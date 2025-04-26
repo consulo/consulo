@@ -542,10 +542,14 @@ code.style.indents.detector.accept:
     text: OK
 code.style.indents.detector.show.settings:
     text: Show Settings
+code.style.other.file.types:
+    text: Other File Types
 code.style.space.indent.detected:
     text: This file is indented with {0} spaces instead of the tab character
 code.style.tab.usage.detected:
     text: This file is indented with tabs instead of {0} spaces
+code.style.widget.configure.indents:
+    text: Configure Indents for {0}...
 column.name:
     text: Name
 column.value:
@@ -876,6 +880,12 @@ group.virtual.space:
     text: Virtual Space
 groupbox.display:
     text: Display
+heavyProcess.type.indexing:
+    text: Indexing...
+heavyProcess.type.processing:
+    text: Processing...
+heavyProcess.type.syncing:
+    text: Syncing...
 html.project.uses.own.code.style:
     text: <html><body>The current project is configured to use its own code style.<br>Changes made to global code style settings will not affect formatting in the current project.<br>See Project Settings | Code Style.<br>Press \&quot;Edit Global Settings\&quot; button below if you still want to edit global settings.</body></html>
 import.scheme.chooser.destination:
