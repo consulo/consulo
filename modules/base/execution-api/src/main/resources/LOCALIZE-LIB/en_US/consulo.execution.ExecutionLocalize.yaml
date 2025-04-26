@@ -112,6 +112,12 @@ clear.all.from.console.action.name:
     text: Clear All
 close.tab.action.name:
     text: Close
+combobox.console.default.encoding.label:
+    text: 'Default Encoding:'
+combobox.console.favorites.separator.label:
+    text: Favorites
+combobox.console.more.separator.label:
+    text: More
 configuration.action.chooser.title:
     text: Choose configuration type to run
 configuration.edit.before.run:
