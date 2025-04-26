@@ -1145,6 +1145,32 @@ public final class StringUtil {
         return s == null ? null : s.trim();
     }
 
+    /**
+     * Trim all characters not accepted by given filter
+     *
+     * @param s      e.g. "/n    my string "
+     * @param filter e.g. {@link CharFilter#NOT_WHITESPACE_FILTER}
+     * @return trimmed string e.g. "my string"
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static String trim(@Nonnull String s, @Nonnull CharFilter filter) {
+        int start = 0;
+        int end = s.length();
+
+        for (; start < end; start++) {
+            char ch = s.charAt(start);
+            if (filter.accept(ch)) break;
+        }
+
+        for (; start < end; end--) {
+            char ch = s.charAt(end - 1);
+            if (filter.accept(ch)) break;
+        }
+
+        return s.substring(start, end);
+    }
+
     @Nonnull
     @Contract(pure = true)
     public static String wrapWithDoubleQuote(@Nonnull String str) {
