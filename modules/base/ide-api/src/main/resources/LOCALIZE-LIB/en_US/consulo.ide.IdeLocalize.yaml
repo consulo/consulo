@@ -52,6 +52,8 @@ action.add:
     text: Add
 action.add.all.open.tabs.to.new.favorites.list:
     text: Add All Open Tabs To New Favorites List
+action.add.repository:
+    text: Add repository
 action.add.to.new.favorites.list:
     text: Add To _New Favorites List
 action.append:
@@ -178,6 +180,8 @@ action.download.and.install.plugin:
     text: Download and Install
 action.edit.file.templates:
     text: Edit File Templates...
+action.edit.repository.url:
+    text: Edit repository URL
 action.expand.all:
     text: Expand All
 action.filter.todo.items:
@@ -258,6 +262,8 @@ action.remove:
     text: Remove
 action.remove.from.current.favorites:
     text: Remove From Current Favorites
+action.remove.repository.from.list:
+    text: Remove repository from list
 action.remove.template:
     text: Remove Template
 action.rename.favorites.list:
@@ -329,7 +335,7 @@ action.structureview.show.properties:
 action.structureview.sort.by.visibility:
     text: Sort by Visibility
 action.sync.completed.successfully:
-    text: '{0} completed successfully.'
+    text: File synchronization completed successfully.
 action.synchronize.file:
     text: Synchronize ''{0}''
 action.synchronize.selected.files:
@@ -374,6 +380,8 @@ action.unpin.active.tab:
     text: Unp_in Active Tab
 action.unpin.tab:
     text: Unp_in Tab
+action.unpin.tab.tooltip:
+    text: Unpin tab
 action.update.plugin:
     text: Update Plugin
 action.view.class.hierarchy:
@@ -386,6 +394,10 @@ activation.auth.message:
     text: The command line launcher is outdated. Please refresh it (via Tools | Create Command-line Launcher).
 activation.auth.title:
     text: Unauthorized Operation
+add.BOM:
+    text: Add BOM
+add.byte.order.mark.to:
+    text: Add byte order mark to {0}
 add.local.scope.action.text:
     text: Local
 add.scope.dialog.title:
@@ -402,6 +414,8 @@ alphabetical.mode.is.on.warning:
     text: Alphabetical order for tabs is ON. Switch it OFF?
 attribute.0.should.be.defined:
     text: '''''{0}'''' attribute should be defined'
+available.packages.dialog.title:
+    text: Available Packages
 background.task.button.cancel:
     text: Cancel
 background.task.button.configure:
@@ -656,6 +670,8 @@ column.todo.patterns.icon:
     text: Icon
 column.todo.patterns.pattern:
     text: Pattern
+combobox.console.default.encoding.label:
+    text: 'Default Encoding:'
 combobox.icon.theme:
     text: Icon Theme
 combobox.icon.theme.ui.default:
@@ -894,6 +910,8 @@ error.license.collision:
         Click Yes to re-activate, or No to shutdown {1}.
 error.list.of.plugins.was.not.loaded:
     text: 'List of plugins was not loaded: {0}'
+error.loading.package.list:
+    text: Error loading package list:{0}
 error.malformed.url:
     text: 'Malformed url: {0}'
 error.message.cannot.make.files.writable:
@@ -918,6 +936,8 @@ error.name.cannot.be.empty:
     text: Name cannot be empty
 error.name.should.be.specified:
     text: A name should be specified
+error.occurred.please.check.your.internet.connection:
+    text: Error occurred. Please, check your internet connection.
 error.parsing.file.template:
     text: 'Error parsing file template: {0}'
 error.please.enter.a.file.name:
@@ -1019,6 +1039,10 @@ exception.missing.data:
     text: 'No data: {0}'
 fail.open.project.message:
     text: Unable to open project from ''{0}''
+failed.to.install.package.dialog.title:
+    text: Failed to install package ''{0}''
+failed.to.install.packages.dialog.title:
+    text: Failed to install packages
 favorites.empty.screen:
     text: 'There is nothing to display. To add item to favorites list use: Main Menu -> View -> Add To Favorites'
 favorites.list.unnamed:
@@ -1201,6 +1225,8 @@ idea.intellij.look.and.feel:
     text: IntelliJ
 import.project.chooser.header:
     text: <html>Select {0}</html>
+install.package.failure:
+    text: Error occurred when installing package ''{0}''. <a href="xxx">Details...</a>
 item.file.templates:
     text: File templates
 jar.build.include.in.jar.file:
@@ -1397,6 +1423,8 @@ listbox.customfiletype.keywords:
     text: Keywords
 loading.editors:
     text: Loading files...
+loading.in.progress:
+    text: '<html><body style=''''text-align: center;padding-top:20px;''''>Loading...</body></html>'
 local.scopes.node.text:
     text: Local Scopes
 low.disk.space.message:
@@ -1499,6 +1527,8 @@ macro.prompt.preview:
     text: <params>
 macro.sourcepath.entry:
     text: Entry in the sourcepath the element belongs to
+manage.repositories.dialog.title:
+    text: Manage Repositories
 maven.repository.presentable.name:
     text: Maven repository
 message.duplicate.plugin.id:
@@ -1615,6 +1645,8 @@ new.library.file.chooser.description:
     text: Select archive files in which library files are located
 new.library.file.chooser.title:
     text: New Library Files
+no.information.available:
+    text: No information available
 node.call.hierarchy.N.usages:
     text: ({0} usages)
 node.call.hierarchy.unknown.jsp:
@@ -1661,6 +1693,30 @@ outdated.jre.version.message1:
     text: IDE''s Java runtime ({0}) is outdated - this may cause stability issues. Please <a href="switch">switch</a> to the bundled Java runtime, or update to {1} or newer
 outdated.jre.version.message2:
     text: IDE''s Java runtime ({0}) is outdated - this may cause stability issues. Please update to {1} or newer
+package.0.installed.successfully:
+    text: Package ''{0}'' installed successfully
+package.installed.successfully:
+    text: Package installed successfully
+package.successfully.uninstalled:
+    text: Package ''{0}'' successfully uninstalled
+package.successfully.upgraded:
+    text: Package {0} successfully upgraded
+packages.settings.latest.version:
+    text: Latest version
+packages.settings.loading:
+    text: Loading Packages List
+packages.settings.package:
+    text: Package
+packages.settings.version:
+    text: Version
+packages.successfully.uninstalled:
+    text: Packages successfully uninstalled
+packages.title:
+    text: Packages
+please.edit.repository.url:
+    text: Please edit repository URL
+please.input.repository.url:
+    text: Please input repository URL
 plugin.advestiser.notification.install.link:
     text: Install {0, choice, 1#plugin|2#plugins}
 plugin.advestiser.notification.text:
@@ -2012,6 +2068,8 @@ recent.locations.popup.title:
     text: Recent Locations
 recent.locations.title.text:
     text: Show changed only
+repository.url.title:
+    text: Repository URL
 run.anything.action.tooltip.text:
     text: Run Anything
 run.anything.actions.undefined:
@@ -2138,6 +2196,8 @@ scopes.save.dialog.title.local:
     text: Save as local scope
 scopes.save.dialog.title.shared:
     text: Save as shared scope
+scratches.and.consoles:
+    text: Scratches and Consoles
 scripting.lib.add:
     text: '&Add...'
 scripting.lib.attach:
@@ -2562,6 +2622,10 @@ treenode.loading:
     text: loading...
 ui.settings:
     text: UI Settings
+uninstall.packages.failed:
+    text: Uninstall packages failed. <a href="xxx">Details...</a>
+uninstall.packages.failed.dialog.title:
+    text: Uninstall Packages Failed
 unknown.error:
     text: Unknown error
 unscramble.dialog.title:
@@ -2654,6 +2718,12 @@ updates.settings.title:
     text: Updates
 updates.timeout.error:
     text: Connection timed out
+upgrade.package.failed.title:
+    text: Upgrade Package Failed.
+upgrade.packages.failed:
+    text: Upgrade packages failed. <a href="xxx">Details...</a>
+upgrade.packages.failed.dialog.title:
+    text: Upgrade Packages Failed
 use.sun.jdk.prompt:
     text: Java version is not supported, please use Sun/Oracle JDK rather than OpenJDK
 value.must.be.identifier:
