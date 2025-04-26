@@ -23,7 +23,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -33,37 +32,39 @@ import jakarta.annotation.Nonnull;
 @DeprecationInfo("Prefer CodeStyle api")
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class IndentHelper {
-  public static IndentHelper getInstance() {
-    return Application.get().getInstance(IndentHelper.class);
-  }
+    public static IndentHelper getInstance() {
+        return Application.get().getInstance(IndentHelper.class);
+    }
 
-  /**
-   * @deprecated Use {@link #getIndent(PsiFile, ASTNode)}
-   */
-  @Deprecated
-  public final int getIndent(Project project, FileType fileType, ASTNode element) {
-    return getIndent(getFile(element), element);
-  }
+    /**
+     * @deprecated Use {@link #getIndent(PsiFile, ASTNode)}
+     */
+    @Deprecated
+    public final int getIndent(Project project, FileType fileType, ASTNode element) {
+        return getIndent(getFile(element), element);
+    }
 
-  /**
-   * @deprecated Use {@link #getIndent(PsiFile, ASTNode, boolean)}
-   */
-  @Deprecated
-  public final int getIndent(Project project, FileType fileType, ASTNode element, boolean includeNonSpace) {
-    return getIndent(getFile(element), element, includeNonSpace);
-  }
+    /**
+     * @deprecated Use {@link #getIndent(PsiFile, ASTNode, boolean)}
+     */
+    @Deprecated
+    public final int getIndent(Project project, FileType fileType, ASTNode element, boolean includeNonSpace) {
+        return getIndent(getFile(element), element, includeNonSpace);
+    }
 
-  private static PsiFile getFile(ASTNode element) {
-    return element.getPsi().getContainingFile();
-  }
+    private static PsiFile getFile(ASTNode element) {
+        return element.getPsi().getContainingFile();
+    }
 
-  public abstract int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element);
+    public abstract int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element);
 
-  public abstract int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace);
+    public abstract int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace);
 
-  @Deprecated
-  public abstract String fillIndent(Project project, FileType fileType, int indent);
+    @Deprecated
+    public abstract String fillIndent(Project project, FileType fileType, int indent);
 
-  @Deprecated
-  public abstract int getIndent(Project project, FileType fileType, String text, boolean includeNonSpace);
+    @Deprecated
+    public abstract int getIndent(Project project, FileType fileType, String text, boolean includeNonSpace);
+
+    public abstract int getIndent(@Nonnull PsiFile file, String text, boolean includeNonSpace);
 }

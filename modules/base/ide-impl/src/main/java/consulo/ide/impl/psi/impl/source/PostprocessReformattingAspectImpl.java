@@ -29,6 +29,7 @@ import consulo.language.impl.internal.pom.TreeChangeImpl;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.psi.CodeEditUtil;
+import consulo.language.impl.psi.IndentHelper;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.pom.PomModelAspect;
@@ -733,7 +734,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         CharSequence charsSequence = document.getCharsSequence();
         for (TextRange indent : indents) {
             String oldIndentStr = charsSequence.subSequence(indent.getStartOffset() + 1, indent.getEndOffset()).toString();
-            int oldIndent = IndentHelperImpl.getIndent(file, oldIndentStr, true);
+            int oldIndent = IndentHelper.getInstance().getIndent(file, oldIndentStr, true);
             String newIndentStr =
                 IndentHelperImpl.fillIndent(CodeStyle.getIndentOptions(file), Math.max(oldIndent + indentAdjustment, 0));
             document.replaceString(indent.getStartOffset() + 1, indent.getEndOffset(), newIndentStr);
@@ -749,7 +750,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         //noinspection StatementWithEmptyBody
         while (Character.isWhitespace(charsSequence.charAt(endOffset++))) ;
         String newIndentStr = charsSequence.subSequence(startOffset, endOffset - 1).toString();
-        return IndentHelperImpl.getIndent(psiFile, newIndentStr, true);
+        return IndentHelper.getInstance().getIndent(psiFile, newIndentStr, true);
     }
 
     public boolean isDisabled() {

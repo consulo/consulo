@@ -18,21 +18,32 @@ package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.IndentHelperExtension;
 import consulo.language.impl.psi.IndentHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
+import java.util.Objects;
 
 @Singleton
 @ServiceImpl
 public final class IndentHelperImpl extends IndentHelper {
     public static final int INDENT_FACTOR = 10000; // "indent" is indent_level * INDENT_FACTOR + spaces
+
+    private final Application myApplication;
+
+    @Inject
+    public IndentHelperImpl(Application application) {
+        myApplication = application;
+    }
 
     @Override
     @RequiredReadAction
@@ -43,12 +54,13 @@ public final class IndentHelperImpl extends IndentHelper {
     @Override
     @RequiredReadAction
     public int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace) {
-        for (IndentHelperExtension extension : IndentHelperExtension.EP_NAME.getExtensionList()) {
-            if (extension.isAvailable(file)) {
-                return extension.getIndentInner(file, element, includeNonSpace, 0);
+        Integer computed = myApplication.getExtensionPoint(IndentHelperExtension.class).computeSafeIfAny(e -> {
+            if (e.isAvailable(file)) {
+                return e.getIndentInner(file, element, includeNonSpace, 0);
             }
-        }
-        return 0;
+            return null;
+        });
+        return Objects.requireNonNullElse(computed, 0);
     }
 
     /**
@@ -110,7 +122,8 @@ public final class IndentHelperImpl extends IndentHelper {
         return getIndent(CodeStyle.getSettings(project).getIndentOptions(fileType), text, includeNonSpace);
     }
 
-    public static int getIndent(@Nonnull PsiFile file, String text, boolean includeNonSpace) {
+    @Override
+    public int getIndent(@Nonnull PsiFile file, String text, boolean includeNonSpace) {
         return getIndent(CodeStyle.getIndentOptions(file), text, includeNonSpace);
     }
 
