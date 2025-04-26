@@ -171,7 +171,7 @@ popup.hints.panel.click.to.configure.profile.text:
 position.panel.caret.count:
     text: '{0} carets'
 position.panel.selected.chars.count:
-    text: '{0} chars'
+    text: '{0,choice,1#char|2#chars}'
 position.panel.selected.line.breaks.count:
     text: '{0} line {0,choice,1#break|2#breaks}'
 position.panel.selected.lines.count:
@@ -286,6 +286,8 @@ tool.window.move.to.top.action.name:
     text: Top
 tool.window.name.ant.build:
     text: Ant Build
+tool.window.name.build:
+    text: Build
 tool.window.name.commander:
     text: Commander
 tool.window.name.cvs:
