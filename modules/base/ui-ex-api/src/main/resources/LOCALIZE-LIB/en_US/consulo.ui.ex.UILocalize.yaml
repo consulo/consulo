@@ -126,6 +126,12 @@ idea.blue.metal.theme.name:
     text: beg blue
 insert.file.path.to.text.action.name:
     text: Insert Path
+integer.field.value.expected:
+    text: A value is expected
+integer.field.value.not.a.number:
+    text: Value ''{0}'' is not an integer number
+integer.field.value.out.of.range:
+    text: Value ''{0}'' is out of range {1}..{2}
 invalid.user.input.dialog.title:
     text: Input Error
 label.class.filter.editor.add.dialog.filter.pattern:

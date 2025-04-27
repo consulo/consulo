@@ -898,12 +898,6 @@ insert.override.annotation:
     text: Insert @&Override annotation
 integer.field.value.default:
     text: Default
-integer.field.value.expected:
-    text: A value is expected
-integer.field.value.not.a.number:
-    text: Value ''{0}'' is not an integer number
-integer.field.value.out.of.range:
-    text: Value ''{0}'' is out of range {1}..{2}
 label.appearance.show.vertical.indent.guides:
     text: Show vertical indent guides
 label.autocomplete.when.only.one.choice:
