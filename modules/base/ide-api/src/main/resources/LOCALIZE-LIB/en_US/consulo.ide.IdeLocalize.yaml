@@ -1,2684 +1,2754 @@
 FileChooser.detailsViewActionLabelText:
-  text: Details
+    text: Details
 FileChooser.listViewActionLabelText:
-  text: List
+    text: List
 FileChooser.newFolderActionLabelText:
-  text: New Folder
+    text: New Folder
 FileChooser.refreshActionLabelText:
-  text: Refresh
+    text: Refresh
 FileChooser.viewMenuLabelText:
-  text: View
+    text: View
 aboutbox.build.date:
-  text: ', built on {0}'
+    text: ', built on {0}'
 aboutbox.build.number:
-  text: 'Build #{0}'
+    text: 'Build #{0}'
 aboutbox.jdk:
-  text: 'JDK: {0}'
+    text: 'JDK: {0}'
 aboutbox.maintenance.due:
-  text: Entitled for free updates and upgrades until {0,date,MMMM dd, yyyy}
+    text: Entitled for free updates and upgrades until {0,date,MMMM dd, yyyy}
 aboutbox.vm:
-  text: 'VM: {0} by {1}'
+    text: 'VM: {0} by {1}'
 action.Anonymous.text.add.abbreviation:
-  text: Add Abbreviation
+    text: Add Abbreviation
 action.Anonymous.text.add.keyboard.shortcut:
-  text: Add Keyboard Shortcut
+    text: Add Keyboard Shortcut
 action.Anonymous.text.add.mouse.shortcut:
-  text: Add Mouse Shortcut
+    text: Add Mouse Shortcut
 action.Anonymous.text.live.templates:
-  text: Live Templates
+    text: Live Templates
 action.Anonymous.text.new.group:
-  text: New group…
+    text: New group…
 action.Anonymous.text.rename:
-  text: Rename
+    text: Rename
 action.Anonymous.text.reset.shortcuts:
-  text: Reset Shortcuts
+    text: Reset Shortcuts
 action.DumbAware.BuildView.text.stop:
-  text: BuildView
+    text: BuildView
 action.DumbAware.CopyrightProfilesPanel.description.stop:
-  text: Stop
+    text: Stop
 action.ToggleAction.pin.window.description:
-  text: Pin Window
+    text: Pin Window
 action.ToggleAction.pin.window.text:
-  text: Pin Window
+    text: Pin Window
 action.ToggleAction.text.filter:
-  text: Filter
+    text: Filter
 action.ToggleAction.text.toggle.view:
-  text: Toggle View
+    text: Toggle View
 action.abbreviate.qualified.package.names:
-  text: Abbreviate Qualified Package Names
+    text: Abbreviate Qualified Package Names
 action.activate.tool.window:
-  text: Activate {0} window
+    text: Activate {0} window
 action.add:
-  text: Add
+    text: Add
 action.add.all.open.tabs.to.new.favorites.list:
-  text: Add All Open Tabs To New Favorites List
+    text: Add All Open Tabs To New Favorites List
+action.add.repository:
+    text: Add repository
 action.add.to.new.favorites.list:
-  text: Add To _New Favorites List
+    text: Add To _New Favorites List
 action.append:
-  text: Append
+    text: Append
 action.base.on.this.class:
-  text: Base on This Class
+    text: Base on This Class
 action.base.on.this.interface:
-  text: Base on This Interface
+    text: Base on This Interface
 action.base.on.this.method:
-  text: Base on This Method
+    text: Base on This Method
 action.bookmark.delete:
-  text: Delete Bookmark
+    text: Delete Bookmark
 action.bookmark.edit.description:
-  text: Edit Description
+    text: Edit Description
 action.bookmark.edit.description.description:
-  text: Assign short description for the bookmark to be shown along the file name
+    text: Assign short description for the bookmark to be shown along the file name
 action.bookmark.edit.description.dialog.message:
-  text: Enter short bookmark description
+    text: Enter short bookmark description
 action.bookmark.edit.description.dialog.title:
-  text: Bookmark Description
+    text: Bookmark Description
 action.bookmark.toggle:
-  text: Toggle _Bookmark
+    text: Toggle _Bookmark
 action.bookmark.toggle.mnemonic:
-  text: Toggle Bookmark With Mnemonic
+    text: Toggle Bookmark With Mnemonic
 action.browse.call.hierarchy:
-  text: Browse Call Hierarchy
+    text: Browse Call Hierarchy
 action.browse.method.hierarchy:
-  text: Browse Method Hierarchy
+    text: Browse Method Hierarchy
 action.browse.type.hierarchy:
-  text: Browse Type Hierarchy
+    text: Browse Type Hierarchy
 action.callee.methods.hierarchy:
-  text: Callee Methods Hierarchy
+    text: Callee Methods Hierarchy
 action.caller.methods.hierarchy:
-  text: Caller Methods Hierarchy
+    text: Caller Methods Hierarchy
 action.choose.actions.to.add:
-  text: Choose Actions To Add
+    text: Choose Actions To Add
 action.clear.list:
-  text: _Clear List
+    text: _Clear List
 action.close:
-  text: _Close
+    text: _Close
 action.close.all.editors:
-  text: Close _All
+    text: Close _All
 action.close.all.editors.in.tab.group:
-  text: Close _All In Group
+    text: Close _All In Group
 action.close.all.unmodified.editors:
-  text: Close _Unmodified
+    text: Close _Unmodified
 action.close.all.unmodified.editors.in.tab.group:
-  text: Close _Unmodified In Group
+    text: Close _Unmodified In Group
 action.close.all.unpinned.editors:
-  text: Close All But Pinned
+    text: Close All But Pinned
 action.close.all.unpinned.editors.in.tab.group:
-  text: Close All But Pinned In Group
+    text: Close All But Pinned In Group
 action.close.project:
-  text: Close Pro_ject
+    text: Close Pro_ject
 action.collapse.all:
-  text: Collapse All
+    text: Collapse All
 action.compact.empty.middle.packages:
-  text: Compact Empty Middle Packages
+    text: Compact Empty Middle Packages
 action.continue.searching:
-  text: Continue Searching
+    text: Continue Searching
 action.copy.path:
-  text: C_opy Path
+    text: C_opy Path
 action.copy.paths:
-  text: C_opy Paths
+    text: C_opy Paths
 action.copy.template:
-  text: Copy Template
+    text: Copy Template
 action.create.annotation.type:
-  text: Create @interface
+    text: Create @interface
 action.create.new.class.name.field:
-  text: Name
+    text: Name
 action.create.new.directory.or.package:
-  text: Create new directory or package
+    text: Create new directory or package
 action.create.new.enum:
-  text: Create New Enum
+    text: Create New Enum
 action.create.new.file:
-  text: File
+    text: File
 action.create.new.file.description:
-  text: Create new file
+    text: Create new file
 action.create.new.interface:
-  text: Create New Interface
+    text: Create New Interface
 action.create.template:
-  text: Create Template
+    text: Create Template
 action.delete:
-  text: _Delete
+    text: _Delete
 action.delete.all.favorites.lists.but.this:
-  text: Delete All User-Defined Lists Except ''{0}''
+    text: Delete All User-Defined Lists Except ''{0}''
 action.delete.ellipsis:
-  text: _Delete...
+    text: _Delete...
 action.delete.favorites.list:
-  text: Delete Favorites List ''{0}''
+    text: Delete Favorites List ''{0}''
 action.description.create.new.module.group:
-  text: Create New Module Group
+    text: Create New Module Group
 action.description.create.new.package:
-  text: Create new package
+    text: Create new package
 action.description.group.by.scope:
-  text: Group by Scope Type (production, test, libraries)
+    text: Group by Scope Type (production, test, libraries)
 action.description.show.files:
-  text: Show/Hide Files
+    text: Show/Hide Files
 action.description.show.included.only:
-  text: Show only files included to the current scope selected
+    text: Show only files included to the current scope selected
 action.description.show.modules:
-  text: Show/Hide Modules
+    text: Show/Hide Modules
 action.description.show.structure:
-  text: Show structure view
+    text: Show structure view
 action.description.todo.show.all:
-  text: Show All TODO Items
+    text: Show All TODO Items
 action.description.view.class.hierarchy:
-  text: Switch to Class Hierarchy
+    text: Switch to Class Hierarchy
 action.description.view.subtypes.hierarchy:
-  text: Switch to Subtypes Hierarchy
+    text: Switch to Subtypes Hierarchy
 action.description.view.supertypes.hierarchy:
-  text: Switch to Supertypes Hierarchy
+    text: Switch to Supertypes Hierarchy
 action.descriptor.action:
-  text: 'Action: {0}'
+    text: 'Action: {0}'
 action.descriptor.keystroke:
-  text: 'Keystroke: "{0}"'
+    text: 'Keystroke: "{0}"'
 action.descriptor.typing:
-  text: 'Typing: "{0}"'
+    text: 'Typing: "{0}"'
 action.directory:
-  text: Directory
+    text: Directory
 action.do.not.mark:
-  text: Do Not Mark
+    text: Do Not Mark
 action.download.and.install.plugin:
-  text: Download and Install
+    text: Download and Install
 action.edit.file.templates:
-  text: Edit File Templates...
+    text: Edit File Templates...
+action.edit.repository.url:
+    text: Edit repository URL
 action.expand.all:
-  text: Expand All
+    text: Expand All
 action.filter.todo.items:
-  text: Filter TODO Items
+    text: Filter TODO Items
 action.flatten.packages:
-  text: Flatten Packages
+    text: Flatten Packages
 action.flatten.view:
-  text: Flatten View
+    text: Flatten View
 action.from.file.template:
-  text: From File Template ...
+    text: From File Template ...
 action.group.by.modules:
-  text: Group By Modules
+    text: Group By Modules
 action.group.by.packages:
-  text: Group By Packages
+    text: Group By Packages
 action.group.by.scope.type:
-  text: Group by Scope Type
+    text: Group by Scope Type
 action.help:
-  text: Help
+    text: Help
 action.hide.all.windows:
-  text: Hide All _Windows
+    text: Hide All _Windows
 action.hide.empty.middle.packages:
-  text: Hide Empty Middle Packages
+    text: Hide Empty Middle Packages
 action.hide.infos:
-  text: Hide information's
+    text: Hide information's
 action.hide.non.implementations:
-  text: Hide classes where the method is legally not implemented
+    text: Hide classes where the method is legally not implemented
 action.hide.warnings:
-  text: Hide warnings
+    text: Hide warnings
 action.implement.method:
-  text: Implement Method
+    text: Implement Method
 action.implement.methods:
-  text: Implement Methods
+    text: Implement Methods
 action.manual.order:
-  text: Manual Order
+    text: Manual Order
 action.mark:
-  text: Mark
+    text: Mark
 action.move.module.new.top.level.group:
-  text: New Top Level Group...
+    text: New Top Level Group...
 action.move.module.outside.any.group:
-  text: Outside Any Group
+    text: Outside Any Group
 action.move.module.to.new.sub.group:
-  text: To New Subgroup...
+    text: To New Subgroup...
 action.move.module.to.this.group:
-  text: To This Group
+    text: To This Group
 action.new.package:
-  text: New Package...
+    text: New Package...
 action.next.message:
-  text: Next Message
+    text: Next Message
 action.next.problem:
-  text: Next Problem
+    text: Next Problem
 action.next.tip:
-  text: '&Next Tip'
+    text: '&Next Tip'
 action.next.todo:
-  text: Next TODO
+    text: Next TODO
 action.override.method:
-  text: Override Method
+    text: Override Method
 action.override.methods:
-  text: Override Methods
+    text: Override Methods
 action.overwrite:
-  text: Overwrite
+    text: Overwrite
 action.package:
-  text: Package
+    text: Package
 action.pin.active.tab:
-  text: P_in Active Tab
+    text: P_in Active Tab
 action.pin.tab:
-  text: P_in Tab
+    text: P_in Tab
 action.previous.message:
-  text: Previous Message
+    text: Previous Message
 action.previous.problem:
-  text: Previous Problem
+    text: Previous Problem
 action.previous.tip:
-  text: '&Previous Tip'
+    text: '&Previous Tip'
 action.previous.todo:
-  text: Previous TODO
+    text: Previous TODO
 action.refresh:
-  text: Refresh
+    text: Refresh
 action.remove:
-  text: Remove
+    text: Remove
 action.remove.from.current.favorites:
-  text: Remove From Current Favorites
+    text: Remove From Current Favorites
+action.remove.repository.from.list:
+    text: Remove repository from list
 action.remove.template:
-  text: Remove Template
+    text: Remove Template
 action.rename.favorites.list:
-  text: Rename favorites list
+    text: Rename favorites list
 action.reset.to.default:
-  text: Reset To Default
+    text: Reset To Default
 action.restore.windows:
-  text: Restore _Windows
+    text: Restore _Windows
 action.select.none:
-  text: Select &None
+    text: Select &None
 action.send.to.new.favorites.list:
-  text: Send To New Favorites List
+    text: Send To New Favorites List
 action.show.classes:
-  text: Show Classes
+    text: Show Classes
 action.show.compact.empty.middle.packages:
-  text: Show/Compact Empty Middle Packages
+    text: Show/Compact Empty Middle Packages
 action.show.excluded.files:
-  text: Show Excluded Files
+    text: Show Excluded Files
 action.show.files:
-  text: Show Files
+    text: Show Files
 action.show.hide.empty.middle.packages:
-  text: Show/Hide Empty Middle Packages
+    text: Show/Hide Empty Middle Packages
 action.show.hide.excluded.files:
-  text: Show/Hide Excluded Files
+    text: Show/Hide Excluded Files
 action.show.hide.library.contents:
-  text: Show/Hide Library Contents
+    text: Show/Hide Library Contents
 action.show.hide.members:
-  text: Show/Hide Members
+    text: Show/Hide Members
 action.show.included.only:
-  text: Show Included Only
+    text: Show Included Only
 action.show.infos:
-  text: Show information's
+    text: Show information's
 action.show.libraries.contents:
-  text: Show Libraries Contents
+    text: Show Libraries Contents
 action.show.members:
-  text: Show Members
+    text: Show Members
 action.show.modules:
-  text: Show Modules
+    text: Show Modules
 action.show.structure:
-  text: Show Structure
+    text: Show Structure
 action.show.warnings:
-  text: Show warnings
+    text: Show warnings
 action.sort.alphabetically:
-  text: Sort Alphabetically
+    text: Sort Alphabetically
 action.sort.by.type:
-  text: Sort by Type
+    text: Sort by Type
 action.split.horizontally:
-  text: Split Hori_zontally
+    text: Split Hori_zontally
 action.split.vertically:
-  text: Split _Vertically
+    text: Split _Vertically
 action.start.macro.recording:
-  text: Start _Macro Recording
+    text: Start _Macro Recording
 action.stop:
-  text: Stop
+    text: Stop
 action.stop.macro.recording:
-  text: Stop _Macro Recording
+    text: Stop _Macro Recording
 action.stop.searching:
-  text: Stop Searching
+    text: Stop Searching
 action.structureview.group.methods.by.defining.type:
-  text: Group Methods by Defining Type
+    text: Group Methods by Defining Type
 action.structureview.show.fields:
-  text: Show Fields
+    text: Show Fields
 action.structureview.show.inherited:
-  text: Show Inherited
+    text: Show Inherited
 action.structureview.show.non.public:
-  text: Show non-public
+    text: Show non-public
 action.structureview.show.properties:
-  text: Show Properties
+    text: Show Properties
 action.structureview.sort.by.visibility:
-  text: Sort by Visibility
+    text: Sort by Visibility
 action.sync.completed.successfully:
-  text: '{0} completed successfully.'
+    text: File synchronization completed successfully.
 action.synchronize.file:
-  text: Synchronize ''{0}''
+    text: Synchronize ''{0}''
 action.synchronize.selected.files:
-  text: Synchronize selected files
+    text: Synchronize selected files
 action.text.remove.0:
-  text: Remove {0}
+    text: Remove {0}
 action.text.remove.abbreviation.0:
-  text: Remove Abbreviation ''{0}''
+    text: Remove Abbreviation ''{0}''
 action.todo.edit.filters:
-  text: Edit Filters
+    text: Edit Filters
 action.todo.show.all:
-  text: Show All
+    text: Show All
 action.toolwindow.ant.build:
-  text: Ant &Build
+    text: Ant &Build
 action.toolwindow.commander:
-  text: '&Commander'
+    text: '&Commander'
 action.toolwindow.cvs:
-  text: C&VS
+    text: C&VS
 action.toolwindow.debug:
-  text: Debug
+    text: Debug
 action.toolwindow.favorites:
-  text: Favorites
+    text: Favorites
 action.toolwindow.find:
-  text: F&ind
+    text: F&ind
 action.toolwindow.hierarchy:
-  text: Hierarch&y
+    text: Hierarch&y
 action.toolwindow.inspection:
-  text: I&nspection
+    text: I&nspection
 action.toolwindow.messages:
-  text: '&Messages'
+    text: '&Messages'
 action.toolwindow.project:
-  text: '&Project'
+    text: '&Project'
 action.toolwindow.run:
-  text: '&Run'
+    text: '&Run'
 action.toolwindow.structure:
-  text: '&Structure'
+    text: '&Structure'
 action.toolwindow.todo:
-  text: TODO
+    text: TODO
 action.uninstall.plugin:
-  text: Uninstall
+    text: Uninstall
 action.unpin.active.tab:
-  text: Unp_in Active Tab
+    text: Unp_in Active Tab
 action.unpin.tab:
-  text: Unp_in Tab
+    text: Unp_in Tab
+action.unpin.tab.tooltip:
+    text: Unpin tab
 action.update.plugin:
-  text: Update Plugin
+    text: Update Plugin
 action.view.class.hierarchy:
-  text: Class Hierarchy
+    text: Class Hierarchy
 action.view.subtypes.hierarchy:
-  text: Subtypes Hierarchy
+    text: Subtypes Hierarchy
 action.view.supertypes.hierarchy:
-  text: Supertypes Hierarchy
+    text: Supertypes Hierarchy
 activation.auth.message:
-  text: The command line launcher is outdated. Please refresh it (via Tools | Create Command-line Launcher).
+    text: The command line launcher is outdated. Please refresh it (via Tools | Create Command-line Launcher).
 activation.auth.title:
-  text: Unauthorized Operation
+    text: Unauthorized Operation
+add.BOM:
+    text: Add BOM
+add.byte.order.mark.to:
+    text: Add byte order mark to {0}
 add.local.scope.action.text:
-  text: Local
+    text: Local
 add.scope.dialog.title:
-  text: Add New Scope
+    text: Add New Scope
 add.scope.name.label:
-  text: Name
+    text: Name
 add.scope.popup.title:
-  text: Add scope
+    text: Add scope
 add.shared.scope.action.text:
-  text: Shared
+    text: Shared
 allow.merging.dialog.buttons:
-  text: Allow merging buttons on dialogs
+    text: Allow merging buttons on dialogs
 alphabetical.mode.is.on.warning:
-  text: Alphabetical order for tabs is ON. Switch it OFF?
+    text: Alphabetical order for tabs is ON. Switch it OFF?
 attribute.0.should.be.defined:
-  text: '''''{0}'''' attribute should be defined'
+    text: '''''{0}'''' attribute should be defined'
+available.packages.dialog.title:
+    text: Available Packages
 background.task.button.cancel:
-  text: Cancel
+    text: Cancel
 background.task.button.configure:
-  text: Configure...
+    text: Configure...
 background.task.editor.header:
-  text: '{0} : background task on vfs change is available for this file'
+    text: '{0} : background task on vfs change is available for this file'
 bean.property:
-  text: Bean Property
+    text: Bean Property
 bookmark.file.X.line.Y:
-  text: '{0}, line {1}'
+    text: '{0}, line {1}'
 browsers.chrome:
-  text: Chrome
+    text: Chrome
 browsers.explorer:
-  text: Internet Explorer
+    text: Internet Explorer
 browsers.firefox:
-  text: Firefox
+    text: Firefox
 browsers.opera:
-  text: Opera
+    text: Opera
 browsers.safari:
-  text: Safari
+    text: Safari
 browsers.settings:
-  text: Web Browsers
+    text: Web Browsers
 bundled.jre.version.message:
-  text: Please consider <a href="switch">switching</a> to the bundled Java runtime which is better suited for the IDE (current Java runtime is {0}).
+    text: Please consider <a href="switch">switching</a> to the bundled Java runtime which is better suited for the IDE (current Java runtime is {0}).
 button.add:
-  text: '&Add...'
+    text: '&Add...'
 button.add.action.after:
-  text: Add A&fter...
+    text: Add A&fter...
 button.add.d:
-  text: A&dd...
+    text: A&dd...
 button.add.separator:
-  text: Add &Separator
+    text: Add &Separator
 button.cancel:
-  text: '&Cancel'
+    text: '&Cancel'
 button.change.directory:
-  text: Change Directory...
+    text: Change Directory...
 button.configure:
-  text: '&Configure...'
+    text: '&Configure...'
 button.configure.e:
-  text: Configure...
+    text: Configure...
 button.copy:
-  text: '&Copy'
+    text: '&Copy'
 button.create:
-  text: '&Create'
+    text: '&Create'
 button.delete:
-  text: Delete
+    text: Delete
 button.edit:
-  text: '&Edit...'
+    text: '&Edit...'
 button.edit.action.icon:
-  text: Edit Action &Icon...
+    text: Edit Action &Icon...
 button.edit.t:
-  text: Edi&t...
+    text: Edi&t...
 button.exclude:
-  text: Exclude
+    text: Exclude
 button.exclude.recursively:
-  text: Exclude Recursively
+    text: Exclude Recursively
 button.existingframe:
-  text: '&This Window'
+    text: '&This Window'
 button.facet.quickfix.text:
-  text: '&Fix'
+    text: '&Fix'
 button.finish:
-  text: '&Finish'
+    text: '&Finish'
 button.fix:
-  text: Fix…
+    text: Fix…
 button.go.to:
-  text: '&Go to'
+    text: '&Go to'
 button.http.proxy.settings:
-  text: '&HTTP Proxy Settings...'
+    text: '&HTTP Proxy Settings...'
 button.include:
-  text: Include
+    text: Include
 button.include.recursively:
-  text: Include Recursively
+    text: Include Recursively
 button.insert:
-  text: Insert
+    text: Insert
 button.mark.all:
-  text: '&Mark All'
+    text: '&Mark All'
 button.move.down:
-  text: Move &Down
+    text: Move &Down
 button.move.down.d:
-  text: Move &Down
+    text: Move &Down
 button.move.up:
-  text: Move &Up
+    text: Move &Up
 button.move.up.u:
-  text: Move &Up
+    text: Move &Up
 button.newframe:
-  text: New &Window
+    text: New &Window
 button.no:
-  text: _No
+    text: _No
 button.ok:
-  text: '&OK'
+    text: '&OK'
 button.remove:
-  text: '&Remove'
+    text: '&Remove'
 button.remove.action:
-  text: Remove Action
+    text: Remove Action
 button.remove.all:
-  text: Remove &All
+    text: Remove &All
 button.remove.m:
-  text: Re&move
+    text: Re&move
 button.rename:
-  text: Rename
+    text: Rename
 button.save:
-  text: Save
+    text: Save
 button.set.icon:
-  text: '&Set icon'
+    text: '&Set icon'
 button.stop.searching:
-  text: '&Stop Searching'
+    text: '&Stop Searching'
 button.unmark.all:
-  text: '&Unmark All'
+    text: '&Unmark All'
 button.view.source:
-  text: '&View Source'
+    text: '&View Source'
 button.wizard.next:
-  text: '&Next'
+    text: '&Next'
 button.wizard.previous:
-  text: '&Previous'
+    text: '&Previous'
 button.yes:
-  text: _Yes
+    text: _Yes
 change.encoding.command.name:
-  text: Change Encoding for ''{0}''
+    text: Change Encoding for ''{0}''
 changelist.todo.title:
-  text: '{0} Changelist'
+    text: '{0} Changelist'
 checkboox.cyclic.scrolling.in.lists:
-  text: Cyclic scrolling in list
+    text: Cyclic scrolling in list
 checkbox.allow.line.numbers:
-  text: Allow Line Numbers
+    text: Allow Line Numbers
 checkbox.allow.status.bar:
-  text: Allow Status Bar
+    text: Allow Status Bar
 checkbox.allow.vcs.annotations:
-  text: Allow VCS Annotations
+    text: Allow VCS Annotations
 checkbox.animate.windows:
-  text: Animate windows
+    text: Animate windows
 checkbox.autodetect.utf:
-  text: Autodetect UTF-encoded files
+    text: Autodetect UTF-encoded files
 checkbox.case.sensitive:
-  text: Case Sensitive
+    text: Case Sensitive
 checkbox.confirm.application.exit:
-  text: Confirm application exit
+    text: Confirm application exit
 checkbox.copy.javadoc:
-  text: Copy &JavaDoc
+    text: Copy &JavaDoc
 checkbox.customfiletype.ignore.case:
-  text: '&Ignore case'
+    text: '&Ignore case'
 checkbox.customfiletype.support.paired.braces:
-  text: Support paired b&races
+    text: Support paired b&races
 checkbox.customfiletype.support.paired.brackets:
-  text: Support paired bra&ckets
+    text: Support paired bra&ckets
 checkbox.customfiletype.support.paired.parens:
-  text: Support paired &parens
+    text: Support paired &parens
 checkbox.customfiletype.support.string.escapes:
-  text: Support string &escapes
+    text: Support string &escapes
 checkbox.disabled.included:
-  text: Include &disabled actions
+    text: Include &disabled actions
 checkbox.enable.live.templates:
-  text: Enable &Live Templates
+    text: Enable &Live Templates
 checkbox.errortree.export.details:
-  text: Details
+    text: Details
 checkbox.include.non.project.classes:
-  text: Include &non-project classes
+    text: Include &non-project classes
 checkbox.include.non.project.files:
-  text: Include &non-project files
+    text: Include &non-project files
 checkbox.include.non.project.items:
-  text: Include &non-{0} items
+    text: Include &non-{0} items
 checkbox.include.non.project.symbols:
-  text: Include &non-project symbols
+    text: Include &non-project symbols
 checkbox.insert.at.override:
-  text: Insert @&Override
+    text: Insert @&Override
 checkbox.left.toolwindow.layout:
-  text: Side-by-side layout on the left
+    text: Side-by-side layout on the left
 checkbox.narrow.down.on.typing:
-  text: '&Narrow down on typing'
+    text: '&Narrow down on typing'
 checkbox.narrow.down.the.list.on.typing:
-  text: '&Narrow down the list on typing'
+    text: '&Narrow down the list on typing'
 checkbox.other.included:
-  text: Include &non-menu actions
+    text: Include &non-menu actions
 checkbox.override.default.laf.fonts:
-  text: 'Use custom font:'
+    text: 'Use custom font:'
 checkbox.position.cursor.on.default.button:
-  text: Automatically position mouse cursor on default button
+    text: Automatically position mouse cursor on default button
 checkbox.reformat.according.to.style:
-  text: Reformat according to style
+    text: Reformat according to style
 checkbox.reopen.last.project.on.startup:
-  text: Reopen last project on startup
+    text: Reopen last project on startup
 checkbox.right.toolwindow.layout:
-  text: Side-by-side layout on the right
+    text: Side-by-side layout on the right
 checkbox.safe.delete.with.usage.search:
-  text: Sa&fe delete (with usage search)
+    text: Sa&fe delete (with usage search)
 checkbox.save.files.automatically:
-  text: Save files automatically if application is idle for
+    text: Save files automatically if application is idle for
 checkbox.save.files.on.frame.deactivation:
-  text: Save files on frame deactivation
+    text: Save files on frame deactivation
 checkbox.search.in.comments.and.strings:
-  text: '&Search in comments and strings'
+    text: '&Search in comments and strings'
 checkbox.search.in.non.java.files:
-  text: S&earch for non-code usages
+    text: S&earch for non-code usages
 checkbox.show.editor.preview.popup:
-  text: Show editor preview tooltip
+    text: Show editor preview tooltip
 checkbox.show.icons.in.menu.items:
-  text: Display icons in menu items
+    text: Display icons in menu items
 checkbox.show.icons.in.quick.navigation:
-  text: Show icons in quick navigation
+    text: Show icons in quick navigation
 checkbox.show.memory.indicator:
-  text: Show memory indicator
+    text: Show memory indicator
 checkbox.show.tips.on.startup:
-  text: Show Tips on Startup
+    text: Show Tips on Startup
 checkbox.show.tool.window.bars:
-  text: Show tool window bars
+    text: Show tool window bars
 checkbox.show.tool.window.numbers:
-  text: Show tool window numbers
+    text: Show tool window numbers
 checkbox.support.screen.readers:
-  text: Support screen readers (requires restart)
+    text: Support screen readers (requires restart)
 checkbox.synchronize.files.on.frame.activation:
-  text: Synchronize files on frame activation
+    text: Synchronize files on frame activation
 checkbox.todo.use.default.colors:
-  text: Use color scheme TODO default colors
+    text: Use color scheme TODO default colors
 checkbox.transparent.native.to.ascii.conversion:
-  text: Transparent native-to-ascii conversion
+    text: Transparent native-to-ascii conversion
 checkbox.use.antialiased.font.in.editor:
-  text: Use anti-aliased font
+    text: Use anti-aliased font
 checkbox.use.preview.window:
-  text: Navigate to preview
+    text: Navigate to preview
 checkbox.use.transparent.mode.for.floating.windows:
-  text: Use transparent mode for floating windows
+    text: Use transparent mode for floating windows
 checkbox.widescreen.tool.window.layout:
-  text: Widescreen tool window layout
+    text: Widescreen tool window layout
 checksum.failed:
-  text: Checksum mismatch. Try again later
+    text: Checksum mismatch. Try again later
 child.tag.0.should.be.defined:
-  text: '''''{0}'''' child tag should be defined'
+    text: '''''{0}'''' child tag should be defined'
 code.folding.settings:
-  text: Code Folding Settings
+    text: Code Folding Settings
 column.description:
-  text: Description
+    text: Description
 column.plugins.category:
-  text: Category
+    text: Category
 column.plugins.date:
-  text: Date
+    text: Date
 column.plugins.downloads:
-  text: Downloads
+    text: Downloads
 column.plugins.name:
-  text: Name
+    text: Name
 column.plugins.rate:
-  text: Rating
+    text: Rating
 column.plugins.tag:
-  text: Tag
+    text: Tag
 column.todo.filter.pattern:
-  text: Pattern
+    text: Pattern
 column.todo.filter.patterns:
-  text: Patterns
+    text: Patterns
 column.todo.filters.name:
-  text: Name
+    text: Name
 column.todo.patterns.case.sensitive:
-  text: Case Sensitive
+    text: Case Sensitive
 column.todo.patterns.icon:
-  text: Icon
+    text: Icon
 column.todo.patterns.pattern:
-  text: Pattern
+    text: Pattern
+combobox.console.default.encoding.label:
+    text: 'Default Encoding:'
 combobox.icon.theme:
-  text: Icon Theme
+    text: Icon Theme
 combobox.icon.theme.ui.default:
-  text: <From UI Theme>
+    text: <From UI Theme>
 combobox.look.and.feel:
-  text: UI Theme
+    text: UI Theme
 command.close.active.editor:
-  text: Close Active Editor
+    text: Close Active Editor
 command.close.all.editors:
-  text: Close All Editors
+    text: Close All Editors
 command.close.all.unmodified.editors:
-  text: Close All Unmodified Editors
+    text: Close All Unmodified Editors
 command.create.class.from.template:
-  text: Create Class From Template
+    text: Create Class From Template
 command.create.directory:
-  text: Create directory
+    text: Create directory
 command.create.enum:
-  text: Create enum
+    text: Create enum
 command.create.file:
-  text: Create file
+    text: Create file
 command.create.file.from.template:
-  text: Create File From Template
+    text: Create File From Template
 command.create.interface:
-  text: Create interface
+    text: Create interface
 command.create.new.package:
-  text: Create new package
+    text: Create new package
 command.create.new.subdirectory:
-  text: Create New Subdirectory
+    text: Create New Subdirectory
 command.create.package:
-  text: Create package
+    text: Create package
 command.find.next:
-  text: Find Next
+    text: Find Next
 command.find.previous:
-  text: Find Previous
+    text: Find Previous
 command.fixing.line.separators:
-  text: fixing line separators
+    text: fixing line separators
 command.go.to.line:
-  text: Go to Line
+    text: Go to Line
 command.go.to.next.split:
-  text: Go to next split
+    text: Go to next split
 command.go.to.prev.split:
-  text: Go to previous split
+    text: Go to previous split
 command.pasting.reference:
-  text: Pasting reference
+    text: Pasting reference
 command.reload.from.disk:
-  text: Reload from Disk
+    text: Reload from Disk
 command.renaming.module:
-  text: Renaming module {0}
+    text: Renaming module {0}
 command.select.all:
-  text: Select All
+    text: Select All
 command.switch.active.editor:
-  text: Switch Active Editor
+    text: Switch Active Editor
 confirm.set.look.and.feel:
-  text: Change &theme
+    text: Change &theme
 connection.failed.message:
-  text: 'Failed to load plugin descriptions from: "{0}"'
+    text: 'Failed to load plugin descriptions from: "{0}"'
 conversion.dialog.text.1:
-  text: The project ''{0}'' has an older format and will be converted. You may not be able to open the project with earlier versions of {1}.
+    text: The project ''{0}'' has an older format and will be converted. You may not be able to open the project with earlier versions of {1}.
 conversion.dialog.text.2:
-  text: '<b> </b><a href="details">Details...</a><br/><br/>Old versions of project files will be saved to: ''''{0}'''''
+    text: '<b> </b><a href="details">Details...</a><br/><br/>Old versions of project files will be saved to: ''''{0}'''''
+copy.reference:
+    text: Cop&y Reference
+copy.references:
+    text: Cop&y References
+copy.relative.path:
+    text: Cop&y Relative Path
+copy.relative.paths:
+    text: Cop&y Relative Paths
 create.default.library.type.action.name:
-  text: Default
+    text: Default
 custom.icon.validation.message:
-  text: Icon is too big to appear in menu
+    text: Icon is too big to appear in menu
 custom.icon.validation.title:
-  text: Icon size is invalid
+    text: Icon size is invalid
 description.copy.text.to.clipboard:
-  text: Copy text to clipboard
+    text: Copy text to clipboard
 description.select.module.file.location:
-  text: The module file will be saved in selected directory
+    text: The module file will be saved in selected directory
 description.select.project.file.directory:
-  text: '{0} file will be stored in this directory'
+    text: '{0} file will be stored in this directory'
 detach.library:
-  text: Detach Library
+    text: Detach Library
 detach.library.from.module:
-  text: |-
-    Detach library ''{0}'' from module ''{1}''?
-    No file on disk will be hurt.
+    text: |-
+        Detach library ''{0}'' from module ''{1}''?
+        No file on disk will be hurt.
 dialog.directory.for.downloaded.files.title:
-  text: Downloaded files will be copied to selected directory
+    text: Downloaded files will be copied to selected directory
 dialog.title.abbreviation:
-  text: Abbreviation
+    text: Abbreviation
 dialog.title.choose.color:
-  text: Choose Color
+    text: Choose Color
 dialog.title.clear.read.only.file.status:
-  text: Clear Read-Only Status
+    text: Clear Read-Only Status
 dialog.title.convert.module:
-  text: Convert Module
+    text: Convert Module
 dialog.title.convert.project:
-  text: Convert Project
+    text: Convert Project
 diff.dialog.title:
-  text: Diff Between ''{0}'' and ''{1}''
+    text: Diff Between ''{0}'' and ''{1}''
 directory.module.content.root:
-  text: |
-    The module content root
+    text: |
+        The module content root
 directory.module.file:
-  text: |
-    The module file directory
+    text: |
+        The module file directory
 directory.project.file.directory:
-  text: |
-    The {0} file directory
+    text: |
+        The {0} file directory
 disabled.plugins.warning.message:
-  text: <li>Plugin <b>"{0}"</b> won''t be able to load because required {2, choice, 1#plugin|2#plugins} {1} {2, choice, 1#is|2#are} disabled.</li>
+    text: <li>Plugin <b>"{0}"</b> won''t be able to load because required {2, choice, 1#plugin|2#plugins} {1} {2, choice, 1#is|2#are} disabled.</li>
 display.balloon.notifications:
-  text: Display balloon notifications
+    text: Display balloon notifications
 display.name.firefox.settings:
-  text: Firefox Settings
+    text: Firefox Settings
 dnd.with.alt.pressed.only:
-  text: Drag-n-Drop with ALT pressed only
+    text: Drag-n-Drop with ALT pressed only
 dom.elements.tree.childs.contain.errors:
-  text: Children contain errors
+    text: Children contain errors
 dumb.service.indexing.paused.due.to:
-  text: Indexing paused due to {0}
+    text: Indexing paused due to {0}
 eap.configurable.name:
-  text: Experimental Features
+    text: Experimental Features
 eap.configurable.warning.text:
-  text: These experimental features may change, break, or disappear at any time. We make absolutely no guarantees about what may happen if you turn one of these experiments on, and your IDE may even spontaneously combust.
+    text: These experimental features may change, break, or disappear at any time. We make absolutely no guarantees about what may happen if you turn one of these experiments on, and your IDE may even spontaneously combust.
 editbox.customfiletype.block.comment.end:
-  text: 'Block comment end:'
+    text: 'Block comment end:'
 editbox.customfiletype.block.comment.start:
-  text: 'Block comment start:'
+    text: 'Block comment start:'
 editbox.customfiletype.description:
-  text: 'Description:'
+    text: 'Description:'
 editbox.customfiletype.hex.prefix:
-  text: 'Hex prefix:'
+    text: 'Hex prefix:'
 editbox.customfiletype.line.comment:
-  text: 'Line comment:'
+    text: 'Line comment:'
 editbox.customfiletype.name:
-  text: 'Name:'
+    text: 'Name:'
 editbox.customfiletype.number.postfixes:
-  text: 'Number postfixes:'
+    text: 'Number postfixes:'
 editbox.default.encoding.for.properties.files:
-  text: 'Default encoding for properties files:'
+    text: 'Default encoding for properties files:'
 editbox.export.settings.to:
-  text: 'Export settings to:'
+    text: 'Export settings to:'
 editbox.export.to.file:
-  text: 'Export to file:'
+    text: 'Export to file:'
 editbox.ignore.files.and.folders:
-  text: Ignore files and folders
+    text: Ignore files and folders
 editbox.keyword:
-  text: 'Keyword:'
+    text: 'Keyword:'
 editbox.license.license.key:
-  text: 'License key:'
+    text: 'License key:'
 editbox.license.user.name:
-  text: 'User name:'
+    text: 'User name:'
 editbox.line.number:
-  text: 'Line number:'
+    text: 'Line number:'
 editbox.plugin.change.notes:
-  text: Change notes
+    text: Change notes
 editbox.plugin.description:
-  text: Description
+    text: Description
 element.method:
-  text: method
+    text: method
 element.of.class:
-  text: of class
+    text: of class
 element.of.interface:
-  text: of interface
+    text: of interface
 encoding.name.system.default:
-  text: '<System Default: {0}>'
+    text: '<System Default: {0}>'
 encodings.dialog.caption:
-  text: |-
-    <html>To change encoding {0} uses for a file or directory, click an item and then select encoding from the Default Encoding list.<br><br>
-     Built-in file encoding (e.g. JSP, HTML or XML) overrides encoding you specify here.<br>
-     If not specified, files and directories inherit encoding settings from the parent directory or from the Project Encoding.</html>
+    text: |-
+        <html>To change encoding {0} uses for a file or directory, click an item and then select encoding from the Default Encoding list.<br><br>
+         Built-in file encoding (e.g. JSP, HTML or XML) overrides encoding you specify here.<br>
+         If not specified, files and directories inherit encoding settings from the parent directory or from the Project Encoding.</html>
 error.0.browser.path.not.specified:
-  text: '{0} browser path is not specified.'
+    text: '{0} browser path is not specified.'
 error.adding.action.without.icon.to.toolbar:
-  text: You are adding an action without icon to the toolbar. The default icon will be added to this action.
+    text: You are adding an action without icon to the toolbar. The default icon will be added to this action.
 error.adding.module.to.project:
-  text: 'Error adding module to project: {0}'
+    text: 'Error adding module to project: {0}'
 error.cannot.convert.project:
-  text: 'Cannot convert project: {0}'
+    text: 'Cannot convert project: {0}'
 error.cannot.create.temp.dir:
-  text: Unable to create temp directory ''{0}''
+    text: Unable to create temp directory ''{0}''
 error.cannot.find.file:
-  text: Cannot find file {0}
+    text: Cannot find file {0}
 error.cannot.load.project:
-  text: 'Cannot load project: {0}'
+    text: 'Cannot load project: {0}'
 error.cannot.set.look.and.feel:
-  text: <html><body>Cannot set {0} theme:<br>{1}</body></html>
+    text: <html><body>Cannot set {0} theme:<br>{1}</body></html>
 error.cannot.start.browser:
-  text: 'Cannot start browser: {0}'
+    text: 'Cannot start browser: {0}'
 error.checkforupdates.connection.failed:
-  text: Connection failed. Please check your network connection and try again.
+    text: Connection failed. Please check your network connection and try again.
 error.connection.failed.redirects:
-  text: 'Connection failed: too many redirects'
+    text: 'Connection failed: too many redirects'
 error.connection.failed.with.http.code.N:
-  text: Connection failed with HTTP code {0}
+    text: Connection failed with HTTP code {0}
 error.content.root.already.defined.for.module:
-  text: |-
-    Content root "{0}" already defined for module "{1}".
-    Two modules in a project cannot share the same content root.
+    text: |-
+        Content root "{0}" already defined for module "{1}".
+        Two modules in a project cannot share the same content root.
 error.correct.pattern.syntax.errors.first:
-  text: Correct pattern syntax errors first
+    text: Correct pattern syntax errors first
 error.failed.to.create.directory:
-  text: Failed to create directory "{0}"
+    text: Failed to create directory "{0}"
 error.favorites.list.already.exists:
-  text: Favorites list with name ''{0}'' already exists
+    text: Favorites list with name ''{0}'' already exists
 error.file.contains.no.settings.to.import:
-  text: |-
-    The file {0} contains no settings to import.
-    {1}
+    text: |-
+        The file {0} contains no settings to import.
+        {1}
 error.file.does.not.exist:
-  text: File {0} does not exist.
+    text: File {0} does not exist.
 error.file.download.failed:
-  text: 'Downloading failed: {0}'
+    text: 'Downloading failed: {0}'
 error.file.not.found.message:
-  text: File ''{0}'' not found
+    text: File ''{0}'' not found
 error.files.of.this.type.cannot.be.opened:
-  text: Files of this type cannot be opened in {0}
+    text: Files of this type cannot be opened in {0}
 error.filter.name.should.be.specified:
-  text: Filter name should be specified
+    text: Filter name should be specified
 error.filter.should.contain.at.least.one.pattern:
-  text: Filter should contain at least one pattern
+    text: Filter should contain at least one pattern
 error.filter.with.the.same.name.already.exists:
-  text: Filter with the same name already exists
+    text: Filter with the same name already exists
 error.invalid.template.file.name.or.extension:
-  text: Invalid template file name or extension
+    text: Invalid template file name or extension
 error.keyword.cannot.be.empty:
-  text: Keyword cannot be empty
+    text: Keyword cannot be empty
 error.keyword.may.not.contain.spaces:
-  text: Keyword may not contain spaces
+    text: Keyword may not contain spaces
 error.license.collision:
-  text: |-
-    This license is being used elsewhere on the network by {0}.
-    Only one active computer at a time can use the license.
-    Would you like to re-activate this computer?
-    Click Yes to re-activate, or No to shutdown {1}.
+    text: |-
+        This license is being used elsewhere on the network by {0}.
+        Only one active computer at a time can use the license.
+        Would you like to re-activate this computer?
+        Click Yes to re-activate, or No to shutdown {1}.
 error.list.of.plugins.was.not.loaded:
-  text: 'List of plugins was not loaded: {0}'
+    text: 'List of plugins was not loaded: {0}'
+error.loading.package.list:
+    text: Error loading package list:{0}
 error.malformed.url:
-  text: 'Malformed url: {0}'
+    text: 'Malformed url: {0}'
 error.message.cannot.make.files.writable:
-  text: |-
-    Cannot make the following files writable:
-    {0}
+    text: |-
+        Cannot make the following files writable:
+        {0}
 error.message.cannot.modify.file.0:
-  text: Cannot modify file ''{0}''
+    text: Cannot modify file ''{0}''
 error.message.unable.to.create.file:
-  text: Unable to create file ''{0}''
+    text: Unable to create file ''{0}''
 error.module.already.exists:
-  text: Module named ''{0}'' already exists
+    text: Module named ''{0}'' already exists
 error.module.file.does.not.exist:
-  text: The specified path to module file does not exist
+    text: The specified path to module file does not exist
 error.module.not.iml:
-  text: |-
-    The "{0}"
-    is not an {1} module file (.iml)
+    text: |-
+        The "{0}"
+        is not an {1} module file (.iml)
 error.module.with.name.already.exists:
-  text: Module with name "{0}" already exists in the project
+    text: Module with name "{0}" already exists in the project
 error.name.cannot.be.empty:
-  text: Name cannot be empty
+    text: Name cannot be empty
 error.name.should.be.specified:
-  text: A name should be specified
+    text: A name should be specified
+error.occurred.please.check.your.internet.connection:
+    text: Error occurred. Please, check your internet connection.
 error.parsing.file.template:
-  text: 'Error parsing file template: {0}'
+    text: 'Error parsing file template: {0}'
 error.please.enter.a.file.name:
-  text: Please enter a file name
+    text: Please enter a file name
 error.please.specify.module.file.location:
-  text: Please specify module file location
+    text: Please specify module file location
 error.please.specify.new.name.for.schema:
-  text: Please, specify new name for scheme ''{0}''.
+    text: Please, specify new name for scheme ''{0}''.
 error.please.specify.path.to.module.file:
-  text: Please specify path to {0} module file (.iml)
+    text: Please specify path to {0} module file (.iml)
 error.please.specify.path.to.web.browser:
-  text: Please specify a path to web browser in {0} | Web Browsers
+    text: Please specify a path to web browser in {0} | Web Browsers
 error.please.specify.template.extension:
-  text: Please specify template extension
+    text: Please specify template extension
 error.please.specify.template.name:
-  text: Please specify template name
+    text: Please specify template name
 error.plugin.download.failed:
-  text: Plugin download failed
+    text: Plugin download failed
 error.plugin.was.not.installed:
-  text: 'Plugin {0} was not installed: {1}'
+    text: 'Plugin {0} was not installed: {1}'
 error.plugins.should.not.have.cyclic.dependencies:
-  text: |-
-    Plugins should not have cyclic dependencies:
-    {0}
+    text: |-
+        Plugins should not have cyclic dependencies:
+        {0}
 error.plugins.were.not.loaded:
-  text: |-
-    Error loading plugins:
-    {0}
-    Plugins were not loaded.
-    Correct the above error and restart IDEA.
+    text: |-
+        Error loading plugins:
+        {0}
+        Plugins were not loaded.
+        Correct the above error and restart IDEA.
 error.plugins.without.id.found:
-  text: There were plugins without id found, all such plugins were skipped.
+    text: There were plugins without id found, all such plugins were skipped.
 error.problems.found.loading.plugins:
-  text: |
-    Problems found loading plugins:
+    text: |
+        Problems found loading plugins:
 error.project.file.does.not.exist:
-  text: Cannot load {0}. The file does not exist.
+    text: Cannot load {0}. The file does not exist.
 error.project.file.is.corrupted:
-  text: Project file is corrupted
+    text: Project file is corrupted
 error.reading.settings.file:
-  text: |-
-    Error reading file {0}.
-    There was {1}
+    text: |-
+        Error reading file {0}.
+        There was {1}
 
-    {2}
+        {2}
 error.reading.settings.file.2:
-  text: |-
-    Error reading file {0}.
+    text: |-
+        Error reading file {0}.
 
-    {1}
+        {1}
 error.required.plugin.disabled:
-  text: 'Plugin "{0}" was not loaded: required plugin "{1}" is disabled.'
+    text: 'Plugin "{0}" was not loaded: required plugin "{1}" is disabled.'
 error.required.plugin.not.installed:
-  text: 'Plugin "{0}" was not loaded: required plugin "{1}" not installed.'
+    text: 'Plugin "{0}" was not loaded: required plugin "{1}" not installed.'
 error.saving.license.data:
-  text: |-
-    Error saving license data.
-    {0}
+    text: |-
+        Error saving license data.
+        {0}
 error.saving.statistic.failed.to.create.folder:
-  text: Cannot create folder {0} to save system information.
+    text: Cannot create folder {0} to save system information.
 error.saving.statistics:
-  text: 'Error saving system information: {0}'
+    text: 'Error saving system information: {0}'
 error.source.directory.should.be.under.module.content.root.directory:
-  text: Source directory should be under module content root directory
+    text: Source directory should be under module content root directory
 error.template.with.such.name.already.exists:
-  text: Template with such name already exists. Please specify a different template name
+    text: Template with such name already exists. Please specify a different template name
 error.text.file.already.exists:
-  text: |-
-    File {0} already exists
-    Do you want overwrite it or to append?
+    text: |-
+        File {0} already exists
+        Do you want overwrite it or to append?
 error.tips.not.found:
-  text: Tips not found.  Make sure you installed {0} correctly.
+    text: Tips not found.  Make sure you installed {0} correctly.
 error.unable.to.parse.template.message:
-  text: |-
-    Unable to parse template "{0}"
-    Error message: {1}
+    text: |-
+        Unable to parse template "{0}"
+        Error message: {1}
 error.unable.to.read.tip.of.the.day:
-  text: <html><body>Unable to read Tip Of The Day ({0}). Make sure {1} is installed properly.</body></html>
+    text: <html><body>Unable to read Tip Of The Day ({0}). Make sure {1} is installed properly.</body></html>
 error.unable.to.save.file.template.using.encoding:
-  text: Unable to save File Template "{0}" using {1}
+    text: Unable to save File Template "{0}" using {1}
 error.writing.settings:
-  text: |-
-    Error writing settings.
+    text: |-
+        Error writing settings.
 
-    {0}
+        {0}
 error.writing.to.file:
-  text: 'Error writing to file: {0}'
+    text: 'Error writing to file: {0}'
 errortree.error:
-  text: 'Error:'
+    text: 'Error:'
 errortree.information:
-  text: 'Information:'
+    text: 'Information:'
 errortree.note:
-  text: 'Note:'
+    text: 'Note:'
 errortree.prefix.line:
-  text: line ({0})
+    text: line ({0})
 errortree.warning:
-  text: 'Warning:'
+    text: 'Warning:'
 exception.missing.data:
-  text: 'No data: {0}'
+    text: 'No data: {0}'
 fail.open.project.message:
-  text: Unable to open project from ''{0}''
+    text: Unable to open project from ''{0}''
+failed.to.install.package.dialog.title:
+    text: Failed to install package ''{0}''
+failed.to.install.packages.dialog.title:
+    text: Failed to install packages
 favorites.empty.screen:
-  text: 'There is nothing to display. To add item to favorites list use: Main Menu -> View -> Add To Favorites'
+    text: 'There is nothing to display. To add item to favorites list use: Main Menu -> View -> Add To Favorites'
 favorites.list.unnamed:
-  text: Unnamed{0}
+    text: Unnamed{0}
 file.changed.externally.message:
-  text: File was changed on disk.
+    text: File was changed on disk.
 file.changed.externally.reload:
-  text: Reload
+    text: Reload
 file.chooser.completion.ad.text:
-  text: Use {0} to keep tail of the path
+    text: Use {0} to keep tail of the path
 file.chooser.completion.no.suggestions:
-  text: No suggestions
+    text: No suggestions
 file.chooser.completion.path.variables.text:
-  text: Path Variables
+    text: Path Variables
 file.chooser.hide.path:
-  text: Hide path
+    text: Hide path
 file.chooser.hide.path.tooltip.text:
-  text: Show/Hide path text field
+    text: Show/Hide path text field
 file.chooser.show.path:
-  text: Show path
+    text: Show path
 file.encoding.option.create.utf8.files:
-  text: 'Create UTF-8 files:'
+    text: 'Create UTF-8 files:'
 file.encoding.option.encoding.column:
-  text: Encoding
+    text: Encoding
 file.encoding.option.global.encoding:
-  text: Global Encoding
+    text: Global Encoding
 file.encoding.option.path.column:
-  text: Path
+    text: Path
 file.encoding.option.project.encoding:
-  text: Project Encoding
+    text: Project Encoding
 file.encoding.option.properties.files:
-  text: Properties Files (*.properties)
+    text: Properties Files (*.properties)
 file.encoding.option.warning.always:
-  text: <html> {0} will add <a>UTF-8 BOM</a> to every created file in UTF-8 encoding</html>
+    text: <html> {0} will add <a>UTF-8 BOM</a> to every created file in UTF-8 encoding</html>
 file.encoding.option.warning.never:
-  text: <html> {0} will NOT add <a>UTF-8 BOM</a> to every created file in UTF-8 encoding</html>
+    text: <html> {0} will NOT add <a>UTF-8 BOM</a> to every created file in UTF-8 encoding</html>
 file.encoding.option.warning.windows.only:
-  text: <html> {0} will add <a>UTF-8 BOM</a> to every created UTF-8 file only when it's running under Windows.</html>
+    text: <html> {0} will add <a>UTF-8 BOM</a> to every created UTF-8 file only when it's running under Windows.</html>
 file.encodings.configurable:
-  text: File Encodings
+    text: File Encodings
 file.encodings.not.configured:
-  text: Encodings are not configured
+    text: Encodings are not configured
 file.structure.toggle.show.inherited:
-  text: '&Show inherited members'
+    text: '&Show inherited members'
 filetype.description.ant:
-  text: ANT buildfiles
+    text: ANT buildfiles
 filetype.description.class:
-  text: Java class files
+    text: Java class files
 filetype.description.dtd:
-  text: XML Document Type Definition
+    text: XML Document Type Definition
 filetype.description.gui.designer.form:
-  text: GUI Designer forms
+    text: GUI Designer forms
 filetype.description.html:
-  text: HTML files
+    text: HTML files
 filetype.description.idea.module:
-  text: Consulo Module
+    text: Consulo Module
 filetype.description.idea.project:
-  text: Consulo Project
+    text: Consulo Project
 filetype.description.idea.workspace:
-  text: Consulo Workspace
+    text: Consulo Workspace
 filetype.description.java:
-  text: Java source files
+    text: Java source files
 filetype.description.jsp:
-  text: Java Server Page files
+    text: Java Server Page files
 filetype.description.jspx:
-  text: JSPx files
+    text: JSPx files
 filetype.description.unknown:
-  text: UNKNOWN
+    text: UNKNOWN
 filetype.description.xhtml:
-  text: XHTML files
+    text: XHTML files
 filetype.description.xml:
-  text: XML files
+    text: XML files
 filter.all.file.types:
-  text: All file types
+    text: All file types
 finished.with.exit.code.text.message:
-  text: Process finished with exit code {0}
+    text: Process finished with exit code {0}
 general.settings:
-  text: General Settings
+    text: General Settings
 global.libraries.display.name:
-  text: Libraries
+    text: Libraries
 global.settings.separator:
-  text: Global Settings
+    text: Global Settings
 go.to.class.action.description:
-  text: Quickly navigate to a {0} by name
+    text: Quickly navigate to a {0} by name
 go.to.class.dumb.mode.message:
-  text: Go To {0} action is not available until indices are built, using Go To File instead
+    text: Go To {0} action is not available until indices are built, using Go To File instead
 go.to.class.kind.text:
-  text: class
+    text: class
 go.to.class.toolwindow.title:
-  text: '{0} matching pattern'
+    text: '{0} matching pattern'
 go.to.file.toolwindow.title:
-  text: Files matching pattern
+    text: Files matching pattern
 goto.custom.region.command:
-  text: Go to Custom Region
+    text: Go to Custom Region
 goto.custom.region.menu.item:
-  text: Custom Region...
+    text: Custom Region...
 goto.custom.region.message.dumb.mode:
-  text: Go to Custom Region action is not available until indices are built.
+    text: Go to Custom Region action is not available until indices are built.
 goto.custom.region.message.unavailable:
-  text: There are no custom folding regions in the current file.
+    text: There are no custom folding regions in the current file.
 goto.inspection.action.text:
-  text: '&Run Inspection by Name...'
+    text: '&Run Inspection by Name...'
 group.antialiasing.mode:
-  text: Antialiasing
+    text: Antialiasing
 group.customfiletype.syntax.highlighting:
-  text: Syntax Highlighting
+    text: Syntax Highlighting
 group.general.options:
-  text: General Options
+    text: General Options
 group.group.by:
-  text: Group By
+    text: Group By
 group.http.proxy:
-  text: HTTP Proxy
+    text: HTTP Proxy
 group.presentation.mode:
-  text: Presentation Mode
+    text: Presentation Mode
 group.settings.process.tab.close:
-  text: On Closing Tool Window with Running Process
+    text: On Closing Tool Window with Running Process
 group.todo.filter.patterns:
-  text: Patterns
+    text: Patterns
 group.transparency:
-  text: Transparency
+    text: Transparency
 group.ui.options:
-  text: UI Options
+    text: UI Options
 group.vendor:
-  text: Vendor
+    text: Vendor
 group.view.options:
-  text: View Options
+    text: View Options
 group.web.browser:
-  text: Web Browser
+    text: Web Browser
 group.window.options:
-  text: Window Options
+    text: Window Options
 handle.ro.file.status.failed:
-  text: <html>Failed to change read-only status for the following files:<br>{0}</html>
+    text: <html>Failed to change read-only status for the following files:<br>{0}</html>
 handle.ro.file.status.type.using.file.system:
-  text: using file system
+    text: using file system
 help.topic.not.found.error:
-  text: Help topic "{0}" not found
+    text: Help topic "{0}" not found
 hierarchy.call.next.occurence.name:
-  text: Go to next call
+    text: Go to next call
 hierarchy.call.prev.occurence.name:
-  text: Go to previous call
+    text: Go to previous call
 hierarchy.legend.method.defined.in.superclass:
-  text: method is not defined in the class but defined in superclass
+    text: method is not defined in the class but defined in superclass
 hierarchy.legend.method.is.defined.in.class:
-  text: method is defined in the class
+    text: method is defined in the class
 hierarchy.legend.method.should.be.defined:
-  text: method should be defined since the class is not abstract
+    text: method should be defined since the class is not abstract
 hierarchy.method.next.occurence.name:
-  text: Go to next method
+    text: Go to next method
 hierarchy.method.prev.occurence.name:
-  text: Go to previous method
+    text: Go to previous method
 hierarchy.scope.all:
-  text: All
+    text: All
 hierarchy.scope.project:
-  text: Production
+    text: Production
 hierarchy.scope.test:
-  text: Test
+    text: Test
 hierarchy.scope.this.class:
-  text: This Class
+    text: This Class
 hierarchy.type.next.occurence.name:
-  text: Go to next type
+    text: Go to next type
 hierarchy.type.prev.occurence.name:
-  text: Go to previous type
+    text: Go to previous type
 ibus.blocking.warn.message:
-  text: IBus prior to 1.5.11 may cause input problems. See <a href="https://youtrack.jetbrains.com/issue/IDEA-78860">IDEA-78860</a> for details.
+    text: IBus prior to 1.5.11 may cause input problems. See <a href="https://youtrack.jetbrains.com/issue/IDEA-78860">IDEA-78860</a> for details.
 ide.hide.navigation.on.focus.loss.description:
-  text: Hide navigation popups on focus loss
+    text: Hide navigation popups on focus loss
 ide.postpone.action:
-  text: Postpone
+    text: Postpone
 ide.restart.action:
-  text: Restart
+    text: Restart
 ide.set.hidpi.mode:
-  text: You may need to manually configure the HiDPI mode to prevent UI scaling issues. See the <a href="https://intellij-support.jetbrains.com/hc/en-us/articles/115001260010">troubleshooting</a> guide.
+    text: You may need to manually configure the HiDPI mode to prevent UI scaling issues. See the <a href="https://intellij-support.jetbrains.com/hc/en-us/articles/115001260010">troubleshooting</a> guide.
 ide.shutdown.action:
-  text: Shutdown
+    text: Shutdown
 ide.sigint.ignored.message:
-  text: The IDE ignores SIGINT - "Stop" button in run configurations may not work. See <a href="https://youtrack.jetbrains.com/issue/IDEA-157989">IDEA-157989</a> for details.
+    text: The IDE ignores SIGINT - "Stop" button in run configurations may not work. See <a href="https://youtrack.jetbrains.com/issue/IDEA-157989">IDEA-157989</a> for details.
 idea.dark.look.and.feel:
-  text: Darcula
+    text: Darcula
 idea.intellij.look.and.feel:
-  text: IntelliJ
+    text: IntelliJ
 import.project.chooser.header:
-  text: <html>Select {0}</html>
+    text: <html>Select {0}</html>
+install.package.failure:
+    text: Error occurred when installing package ''{0}''. <a href="xxx">Details...</a>
 item.file.templates:
-  text: File templates
+    text: File templates
 jar.build.include.in.jar.file:
-  text: 'Include in jar file:'
+    text: 'Include in jar file:'
 jar.build.module.0.jar.settings:
-  text: Module ''{0}'' Jar Settings
+    text: Module ''{0}'' Jar Settings
 jar.build.modules.to.jar:
-  text: Choose Modules to Jar
+    text: Choose Modules to Jar
 jar.build.on.make:
-  text: Build jars on &make
+    text: Build jars on &make
 label.appearance.caret.blinking:
-  text: Caret blinking
+    text: Caret blinking
 label.appearance.show.inner.whitespaces:
-  text: Show inner whitespaces
+    text: Show inner whitespaces
 label.appearance.show.leading.whitespaces:
-  text: Show leading whitespaces
+    text: Show leading whitespaces
 label.appearance.show.right.margin:
-  text: Show right margin
+    text: Show right margin
 label.appearance.show.trailing.whitespaces:
-  text: Show trailing whitespaces
+    text: Show trailing whitespaces
 label.choosebyname.no.matches.found:
-  text: No matches found
+    text: No matches found
 label.choosebyname.searching:
-  text: Searching...
+    text: Searching...
 label.component.file.location:
-  text: '{0} file &location:'
+    text: '{0} file &location:'
 label.description:
-  text: Description
+    text: Description
 label.did.you.know:
-  text: Did you know ... ?
+    text: Did you know ... ?
 label.enter.new.abbreviation:
-  text: 'Enter new abbreviation:'
+    text: 'Enter new abbreviation:'
 label.extension:
-  text: 'Extension:'
+    text: 'Extension:'
 label.file.name:
-  text: 'File name:'
+    text: 'File name:'
 label.font.name:
-  text: 'Name:'
+    text: 'Name:'
 label.font.size:
-  text: 'Size:'
+    text: 'Size:'
 label.icon.path:
-  text: '&Icon Path:'
+    text: '&Icon Path:'
 label.implements.method.of_class_or_interface.name:
-  text: implements {0} {1} {2}.
+    text: implements {0} {1} {2}.
 label.implements.method.of_interfaces:
-  text: 'implements methods of the following classes/interfaces:'
+    text: 'implements methods of the following classes/interfaces:'
 label.inactive.timeout.sec:
-  text: sec.
+    text: sec.
 label.java.source.files.have.been.found:
-  text: |-
-    Source files for your module have been found. Please choose directories that will
-    be marked as source paths. These paths correspond to default (root, unnamed, top level) packages.
-    Note: the program will recognize only those source files, that are located under source directories.
+    text: |-
+        Source files for your module have been found. Please choose directories that will
+        be marked as source paths. These paths correspond to default (root, unnamed, top level) packages.
+        Note: the program will recognize only those source files, that are located under source directories.
 label.library.will.be.created.description.text:
-  text: '{0} level library <b>{1}</b> with {2} {2, choice, 1#file|2#files} will be created'
+    text: '{0} level library <b>{1}</b> with {2} {2, choice, 1#file|2#files} will be created'
 label.macro.preview:
-  text: Macro preview
+    text: Macro preview
 label.macros:
-  text: Macros
+    text: Macros
 label.method:
-  text: Method {0}
+    text: Method {0}
 label.missed.libraries.prefix:
-  text: 'The following libraries are missing:'
+    text: 'The following libraries are missing:'
 label.missed.libraries.text:
-  text: '{0}.<br>Class ''''{1}'''' not found'
+    text: '{0}.<br>Class ''''{1}'''' not found'
 label.module.content.root:
-  text: 'Module content &root:'
+    text: 'Module content &root:'
 label.module.file.will.be.saved.in:
-  text: 'Module file will be saved in:'
+    text: 'Module file will be saved in:'
 label.module.name:
-  text: '&Module name:'
+    text: '&Module name:'
 label.name:
-  text: 'Name:'
+    text: 'Name:'
 label.no.actions.found:
-  text: No actions found
+    text: No actions found
 label.no.enabled.actions.found:
-  text: No enabled actions found
+    text: No enabled actions found
 label.no.files.found:
-  text: No files found
+    text: No files found
 label.no.inspections.found:
-  text: No inspections found
+    text: No inspections found
 label.no.matches.found:
-  text: no matches found
+    text: no matches found
 label.no.matches.found.in.project:
-  text: No matches found in project
+    text: No matches found in project
 label.no.menu.actions.found:
-  text: No actions in main menu found
+    text: No actions in main menu found
 label.no.non.java.files.found:
-  text: No matches found in project
+    text: No matches found in project
 label.option.appearance:
-  text: 'Appearance: {0}'
+    text: 'Appearance: {0}'
 label.option.mouse:
-  text: 'Mouse: {0}'
+    text: 'Mouse: {0}'
 label.option.tabs:
-  text: 'Tabs: {0}'
+    text: 'Tabs: {0}'
 label.option.ui:
-  text: 'UI: {0}'
+    text: 'UI: {0}'
 label.option.view:
-  text: 'View: {0}'
+    text: 'View: {0}'
 label.option.virtual.space:
-  text: 'Virtual Space: {0}'
+    text: 'Virtual Space: {0}'
 label.option.window:
-  text: 'Window: {0}'
+    text: 'Window: {0}'
 label.override.laf.font:
-  text: 'Font:'
+    text: 'Font:'
 label.overrides.method.of_class_or_interface.name:
-  text: overrides {0} {1} {2}.
+    text: overrides {0} {1} {2}.
 label.path.to.module.file:
-  text: 'Path to {0} module file (.iml):'
+    text: 'Path to {0} module file (.iml):'
 label.please.enter.project.name:
-  text: Please enter a name to create a new {0} {1}.
+    text: Please enter a name to create a new {0} {1}.
 label.plugin.home.page:
-  text: Plugin home page
+    text: Plugin home page
 label.plugin.vendor.email:
-  text: 'E-mail:'
+    text: 'E-mail:'
 label.plugin.vendor.home.page:
-  text: 'Home page:'
+    text: 'Home page:'
 label.plugin.vendor.name:
-  text: 'Name:'
+    text: 'Name:'
 label.project.files.location:
-  text: 'Project &location:'
+    text: 'Project &location:'
 label.project.jdk:
-  text: 'Project SDK:'
+    text: 'Project SDK:'
 label.project.name:
-  text: 'Project n&ame:'
+    text: 'Project n&ame:'
 label.project.roots.have.been.found:
-  text: |-
-    Source files for your project have been found. Please choose directories that will
-    be added to the project roots. These paths correspond to default (root, unnamed, top level) packages.
-    Note: the program will recognize only those source files, that are located under these directories.
+    text: |-
+        Source files for your project have been found. Please choose directories that will
+        be added to the project roots. These paths correspond to default (root, unnamed, top level) packages.
+        Note: the program will recognize only those source files, that are located under these directories.
 label.project.roots.not.found:
-  text: Source files for your project not found.
+    text: Source files for your project not found.
 label.scope:
-  text: 'Scope:'
+    text: 'Scope:'
 label.scope.contains.files:
-  text: Scope contains {0} of total {1} files
+    text: Scope contains {0} of total {1} files
 label.scope.editor.caret.position:
-  text: pos:{0}
+    text: pos:{0}
 label.scope.pattern:
-  text: '&Pattern:'
+    text: '&Pattern:'
 label.select.compiler.output.path:
-  text: 'Select c&ompiler output path:'
+    text: 'Select c&ompiler output path:'
 label.select.module.type:
-  text: 'Module type:'
+    text: 'Module type:'
 label.source.directory:
-  text: 'The following directory will be marked as a source directory:'
+    text: 'The following directory will be marked as a source directory:'
 label.tabs.show.directory.for.non.unique.filenames:
-  text: Show directory in editor tabs for non-unique filenames
+    text: Show directory in editor tabs for non-unique filenames
 label.text.antialiasing.scope.editor:
-  text: 'Editor:'
+    text: 'Editor:'
 label.text.antialiasing.scope.ide:
-  text: 'IDE:'
+    text: 'IDE:'
 label.todo.filter.name:
-  text: 'Name:'
+    text: 'Name:'
 label.todo.filters:
-  text: Filters
+    text: Filters
 label.todo.icon:
-  text: 'Icon:'
+    text: 'Icon:'
 label.todo.pattern:
-  text: 'Pattern:'
+    text: 'Pattern:'
 label.todo.patterns:
-  text: Patterns
+    text: Patterns
 label.transparency.delay.ms:
-  text: 'Delay (ms):'
+    text: 'Delay (ms):'
 label.transparency.ratio:
-  text: 'Ratio:'
+    text: 'Ratio:'
 license.panel.buildit.evaluation.expires.in.many:
-  text: '{0} days left'
+    text: '{0} days left'
 license.panel.buildit.evaluation.expires.in.one:
-  text: 1 day left
+    text: 1 day left
 license.panel.current.floating.ticket.description:
-  text: Floating ticket obtained
+    text: Floating ticket obtained
 license.panel.current.permanent.ticket.description:
-  text: Permanent ticket obtained
+    text: Permanent ticket obtained
 license.panel.default.server.discover:
-  text: Discover
+    text: Discover
 license.panel.discover.license.server.error.message:
-  text: Unable to discover license server url
+    text: Unable to discover license server url
 license.panel.expirable.license.description:
-  text: The license will expire on {0,date,MMMM dd, yyyy}
+    text: The license will expire on {0,date,MMMM dd, yyyy}
 license.panel.maintenance.aware.license.description:
-  text: Entitled for free updates and upgrades until {0,date,MMMM dd, yyyy}
+    text: Entitled for free updates and upgrades until {0,date,MMMM dd, yyyy}
 license.panel.perpetual.license.description:
-  text: Valid for {0} version {1}
+    text: Valid for {0} version {1}
 license.panel.ping.license.server.error.message:
-  text: No response from autodetected license server {0}
+    text: No response from autodetected license server {0}
 license.panel.ping.license.server.error.title:
-  text: 'No response from server '
+    text: 'No response from server '
 link.click.here.to.license.server.info:
-  text: More info
+    text: More info
 link.purchase.commercial.license:
-  text: To purchase a commercial license, please visit
+    text: To purchase a commercial license, please visit
 listbox.customfiletype.keywords:
-  text: Keywords
+    text: Keywords
 loading.editors:
-  text: Loading files...
+    text: Loading files...
+loading.in.progress:
+    text: '<html><body style=''''text-align: center;padding-top:20px;''''>Loading...</body></html>'
 local.scopes.node.text:
-  text: Local Scopes
+    text: Local Scopes
 low.disk.space.message:
-  text: Low disk space on a {0} system directory partition
+    text: Low disk space on a {0} system directory partition
 lower.jre.versions.11.message:
-  text: Java versions lower 11 will be not supported in near future. Please migrate to JRE 11+(<a href="ignore">ignore</a>) or <a href="jre">use bundled jre</a>(at next update)
+    text: Java versions lower 11 will be not supported in near future. Please migrate to JRE 11+(<a href="ignore">ignore</a>) or <a href="jre">use bundled jre</a>(at next update)
 macro.class.name:
-  text: Class name
+    text: Class name
 macro.classpath.entry:
-  text: Entry in the classpath the element belongs to
+    text: Entry in the classpath the element belongs to
 macro.column.number:
-  text: Column number
+    text: Column number
 macro.file.dir.relative.to.root:
-  text: File dir relative to the module content root the file belongs to
+    text: File dir relative to the module content root the file belongs to
 macro.file.dir.relative.to.root.fwd.slash:
-  text: File dir relative to the module content root the file belongs to (with forward slashes)
+    text: File dir relative to the module content root the file belongs to (with forward slashes)
 macro.file.dir.relative.to.sourcepath.root:
-  text: File dir relative to the sourcepath root the file belongs to
+    text: File dir relative to the sourcepath root the file belongs to
 macro.file.dir.relative.to.sourcepath.root.fwd.slash:
-  text: File dir relative to the sourcepath root the file belongs to (with forward slashes)
+    text: File dir relative to the sourcepath root the file belongs to (with forward slashes)
 macro.file.directory:
-  text: File directory
+    text: File directory
 macro.file.directory.from.parent:
-  text: Path to $FileDir$ from parent directory with name passed as a parameter
+    text: Path to $FileDir$ from parent directory with name passed as a parameter
 macro.file.directory.name:
-  text: File directory name
+    text: File directory name
 macro.file.directory.relative:
-  text: File directory relative to the project file
+    text: File directory relative to the project file
 macro.file.directory.relative.fwd.slash:
-  text: File directory relative to the project file (with forward slashes)
+    text: File directory relative to the project file (with forward slashes)
 macro.file.encoding:
-  text: File encoding
+    text: File encoding
 macro.file.extension:
-  text: File extension
+    text: File extension
 macro.file.fully.qualified.package:
-  text: File fully qualified package
+    text: File fully qualified package
 macro.file.name:
-  text: File name
+    text: File name
 macro.file.name.without.all.extensions:
-  text: File name without all extensions
+    text: File name without all extensions
 macro.file.name.without.extension:
-  text: File name without extension
+    text: File name without extension
 macro.file.package:
-  text: File package
+    text: File package
 macro.file.parent.directory:
-  text: File parent directory. Takes an optional parameter(name) to find the parent directory
+    text: File parent directory. Takes an optional parameter(name) to find the parent directory
 macro.file.path:
-  text: File path
+    text: File path
 macro.file.path.relative:
-  text: File path relative to the project file
+    text: File path relative to the project file
 macro.file.path.relative.fwd.slash:
-  text: File path relative to the project file (with forward slashes)
+    text: File path relative to the project file (with forward slashes)
 macro.file.path.relative.to.root:
-  text: File path relative to the module content root the file belongs to
+    text: File path relative to the module content root the file belongs to
 macro.file.path.relative.to.root.fwd.slash:
-  text: File path relative to the module content root the file belongs to (with forward slashes)
+    text: File path relative to the module content root the file belongs to (with forward slashes)
 macro.file.path.relative.to.sourcepath.root:
-  text: File path relative to the sourcepath root the file belongs to
+    text: File path relative to the sourcepath root the file belongs to
 macro.file.path.relative.to.sourcepath.root.fwd.slash:
-  text: File path relative to the sourcepath root the file belongs to (with forward slashes)
+    text: File path relative to the sourcepath root the file belongs to (with forward slashes)
 macro.fileprompt.preview:
-  text: <filename>
+    text: <filename>
 macro.javadoc.output.directory:
-  text: JavaDoc output directory
+    text: JavaDoc output directory
 macro.line.number:
-  text: Line number
+    text: Line number
 macro.module.file.directory:
-  text: The directory of the module
+    text: The directory of the module
 macro.module.file.name:
-  text: The name of the module file without extension
+    text: The name of the module file without extension
 macro.module.file.path:
-  text: The path of the module file
+    text: The path of the module file
 macro.module.production.output.dir.path:
-  text: The path of the module production output directory
+    text: The path of the module production output directory
 macro.module.profile.name:
-  text: The name of current profile of module
+    text: The name of current profile of module
 macro.module.source.path:
-  text: Module source path
+    text: Module source path
 macro.module.test.output.dir.path:
-  text: The path of the module test output directory
+    text: The path of the module test output directory
 macro.noname:
-  text: <noname>
+    text: <noname>
 macro.output.path:
-  text: Output path
+    text: Output path
 macro.project.classpath:
-  text: Project's classpath
+    text: Project's classpath
 macro.project.file.directory:
-  text: The directory of the project file
+    text: The directory of the project file
 macro.project.file.name:
-  text: The name of the project file without extension
+    text: The name of the project file without extension
 macro.project.file.path:
-  text: The path of the project file
+    text: The path of the project file
 macro.project.source.path:
-  text: Project source path
+    text: Project source path
 macro.project.sourcepath:
-  text: Project's sourcepath
+    text: Project's sourcepath
 macro.prompt:
-  text: Displays a string input dialog
+    text: Displays a string input dialog
 macro.prompt.preview:
-  text: <params>
+    text: <params>
 macro.sourcepath.entry:
-  text: Entry in the sourcepath the element belongs to
+    text: Entry in the sourcepath the element belongs to
+manage.repositories.dialog.title:
+    text: Manage Repositories
 maven.repository.presentable.name:
-  text: Maven repository
+    text: Maven repository
 message.duplicate.plugin.id:
-  text: 'Duplicate plugin id:'
+    text: 'Duplicate plugin id:'
 message.educational.license:
-  text: 1-Year Educational License. {0}
+    text: 1-Year Educational License. {0}
 message.evaluation.N.days:
-  text: '{0} days'
+    text: '{0} days'
 message.evaluation.has.expired:
-  text: Your {0} evaluation has expired. Your session will be limited to 30 minutes.<br>{1}
+    text: Your {0} evaluation has expired. Your session will be limited to 30 minutes.<br>{1}
 message.evaluation.less.than.one.day:
-  text: less than 1 day
+    text: less than 1 day
 message.evaluation.license.expired:
-  text: Your evaluation license has expired. {0} will now exit.
+    text: Your evaluation license has expired. {0} will now exit.
 message.evaluation.one.day:
-  text: 1 day
+    text: 1 day
 message.evaluation.will.expire:
-  text: Thank you for evaluating {0}.<br>Your evaluation license expires in {1}<br><br>{2}
+    text: Thank you for evaluating {0}.<br>Your evaluation license expires in {1}<br><br>{2}
 message.expiration.date:
-  text: 'Expiration date: {0}'
+    text: 'Expiration date: {0}'
 message.files.doesn.t.exists.0.so.the.corresponding.modules.won.t.be.converted.do.you.want.to.continue:
-  text: '<html><body>The following files don''''t exists: <br>{0}The corresponding modules won''''t be converted. Do you want to continue?</body></html>'
+    text: '<html><body>The following files don''''t exists: <br>{0}The corresponding modules won''''t be converted. Do you want to continue?</body></html>'
 message.idea.restart.required:
-  text: Restart {0} to activate changes in plugins?
+    text: Restart {0} to activate changes in plugins?
 message.idea.shutdown.required:
-  text: Shutdown {0} to activate changes in plugins?
+    text: Shutdown {0} to activate changes in plugins?
 message.invalid.license.data:
-  text: Invalid license data. Please, try again.
+    text: Invalid license data. Please, try again.
 message.license.expired:
-  text: Your license has expired
+    text: Your license has expired
 message.license.is.corrupt:
-  text: License is corrupt
+    text: License is corrupt
 message.license.will.expire:
-  text: Your {0} license expires in {1}.
+    text: Your {0} license expires in {1}.
 message.licensed.to:
-  text: Licensed to {0}
+    text: Licensed to {0}
 message.macro.exists:
-  text: There is already a macro called ''{0}''. Overwrite it?
+    text: There is already a macro called ''{0}''. Overwrite it?
 message.module:
-  text: module ''{0}''
+    text: module ''{0}''
 message.module.file.has.an.older.format.do.you.want.to.convert.it:
-  text: Module file has an older format. Do you want to convert it?
+    text: Module file has an older format. Do you want to convert it?
 message.modules:
-  text: modules
+    text: modules
 message.move.modules.to.group:
-  text: Move {0} to the Group {1}
+    text: Move {0} to the Group {1}
 message.no.targets.available:
-  text: No targets available in this context
+    text: No targets available in this context
 message.non.commercial.use.only:
-  text: Non-commercial use only
+    text: Non-commercial use only
 message.nothing.to.show.in.structure.view:
-  text: Nothing to show in the Structure View
+    text: Nothing to show in the Structure View
 message.occurrence.N.of.M:
-  text: Occurrence {0} of {1}
+    text: Occurrence {0} of {1}
 message.open.file.is.project:
-  text: |-
-    {0} is a project file.
-    Would you like to open this project?
+    text: |-
+        {0} is a project file.
+        Would you like to open this project?
 message.open.source.project.license:
-  text: Open Source Project License. {0}
+    text: Open Source Project License. {0}
 message.path.to.fqn.has.been.copied:
-  text: '''''{0}'''' has been copied.'
+    text: '''''{0}'''' has been copied.'
 message.personal.license:
-  text: Personal License
+    text: Personal License
 message.please.ensure.correct.settings:
-  text: Please make sure you have generated the file using 'File|Export Settings' feature.
+    text: Please make sure you have generated the file using 'File|Export Settings' feature.
 message.please.select.element.for.javadoc:
-  text: Please select the element for which you wish to view the documentation
+    text: Please select the element for which you wish to view the documentation
 message.purchase.or.upgrade:
-  text: For information on how to upgrade your evaluation software please go to {0}
+    text: For information on how to upgrade your evaluation software please go to {0}
 message.reference.to.fqn.has.been.copied:
-  text: Reference to ''{0}'' has been copied.
+    text: Reference to ''{0}'' has been copied.
 message.server.no.licenses:
-  text: No suitable licenses left on the license server
+    text: No suitable licenses left on the license server
 message.server.not.available:
-  text: Unable to contact license server
+    text: Unable to contact license server
 message.server.protocol.hijacked:
-  text: License Server response haven''t passed data integrity check. Server hijacked?
+    text: License Server response haven''t passed data integrity check. Server hijacked?
 message.settings.exported.successfully:
-  text: |-
-    Your settings have been successfully exported.
-    You can import settings using ''File|Import Settings''.
+    text: |-
+        Your settings have been successfully exported.
+        You can import settings using ''File|Import Settings''.
 message.settings.imported.successfully:
-  text: |-
-    Settings imported successfully. You have to restart {0} to reload the settings.
-    Shutdown {1}?
+    text: |-
+        Settings imported successfully. You have to restart {0} to reload the settings.
+        Shutdown {1}?
 message.settings.imported.successfully.restart:
-  text: |-
-    Settings imported successfully. You have to restart {0} to reload the settings.
-    Restart {1}?
+    text: |-
+        Settings imported successfully. You have to restart {0} to reload the settings.
+        Restart {1}?
 message.text.creating.deployment.descriptor:
-  text: Creating Deployment Descriptor
+    text: Creating Deployment Descriptor
 message.text.error.creating.deployment.descriptor:
-  text: 'Error Creating Deployment Item: {0}'
+    text: 'Error Creating Deployment Item: {0}'
 message.text.unlock.read.only.files:
-  text: <html><body>The following files are read only. {0} will unlock them.<br>{1}</body></html>
+    text: <html><body>The following files are read only. {0} will unlock them.<br>{1}</body></html>
 message.upgrade.from.previous.required:
-  text: Your license is not valid for use with this version of {0}. <br/> For information on how to upgrade your license please go to {1} <br/> You can also opt for a free time-limited evaluation.
+    text: Your license is not valid for use with this version of {0}. <br/> For information on how to upgrade your license please go to {1} <br/> You can also opt for a free time-limited evaluation.
 message.your.module.was.successfully.converted.br.old.version.was.saved.to.0:
-  text: <html><body>Your module was successfully converted. <br>Old version was saved to ''{0}''</body></html>
+    text: <html><body>Your module was successfully converted. <br>Old version was saved to ''{0}''</body></html>
 missing.libraries.fix.button:
-  text: Fix...
+    text: Fix...
 model.highlighting.identity:
-  text: '{0} with such name already exists'
+    text: '{0} with such name already exists'
 model.highlighting.identity.in.other.file:
-  text: '{0} with such name already exists in file ''''{1}'''''
+    text: '{0} with such name already exists in file ''''{1}'''''
 modern.dark.intellij.look.and.feel:
-  text: Consulo Dark
+    text: Consulo Dark
 modern.white.intellij.look.and.feel:
-  text: Consulo Light
+    text: Consulo Light
 native.modern.white.intellij.look.and.feel:
-  text: Consulo Light (system color)
+    text: Consulo Light (system color)
 new.library.file.chooser.description:
-  text: Select archive files in which library files are located
+    text: Select archive files in which library files are located
 new.library.file.chooser.title:
-  text: New Library Files
+    text: New Library Files
+no.information.available:
+    text: No information available
 node.call.hierarchy.N.usages:
-  text: ({0} usages)
+    text: ({0} usages)
 node.call.hierarchy.unknown.jsp:
-  text: unknown jsp
+    text: unknown jsp
 node.default:
-  text: <default>
+    text: <default>
 node.default.package:
-  text: <Default Package>
+    text: <Default Package>
 node.hierarchy.invalid:
-  text: '[Invalid]'
+    text: '[Invalid]'
 node.hierarchy.java.lang.object:
-  text: All classes are derived from java.lang.Object
+    text: All classes are derived from java.lang.Object
 node.memberchooser.all.classes:
-  text: All classes
+    text: All classes
 node.projectview.external.libraries:
-  text: External Libraries
+    text: External Libraries
 node.projectview.jdk:
-  text: JDK
+    text: JDK
 node.projectview.libraries:
-  text: Libraries
+    text: Libraries
 node.projectview.library:
-  text: '{0} library'
+    text: '{0} library'
 node.structureview.invalid:
-  text: <invalid>
+    text: <invalid>
 node.todo.found.items:
-  text: '{0} (found {1} {1,choice,1#item|2#items})'
+    text: '{0} (found {1} {1,choice,1#item|2#items})'
 node.todo.group:
-  text: '{0} {0,choice,0#items|1#item|2#items}'
+    text: '{0} {0,choice,0#items|1#item|2#items}'
 node.todo.items:
-  text: '{0} {0, choice, 0#items|1#item|2#items}'
+    text: '{0} {0, choice, 0#items|1#item|2#items}'
 node.todo.more.items:
-  text: '...more...'
+    text: '...more...'
 node.todo.no.items.found:
-  text: '{0} (no items found)'
+    text: '{0} (no items found)'
 node.todo.summary:
-  text: Found {0} TODO {0,choice,0#items|1#item|2#items} in {1} {1,choice,0#files|1#file|2#files}
+    text: Found {0} TODO {0,choice,0#items|1#item|2#items} in {1} {1,choice,0#files|1#file|2#files}
 open.url.in.browser.tooltip:
-  text: Open in browser
+    text: Open in browser
 option.hide.tool.window.bars:
-  text: Hide Tool Window Bars
+    text: Hide Tool Window Bars
+options.locale.auto.locale:
+    text: <auto - {0}>
 outdated.jre.version.message1:
-  text: IDE''s Java runtime ({0}) is outdated - this may cause stability issues. Please <a href="switch">switch</a> to the bundled Java runtime, or update to {1} or newer
+    text: IDE''s Java runtime ({0}) is outdated - this may cause stability issues. Please <a href="switch">switch</a> to the bundled Java runtime, or update to {1} or newer
 outdated.jre.version.message2:
-  text: IDE''s Java runtime ({0}) is outdated - this may cause stability issues. Please update to {1} or newer
+    text: IDE''s Java runtime ({0}) is outdated - this may cause stability issues. Please update to {1} or newer
+package.0.installed.successfully:
+    text: Package ''{0}'' installed successfully
+package.installed.successfully:
+    text: Package installed successfully
+package.successfully.uninstalled:
+    text: Package ''{0}'' successfully uninstalled
+package.successfully.upgraded:
+    text: Package {0} successfully upgraded
+packages.settings.latest.version:
+    text: Latest version
+packages.settings.loading:
+    text: Loading Packages List
+packages.settings.package:
+    text: Package
+packages.settings.version:
+    text: Version
+packages.successfully.uninstalled:
+    text: Packages successfully uninstalled
+packages.title:
+    text: Packages
+please.edit.repository.url:
+    text: Please edit repository URL
+please.input.repository.url:
+    text: Please input repository URL
 plugin.advestiser.notification.install.link:
-  text: Install {0, choice, 1#plugin|2#plugins}
+    text: Install {0, choice, 1#plugin|2#plugins}
 plugin.advestiser.notification.text:
-  text: '{0, choice, 1#Plugin|2#Plugins} supporting current file are found'
+    text: '{0, choice, 1#Plugin|2#Plugins} supporting current file are found'
 plugin.deleted.status.tooltip:
-  text: Plugin will be deleted on next startup
+    text: Plugin will be deleted on next startup
 plugin.download.status.tooltip:
-  text: Plugin will be activated on next startup
+    text: Plugin will be activated on next startup
 plugin.info.not.available:
-  text: n/a
+    text: n/a
 plugin.info.unknown:
-  text: unknown
+    text: unknown
 plugin.install.dialog.title:
-  text: Plugin Install
+    text: Plugin Install
 plugin.is.already.installed.status.tooltip:
-  text: Plugin is installed
+    text: Plugin is installed
 plugin.manager.dependencies.detected.message:
-  text: The plugin you want to install requires other plugin{0, choice, 1#|2#s} ({1}) which have to be installed as well. Proceed?
+    text: The plugin you want to install requires other plugin{0, choice, 1#|2#s} ({1}) which have to be installed as well. Proceed?
 plugin.manager.dependencies.detected.title:
-  text: Plugin Dependencies Detected
+    text: Plugin Dependencies Detected
 plugin.manager.enable.column.title:
-  text: Enable
+    text: Enable
 plugin.manager.incompatible.deps.tooltip:
-  text: Required {0, choice, 1#plugin|2#plugins} {1} {0, choice, 1#is|2#are} not enabled
+    text: Required {0, choice, 1#plugin|2#plugins} {1} {0, choice, 1#is|2#are} not enabled
 plugin.manager.incompatible.not.loaded.tooltip:
-  text: The plugin was not loaded
+    text: The plugin was not loaded
 plugin.manager.incompatible.tooltip:
-  text: Plugin is incompatible with current installation
+    text: Plugin is incompatible with current installation
 plugin.manager.optional.dependencies.detected.message:
-  text: The plugin you want to install optionally requires other plugin{0, choice, 1#|2#s} ({1}). Should those be installed as well?
+    text: The plugin you want to install optionally requires other plugin{0, choice, 1#|2#s} ({1}). Should those be installed as well?
 plugin.manager.tooltip.warning:
-  text: Required plugin ''{0}'' is not included
+    text: Required plugin ''{0}'' is not included
 plugin.outdated.version.status.tooltip:
-  text: Plugin has newer version
+    text: Plugin has newer version
 plugin.size.label:
-  text: 'Size:'
+    text: 'Size:'
 plugin.status.available:
-  text: Available
+    text: Available
 plugin.status.installed:
-  text: Installed
+    text: Installed
 plugin.status.not.specified:
-  text: (not specified)
+    text: (not specified)
 plugin.updated.status.tooltip:
-  text: Updated plugin will be activated on next startup
+    text: Updated plugin will be activated on next startup
 plugin.version.label:
-  text: Version
+    text: Version
 popup.title.edit.shortcuts:
-  text: Edit Shortcuts
+    text: Edit Shortcuts
 popup.title.select.library.type:
-  text: Select Library Type
+    text: Select Library Type
 predefined.scope.problems.name:
-  text: Problems
+    text: Problems
 predefined.scope.production.name:
-  text: Production
+    text: Production
 predefined.scope.resources.name:
-  text: Resources
+    text: Resources
 predefined.scope.sources.name:
-  text: Sources
+    text: Sources
 predefined.scope.test.resources.name:
-  text: Test Resources
+    text: Test Resources
 predefined.scope.tests.name:
-  text: Tests
+    text: Tests
 presentation.mode.fon.size:
-  text: 'Font size:'
+    text: 'Font size:'
 progress.connecting:
-  text: Connecting...
+    text: Connecting...
 progress.connecting.to.download.file.text:
-  text: Connecting to ''{0}''...
+    text: Connecting to ''{0}''...
 progress.connecting.to.plugin.manager:
-  text: Connecting to {0}
+    text: Connecting to {0}
 progress.creating.directory:
-  text: Creating directory {0}{1}{2}
+    text: Creating directory {0}{1}{2}
 progress.creating.file:
-  text: Creating file {0}{1}{2}
+    text: Creating file {0}{1}{2}
 progress.creating.interface:
-  text: Creating interface {0}.{1}
+    text: Creating interface {0}.{1}
 progress.creating.package:
-  text: Creating package {0}.{1}
+    text: Creating package {0}.{1}
 progress.deleting:
-  text: Deleting
+    text: Deleting
 progress.deleting.class:
-  text: Deleting class {0}
+    text: Deleting class {0}
 progress.download.0.title:
-  text: Downloading {0}
+    text: Downloading {0}
 progress.download.file.text:
-  text: Downloading ''{0}'' from ''{1}''...
+    text: Downloading ''{0}'' from ''{1}''...
 progress.download.plugins:
-  text: Downloading...
+    text: Downloading...
 progress.downloading.0.of.1.file.text:
-  text: Downloading {0} of {1} {1, choice, 1#file|2#files}...
+    text: Downloading {0} of {1} {1, choice, 1#file|2#files}...
 progress.downloading.list.of.plugins:
-  text: Downloading List of Plugins
+    text: Downloading List of Plugins
 progress.downloading.platform:
-  text: Downloading platform
+    text: Downloading platform
 progress.downloading.plugin:
-  text: Downloading plugin ''{0}''
+    text: Downloading plugin ''{0}''
 progress.extracting.platform:
-  text: Extracting platform
+    text: Extracting platform
 progress.indexing:
-  text: Updating indices...
+    text: Updating indices...
 progress.indexing.scanning:
-  text: Scanning files to index...
+    text: Scanning files to index...
 progress.indexing.updating:
-  text: Indexing...
+    text: Indexing...
 progress.installing.plugins:
-  text: Installing plugins...
+    text: Installing plugins...
 progress.locate.file.text:
-  text: Locating ''{0}''...
+    text: Locating ''{0}''...
 progress.looking.for.todos:
-  text: Looking for TODOs...
+    text: Looking for TODOs...
 progress.performing.indexing.tasks:
-  text: Performing indexing tasks
+    text: Performing indexing tasks
 progress.searching:
-  text: searching...
+    text: searching...
 progress.searching.for.sources:
-  text: Searching for sources in {0}. Please wait.
+    text: Searching for sources in {0}. Please wait.
 progress.text.clickToViewProgressWindow:
-  text: Click to open tasks window
+    text: Click to open tasks window
 progress.text.reloading.file:
-  text: Reloading file...
+    text: Reloading file...
 progress.text.reloading.files:
-  text: Reloading files...
+    text: Reloading files...
 progress.title.reload.files:
-  text: Reload files
+    text: Reload files
 progress.waiting.for.reply.from.plugin.manager:
-  text: Waiting for reply from {0}
+    text: Waiting for reply from {0}
 progress.window.empty.text:
-  text: There are no active background tasks
+    text: There are no active background tasks
 progress.window.title:
-  text: Background Tasks
+    text: Background Tasks
 project.directory.is.not.writable:
-  text: Directory ''{0}'' doesn''t seem to be writeable. Please choose another location.
+    text: Directory ''{0}'' doesn''t seem to be writeable. Please choose another location.
 project.import.default.name:
-  text: ImportedFrom{0}
+    text: ImportedFrom{0}
 project.import.default.name.dotIdea:
-  text: Imported From {0}
+    text: Imported From {0}
 project.import.open.existing:
-  text: |-
-    There is {0} in ''{1}''.
-    Do you want to open the existing project or delete it and import ''{2}''?
+    text: |-
+        There is {0} in ''{1}''.
+        Do you want to open the existing project or delete it and import ''{2}''?
 project.import.open.existing.openExisting:
-  text: Open Existing Project
+    text: Open Existing Project
 project.import.open.existing.reimport:
-  text: Delete Existing Project and Import
+    text: Delete Existing Project and Import
 project.import.select.title:
-  text: Select {0} projects to import
+    text: Select {0} projects to import
 project.import.show.settings.after:
-  text: '&Open Project Structure after import'
+    text: '&Open Project Structure after import'
 project.import.wizard.title:
-  text: Import from {0}
+    text: Import from {0}
 project.new.wizard.module.identification:
-  text: module
+    text: module
 project.new.wizard.project.identification:
-  text: project
+    text: project
 project.settings.separator:
-  text: Project Settings
+    text: Project Settings
 promot.projectwizard.directory.does.not.exist:
-  text: |-
-    {0}"{1}"
-    does not exist. It will be created by {2}.
+    text: |-
+        {0}"{1}"
+        does not exist. It will be created by {2}.
 prompt.browse.icon.for.selected.action:
-  text: Browse icon for selected action (*.png)
+    text: Browse icon for selected action (*.png)
 prompt.check.components.to.import:
-  text: 'Please check all components to import:'
+    text: 'Please check all components to import:'
 prompt.choose.base.class.of.the.hierarchy:
-  text: Choose Base Class of the Hierarchy to Search In
+    text: Choose Base Class of the Hierarchy to Search In
 prompt.choose.export.settings.file.path:
-  text: Choose export file path or directory where to create new file
+    text: Choose export file path or directory where to create new file
 prompt.choose.import.file.path:
-  text: Select the settings file to import or directory where the file is located
+    text: Select the settings file to import or directory where the file is located
 prompt.confirm.project.no.jdk:
-  text: |-
-    Do you want to create a project with no SDK assigned?
-    SDK is required for compiling, debugging and running applications
-    as well as for standard SDK classes resolution.
+    text: |-
+        Do you want to create a project with no SDK assigned?
+        SDK is required for compiling, debugging and running applications
+        as well as for standard SDK classes resolution.
 prompt.create.non.existing.package:
-  text: |-
-    Package {0} does not exist.
-    Do you want to create it?
+    text: |-
+        Package {0} does not exist.
+        Do you want to create it?
 prompt.delete.and:
-  text: and
+    text: and
 prompt.delete.class:
-  text: '{0,choice,1#class|2#classes}'
+    text: '{0,choice,1#class|2#classes}'
 prompt.delete.directory:
-  text: '{0,choice,1#directory|2#directories}'
+    text: '{0,choice,1#directory|2#directories}'
 prompt.delete.directory.paren:
-  text: ({0} {0,choice,1#directory|2#directories})
+    text: ({0} {0,choice,1#directory|2#directories})
 prompt.delete.elements:
-  text: Delete {0}?
+    text: Delete {0}?
 prompt.delete.field:
-  text: '{0,choice,1#field|2#fields}'
+    text: '{0,choice,1#field|2#fields}'
 prompt.delete.file:
-  text: '{0,choice,1#file|2#files}'
+    text: '{0,choice,1#file|2#files}'
 prompt.delete.interface:
-  text: '{0,choice,1#interface|2#interfaces}'
+    text: '{0,choice,1#interface|2#interfaces}'
 prompt.delete.it.anyway:
-  text: Delete it anyway?
+    text: Delete it anyway?
 prompt.delete.method:
-  text: '{0,choice,1#method|2#methods}'
+    text: '{0,choice,1#method|2#methods}'
 prompt.delete.package:
-  text: '{0,choice,1#package|2#packages}'
+    text: '{0,choice,1#package|2#packages}'
 prompt.delete.property:
-  text: '{0,choice,1#property|2#properties}'
+    text: '{0,choice,1#property|2#properties}'
 prompt.delete.symlink:
-  text: '{0,choice,1#symlink|2#symlinks}'
+    text: '{0,choice,1#symlink|2#symlinks}'
 prompt.delete.type.parameter:
-  text: '{0,choice,1#type parameter|2#type parameters}'
+    text: '{0,choice,1#type parameter|2#type parameters}'
 prompt.directory.contains.read.only.files:
-  text: Directory {0} contains read-only file(s). Delete it anyway?
+    text: Directory {0} contains read-only file(s). Delete it anyway?
 prompt.do.you.want.to.action_verb.the.method.from_class:
-  text: Do you want {0} the base {1,choice,1#method|2#methods}?
+    text: Do you want {0} the base {1,choice,1#method|2#methods}?
 prompt.download.and.install.plugin:
-  text: Would you like to download and install plugin ''{0}''?
+    text: Would you like to download and install plugin ''{0}''?
 prompt.enter.a.new.package.name:
-  text: 'Enter a new package name:'
+    text: 'Enter a new package name:'
 prompt.enter.annotation.type.name:
-  text: 'Enter a new @interface name:'
+    text: 'Enter a new @interface name:'
 prompt.enter.macro.name:
-  text: Enter macro name. Leave blank if macro is temporary.
+    text: Enter macro name. Leave blank if macro is temporary.
 prompt.enter.new.class.name:
-  text: 'Enter a new class name:'
+    text: 'Enter a new class name:'
 prompt.enter.new.file.name:
-  text: 'Enter a new file name:'
+    text: 'Enter a new file name:'
 prompt.enter.new.interface.name:
-  text: 'Enter a new interface name:'
+    text: 'Enter a new interface name:'
 prompt.enter.new.library.name:
-  text: Enter new library name
+    text: Enter new library name
 prompt.enter.new.module.name:
-  text: Enter new module name
+    text: Enter new module name
 prompt.enter.new.name:
-  text: Enter New Name
+    text: Enter New Name
 prompt.enter.parameters:
-  text: 'Enter parameters:'
+    text: 'Enter parameters:'
 prompt.enter.project.file.location:
-  text: Enter {0} file location
+    text: Enter {0} file location
 prompt.enter.relative.path.to.module.content.root:
-  text: 'Enter relative path to module content root  (example: java{0}src):'
+    text: 'Enter relative path to module content root  (example: java{0}src):'
 prompt.filechooser.enter.file.name:
-  text: 'Enter file name:'
+    text: 'Enter file name:'
 prompt.goto.inspection.enter.name:
-  text: 'Enter inspection name:'
+    text: 'Enter inspection name:'
 prompt.gotoaction.enter.action:
-  text: 'Enter action or option name:'
+    text: 'Enter action or option name:'
 prompt.gotoclass.enter.class.name:
-  text: 'Enter class name:'
+    text: 'Enter class name:'
 prompt.gotofile.enter.file.name:
-  text: 'Enter file name:'
+    text: 'Enter file name:'
 prompt.gotosymbol.enter.symbol.name:
-  text: 'Enter symbol name:'
+    text: 'Enter symbol name:'
 prompt.input.favorites.list.new.name:
-  text: 'Rename favorite list ''''{0}'''' to:'
+    text: 'Rename favorite list ''''{0}'''' to:'
 prompt.input.new.favorites.list.name:
-  text: Input new favorites list name
+    text: Input new favorites list name
 prompt.install.several.plugins:
-  text: Install or update {0} plugins ?
+    text: Install or update {0} plugins ?
 prompt.new.project.file.name:
-  text: Enter a file name to create a new {0} {1}
+    text: Enter a file name to create a new {0} {1}
 prompt.open.project.in.new.frame:
-  text: <html><body>New projects can either be opened in a new window or replace the project in the existing window.<br>How would you like to open the project?</body></html>
+    text: <html><body>New projects can either be opened in a new window or replace the project in the existing window.<br>How would you like to open the project?</body></html>
 prompt.overwrite.project.folder:
-  text: |-
-    {0} folder already exists in {1}.
-    Its content may be overwritten.
-    Continue?
+    text: |-
+        {0} folder already exists in {1}.
+        Its content may be overwritten.
+        Continue?
 prompt.overwrite.settings.file:
-  text: Overwrite ''{0}''?
+    text: Overwrite ''{0}''?
 prompt.please.check.all.components.to.export:
-  text: 'Please check the settings to export:'
+    text: 'Please check the settings to export:'
 prompt.please.select.module.jdk:
-  text: Please select the {0} to be set for this module
+    text: Please select the {0} to be set for this module
 prompt.please.select.project.jdk:
-  text: |-
-    Please select project SDK.
-    This SDK will be used by default by all project modules.
+    text: |-
+        Please select project SDK.
+        This SDK will be used by default by all project modules.
 prompt.please.specify.java.sources.directory:
-  text: |-
-    Please specify a directory where source files for your project can be found.
-    This path should correspond to default (root, unnamed, top level) package.
-    Note: the program will recognize only those source files, that are located under this directory.
+    text: |-
+        Please specify a directory where source files for your project can be found.
+        This path should correspond to default (root, unnamed, top level) package.
+        Note: the program will recognize only those source files, that are located under this directory.
 prompt.please.specify.module.name:
-  text: Please specify module name
+    text: Please specify module name
 prompt.please.specify.module.name.and.content.root:
-  text: |-
-    Please specify module name and module content root.
-    A module content root is a directory where the files that belong to the module are stored.
+    text: |-
+        Please specify module name and module content root.
+        A module content root is a directory where the files that belong to the module are stored.
 prompt.relative.path.to.sources.empty:
-  text: |-
-    Relative path to sources is empty.
-    Would you like to mark the module content root
-    "{0}"
-    as a source directory?
+    text: |-
+        Relative path to sources is empty.
+        Would you like to mark the module content root
+        "{0}"
+        as a source directory?
 prompt.reload.file.from.disk:
-  text: Reload "{0}" from disk and lose all changes?
+    text: Reload "{0}" from disk and lose all changes?
 prompt.reset.to.original.template:
-  text: Reset to original template?
+    text: Reset to original template?
 prompt.select.module.file.to.import:
-  text: Select {0} module file (.iml) to import
+    text: Select {0} module file (.iml) to import
 prompt.select.source.directory:
-  text: Select source directory
+    text: Select source directory
 prompt.specify.module.group.name:
-  text: |+
-    Specify group name the {0} will be shown under.
+    text: |+
+        Specify group name the {0} will be shown under.
 
 prompt.specify.name.of.module.subgroup:
-  text: |+
-    Specify name of {0} subgroup the {1} will be shown under.
+    text: |+
+        Specify name of {0} subgroup the {1} will be shown under.
 
 prompt.stop.searching.for.sources:
-  text: '{0} is currently searching for sources. Would you like to stop the search?'
+    text: '{0} is currently searching for sources. Would you like to stop the search?'
 prompt.uninstall.plugin:
-  text: Do you really want to uninstall plugin ''{0}''?
+    text: Do you really want to uninstall plugin ''{0}''?
 prompt.uninstall.several.plugins:
-  text: Do you really want to uninstall these {0} plugins ?
+    text: Do you really want to uninstall these {0} plugins ?
 prompt.update.plugin:
-  text: Would you like to update plugin ''{0}''?
+    text: Would you like to update plugin ''{0}''?
 quick.lists.presentable.name:
-  text: Quick lists
+    text: Quick lists
 radio.create.new.module:
-  text: '&Create new module'
+    text: '&Create new module'
 radio.create.source.directory:
-  text: '&Create source directory'
+    text: '&Create source directory'
 radio.default.license.server:
-  text: '&Default License Server'
+    text: '&Default License Server'
 radio.do.not.create.source.directory:
-  text: '&Do not create source directory'
+    text: '&Do not create source directory'
 radio.evaluate:
-  text: '&Evaluate for free for {0} days'
+    text: '&Evaluate for free for {0} days'
 radio.import.existing.module:
-  text: '&Import existing module'
+    text: '&Import existing module'
 radio.license.data:
-  text: Enter license &data
+    text: Enter license &data
 radio.license.server.address:
-  text: Enter license &server address
+    text: Enter license &server address
 radio.process.close.ask:
-  text: Ask
+    text: Ask
 radio.process.close.disconnect:
-  text: Disconnect (if available)
+    text: Disconnect (if available)
 radio.process.close.terminate:
-  text: Terminate process
+    text: Terminate process
 recent.files.checkbox.label:
-  text: Show changed only
+    text: Show changed only
 recent.locations.changed.locations:
-  text: Recent Changed Locations
+    text: Recent Changed Locations
 recent.locations.popup.empty.file.text:
-  text: Empty lines
+    text: Empty lines
 recent.locations.popup.empty.text:
-  text: No recent locations found
+    text: No recent locations found
 recent.locations.popup.title:
-  text: Recent Locations
+    text: Recent Locations
 recent.locations.title.text:
-  text: Show changed only
+    text: Show changed only
+repository.url.title:
+    text: Repository URL
 run.anything.action.tooltip.text:
-  text: Run Anything
+    text: Run Anything
 run.anything.actions.undefined:
-  text: Undefined
+    text: Undefined
 run.anything.ad.command.delete:
-  text: '{0} to delete recent command'
+    text: '{0} to delete recent command'
 run.anything.ad.run.action.with.default.settings:
-  text: Press {0} to run with default settings
+    text: Press {0} to run with default settings
 run.anything.ad.run.in.context:
-  text: Press {0} to run in the current file context
+    text: Press {0} to run in the current file context
 run.anything.ad.run.with.debug:
-  text: '{0} to debug'
+    text: '{0} to debug'
 run.anything.command.empty.list.title:
-  text: Press ENTER to execute input command
+    text: Press ENTER to execute input command
 run.anything.console.error.title:
-  text: Cannot Run Command
+    text: Cannot Run Command
 run.anything.console.process.finished:
-  text: |2-
+    text: |4-
 
-    Process finished with exit code {0}.
+        Process finished with exit code {0}.
 run.anything.console.title:
-  text: Run anything command
+    text: Run anything command
 run.anything.context.browse.directory:
-  text: Browse Directory...
+    text: Browse Directory...
 run.anything.context.project:
-  text: Project
+    text: Project
 run.anything.context.separator.directories:
-  text: Directories
+    text: Directories
 run.anything.context.separator.modules:
-  text: Modules
+    text: Modules
 run.anything.context.title.working.directory:
-  text: Working Directory
+    text: Working Directory
 run.anything.context.tooltip:
-  text: Choose context the current command will be executed in
+    text: Choose context the current command will be executed in
 run.anything.custom.activity.notification.group.id:
-  text: Run Anything
+    text: Run Anything
 run.anything.custom.activity.rollback.action:
-  text: Rollback
+    text: Rollback
 run.anything.double.ctrl.shortcut:
-  text: Double {0}
+    text: Double {0}
 run.anything.general.group.title:
-  text: General
+    text: General
 run.anything.group.settings.title:
-  text: Show ''{0}''
+    text: Show ''{0}''
 run.anything.group.title.commands:
-  text: Recent commands
+    text: Recent commands
 run.anything.group.title.permanent:
-  text: Permanent configurations
+    text: Permanent configurations
 run.anything.group.title.temporary:
-  text: Temporary configurations
+    text: Temporary configurations
 run.anything.help.list.empty.secondary.text:
-  text: Select command
+    text: Select command
 run.anything.hint.initial.text:
-  text: Press {0} or {1} to navigate through the suggestion list
+    text: Press {0} or {1} to navigate through the suggestion list
 run.anything.indexing.mode.not.supported:
-  text: Run anything is not available while indices are updating
+    text: Run anything is not available while indices are updating
 run.anything.main.list.empty.primary.text:
-  text: Run command or configuration
+    text: Run command or configuration
 run.anything.main.list.empty.secondary.text:
-  text: Type "?" to see all commands
+    text: Type "?" to see all commands
 run.anything.notification.warning.content:
-  text: Command ''{0}'' failed to execute.
+    text: Command ''{0}'' failed to execute.
 run.anything.notification.warning.title:
-  text: Failed Command Execution
+    text: Failed Command Execution
 run.anything.recent.group.title:
-  text: Recent
+    text: Recent
 run.anything.recent.project.command.placeholder:
-  text: open <project name>
+    text: open <project name>
 run.anything.recent.project.completion.group.title:
-  text: Recent projects
+    text: Recent projects
 run.anything.recent.project.help.group.title:
-  text: Recent projects
+    text: Recent projects
 run.anything.run.anything.title:
-  text: Run Anything
+    text: Run Anything
 run.anything.run.configurations.group.title:
-  text: Run configurations
+    text: Run configurations
 run.anything.run.debug.title:
-  text: 'Debug:'
+    text: 'Debug:'
 run.anything.run.in.context.debug.title:
-  text: 'Run in Context with Debug:'
+    text: 'Run in Context with Debug:'
 run.anything.run.in.context.title:
-  text: 'Run in Context:'
+    text: 'Run in Context:'
 run.canceled.by.user.message:
-  text: Run canceled by user
+    text: Run canceled by user
 run.configuration.error.executable.not.specified:
-  text: Executable is not specified
+    text: Executable is not specified
 run.configuration.error.working.directory.does.not.exist:
-  text: Cannot start process, the working directory {0} does not exist
+    text: Cannot start process, the working directory {0} does not exist
 run.configuration.error.working.directory.not.directory:
-  text: Cannot start process, the path specified for working directory is not a directory
+    text: Cannot start process, the path specified for working directory is not a directory
 scope.banner.text:
-  text: Scope ''{0}''
+    text: Scope ''{0}''
 scope.class.hierarchy:
-  text: Class Hierarchy
+    text: Class Hierarchy
 scope.current.file:
-  text: Current File
+    text: Current File
 scope.editor.legend.partly.included.label:
-  text: Partially included
+    text: Partially included
 scope.editor.legend.recursively.included.label:
-  text: Recursively included
+    text: Recursively included
 scope.files.in.previous.search.result:
-  text: Files in Previous Search Result
+    text: Files in Previous Search Result
 scope.hierarchy:
-  text: Hierarchy of {0}
+    text: Hierarchy of {0}
 scope.modified.files:
-  text: Changed Files
+    text: Changed Files
 scope.open.files:
-  text: Open Files
+    text: Open Files
 scope.previous.search.results:
-  text: Previous Search Results
+    text: Previous Search Results
 scope.selection:
-  text: Selection
+    text: Selection
 scope.unable.to.save.scope.message:
-  text: Do you want to save scope as shared?
+    text: Do you want to save scope as shared?
 scope.unable.to.save.scope.title:
-  text: Unable to use local scope
+    text: Unable to use local scope
 scope.view.title:
-  text: Scopes
+    text: Scopes
 scopes.display.name:
-  text: Scopes
+    text: Scopes
 scopes.no.scoped:
-  text: No scopes
+    text: No scopes
 scopes.save.dialog.title.local:
-  text: Save as local scope
+    text: Save as local scope
 scopes.save.dialog.title.shared:
-  text: Save as shared scope
+    text: Save as shared scope
+scratches.and.consoles:
+    text: Scratches and Consoles
 scripting.lib.add:
-  text: '&Add...'
+    text: '&Add...'
 scripting.lib.attach:
-  text: '&Attach...'
+    text: '&Attach...'
 scripting.lib.detach:
-  text: '&Detach'
+    text: '&Detach'
 scripting.lib.docUrl.remove:
-  text: '&Remove'
+    text: '&Remove'
 scripting.lib.docUrl.specify:
-  text: '&Specify...'
+    text: '&Specify...'
 scripting.lib.docUrl.title:
-  text: Documentation URLs
+    text: Documentation URLs
 scripting.lib.edit:
-  text: '&Edit...'
+    text: '&Edit...'
 scripting.lib.file.location:
-  text: Location
+    text: Location
 scripting.lib.file.name:
-  text: Name
+    text: Name
 scripting.lib.file.title:
-  text: Files
+    text: Files
 scripting.lib.file.type:
-  text: Type
+    text: Type
 scripting.lib.invalid.name:
-  text: Invalid library name
+    text: Invalid library name
 scripting.lib.name:
-  text: '&Name:'
+    text: '&Name:'
 scripting.lib.remove:
-  text: '&Remove'
+    text: '&Remove'
 scripting.lib.select.root:
-  text: Select Library Files or Directories
+    text: Select Library Files or Directories
 scripting.lib.usageScope:
-  text: Usage Scope
+    text: Usage Scope
 scripting.lib.usageScope.caption:
-  text: <html>Specify which libraries are used in specific files and/or directories</html>
+    text: <html>Specify which libraries are used in specific files and/or directories</html>
 scripting.lib.usageScope.override.question:
-  text: Override library settings for child directories and files?
+    text: Override library settings for child directories and files?
 scripting.lib.usageScope.override.title:
-  text: Override Library Settings
+    text: Override Library Settings
 scripting.lib.usageScope.tableTitle:
-  text: Library
+    text: Library
 search.for.usages.and.delete.elements:
-  text: Search for usages and delete {0}?
+    text: Search for usages and delete {0}?
 search.in.the.background:
-  text: Search in the background
+    text: Search in the background
 search.textfield.title:
-  text: '&Search:'
+    text: '&Search:'
 searcheverywhere.allelements.tab.name:
-  text: All
+    text: All
 searcheverywhere.commands.tab.name:
-  text: Commands
+    text: Commands
 searcheverywhere.found.matches.generated.code.title:
-  text: Matches for ''{0}'' in [{1}] in generated code
+    text: Matches for ''{0}'' in [{1}] in generated code
 searcheverywhere.found.matches.title:
-  text: Matches for ''{0}'' in [{1}]
+    text: Matches for ''{0}'' in [{1}]
 searcheverywhere.found.targets.title:
-  text: Unsorted results
+    text: Unsorted results
 searcheverywhere.history.shortcuts.hint:
-  text: Press {0} or {1} to navigate through the search history
+    text: Press {0} or {1} to navigate through the search history
 searcheverywhere.indexing.incomplete.results:
-  text: Search in ''{0}'' results maybe incomplete while {1} is updating indices
+    text: Search in ''{0}'' results maybe incomplete while {1} is updating indices
 searcheverywhere.indexing.mode.not.supported:
-  text: Search in ''{0}'' is not available while {1} is updating indices
+    text: Search in ''{0}'' is not available while {1} is updating indices
 searcheverywhere.nothing.found.for.all:
-  text: Nothing found.
+    text: Nothing found.
 searcheverywhere.nothing.found.for.all.anywhere:
-  text: Nothing found.
+    text: Nothing found.
 searcheverywhere.nothing.found.for.contributor:
-  text: No {0} found.
+    text: No {0} found.
 searcheverywhere.nothing.found.for.contributor.anywhere:
-  text: No {0} found.
+    text: No {0} found.
 searcheverywhere.run.configs.tab.name:
-  text: Run Configurations
+    text: Run Configurations
 searcheverywhere.runconfigurations.command.debug.description:
-  text: Start Run Configuration in 'Debug' mode
+    text: Start Run Configuration in 'Debug' mode
 searcheverywhere.runconfigurations.command.run.description:
-  text: Start Run Configuration in 'Run' mode
+    text: Start Run Configuration in 'Run' mode
 searcheverywhere.textfield.hint:
-  text: Type {0} to see commands
+    text: Type {0} to see commands
 select.in.aspects:
-  text: Aspects
+    text: Aspects
 select.in.commander:
-  text: Commander
+    text: Commander
 select.in.favorites:
-  text: Favorites
+    text: Favorites
 select.in.file.structure:
-  text: File Structure
+    text: File Structure
 select.in.nav.bar:
-  text: Navigation Bar
+    text: Navigation Bar
 select.in.packages:
-  text: Packages
+    text: Packages
 select.in.project:
-  text: Project
+    text: Project
 select.in.project.settings:
-  text: Project Structure
+    text: Project Structure
 select.in.scope:
-  text: Scope
+    text: Scope
 select.in.title.project.view:
-  text: Project View
-setup.library.dialog.title:
-  text: Setup Library
-several.plugins.depend.on.0.continue.to.remove:
-  text: Several plugins depend on {0}. Continue to remove?
-share.scope.checkbox.title:
-  text: Share scope
-shared.scopes.node.text:
-  text: Shared Scopes
-show.in.find.window.button.description:
-  text: Open search results in Find tool window
-show.in.find.window.button.name:
-  text: Open in Find Tool Window
-show.main.toolbar:
-  text: Show Main Toolbar
-show.navigation.bar:
-  text: Show Navigation Bar
-show.status.bar:
-  text: Show Status Bar
-small.labels.in.editor.tabs:
-  text: Small labels in editor tabs
-sys.health.acknowledge.link:
-  text: <br/><a href="ack">Do not show again</a>.
-tab.chooser.project:
-  text: Project
-tab.chooser.search.by.name:
-  text: Search by Name
-tab.filetemplates.code:
-  text: Code
-tab.filetemplates.includes:
-  text: Includes
-tab.filetemplates.j2ee:
-  text: Other
-tab.filetemplates.templates:
-  text: Templates
-tab.structureview.baselanguage.view:
-  text: '{0}'
-tab.structureview.jsp.view:
-  text: JSP
-team.server.license.not.found:
-  text: This IDEA distribution is only licensed to be used with JetBrains TeamCity.
-template.copy.N.of.T:
-  text: Copy{0} of {1}
-template.default.class.comment:
-  text: |
-    /*
-     * Created by {0}.
-     * User: $USER$
-     * Date: $DATE$
-     * Time: $TIME$
-     */
-template.unnamed:
-  text: Unnamed
-text.not.applicable:
-  text: <N/A>
-text.todo.no.filters:
-  text: No filters configured
-text.todo.no.patterns:
-  text: No patterns configured
-title.add.module:
-  text: New Module
-title.add.new.favorites.list:
-  text: Add New Favorites List
-title.add.new.keyword:
-  text: Add New Keyword
-title.add.todo.filter:
-  text: Add Filter
-title.add.todo.pattern:
-  text: Add Pattern
-title.appearance:
-  text: Appearance
-title.browse.icon:
-  text: Browse Icon
-title.browser.not.found:
-  text: Browser Not Found
-title.browser.path.not.found:
-  text: Browser Path Not Found
-title.cannot.convert.project:
-  text: Cannot Convert Project
-title.cannot.create.annotation.type:
-  text: Cannot Create @interface
-title.cannot.create.enum:
-  text: Cannot Create Enum
-title.cannot.create.file:
-  text: Cannot Create File
-title.cannot.create.interface:
-  text: Cannot Create Interface
-title.cannot.load.project:
-  text: Cannot Load Project
-title.cannot.open.file:
-  text: Cannot Open File
-title.cannot.save.current.template:
-  text: Cannot save current template
-title.cannot.start.browser:
-  text: Cannot start browser
-title.choose.action.icon:
-  text: Choose Action Icon
-title.choose.destination.directory:
-  text: Choose Destination Directory
-title.connection.error:
-  text: Connection Error
-title.custom.actions.schemas:
-  text: Menus and toolbars customization
-title.customizations:
-  text: Menus and Toolbars
-title.delete:
-  text: Delete
-title.directory.does.not.exist:
-  text: Directory Does Not Exist
-title.edit.file.template:
-  text: Edit File Template
-title.edit.keyword:
-  text: Edit Keyword
-title.edit.macros:
-  text: Edit Macros
-title.edit.todo.filter:
-  text: Edit Filter
-title.edit.todo.pattern:
-  text: Edit Pattern
-title.enter.license.data:
-  text: Enter {0} License
-title.enter.macro.name:
-  text: Enter Macro Name
-title.error.reading.file:
-  text: Error Reading File
-title.error.writing.file:
-  text: Error Writing File
-title.evaluation.license.expired:
-  text: Evaluation License Expired
-title.export.file.location:
-  text: Export File Location
-title.export.preview:
-  text: Export Preview
-title.export.successful:
-  text: Export Complete
-title.failed.to.download:
-  text: Failed to Download
-title.file.already.exists:
-  text: File Already Exists
-title.file.not.found:
-  text: File Not Found
-title.file.templates:
-  text: File and Code Templates
-title.general:
-  text: General
-title.go.to.line:
-  text: Go to Line
-title.hierarchy.callees.of:
-  text: Callees Of {0}
-title.hierarchy.callers.of:
-  text: Callers Of {0}
-title.hierarchy.class:
-  text: Class {0}
-title.hierarchy.method:
-  text: Method {0}
-title.hierarchy.subtypes:
-  text: Subtypes of {0}
-title.hierarchy.supertypes:
-  text: Supertypes of {0}
-title.import.file.location:
-  text: Import File Location
-title.incorrect.file.type:
-  text: Incorrect File Type
-title.input:
-  text: Input
-title.invalid.file:
-  text: Invalid File
-title.invalid.license.data:
-  text: Invalid License Data
-title.license.collision.detected:
-  text: License Collision Detected
-title.license.corrupt:
-  text: License Corrupt
-title.license.expired:
-  text: License Expired
-title.license.will.expire:
-  text: '{0} License Expires Soon'
-title.macro.name.already.used:
-  text: Macro Name Already Used
-title.macros:
-  text: Macros
-title.mark.source.directory:
-  text: Mark Source Directory
-title.module.already.exists:
-  text: Module Already Exists
-title.module.content.root.already.exists:
-  text: Module Content Root Already Exists
-title.module.file.does.not.exist:
-  text: 'Module file does not exist: {0}'
-title.module.file.location.not.specified:
-  text: Module File Location Not Specified
-title.module.file.path.not.specified:
-  text: Module File Path Not Specified
-title.module.group:
-  text: Module Group
-title.module.name.not.specified:
-  text: Module Name Not Specified
-title.module.sub.group:
-  text: Module Subgroup
-title.new.annotation.type:
-  text: New @interface
-title.new.class:
-  text: New Class
-title.new.directory:
-  text: New Directory
-title.new.enum:
-  text: New Enum
-title.new.file:
-  text: New File
-title.new.from.template:
-  text: New {0}
-title.new.interface:
-  text: New Interface
-title.new.package:
-  text: New Package
-title.new.project:
-  text: New Project
-title.no.element.selected:
-  text: No Element Selected
-title.no.jdk.specified:
-  text: No SDK Specified
-title.open.project:
-  text: Open Project
-title.package.not.found:
-  text: Package Not Found
-title.packages:
-  text: Packages
-title.plugin.notification.title:
-  text: Plugin Manager
-title.plugin.uninstall:
-  text: Plugin Uninstall
-title.plugins:
-  text: Platform and Plugins
-title.plugins.changed:
-  text: Plugins Changed
-title.popup.new.element:
-  text: New
-title.popup.new.element.same.place:
-  text: New in Current Directory
-title.popup.recent.files:
-  text: Recent Files
-title.popup.select.target:
-  text: Select Target
-title.popup.views:
-  text: Views
-title.product.evaluation:
-  text: '{0} Evaluation'
-title.project:
-  text: Project
-title.question:
-  text: Question
-title.reload.file:
-  text: Reload File
-title.rename.favorites.list:
-  text: Rename
-title.rename.library:
-  text: Rename Library
-title.rename.macro:
-  text: Rename Macro
-title.rename.module:
-  text: Rename Module
-title.reset.template:
-  text: Reset Template
-title.restart.needed:
-  text: Restart Needed
-title.select.compiler.output.path:
-  text: Select compiler output path
-title.select.components.to.export:
-  text: Export Settings
-title.select.components.to.import:
-  text: Select Components to Import
-title.select.jdk:
-  text: Select JDK
-title.select.module.content.root:
-  text: Select Module Content Root
-title.select.module.file.location:
-  text: Select Module File Location
-title.select.path.to.browser:
-  text: Select Path to Browser
-title.select.project.file.directory:
-  text: Select {0} file directory
-title.select.template:
-  text: Select Template
-title.server.no.licenses:
-  text: No Licenses on Server
-title.server.not.available:
-  text: License Server Connection Error
-title.server.protocol.hijacked:
-  text: Problem with License Server Response
-title.system.error:
-  text: System Error
-title.tip.of.the.day:
-  text: Tip of the Day
-title.todo:
-  text: TODO
-title.todo.current.file:
-  text: Current File
-title.unable.to.add.action.without.icon.to.toolbar:
-  text: Unable to add action without icon to the toolbar
-title.unable.to.add.favorites.list:
-  text: Unable To Add Favorites List
-title.unable.to.save.data:
-  text: Unable to Save Data
-title.upgrade.needed:
-  text: License Upgrade Needed
-title.velocity.error:
-  text: Velocity Error
-title.warning:
-  text: Warning
-title.web.services:
-  text: Web Services
-tooltip.module.group:
-  text: Module Group
-tooltip.syntax.linenumber.columnnumber:
-  text: 'Syntax: [<lineNumber>][:<columnNumber>] or [<lineNumber>][,<columnNumber]'
-tooltip.ui.designer.form:
-  text: UI Designer Form
-toolwindow.palette:
-  text: Palette
-treenode.loading:
-  text: loading...
-ui.settings:
-  text: UI Settings
-unknown.error:
-  text: Unknown error
-unscramble.dialog.title:
-  text: Analyze Stacktrace
-unscramble.log.path.label:
-  text: '&Log file:'
-unscramble.no.unscrambler.item:
-  text: <Do not unscramble>
-unscramble.normalize.button:
-  text: '&Normalize'
-unscramble.stacktrace.caption:
-  text: 'Put a stack trace or a complete thread dump here:'
-unscramble.unscrambled.deadlock.tab:
-  text: <Deadlock>
-unscramble.unscrambled.stacktrace.tab:
-  text: <Stacktrace>
-unscramble.unscrambled.threaddump.tab:
-  text: <Threads>
-unscramble.unscrambler.combobox:
-  text: 'Un&scrambler:'
-unscramble.use.unscrambler.checkbox:
-  text: '&Unscramble stacktrace'
-unsupported.jvm.ea.message:
-  text: Early Access Java versions may cause compatibility issues. Please use stable release.
-update.add.new.plugin.host.title:
-  text: Add Repository
-update.available:
-  text: Updates available
-update.available.group:
-  text: Update Checker
-update.downloading.patch.progress.title:
-  text: Downloading Patch file
-update.edit.plugin.host.title:
-  text: Edit Repository
-update.no.update.hosts:
-  text: No plugin repositories configured
-update.plugin.host.url.message:
-  text: 'Repository URL:'
-update.plugin.hosts.title:
-  text: Plugin Repositories
-update.plugins.update.action:
-  text: '&Update'
-update.there.are.no.updates:
-  text: There are no updates
-update.uploading.plugin.progress.title:
-  text: Updating Plugins
-update.view.updates:
-  text: View updates
-updates.available.idea.version:
-  text: 'New version:'
-updates.build.number:
-  text: '(Build number:'
-updates.check.manually.label:
-  text: <html><br>To check for new updates manually, use the <b>Help | Check for Updates</b> command.</html>
-updates.check.period.on.exit:
-  text: On every exit
-updates.configure.label:
-  text: <html><head>{0}</head><br>To configure automatic update settings, see the <b><a href="updates">Updates</a></b> dialog of your IDE settings</html>
-updates.current.idea.version:
-  text: 'Current version:'
-updates.download.and.install.patch.button:
-  text: '&Download Patch and Shutdown'
-updates.download.and.install.patch.button.restart:
-  text: Up&date and Restart
-updates.info.dialog.title:
-  text: Update Info
-updates.last.check.never:
-  text: Never
-updates.more.info.button:
-  text: '&More Info...'
-updates.new.version.available:
-  text: <html><h4>A new version of Consulo is available.</h4></html>
-updates.no.updates.message:
-  text: <html><h4>You are using the latest version of Consulo.</h4></html>
-updates.press.more.info.label:
-  text: <html><br>Press <b>More Info...</b> to open a web page where you can download Consulo manually or learn more about its new version.</HTML>
-updates.settings.build.number:
-  text: 'Build number:'
-updates.settings.caption.1:
-  text: <html>Consulo can automatically check for new and updated versions of itself, using your internet connection (when active).<html>
-updates.settings.check.now.button:
-  text: '&Check Now'
-updates.settings.checkbox:
-  text: Check for updates in channel
-updates.settings.current.version:
-  text: 'Current Consulo version:'
-updates.settings.last.check:
-  text: 'Last checked for updates:'
-updates.settings.title:
-  text: Updates
-updates.timeout.error:
-  text: Connection timed out
-use.sun.jdk.prompt:
-  text: Java version is not supported, please use Sun/Oracle JDK rather than OpenJDK
-value.must.be.identifier:
-  text: Value must be identifier
-value.must.not.be.empty:
-  text: Value must not be empty
-value.should.be.integer:
-  text: Value should be integer
-vmoptions.warn.message:
-  text: The code cache size of {0}m is too low. Please increase it to {1}m (or more) to avoid performance degradation. How you can do it read at <a href="https://github.com/consulo/consulo/wiki/VM-Options">wiki</a>.
-warning.delete.all.files.and.subdirectories:
-  text: |2-
-
-    All files and subdirectories in "{0}" will be deleted.
-    You might not be able to fully undo this operation!
-warning.delete.all.files.and.subdirectories.in.the.selected.directory:
-  text: |2-
-
-    All files and subdirectories in the selected directory(s) will be deleted.
-    You might not be able to fully undo this operation!
-warning.message.the.module.file.0.already.exist.and.will.be.overwritten:
-  text: The module file ''{0}'' already exist.
-warning.text.0.do.you.want.to.overwrite.these.files:
-  text: |-
-    {0}
-    Would you like to overwrite {1,choice,1#it|2#these files}?
-web.search.label.layout:
-  text: Web Search
-options.locale.auto.locale:
-  text: <auto - {0}>
-copy.relative.paths:
-  text: Cop&y Relative Paths
-copy.relative.path:
-  text: Cop&y Relative Path
-copy.references:
-  text: Cop&y References
-copy.reference:
-  text: Cop&y Reference
+    text: Project View
 settings.entry.point.tooltip:
-  text: IDE and project settings
+    text: IDE and project settings
 settings.entry.point.widget.name:
-  text: IDE and Project Settings
+    text: IDE and Project Settings
+setup.library.dialog.title:
+    text: Setup Library
+several.plugins.depend.on.0.continue.to.remove:
+    text: Several plugins depend on {0}. Continue to remove?
+share.scope.checkbox.title:
+    text: Share scope
+shared.scopes.node.text:
+    text: Shared Scopes
+show.in.find.window.button.description:
+    text: Open search results in Find tool window
+show.in.find.window.button.name:
+    text: Open in Find Tool Window
+show.main.toolbar:
+    text: Show Main Toolbar
+show.navigation.bar:
+    text: Show Navigation Bar
+show.status.bar:
+    text: Show Status Bar
+small.labels.in.editor.tabs:
+    text: Small labels in editor tabs
+sys.health.acknowledge.link:
+    text: <br/><a href="ack">Do not show again</a>.
+tab.chooser.project:
+    text: Project
+tab.chooser.search.by.name:
+    text: Search by Name
+tab.filetemplates.code:
+    text: Code
+tab.filetemplates.includes:
+    text: Includes
+tab.filetemplates.j2ee:
+    text: Other
+tab.filetemplates.templates:
+    text: Templates
+tab.structureview.baselanguage.view:
+    text: '{0}'
+tab.structureview.jsp.view:
+    text: JSP
+team.server.license.not.found:
+    text: This IDEA distribution is only licensed to be used with JetBrains TeamCity.
+template.copy.N.of.T:
+    text: Copy{0} of {1}
+template.default.class.comment:
+    text: |
+        /*
+         * Created by {0}.
+         * User: $USER$
+         * Date: $DATE$
+         * Time: $TIME$
+         */
+template.unnamed:
+    text: Unnamed
+text.not.applicable:
+    text: <N/A>
+text.todo.no.filters:
+    text: No filters configured
+text.todo.no.patterns:
+    text: No patterns configured
+title.add.module:
+    text: New Module
+title.add.new.favorites.list:
+    text: Add New Favorites List
+title.add.new.keyword:
+    text: Add New Keyword
+title.add.todo.filter:
+    text: Add Filter
+title.add.todo.pattern:
+    text: Add Pattern
+title.appearance:
+    text: Appearance
+title.browse.icon:
+    text: Browse Icon
+title.browser.not.found:
+    text: Browser Not Found
+title.browser.path.not.found:
+    text: Browser Path Not Found
+title.cannot.convert.project:
+    text: Cannot Convert Project
+title.cannot.create.annotation.type:
+    text: Cannot Create @interface
+title.cannot.create.enum:
+    text: Cannot Create Enum
+title.cannot.create.file:
+    text: Cannot Create File
+title.cannot.create.interface:
+    text: Cannot Create Interface
+title.cannot.load.project:
+    text: Cannot Load Project
+title.cannot.open.file:
+    text: Cannot Open File
+title.cannot.save.current.template:
+    text: Cannot save current template
+title.cannot.start.browser:
+    text: Cannot start browser
+title.choose.action.icon:
+    text: Choose Action Icon
+title.choose.destination.directory:
+    text: Choose Destination Directory
+title.connection.error:
+    text: Connection Error
+title.custom.actions.schemas:
+    text: Menus and toolbars customization
+title.customizations:
+    text: Menus and Toolbars
+title.delete:
+    text: Delete
+title.directory.does.not.exist:
+    text: Directory Does Not Exist
+title.edit.file.template:
+    text: Edit File Template
+title.edit.keyword:
+    text: Edit Keyword
+title.edit.macros:
+    text: Edit Macros
+title.edit.todo.filter:
+    text: Edit Filter
+title.edit.todo.pattern:
+    text: Edit Pattern
+title.enter.license.data:
+    text: Enter {0} License
+title.enter.macro.name:
+    text: Enter Macro Name
+title.error.reading.file:
+    text: Error Reading File
+title.error.writing.file:
+    text: Error Writing File
+title.evaluation.license.expired:
+    text: Evaluation License Expired
+title.export.file.location:
+    text: Export File Location
+title.export.preview:
+    text: Export Preview
+title.export.successful:
+    text: Export Complete
+title.failed.to.download:
+    text: Failed to Download
+title.file.already.exists:
+    text: File Already Exists
+title.file.not.found:
+    text: File Not Found
+title.file.templates:
+    text: File and Code Templates
+title.general:
+    text: General
+title.go.to.line:
+    text: Go to Line
+title.hierarchy.callees.of:
+    text: Callees Of {0}
+title.hierarchy.callers.of:
+    text: Callers Of {0}
+title.hierarchy.class:
+    text: Class {0}
+title.hierarchy.method:
+    text: Method {0}
+title.hierarchy.subtypes:
+    text: Subtypes of {0}
+title.hierarchy.supertypes:
+    text: Supertypes of {0}
+title.import.file.location:
+    text: Import File Location
+title.incorrect.file.type:
+    text: Incorrect File Type
+title.input:
+    text: Input
+title.invalid.file:
+    text: Invalid File
+title.invalid.license.data:
+    text: Invalid License Data
+title.license.collision.detected:
+    text: License Collision Detected
+title.license.corrupt:
+    text: License Corrupt
+title.license.expired:
+    text: License Expired
+title.license.will.expire:
+    text: '{0} License Expires Soon'
+title.macro.name.already.used:
+    text: Macro Name Already Used
+title.macros:
+    text: Macros
+title.mark.source.directory:
+    text: Mark Source Directory
+title.module.already.exists:
+    text: Module Already Exists
+title.module.content.root.already.exists:
+    text: Module Content Root Already Exists
+title.module.file.does.not.exist:
+    text: 'Module file does not exist: {0}'
+title.module.file.location.not.specified:
+    text: Module File Location Not Specified
+title.module.file.path.not.specified:
+    text: Module File Path Not Specified
+title.module.group:
+    text: Module Group
+title.module.name.not.specified:
+    text: Module Name Not Specified
+title.module.sub.group:
+    text: Module Subgroup
+title.new.annotation.type:
+    text: New @interface
+title.new.class:
+    text: New Class
+title.new.directory:
+    text: New Directory
+title.new.enum:
+    text: New Enum
+title.new.file:
+    text: New File
+title.new.from.template:
+    text: New {0}
+title.new.interface:
+    text: New Interface
+title.new.package:
+    text: New Package
+title.new.project:
+    text: New Project
+title.no.element.selected:
+    text: No Element Selected
+title.no.jdk.specified:
+    text: No SDK Specified
+title.open.project:
+    text: Open Project
+title.package.not.found:
+    text: Package Not Found
+title.packages:
+    text: Packages
+title.plugin.notification.title:
+    text: Plugin Manager
+title.plugin.uninstall:
+    text: Plugin Uninstall
+title.plugins:
+    text: Platform and Plugins
+title.plugins.changed:
+    text: Plugins Changed
+title.popup.new.element:
+    text: New
+title.popup.new.element.same.place:
+    text: New in Current Directory
+title.popup.recent.files:
+    text: Recent Files
+title.popup.select.target:
+    text: Select Target
+title.popup.views:
+    text: Views
+title.product.evaluation:
+    text: '{0} Evaluation'
+title.project:
+    text: Project
+title.question:
+    text: Question
+title.reload.file:
+    text: Reload File
+title.rename.favorites.list:
+    text: Rename
+title.rename.library:
+    text: Rename Library
+title.rename.macro:
+    text: Rename Macro
+title.rename.module:
+    text: Rename Module
+title.reset.template:
+    text: Reset Template
+title.restart.needed:
+    text: Restart Needed
+title.select.compiler.output.path:
+    text: Select compiler output path
+title.select.components.to.export:
+    text: Export Settings
+title.select.components.to.import:
+    text: Select Components to Import
+title.select.jdk:
+    text: Select JDK
+title.select.module.content.root:
+    text: Select Module Content Root
+title.select.module.file.location:
+    text: Select Module File Location
+title.select.path.to.browser:
+    text: Select Path to Browser
+title.select.project.file.directory:
+    text: Select {0} file directory
+title.select.template:
+    text: Select Template
+title.server.no.licenses:
+    text: No Licenses on Server
+title.server.not.available:
+    text: License Server Connection Error
+title.server.protocol.hijacked:
+    text: Problem with License Server Response
+title.system.error:
+    text: System Error
+title.tip.of.the.day:
+    text: Tip of the Day
+title.todo:
+    text: TODO
+title.todo.current.file:
+    text: Current File
+title.unable.to.add.action.without.icon.to.toolbar:
+    text: Unable to add action without icon to the toolbar
+title.unable.to.add.favorites.list:
+    text: Unable To Add Favorites List
+title.unable.to.save.data:
+    text: Unable to Save Data
+title.upgrade.needed:
+    text: License Upgrade Needed
+title.velocity.error:
+    text: Velocity Error
+title.warning:
+    text: Warning
+title.web.services:
+    text: Web Services
+tooltip.module.group:
+    text: Module Group
+tooltip.syntax.linenumber.columnnumber:
+    text: 'Syntax: [<lineNumber>][:<columnNumber>] or [<lineNumber>][,<columnNumber]'
+tooltip.ui.designer.form:
+    text: UI Designer Form
+toolwindow.palette:
+    text: Palette
+treenode.loading:
+    text: loading...
+ui.settings:
+    text: UI Settings
+uninstall.packages.failed:
+    text: Uninstall packages failed. <a href="xxx">Details...</a>
+uninstall.packages.failed.dialog.title:
+    text: Uninstall Packages Failed
+unknown.error:
+    text: Unknown error
+unscramble.dialog.title:
+    text: Analyze Stacktrace
+unscramble.log.path.label:
+    text: '&Log file:'
+unscramble.no.unscrambler.item:
+    text: <Do not unscramble>
+unscramble.normalize.button:
+    text: '&Normalize'
+unscramble.stacktrace.caption:
+    text: 'Put a stack trace or a complete thread dump here:'
+unscramble.unscrambled.deadlock.tab:
+    text: <Deadlock>
+unscramble.unscrambled.stacktrace.tab:
+    text: <Stacktrace>
+unscramble.unscrambled.threaddump.tab:
+    text: <Threads>
+unscramble.unscrambler.combobox:
+    text: 'Un&scrambler:'
+unscramble.use.unscrambler.checkbox:
+    text: '&Unscramble stacktrace'
+unsupported.jvm.ea.message:
+    text: Early Access Java versions may cause compatibility issues. Please use stable release.
+update.add.new.plugin.host.title:
+    text: Add Repository
+update.available:
+    text: Updates available
+update.available.group:
+    text: Update Checker
+update.downloading.patch.progress.title:
+    text: Downloading Patch file
+update.edit.plugin.host.title:
+    text: Edit Repository
+update.no.update.hosts:
+    text: No plugin repositories configured
+update.plugin.host.url.message:
+    text: 'Repository URL:'
+update.plugin.hosts.title:
+    text: Plugin Repositories
+update.plugins.update.action:
+    text: '&Update'
+update.there.are.no.updates:
+    text: There are no updates
+update.uploading.plugin.progress.title:
+    text: Updating Plugins
+update.view.updates:
+    text: View updates
+updates.available.idea.version:
+    text: 'New version:'
+updates.build.number:
+    text: '(Build number:'
+updates.check.manually.label:
+    text: <html><br>To check for new updates manually, use the <b>Help | Check for Updates</b> command.</html>
+updates.check.period.on.exit:
+    text: On every exit
+updates.configure.label:
+    text: <html><head>{0}</head><br>To configure automatic update settings, see the <b><a href="updates">Updates</a></b> dialog of your IDE settings</html>
+updates.current.idea.version:
+    text: 'Current version:'
+updates.download.and.install.patch.button:
+    text: '&Download Patch and Shutdown'
+updates.download.and.install.patch.button.restart:
+    text: Up&date and Restart
+updates.info.dialog.title:
+    text: Update Info
+updates.last.check.never:
+    text: Never
+updates.more.info.button:
+    text: '&More Info...'
+updates.new.version.available:
+    text: <html><h4>A new version of Consulo is available.</h4></html>
+updates.no.updates.message:
+    text: <html><h4>You are using the latest version of Consulo.</h4></html>
+updates.press.more.info.label:
+    text: <html><br>Press <b>More Info...</b> to open a web page where you can download Consulo manually or learn more about its new version.</HTML>
+updates.settings.build.number:
+    text: 'Build number:'
+updates.settings.caption.1:
+    text: <html>Consulo can automatically check for new and updated versions of itself, using your internet connection (when active).<html>
+updates.settings.check.now.button:
+    text: '&Check Now'
+updates.settings.checkbox:
+    text: Check for updates in channel
+updates.settings.current.version:
+    text: 'Current Consulo version:'
+updates.settings.last.check:
+    text: 'Last checked for updates:'
+updates.settings.title:
+    text: Updates
+updates.timeout.error:
+    text: Connection timed out
+upgrade.package.failed.title:
+    text: Upgrade Package Failed.
+upgrade.packages.failed:
+    text: Upgrade packages failed. <a href="xxx">Details...</a>
+upgrade.packages.failed.dialog.title:
+    text: Upgrade Packages Failed
+use.sun.jdk.prompt:
+    text: Java version is not supported, please use Sun/Oracle JDK rather than OpenJDK
+value.must.be.identifier:
+    text: Value must be identifier
+value.must.not.be.empty:
+    text: Value must not be empty
+value.should.be.integer:
+    text: Value should be integer
+vmoptions.warn.message:
+    text: The code cache size of {0}m is too low. Please increase it to {1}m (or more) to avoid performance degradation. How you can do it read at <a href="https://github.com/consulo/consulo/wiki/VM-Options">wiki</a>.
+warning.delete.all.files.and.subdirectories:
+    text: |4-
+
+        All files and subdirectories in "{0}" will be deleted.
+        You might not be able to fully undo this operation!
+warning.delete.all.files.and.subdirectories.in.the.selected.directory:
+    text: |4-
+
+        All files and subdirectories in the selected directory(s) will be deleted.
+        You might not be able to fully undo this operation!
+warning.message.the.module.file.0.already.exist.and.will.be.overwritten:
+    text: The module file ''{0}'' already exist.
+warning.text.0.do.you.want.to.overwrite.these.files:
+    text: |-
+        {0}
+        Would you like to overwrite {1,choice,1#it|2#these files}?
+web.search.label.layout:
+    text: Web Search
