@@ -1,1408 +1,1412 @@
 action.add:
-  text: Add
+    text: Add
 action.apply.editor.font.settings:
-  text: Apply editor font settings
+    text: Apply editor font settings
 action.edit:
-  text: Edit
+    text: Edit
 action.remove:
-  text: R&emove
+    text: R&emove
 application.save.settings.error:
-  text: 'Could not save application settings: {0}'
+    text: 'Could not save application settings: {0}'
 arrangement.action.rule.add.description:
-  text: Add new arrangement rule
+    text: Add new arrangement rule
 arrangement.action.rule.add.text:
-  text: Add rule
+    text: Add rule
 arrangement.action.rule.edit.description:
-  text: Edit selected arrangement rule
+    text: Edit selected arrangement rule
 arrangement.action.rule.edit.text:
-  text: Edit rule
+    text: Edit rule
 arrangement.action.rule.move.down.description:
-  text: Move selected arrangement rule(s) down
+    text: Move selected arrangement rule(s) down
 arrangement.action.rule.move.down.text:
-  text: Move down
+    text: Move down
 arrangement.action.rule.move.up.description:
-  text: Move selected arrangement rule(s) up
+    text: Move selected arrangement rule(s) up
 arrangement.action.rule.move.up.text:
-  text: Move up
+    text: Move up
 arrangement.action.rule.remove.description:
-  text: Remove selected arrangement rule(s)
+    text: Remove selected arrangement rule(s)
 arrangement.action.rule.remove.text:
-  text: Remove rule(s)
+    text: Remove rule(s)
 arrangement.order.name:
-  text: Order
+    text: Order
 arrangement.settings.groups.dependent.methods:
-  text: Keep dependent methods together
+    text: Keep dependent methods together
 arrangement.settings.groups.getters.and.setters.together:
-  text: Keep getters and setters together
+    text: Keep getters and setters together
 arrangement.settings.groups.overridden.methods:
-  text: Keep overridden methods together
+    text: Keep overridden methods together
 arrangement.settings.groups.property.field:
-  text: Group property field with corresponding getter/setter
+    text: Group property field with corresponding getter/setter
 arrangement.settings.order.type.breadth.first:
-  text: breadth-first order
+    text: breadth-first order
 arrangement.settings.order.type.by.name:
-  text: order by name
+    text: order by name
 arrangement.settings.order.type.depth.first:
-  text: depth-first order
+    text: depth-first order
 arrangement.settings.order.type.keep:
-  text: keep order
+    text: keep order
 arrangement.settings.section.groups:
-  text: Grouping rules
+    text: Grouping rules
 arrangement.settings.section.match:
-  text: Matching rules
+    text: Matching rules
 arrangement.settings.text.entry.type.xml.attribute:
-  text: attribute
+    text: attribute
 arrangement.settings.text.entry.type.xml.tag:
-  text: tag
+    text: tag
 arrangement.settings.text.general.modifier:
-  text: 'Modifier:'
+    text: 'Modifier:'
 arrangement.settings.text.general.name:
-  text: 'Name:'
+    text: 'Name:'
 arrangement.settings.text.general.order:
-  text: 'Order:'
+    text: 'Order:'
 arrangement.settings.text.general.text:
-  text: 'Text:'
+    text: 'Text:'
 arrangement.settings.text.general.type:
-  text: 'Type:'
+    text: 'Type:'
 arrangement.settings.text.general.xml.namespace:
-  text: 'Namespace:'
+    text: 'Namespace:'
 arrangement.text.empty.rule:
-  text: <empty rule>
+    text: <empty rule>
 arrangement.text.modifier:
-  text: Modifier
+    text: Modifier
 arrangement.text.name:
-  text: Name
+    text: Name
 arrangement.text.type:
-  text: Type
+    text: Type
 arrangement.title.settings.tab:
-  text: Arrangement
+    text: Arrangement
 auto.import:
-  text: Auto Import
+    text: Auto Import
 building.include.indices:
-  text: Building include indices...
+    text: Building include indices...
 bulk.reformat.prepare.progress.text:
-  text: Preparing...
+    text: Preparing...
 bulk.reformat.process.progress.text:
-  text: Processing...
+    text: Processing...
 button.add:
-  text: '&Add...'
+    text: '&Add...'
 button.add.blank:
-  text: Add Blank
+    text: Add Blank
 button.add.package:
-  text: Add Package
+    text: Add Package
 button.add.package.p:
-  text: Add &Package
+    text: Add &Package
 button.delete:
-  text: Delete
+    text: Delete
 button.edit:
-  text: '&Edit'
+    text: '&Edit'
 button.edit.dialog:
-  text: '&Edit...'
+    text: '&Edit...'
 button.edit.global.settings:
-  text: Edit Global Settings...
+    text: Edit Global Settings...
 button.edit.scopes:
-  text: Edit Scopes...
+    text: Edit Scopes...
 button.export:
-  text: Export...
+    text: Export...
 button.import:
-  text: Import...
+    text: Import...
 button.move.down:
-  text: Move &Down
+    text: Move &Down
 button.move.up:
-  text: Move &Up
+    text: Move &Up
 button.new:
-  text: '&New...'
+    text: '&New...'
 button.ok:
-  text: OK
+    text: OK
 button.remove:
-  text: R&emove
+    text: R&emove
 button.remove.r:
-  text: '&Remove'
+    text: '&Remove'
 button.save.as:
-  text: Save As...
+    text: Save As...
 checkbox.add.unambiguous.imports.on.the.fly:
-  text: Add unambiguous imports on the fly
+    text: Add unambiguous imports on the fly
 checkbox.after.description:
-  text: After description
+    text: After description
 checkbox.after.parameter.descriptions:
-  text: After parameter descriptions
+    text: After parameter descriptions
 checkbox.after.return.tag:
-  text: After return tag
+    text: After return tag
 checkbox.align.attributes:
-  text: Align attributes
+    text: Align attributes
 checkbox.align.multiline.array.initializer:
-  text: Array initializer
+    text: Array initializer
 checkbox.align.multiline.assignments:
-  text: Assignments
+    text: Assignments
 checkbox.align.multiline.binary.operation:
-  text: Binary operation
+    text: Binary operation
 checkbox.align.multiline.call.arguments:
-  text: Call arguments
+    text: Call arguments
 checkbox.align.multiline.chained.methods:
-  text: Chained methods
+    text: Chained methods
 checkbox.align.multiline.extends.list:
-  text: Extends list
+    text: Extends list
 checkbox.align.multiline.fields.groups:
-  text: Field groups
+    text: Field groups
 checkbox.align.multiline.for.statement:
-  text: For statement
+    text: For statement
 checkbox.align.multiline.method.parameters:
-  text: Method parameters
+    text: Method parameters
 checkbox.align.multiline.parenthesized.expression:
-  text: Parenthesized expression
+    text: Parenthesized expression
 checkbox.align.multiline.ternary.operation:
-  text: Ternary operation
+    text: Ternary operation
 checkbox.align.multiline.throws.list:
-  text: Throws list
+    text: Throws list
 checkbox.align.parameter.descriptions:
-  text: Align parameter descriptions
+    text: Align parameter descriptions
 checkbox.align.text:
-  text: Align text
+    text: Align text
 checkbox.align.thrown.exception.descriptions:
-  text: Align thrown exception descriptions
+    text: Align thrown exception descriptions
 checkbox.allow.placement.of.caret.after.end.of.line:
-  text: Allow placement of caret after end of line
+    text: Allow placement of caret after end of line
 checkbox.allow.placement.of.caret.inside.tabs:
-  text: Allow placement of caret inside tabs
+    text: Allow placement of caret inside tabs
 checkbox.autocomplete.basic:
-  text: Basic
+    text: Basic
 checkbox.autocomplete.common.prefix:
-  text: Autocomplete common prefix
+    text: Autocomplete common prefix
 checkbox.autocomplete.smart.type:
-  text: Smart Type
+    text: Smart Type
 checkbox.block.comment.at.first.column:
-  text: Block comment at first column
+    text: Block comment at first column
 checkbox.caret.blinking.ms:
-  text: 'Caret blinking (ms):'
+    text: 'Caret blinking (ms):'
 checkbox.collapse.annotations:
-  text: <html>Annotations</html>
+    text: <html>Annotations</html>
 checkbox.collapse.anonymous.classes:
-  text: <html>Anonymous classes</html>
+    text: <html>Anonymous classes</html>
 checkbox.collapse.closures:
-  text: <html>"Closures" (anonymous classes implementing one method)</html>
+    text: <html>"Closures" (anonymous classes implementing one method)</html>
 checkbox.collapse.end.of.line.comments:
-  text: <html>End of line comments sequence</html>
+    text: <html>End of line comments sequence</html>
 checkbox.collapse.file.header:
-  text: File header
+    text: File header
 checkbox.collapse.generic.constructor.parameters:
-  text: <html>Generic constructor and method parameters</html>
+    text: <html>Generic constructor and method parameters</html>
 checkbox.collapse.html.style.attribute:
-  text: HTML 'style' attribute
+    text: HTML 'style' attribute
 checkbox.collapse.i18n.messages:
-  text: <html>I18n strings</html>
+    text: <html>I18n strings</html>
 checkbox.collapse.inner.classes:
-  text: Inner classes
+    text: Inner classes
 checkbox.collapse.javadoc.comments:
-  text: Documentation comments
+    text: Documentation comments
 checkbox.collapse.method.bodies:
-  text: Method bodies
+    text: Method bodies
 checkbox.collapse.simple.property.accessors:
-  text: <html>Simple property accessors<html>
+    text: <html>Simple property accessors<html>
 checkbox.collapse.suppress.warnings:
-  text: <html>@SuppressWarnings</html>
+    text: <html>@SuppressWarnings</html>
 checkbox.collapse.title.imports:
-  text: Imports
+    text: Imports
 checkbox.collapse.xml.tags:
-  text: XML tags
+    text: XML tags
 checkbox.color.background:
-  text: Background
+    text: Background
 checkbox.color.effects:
-  text: Effects
+    text: Effects
 checkbox.color.error.stripe.mark:
-  text: Error Stripe Mark
+    text: Error Stripe Mark
 checkbox.color.foreground:
-  text: Foreground
+    text: Foreground
 checkbox.do.not.indent.top.level.class.members:
-  text: Do not indent top level class members
+    text: Do not indent top level class members
 checkbox.do.not.wrap.one.line.comments:
-  text: Do not wrap one line comments
+    text: Do not wrap one line comments
 checkbox.editor.tabs.in.single.row:
-  text: Show tabs in single row
+    text: Show tabs in single row
 checkbox.editor.tabs.show.close.button:
-  text: Show "close" button on editor tabs
+    text: Show "close" button on editor tabs
 checkbox.enable.ctrl.mousewheel.changes.font.size:
-  text: Change font size (Zoom) with Ctrl+Mouse Wheel
+    text: Change font size (Zoom) with Ctrl+Mouse Wheel
 checkbox.enable.ctrl.mousewheel.changes.font.size.macos:
-  text: Change font size (Zoom) with Command+Mouse Wheel
+    text: Change font size (Zoom) with Command+Mouse Wheel
 checkbox.enable.drag.n.drop.functionality.in.editor:
-  text: Enable Drag'n'Drop functionality in editor
+    text: Enable Drag'n'Drop functionality in editor
 checkbox.enable.javadoc.formatting:
-  text: Enable JavaDoc formatting
+    text: Enable JavaDoc formatting
 checkbox.enable.leading.asterisks:
-  text: Enable leading asterisks
+    text: Enable leading asterisks
 checkbox.font.bold:
-  text: Bold
+    text: Bold
 checkbox.font.italic:
-  text: Italic
+    text: Italic
 checkbox.generate.p.on.empty.lines:
-  text: Generate "<p/>" on empty lines
+    text: Generate "<p/>" on empty lines
 checkbox.hide.file.extension.in.editor.tabs:
-  text: Hide file extension in editor tabs
+    text: Hide file extension in editor tabs
 checkbox.highlight.current.scope:
-  text: Highlight current scope
+    text: Highlight current scope
 checkbox.highlight.matched.brace:
-  text: Highlight matched brace
+    text: Highlight matched brace
 checkbox.honor.camelhumps.words.settings.on.double.click:
-  text: Honor "CamelHumps" words settings when selecting on double click
+    text: Honor "CamelHumps" words settings when selecting on double click
 checkbox.indent.absolute.label.indent:
-  text: Absolute label indent
+    text: Absolute label indent
 checkbox.indent.keep.indents.on.empty.lines:
-  text: Keep indents on empty lines
+    text: Keep indents on empty lines
 checkbox.indent.on.paste:
-  text: Smart indent pasted lines
+    text: Smart indent pasted lines
 checkbox.indent.smart.tabs:
-  text: Smart tabs
+    text: Smart tabs
 checkbox.indent.use.same.settings.for.all.file.types:
-  text: Use default indent options (General)
+    text: Use default indent options (General)
 checkbox.indent.use.tab.character:
-  text: Use tab character
+    text: Use tab character
 checkbox.indenting.backspace:
-  text: Backspace smart indent
+    text: Backspace smart indent
 checkbox.insert.both.parentheses.when.no.arguments:
-  text: Insert '()' when no arguments
+    text: Insert '()' when no arguments
 checkbox.insert.imports.for.inner.classes:
-  text: Insert imports for inner classes
+    text: Insert imports for inner classes
 checkbox.insert.pair.bracket:
-  text: Insert pair bracket
+    text: Insert pair bracket
 checkbox.insert.pair.curly.brace:
-  text: Insert pair '}'
+    text: Insert pair '}'
 checkbox.insert.pair.percent.gt.in.jsp:
-  text: Insert pair '%>' in JSP
+    text: Insert pair '%>' in JSP
 checkbox.insert.pair.quote:
-  text: Insert pair quote
+    text: Insert pair quote
 checkbox.javadoc.stub.after.slash.star.star:
-  text: Insert documentation comment stub
+    text: Insert documentation comment stub
 checkbox.keep.empty.lines:
-  text: Keep empty lines
+    text: Keep empty lines
 checkbox.keep.empty.param.tags:
-  text: Keep empty @param tags
+    text: Keep empty @param tags
 checkbox.keep.empty.return.tags:
-  text: Keep empty @return tags
+    text: Keep empty @return tags
 checkbox.keep.empty.throws.tags:
-  text: Keep empty @throws tags
+    text: Keep empty @throws tags
 checkbox.keep.invalid.tags:
-  text: Keep invalid tags
+    text: Keep invalid tags
 checkbox.keep.line.breaks:
-  text: Keep line breaks
+    text: Keep line breaks
 checkbox.keep.line.breaks.in.text:
-  text: Keep line breaks in text
+    text: Keep line breaks in text
 checkbox.keep.when.reformatting.control.statement.in.one.line:
-  text: Control statement in one line
+    text: Control statement in one line
 checkbox.keep.white.spaces:
-  text: Keep white spaces
+    text: Keep white spaces
 checkbox.line.comment.add.space:
-  text: Add a space at comment start
+    text: Add a space at comment start
 checkbox.line.comment.at.first.column:
-  text: Line comment at first column
+    text: Line comment at first column
 checkbox.make.generated.local.variables.final:
-  text: Make generated local variables final
+    text: Make generated local variables final
 checkbox.make.generated.parameters.final:
-  text: Make generated parameters final
+    text: Make generated parameters final
 checkbox.mark.modified.tabs.with.asterisk:
-  text: Mark modified tabs with asterisk
+    text: Mark modified tabs with asterisk
 checkbox.next.error.action.goes.to.errors.first:
-  text: '''Next Error'' action goes to high priority problems only'
+    text: '''Next Error'' action goes to high priority problems only'
 checkbox.optimize.imports.on.the.fly:
-  text: Optimize imports on the fly
+    text: Optimize imports on the fly
 checkbox.param.description.on.new.line:
-  text: Parameter descriptions on new line
+    text: Parameter descriptions on new line
 checkbox.parentheses.around.method.arguments:
-  text: Add parentheses around method arguments
+    text: Add parentheses around method arguments
 checkbox.prefer.longer.names:
-  text: Prefer longer names
+    text: Prefer longer names
 checkbox.preserve.line.feeds:
-  text: Preserve line feeds
+    text: Preserve line feeds
 checkbox.reformat.on.typing.rbrace:
-  text: Reformat block on typing '}'
+    text: Reformat block on typing '}'
 checkbox.rename.local.variables.inplace:
-  text: Enable in-place mode
+    text: Enable in-place mode
 checkbox.rename.local.variables.preselect:
-  text: Preselect old name
+    text: Preselect old name
 checkbox.richcopy.strip.whitespace.at.line.start:
-  text: Strip common indent
+    text: Strip common indent
 checkbox.right.margin:
-  text: Show right margin (configured in Code Style options)
+    text: Show right margin (configured in Code Style options)
 checkbox.show.all.softwraps:
-  text: Show all soft wraps
+    text: Show all soft wraps
 checkbox.show.breadcrumbs:
-  text: Show breadcrumbs
+    text: Show breadcrumbs
 checkbox.show.code.folding.outline:
-  text: Show code folding outline
+    text: Show code folding outline
 checkbox.show.full.signatures:
-  text: Show full signatures
+    text: Show full signatures
 checkbox.show.gutter.icons:
-  text: Show gutter &icons
+    text: Show gutter &icons
 checkbox.show.import.popup:
-  text: Show import &popup
+    text: Show import &popup
 checkbox.show.line.numbers:
-  text: Show line numbers
+    text: Show line numbers
 checkbox.show.method.separators:
-  text: Show method separators
+    text: Show method separators
 checkbox.show.only.monospaced.fonts:
-  text: Show only monospaced fonts
+    text: Show only monospaced fonts
 checkbox.show.parameter.name.hints:
-  text: Show parameter name hints
+    text: Show parameter name hints
 checkbox.show.quick.doc.on.mouse.over:
-  text: 'Show quick doc on mouse over element (ms):'
+    text: 'Show quick doc on mouse over element (ms):'
 checkbox.show.signatures:
-  text: Show signatures
+    text: Show signatures
 checkbox.show.softwraps.only.for.caret.line.action.text:
-  text: 'Soft Wraps: Show for current line only'
+    text: 'Soft Wraps: Show for current line only'
 checkbox.show.static.members.after.instance.qualifier:
-  text: Show static members after instance qualifier
+    text: Show static members after instance qualifier
 checkbox.show.tabs.tooltips:
-  text: Show tabs tooltips
+    text: Show tabs tooltips
 checkbox.show.virtual.space.at.file.bottom:
-  text: Show virtual space at file bottom
+    text: Show virtual space at file bottom
 checkbox.show.whitespaces:
-  text: Show whitespaces
+    text: Show whitespaces
 checkbox.smart.end.on.blank.line:
-  text: End (on blank line)
+    text: End (on blank line)
 checkbox.smart.home:
-  text: Home
+    text: Home
 checkbox.smart.indent:
-  text: Smart indent
+    text: Smart indent
 checkbox.smooth.scrolling:
-  text: Smooth scrolling
+    text: Smooth scrolling
 checkbox.spaces.additive.operators:
-  text: Additive operators (+, -)
+    text: Additive operators (+, -)
 checkbox.spaces.after.colon:
-  text: After ':'
+    text: After ':'
 checkbox.spaces.after.colon.in.label.declaration:
-  text: After ':' in label declaration
+    text: After ':' in label declaration
 checkbox.spaces.after.comma:
-  text: After comma
+    text: After comma
 checkbox.spaces.after.question:
-  text: After '?'
+    text: After '?'
 checkbox.spaces.after.semicolon:
-  text: After semicolon
+    text: After semicolon
 checkbox.spaces.after.type.cast:
-  text: After type cast
+    text: After type cast
 checkbox.spaces.annotation.array.initializer.left.brace:
-  text: Annotation array initializer left brace
+    text: Annotation array initializer left brace
 checkbox.spaces.annotation.parameters:
-  text: Annotation parameters
+    text: Annotation parameters
 checkbox.spaces.annotation.parentheses:
-  text: Annotation parentheses
+    text: Annotation parentheses
 checkbox.spaces.around.equals.in.attribute:
-  text: Around "=" in attribute
+    text: Around "=" in attribute
 checkbox.spaces.around.lambda.arrow:
-  text: Lambda arrow
+    text: Lambda arrow
 checkbox.spaces.around.method.ref.dbl.colon.arrow:
-  text: Method reference double colon
+    text: Method reference double colon
 checkbox.spaces.around.tag.name:
-  text: After tag name
+    text: After tag name
 checkbox.spaces.around.unary.operator:
-  text: Unary operators (!, -, +, ++, --)
+    text: Unary operators (!, -, +, ++, --)
 checkbox.spaces.array.initializer.left.brace:
-  text: Array initializer left brace
+    text: Array initializer left brace
 checkbox.spaces.assignment.operators:
-  text: Assignment operators (=, +=, ...)
+    text: Assignment operators (=, +=, ...)
 checkbox.spaces.before.colon:
-  text: Before ':'
+    text: Before ':'
 checkbox.spaces.before.comma:
-  text: Before comma
+    text: Before comma
 checkbox.spaces.before.question:
-  text: Before '?'
+    text: Before '?'
 checkbox.spaces.before.semicolon:
-  text: Before semicolon
+    text: Before semicolon
 checkbox.spaces.bitwise.operators:
-  text: Bitwise operators (\&, |, ^)
+    text: Bitwise operators (\&, |, ^)
 checkbox.spaces.catch.keyword:
-  text: '''catch'' keyword'
+    text: '''catch'' keyword'
 checkbox.spaces.catch.left.brace:
-  text: '''catch'' left brace'
+    text: '''catch'' left brace'
 checkbox.spaces.catch.parentheses:
-  text: '''catch'' parentheses'
+    text: '''catch'' parentheses'
 checkbox.spaces.checkbox.spaces.empty.method.call.parentheses:
-  text: Empty method call parentheses
+    text: Empty method call parentheses
 checkbox.spaces.checkbox.spaces.empty.method.declaration.parentheses:
-  text: Empty method declaration parentheses
+    text: Empty method declaration parentheses
 checkbox.spaces.checkbox.spaces.method.call.parentheses:
-  text: Method call parentheses
+    text: Method call parentheses
 checkbox.spaces.checkbox.spaces.method.declaration.parentheses:
-  text: Method declaration parentheses
+    text: Method declaration parentheses
 checkbox.spaces.class.left.brace:
-  text: Class left brace
+    text: Class left brace
 checkbox.spaces.do.left.brace:
-  text: '''do'' left brace'
+    text: '''do'' left brace'
 checkbox.spaces.else.keyword:
-  text: '''else'' keyword'
+    text: '''else'' keyword'
 checkbox.spaces.else.left.brace:
-  text: '''else'' left brace'
+    text: '''else'' left brace'
 checkbox.spaces.equality.operators:
-  text: Equality operators (==, !=)
+    text: Equality operators (==, !=)
 checkbox.spaces.finally.keyword:
-  text: '''finally'' keyword'
+    text: '''finally'' keyword'
 checkbox.spaces.finally.left.brace:
-  text: '''finally'' left brace'
+    text: '''finally'' left brace'
 checkbox.spaces.for.left.brace:
-  text: '''for'' left brace'
+    text: '''for'' left brace'
 checkbox.spaces.for.parentheses:
-  text: '''for'' parentheses'
+    text: '''for'' parentheses'
 checkbox.spaces.if.left.brace:
-  text: '''if'' left brace'
+    text: '''if'' left brace'
 checkbox.spaces.if.parentheses:
-  text: '''if'' parentheses'
+    text: '''if'' parentheses'
 checkbox.spaces.in.empty.tag:
-  text: In empty tag
+    text: In empty tag
 checkbox.spaces.logical.operators:
-  text: Logical operators (\&\&, ||)
+    text: Logical operators (\&\&, ||)
 checkbox.spaces.method.call.parentheses:
-  text: Method call parentheses
+    text: Method call parentheses
 checkbox.spaces.method.declaration.parentheses:
-  text: Method declaration parentheses
+    text: Method declaration parentheses
 checkbox.spaces.method.left.brace:
-  text: Method left brace
+    text: Method left brace
 checkbox.spaces.multiplicative.operators:
-  text: Multiplicative operators (*, /, %)
+    text: Multiplicative operators (*, /, %)
 checkbox.spaces.relational.operators:
-  text: Relational operators (<, >, <=, >=)
+    text: Relational operators (<, >, <=, >=)
 checkbox.spaces.shift.operators:
-  text: Shift operators (<<, >>, >>>)
+    text: Shift operators (<<, >>, >>>)
 checkbox.spaces.switch.left.brace:
-  text: '''switch'' left brace'
+    text: '''switch'' left brace'
 checkbox.spaces.switch.parentheses:
-  text: '''switch'' parentheses'
+    text: '''switch'' parentheses'
 checkbox.spaces.synchronized.left.brace:
-  text: '''synchronized'' left brace'
+    text: '''synchronized'' left brace'
 checkbox.spaces.synchronized.parentheses:
-  text: '''synchronized'' parentheses'
+    text: '''synchronized'' parentheses'
 checkbox.spaces.try.left.brace:
-  text: '''try'' left brace'
+    text: '''try'' left brace'
 checkbox.spaces.try.parentheses:
-  text: '''try'' parentheses'
+    text: '''try'' parentheses'
 checkbox.spaces.type.cast.parentheses:
-  text: Type cast parentheses
+    text: Type cast parentheses
 checkbox.spaces.while.keyword:
-  text: '''while'' keyword'
+    text: '''while'' keyword'
 checkbox.spaces.while.left.brace:
-  text: '''while'' left brace'
+    text: '''while'' left brace'
 checkbox.spaces.while.parentheses:
-  text: '''while'' parentheses'
+    text: '''while'' parentheses'
 checkbox.spaces.within.array.initializer.braces:
-  text: Array initializer braces
+    text: Array initializer braces
 checkbox.spaces.within.braces:
-  text: Code braces
+    text: Code braces
 checkbox.spaces.within.brackets:
-  text: Brackets
+    text: Brackets
 checkbox.spaces.within.parentheses:
-  text: Grouping parentheses
+    text: Grouping parentheses
 checkbox.suppress.with.suppresswarnings:
-  text: Suppress with @SuppressWarnings (for Java 5.0 only)
+    text: Suppress with @SuppressWarnings (for Java 5.0 only)
 checkbox.surround.selection.on.typing.quote.or.brace:
-  text: Surround selection on typing quote or brace
+    text: Surround selection on typing quote or brace
 checkbox.use.block.caret:
-  text: Use block caret
+    text: Use block caret
 checkbox.use.camelhumps.words:
-  text: Use "CamelHumps" words
+    text: Use "CamelHumps" words
 checkbox.use.custom.soft.wraps.indent:
-  text: Use custom soft wraps indent
+    text: Use custom soft wraps indent
 checkbox.use.fully.qualified.class.names:
-  text: Use fully qualified class names
+    text: Use fully qualified class names
 checkbox.use.fully.qualified.class.names.in.javadoc:
-  text: Use fully qualified class names in javadoc
+    text: Use fully qualified class names in javadoc
 checkbox.use.relative.indents:
-  text: Use indents relative to expression start
+    text: Use indents relative to expression start
 checkbox.use.single.class.import:
-  text: Use single class import
+    text: Use single class import
 checkbox.use.soft.wraps.at.console:
-  text: Use soft wraps in console
+    text: Use soft wraps in console
 checkbox.use.soft.wraps.at.editor:
-  text: Use soft wraps in editor
+    text: Use soft wraps in editor
 checkbox.use.throws.rather.than.exception:
-  text: Use @throws rather than @exception
+    text: Use @throws rather than @exception
 checkbox.wrap.at.right.margin:
-  text: Wrap at right margin
+    text: Wrap at right margin
 checkbox.wrap.text:
-  text: Wrap text
+    text: Wrap text
 checkbox.wrap.typing.on.right.margin:
-  text: Wrap on typing
+    text: Wrap on typing
 code.style.detector.use.spaces:
-  text: Indent with {0} spaces
+    text: Indent with {0} spaces
 code.style.detector.use.tabs:
-  text: Indent with tab
+    text: Indent with tab
 code.style.different.indent.size.detected:
-  text: This file is indented with {0} spaces instead of {1}
+    text: This file is indented with {0} spaces instead of {1}
 code.style.indent.detector.apply:
-  text: <html>Indent New Lines with {0}  <span style="color:#{1}">detected</span>
+    text: <html>Indent New Lines with {0}  <span style="color:#{1}">detected</span>
 code.style.indent.detector.disable:
-  text: Disable Indents Detection for Project
+    text: Disable Indents Detection for Project
 code.style.indent.detector.notification.content:
-  text: Indents detection disabled
+    text: Indents detection disabled
 code.style.indent.detector.reindent:
-  text: Reindent File with {0}
+    text: Reindent File with {0}
 code.style.indent.detector.reject:
-  text: Indent New Lines with {0}
+    text: Indent New Lines with {0}
 code.style.indent.provider.notification.re.enable:
-  text: Undo
+    text: Undo
 code.style.indent.provider.notification.settings:
-  text: Code Style Settings
+    text: Code Style Settings
 code.style.indents.detector.accept:
-  text: OK
+    text: OK
 code.style.indents.detector.show.settings:
-  text: Show Settings
+    text: Show Settings
+code.style.other.file.types:
+    text: Other File Types
 code.style.space.indent.detected:
-  text: This file is indented with {0} spaces instead of the tab character
+    text: This file is indented with {0} spaces instead of the tab character
 code.style.tab.usage.detected:
-  text: This file is indented with tabs instead of {0} spaces
+    text: This file is indented with tabs instead of {0} spaces
+code.style.widget.configure.indents:
+    text: Configure Indents for {0}...
 column.name:
-  text: Name
+    text: Name
 column.value:
-  text: Value
+    text: Value
 combobox.autocomplete.case.sensitive.all:
-  text: All
+    text: All
 combobox.autocomplete.case.sensitive.first.letter:
-  text: First letter
+    text: First letter
 combobox.autocomplete.case.sensitive.none:
-  text: None
+    text: None
 combobox.case.sensitive.completion:
-  text: 'Case sensitive completion:'
+    text: 'Case sensitive completion:'
 combobox.crlf.mac:
-  text: "CR - Classic Mac (\\r)"
+    text: CR - Classic Mac (\r)
 combobox.crlf.system.dependent:
-  text: "System-Dependent"
+    text: System-Dependent
 combobox.crlf.unix:
-  text: "LF - Unix and OS X (\\n)"
+    text: LF - Unix and OS X (\n)
 combobox.crlf.windows:
-  text: "CRLF - Windows (\\r\\n)"
+    text: CRLF - Windows (\r\n)
 combobox.editor.tab.placement:
-  text: 'Placement:'
+    text: 'Placement:'
 combobox.effect.bold.dottedline:
-  text: Dotted Line
+    text: Dotted Line
 combobox.effect.boldunderscored:
-  text: Bold Underscored
+    text: Bold Underscored
 combobox.effect.bordered:
-  text: Bordered
+    text: Bordered
 combobox.effect.strikeout:
-  text: Strikeout
+    text: Strikeout
 combobox.effect.underscored:
-  text: Underscored
+    text: Underscored
 combobox.effect.underwaved:
-  text: Underwaved
+    text: Underwaved
 combobox.force.braces.do.while:
-  text: 'do ... while():'
+    text: 'do ... while():'
 combobox.force.braces.for:
-  text: 'for ():'
+    text: 'for ():'
 combobox.force.braces.if:
-  text: 'if ():'
+    text: 'if ():'
 combobox.force.braces.while:
-  text: 'while ():'
+    text: 'while ():'
 combobox.insert.imports.all:
-  text: All
+    text: All
 combobox.insert.imports.ask:
-  text: Ask
+    text: Ask
 combobox.insert.imports.none:
-  text: None
+    text: None
 combobox.line.separator.for.new.files:
-  text: 'Line separator (for new files):'
+    text: 'Line separator (for new files):'
 combobox.lineseparator.for.new.files.hint:
-  text: Applied to new files
+    text: Applied to new files
 combobox.paste.insert.imports:
-  text: '&Insert imports on paste:'
+    text: '&Insert imports on paste:'
 combobox.paste.reformat:
-  text: Reformat on paste
+    text: Reformat on paste
 combobox.paste.reformat.indent.block:
-  text: Indent Block
+    text: Indent Block
 combobox.paste.reformat.indent.each.line:
-  text: Indent Each Line
+    text: Indent Each Line
 combobox.paste.reformat.none:
-  text: None
+    text: None
 combobox.paste.reformat.reformat.block:
-  text: Reformat Block
+    text: Reformat Block
 combobox.richcopy.color.scheme:
-  text: Color scheme
+    text: Color scheme
 combobox.richcopy.color.scheme.active:
-  text: Active scheme
+    text: Active scheme
 combobox.scheme.name:
-  text: 'Scheme name:'
+    text: 'Scheme name:'
 combobox.smart.backspace:
-  text: Unindent
+    text: Unindent
 combobox.smart.backspace.off:
-  text: Disabled
+    text: Disabled
 combobox.smart.backspace.simple:
-  text: To nearest indent position
+    text: To nearest indent position
 combobox.smart.backspace.smart:
-  text: To proper indent position
+    text: To proper indent position
 combobox.strip.all:
-  text: All
+    text: All
 combobox.strip.modified.lines:
-  text: Modified Lines
+    text: Modified Lines
 combobox.strip.none:
-  text: None
+    text: None
 combobox.strip.trailing.spaces.on.save:
-  text: 'Strip trailing spaces on Save:'
+    text: 'Strip trailing spaces on Save:'
 combobox.tab.placement.bottom:
-  text: Bottom
+    text: Bottom
 combobox.tab.placement.left:
-  text: Left
+    text: Left
 combobox.tab.placement.none:
-  text: None
+    text: None
 combobox.tab.placement.right:
-  text: Right
+    text: Right
 combobox.tab.placement.top:
-  text: Top
+    text: Top
 command.exit:
-  text: Exit
+    text: Exit
 config.import.invalid.directory.error:
-  text: '{0} is not a directory!'
+    text: '{0} is not a directory!'
 configurable.breadcrumbs:
-  text: Breadcrumbs
+    text: Breadcrumbs
 configure.breadcrumbs.colors:
-  text: Manage colors
+    text: Manage colors
 desktop.entry.checking:
-  text: Checking...
+    text: Checking...
 desktop.entry.icon.missing:
-  text: Unable to locate suitable application icon in ''{0}''.
+    text: Unable to locate suitable application icon in ''{0}''.
 desktop.entry.installing:
-  text: Installing entry...
+    text: Installing entry...
 desktop.entry.preparing:
-  text: Preparing entry...
+    text: Preparing entry...
 desktop.entry.script.missing:
-  text: Unable to locate suitable startup script in ''{0}''.
+    text: Unable to locate suitable startup script in ''{0}''.
 desktop.entry.success:
-  text: You may now exit {0} and start it from the system menu<br/> (restart a session if a new entry seem not to appear).
+    text: You may now exit {0} and start it from the system menu<br/> (restart a session if a new entry seem not to appear).
 desktop.entry.sudo.prompt:
-  text: Please enter your password to create a desktop entry
+    text: Please enter your password to create a desktop entry
 desktop.entry.xdg.missing:
-  text: Unfortunately, xdg-utils seem to be unavailable on your system.
+    text: Unfortunately, xdg-utils seem to be unavailable on your system.
 don.t.break.if.inline.content:
-  text: 'Don''t break if inline content:'
+    text: 'Don''t break if inline content:'
 edit.code.folding.options:
-  text: Open code folding options
+    text: Open code folding options
 editbox.autopopup.in.ms:
-  text: 'Autopopup in (ms):'
+    text: 'Autopopup in (ms):'
 editbox.autopopup.javadoc.in.ms:
-  text: 'Autopopup documentation in (ms):'
+    text: 'Autopopup documentation in (ms):'
 editbox.autoreparse.delay.ms:
-  text: 'Autoreparse delay (ms):'
+    text: 'Autoreparse delay (ms):'
 editbox.blanklines.after.anonymous.class.header:
-  text: 'After anonymous class header:'
+    text: 'After anonymous class header:'
 editbox.blanklines.after.class.header:
-  text: 'After class header:'
+    text: 'After class header:'
 editbox.blanklines.after.imports:
-  text: 'After imports:'
+    text: 'After imports:'
 editbox.blanklines.after.package.statement:
-  text: 'After package statement:'
+    text: 'After package statement:'
 editbox.blanklines.around.class:
-  text: 'Around class:'
+    text: 'Around class:'
 editbox.blanklines.around.field:
-  text: 'Around field:'
+    text: 'Around field:'
 editbox.blanklines.around.method:
-  text: 'Around method:'
+    text: 'Around method:'
 editbox.blanklines.before.imports:
-  text: 'Before imports:'
+    text: 'Before imports:'
 editbox.blanklines.before.method.body:
-  text: 'Before method body:'
+    text: 'Before method body:'
 editbox.blanklines.before.package.statement:
-  text: 'Before package statement:'
+    text: 'Before package statement:'
 editbox.class.count.to.use.import.with.star:
-  text: 'Class count to use import with ''*'':'
+    text: 'Class count to use import with ''*'':'
 editbox.console.history.limit:
-  text: 'Console commands history size:'
+    text: 'Console commands history size:'
 editbox.enter.tag.name:
-  text: 'Enter tag name:'
+    text: 'Enter tag name:'
 editbox.error.stripe.mark.min.height.pixels:
-  text: 'Error stripe mark min height (pixels):'
+    text: 'Error stripe mark min height (pixels):'
 editbox.font.size:
-  text: 'Size:'
+    text: 'Size:'
 editbox.indent.continuation.indent:
-  text: 'Continuation indent:'
+    text: 'Continuation indent:'
 editbox.indent.indent:
-  text: 'Indent:'
+    text: 'Indent:'
 editbox.indent.label.indent:
-  text: 'Label indent:'
+    text: 'Label indent:'
 editbox.indent.tab.size:
-  text: 'Tab size:'
+    text: 'Tab size:'
 editbox.installation.home:
-  text: 'Specify config folder or installation home of the previous version of {0}:'
+    text: 'Specify config folder or installation home of the previous version of {0}:'
 editbox.keep.blank.lines:
-  text: 'Keep blank lines:'
+    text: 'Keep blank lines:'
 editbox.keep.blanklines.before.rbrace:
-  text: 'Before ''}'':'
+    text: 'Before ''}'':'
 editbox.keep.blanklines.in.code:
-  text: 'In code:'
+    text: 'In code:'
 editbox.keep.blanklines.in.declarations:
-  text: 'In declarations:'
+    text: 'In declarations:'
 editbox.line.spacing:
-  text: 'Line spacing:'
+    text: 'Line spacing:'
 editbox.lookup.height:
-  text: 'Lookup height (items):'
+    text: 'Lookup height (items):'
 editbox.maximum.number.of.contents.to.keep.in.clipboard:
-  text: 'Maximum number of contents to keep  in clipboard:'
+    text: 'Maximum number of contents to keep  in clipboard:'
 editbox.names.count.to.use.static.import.with.star:
-  text: 'Names count to use static import with ''*'':'
+    text: 'Names count to use static import with ''*'':'
 editbox.path.macro.name:
-  text: 'Name:'
+    text: 'Name:'
 editbox.path.macro.value:
-  text: 'Value:'
+    text: 'Value:'
 editbox.recent.files.limit:
-  text: 'Recent files limit:'
+    text: 'Recent files limit:'
 editbox.right.margin.columns:
-  text: 'Right margin (columns):'
+    text: 'Right margin (columns):'
 editbox.scheme.name:
-  text: 'Scheme:'
+    text: 'Scheme:'
 editbox.tab.limit:
-  text: 'Tab limit:'
+    text: 'Tab limit:'
 editorsearch.current.cursor.position:
-  text: '{0}/{1}'
+    text: '{0}/{1}'
 editorsearch.empty.string.matches:
-  text: Vague pattern
+    text: Vague pattern
 editorsearch.in.selection:
-  text: Search in selection only
+    text: Search in selection only
 editorsearch.in.selection.with.hint:
-  text: Search in selection. {0} to search for selected text
+    text: Search in selection. {0} to search for selected text
 editorsearch.matches:
-  text: '{0, choice, 0#0 results|1#1 result|2#{0} results}'
+    text: '{0, choice, 0#0 results|1#1 result|2#{0} results}'
 editorsearch.noselection:
-  text: No selection
+    text: No selection
 editorsearch.toomuch:
-  text: '{0}+'
+    text: '{0}+'
 error.a.scheme.with.this.name.already.exists.or.was.deleted.without.applying.the.changes:
-  text: A scheme with this name already exists or was deleted without applying the changes
+    text: A scheme with this name already exists or was deleted without applying the changes
 error.does.not.appear.to.be.installation.home:
-  text: '{0} does not appear to be {1} config folder or installation home'
+    text: '{0} does not appear to be {1} config folder or installation home'
 error.illegal.scheme.name:
-  text: Illegal scheme name
+    text: Illegal scheme name
 error.invalid.config.folder:
-  text: Unable to import settings. ''{0}'' doesn''t appear to be valid {1} config folder.
+    text: Unable to import settings. ''{0}'' doesn''t appear to be valid {1} config folder.
 error.invalid.installation.home:
-  text: Unable to import settings. ''{0}'' doesn''t appear to be valid {1} installation home.
+    text: Unable to import settings. ''{0}'' doesn''t appear to be valid {1} installation home.
 error.monitor.too.many.errors:
-  text: Too many IDE fatal errors. Monitoring stopped.
+    text: Too many IDE fatal errors. Monitoring stopped.
 error.no.read.permissions:
-  text: You do not have read permissions to {0}
+    text: You do not have read permissions to {0}
 error.no.settings.path:
-  text: Unable to import settings. {0} does not exist.
+    text: Unable to import settings. {0} does not exist.
 error.path.variable.is.undefined:
-  text: Path variable "{0}" is undefined
+    text: Path variable "{0}" is undefined
 error.please.select.previous.installation.home:
-  text: Please select previous {0} config folder or installation home
+    text: Please select previous {0} config folder or installation home
 error.plugin.was.not.installed:
-  text: 'Plugin {0} was not installed: {1}'
+    text: 'Plugin {0} was not installed: {1}'
 error.plugins.should.not.have.cyclic.dependencies:
-  text: |-
-    Plugins should not have cyclic dependencies:
-    {0}
+    text: |-
+        Plugins should not have cyclic dependencies:
+        {0}
 error.readonly.scheme.cannot.be.modified:
-  text: Read-only scheme cannot be modified. Please do "Save As..." first.
+    text: Read-only scheme cannot be modified. Please do "Save As..." first.
 error.required.plugin.disabled:
-  text: 'Plugin "{0}" was not loaded: required plugin "{1}" is disabled.'
+    text: 'Plugin "{0}" was not loaded: required plugin "{1}" is disabled.'
 error.required.plugin.not.installed:
-  text: 'Plugin "{0}" was not loaded: required plugin "{1}" not installed.'
+    text: 'Plugin "{0}" was not loaded: required plugin "{1}" not installed.'
 error.scheme.must.have.a.name:
-  text: Scheme must have a name
+    text: Scheme must have a name
 error.selected.current.installation.home:
-  text: |-
-    You have selected current {0} installation home.
-    Please select previous {1} installation home
+    text: |-
+        You have selected current {0} installation home.
+        Please select previous {1} installation home
 error.shared.scheme.cannot.be.modified:
-  text: Shared scheme cannot be modified. Please do "Save As..." first.
+    text: Shared scheme cannot be modified. Please do "Save As..." first.
 error.unable.to.import.settings:
-  text: Unable to import settings. {0}
+    text: Unable to import settings. {0}
 error.variable.already.exists:
-  text: Variable with name {0} already exists
+    text: Variable with name {0} already exists
 exclude.from.completion.group:
-  text: Exclude from Import and Completion
+    text: Exclude from Import and Completion
 exclude.from.completion.prompt:
-  text: 'Enter the name of the package or class to exclude from auto-import and class name completion:'
+    text: 'Enter the name of the package or class to exclude from auto-import and class name completion:'
 exclude.from.completion.title:
-  text: Exclude Package
+    text: Exclude Package
 exclude.from.imports.add:
-  text: A&dd
+    text: A&dd
 exclude.from.imports.no.exclusions:
-  text: No exclude patterns
+    text: No exclude patterns
 exit.confirm.prompt:
-  text: Are you sure you want to exit {0}?
+    text: Are you sure you want to exit {0}?
 exit.confirm.prompt.tasks:
-  text: You have background tasks running. Are you sure you want to stop them and exit {0}?
+    text: You have background tasks running. Are you sure you want to stop them and exit {0}?
 exit.confirm.title:
-  text: Confirm Exit
+    text: Confirm Exit
 fs.case.sensitivity.mismatch.message:
-  text: The project seems to be located on a case-{0,choice,0#|1#in}sensitive file system.<br> This does not match the IDE setting (controlled by property "<tt>consulo.case.sensitive.fs</tt>")<br> <a href="https://confluence.jetbrains.com/display/IDEADEV/Filesystem+Case-Sensitivity+Mismatch">More details.</a>
+    text: The project seems to be located on a case-{0,choice,0#|1#in}sensitive file system.<br> This does not match the IDE setting (controlled by property "<tt>consulo.case.sensitive.fs</tt>")<br> <a href="https://confluence.jetbrains.com/display/IDEADEV/Filesystem+Case-Sensitivity+Mismatch">More details.</a>
 fs.case.sensitivity.mismatch.title:
-  text: Filesystem Case-Sensitivity Mismatch
+    text: Filesystem Case-Sensitivity Mismatch
 group.advanced.mouse.usages:
-  text: Mouse
+    text: Mouse
 group.brace.highlighting:
-  text: Highlight on Caret Movement
+    text: Highlight on Caret Movement
 group.code.folding:
-  text: Code Folding
+    text: Code Folding
 group.editor.font:
-  text: Editor Font
+    text: Editor Font
 group.error.highlighting:
-  text: Error highlighting
+    text: Error highlighting
 group.javadoc.alignment:
-  text: Alignment
+    text: Alignment
 group.javadoc.blank.lines:
-  text: Blank lines
+    text: Blank lines
 group.javadoc.invalid.tags:
-  text: Invalid tags
+    text: Invalid tags
 group.javadoc.other:
-  text: Other
+    text: Other
 group.limits:
-  text: Limits
+    text: Limits
 group.richcopy:
-  text: Rich-text copy
+    text: Rich-text copy
 group.smart.keys:
-  text: Smart Keys
+    text: Smart Keys
 group.spaces.after.right.brace:
-  text: Before Keywords
+    text: Before Keywords
 group.spaces.around.operators:
-  text: Around Operators
+    text: Around Operators
 group.spaces.before.left.brace:
-  text: Before Left Brace
+    text: Before Left Brace
 group.spaces.before.parentheses:
-  text: Before Parentheses
+    text: Before Parentheses
 group.spaces.in.ternary.operator:
-  text: In Ternary Operator (?:)
+    text: In Ternary Operator (?:)
 group.spaces.in.type.arguments:
-  text: Within Type Arguments
+    text: Within Type Arguments
 group.spaces.in.type.arguments.block:
-  text: Type Arguments
+    text: Type Arguments
 group.spaces.in.type.parameters.block:
-  text: Type Parameters
+    text: Type Parameters
 group.spaces.other:
-  text: Other
+    text: Other
 group.spaces.within:
-  text: Within
+    text: Within
 group.tab.appearance:
-  text: Tab Appearance
+    text: Tab Appearance
 group.tab.closing.policy:
-  text: Tab Closing Policy
+    text: Tab Closing Policy
 group.tabs.and.indents:
-  text: Tabs and Indents
+    text: Tabs and Indents
 group.virtual.space:
-  text: Virtual Space
+    text: Virtual Space
 groupbox.display:
-  text: Display
+    text: Display
+heavyProcess.type.indexing:
+    text: Indexing...
+heavyProcess.type.processing:
+    text: Processing...
+heavyProcess.type.syncing:
+    text: Syncing...
 html.project.uses.own.code.style:
-  text: <html><body>The current project is configured to use its own code style.<br>Changes made to global code style settings will not affect formatting in the current project.<br>See Project Settings | Code Style.<br>Press \&quot;Edit Global Settings\&quot; button below if you still want to edit global settings.</body></html>
+    text: <html><body>The current project is configured to use its own code style.<br>Changes made to global code style settings will not affect formatting in the current project.<br>See Project Settings | Code Style.<br>Press \&quot;Edit Global Settings\&quot; button below if you still want to edit global settings.</body></html>
 import.scheme.chooser.destination:
-  text: 'To:'
+    text: 'To:'
 import.scheme.chooser.source:
-  text: 'From:'
+    text: 'From:'
 inline.elements:
-  text: 'Inline elements:'
+    text: 'Inline elements:'
 insert.override.annotation:
-  text: Insert @&Override annotation
+    text: Insert @&Override annotation
 integer.field.value.default:
-  text: Default
-integer.field.value.expected:
-  text: A value is expected
-integer.field.value.not.a.number:
-  text: Value ''{0}'' is not an integer number
-integer.field.value.out.of.range:
-  text: Value ''{0}'' is out of range {1}..{2}
+    text: Default
 label.appearance.show.vertical.indent.guides:
-  text: Show vertical indent guides
+    text: Show vertical indent guides
 label.autocomplete.when.only.one.choice:
-  text: 'Autocomplete when only one choice:'
+    text: 'Autocomplete when only one choice:'
 label.breadcrumbs.languages:
-  text: 'Languages:'
+    text: 'Languages:'
 label.breadcrumbs.placement:
-  text: 'Placement:'
+    text: 'Placement:'
 label.collapse.by.default:
-  text: 'Collapse by default:'
+    text: 'Collapse by default:'
 label.complete.autopopup:
-  text: 'Autopopup:'
+    text: 'Autopopup:'
 label.complete.brackets:
-  text: 'Brackets:'
+    text: 'Brackets:'
 label.do.not.indent.children.of:
-  text: 'Do not indent children of:'
+    text: 'Do not indent children of:'
 label.edit.per.project.or.global.code.style:
-  text: <html><body>Check option above on for per-project code style configuration<br>or use global code style. Global code style settings can be configured<br>in IDE Settings/Global Code Style</body></html>
+    text: <html><body>Check option above on for per-project code style configuration<br>or use global code style. Global code style settings can be configured<br>in IDE Settings/Global Code Style</body></html>
 label.fallback.fonts.list.description:
-  text: The ide tries to use the next font from 'Selected fonts' list for displaying a symbol if the current font fails to do that
+    text: The ide tries to use the next font from 'Selected fonts' list for displaying a symbol if the current font fails to do that
 label.font.name:
-  text: 'Name:'
+    text: 'Name:'
 label.font.size:
-  text: 'Font size:'
+    text: 'Font size:'
 label.font.type:
-  text: 'Font type:'
+    text: 'Font type:'
 label.inherit.attributes:
-  text: 'Inherit Attributes From:'
+    text: 'Inherit Attributes From:'
 label.insert.new.line.before:
-  text: 'Insert new line before:'
+    text: 'Insert new line before:'
 label.keep.white.spaces.inside:
-  text: 'Keep white spaces inside:'
+    text: 'Keep white spaces inside:'
 label.lines:
-  text: lines
+    text: lines
 label.loading.page.please.wait:
-  text: Loading...
+    text: Loading...
 label.name:
-  text: 'Name:'
+    text: 'Name:'
 label.name.prefix:
-  text: 'Name prefix:'
+    text: 'Name prefix:'
 label.name.suffix:
-  text: 'Name suffix:'
+    text: 'Name suffix:'
 label.naming.field:
-  text: 'Field:'
+    text: 'Field:'
 label.naming.local.variable:
-  text: 'Local variable:'
+    text: 'Local variable:'
 label.naming.parameter:
-  text: 'Parameter:'
+    text: 'Parameter:'
 label.naming.static.field:
-  text: 'Static field:'
+    text: 'Static field:'
 label.or.if.tag.size.more.than:
-  text: or if tag size more than
+    text: or if tag size more than
 label.remove.new.line.before:
-  text: 'Remove new line before:'
+    text: 'Remove new line before:'
 label.smart.enter:
-  text: 'Smart Enter:'
+    text: 'Smart Enter:'
 label.when.closing.active.editor:
-  text: 'When closing active editor:'
+    text: 'When closing active editor:'
 label.when.number.of.opened.editors.exceeds.tab.limit:
-  text: 'When number of opened editors exceeds tab limit:'
+    text: 'When number of opened editors exceeds tab limit:'
 label.wrap.attributes:
-  text: 'Wrap attributes:'
+    text: 'Wrap attributes:'
 label.you.can.import:
-  text: You can import your settings from a previous version of {0}.
-launcher.script.title:
-  text: Create Launcher Script
+    text: You can import your settings from a previous version of {0}.
 launcher.script.overwrite:
-  text: The file ''{0}'' already exists. Would you like to overwrite it?
+    text: The file ''{0}'' already exists. Would you like to overwrite it?
 launcher.script.sudo.prompt:
-  text: Please enter your password to create a launcher script in a ''{0}''
+    text: Please enter your password to create a launcher script in a ''{0}''
+launcher.script.title:
+    text: Create Launcher Script
 ligatures.more.info:
-  text: more info
+    text: more info
 listbox.import.all.other.imports:
-  text: <all other imports>
+    text: <all other imports>
 listbox.import.blank.line:
-  text: <blank line>
+    text: <blank line>
 listbox.import.package:
-  text: Package
+    text: Package
 listbox.import.with.subpackages:
-  text: With Subpackages
+    text: With Subpackages
 listbox.members.order.constructors:
-  text: Constructors
+    text: Constructors
 listbox.members.order.fields:
-  text: Instance fields
+    text: Instance fields
 listbox.members.order.inner.classes:
-  text: Inner classes
+    text: Inner classes
 listbox.members.order.inner.static.classes:
-  text: Static inner classes
+    text: Static inner classes
 listbox.members.order.methods:
-  text: Instance methods
+    text: Instance methods
 listbox.members.order.static.fields:
-  text: Static fields
+    text: Static fields
 listbox.members.order.static.methods:
-  text: Static methods
+    text: Static methods
 loading.include.indices:
-  text: Loading include indices...
+    text: Loading include indices...
 margin.columns:
-  text: columns
+    text: columns
 message.duplicate.plugin.id:
-  text: 'Duplicate plugin id:'
+    text: 'Duplicate plugin id:'
 nothing.here:
-  text: Nothing Here
+    text: Nothing Here
 notification.group.automatic.indent.detection:
-  text: Automatic indent detection
+    text: Automatic indent detection
 option.table.sizing.text:
-  text: Chop down if long.
+    text: Chop down if long.
 primary.font:
-  text: 'Primary font:'
+    text: 'Primary font:'
 progress.analysing.font:
-  text: 'Analysing font: {0}'
+    text: 'Analysing font: {0}'
 progress.analyzing.fonts:
-  text: Analyzing Fonts
+    text: Analyzing Fonts
 project.code.style.migration.message:
-  text: The code style settings of your project {0} were migrated to the new format. We''re keeping the old format for now, for backwards compatibility.
+    text: The code style settings of your project {0} were migrated to the new format. We''re keeping the old format for now, for backwards compatibility.
 project.code.style.migration.title:
-  text: Project code style settings migration
+    text: Project code style settings migration
 quickdoc.tooltip.font.size.by.wheel:
-  text: Slider or Ctrl+Wheel change font size
+    text: Slider or Ctrl+Wheel change font size
 radio.activate.left.neighbouring.tab:
-  text: Activate left neighbouring tab
+    text: Activate left neighbouring tab
 radio.activate.most.recently.opened.tab:
-  text: Activate most recently opened tab
+    text: Activate most recently opened tab
 radio.activate.right.neighbouring.tab:
-  text: Activate right neighbouring tab
+    text: Activate right neighbouring tab
 radio.close.less.frequently.used.files:
-  text: Close less frequently used files
+    text: Close less frequently used files
 radio.close.non.modified.files.first:
-  text: Close non-modified files first
+    text: Close non-modified files first
 radio.do.not.import:
-  text: I do not have a previous version of {0} or I do not want to import my settings
+    text: I do not have a previous version of {0} or I do not want to import my settings
 radio.import:
-  text: I want to import my settings from a custom location
+    text: I want to import my settings from a custom location
 radio.import.auto:
-  text: I want to import my settings from a previous version ({0})
+    text: I want to import my settings from a previous version ({0})
 radio.insert.both.parentheses:
-  text: Insert '()'
+    text: Insert '()'
 radio.insert.left.parenthesis:
-  text: Insert '('
+    text: Insert '('
 radio.prefer.comma.separated.import.list:
-  text: Prefer comma separated import list
+    text: Prefer comma separated import list
 radio.prefer.one.import.statement.per.page.directive:
-  text: Prefer one import statement per page directive
+    text: Prefer one import statement per page directive
 radio.show.breadcrumbs.above:
-  text: Top
+    text: Top
 radio.show.breadcrumbs.below:
-  text: Bottom
+    text: Bottom
 radio.use.global.code.style:
-  text: Use global code style
+    text: Use global code style
 radio.use.per.project.code.style.scheme:
-  text: Use per-project code style scheme
+    text: Use per-project code style scheme
 reformat.changed.text.file.too.big.notification.groupId:
-  text: Reformat changed text
+    text: Reformat changed text
 reformat.changed.text.file.too.big.notification.text:
-  text: file {0} is too big or there are too many changes
+    text: file {0} is too big or there are too many changes
 reformat.changed.text.file.too.big.notification.title:
-  text: Couldn't calculate changed ranges
+    text: Couldn't calculate changed ranges
 remote.desktop.detected.message:
-  text: Animation disabled
+    text: Animation disabled
 remote.desktop.detected.title:
-  text: Remote desktop detected
+    text: Remote desktop detected
 secondary.font:
-  text: 'Secondary font:'
+    text: 'Secondary font:'
 settings.code.style.general.autodetect.indents:
-  text: Detect and use existing file indents for editing
+    text: Detect and use existing file indents for editing
 settings.code.style.general.default.options:
-  text: Default Options
+    text: Default Options
 settings.code.style.general.enable.formatter.tags:
-  text: Enable formatter markers in comments
+    text: Enable formatter markers in comments
 settings.code.style.general.excluded.files:
-  text: 'Do not format:'
+    text: 'Do not format:'
 settings.code.style.general.formatter.control:
-  text: Formatter Control
+    text: Formatter Control
 settings.code.style.general.formatter.marker.invalid.regexp:
-  text: Invalid regular expression
+    text: Invalid regular expression
 settings.code.style.general.formatter.marker.options.title:
-  text: Options
+    text: Options
 settings.code.style.general.formatter.marker.regexp:
-  text: Regular expressions
+    text: Regular expressions
 settings.code.style.general.formatter.marker.title:
-  text: Markers
+    text: Markers
 settings.code.style.general.formatter.off.tag:
-  text: 'Formatter off:'
+    text: 'Formatter off:'
 settings.code.style.general.formatter.on.tag:
-  text: 'Formatter on:'
+    text: 'Formatter on:'
 settings.code.style.general.indents.detection:
-  text: Indents Detection
+    text: Indents Detection
 settings.code.style.general.visual.guides.hint:
-  text: Specify one guide (80) or several (80, 120)
+    text: Specify one guide (80) or several (80, 120)
 settings.code.style.visual.guides:
-  text: Visual guides
+    text: Visual guides
 settings.default.value.prefix:
-  text: 'Default: {0}'
+    text: 'Default: {0}'
 settings.editor.font.none:
-  text: <None>
+    text: <None>
 settings.soft.margins.empty.list:
-  text: None
+    text: None
 tab.editor.settings.appearance:
-  text: Appearance
+    text: Appearance
 tab.editor.settings.behavior:
-  text: Behavior
+    text: Behavior
 tab.indent.other:
-  text: Other
+    text: Other
 task.button.cancel:
-  text: Cancel
+    text: Cancel
 text.no.path.variables:
-  text: No path variables
+    text: No path variables
 title.add.variable:
-  text: Add Variable
+    text: Add Variable
 title.blank.lines:
-  text: Blank Lines
+    text: Blank Lines
 title.braces.placement:
-  text: Braces Placement
+    text: Braces Placement
 title.cannot.modify.readonly.scheme:
-  text: Cannot Modify Read-Only Scheme
+    text: Cannot Modify Read-Only Scheme
 title.choose.code.style.scheme:
-  text: Choose Code Style Scheme
+    text: Choose Code Style Scheme
 title.code.completion:
-  text: Code Completion
+    text: Code Completion
 title.code.generation:
-  text: Code Generation
+    text: Code Generation
 title.colors.and.fonts:
-  text: Colors \& Fonts
+    text: Colors \& Fonts
 title.complete.installation:
-  text: Complete Installation
+    text: Complete Installation
 title.diff:
-  text: Diff
+    text: Diff
 title.do.not.indent.children.of:
-  text: Do not Indent Children Of
+    text: Do not Indent Children Of
 title.dont.wrap.if.inline.content:
-  text: Dont Wrap If Inline Content Only
+    text: Dont Wrap If Inline Content Only
 title.edit.global.settings:
-  text: Edit &Global Settings
+    text: Edit &Global Settings
 title.edit.variable:
-  text: Edit Variable
+    text: Edit Variable
 title.editor:
-  text: General
+    text: General
 title.file.status:
-  text: File Status
+    text: File Status
 title.font.available:
-  text: 'Available fonts:'
+    text: 'Available fonts:'
 title.font.selected:
-  text: 'Selected fonts:'
+    text: 'Selected fonts:'
 title.general:
-  text: General
+    text: General
 title.global.code.style:
-  text: |-
-    Global
-    Code Style
+    text: |-
+        Global
+        Code Style
 title.html:
-  text: HTML
+    text: HTML
 title.import.layout:
-  text: Import Layout
+    text: Import Layout
 title.imports:
-  text: Imports
+    text: Imports
 title.inline.elements:
-  text: Inline Elements
+    text: Inline Elements
 title.insert.new.line.before.tags:
-  text: Insert New Line Before Tags
+    text: Insert New Line Before Tags
 title.installation.home.required:
-  text: Config Folder or Installation Home Required
+    text: Config Folder or Installation Home Required
 title.javadoc:
-  text: JavaDoc
+    text: JavaDoc
 title.jsp.imports.layout:
-  text: JSP imports layout
+    text: JSP imports layout
 title.keep.blank.lines:
-  text: Keep Maximum Blank Lines
+    text: Keep Maximum Blank Lines
 title.keep.whitespaces.inside:
-  text: Keep Whitespaces Inside
+    text: Keep Whitespaces Inside
 title.lookup.list:
-  text: Lookup List
+    text: Lookup List
 title.minimum.blank.lines:
-  text: Minimum Blank Lines
+    text: Minimum Blank Lines
 title.naming:
-  text: Naming
+    text: Naming
 title.naming.comment.code:
-  text: Comment Code
+    text: Comment Code
 title.naming.final.modifier:
-  text: Final Modifier
+    text: Final Modifier
 title.order.of.members:
-  text: Order of Members
+    text: Order of Members
 title.other.languages:
-  text: Other Languages
+    text: Other Languages
 title.other.tabs.and.indents:
-  text: Other
+    text: Other
 title.packages.to.use.import.with:
-  text: Packages to Use Import with '*'
+    text: Packages to Use Import with '*'
 title.parameter.info:
-  text: Parameter Info
+    text: Parameter Info
 title.path.variables:
-  text: Path Variables
+    text: Path Variables
 title.place.on.new.line:
-  text: Place on New Line
+    text: Place on New Line
 title.preview:
-  text: Preview
+    text: Preview
 title.project.code.style:
-  text: |-
-    Project
-    Code Style
+    text: |-
+        Project
+        Code Style
 title.remove.line.breaks.before.tags:
-  text: Remove Line Breaks Before Tags
+    text: Remove Line Breaks Before Tags
 title.save.code.style.scheme.as:
-  text: Save Code Style Scheme As
+    text: Save Code Style Scheme As
 title.save.color.scheme.as:
-  text: Save Color Scheme As
+    text: Save Color Scheme As
 title.scope.based:
-  text: Scope Based
+    text: Scope Based
 title.select.font:
-  text: Select Font
+    text: Select Font
 title.settings:
-  text: Settings
+    text: Settings
 title.settings.import.failed:
-  text: Settings Import Failed
+    text: Settings Import Failed
 title.spaces:
-  text: Spaces
+    text: Spaces
 title.tabs.and.indents:
-  text: Tabs and Indents
+    text: Tabs and Indents
 title.tag.name:
-  text: Tag Name
+    text: Tag Name
 title.warning:
-  text: Warning
+    text: Warning
 title.xml:
-  text: XML
+    text: XML
 tooltip.indent.must.be.multiple.of.tab.size.for.smart.tabs.to.operate:
-  text: Indent must be multiple of tab size for smart tabs to operate
+    text: Indent must be multiple of tab size for smart tabs to operate
 use.external.annotations:
-  text: Use &external annotations
+    text: Use &external annotations
 use.ligatures:
-  text: Enable font ligatures
+    text: Enable font ligatures
 watcher.exe.not.exe:
-  text: 'Native file watcher is not executable: <a href="{0}">{0}</a>'
+    text: 'Native file watcher is not executable: <a href="{0}">{0}</a>'
 watcher.exe.not.exists:
-  text: Native file watcher is not supported on this platform
+    text: Native file watcher is not supported on this platform
 watcher.exe.not.found:
-  text: Native file watcher executable not found
+    text: Native file watcher executable not found
 watcher.failed.to.start:
-  text: File watcher failed to start
+    text: File watcher failed to start
 watcher.gave.up:
-  text: File watcher gave up to operate
+    text: File watcher gave up to operate
 watcher.non.watchable.project:
-  text: Project content is under network-mounted directory
+    text: Project content is under network-mounted directory
 watcher.slow.sync:
-  text: External file changes sync may be slow
+    text: External file changes sync may be slow
 wrapping.after.modifier.list:
-  text: Wrap after modifier list
+    text: Wrap after modifier list
 wrapping.align.fields.in.columns:
-  text: Align fields in columns
+    text: Align fields in columns
 wrapping.align.in.columns:
-  text: Align in columns
+    text: Align in columns
 wrapping.align.parenthesised.when.multiline:
-  text: Align parenthesised when multiline
+    text: Align parenthesised when multiline
 wrapping.align.simple.methods.in.columns:
-  text: Align simple methods in columns
+    text: Align simple methods in columns
 wrapping.align.throws.keyword:
-  text: Align 'throws' to method start
+    text: Align 'throws' to method start
 wrapping.align.variables.in.columns:
-  text: Align variables in columns
+    text: Align variables in columns
 wrapping.align.when.multiline:
-  text: Align when multiline
+    text: Align when multiline
 wrapping.and.braces:
-  text: Wrapping and Braces
+    text: Wrapping and Braces
 wrapping.array.initializer:
-  text: Array initializer
+    text: Array initializer
 wrapping.assert.statement:
-  text: Assert statement
+    text: Assert statement
 wrapping.assignment.sign.on.next.line:
-  text: Assignment sign on next line
+    text: Assignment sign on next line
 wrapping.assignment.statement:
-  text: Assignment statement
+    text: Assignment statement
 wrapping.assignment.variables.groups:
-  text: Fields/variables groups
+    text: Fields/variables groups
 wrapping.binary.operations:
-  text: Binary expressions
+    text: Binary expressions
 wrapping.brace.placement:
-  text: Braces placement
+    text: Braces placement
 wrapping.brace.placement.class.declaration:
-  text: In class declaration
+    text: In class declaration
 wrapping.brace.placement.end.of.line:
-  text: End of line
+    text: End of line
 wrapping.brace.placement.method.declaration:
-  text: In method declaration
+    text: In method declaration
 wrapping.brace.placement.next.line:
-  text: Next line
+    text: Next line
 wrapping.brace.placement.next.line.each.shifted:
-  text: Next line, each shifted
+    text: Next line, each shifted
 wrapping.brace.placement.next.line.if.wrapped:
-  text: Next line if wrapped
+    text: Next line if wrapped
 wrapping.brace.placement.next.line.shifted:
-  text: Next line shifted
+    text: Next line shifted
 wrapping.brace.placement.other:
-  text: Other
+    text: Other
 wrapping.catch.on.new.line:
-  text: '''catch'' on new line'
+    text: '''catch'' on new line'
 wrapping.chained.method.call.first.on.new.line:
-  text: Wrap first call
+    text: Wrap first call
 wrapping.chained.method.calls:
-  text: Chained method calls
+    text: Chained method calls
 wrapping.chop.down.if.long:
-  text: Chop down if long
+    text: Chop down if long
 wrapping.classes.annotation:
-  text: Class annotations
+    text: Class annotations
 wrapping.colon.signs.on.next.line:
-  text: ''':'' signs on next line'
+    text: ''':'' signs on next line'
 wrapping.comments:
-  text: Comments
+    text: Comments
 wrapping.comments.wrap.at.right.margin:
-  text: Wrap at right margin
+    text: Wrap at right margin
 wrapping.do.not.wrap:
-  text: Do not wrap
+    text: Do not wrap
 wrapping.dowhile.statement:
-  text: '''do ... while()'' statement'
+    text: '''do ... while()'' statement'
 wrapping.else.on.new.line:
-  text: '''else'' on new line'
+    text: '''else'' on new line'
 wrapping.enum.constants:
-  text: Enum constants
+    text: Enum constants
 wrapping.extends.implements.keyword:
-  text: Extends/implements keyword
+    text: Extends/implements keyword
 wrapping.extends.implements.list:
-  text: Extends/implements list
+    text: Extends/implements list
 wrapping.fields.annotation:
-  text: Field annotations
+    text: Field annotations
 wrapping.finally.on.new.line:
-  text: '''finally'' on new line'
+    text: '''finally'' on new line'
 wrapping.for.statement:
-  text: '''for()'' statement'
+    text: '''for()'' statement'
 wrapping.force.braces:
-  text: Force braces
+    text: Force braces
 wrapping.force.braces.always:
-  text: Always
+    text: Always
 wrapping.force.braces.do.not.force:
-  text: Do not force
+    text: Do not force
 wrapping.force.braces.when.multiline:
-  text: When multiline
+    text: When multiline
 wrapping.if.statement:
-  text: '''if()'' statement'
+    text: '''if()'' statement'
 wrapping.indent.case.from.switch:
-  text: Indent 'case' branches
+    text: Indent 'case' branches
 wrapping.keep.comment.at.first.column:
-  text: Comment at first column
+    text: Comment at first column
 wrapping.keep.line.breaks:
-  text: Line breaks
+    text: Line breaks
 wrapping.keep.multiple.expressions.in.one.line:
-  text: Multiple expressions in one line
+    text: Multiple expressions in one line
 wrapping.keep.simple.blocks.in.one.line:
-  text: Simple blocks in one line
+    text: Simple blocks in one line
 wrapping.keep.simple.classes.in.one.line:
-  text: Simple classes in one line
+    text: Simple classes in one line
 wrapping.keep.simple.lambdas.in.one.line:
-  text: Simple lambdas in one line
+    text: Simple lambdas in one line
 wrapping.keep.simple.methods.in.one.line:
-  text: Simple methods in one line
+    text: Simple methods in one line
 wrapping.keep.when.reformatting:
-  text: Keep when reformatting
+    text: Keep when reformatting
 wrapping.local.variables.annotation:
-  text: Local variable annotations
+    text: Local variable annotations
 wrapping.long.lines:
-  text: Ensure right margin is not exceeded
+    text: Ensure right margin is not exceeded
 wrapping.method.arguments:
-  text: Method call arguments
+    text: Method call arguments
 wrapping.method.parameters:
-  text: Method declaration parameters
+    text: Method declaration parameters
 wrapping.method.parentheses:
-  text: Method parentheses
+    text: Method parentheses
 wrapping.methods.annotation:
-  text: Method annotations
+    text: Method annotations
 wrapping.modifier.list:
-  text: Modifier list
+    text: Modifier list
 wrapping.new.line.after.lbrace:
-  text: New line after '{'
+    text: New line after '{'
 wrapping.new.line.after.lpar:
-  text: New line after '('
+    text: New line after '('
 wrapping.operation.sign.on.next.line:
-  text: Operation sign on next line
+    text: Operation sign on next line
 wrapping.parameters.annotation:
-  text: Parameter annotations
+    text: Parameter annotations
 wrapping.quest.and.colon.signs.on.next.line:
-  text: '''?'' and '':'' signs on next line'
+    text: '''?'' and '':'' signs on next line'
 wrapping.rbrace.on.new.line:
-  text: Place '}' on new line
+    text: Place '}' on new line
 wrapping.rpar.on.new.line:
-  text: Place ')' on new line
+    text: Place ')' on new line
 wrapping.special.else.if.braces.treatment:
-  text: Special 'else if' treatment
+    text: Special 'else if' treatment
 wrapping.switch.statement:
-  text: '''switch'' statement'
+    text: '''switch'' statement'
 wrapping.take.priority.over.call.chain.wrapping:
-  text: Take priority over call chain wrapping
+    text: Take priority over call chain wrapping
 wrapping.ternary.operation:
-  text: Ternary operation
+    text: Ternary operation
 wrapping.throws.keyword:
-  text: Throws keyword
+    text: Throws keyword
 wrapping.throws.list:
-  text: Throws list
+    text: Throws list
 wrapping.try.resources:
-  text: '''try-with-resources'''
+    text: '''try-with-resources'''
 wrapping.try.statement:
-  text: '''try'' statement'
+    text: '''try'' statement'
 wrapping.while.on.new.line:
-  text: '''while'' on new line'
+    text: '''while'' on new line'
 wrapping.while.statement:
-  text: '''while()'' statement'
+    text: '''while()'' statement'
 wrapping.wrap.always:
-  text: Wrap always
+    text: Wrap always
 wrapping.wrap.if.long:
-  text: Wrap if long
+    text: Wrap if long
 wrapping.wrap.on.typing:
-  text: Wrap on typing
+    text: Wrap on typing
 wrapping.wrap.on.typing.default:
-  text: Default
+    text: Default
 wrapping.wrap.on.typing.no.wrap:
-  text: 'No'
+    text: 'No'
 wrapping.wrap.on.typing.wrap:
-  text: 'Yes'
+    text: 'Yes'
