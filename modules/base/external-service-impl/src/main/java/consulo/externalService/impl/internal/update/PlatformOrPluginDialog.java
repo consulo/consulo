@@ -80,6 +80,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     @Nonnull
     private PlatformOrPluginUpdateResultType myType;
 
+    @SuppressWarnings("unchecked")
     public PlatformOrPluginDialog(
         @Nullable Project project,
         @Nonnull PlatformOrPluginUpdateResult updateResult,
@@ -131,7 +132,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
             }
         }
 
-        Lists.quickSort(toShowPluginList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        toShowPluginList.sort(Comparator.comparing(t -> PluginSorter.NAME.getValueGetter().apply(t)));
 
         Lists.weightSort(toShowPluginList, pluginDescriptor -> {
             if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
