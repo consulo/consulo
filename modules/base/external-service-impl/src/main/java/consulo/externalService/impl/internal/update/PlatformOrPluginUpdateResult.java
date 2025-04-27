@@ -17,6 +17,7 @@ package consulo.externalService.impl.internal.update;
 
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import jakarta.annotation.Nonnull;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -25,25 +26,25 @@ import java.util.List;
  * @since 10-Oct-16
  */
 public class PlatformOrPluginUpdateResult {
-  public static PlatformOrPluginUpdateResult CANCELED = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.CANCELED, Collections.emptyList());
-  public static PlatformOrPluginUpdateResult NO_UPDATE = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.NO_UPDATE, Collections.emptyList());
-  public static PlatformOrPluginUpdateResult RESTART_REQUIRED = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED, Collections.emptyList());
+    public static PlatformOrPluginUpdateResult CANCELED = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.CANCELED, Collections.emptyList());
+    public static PlatformOrPluginUpdateResult NO_UPDATE = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.NO_UPDATE, Collections.emptyList());
+    public static PlatformOrPluginUpdateResult RESTART_REQUIRED = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED, Collections.emptyList());
 
     private final PlatformOrPluginUpdateResultType myType;
-  private final List<PlatformOrPluginNode> myPlugins;
+    private final List<PlatformOrPluginNode> myPlugins;
 
-  public PlatformOrPluginUpdateResult(@Nonnull PlatformOrPluginUpdateResultType type, @Nonnull List<PlatformOrPluginNode> plugins) {
-    myType = type;
-    myPlugins = plugins;
-  }
+    public PlatformOrPluginUpdateResult(@Nonnull PlatformOrPluginUpdateResultType type, @Nonnull List<PlatformOrPluginNode> plugins) {
+        myType = type;
+        myPlugins = plugins;
+    }
 
-  @Nonnull
-  public PlatformOrPluginUpdateResultType getType() {
-    return myType;
-  }
+    @Nonnull
+    public PlatformOrPluginUpdateResultType getType() {
+        return myType;
+    }
 
-  @Nonnull
-  public List<PlatformOrPluginNode> getPlugins() {
-    return myPlugins;
-  }
+    @Nonnull
+    public List<PlatformOrPluginNode> getPlugins() {
+        return myPlugins;
+    }
 }
