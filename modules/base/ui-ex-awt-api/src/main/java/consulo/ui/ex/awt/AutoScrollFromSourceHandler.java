@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ui.ex.awt;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.util.Alarm;
 
+import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -84,21 +83,20 @@ public abstract class AutoScrollFromSourceHandler implements Disposable {
     private class AutoScrollFromSourceAction extends ToggleAction implements DumbAware {
         public AutoScrollFromSourceAction() {
             super(
-                UIBundle.message("autoscroll.from.source.action.name"),
-                UIBundle.message("autoscroll.from.source.action.description"),
-                AllIcons.General.AutoscrollFromSource
+                UILocalize.autoscrollFromSourceActionName(),
+                UILocalize.autoscrollFromSourceActionDescription(),
+                PlatformIconGroup.generalAutoscrollfromsource()
             );
         }
 
         @Override
-        public boolean isSelected(final AnActionEvent event) {
+        public boolean isSelected(@Nonnull AnActionEvent event) {
             return isAutoScrollEnabled();
         }
 
         @Override
-        public void setSelected(final AnActionEvent event, final boolean flag) {
+        public void setSelected(@Nonnull AnActionEvent event, final boolean flag) {
             setAutoScrollEnabled(flag);
         }
     }
 }
-

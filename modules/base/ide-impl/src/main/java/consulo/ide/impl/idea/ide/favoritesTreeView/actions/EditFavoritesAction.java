@@ -28,7 +28,7 @@ import consulo.ui.ex.awt.CommonActionsPanel;
 import java.util.Set;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public class EditFavoritesAction extends AnAction {
     @Override

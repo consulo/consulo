@@ -32,8 +32,8 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
- * User: anna
- * Date: Feb 24, 2005
+ * @author anna
+ * @since 2005-02-24
  */
 public class AddNewFavoritesListAction extends AnAction {
     public AddNewFavoritesListAction() {
@@ -48,16 +48,16 @@ public class AddNewFavoritesListAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project != null) {
             doAddNewFavoritesList(project);
         }
     }
 
     @RequiredUIAccess
-    public static String doAddNewFavoritesList(final Project project) {
-        final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
-        final String name = Messages.showInputDialog(
+    public static String doAddNewFavoritesList(Project project) {
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+        String name = Messages.showInputDialog(
             project,
             IdeLocalize.promptInputNewFavoritesListName().get(),
             IdeLocalize.titleAddNewFavoritesList().get(),
@@ -75,7 +75,8 @@ public class AddNewFavoritesListAction extends AnAction {
                 public boolean canClose(String inputString) {
                     inputString = inputString.trim();
                     if (favoritesManager.getAvailableFavoritesListNames().contains(inputString)) {
-                        Messages.showErrorDialog(project,
+                        Messages.showErrorDialog(
+                            project,
                             IdeLocalize.errorFavoritesListAlreadyExists(inputString.trim()).get(),
                             IdeLocalize.titleUnableToAddFavoritesList().get()
                         );

@@ -27,27 +27,23 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
- * User: anna
- * Date: Feb 23, 2005
+ * @author anna
+ * @since 2005-02-23
  */
 public class RenameFavoritesListAction extends AnAction implements DumbAware {
     public RenameFavoritesListAction() {
-        super(
-            IdeLocalize.actionRenameFavoritesList(),
-            IdeLocalize.actionRenameFavoritesList(),
-            null
-        );
+        super(IdeLocalize.actionRenameFavoritesList(), IdeLocalize.actionRenameFavoritesList());
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final DataContext dataContext = e.getDataContext();
-        final Project project = e.getData(Project.KEY);
+        DataContext dataContext = e.getDataContext();
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
-        final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
         String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
         if (listName == null || favoritesManager.getListProvider(listName) != null) {
             return;
@@ -58,13 +54,13 @@ public class RenameFavoritesListAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent e) {
-        final DataContext dataContext = e.getDataContext();
+        DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);
             return;
         }
-        final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
         String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
         e.getPresentation().setEnabled(listName != null && favoritesManager.getListProvider(listName) == null);
     }

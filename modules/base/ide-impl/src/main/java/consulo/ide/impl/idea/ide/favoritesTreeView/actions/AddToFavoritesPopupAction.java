@@ -26,15 +26,15 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
- * User: anna
- * Date: Feb 24, 2005
+ * @author anna
+ * @since 2005-02-24
  */
 public class AddToFavoritesPopupAction extends QuickSwitchSchemeAction {
     @Override
     protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
         group.removeAll();
 
-        final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
+        List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
         availableFavoritesLists.remove(dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
 
         for (String favoritesList : availableFavoritesLists) {

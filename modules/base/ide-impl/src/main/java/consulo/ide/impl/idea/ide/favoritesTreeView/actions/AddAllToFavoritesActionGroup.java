@@ -30,8 +30,8 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
- * User: anna
- * Date: Mar 3, 2005
+ * @author anna
+ * @since 2005-03-03
  */
 public class AddAllToFavoritesActionGroup extends ActionGroup {
     @Override
@@ -40,12 +40,12 @@ public class AddAllToFavoritesActionGroup extends ActionGroup {
         if (e == null) {
             return AnAction.EMPTY_ARRAY;
         }
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return AnAction.EMPTY_ARRAY;
         }
-        final List<String> listNames = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
-        final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
+        List<String> listNames = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
+        List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
         availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
         if (availableFavoritesLists.isEmpty()) {
             return new AnAction[]{new AddAllOpenFilesToNewFavoritesListAction()};

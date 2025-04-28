@@ -30,8 +30,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.ArrayList;
 
 /**
- * User: anna
- * Date: Apr 5, 2005
+ * @author anna
+ * @since 2005-04-05
  */
 public class AddAllOpenFilesToFavorites extends AnAction {
     private final String myFavoritesName;
@@ -44,14 +44,14 @@ public class AddAllOpenFilesToFavorites extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
 
-        final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
 
-        final ArrayList<PsiFile> filesToAdd = getFilesToAdd(project);
+        ArrayList<PsiFile> filesToAdd = getFilesToAdd(project);
         for (PsiFile file : filesToAdd) {
             favoritesManager.addRoots(myFavoritesName, null, file);
         }
@@ -60,14 +60,14 @@ public class AddAllOpenFilesToFavorites extends AnAction {
     @RequiredReadAction
     static ArrayList<PsiFile> getFilesToAdd(Project project) {
         ArrayList<PsiFile> result = new ArrayList<>();
-        final FileEditorManager editorManager = FileEditorManager.getInstance(project);
-        final PsiManager psiManager = PsiManager.getInstance(project);
-        final VirtualFile[] openFiles = editorManager.getOpenFiles();
+        FileEditorManager editorManager = FileEditorManager.getInstance(project);
+        PsiManager psiManager = PsiManager.getInstance(project);
+        VirtualFile[] openFiles = editorManager.getOpenFiles();
         for (VirtualFile openFile : openFiles) {
             if (!openFile.isValid()) {
                 continue;
             }
-            final PsiFile psiFile = psiManager.findFile(openFile);
+            PsiFile psiFile = psiManager.findFile(openFile);
             if (psiFile != null) {
                 result.add(psiFile);
             }
@@ -78,7 +78,7 @@ public class AddAllOpenFilesToFavorites extends AnAction {
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);
             return;

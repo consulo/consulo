@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 
 /**
  * @author Konstantin Bulenkov
@@ -32,7 +32,7 @@ public class FavoritesAutoScrollToSourceAction extends FavoritesToolbarButtonAct
         AutoScrollToSourceHandler autoScrollToSourceHandler,
         FavoritesViewTreeBuilder builder
     ) {
-        super(project, builder, UIBundle.message("autoscroll.to.source.action.name"), AllIcons.General.AutoscrollToSource);
+        super(project, builder, UILocalize.autoscrollToSourceActionName(), PlatformIconGroup.generalAutoscrolltosource());
         myAutoScrollToSourceHandler = autoScrollToSourceHandler;
     }
 

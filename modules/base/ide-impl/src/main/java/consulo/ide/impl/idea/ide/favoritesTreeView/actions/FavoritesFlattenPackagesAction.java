@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 
 /**
@@ -25,7 +25,7 @@ import consulo.project.Project;
  */
 public class FavoritesFlattenPackagesAction extends FavoritesToolbarButtonAction {
     public FavoritesFlattenPackagesAction(Project project, FavoritesViewTreeBuilder builder) {
-        super(project, builder, IdeBundle.message("action.flatten.packages"), AllIcons.ObjectBrowser.FlattenPackages);
+        super(project, builder, IdeLocalize.actionFlattenPackages(), PlatformIconGroup.objectbrowserFlattenpackages());
     }
 
     @Override

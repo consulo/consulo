@@ -43,9 +43,9 @@ public class SendToFavoritesAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final DataContext dataContext = e.getDataContext();
+        DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
-        final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
 
         FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
         if (roots == null) {
@@ -54,15 +54,15 @@ public class SendToFavoritesAction extends AnAction {
 
         for (FavoritesTreeNodeDescriptor root : roots) {
             FavoritesTreeNodeDescriptor listNode = root.getFavoritesRoot();
-            if (listNode != null && listNode != root && listNode.getElement() instanceof FavoritesListNode) {
-                doSend(favoritesManager, new FavoritesTreeNodeDescriptor[]{root}, listNode.getElement().getName());
+            if (listNode != null && listNode != root && listNode.getElement() instanceof FavoritesListNode favoritesListNode) {
+                doSend(favoritesManager, new FavoritesTreeNodeDescriptor[]{root}, favoritesListNode.getName());
             }
         }
     }
 
-    public void doSend(final FavoritesManagerImpl favoritesManager, final FavoritesTreeNodeDescriptor[] roots, final String listName) {
+    public void doSend(FavoritesManagerImpl favoritesManager, FavoritesTreeNodeDescriptor[] roots, String listName) {
         for (FavoritesTreeNodeDescriptor root : roots) {
-            final AbstractTreeNode rootElement = root.getElement();
+            AbstractTreeNode rootElement = root.getElement();
             String name = listName;
             if (name == null) {
                 name = root.getFavoritesRoot().getName();

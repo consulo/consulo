@@ -15,29 +15,26 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.OpenSourceUtil;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -49,11 +46,11 @@ public abstract class AutoScrollToSourceHandler {
     protected AutoScrollToSourceHandler() {
     }
 
-    public void install(final JTree tree) {
+    public void install(JTree tree) {
         myAutoScrollAlarm = new Alarm();
         new ClickListener() {
             @Override
-            public boolean onClick(MouseEvent e, int clickCount) {
+            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
                 if (clickCount > 1) {
                     return false;
                 }
@@ -70,23 +67,18 @@ public abstract class AutoScrollToSourceHandler {
 
         tree.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
-            public void mouseDragged(final MouseEvent e) {
+            public void mouseDragged(MouseEvent e) {
                 onSelectionChanged(tree);
             }
         });
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                onSelectionChanged(tree);
-            }
-        });
+        tree.addTreeSelectionListener(e -> onSelectionChanged(tree));
     }
 
-    public void install(final JTable table) {
+    public void install(JTable table) {
         myAutoScrollAlarm = new Alarm();
         new ClickListener() {
             @Override
-            public boolean onClick(MouseEvent e, int clickCount) {
+            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
                 if (clickCount >= 2) {
                     return false;
                 }
@@ -102,28 +94,23 @@ public abstract class AutoScrollToSourceHandler {
 
         table.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
-            public void mouseDragged(final MouseEvent e) {
+            public void mouseDragged(MouseEvent e) {
                 onSelectionChanged(table);
             }
         });
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                onSelectionChanged(table);
-            }
-        });
+        table.getSelectionModel().addListSelectionListener(e -> onSelectionChanged(table));
     }
 
-    public void install(final JList jList) {
+    public void install(JList jList) {
         myAutoScrollAlarm = new Alarm();
         new ClickListener() {
             @Override
-            public boolean onClick(MouseEvent e, int clickCount) {
+            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
                 if (clickCount >= 2) {
                     return false;
                 }
-                final Object source = e.getSource();
-                final int index = jList.locationToIndex(SwingUtilities.convertPoint(
+                Object source = e.getSource();
+                int index = jList.locationToIndex(SwingUtilities.convertPoint(
                     source instanceof Component ? (Component)source : null,
                     e.getPoint(),
                     jList
@@ -136,12 +123,7 @@ public abstract class AutoScrollToSourceHandler {
             }
         }.installOn(jList);
 
-        jList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                onSelectionChanged(jList);
-            }
-        });
+        jList.addListSelectionListener(e -> onSelectionChanged(jList));
     }
 
     public void cancelAllRequests() {
@@ -150,19 +132,14 @@ public abstract class AutoScrollToSourceHandler {
         }
     }
 
-    public void onMouseClicked(final Component component) {
+    public void onMouseClicked(Component component) {
         myAutoScrollAlarm.cancelAllRequests();
         if (isAutoScrollMode()) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    scrollToSource(component);
-                }
-            });
+            Application.get().invokeLater(() -> scrollToSource(component));
         }
     }
 
-    private void onSelectionChanged(final Component component) {
+    private void onSelectionChanged(Component component) {
         if (component != null && !component.isShowing()) {
             return;
         }
@@ -175,14 +152,14 @@ public abstract class AutoScrollToSourceHandler {
         }
 
         myAutoScrollAlarm.cancelAllRequests();
-        myAutoScrollAlarm.addRequest(new Runnable() {
-            @Override
-            public void run() {
+        myAutoScrollAlarm.addRequest(
+            () -> {
                 if (component.isShowing()) { //for tests
                     scrollToSource(component);
                 }
-            }
-        }, 500);
+            },
+            500
+        );
     }
 
     protected boolean needToCheckFocus() {
@@ -193,39 +170,36 @@ public abstract class AutoScrollToSourceHandler {
 
     protected abstract void setAutoScrollMode(boolean state);
 
-    protected void scrollToSource(final Component tree) {
+    protected void scrollToSource(Component tree) {
         DataContext dataContext = DataManager.getInstance().getDataContext(tree);
-        getReady(dataContext).doWhenDone(new Runnable() {
-            @Override
-            public void run() {
-                DataContext context = DataManager.getInstance().getDataContext(tree);
-                final VirtualFile vFile = context.getData(VirtualFile.KEY);
-                if (vFile != null) {
-                    // Attempt to navigate to the virtual file with unknown file type will show a modal dialog
-                    // asking to register some file type for this file. This behaviour is undesirable when autoscrolling.
-                    if (vFile.getFileType() == UnknownFileType.INSTANCE || vFile.getFileType() instanceof INativeFileType) {
-                        return;
-                    }
+        getReady(dataContext).doWhenDone(() -> {
+            DataContext context = DataManager.getInstance().getDataContext(tree);
+            VirtualFile vFile = context.getData(VirtualFile.KEY);
+            if (vFile != null) {
+                // Attempt to navigate to the virtual file with unknown file type will show a modal dialog
+                // asking to register some file type for this file. This behaviour is undesirable when autoscrolling.
+                if (vFile.getFileType() == UnknownFileType.INSTANCE || vFile.getFileType() instanceof INativeFileType) {
+                    return;
+                }
 
-                    //IDEA-84881 Don't autoscroll to very large files
-                    if (RawFileLoader.getInstance().isLargeForContentLoading(vFile.getLength())) {
-                        return;
-                    }
+                //IDEA-84881 Don't autoscroll to very large files
+                if (RawFileLoader.getInstance().isLargeForContentLoading(vFile.getLength())) {
+                    return;
                 }
-                Navigatable[] navigatables = context.getData(Navigatable.KEY_OF_ARRAY);
-                if (navigatables != null) {
-                    if (navigatables.length > 1) {
-                        return;
-                    }
-                    for (Navigatable navigatable : navigatables) {
-                        // we are not going to open modal dialog during autoscrolling
-                        if (!navigatable.canNavigateToSource()) {
-                            return;
-                        }
-                    }
-                }
-                OpenSourceUtil.openSourcesFrom(context, false);
             }
+            Navigatable[] navigatables = context.getData(Navigatable.KEY_OF_ARRAY);
+            if (navigatables != null) {
+                if (navigatables.length > 1) {
+                    return;
+                }
+                for (Navigatable navigatable : navigatables) {
+                    // we are not going to open modal dialog during autoscrolling
+                    if (!navigatable.canNavigateToSource()) {
+                        return;
+                    }
+                }
+            }
+            OpenSourceUtil.openSourcesFrom(context, false);
         });
     }
 
@@ -236,19 +210,19 @@ public abstract class AutoScrollToSourceHandler {
     private class AutoscrollToSourceAction extends ToggleAction implements DumbAware {
         public AutoscrollToSourceAction() {
             super(
-                UIBundle.message("autoscroll.to.source.action.name"),
-                UIBundle.message("autoscroll.to.source.action.description"),
-                AllIcons.General.AutoscrollToSource
+                UILocalize.autoscrollToSourceActionName(),
+                UILocalize.autoscrollToSourceActionDescription(),
+                PlatformIconGroup.generalAutoscrolltosource()
             );
         }
 
         @Override
-        public boolean isSelected(AnActionEvent event) {
+        public boolean isSelected(@Nonnull AnActionEvent event) {
             return isAutoScrollMode();
         }
 
         @Override
-        public void setSelected(AnActionEvent event, boolean flag) {
+        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
             setAutoScrollMode(flag);
         }
     }

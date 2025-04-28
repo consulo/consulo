@@ -15,22 +15,22 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public class FavoritesAbbreviatePackageNamesAction extends FavoritesToolbarButtonAction {
     public FavoritesAbbreviatePackageNamesAction(Project project, FavoritesViewTreeBuilder builder) {
         super(
             project,
             builder,
-            IdeBundle.message("action.abbreviate.qualified.package.names"),
-            AllIcons.ObjectBrowser.AbbreviatePackageNames
+            IdeLocalize.actionAbbreviateQualifiedPackageNames(),
+            PlatformIconGroup.objectbrowserAbbreviatepackagenames()
         );
     }
 

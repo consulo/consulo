@@ -33,18 +33,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: anna
- * Date: Feb 24, 2005
+ * @author anna
+ * @since 2005-02-24
  */
 public class SendToFavoritesGroup extends ActionGroup {
-    @Override
     @Nonnull
+    @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (e == null) {
             return EMPTY_ARRAY;
         }
-        final Project project = e.getDataContext().getData(Project.KEY);
-        final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
+        Project project = e.getDataContext().getData(Project.KEY);
+        List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
         availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
         if (availableFavoritesLists.isEmpty()) {
             return new AnAction[]{new SendToNewFavoritesListAction()};
@@ -78,7 +78,7 @@ public class SendToFavoritesGroup extends ActionGroup {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            final DataContext dataContext = e.getDataContext();
+            DataContext dataContext = e.getDataContext();
             Project project = e.getData(Project.KEY);
             FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
             String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);

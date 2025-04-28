@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
@@ -27,7 +27,7 @@ import consulo.ide.localize.IdeLocalize;
  */
 public class FavoritesCompactEmptyMiddlePackagesAction extends FavoritesToolbarButtonAction {
     public FavoritesCompactEmptyMiddlePackagesAction(Project project, FavoritesViewTreeBuilder builder) {
-        super(project, builder, IdeLocalize.actionCompactEmptyMiddlePackages(), AllIcons.ObjectBrowser.CompactEmptyPackages);
+        super(project, builder, IdeLocalize.actionCompactEmptyMiddlePackages(), PlatformIconGroup.objectbrowserCompactemptypackages());
     }
 
     @Override
