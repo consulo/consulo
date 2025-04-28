@@ -25,25 +25,27 @@ import consulo.ui.ex.UIBundle;
  * @author Konstantin Bulenkov
  */
 public class FavoritesAutoScrollToSourceAction extends FavoritesToolbarButtonAction {
-  private final AutoScrollToSourceHandler myAutoScrollToSourceHandler;
+    private final AutoScrollToSourceHandler myAutoScrollToSourceHandler;
 
-  public FavoritesAutoScrollToSourceAction(Project project,
-                                           AutoScrollToSourceHandler autoScrollToSourceHandler,
-                                           FavoritesViewTreeBuilder builder) {
-    super(project, builder, UIBundle.message("autoscroll.to.source.action.name"), AllIcons.General.AutoscrollToSource);
-    myAutoScrollToSourceHandler = autoScrollToSourceHandler;
-  }
-
-  @Override
-  public boolean isOptionEnabled() {
-    return getViewSettings().isAutoScrollToSource();
-  }
-
-  @Override
-  public void setOption(boolean enabled) {
-    getViewSettings().setAutoScrollToSource(enabled);
-    if (enabled) {
-      myAutoScrollToSourceHandler.onMouseClicked(getBuilder().getTree());
+    public FavoritesAutoScrollToSourceAction(
+        Project project,
+        AutoScrollToSourceHandler autoScrollToSourceHandler,
+        FavoritesViewTreeBuilder builder
+    ) {
+        super(project, builder, UIBundle.message("autoscroll.to.source.action.name"), AllIcons.General.AutoscrollToSource);
+        myAutoScrollToSourceHandler = autoScrollToSourceHandler;
     }
-  }
+
+    @Override
+    public boolean isOptionEnabled() {
+        return getViewSettings().isAutoScrollToSource();
+    }
+
+    @Override
+    public void setOption(boolean enabled) {
+        getViewSettings().setAutoScrollToSource(enabled);
+        if (enabled) {
+            myAutoScrollToSourceHandler.onMouseClicked(getBuilder().getTree());
+        }
+    }
 }

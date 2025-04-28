@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.bookmark.ui.view.FavoritesListNode;
@@ -34,64 +33,66 @@ import java.util.Collections;
  * @author Konstantin Bulenkov
  */
 public class SendToFavoritesAction extends AnAction {
-  private final String toName;
+    private final String toName;
 
-  public SendToFavoritesAction(String name) {
-    super(name);
-    toName = name;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    Project project = e.getData(Project.KEY);
-    final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
-
-    FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
-    if (roots == null) return;
-
-    for (FavoritesTreeNodeDescriptor root : roots) {
-      FavoritesTreeNodeDescriptor listNode = root.getFavoritesRoot();
-      if (listNode != null && listNode !=root && listNode.getElement() instanceof FavoritesListNode) {
-        doSend(favoritesManager, new FavoritesTreeNodeDescriptor[]{root}, listNode.getElement().getName());
-      }
+    public SendToFavoritesAction(String name) {
+        super(name);
+        toName = name;
     }
-  }
 
-  public void doSend(final FavoritesManagerImpl favoritesManager, final FavoritesTreeNodeDescriptor[] roots, final String listName) {
-    for (FavoritesTreeNodeDescriptor root : roots) {
-      final AbstractTreeNode rootElement = root.getElement();
-      String name = listName;
-      if (name == null) {
-        name = root.getFavoritesRoot().getName();
-      }
-      favoritesManager.removeRoot(name, Collections.singletonList(rootElement));
-      favoritesManager.addRoots(toName, Collections.singletonList(rootElement));
-    }
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final DataContext dataContext = e.getDataContext();
+        Project project = e.getData(Project.KEY);
+        final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(isEnabled(e));
-  }
+        FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
+        if (roots == null) {
+            return;
+        }
 
-  static boolean isEnabled(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return false;
+        for (FavoritesTreeNodeDescriptor root : roots) {
+            FavoritesTreeNodeDescriptor listNode = root.getFavoritesRoot();
+            if (listNode != null && listNode != root && listNode.getElement() instanceof FavoritesListNode) {
+                doSend(favoritesManager, new FavoritesTreeNodeDescriptor[]{root}, listNode.getElement().getName());
+            }
+        }
     }
-    FavoritesTreeNodeDescriptor[] roots = e.getDataContext().getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
-    if (roots == null || roots.length == 0) {
-      return false;
+
+    public void doSend(final FavoritesManagerImpl favoritesManager, final FavoritesTreeNodeDescriptor[] roots, final String listName) {
+        for (FavoritesTreeNodeDescriptor root : roots) {
+            final AbstractTreeNode rootElement = root.getElement();
+            String name = listName;
+            if (name == null) {
+                name = root.getFavoritesRoot().getName();
+            }
+            favoritesManager.removeRoot(name, Collections.singletonList(rootElement));
+            favoritesManager.addRoots(toName, Collections.singletonList(rootElement));
+        }
     }
-    for (FavoritesTreeNodeDescriptor root : roots) {
-      FavoritesTreeNodeDescriptor listNode = root.getFavoritesRoot();
-      if (listNode == null || listNode ==root || !(listNode.getElement() instanceof FavoritesListNode)) {
-        return false;
-      }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(isEnabled(e));
     }
-    return true;
-  }
+
+    static boolean isEnabled(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return false;
+        }
+        FavoritesTreeNodeDescriptor[] roots = e.getDataContext().getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
+        if (roots == null || roots.length == 0) {
+            return false;
+        }
+        for (FavoritesTreeNodeDescriptor root : roots) {
+            FavoritesTreeNodeDescriptor listNode = root.getFavoritesRoot();
+            if (listNode == null || listNode == root || !(listNode.getElement() instanceof FavoritesListNode)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

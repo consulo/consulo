@@ -30,46 +30,46 @@ import consulo.ui.image.Image;
  * @author Konstantin Bulenkov
  */
 public abstract class FavoritesToolbarButtonAction extends AnActionButton implements Toggleable {
-  private FavoritesViewTreeBuilder myBuilder;
-  private FavoritesViewSettingsImpl mySettings;
+    private FavoritesViewTreeBuilder myBuilder;
+    private FavoritesViewSettingsImpl mySettings;
 
-  @Deprecated
-  public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, String name, Image icon) {
-    this(project, builder, LocalizeValue.of(name), icon);
-  }
+    @Deprecated
+    public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, String name, Image icon) {
+        this(project, builder, LocalizeValue.of(name), icon);
+    }
 
-  public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, LocalizeValue name, Image icon) {
-    super(name, LocalizeValue.empty(), icon);
-    myBuilder = builder;
-    mySettings = FavoritesManagerImpl.getInstance(project).getViewSettings();
-    setContextComponent(myBuilder.getTree());
-    Disposer.register(project, () -> {
-      myBuilder = null;
-      mySettings = null;
-    });
-  }
+    public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, LocalizeValue name, Image icon) {
+        super(name, LocalizeValue.empty(), icon);
+        myBuilder = builder;
+        mySettings = FavoritesManagerImpl.getInstance(project).getViewSettings();
+        setContextComponent(myBuilder.getTree());
+        Disposer.register(project, () -> {
+            myBuilder = null;
+            mySettings = null;
+        });
+    }
 
-  public abstract boolean isOptionEnabled();
+    public abstract boolean isOptionEnabled();
 
-  public abstract void setOption(boolean enabled);
+    public abstract void setOption(boolean enabled);
 
-  public FavoritesViewSettingsImpl getViewSettings() {
-    return mySettings;
-  }
+    public FavoritesViewSettingsImpl getViewSettings() {
+        return mySettings;
+    }
 
-  public FavoritesViewTreeBuilder getBuilder() {
-    return myBuilder;
-  }
+    public FavoritesViewTreeBuilder getBuilder() {
+        return myBuilder;
+    }
 
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    setOption(!isOptionEnabled());
-    myBuilder.updateFromRootCB();
-  }
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        setOption(!isOptionEnabled());
+        myBuilder.updateFromRootCB();
+    }
 
-  @Override
-  public void updateButton(AnActionEvent e) {
-    super.updateButton(e);
-    e.getPresentation().putClientProperty(SELECTED_PROPERTY, isOptionEnabled());
-  }
+    @Override
+    public void updateButton(AnActionEvent e) {
+        super.updateButton(e);
+        e.getPresentation().putClientProperty(SELECTED_PROPERTY, isOptionEnabled());
+    }
 }

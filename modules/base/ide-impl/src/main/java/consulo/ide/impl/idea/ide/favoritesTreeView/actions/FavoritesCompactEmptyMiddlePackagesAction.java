@@ -26,31 +26,31 @@ import consulo.ide.localize.IdeLocalize;
  * @author Konstantin Bulenkov
  */
 public class FavoritesCompactEmptyMiddlePackagesAction extends FavoritesToolbarButtonAction {
-  public FavoritesCompactEmptyMiddlePackagesAction(Project project, FavoritesViewTreeBuilder builder) {
-    super(project, builder, IdeLocalize.actionCompactEmptyMiddlePackages(), AllIcons.ObjectBrowser.CompactEmptyPackages);
-  }
-
-  @Override
-  public void updateButton(AnActionEvent e) {
-    super.updateButton(e);
-    Presentation presentation = e.getPresentation();
-    if (getViewSettings().isFlattenPackages()) {
-      presentation.setTextValue(IdeLocalize.actionHideEmptyMiddlePackages());
-      presentation.setDescriptionValue(IdeLocalize.actionShowHideEmptyMiddlePackages());
+    public FavoritesCompactEmptyMiddlePackagesAction(Project project, FavoritesViewTreeBuilder builder) {
+        super(project, builder, IdeLocalize.actionCompactEmptyMiddlePackages(), AllIcons.ObjectBrowser.CompactEmptyPackages);
     }
-    else {
-      presentation.setTextValue(IdeLocalize.actionCompactEmptyMiddlePackages());
-      presentation.setDescriptionValue(IdeLocalize.actionShowCompactEmptyMiddlePackages());
+
+    @Override
+    public void updateButton(AnActionEvent e) {
+        super.updateButton(e);
+        Presentation presentation = e.getPresentation();
+        if (getViewSettings().isFlattenPackages()) {
+            presentation.setTextValue(IdeLocalize.actionHideEmptyMiddlePackages());
+            presentation.setDescriptionValue(IdeLocalize.actionShowHideEmptyMiddlePackages());
+        }
+        else {
+            presentation.setTextValue(IdeLocalize.actionCompactEmptyMiddlePackages());
+            presentation.setDescriptionValue(IdeLocalize.actionShowCompactEmptyMiddlePackages());
+        }
     }
-  }
 
-  @Override
-  public boolean isOptionEnabled() {
-    return getViewSettings().isHideEmptyMiddlePackages();
-  }
+    @Override
+    public boolean isOptionEnabled() {
+        return getViewSettings().isHideEmptyMiddlePackages();
+    }
 
-  @Override
-  public void setOption(boolean hide) {
-    getViewSettings().setHideEmptyMiddlePackages(hide);
-  }
+    @Override
+    public void setOption(boolean hide) {
+        getViewSettings().setHideEmptyMiddlePackages(hide);
+    }
 }

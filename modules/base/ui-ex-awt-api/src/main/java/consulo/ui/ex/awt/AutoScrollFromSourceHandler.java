@@ -30,6 +30,7 @@ import consulo.ui.ex.awt.util.Alarm;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -37,63 +38,67 @@ import javax.swing.*;
  */
 @SuppressWarnings("MethodMayBeStatic")
 public abstract class AutoScrollFromSourceHandler implements Disposable {
-  protected final Project myProject;
-  protected final Alarm myAlarm;
-  protected JComponent myComponent;
+    protected final Project myProject;
+    protected final Alarm myAlarm;
+    protected JComponent myComponent;
 
-  public AutoScrollFromSourceHandler(@Nonnull Project project, @Nonnull JComponent view) {
-    this(project, view, null);
-  }
-
-  public AutoScrollFromSourceHandler(@Nonnull Project project, @Nonnull JComponent view, @Nullable Disposable parentDisposable) {
-    myProject = project;
-
-    if (parentDisposable != null) {
-      Disposer.register(parentDisposable, this);
+    public AutoScrollFromSourceHandler(@Nonnull Project project, @Nonnull JComponent view) {
+        this(project, view, null);
     }
-    myComponent = view;
-    myAlarm = new Alarm(this);
-  }
 
-  protected abstract boolean isAutoScrollEnabled();
+    public AutoScrollFromSourceHandler(@Nonnull Project project, @Nonnull JComponent view, @Nullable Disposable parentDisposable) {
+        myProject = project;
 
-  protected abstract void setAutoScrollEnabled(boolean enabled);
-
-  protected ModalityState getModalityState() {
-    return Application.get().getCurrentModalityState();
-  }
-
-  protected long getAlarmDelay() {
-    return 500;
-  }
-
-  public abstract void install();
-
-  @Override
-  public void dispose() {
-    if (!myAlarm.isDisposed()) {
-      myAlarm.cancelAllRequests();
+        if (parentDisposable != null) {
+            Disposer.register(parentDisposable, this);
+        }
+        myComponent = view;
+        myAlarm = new Alarm(this);
     }
-  }
 
-  public ToggleAction createToggleAction() {
-    return new AutoScrollFromSourceAction();
-  }
+    protected abstract boolean isAutoScrollEnabled();
 
-  private class AutoScrollFromSourceAction extends ToggleAction implements DumbAware {
-    public AutoScrollFromSourceAction() {
-      super(UIBundle.message("autoscroll.from.source.action.name"), UIBundle.message("autoscroll.from.source.action.description"), AllIcons.General.AutoscrollFromSource);
+    protected abstract void setAutoScrollEnabled(boolean enabled);
+
+    protected ModalityState getModalityState() {
+        return Application.get().getCurrentModalityState();
     }
+
+    protected long getAlarmDelay() {
+        return 500;
+    }
+
+    public abstract void install();
 
     @Override
-    public boolean isSelected(final AnActionEvent event) {
-      return isAutoScrollEnabled();
+    public void dispose() {
+        if (!myAlarm.isDisposed()) {
+            myAlarm.cancelAllRequests();
+        }
     }
 
-    @Override
-    public void setSelected(final AnActionEvent event, final boolean flag) {
-      setAutoScrollEnabled(flag);
+    public ToggleAction createToggleAction() {
+        return new AutoScrollFromSourceAction();
     }
-  }
+
+    private class AutoScrollFromSourceAction extends ToggleAction implements DumbAware {
+        public AutoScrollFromSourceAction() {
+            super(
+                UIBundle.message("autoscroll.from.source.action.name"),
+                UIBundle.message("autoscroll.from.source.action.description"),
+                AllIcons.General.AutoscrollFromSource
+            );
+        }
+
+        @Override
+        public boolean isSelected(final AnActionEvent event) {
+            return isAutoScrollEnabled();
+        }
+
+        @Override
+        public void setSelected(final AnActionEvent event, final boolean flag) {
+            setAutoScrollEnabled(flag);
+        }
+    }
 }
 

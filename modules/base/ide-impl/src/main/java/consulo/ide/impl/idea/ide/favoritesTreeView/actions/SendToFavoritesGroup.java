@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
@@ -38,56 +37,56 @@ import java.util.List;
  * Date: Feb 24, 2005
  */
 public class SendToFavoritesGroup extends ActionGroup {
-  @Override
-  @Nonnull
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    if (e == null) {
-      return EMPTY_ARRAY;
-    }
-    final Project project = e.getDataContext().getData(Project.KEY);
-    final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
-    availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
-    if (availableFavoritesLists.isEmpty()) {
-      return new AnAction[]{new SendToNewFavoritesListAction()};
-    }
+    @Override
+    @Nonnull
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        if (e == null) {
+            return EMPTY_ARRAY;
+        }
+        final Project project = e.getDataContext().getData(Project.KEY);
+        final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
+        availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
+        if (availableFavoritesLists.isEmpty()) {
+            return new AnAction[]{new SendToNewFavoritesListAction()};
+        }
 
-    List<AnAction> actions = new ArrayList<>();
+        List<AnAction> actions = new ArrayList<>();
 
-    for (String list : availableFavoritesLists) {
-      actions.add(new SendToFavoritesAction(list));
-    }
-    actions.add(AnSeparator.getInstance());
-    actions.add(new SendToNewFavoritesListAction());
-    return actions.toArray(new AnAction[actions.size()]);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setVisible(
-      SendToFavoritesAction.isEnabled(e)
-        && e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY) != null
-    );
-  }
-
-  private static class SendToNewFavoritesListAction extends AnAction {
-    public SendToNewFavoritesListAction() {
-      super(IdeLocalize.actionSendToNewFavoritesList());
+        for (String list : availableFavoritesLists) {
+            actions.add(new SendToFavoritesAction(list));
+        }
+        actions.add(AnSeparator.getInstance());
+        actions.add(new SendToNewFavoritesListAction());
+        return actions.toArray(new AnAction[actions.size()]);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-      final DataContext dataContext = e.getDataContext();
-      Project project = e.getData(Project.KEY);
-      FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
-      String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
-
-      String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
-      if (newName != null) {
-        new SendToFavoritesAction(newName).doSend(FavoritesManagerImpl.getInstance(project), roots, listName);
-      }
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setVisible(
+            SendToFavoritesAction.isEnabled(e)
+                && e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY) != null
+        );
     }
-  }
+
+    private static class SendToNewFavoritesListAction extends AnAction {
+        public SendToNewFavoritesListAction() {
+            super(IdeLocalize.actionSendToNewFavoritesList());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            final DataContext dataContext = e.getDataContext();
+            Project project = e.getData(Project.KEY);
+            FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
+            String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
+
+            String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
+            if (newName != null) {
+                new SendToFavoritesAction(newName).doSend(FavoritesManagerImpl.getInstance(project), roots, listName);
+            }
+        }
+    }
 }

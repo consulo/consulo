@@ -24,17 +24,17 @@ import consulo.project.Project;
  * @author Konstantin Bulenkov
  */
 public class FavoritesFlattenPackagesAction extends FavoritesToolbarButtonAction {
-  public FavoritesFlattenPackagesAction(Project project, FavoritesViewTreeBuilder builder) {
-    super(project, builder, IdeBundle.message("action.flatten.packages"), AllIcons.ObjectBrowser.FlattenPackages);
-  }
+    public FavoritesFlattenPackagesAction(Project project, FavoritesViewTreeBuilder builder) {
+        super(project, builder, IdeBundle.message("action.flatten.packages"), AllIcons.ObjectBrowser.FlattenPackages);
+    }
 
-  @Override
-  public boolean isOptionEnabled() {
-    return getViewSettings().isFlattenPackages();
-  }
+    @Override
+    public boolean isOptionEnabled() {
+        return getViewSettings().isFlattenPackages();
+    }
 
-  @Override
-  public void setOption(boolean enabled) {
-    getViewSettings().setFlattenPackages(enabled);
-  }
+    @Override
+    public void setOption(boolean enabled) {
+        getViewSettings().setFlattenPackages(enabled);
+    }
 }

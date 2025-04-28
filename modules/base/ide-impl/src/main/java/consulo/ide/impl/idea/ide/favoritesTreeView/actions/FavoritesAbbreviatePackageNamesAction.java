@@ -25,23 +25,28 @@ import consulo.project.Project;
  * User: Vassiliy.Kudryashov
  */
 public class FavoritesAbbreviatePackageNamesAction extends FavoritesToolbarButtonAction {
-  public FavoritesAbbreviatePackageNamesAction(Project project, FavoritesViewTreeBuilder builder) {
-    super(project, builder, IdeBundle.message("action.abbreviate.qualified.package.names"), AllIcons.ObjectBrowser.AbbreviatePackageNames);
-  }
+    public FavoritesAbbreviatePackageNamesAction(Project project, FavoritesViewTreeBuilder builder) {
+        super(
+            project,
+            builder,
+            IdeBundle.message("action.abbreviate.qualified.package.names"),
+            AllIcons.ObjectBrowser.AbbreviatePackageNames
+        );
+    }
 
-  @Override
-  public boolean isOptionEnabled() {
-    return getViewSettings().isAbbreviatePackageNames();
-  }
+    @Override
+    public boolean isOptionEnabled() {
+        return getViewSettings().isAbbreviatePackageNames();
+    }
 
-  @Override
-  public void setOption(boolean enabled) {
-    getViewSettings().setAbbreviateQualifiedPackages(enabled);
-  }
+    @Override
+    public void setOption(boolean enabled) {
+        getViewSettings().setAbbreviateQualifiedPackages(enabled);
+    }
 
-  @Override
-  public void updateButton(AnActionEvent e) {
-    super.updateButton(e);
-    setVisible(getViewSettings().isFlattenPackages());
-  }
+    @Override
+    public void updateButton(AnActionEvent e) {
+        super.updateButton(e);
+        setVisible(getViewSettings().isFlattenPackages());
+    }
 }
