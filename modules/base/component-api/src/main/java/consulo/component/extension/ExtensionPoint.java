@@ -40,6 +40,11 @@ import java.util.function.Predicate;
  * Also when count count changed all cache {@link #getOrBuildCache(ExtensionPointCacheKey)} & {@link #findExtension(Class)} will be dropped
  */
 public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
+    public enum Flow {
+        CONTINUE,
+        BREAK
+    }
+
     @Nonnull
     default String getName() {
         return getClassName();
@@ -182,6 +187,10 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
                 ExtensionLogger.checkException(e, value);
             }
         });
+    }
+
+    default void forEachExtensionSafe(@Nonnull Function<? super E, Flow> breakableConsumer) {
+        computeSafeIfAny(value -> breakableConsumer.apply(value) != Flow.BREAK ? null : Flow.BREAK);
     }
 
     @Override

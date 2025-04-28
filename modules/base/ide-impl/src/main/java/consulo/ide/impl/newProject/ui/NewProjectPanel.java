@@ -16,14 +16,14 @@
 package consulo.ide.impl.newProject.ui;
 
 import consulo.application.Application;
-import consulo.application.CommonBundle;
 import consulo.disposer.Disposable;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.newModule.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.project.util.ProjectUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
@@ -49,7 +49,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 14-Sep-16
+ * @since 2016-09-14
  */
 public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements Disposable {
     private static final Logger LOG = Logger.getInstance(NewProjectPanel.class);
@@ -66,14 +66,16 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     private Tree myTree;
 
     @RequiredUIAccess
-    public NewProjectPanel(@Nonnull Disposable parentDisposable,
-                           @Nullable Project project,
-                           @Nullable VirtualFile moduleHome,
-                           @Nonnull TitlelessDecorator titlelessDecorator) {
+    public NewProjectPanel(
+        @Nonnull Disposable parentDisposable,
+        @Nullable Project project,
+        @Nullable VirtualFile moduleHome,
+        @Nonnull TitlelessDecorator titlelessDecorator
+    ) {
         super(parentDisposable, titlelessDecorator);
         myModuleHome = moduleHome;
-        setOKActionText(IdeBundle.message("button.create"));
-        setCancelText(CommonBundle.message("button.cancel"));
+        setOKActionText(IdeLocalize.buttonCreate());
+        setCancelText(CommonLocalize.buttonCancel());
     }
 
     @Override
@@ -101,11 +103,11 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
     public abstract void setOKActionEnabled(boolean enabled);
 
-    public abstract void setOKActionText(@Nonnull String text);
+    public abstract void setOKActionText(@Nonnull LocalizeValue text);
 
     public abstract void setOKAction(@Nullable Runnable action);
 
-    public abstract void setCancelText(@Nonnull String text);
+    public abstract void setCancelText(@Nonnull LocalizeValue text);
 
     public abstract void setCancelAction(@Nullable Runnable action);
 
@@ -114,9 +116,12 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable) {
         NewModuleContext context = new NewModuleContext();
 
-        Application.get().getExtensionPoint(NewModuleBuilder.class).forEachExtensionSafe(it -> it.setupContext(context));
+        Application.get().getExtensionPoint(NewModuleBuilder.class).forEach(it -> it.setupContext(context));
 
-        myTree = new Tree(new AsyncTreeModel(new StructureTreeModel<>(new NewProjectTreeStructure(context), parentDisposable), parentDisposable));
+        myTree = new Tree(new AsyncTreeModel(
+            new StructureTreeModel<>(new NewProjectTreeStructure(context), parentDisposable),
+            parentDisposable
+        ));
         myTree.setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));
         myTree.setOpaque(false);
         myTree.setBackground(MorphColor.of(UIUtil::getPanelBackground));
@@ -143,7 +148,11 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         rightPanel.add(rightContentPanel, BorderLayout.CENTER);
 
         final JPanel nullPanel = new JPanel(new BorderLayout());
-        JBLabel nodeLabel = new JBLabel(myModuleHome == null ? "Please select project type" : "Please select module type", UIUtil.ComponentStyle.SMALL, UIUtil.FontColor.BRIGHTER);
+        JBLabel nodeLabel = new JBLabel(
+            myModuleHome == null ? "Please select project type" : "Please select module type",
+            UIUtil.ComponentStyle.SMALL,
+            UIUtil.FontColor.BRIGHTER
+        );
         nodeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         nullPanel.add(nodeLabel, BorderLayout.CENTER);
 
@@ -168,7 +177,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
             }
 
             myProcessor = selectedValue instanceof NewModuleContextItem newModuleContextItem
-                ? (NewModuleBuilderProcessor<NewModuleWizardContext>) newModuleContextItem.getProcessor() : null;
+                ? (NewModuleBuilderProcessor<NewModuleWizardContext>)newModuleContextItem.getProcessor() : null;
 
             String id = null;
             Component toShow = null;
@@ -242,22 +251,22 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
             boolean hasNext = myWizardSession.hasNext();
 
             if (hasNext) {
-                setOKActionText(CommonBundle.getNextButtonText());
+                setOKActionText(CommonLocalize.buttonNext());
                 setOKAction(() -> gotoStep(rightContentPanel, myWizardSession.next()));
             }
             else {
-                setOKActionText(IdeBundle.message("button.create"));
+                setOKActionText(IdeLocalize.buttonCreate());
                 setOKAction(null);
             }
 
             int currentStepIndex = myWizardSession.getCurrentStepIndex();
             if (currentStepIndex != 0) {
                 setCancelAction(() -> gotoStep(rightContentPanel, myWizardSession.prev()));
-                setCancelText(CommonBundle.message("button.back"));
+                setCancelText(CommonLocalize.buttonBack());
             }
             else {
                 setCancelAction(null);
-                setCancelText(CommonBundle.message("button.cancel"));
+                setCancelText(CommonLocalize.buttonCancel());
             }
 
             setOKActionEnabled(true);
@@ -265,7 +274,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         else {
             setOKActionEnabled(false);
 
-            setOKActionText(IdeBundle.message("button.create"));
+            setOKActionText(IdeLocalize.buttonCreate());
             setOKAction(null);
             setCancelAction(null);
         }
@@ -283,7 +292,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
         String id = "step-" + myWizardSession.getCurrentStepIndex();
 
-        JBCardLayout layout = (JBCardLayout) rightContentPanel.getLayout();
+        JBCardLayout layout = (JBCardLayout)rightContentPanel.getLayout();
 
         rightContentPanel.add(swingComponent, id);
 

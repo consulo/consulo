@@ -20,6 +20,8 @@ import consulo.language.editor.hierarchy.TypeHierarchyProvider;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
@@ -35,156 +37,159 @@ import javax.swing.*;
 import java.util.Map;
 
 public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
+    @SuppressWarnings("UnresolvedPropertyKey")
+    public static final String TYPE_HIERARCHY_TYPE = IdeBundle.message("title.hierarchy.class");
+    @SuppressWarnings("UnresolvedPropertyKey")
+    public static final String SUBTYPES_HIERARCHY_TYPE = IdeBundle.message("title.hierarchy.subtypes");
+    @SuppressWarnings("UnresolvedPropertyKey")
+    public static final String SUPERTYPES_HIERARCHY_TYPE = IdeBundle.message("title.hierarchy.supertypes");
 
-  @SuppressWarnings("UnresolvedPropertyKey")
-  public static final String TYPE_HIERARCHY_TYPE = IdeBundle.message("title.hierarchy.class");
-  @SuppressWarnings("UnresolvedPropertyKey")
-  public static final String SUBTYPES_HIERARCHY_TYPE = IdeBundle.message("title.hierarchy.subtypes");
-  @SuppressWarnings("UnresolvedPropertyKey")
-  public static final String SUPERTYPES_HIERARCHY_TYPE = IdeBundle.message("title.hierarchy.supertypes");
+    private boolean myIsInterface;
 
-  private boolean myIsInterface;
+    private final MyDeleteProvider myDeleteElementProvider = new MyDeleteProvider();
 
-  private final MyDeleteProvider myDeleteElementProvider = new MyDeleteProvider();
+    public static final Key<TypeHierarchyBrowserBase> DATA_KEY = Key.create("consulo.ide.impl.idea.ide.hierarchy.TypeHierarchyBrowserBase");
 
-  public static final Key<TypeHierarchyBrowserBase> DATA_KEY = Key.create("consulo.ide.impl.idea.ide.hierarchy.TypeHierarchyBrowserBase");
+    public TypeHierarchyBrowserBase(Project project, PsiElement element) {
+        super(project, element);
+    }
 
-  public TypeHierarchyBrowserBase(final Project project, final PsiElement element) {
-    super(project, element);
-  }
+    protected abstract boolean isInterface(PsiElement psiElement);
 
-  protected abstract boolean isInterface(PsiElement psiElement);
+    protected void createTreeAndSetupCommonActions(@Nonnull Map<String, JTree> trees, String typeHierarchyActionGroupName) {
+        ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(typeHierarchyActionGroupName);
+        createTreeAndSetupCommonActions(trees, group);
+    }
 
-  protected void createTreeAndSetupCommonActions(@Nonnull Map<String, JTree> trees, String typeHierarchyActionGroupName) {
-    ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(typeHierarchyActionGroupName);
-    createTreeAndSetupCommonActions(trees, group);
-  }
-
-  protected void createTreeAndSetupCommonActions(@Nonnull Map<String, JTree> trees, ActionGroup group) {
-    final BaseOnThisTypeAction baseOnThisTypeAction = createBaseOnThisAction();
-    final JTree tree1 = createTree(true);
-    PopupHandler.installPopupHandler(tree1, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
-    baseOnThisTypeAction
+    protected void createTreeAndSetupCommonActions(@Nonnull Map<String, JTree> trees, ActionGroup group) {
+        BaseOnThisTypeAction baseOnThisTypeAction = createBaseOnThisAction();
+        JTree tree1 = createTree(true);
+        PopupHandler.installPopupHandler(tree1, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
+        baseOnThisTypeAction
             .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_TYPE_HIERARCHY).getShortcutSet(), tree1);
-    trees.put(TYPE_HIERARCHY_TYPE, tree1);
+        trees.put(TYPE_HIERARCHY_TYPE, tree1);
 
-    final JTree tree2 = createTree(true);
-    PopupHandler.installPopupHandler(tree2, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
-    baseOnThisTypeAction
+        JTree tree2 = createTree(true);
+        PopupHandler.installPopupHandler(tree2, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
+        baseOnThisTypeAction
             .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_TYPE_HIERARCHY).getShortcutSet(), tree2);
-    trees.put(SUPERTYPES_HIERARCHY_TYPE, tree2);
+        trees.put(SUPERTYPES_HIERARCHY_TYPE, tree2);
 
-    final JTree tree3 = createTree(true);
-    PopupHandler.installPopupHandler(tree3, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
-    baseOnThisTypeAction
+        JTree tree3 = createTree(true);
+        PopupHandler.installPopupHandler(tree3, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
+        baseOnThisTypeAction
             .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_TYPE_HIERARCHY).getShortcutSet(), tree3);
-    trees.put(SUBTYPES_HIERARCHY_TYPE, tree3);
-  }
-
-  @Nonnull
-  protected BaseOnThisTypeAction createBaseOnThisAction() {
-    return new BaseOnThisTypeAction();
-  }
-
-  protected abstract boolean canBeDeleted(PsiElement psiElement);
-
-  protected abstract String getQualifiedName(PsiElement psiElement);
-
-  public boolean isInterface() {
-    return myIsInterface;
-  }
-
-  @Override
-  protected void setHierarchyBase(@Nonnull PsiElement element) {
-    super.setHierarchyBase(element);
-    myIsInterface = isInterface(element);
-  }
-
-  @Override
-  protected void prependActions(final DefaultActionGroup actionGroup) {
-    actionGroup.add(new ViewClassHierarchyAction());
-    actionGroup.add(new ViewSupertypesHierarchyAction());
-    actionGroup.add(new ViewSubtypesHierarchyAction());
-    actionGroup.add(new AlphaSortAction());
-  }
-
-  @Override
-  @Nonnull
-  protected Key getBrowserDataKey() {
-    return DATA_KEY;
-  }
-
-  @Override
-  @Nonnull
-  protected String getActionPlace() {
-    return ActionPlaces.TYPE_HIERARCHY_VIEW_TOOLBAR;
-  }
-
-  @Override
-  public final Object getData(@Nonnull Key<?> dataId) {
-    if (DeleteProvider.KEY == dataId) {
-      return myDeleteElementProvider;
+        trees.put(SUBTYPES_HIERARCHY_TYPE, tree3);
     }
-    return super.getData(dataId);
-  }
 
-  @Override
-  @Nonnull
-  protected String getPrevOccurenceActionNameImpl() {
-    return IdeLocalize.hierarchyTypePrevOccurenceName().get();
-  }
+    @Nonnull
+    protected BaseOnThisTypeAction createBaseOnThisAction() {
+        return new BaseOnThisTypeAction();
+    }
 
-  @Override
-  @Nonnull
-  protected String getNextOccurenceActionNameImpl() {
-    return IdeLocalize.hierarchyTypeNextOccurenceName().get();
-  }
+    protected abstract boolean canBeDeleted(PsiElement psiElement);
 
-  private final class MyDeleteProvider implements DeleteProvider {
-    @Override
-    public final void deleteElement(@Nonnull final DataContext dataContext) {
-      final PsiElement aClass = getSelectedElement();
-      if (!canBeDeleted(aClass)) return;
-      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeletingClass(getQualifiedName(aClass)).get());
-      try {
-        final PsiElement[] elements = {aClass};
-        DeleteHandler.deletePsiElement(elements, myProject);
-      }
-      finally {
-        a.finish();
-      }
+    protected abstract String getQualifiedName(PsiElement psiElement);
+
+    public boolean isInterface() {
+        return myIsInterface;
     }
 
     @Override
-    public final boolean canDeleteElement(@Nonnull final DataContext dataContext) {
-      final PsiElement aClass = getSelectedElement();
-      if (!canBeDeleted(aClass)) {
-        return false;
-      }
-      final PsiElement[] elements = {aClass};
-      return DeleteHandler.shouldEnableDeleteAction(elements);
-    }
-  }
-
-
-  protected static class BaseOnThisTypeAction extends BaseOnThisElementAction<TypeHierarchyProvider> {
-
-    public BaseOnThisTypeAction() {
-      super("", IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, TypeHierarchyProvider.class);
+    protected void setHierarchyBase(@Nonnull PsiElement element) {
+        super.setHierarchyBase(element);
+        myIsInterface = isInterface(element);
     }
 
     @Override
-    protected String correctViewType(HierarchyBrowserBaseEx browser, String viewType) {
-      if (((TypeHierarchyBrowserBase)browser).myIsInterface && TYPE_HIERARCHY_TYPE.equals(viewType)) return SUBTYPES_HIERARCHY_TYPE;
-      return viewType;
+    protected void prependActions(DefaultActionGroup actionGroup) {
+        actionGroup.add(new ViewClassHierarchyAction());
+        actionGroup.add(new ViewSupertypesHierarchyAction());
+        actionGroup.add(new ViewSubtypesHierarchyAction());
+        actionGroup.add(new AlphaSortAction());
     }
 
     @Override
-    protected String getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
-      return ((TypeHierarchyBrowserBase)browser).isInterface(element)
-        ? IdeLocalize.actionBaseOnThisInterface().get()
-        : IdeLocalize.actionBaseOnThisClass().get();
+    @Nonnull
+    protected Key getBrowserDataKey() {
+        return DATA_KEY;
     }
-  }
 
+    @Override
+    @Nonnull
+    protected String getActionPlace() {
+        return ActionPlaces.TYPE_HIERARCHY_VIEW_TOOLBAR;
+    }
+
+    @Override
+    public final Object getData(@Nonnull Key<?> dataId) {
+        if (DeleteProvider.KEY == dataId) {
+            return myDeleteElementProvider;
+        }
+        return super.getData(dataId);
+    }
+
+    @Override
+    @Nonnull
+    protected String getPrevOccurenceActionNameImpl() {
+        return IdeLocalize.hierarchyTypePrevOccurenceName().get();
+    }
+
+    @Override
+    @Nonnull
+    protected String getNextOccurenceActionNameImpl() {
+        return IdeLocalize.hierarchyTypeNextOccurenceName().get();
+    }
+
+    private final class MyDeleteProvider implements DeleteProvider {
+        @Override
+        @RequiredUIAccess
+        public final void deleteElement(@Nonnull DataContext dataContext) {
+            PsiElement aClass = getSelectedElement();
+            if (!canBeDeleted(aClass)) {
+                return;
+            }
+            LocalHistoryAction a =
+                LocalHistory.getInstance().startAction(IdeLocalize.progressDeletingClass(getQualifiedName(aClass)).get());
+            try {
+                PsiElement[] elements = {aClass};
+                DeleteHandler.deletePsiElement(elements, myProject);
+            }
+            finally {
+                a.finish();
+            }
+        }
+
+        @Override
+        public final boolean canDeleteElement(@Nonnull DataContext dataContext) {
+            PsiElement aClass = getSelectedElement();
+            if (!canBeDeleted(aClass)) {
+                return false;
+            }
+            PsiElement[] elements = {aClass};
+            return DeleteHandler.shouldEnableDeleteAction(elements);
+        }
+    }
+
+    protected static class BaseOnThisTypeAction extends BaseOnThisElementAction<TypeHierarchyProvider> {
+        public BaseOnThisTypeAction() {
+            super(LocalizeValue.empty(), IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, TypeHierarchyProvider.class);
+        }
+
+        @Override
+        protected String correctViewType(HierarchyBrowserBaseEx browser, String viewType) {
+            if (((TypeHierarchyBrowserBase)browser).myIsInterface && TYPE_HIERARCHY_TYPE.equals(viewType)) {
+                return SUBTYPES_HIERARCHY_TYPE;
+            }
+            return viewType;
+        }
+
+        @Nonnull
+        @Override
+        protected LocalizeValue getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
+            return ((TypeHierarchyBrowserBase)browser).isInterface(element)
+                ? IdeLocalize.actionBaseOnThisInterface()
+                : IdeLocalize.actionBaseOnThisClass();
+        }
+    }
 }

@@ -13,204 +13,146 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.ide.localize.IdeLocalize;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.project.Project;
-import consulo.project.content.TestSourcesFilter;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.content.scope.SearchScope;
+import consulo.ide.impl.idea.ide.hierarchy.scope.HierarchyScope;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ide.impl.psi.search.GlobalSearchScopes;
-import consulo.language.psi.scope.LocalSearchScope;
-import consulo.content.scope.SearchScope;
-import consulo.content.scope.NamedScope;
-import consulo.language.editor.scope.NamedScopeManager;
-import consulo.content.scope.NamedScopesHolder;
-import consulo.content.scope.PackageSet;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.style.StandardColors;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.ActionCallback;
-
 import jakarta.annotation.Nonnull;
 
 public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
-  protected HierarchyNodeDescriptor myBaseDescriptor;
-  private HierarchyNodeDescriptor myRoot;
-  protected final Project myProject;
+    protected HierarchyNodeDescriptor myBaseDescriptor;
+    private HierarchyNodeDescriptor myRoot;
+    protected final Project myProject;
 
-  protected HierarchyTreeStructure(@Nonnull Project project, HierarchyNodeDescriptor baseDescriptor) {
-    myBaseDescriptor = baseDescriptor;
-    myProject = project;
-    myRoot = baseDescriptor;
-  }
-
-  public final HierarchyNodeDescriptor getBaseDescriptor() {
-    return myBaseDescriptor;
-  }
-
-  protected final void setBaseElement(@Nonnull HierarchyNodeDescriptor baseElement) {
-    myBaseDescriptor = baseElement;
-    myRoot = baseElement;
-    while(myRoot.getParentDescriptor() != null){
-      myRoot = (HierarchyNodeDescriptor)myRoot.getParentDescriptor();
+    protected HierarchyTreeStructure(@Nonnull Project project, HierarchyNodeDescriptor baseDescriptor) {
+        myBaseDescriptor = baseDescriptor;
+        myProject = project;
+        myRoot = baseDescriptor;
     }
-  }
 
-  @Override
-  @Nonnull
-  public final NodeDescriptor createDescriptor(final Object element, final NodeDescriptor parentDescriptor) {
-    if (element instanceof HierarchyNodeDescriptor) {
-      return (HierarchyNodeDescriptor)element;
+    public final HierarchyNodeDescriptor getBaseDescriptor() {
+        return myBaseDescriptor;
     }
-    if (element instanceof String) {
-      return new TextInfoNodeDescriptor(parentDescriptor, (String)element, myProject);
-    }
-    throw new IllegalArgumentException("Unknown element type: " + element);
-  }
 
-  @Override
-  public final boolean isToBuildChildrenInBackground(final Object element) {
-    if (element instanceof HierarchyNodeDescriptor){
-      final HierarchyNodeDescriptor descriptor = (HierarchyNodeDescriptor)element;
-      final Object[] cachedChildren = descriptor.getCachedChildren();
-      if (cachedChildren == null && descriptor.isValid()){
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public final Object[] getChildElements(final Object element) {
-    if (element instanceof HierarchyNodeDescriptor) {
-      final HierarchyNodeDescriptor descriptor = (HierarchyNodeDescriptor)element;
-      final Object[] cachedChildren = descriptor.getCachedChildren();
-      if (cachedChildren == null) {
-        if (!descriptor.isValid()){ //invalid
-          descriptor.setCachedChildren(ArrayUtil.EMPTY_OBJECT_ARRAY);
+    protected final void setBaseElement(@Nonnull HierarchyNodeDescriptor baseElement) {
+        myBaseDescriptor = baseElement;
+        myRoot = baseElement;
+        while (myRoot.getParentDescriptor() != null) {
+            myRoot = (HierarchyNodeDescriptor)myRoot.getParentDescriptor();
         }
-        else{
-          descriptor.setCachedChildren(buildChildren(descriptor));
-        }
-      }
-      return descriptor.getCachedChildren();
-    }
-    return ArrayUtil.EMPTY_OBJECT_ARRAY;
-  }
-
-  @Override
-  public final Object getParentElement(final Object element) {
-    if (element instanceof HierarchyNodeDescriptor) {
-      return ((HierarchyNodeDescriptor)element).getParentDescriptor();
-    }
-
-    return null;
-  }
-
-  @Override
-  public final void commit() {
-    PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-  }
-
-  @Override
-  public final boolean hasSomethingToCommit() {
-    return PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments();
-  }
-  @Nonnull
-  @Override
-  public ActionCallback asyncCommit() {
-    return PsiDocumentManager.asyncCommitDocuments(myProject);
-  }
-
-  protected abstract Object[] buildChildren(HierarchyNodeDescriptor descriptor);
-
-  @Override
-  public final Object getRootElement() {
-    return myRoot;
-  }
-
-  protected SearchScope getSearchScope(final String scopeType, final PsiElement thisClass) {
-    SearchScope searchScope = GlobalSearchScope.allScope(myProject);
-    if (IdeLocalize.hierarchyScopeThisClass().get().equals(scopeType)) {
-      searchScope = new LocalSearchScope(thisClass);
-    }
-    else if (IdeLocalize.hierarchyScopeProject().get().equals(scopeType)) {
-      searchScope = GlobalSearchScopes.projectProductionScope(myProject);
-    }
-    else if (IdeLocalize.hierarchyScopeTest().get().equals(scopeType)) {
-      searchScope = GlobalSearchScopes.projectTestScope(myProject);
-    } else {
-      final NamedScope namedScope = NamedScopesHolder.getScope(myProject, scopeType);
-      if (namedScope != null) {
-        searchScope = GlobalSearchScopes.filterScope(myProject, namedScope);
-      }
-    }
-    return searchScope;
-  }
-
-  protected boolean isInScope(final PsiElement baseClass, final PsiElement srcElement, final String scopeType) {
-    if (IdeLocalize.hierarchyScopeThisClass().get().equals(scopeType)) {
-      if (!PsiTreeUtil.isAncestor(baseClass, srcElement, true)) {
-        return false;
-      }
-    }
-    else if (IdeLocalize.hierarchyScopeProject().get().equals(scopeType)) {
-      final VirtualFile virtualFile = srcElement.getContainingFile().getVirtualFile();
-      if (virtualFile != null && TestSourcesFilter.isTestSources(virtualFile, myProject)) {
-        return false;
-      }
-    }
-    else if (IdeLocalize.hierarchyScopeTest().get().equals(scopeType)) {
-
-      final VirtualFile virtualFile = srcElement.getContainingFile().getVirtualFile();
-      if (virtualFile != null && !TestSourcesFilter.isTestSources(virtualFile, myProject)) {
-        return false;
-      }
-    } else if (!IdeLocalize.hierarchyScopeAll().get().equals(scopeType)) {
-      final NamedScope namedScope = NamedScopesHolder.getScope(myProject, scopeType);
-      if (namedScope == null) {
-        return false;
-      }
-      final PackageSet namedScopePattern = namedScope.getValue();
-      if (namedScopePattern == null) {
-        return false;
-      }
-      final PsiFile psiFile = srcElement.getContainingFile();
-      if (psiFile != null && !namedScopePattern.contains(psiFile.getVirtualFile(), psiFile.getProject(), NamedScopesHolder.getHolder(myProject, scopeType, NamedScopeManager.getInstance(myProject)))) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  private static final class TextInfoNodeDescriptor extends NodeDescriptor {
-    public TextInfoNodeDescriptor(final NodeDescriptor parentDescriptor, final String text, final Project project) {
-      super(parentDescriptor);
-      myName = text;
-      myColor = StandardColors.RED;
     }
 
     @Override
-    public final Object getElement() {
-      return myName;
+    @Nonnull
+    public final NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+        if (element instanceof HierarchyNodeDescriptor descriptor) {
+            return descriptor;
+        }
+        if (element instanceof String text) {
+            return new TextInfoNodeDescriptor(parentDescriptor, text, myProject);
+        }
+        throw new IllegalArgumentException("Unknown element type: " + element);
     }
 
-    @RequiredUIAccess
     @Override
-    public final boolean update() {
-      return true;
+    public final boolean isToBuildChildrenInBackground(@Nonnull Object element) {
+        if (element instanceof HierarchyNodeDescriptor descriptor) {
+            Object[] cachedChildren = descriptor.getCachedChildren();
+            if (cachedChildren == null && descriptor.isValid()) {
+                return true;
+            }
+        }
+        return false;
     }
-  }
 
-  public boolean isAlwaysShowPlus() {
-    return false;
-  }
+    @Nonnull
+    @Override
+    public final Object[] getChildElements(@Nonnull Object element) {
+        if (element instanceof HierarchyNodeDescriptor descriptor) {
+            Object[] cachedChildren = descriptor.getCachedChildren();
+            if (cachedChildren == null) {
+                if (!descriptor.isValid()) { //invalid
+                    descriptor.setCachedChildren(ArrayUtil.EMPTY_OBJECT_ARRAY);
+                }
+                else {
+                    descriptor.setCachedChildren(buildChildren(descriptor));
+                }
+            }
+            return descriptor.getCachedChildren();
+        }
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
+    }
+
+    @Override
+    public final Object getParentElement(@Nonnull Object element) {
+        if (element instanceof HierarchyNodeDescriptor descriptor) {
+            return descriptor.getParentDescriptor();
+        }
+
+        return null;
+    }
+
+    @Override
+    public final void commit() {
+        PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+    }
+
+    @Override
+    public final boolean hasSomethingToCommit() {
+        return PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments();
+    }
+
+    @Nonnull
+    @Override
+    public ActionCallback asyncCommit() {
+        return PsiDocumentManager.asyncCommitDocuments(myProject);
+    }
+
+    protected abstract Object[] buildChildren(HierarchyNodeDescriptor descriptor);
+
+    @Nonnull
+    @Override
+    public final Object getRootElement() {
+        return myRoot;
+    }
+
+    protected SearchScope getSearchScope(String scopeId, PsiElement thisClass) {
+        return HierarchyScope.find(myProject, scopeId).getSearchScope(thisClass);
+    }
+
+    protected boolean isInScope(PsiElement baseClass, PsiElement srcElement, String scopeId) {
+        return HierarchyScope.find(myProject, scopeId).isInScope(baseClass, srcElement);
+    }
+
+    private static final class TextInfoNodeDescriptor extends NodeDescriptor {
+        public TextInfoNodeDescriptor(NodeDescriptor parentDescriptor, String text, Project project) {
+            super(parentDescriptor);
+            myName = text;
+            myColor = StandardColors.RED;
+        }
+
+        @Override
+        public final Object getElement() {
+            return myName;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public final boolean update() {
+            return true;
+        }
+    }
+
+    public boolean isAlwaysShowPlus() {
+        return false;
+    }
 }

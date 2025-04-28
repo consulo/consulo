@@ -31,90 +31,93 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import jakarta.annotation.Nonnull;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 15:05/22.11.13
+ * @since 2013-11-22
  */
 @ExtensionImpl
 public class PredefinedBundlesLoader extends PreloadingActivity {
-  private static final Logger LOG = Logger.getInstance(PredefinedBundlesLoader.class);
+    private static final Logger LOG = Logger.getInstance(PredefinedBundlesLoader.class);
 
-  private static class ContextImpl implements PredefinedBundlesProvider.Context {
-    private final List<Sdk> myBundles = new ArrayList<>();
-    private final SdkTable mySdkTable;
+    private static class ContextImpl implements PredefinedBundlesProvider.Context {
+        private final List<Sdk> myBundles = new ArrayList<>();
+        private final SdkTable mySdkTable;
 
-    public ContextImpl(SdkTable sdkTable) {
-      mySdkTable = sdkTable;
+        public ContextImpl(SdkTable sdkTable) {
+            mySdkTable = sdkTable;
+        }
+
+        @Nonnull
+        @Override
+        public Sdk createSdkWithName(
+            @Nonnull BundleType sdkType,
+            @Nonnull Path homePath,
+            @Nonnull String suggestName
+        ) {
+            // TODO [VISTALL] path can be remote - handle it
+
+            Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
+            String uniqueSdkName = SdkUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
+            Sdk sdk = mySdkTable.createSdk(homePath, uniqueSdkName, sdkType);
+            myBundles.add(sdk);
+            return sdk;
+        }
+
+        @Override
+        @Nonnull
+        @SuppressWarnings("deprecation")
+        public Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName) {
+            Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
+            String uniqueSdkName = SdkUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
+            Sdk sdk = mySdkTable.createSdk(uniqueSdkName, sdkType);
+            myBundles.add(sdk);
+            return sdk;
+        }
+
+        @Override
+        @Nonnull
+        public Sdk createSdk(@Nonnull SdkType sdkType, @Nonnull String sdkHome) {
+            return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
+        }
     }
 
-    @Nonnull
+    private final Application myApplication;
+    private final Provider<SdkTable> mySdkTable;
+    private final Provider<SdkPointerManager> mySdkPointerManager;
+
+    @Inject
+    public PredefinedBundlesLoader(Application application, Provider<SdkTable> sdkTable, Provider<SdkPointerManager> sdkPointerManager) {
+        mySdkTable = sdkTable;
+        myApplication = application;
+        mySdkPointerManager = sdkPointerManager;
+    }
+
     @Override
-    public Sdk createSdkWithName(@Nonnull BundleType sdkType,
-                                 @Nonnull Path homePath,
-                                 @Nonnull String suggestName) {
-      // TODO [VISTALL] path can be remote - handle it
+    public void preload(@Nonnull ProgressIndicator indicator) {
+        if (SystemProperties.is("consulo.disable.predefined.bundles")) {
+            return;
+        }
 
-      Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
-      String uniqueSdkName = SdkUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
-      Sdk sdk = mySdkTable.createSdk(homePath, uniqueSdkName, sdkType);
-      myBundles.add(sdk);
-      return sdk;
+        SdkTable sdkTable = mySdkTable.get();
+
+        ContextImpl context = new ContextImpl(sdkTable);
+
+        myApplication.getExtensionPoint(PredefinedBundlesProvider.class).forEach(provider -> provider.createBundles(context));
+
+        List<Sdk> bundles = context.myBundles;
+
+        if (!bundles.isEmpty()) {
+            for (Sdk bundle : bundles) {
+                ((SdkImpl)bundle).setPredefined(true);
+            }
+
+            ((SdkTableImpl)sdkTable).addSdksUnsafe(bundles);
+            ((SdkPointerManagerImpl)mySdkPointerManager.get()).updatePointers(bundles);
+        }
     }
-
-    @Override
-    @Nonnull
-    @SuppressWarnings("deprecation")
-    public Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName) {
-      Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
-      String uniqueSdkName = SdkUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
-      Sdk sdk = mySdkTable.createSdk(uniqueSdkName, sdkType);
-      myBundles.add(sdk);
-      return sdk;
-    }
-
-    @Override
-    @Nonnull
-    public Sdk createSdk(@Nonnull SdkType sdkType, @Nonnull String sdkHome) {
-      return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
-    }
-  }
-
-  private final Application myApplication;
-  private final Provider<SdkTable> mySdkTable;
-  private final Provider<SdkPointerManager> mySdkPointerManager;
-
-  @Inject
-  public PredefinedBundlesLoader(Application application, Provider<SdkTable> sdkTable, Provider<SdkPointerManager> sdkPointerManager) {
-    mySdkTable = sdkTable;
-    myApplication = application;
-    mySdkPointerManager = sdkPointerManager;
-  }
-
-  @Override
-  public void preload(@Nonnull ProgressIndicator indicator) {
-    if (SystemProperties.is("consulo.disable.predefined.bundles")) {
-      return;
-    }
-
-    SdkTable sdkTable = mySdkTable.get();
-
-    ContextImpl context = new ContextImpl(sdkTable);
-
-    myApplication.getExtensionPoint(PredefinedBundlesProvider.class).forEachExtensionSafe(provider -> provider.createBundles(context));
-
-    List<Sdk> bundles = context.myBundles;
-
-    if (!bundles.isEmpty()) {
-      for (Sdk bundle : bundles) {
-        ((SdkImpl)bundle).setPredefined(true);
-      }
-
-      ((SdkTableImpl)sdkTable).addSdksUnsafe(bundles);
-      ((SdkPointerManagerImpl)mySdkPointerManager.get()).updatePointers(bundles);
-    }
-  }
 }

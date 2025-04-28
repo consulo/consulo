@@ -52,7 +52,7 @@ public abstract class RunAnythingCommandCustomizer {
         @Nonnull GeneralCommandLine commandLine
     ) {
         SimpleReference<GeneralCommandLine> commandLineRef = SimpleReference.create(commandLine);
-        Application.get().getExtensionPoint(RunAnythingCommandCustomizer.class).forEachExtensionSafe(
+        Application.get().getExtensionPoint(RunAnythingCommandCustomizer.class).forEach(
             customizer -> commandLineRef.set(customizer.customizeCommandLine(workDirectory, dataContext, commandLineRef.get()))
         );
         return commandLineRef.get();
@@ -62,7 +62,7 @@ public abstract class RunAnythingCommandCustomizer {
     public static DataContext customizeContext(@Nonnull DataContext dataContext) {
         SimpleReference<DataContext> dataContextRef = SimpleReference.create(dataContext);
         Application.get().getExtensionPoint(RunAnythingCommandCustomizer.class)
-            .forEachExtensionSafe(customizer -> dataContextRef.set(customizer.customizeDataContext(dataContextRef.get())));
+            .forEach(customizer -> dataContextRef.set(customizer.customizeDataContext(dataContextRef.get())));
         return dataContextRef.get();
     }
 }

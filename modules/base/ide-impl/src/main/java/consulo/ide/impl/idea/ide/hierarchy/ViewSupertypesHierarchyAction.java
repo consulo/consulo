@@ -16,20 +16,23 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 /**
  * @author cdr
  */
 public final class ViewSupertypesHierarchyAction extends ChangeViewTypeActionBase {
-  public ViewSupertypesHierarchyAction() {
-    super(IdeBundle.message("action.view.supertypes.hierarchy"), 
-          IdeBundle.message("action.description.view.supertypes.hierarchy"), AllIcons.Hierarchy.Supertypes);
-  }
+    public ViewSupertypesHierarchyAction() {
+        super(
+            IdeLocalize.actionViewSupertypesHierarchy(),
+            IdeLocalize.actionDescriptionViewSupertypesHierarchy(),
+            PlatformIconGroup.hierarchySupertypes()
+        );
+    }
 
-  @Override
-  protected final String getTypeName() {
-    return TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
-  }
+    @Override
+    protected final String getTypeName() {
+        return TypeHierarchyBrowserBase.SUPERTYPES_HIERARCHY_TYPE;
+    }
 }

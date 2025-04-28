@@ -135,7 +135,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
         HighlightInfo.Builder builder = createInfoWithoutFixes(element);
         element.getProject()
             .getExtensionPoint(ErrorQuickFixProvider.class)
-            .forEachExtensionSafe(it -> it.registerErrorQuickFix(element, builder));
+            .forEach(it -> it.registerErrorQuickFix(element, builder));
 
         return builder.createUnconditionally();
     }

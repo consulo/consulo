@@ -24,29 +24,29 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 09-Feb-22
+ * @since 2022-02-09
  */
 public interface SearchScope extends VirtualFileFilter {
-  @Nonnull
-  default String getDisplayName() {
-    return "<unknown scope>";
-  }
+    @Nonnull
+    default String getDisplayName() {
+        return "<unknown scope>";
+    }
 
-  @Nullable
-  default Image getIcon() {
-    return null;
-  }
+    @Nullable
+    default Image getIcon() {
+        return null;
+    }
 
-  @Nonnull
-  SearchScope intersectWith(@Nonnull SearchScope scope2);
+    @Nonnull
+    SearchScope intersectWith(@Nonnull SearchScope scope2);
 
-  @Nonnull
-  SearchScope union(@Nonnull SearchScope scope);
+    @Nonnull
+    SearchScope union(@Nonnull SearchScope scope);
 
-  boolean contains(@Nonnull VirtualFile file);
+    boolean contains(@Nonnull VirtualFile file);
 
-  @Override
-  default boolean accept(VirtualFile file) {
-    return contains(file);
-  }
+    @Override
+    default boolean accept(VirtualFile file) {
+        return contains(file);
+    }
 }

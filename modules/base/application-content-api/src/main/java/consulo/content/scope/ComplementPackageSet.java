@@ -20,41 +20,45 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 public class ComplementPackageSet extends PackageSetBase {
-  private final PackageSet myComplementarySet;
+    private final PackageSet myComplementarySet;
 
-  public ComplementPackageSet(PackageSet set) {
-    myComplementarySet = set;
-  }
+    public ComplementPackageSet(PackageSet set) {
+        myComplementarySet = set;
+    }
 
-  @Override
-  public boolean contains(VirtualFile file, @Nonnull Project project, NamedScopesHolder holder) {
-    return !myComplementarySet.contains(file, project, holder);
-  }
+    @Override
+    public boolean contains(VirtualFile file, @Nonnull Project project, NamedScopesHolder holder) {
+        return !myComplementarySet.contains(file, project, holder);
+    }
 
-  @Override
-  @Nonnull
-  public PackageSet createCopy() {
-    return new ComplementPackageSet(myComplementarySet.createCopy());
-  }
+    @Override
+    @Nonnull
+    public PackageSet createCopy() {
+        return new ComplementPackageSet(myComplementarySet.createCopy());
+    }
 
-  @Override
-  @Nonnull
-  public String getText() {
-    StringBuilder buf = new StringBuilder();
-    boolean needParen = myComplementarySet.getNodePriority() > getNodePriority();
-    buf.append('!');
-    if (needParen) buf.append('(');
-    buf.append(myComplementarySet.getText());
-    if (needParen) buf.append(')');
-    return buf.toString();
-  }
+    @Override
+    @Nonnull
+    public String getText() {
+        StringBuilder buf = new StringBuilder();
+        boolean needParen = myComplementarySet.getNodePriority() > getNodePriority();
+        buf.append('!');
+        if (needParen) {
+            buf.append('(');
+        }
+        buf.append(myComplementarySet.getText());
+        if (needParen) {
+            buf.append(')');
+        }
+        return buf.toString();
+    }
 
-  @Override
-  public int getNodePriority() {
-    return 1;
-  }
+    @Override
+    public int getNodePriority() {
+        return 1;
+    }
 
-  public PackageSet getComplementarySet() {
-    return myComplementarySet;
-  }
+    public PackageSet getComplementarySet() {
+        return myComplementarySet;
+    }
 }

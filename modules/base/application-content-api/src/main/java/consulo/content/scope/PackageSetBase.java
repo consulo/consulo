@@ -16,7 +16,7 @@
 package consulo.content.scope;
 
 /**
- * User: anna
+ * @author anna
  */
 public abstract class PackageSetBase implements PackageSet {
 }

@@ -21,9 +21,9 @@ import consulo.application.Application;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PackageSetFactory {
-  public abstract PackageSet compile(String text) throws ParsingException;
+    public abstract PackageSet compile(String text) throws ParsingException;
 
-  public static PackageSetFactory getInstance() {
-    return Application.get().getInstance(PackageSetFactory.class);
-  }
+    public static PackageSetFactory getInstance() {
+        return Application.get().getInstance(PackageSetFactory.class);
+    }
 }

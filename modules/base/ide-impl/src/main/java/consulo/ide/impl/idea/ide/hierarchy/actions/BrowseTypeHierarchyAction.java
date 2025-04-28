@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy.actions;
 
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.hierarchy.TypeHierarchyProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 public final class BrowseTypeHierarchyAction extends BrowseHierarchyActionBase<TypeHierarchyProvider> {
-  public BrowseTypeHierarchyAction() {
-    super(TypeHierarchyProvider.class);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public final void update(final AnActionEvent event){
-    final Presentation presentation = event.getPresentation();
-    if (!ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
-      presentation.setText(IdeBundle.message("action.browse.type.hierarchy"));
+    public BrowseTypeHierarchyAction() {
+        super(TypeHierarchyProvider.class);
     }
-    super.update(event);
-  }
+
+    @Override
+    @RequiredUIAccess
+    public final void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        if (!ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
+            presentation.setTextValue(IdeLocalize.actionBrowseTypeHierarchy());
+        }
+        super.update(event);
+    }
 }

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -27,30 +28,32 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public final class HierarchyNodeRenderer extends NodeRenderer {
-  public HierarchyNodeRenderer() {
-    setOpaque(false);
-    setIconOpaque(false);
-    setTransparentIconBackground(true);
-  }
-
-  @Override
-  protected void doPaint(Graphics2D g) {
-    super.doPaint(g);
-    setOpaque(false);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void customizeCellRenderer(final JTree tree, final Object value, final boolean selected, final boolean expanded, final boolean leaf,
-                                    final int row, final boolean hasFocus) {
-    if (value instanceof DefaultMutableTreeNode) {
-      final DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-      final Object object = node.getUserObject();
-      if (object instanceof HierarchyNodeDescriptor) {
-        final HierarchyNodeDescriptor descriptor = (HierarchyNodeDescriptor)object;
-        descriptor.getHighlightedText().customize(this);
-        setIcon(descriptor.getIcon());
-      }
+    public HierarchyNodeRenderer() {
+        setOpaque(false);
+        setIconOpaque(false);
+        setTransparentIconBackground(true);
     }
-  }
+
+    @Override
+    protected void doPaint(Graphics2D g) {
+        super.doPaint(g);
+        setOpaque(false);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void customizeCellRenderer(
+        @Nonnull JTree tree,
+        Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
+    ) {
+        if (value instanceof DefaultMutableTreeNode node && node.getUserObject() instanceof HierarchyNodeDescriptor descriptor) {
+            descriptor.getHighlightedText().customize(this);
+            setIcon(descriptor.getIcon());
+        }
+    }
 }

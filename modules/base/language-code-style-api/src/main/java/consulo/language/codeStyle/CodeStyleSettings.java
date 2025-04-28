@@ -100,10 +100,10 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
             Application application = Application.get();
 
             application.getExtensionPoint(CodeStyleSettingsProvider.class)
-                .forEachExtensionSafe(provider -> addCustomSettings(provider.createCustomSettings(this)));
+                .forEach(provider -> addCustomSettings(provider.createCustomSettings(this)));
 
             application.getExtensionPoint(LanguageCodeStyleSettingsProvider.class)
-                .forEachExtensionSafe(provider -> addCustomSettings(provider.createCustomSettings(this)));
+                .forEach(provider -> addCustomSettings(provider.createCustomSettings(this)));
         }
     }
 

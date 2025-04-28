@@ -29,68 +29,73 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class HierarchyNodeDescriptor extends SmartElementDescriptor {
-  protected CompositeAppearance myHighlightedText;
-  private Object[] myCachedChildren = null;
-  protected final boolean myIsBase;
+    protected CompositeAppearance myHighlightedText;
+    private Object[] myCachedChildren = null;
+    protected final boolean myIsBase;
 
-  protected HierarchyNodeDescriptor(@Nonnull Project project, final NodeDescriptor parentDescriptor, @Nonnull PsiElement element, final boolean isBase) {
-    super(project, parentDescriptor, element);
-    myHighlightedText = new CompositeAppearance();
-    myName = "";
-    myIsBase = isBase;
-  }
+    protected HierarchyNodeDescriptor(
+        @Nonnull Project project,
+        NodeDescriptor parentDescriptor,
+        @Nonnull PsiElement element,
+        boolean isBase
+    ) {
+        super(project, parentDescriptor, element);
+        myHighlightedText = new CompositeAppearance();
+        myName = "";
+        myIsBase = isBase;
+    }
 
-  @Override
-  public final Object getElement() {
-    return this;
-  }
+    @Override
+    public final Object getElement() {
+        return this;
+    }
 
-  @Nullable
-  public PsiFile getContainingFile() {
-    PsiElement element = getPsiElement();
-    return element != null ? element.getContainingFile() : null;
-  }
+    @Nullable
+    public PsiFile getContainingFile() {
+        PsiElement element = getPsiElement();
+        return element != null ? element.getContainingFile() : null;
+    }
 
-  public boolean isValid() {
-    return getPsiElement() != null;
-  }
+    public boolean isValid() {
+        return getPsiElement() != null;
+    }
 
-  public final Object[] getCachedChildren() {
-    return myCachedChildren;
-  }
+    public final Object[] getCachedChildren() {
+        return myCachedChildren;
+    }
 
-  public final void setCachedChildren(final Object[] cachedChildren) {
-    myCachedChildren = cachedChildren;
-  }
+    public final void setCachedChildren(Object[] cachedChildren) {
+        myCachedChildren = cachedChildren;
+    }
 
-  @Override
-  protected final boolean isMarkReadOnly() {
-    return true;
-  }
+    @Override
+    protected final boolean isMarkReadOnly() {
+        return true;
+    }
 
-  @Override
-  protected final boolean isMarkModified() {
-    return true;
-  }
+    @Override
+    protected final boolean isMarkModified() {
+        return true;
+    }
 
-  public final CompositeAppearance getHighlightedText() {
-    return myHighlightedText;
-  }
+    public final CompositeAppearance getHighlightedText() {
+        return myHighlightedText;
+    }
 
-  protected static TextAttributes getInvalidPrefixAttributes() {
-    return UsageTreeColorsScheme.getInstance().getScheme().getAttributes(UsageTreeColors.INVALID_PREFIX);
-  }
+    protected static TextAttributes getInvalidPrefixAttributes() {
+        return UsageTreeColorsScheme.getInstance().getScheme().getAttributes(UsageTreeColors.INVALID_PREFIX);
+    }
 
-  protected static TextAttributes getUsageCountPrefixAttributes() {
-    return UsageTreeColorsScheme.getInstance().getScheme().getAttributes(UsageTreeColors.NUMBER_OF_USAGES);
-  }
+    protected static TextAttributes getUsageCountPrefixAttributes() {
+        return UsageTreeColorsScheme.getInstance().getScheme().getAttributes(UsageTreeColors.NUMBER_OF_USAGES);
+    }
 
-  protected static TextAttributes getPackageNameAttributes() {
-    return getUsageCountPrefixAttributes();
-  }
+    protected static TextAttributes getPackageNameAttributes() {
+        return getUsageCountPrefixAttributes();
+    }
 
-  @Override
-  public boolean expandOnDoubleClick() {
-    return false;
-  }
+    @Override
+    public boolean expandOnDoubleClick() {
+        return false;
+    }
 }

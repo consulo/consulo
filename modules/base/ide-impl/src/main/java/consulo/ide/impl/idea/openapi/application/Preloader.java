@@ -86,7 +86,7 @@ public class Preloader implements Disposable {
             ExtensionPoint<PreloadingActivity> point = application.getExtensionPoint(PreloadingActivity.class);
 
             // preinit all futures
-            point.forEachExtensionSafe(it -> futures.put(it, new CompletableFuture<>()));
+            point.forEach(it -> futures.put(it, new CompletableFuture<>()));
 
             CompletableFuture.allOf(futures.values().toArray(new CompletableFuture[0])).whenComplete((unused, throwable) -> {
                 collector.dump("Preload statistics", LOG::info);

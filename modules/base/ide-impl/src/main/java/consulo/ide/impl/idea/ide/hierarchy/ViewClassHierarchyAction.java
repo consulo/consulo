@@ -16,28 +16,34 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
  */
 public final class ViewClassHierarchyAction extends ChangeViewTypeActionBase {
-  public ViewClassHierarchyAction() {
-    super(IdeBundle.message("action.view.class.hierarchy"),
-          IdeBundle.message("action.description.view.class.hierarchy"), AllIcons.Hierarchy.Class);
-  }
+    public ViewClassHierarchyAction() {
+        super(
+            IdeLocalize.actionViewClassHierarchy(),
+            IdeLocalize.actionDescriptionViewClassHierarchy(),
+            PlatformIconGroup.hierarchyClasshierarchy()
+        );
+    }
 
-  @Override
-  protected final String getTypeName() {
-    return TypeHierarchyBrowserBase.TYPE_HIERARCHY_TYPE;
-  }
+    @Override
+    protected final String getTypeName() {
+        return TypeHierarchyBrowserBase.TYPE_HIERARCHY_TYPE;
+    }
 
-  @Override
-  public final void update(final AnActionEvent event) {
-    super.update(event);
-    final TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
-    event.getPresentation().setEnabled(browser != null && !browser.isInterface());
-  }
+    @Override
+    @RequiredUIAccess
+    public final void update(@Nonnull AnActionEvent event) {
+        super.update(event);
+        TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
+        event.getPresentation().setEnabled(browser != null && !browser.isInterface());
+    }
 }
