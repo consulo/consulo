@@ -319,7 +319,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         }
         List<StripTrailingSpacesFilter> filters = new ArrayList<>();
         SimpleReference<StripTrailingSpacesFilter> specialFilter = SimpleReference.create();
-        Application.get().getExtensionPoint(StripTrailingSpacesFilterFactory.class).forEachExtensionSafe(filterFactory -> {
+        Application.get().getExtensionPoint(StripTrailingSpacesFilterFactory.class).forEachBreakable(filterFactory -> {
             StripTrailingSpacesFilter filter = filterFactory.createFilter(project, this);
             if (specialFilter.isNull()
                 && (filter == StripTrailingSpacesFilter.NOT_ALLOWED || filter == StripTrailingSpacesFilter.POSTPONED)) {
