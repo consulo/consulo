@@ -17,10 +17,7 @@ package consulo.ui.ex.awt.action;
 
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -94,12 +91,12 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
             getPopupTitle(),
             group,
             context,
-            false,
+            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
             shouldShowDisabledActions(),
-            false,
             onDispose,
             getMaxRows(),
-            getPreselectCondition()
+            getPreselectCondition(),
+            getPopupActionPlace()
         );
         popup.setMinimumSize(new Dimension(getMinWidth(), getMinHeight()));
         return popup;
@@ -150,6 +147,11 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
     public int getMinWidth() {
         return 1;
+    }
+
+    @Nonnull
+    public String getPopupActionPlace() {
+        return ActionPlaces.UNKNOWN;
     }
 
     public Predicate<AnAction> getPreselectCondition() {

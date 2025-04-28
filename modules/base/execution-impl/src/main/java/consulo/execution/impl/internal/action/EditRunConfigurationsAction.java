@@ -50,10 +50,10 @@ public class EditRunConfigurationsAction extends DumbAwareAction {
         presentation.setEnabled(true);
 
         if (ActionPlaces.RUN_CONFIGURATIONS_COMBOBOX.equals(e.getPlace())) {
-            LocalizeValue textValue = ExecutionLocalize.editConfigurationAction();
+            LocalizeValue textValue = ExecutionLocalize.editConfigurationAction().map(Presentation.NO_MNEMONIC);
 
             presentation.setTextValue(textValue);
-            presentation.setDescriptionValue(textValue.map(Presentation.NO_MNEMONIC));
+            presentation.setDescriptionValue(textValue);
         }
     }
 }

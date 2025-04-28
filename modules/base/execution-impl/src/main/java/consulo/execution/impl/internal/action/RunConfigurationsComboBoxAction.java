@@ -63,6 +63,12 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         myRunCurrentFileService = runCurrentFileService;
     }
 
+    @Nonnull
+    @Override
+    public String getPopupActionPlace() {
+        return ActionPlaces.RUN_CONFIGURATIONS_COMBOBOX;
+    }
+
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
