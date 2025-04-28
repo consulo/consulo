@@ -26,29 +26,30 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import java.util.Collection;
 
 /**
- * User: anna
- * Date: Feb 28, 2005
+ * @author anna
+ * @since 2005-02-28
  */
 class AddToNewFavoritesListAction extends AnAction {
     public AddToNewFavoritesListAction() {
         super(
             IdeLocalize.actionAddToNewFavoritesList(),
-            LocalizeValue.localizeTODO("Add To New Favorites List"),
+            IdeLocalize.actionAddToNewFavoritesList().map(Presentation.NO_MNEMONIC),
             BookmarkIconGroup.actionAddbookmarkslist()
         );
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Collection<AbstractTreeNode> nodesToAdd = AddToFavoritesAction.getNodesToAdd(e.getDataContext(), true);
         if (nodesToAdd != null) {
-            final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
+            String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
             if (newName != null) {
                 FavoritesManagerImpl.getInstance(project).addRoots(newName, nodesToAdd);
             }

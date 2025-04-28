@@ -27,43 +27,41 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
- * User: anna
- * Date: Feb 23, 2005
+ * @author anna
+ * @since 2005-02-23
  */
 public class RenameFavoritesListAction extends AnAction implements DumbAware {
-  public RenameFavoritesListAction() {
-    super(
-      IdeLocalize.actionRenameFavoritesList(),
-      IdeLocalize.actionRenameFavoritesList(),
-      null
-    );
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public RenameFavoritesListAction() {
+        super(IdeLocalize.actionRenameFavoritesList(), IdeLocalize.actionRenameFavoritesList());
     }
-    final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
-    String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
-    if (listName == null || favoritesManager.getListProvider(listName) != null) return;
-    favoritesManager.renameList(project, listName);
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+        String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
+        if (listName == null || favoritesManager.getListProvider(listName) != null) {
+            return;
+        }
+        favoritesManager.renameList(project, listName);
     }
-    final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
-    String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
-    e.getPresentation().setEnabled(listName != null && favoritesManager.getListProvider(listName) == null);
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+        String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
+        e.getPresentation().setEnabled(listName != null && favoritesManager.getListProvider(listName) == null);
+    }
 }

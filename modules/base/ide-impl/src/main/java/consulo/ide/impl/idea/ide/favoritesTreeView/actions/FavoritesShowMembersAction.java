@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class FavoritesShowMembersAction extends FavoritesToolbarButtonAction {
-  public FavoritesShowMembersAction(Project project, FavoritesViewTreeBuilder builder) {
-    super(project, builder, IdeBundle.message("action.show.members"), AllIcons.ObjectBrowser.ShowMembers);
-  }
+    public FavoritesShowMembersAction(Project project, FavoritesViewTreeBuilder builder) {
+        super(project, builder, IdeLocalize.actionShowMembers(), PlatformIconGroup.objectbrowserShowmembers());
+    }
 
-  @Override
-  public boolean isOptionEnabled() {
-    return getViewSettings().isShowMembers();
-  }
+    @Override
+    public boolean isOptionEnabled() {
+        return getViewSettings().isShowMembers();
+    }
 
-  @Override
-  public void setOption(boolean enabled) {
-    getViewSettings().setShowMembers(enabled);
-  }
+    @Override
+    public void setOption(boolean enabled) {
+        getViewSettings().setShowMembers(enabled);
+    }
 }

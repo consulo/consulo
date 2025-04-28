@@ -15,33 +15,38 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public class FavoritesAbbreviatePackageNamesAction extends FavoritesToolbarButtonAction {
-  public FavoritesAbbreviatePackageNamesAction(Project project, FavoritesViewTreeBuilder builder) {
-    super(project, builder, IdeBundle.message("action.abbreviate.qualified.package.names"), AllIcons.ObjectBrowser.AbbreviatePackageNames);
-  }
+    public FavoritesAbbreviatePackageNamesAction(Project project, FavoritesViewTreeBuilder builder) {
+        super(
+            project,
+            builder,
+            IdeLocalize.actionAbbreviateQualifiedPackageNames(),
+            PlatformIconGroup.objectbrowserAbbreviatepackagenames()
+        );
+    }
 
-  @Override
-  public boolean isOptionEnabled() {
-    return getViewSettings().isAbbreviatePackageNames();
-  }
+    @Override
+    public boolean isOptionEnabled() {
+        return getViewSettings().isAbbreviatePackageNames();
+    }
 
-  @Override
-  public void setOption(boolean enabled) {
-    getViewSettings().setAbbreviateQualifiedPackages(enabled);
-  }
+    @Override
+    public void setOption(boolean enabled) {
+        getViewSettings().setAbbreviateQualifiedPackages(enabled);
+    }
 
-  @Override
-  public void updateButton(AnActionEvent e) {
-    super.updateButton(e);
-    setVisible(getViewSettings().isFlattenPackages());
-  }
+    @Override
+    public void updateButton(AnActionEvent e) {
+        super.updateButton(e);
+        setVisible(getViewSettings().isFlattenPackages());
+    }
 }

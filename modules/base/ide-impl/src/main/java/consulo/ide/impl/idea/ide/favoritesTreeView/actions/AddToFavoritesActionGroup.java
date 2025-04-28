@@ -30,39 +30,40 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
- * User: anna
- * Date: Mar 3, 2005
+ * @author anna
+ * @since 2005-03-03
  */
 public class AddToFavoritesActionGroup extends ActionGroup {
+    @Nonnull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        if (e == null) {
+            return AnAction.EMPTY_ARRAY;
+        }
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return AnAction.EMPTY_ARRAY;
+        }
+        List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
+        availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
+        if (availableFavoritesLists.isEmpty()) {
+            return new AnAction[]{new AddToNewFavoritesListAction()};
+        }
 
-  @Override
-  @Nonnull
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    if (e == null) return AnAction.EMPTY_ARRAY;
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return AnAction.EMPTY_ARRAY;
-    }
-    final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
-    availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
-    if (availableFavoritesLists.isEmpty()) {
-      return new AnAction[]{new AddToNewFavoritesListAction()};
+        AnAction[] actions = new AnAction[availableFavoritesLists.size() + 2];
+        int idx = 0;
+        for (String favoritesList : availableFavoritesLists) {
+            actions[idx++] = new AddToFavoritesAction(favoritesList);
+        }
+        actions[idx++] = AnSeparator.getInstance();
+        actions[idx] = new AddToNewFavoritesListAction();
+        return actions;
     }
 
-    AnAction[] actions = new AnAction[availableFavoritesLists.size() + 2];
-    int idx = 0;
-    for (String favoritesList : availableFavoritesLists) {
-      actions[idx++] = new AddToFavoritesAction(favoritesList);
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setVisible(AddToFavoritesAction.canCreateNodes(e));
     }
-    actions[idx++] = AnSeparator.getInstance();
-    actions[idx] = new AddToNewFavoritesListAction();
-    return actions;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setVisible(AddToFavoritesAction.canCreateNodes(e));
-  }
 }

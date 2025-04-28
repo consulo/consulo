@@ -28,47 +28,47 @@ import consulo.ui.ex.awt.CommonActionsPanel;
 import java.util.Set;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public class EditFavoritesAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    FavoritesViewTreeBuilder treeBuilder = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
-    String listName = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
-    if (project == null || treeBuilder == null || listName == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        FavoritesViewTreeBuilder treeBuilder = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
+        String listName = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
+        if (project == null || treeBuilder == null || listName == null) {
+            return;
+        }
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+        FavoritesListProvider provider = favoritesManager.getListProvider(listName);
+        Set<Object> selection = treeBuilder.getSelectedElements();
+        if (provider != null && provider.willHandle(CommonActionsPanel.Buttons.EDIT, project, selection)) {
+            provider.handle(CommonActionsPanel.Buttons.EDIT, project, selection, treeBuilder.getTree());
+            return;
+        }
+        favoritesManager.renameList(project, listName);
     }
-    FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
-    FavoritesListProvider provider = favoritesManager.getListProvider(listName);
-    Set<Object> selection = treeBuilder.getSelectedElements();
-    if (provider != null && provider.willHandle(CommonActionsPanel.Buttons.EDIT, project, selection)) {
-      provider.handle(CommonActionsPanel.Buttons.EDIT, project, selection, treeBuilder.getTree());
-      return;
-    }
-    favoritesManager.renameList(project, listName);
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    e.getPresentation().setText(CommonActionsPanel.Buttons.EDIT.getText());
-    e.getPresentation().setIcon(CommonActionsPanel.Buttons.EDIT.getIcon());
-    e.getPresentation().setEnabled(true);
-    Project project = e.getData(Project.KEY);
-    FavoritesViewTreeBuilder treeBuilder = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
-    String listName = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
-    if (project == null || treeBuilder == null || listName == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        e.getPresentation().setText(CommonActionsPanel.Buttons.EDIT.getText());
+        e.getPresentation().setIcon(CommonActionsPanel.Buttons.EDIT.getIcon());
+        e.getPresentation().setEnabled(true);
+        Project project = e.getData(Project.KEY);
+        FavoritesViewTreeBuilder treeBuilder = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
+        String listName = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
+        if (project == null || treeBuilder == null || listName == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+        FavoritesListProvider provider = favoritesManager.getListProvider(listName);
+        Set<Object> selection = treeBuilder.getSelectedElements();
+        if (provider != null) {
+            e.getPresentation().setEnabled(provider.willHandle(CommonActionsPanel.Buttons.EDIT, project, selection));
+            e.getPresentation().setText(provider.getCustomName(CommonActionsPanel.Buttons.EDIT));
+        }
     }
-    FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
-    FavoritesListProvider provider = favoritesManager.getListProvider(listName);
-    Set<Object> selection = treeBuilder.getSelectedElements();
-    if (provider != null) {
-      e.getPresentation().setEnabled(provider.willHandle(CommonActionsPanel.Buttons.EDIT, project, selection));
-      e.getPresentation().setText(provider.getCustomName(CommonActionsPanel.Buttons.EDIT));
-    }
-  }
 }

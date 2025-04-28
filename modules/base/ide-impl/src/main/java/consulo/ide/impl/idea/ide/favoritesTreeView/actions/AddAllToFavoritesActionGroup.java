@@ -30,39 +30,41 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
- * User: anna
- * Date: Mar 3, 2005
+ * @author anna
+ * @since 2005-03-03
  */
 public class AddAllToFavoritesActionGroup extends ActionGroup {
-  @Override
-  @Nonnull
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    if (e == null) return AnAction.EMPTY_ARRAY;
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return AnAction.EMPTY_ARRAY;
-    }
-    final List<String> listNames = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
-    final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
-    availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
-    if (availableFavoritesLists.isEmpty()) {
-      return new AnAction[]{new AddAllOpenFilesToNewFavoritesListAction()};
+    @Override
+    @Nonnull
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        if (e == null) {
+            return AnAction.EMPTY_ARRAY;
+        }
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return AnAction.EMPTY_ARRAY;
+        }
+        List<String> listNames = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
+        List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
+        availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
+        if (availableFavoritesLists.isEmpty()) {
+            return new AnAction[]{new AddAllOpenFilesToNewFavoritesListAction()};
+        }
+
+        AnAction[] actions = new AnAction[listNames.size() + 2];
+        int idx = 0;
+        for (String favoritesList : listNames) {
+            actions[idx++] = new AddAllOpenFilesToFavorites(favoritesList);
+        }
+        actions[idx++] = AnSeparator.getInstance();
+        actions[idx] = new AddAllOpenFilesToNewFavoritesListAction();
+        return actions;
     }
 
-    AnAction[] actions = new AnAction[listNames.size() + 2];
-    int idx = 0;
-    for (String favoritesList : listNames) {
-      actions[idx++] = new AddAllOpenFilesToFavorites(favoritesList);
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
     }
-    actions[idx++] = AnSeparator.getInstance();
-    actions[idx] = new AddAllOpenFilesToNewFavoritesListAction();
-    return actions;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
-  }
 }

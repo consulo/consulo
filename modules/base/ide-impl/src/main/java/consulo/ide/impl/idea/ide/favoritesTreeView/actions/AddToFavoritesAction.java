@@ -46,236 +46,245 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 /**
- * User: anna
- * Date: Feb 15, 2005
+ * @author anna
+ * @since 2005-02-15
  */
 public class AddToFavoritesAction extends AnAction {
-  private static final Logger LOG = Logger.getInstance(AddToFavoritesAction.class);
+    private static final Logger LOG = Logger.getInstance(AddToFavoritesAction.class);
+    private static final Set<String> POPUP_PLACES_IN_PROJECT_VIEW = Set.of(
+        ActionPlaces.J2EE_VIEW_POPUP,
+        ActionPlaces.STRUCTURE_VIEW_POPUP,
+        ActionPlaces.PROJECT_VIEW_POPUP
+    );
 
-  private final String myFavoritesListName;
+    private final String myFavoritesListName;
 
-  public AddToFavoritesAction(String choosenList) {
-    getTemplatePresentation().setText(choosenList, false);
-    myFavoritesListName = choosenList;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-
-    Collection<AbstractTreeNode> nodesToAdd = getNodesToAdd(dataContext, true);
-
-    if (nodesToAdd != null && !nodesToAdd.isEmpty()) {
-      Project project = e.getData(Project.KEY);
-      FavoritesManagerImpl.getInstance(project).addRoots(myFavoritesListName, nodesToAdd);
-    }
-  }
-
-  @RequiredReadAction
-  public static Collection<AbstractTreeNode> getNodesToAdd(final DataContext dataContext, final boolean inProjectView) {
-    Project project = dataContext.getData(Project.KEY);
-
-    if (project == null) return Collections.emptyList();
-
-    Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
-
-    Collection<AbstractTreeNode> nodesToAdd = null;
-    for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
-      nodesToAdd = provider.getFavoriteNodes(dataContext, ViewSettings.DEFAULT);
-      if (nodesToAdd != null) {
-        break;
-      }
+    public AddToFavoritesAction(String choosenList) {
+        getTemplatePresentation().setText(choosenList, false);
+        myFavoritesListName = choosenList;
     }
 
-    if (nodesToAdd == null) {
-      Object elements = collectSelectedElements(dataContext);
-      if (elements != null) {
-        nodesToAdd = createNodes(project, moduleContext, elements, inProjectView, ViewSettings.DEFAULT);
-      }
-    }
-    return nodesToAdd;
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(canCreateNodes(e));
-  }
+        Collection<AbstractTreeNode> nodesToAdd = getNodesToAdd(dataContext, true);
 
-  @RequiredReadAction
-  public static boolean canCreateNodes(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    if (e.getData(Project.KEY) == null) {
-      return false;
-    }
-    if (e.getPlace().equals(ActionPlaces.FAVORITES_VIEW_POPUP)
-        && dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY) == null) {
-      return false;
-    }
-    final boolean inProjectView = e.getPlace().equals(ActionPlaces.J2EE_VIEW_POPUP) ||
-                                  e.getPlace().equals(ActionPlaces.STRUCTURE_VIEW_POPUP) ||
-                                  e.getPlace().equals(ActionPlaces.PROJECT_VIEW_POPUP);
-    //consulo.ide.impl.idea.openapi.actionSystem.ActionPlaces.USAGE_VIEW_TOOLBAR
-    return getNodesToAdd(dataContext, inProjectView) != null;
-  }
-
-  static Object retrieveData(Object object, Object data) {
-    return object == null ? data : object;
-  }
-
-  private static Object collectSelectedElements(final DataContext dataContext) {
-    Object elements = retrieveData(null, dataContext.getData(PsiElement.KEY));
-    elements = retrieveData(elements, dataContext.getData(PsiElement.KEY_OF_ARRAY));
-    elements = retrieveData(elements, dataContext.getData(PsiFile.KEY));
-    elements = retrieveData(elements, dataContext.getData(ModuleGroup.ARRAY_DATA_KEY));
-    elements = retrieveData(elements, dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY));
-    elements = retrieveData(elements, dataContext.getData(LibraryGroupElement.ARRAY_DATA_KEY));
-    elements = retrieveData(elements, dataContext.getData(NamedLibraryElement.ARRAY_DATA_KEY));
-    elements = retrieveData(elements, dataContext.getData(VirtualFile.KEY));
-    elements = retrieveData(elements, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
-    return elements;
-  }
-
-  @Nonnull
-  @RequiredReadAction
-  public static Collection<AbstractTreeNode> createNodes(
-    Project project,
-    Module moduleContext,
-    Object object,
-    boolean inProjectView,
-    ViewSettings favoritesConfig
-  ) {
-    if (project == null) return Collections.emptyList();
-    ArrayList<AbstractTreeNode> result = new ArrayList<>();
-    for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
-      final AbstractTreeNode treeNode = provider.createNode(project, object, favoritesConfig);
-      if (treeNode != null) {
-        result.add(treeNode);
-        return result;
-      }
-    }
-    final PsiManager psiManager = PsiManager.getInstance(project);
-
-    final String currentViewId = ProjectView.getInstance(project).getCurrentViewId();
-    ProjectViewPane pane = ProjectView.getInstance(project).getProjectViewPaneById(currentViewId);
-
-    //on psi elements
-    if (object instanceof PsiElement[]) {
-      for (PsiElement psiElement : (PsiElement[])object) {
-        addPsiElementNode(psiElement, project, result, favoritesConfig);
-      }
-      return result;
-    }
-
-    //on psi element
-    if (object instanceof PsiElement) {
-      Module containingModule = null;
-      if (inProjectView && ProjectView.getInstance(project).isShowModules(currentViewId)) {
-        if (pane != null && pane.getSelectedDescriptor() != null && pane.getSelectedDescriptor().getElement() instanceof AbstractTreeNode) {
-          AbstractTreeNode abstractTreeNode = ((AbstractTreeNode)pane.getSelectedDescriptor().getElement());
-          while (abstractTreeNode != null && !(abstractTreeNode.getParent() instanceof AbstractModuleNode)) {
-            abstractTreeNode = (AbstractTreeNode)abstractTreeNode.getParent();
-          }
-          if (abstractTreeNode != null) {
-            containingModule = ((AbstractModuleNode)abstractTreeNode.getParent()).getValue();
-          }
+        if (nodesToAdd != null && !nodesToAdd.isEmpty()) {
+            Project project = e.getData(Project.KEY);
+            FavoritesManagerImpl.getInstance(project).addRoots(myFavoritesListName, nodesToAdd);
         }
-      }
-      addPsiElementNode((PsiElement)object, project, result, favoritesConfig);
-      return result;
     }
 
-    if (object instanceof VirtualFile[]) {
-      for (VirtualFile vFile : (VirtualFile[])object) {
-        PsiElement element = psiManager.findFile(vFile);
-        if (element == null) element = psiManager.findDirectory(vFile);
-        addPsiElementNode(element,
-                          project,
-                          result,
-                          favoritesConfig);
-      }
-      return result;
+    @RequiredReadAction
+    public static Collection<AbstractTreeNode> getNodesToAdd(DataContext dataContext, boolean inProjectView) {
+        Project project = dataContext.getData(Project.KEY);
+
+        if (project == null) {
+            return Collections.emptyList();
+        }
+
+        Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
+
+        Collection<AbstractTreeNode> nodesToAdd = null;
+        for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
+            nodesToAdd = provider.getFavoriteNodes(dataContext, ViewSettings.DEFAULT);
+            if (nodesToAdd != null) {
+                break;
+            }
+        }
+
+        if (nodesToAdd == null) {
+            Object elements = collectSelectedElements(dataContext);
+            if (elements != null) {
+                nodesToAdd = createNodes(project, moduleContext, elements, inProjectView, ViewSettings.DEFAULT);
+            }
+        }
+        return nodesToAdd;
     }
 
-    //on form in editor
-    if (object instanceof VirtualFile) {
-      final VirtualFile vFile = (VirtualFile)object;
-      final PsiFile psiFile = psiManager.findFile(vFile);
-      addPsiElementNode(psiFile, project, result, favoritesConfig);
-      return result;
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(canCreateNodes(e));
     }
 
-    //on module groups
-    if (object instanceof ModuleGroup[]) {
-      for (ModuleGroup moduleGroup : (ModuleGroup[])object) {
-        result.add(new ProjectViewModuleGroupNode(project, moduleGroup, favoritesConfig));
-      }
-      return result;
+    @RequiredReadAction
+    public static boolean canCreateNodes(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        if (e.getData(Project.KEY) == null) {
+            return false;
+        }
+        String place = e.getPlace();
+        if (ActionPlaces.FAVORITES_VIEW_POPUP.equals(place)
+            && dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY) == null) {
+            return false;
+        }
+        boolean inProjectView = POPUP_PLACES_IN_PROJECT_VIEW.contains(place);
+        //consulo.ide.impl.idea.openapi.actionSystem.ActionPlaces.USAGE_VIEW_TOOLBAR
+        return getNodesToAdd(dataContext, inProjectView) != null;
     }
 
-    //on module nodes
-    if (object instanceof Module) object = new Module[]{(Module)object};
-    if (object instanceof Module[]) {
-      for (Module module1 : (Module[])object) {
-        result.add(new ProjectViewModuleNode(project, module1, favoritesConfig));
-      }
-      return result;
+    static Object retrieveData(Object object, Object data) {
+        return object == null ? data : object;
     }
 
-    //on library group node
-    if (object instanceof LibraryGroupElement[]) {
-      for (LibraryGroupElement libraryGroup : (LibraryGroupElement[])object) {
-        result.add(new LibraryGroupNode(project, libraryGroup, favoritesConfig));
-      }
-      return result;
+    private static Object collectSelectedElements(DataContext dataContext) {
+        Object elements = retrieveData(null, dataContext.getData(PsiElement.KEY));
+        elements = retrieveData(elements, dataContext.getData(PsiElement.KEY_OF_ARRAY));
+        elements = retrieveData(elements, dataContext.getData(PsiFile.KEY));
+        elements = retrieveData(elements, dataContext.getData(ModuleGroup.ARRAY_DATA_KEY));
+        elements = retrieveData(elements, dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY));
+        elements = retrieveData(elements, dataContext.getData(LibraryGroupElement.ARRAY_DATA_KEY));
+        elements = retrieveData(elements, dataContext.getData(NamedLibraryElement.ARRAY_DATA_KEY));
+        elements = retrieveData(elements, dataContext.getData(VirtualFile.KEY));
+        elements = retrieveData(elements, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
+        return elements;
     }
 
-    //on named library node
-    if (object instanceof NamedLibraryElement[]) {
-      for (NamedLibraryElement namedLibrary : (NamedLibraryElement[])object) {
-        result.add(new NamedLibraryElementNode(project, namedLibrary, favoritesConfig));
-      }
-      return result;
-    }
-    return result;
-  }
+    @Nonnull
+    @RequiredReadAction
+    public static Collection<AbstractTreeNode> createNodes(
+        Project project,
+        Module moduleContext,
+        Object object,
+        boolean inProjectView,
+        ViewSettings favoritesConfig
+    ) {
+        if (project == null) {
+            return Collections.emptyList();
+        }
+        ArrayList<AbstractTreeNode> result = new ArrayList<>();
+        for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
+            AbstractTreeNode treeNode = provider.createNode(project, object, favoritesConfig);
+            if (treeNode != null) {
+                result.add(treeNode);
+                return result;
+            }
+        }
+        PsiManager psiManager = PsiManager.getInstance(project);
 
-  private static void addPsiElementNode(PsiElement psiElement,
-                                        final Project project,
-                                        final ArrayList<AbstractTreeNode> result,
-                                        final ViewSettings favoritesConfig) {
+        String currentViewId = ProjectView.getInstance(project).getCurrentViewId();
+        ProjectViewPane pane = ProjectView.getInstance(project).getProjectViewPaneById(currentViewId);
 
-    Class<? extends AbstractTreeNode> klass = getPsiElementNodeClass(psiElement);
-    if (klass == null) {
-      psiElement = PsiTreeUtil.getParentOfType(psiElement, PsiFile.class);
-      if (psiElement != null) {
-        klass = PsiFileNode.class;
-      }
+        //on psi elements
+        if (object instanceof PsiElement[]) {
+            for (PsiElement psiElement : (PsiElement[])object) {
+                addPsiElementNode(psiElement, project, result, favoritesConfig);
+            }
+            return result;
+        }
+
+        //on psi element
+        if (object instanceof PsiElement element) {
+            Module containingModule = null;
+            if (inProjectView && ProjectView.getInstance(project).isShowModules(currentViewId)) {
+                if (pane != null && pane.getSelectedDescriptor() != null
+                    && pane.getSelectedDescriptor().getElement() instanceof AbstractTreeNode abstractTreeNode) {
+                    while (abstractTreeNode != null && !(abstractTreeNode.getParent() instanceof AbstractModuleNode)) {
+                        abstractTreeNode = (AbstractTreeNode)abstractTreeNode.getParent();
+                    }
+                    if (abstractTreeNode != null) {
+                        containingModule = ((AbstractModuleNode)abstractTreeNode.getParent()).getValue();
+                    }
+                }
+            }
+            addPsiElementNode(element, project, result, favoritesConfig);
+            return result;
+        }
+
+        if (object instanceof VirtualFile[] virtualFiles) {
+            for (VirtualFile vFile : virtualFiles) {
+                PsiElement element = psiManager.findFile(vFile);
+                if (element == null) {
+                    element = psiManager.findDirectory(vFile);
+                }
+                addPsiElementNode(element, project, result, favoritesConfig);
+            }
+            return result;
+        }
+
+        //on form in editor
+        if (object instanceof VirtualFile vFile) {
+            PsiFile psiFile = psiManager.findFile(vFile);
+            addPsiElementNode(psiFile, project, result, favoritesConfig);
+            return result;
+        }
+
+        //on module groups
+        if (object instanceof ModuleGroup[] moduleGroups) {
+            for (ModuleGroup moduleGroup : moduleGroups) {
+                result.add(new ProjectViewModuleGroupNode(project, moduleGroup, favoritesConfig));
+            }
+            return result;
+        }
+
+        //on module nodes
+        if (object instanceof Module module) {
+            object = new Module[]{module};
+        }
+        if (object instanceof Module[] modules) {
+            for (Module module1 : modules) {
+                result.add(new ProjectViewModuleNode(project, module1, favoritesConfig));
+            }
+            return result;
+        }
+
+        //on library group node
+        if (object instanceof LibraryGroupElement[] libraryGroupElements) {
+            for (LibraryGroupElement libraryGroup : libraryGroupElements) {
+                result.add(new LibraryGroupNode(project, libraryGroup, favoritesConfig));
+            }
+            return result;
+        }
+
+        //on named library node
+        if (object instanceof NamedLibraryElement[] namedLibraryElements) {
+            for (NamedLibraryElement namedLibrary : namedLibraryElements) {
+                result.add(new NamedLibraryElementNode(project, namedLibrary, favoritesConfig));
+            }
+            return result;
+        }
+        return result;
     }
 
-    final Object value = psiElement;
-    try {
-      if (klass != null && value != null) {
-        result.add(ProjectViewNode.createTreeNode(klass, project, value, favoritesConfig));
-      }
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-  }
+    private static void addPsiElementNode(
+        PsiElement psiElement,
+        Project project,
+        ArrayList<AbstractTreeNode> result,
+        ViewSettings favoritesConfig
+    ) {
+        Class<? extends AbstractTreeNode> klass = getPsiElementNodeClass(psiElement);
+        if (klass == null) {
+            psiElement = PsiTreeUtil.getParentOfType(psiElement, PsiFile.class);
+            if (psiElement != null) {
+                klass = PsiFileNode.class;
+            }
+        }
 
+        Object value = psiElement;
+        try {
+            if (klass != null && value != null) {
+                result.add(ProjectViewNode.createTreeNode(klass, project, value, favoritesConfig));
+            }
+        }
+        catch (Exception e) {
+            LOG.error(e);
+        }
+    }
 
-  private static Class<? extends AbstractTreeNode> getPsiElementNodeClass(PsiElement psiElement) {
-    Class<? extends AbstractTreeNode> klass = null;
-    if (psiElement instanceof PsiFile) {
-      klass = PsiFileNode.class;
+    private static Class<? extends AbstractTreeNode> getPsiElementNodeClass(PsiElement psiElement) {
+        Class<? extends AbstractTreeNode> klass = null;
+        if (psiElement instanceof PsiFile) {
+            klass = PsiFileNode.class;
+        }
+        else if (psiElement instanceof PsiDirectory) {
+            klass = PsiDirectoryNode.class;
+        }
+        return klass;
     }
-    else if (psiElement instanceof PsiDirectory) {
-      klass = PsiDirectoryNode.class;
-    }
-    return klass;
-  }
 }

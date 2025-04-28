@@ -24,8 +24,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
- * User: anna
- * Date: Feb 28, 2005
+ * @author anna
+ * @since 2005-02-28
  */
 class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
     public AddAllOpenFilesToNewFavoritesListAction() {
@@ -39,7 +39,7 @@ class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getData(Project.KEY));
+        String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getData(Project.KEY));
         if (newName != null) {
             new AddAllOpenFilesToFavorites(newName).actionPerformed(e);
         }

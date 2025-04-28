@@ -15,35 +15,37 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class FavoritesAutoScrollToSourceAction extends FavoritesToolbarButtonAction {
-  private final AutoScrollToSourceHandler myAutoScrollToSourceHandler;
+    private final AutoScrollToSourceHandler myAutoScrollToSourceHandler;
 
-  public FavoritesAutoScrollToSourceAction(Project project,
-                                           AutoScrollToSourceHandler autoScrollToSourceHandler,
-                                           FavoritesViewTreeBuilder builder) {
-    super(project, builder, UIBundle.message("autoscroll.to.source.action.name"), AllIcons.General.AutoscrollToSource);
-    myAutoScrollToSourceHandler = autoScrollToSourceHandler;
-  }
-
-  @Override
-  public boolean isOptionEnabled() {
-    return getViewSettings().isAutoScrollToSource();
-  }
-
-  @Override
-  public void setOption(boolean enabled) {
-    getViewSettings().setAutoScrollToSource(enabled);
-    if (enabled) {
-      myAutoScrollToSourceHandler.onMouseClicked(getBuilder().getTree());
+    public FavoritesAutoScrollToSourceAction(
+        Project project,
+        AutoScrollToSourceHandler autoScrollToSourceHandler,
+        FavoritesViewTreeBuilder builder
+    ) {
+        super(project, builder, UILocalize.autoscrollToSourceActionName(), PlatformIconGroup.generalAutoscrolltosource());
+        myAutoScrollToSourceHandler = autoScrollToSourceHandler;
     }
-  }
+
+    @Override
+    public boolean isOptionEnabled() {
+        return getViewSettings().isAutoScrollToSource();
+    }
+
+    @Override
+    public void setOption(boolean enabled) {
+        getViewSettings().setAutoScrollToSource(enabled);
+        if (enabled) {
+            myAutoScrollToSourceHandler.onMouseClicked(getBuilder().getTree());
+        }
+    }
 }

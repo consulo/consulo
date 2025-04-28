@@ -30,57 +30,59 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.ArrayList;
 
 /**
- * User: anna
- * Date: Apr 5, 2005
+ * @author anna
+ * @since 2005-04-05
  */
 public class AddAllOpenFilesToFavorites extends AnAction {
-  private final String myFavoritesName;
+    private final String myFavoritesName;
 
-  public AddAllOpenFilesToFavorites(String chosenList) {
-    getTemplatePresentation().setText(chosenList, false);
-    myFavoritesName = chosenList;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public AddAllOpenFilesToFavorites(String chosenList) {
+        getTemplatePresentation().setText(chosenList, false);
+        myFavoritesName = chosenList;
     }
 
-    final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-    final ArrayList<PsiFile> filesToAdd = getFilesToAdd(project);
-    for (PsiFile file : filesToAdd) {
-      favoritesManager.addRoots(myFavoritesName, null, file);
-    }
-  }
+        FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
 
-  @RequiredReadAction
-  static ArrayList<PsiFile> getFilesToAdd(Project project) {
-    ArrayList<PsiFile> result = new ArrayList<>();
-    final FileEditorManager editorManager = FileEditorManager.getInstance(project);
-    final PsiManager psiManager = PsiManager.getInstance(project);
-    final VirtualFile[] openFiles = editorManager.getOpenFiles();
-    for (VirtualFile openFile : openFiles) {
-      if (!openFile.isValid()) continue;
-      final PsiFile psiFile = psiManager.findFile(openFile);
-      if (psiFile != null) {
-        result.add(psiFile);
-      }
+        ArrayList<PsiFile> filesToAdd = getFilesToAdd(project);
+        for (PsiFile file : filesToAdd) {
+            favoritesManager.addRoots(myFavoritesName, null, file);
+        }
     }
-    return result;
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+    @RequiredReadAction
+    static ArrayList<PsiFile> getFilesToAdd(Project project) {
+        ArrayList<PsiFile> result = new ArrayList<>();
+        FileEditorManager editorManager = FileEditorManager.getInstance(project);
+        PsiManager psiManager = PsiManager.getInstance(project);
+        VirtualFile[] openFiles = editorManager.getOpenFiles();
+        for (VirtualFile openFile : openFiles) {
+            if (!openFile.isValid()) {
+                continue;
+            }
+            PsiFile psiFile = psiManager.findFile(openFile);
+            if (psiFile != null) {
+                result.add(psiFile);
+            }
+        }
+        return result;
     }
-    e.getPresentation().setEnabled(!getFilesToAdd(project).isEmpty());
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+        e.getPresentation().setEnabled(!getFilesToAdd(project).isEmpty());
+    }
 }
