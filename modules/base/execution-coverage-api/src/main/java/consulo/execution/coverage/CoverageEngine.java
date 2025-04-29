@@ -4,7 +4,6 @@ import com.intellij.rt.coverage.data.LineData;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
-import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.coverage.view.CoverageViewExtension;
@@ -18,7 +17,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,8 +36,6 @@ import java.util.Set;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CoverageEngine {
-    public static final ExtensionPointName<CoverageEngine> EP_NAME = ExtensionPointName.create(CoverageEngine.class);
-
     /**
      * Checks whether coverage feature is supported by this engine for given configuration or not.
      *

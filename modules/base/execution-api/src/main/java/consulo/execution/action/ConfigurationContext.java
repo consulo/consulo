@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.action;
 
 import consulo.annotation.UsedInPlugin;
@@ -40,7 +39,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -59,7 +58,7 @@ public class ConfigurationContext {
     private RunnerAndConfigurationSettings myConfiguration;
     private boolean myInitialized = false;
     private boolean myMultipleSelection = false;
-    private Ref<RunnerAndConfigurationSettings> myExistingConfiguration;
+    private SimpleReference<RunnerAndConfigurationSettings> myExistingConfiguration;
     private final Module myModule;
     private final RunConfiguration myRuntimeConfiguration;
     private final Component myContextComponent;
@@ -186,7 +185,7 @@ public class ConfigurationContext {
         if (myExistingConfiguration != null) {
             return myExistingConfiguration.get();
         }
-        myExistingConfiguration = new Ref<>();
+        myExistingConfiguration = SimpleReference.create();
         if (myLocation == null) {
             return null;
         }
@@ -206,27 +205,27 @@ public class ConfigurationContext {
                     }
                 }
             }
-            for (RunConfigurationProducer producer : RunConfigurationProducer.getProducers(getProject())) {
+            getProject().getApplication().getExtensionPoint(RunConfigurationProducer.class).forEach(producer -> {
                 RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(this);
                 if (configuration != null && configuration.getConfiguration() == myRuntimeConfiguration) {
                     myExistingConfiguration.set(configuration);
                 }
-            }
+            });
         }
         if (producers != null) {
             for (RuntimeConfigurationProducer producer : producers) {
-                final RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(myLocation, this);
+                RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(myLocation, this);
                 if (configuration != null) {
                     myExistingConfiguration.set(configuration);
                 }
             }
         }
-        for (RunConfigurationProducer producer : RunConfigurationProducer.getProducers(getProject())) {
+        getProject().getApplication().getExtensionPoint(RunConfigurationProducer.class).forEach(producer -> {
             RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(this);
             if (configuration != null) {
                 myExistingConfiguration.set(configuration);
             }
-        }
+        });
         return myExistingConfiguration.get();
     }
 

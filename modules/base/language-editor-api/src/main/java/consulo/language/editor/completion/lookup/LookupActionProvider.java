@@ -17,7 +17,6 @@ package consulo.language.editor.completion.lookup;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 
 import java.util.function.Consumer;
 
@@ -26,7 +25,5 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LookupActionProvider {
-  ExtensionPointName<LookupActionProvider> EP_NAME = ExtensionPointName.create(LookupActionProvider.class);
-
   void fillActions(LookupElement element, Lookup lookup, Consumer<LookupElementAction> consumer);
 }

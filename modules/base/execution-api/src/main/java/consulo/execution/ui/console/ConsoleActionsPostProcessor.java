@@ -18,7 +18,6 @@ package consulo.execution.ui.console;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
-import consulo.component.extension.ExtensionPointName;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,9 +28,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ConsoleActionsPostProcessor {
-    public static final ExtensionPointName<ConsoleActionsPostProcessor> EP_NAME =
-        ExtensionPointName.create(ConsoleActionsPostProcessor.class);
-
     /**
      * Allows to adjust actions to use within the given console instance.
      * <p/>

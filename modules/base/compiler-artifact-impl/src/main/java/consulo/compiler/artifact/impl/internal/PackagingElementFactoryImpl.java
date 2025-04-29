@@ -17,6 +17,7 @@ package consulo.compiler.artifact.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
@@ -56,11 +57,17 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
     public static final PackagingElementType<ArtifactRootElement<?>> ARTIFACT_ROOT_ELEMENT_TYPE = ArtifactRootElementType.INSTANCE;
 
+    private final Application myApplication;
     private final ArtifactPointerManager myArtifactPointerManager;
     private final ModulePointerManager myModulePointerManager;
 
     @Inject
-    public PackagingElementFactoryImpl(ArtifactPointerManager artifactPointerManager, ModulePointerManager modulePointerManager) {
+    public PackagingElementFactoryImpl(
+        Application application,
+        ArtifactPointerManager artifactPointerManager,
+        ModulePointerManager modulePointerManager
+    ) {
+        myApplication = application;
         myArtifactPointerManager = artifactPointerManager;
         myModulePointerManager = modulePointerManager;
     }
@@ -117,7 +124,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     @Nonnull
     @Override
     public PackagingElementType[] getAllElementTypes() {
-        return PackagingElementType.EP_NAME.getExtensions();
+        return myApplication.getExtensionPoint(PackagingElementType.class).getExtensions();
     }
 
     @Nonnull

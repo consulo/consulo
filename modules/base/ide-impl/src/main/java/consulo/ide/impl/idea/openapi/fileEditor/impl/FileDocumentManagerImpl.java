@@ -439,9 +439,8 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
     private boolean maySaveDocument(@Nonnull VirtualFile file, @Nonnull Document document, boolean isExplicit) {
         return !myConflictResolver.hasConflict(file)
-            && FileDocumentSynchronizationVetoer.EP_NAME.getExtensionList()
-            .stream()
-            .allMatch(vetoer -> vetoer.maySaveDocument(document, isExplicit));
+            && Application.get().getExtensionPoint(FileDocumentSynchronizationVetoer.class)
+            .allMatchSafe(vetoer -> vetoer.maySaveDocument(document, isExplicit));
     }
 
     @RequiredWriteAction
@@ -756,19 +755,13 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     private boolean fireBeforeFileContentReload(@Nonnull VirtualFile file, @Nonnull Document document) {
-        for (FileDocumentSynchronizationVetoer vetoer : FileDocumentSynchronizationVetoer.EP_NAME.getExtensionList()) {
-            try {
-                if (!vetoer.mayReloadFileContent(file, document)) {
-                    return false;
-                }
-            }
-            catch (Exception e) {
-                LOG.error(e);
-            }
-        }
+        boolean mayReload = Application.get().getExtensionPoint(FileDocumentSynchronizationVetoer.class)
+            .allMatchSafe(vetoer -> vetoer.mayReloadFileContent(file, document));
 
-        myMultiCaster.beforeFileContentReload(file, document);
-        return true;
+        if (mayReload) {
+            myMultiCaster.beforeFileContentReload(file, document);
+        }
+        return mayReload;
     }
 
     private static int getPreviewCharCount(@Nonnull VirtualFile file) {

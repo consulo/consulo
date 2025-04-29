@@ -17,14 +17,12 @@ package consulo.ide.navigationToolbar;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -41,8 +39,6 @@ import java.util.function.Predicate;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface NavBarModelExtension {
-    ExtensionPointName<NavBarModelExtension> EP_NAME = ExtensionPointName.create(NavBarModelExtension.class);
-
     @Nullable
     String getPresentableText(Object object);
 

@@ -296,13 +296,10 @@ public class ExternalSystemApiUtil {
 
     @Nullable
     public static AbstractExternalSystemTaskConfigurationType findConfigurationType(@Nonnull ProjectSystemId externalSystemId) {
-        for (ConfigurationType type : ConfigurationType.EP_NAME.getExtensionList()) {
-            if (type instanceof AbstractExternalSystemTaskConfigurationType candidate
-                && externalSystemId.equals(candidate.getExternalSystemId())) {
-                return candidate;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(ConfigurationType.class).computeSafeIfAny(
+            type -> type instanceof AbstractExternalSystemTaskConfigurationType candidate
+                && externalSystemId.equals(candidate.getExternalSystemId()) ? candidate : null
+        );
     }
 
     @Nullable
