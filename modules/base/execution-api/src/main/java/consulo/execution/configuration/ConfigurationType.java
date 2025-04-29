@@ -18,7 +18,6 @@ package consulo.execution.configuration;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.dumb.PossiblyDumbAware;
-import consulo.component.extension.ExtensionPointName;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -31,8 +30,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConfigurationType extends PossiblyDumbAware {
-    ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create(ConfigurationType.class);
-
     /**
      * Returns the display name of the configuration type. This is used, for example, to represent the configuration type in the run
      * configurations tree, and also as the name of the action used to create the configuration.

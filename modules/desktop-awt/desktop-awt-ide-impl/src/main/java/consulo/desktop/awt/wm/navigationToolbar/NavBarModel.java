@@ -6,9 +6,9 @@ import consulo.application.AccessRule;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.CommonProcessors;
+import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.navigationToolbar.NavBarModelListener;
-import consulo.util.collection.ContainerUtil;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.ide.navigationToolbar.NavBarModelExtensions;
 import consulo.language.psi.*;
@@ -18,7 +18,9 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -101,15 +103,16 @@ public class NavBarModel {
             return;
         }
 
-        NavBarModelExtension ownerExtension = null;
-        PsiElement psiElement = null;
-        for (NavBarModelExtension extension : NavBarModelExtension.EP_NAME.getExtensionList()) {
-            psiElement = extension.getLeafElement(dataContext);
-            if (psiElement != null) {
-                ownerExtension = extension;
-                break;
-            }
-        }
+        Pair<PsiElement,NavBarModelExtension> leafElemExt = myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
+            .computeSafeIfAny(extension -> {
+                PsiElement leafElement = extension.getLeafElement(dataContext);
+                if (leafElement != null) {
+                    return Pair.create(leafElement, extension);
+                }
+                return null;
+            });
+        PsiElement psiElement = leafElemExt != null ? leafElemExt.getFirst() : null;
+        NavBarModelExtension ownerExtension = leafElemExt != null ? leafElemExt.getSecond() : null;
 
         if (psiElement == null) {
             psiElement = dataContext.getData(PsiFile.KEY);
@@ -181,14 +184,14 @@ public class NavBarModel {
             }
         }
 
-        for (NavBarModelExtension modelExtension : NavBarModelExtension.EP_NAME.getExtensionList()) {
+        myProject.getApplication().getExtensionPoint(NavBarModelExtension.class).forEach(modelExtension -> {
             for (VirtualFile root : modelExtension.additionalRoots(psiElement.getProject())) {
                 VirtualFile parent = root.getParent();
                 if (parent == null || !projectFileIndex.isInContent(parent)) {
                     roots.add(root);
                 }
             }
-        }
+        });
 
         List<Object> updatedModel = AccessRule.read(
             () -> isValid(psiElement)
@@ -296,16 +299,13 @@ public class NavBarModel {
             return true;
         }
         Object rootElement = size() > 1 ? getElement(1) : null;
+        //noinspection SimplifiableIfStatement
         if (rootElement != null && !isValid(rootElement)) {
             return true;
         }
 
-        for (NavBarModelExtension modelExtension : NavBarModelExtension.EP_NAME.getExtensionList()) {
-            if (!modelExtension.processChildren(object, rootElement, o -> pairProcessor.test(o, modelExtension))) {
-                return false;
-            }
-        }
-        return true;
+        return myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
+            .allMatchSafe(extension -> extension.processChildren(object, rootElement, o -> pairProcessor.test(o, extension)));
     }
 
     public Object get(int index) {

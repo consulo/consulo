@@ -1,12 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.navigationToolbar;
 
+import consulo.component.extension.ExtensionPoint;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.ide.navigationToolbar.NavBarModelExtensions;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -22,29 +24,27 @@ public class NavBarModelBuilderImpl extends NavBarModelBuilder {
         @Nonnull List<Object> model,
         @Nullable NavBarModelExtension ownerExtension
     ) {
-        List<NavBarModelExtension> extensions = NavBarModelExtension.EP_NAME.getExtensionList();
-
-        for (PsiElement e = normalize(psiElement, ownerExtension), next = null; e != null;
-             e = normalize(next, ownerExtension), next = null) {
+        ExtensionPoint<NavBarModelExtension> extensionPoint = psiElement.getApplication().getExtensionPoint(NavBarModelExtension.class);
+        SimpleReference<PsiElement> elem = SimpleReference.create(normalize(psiElement, ownerExtension));
+        for (PsiElement next = null; !elem.isNull(); elem.set(normalize(next, ownerExtension)), next = null) {
             // check if we're running circles due to getParent()->normalize/adjust()
-            if (model.contains(e)) {
+            if (model.contains(elem.get())) {
                 break;
             }
-            model.add(e);
+            model.add(elem.get());
 
             // check if a root is reached
-            VirtualFile vFile = PsiUtilCore.getVirtualFile(e);
+            VirtualFile vFile = PsiUtilCore.getVirtualFile(elem.get());
             if (roots.contains(vFile)) {
                 break;
             }
 
-            for (NavBarModelExtension ext : extensions) {
-                PsiElement parent = ext.getParent(e);
-                if (parent != null && parent != e) {
-                    //noinspection AssignmentToForLoopParameter
-                    next = parent;
-                    break;
-                }
+            PsiElement nextCandidate = extensionPoint.computeSafeIfAny(ext -> {
+                PsiElement parent = ext.getParent(elem.get());
+                return parent != elem.get() ? parent : null;
+            });
+            if (nextCandidate != null) {
+                next = nextCandidate;
             }
         }
     }

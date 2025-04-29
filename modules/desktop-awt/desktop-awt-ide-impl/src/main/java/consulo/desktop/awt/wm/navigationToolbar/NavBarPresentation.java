@@ -116,13 +116,9 @@ public class NavBarPresentation {
         if (!NavBarModel.isValid(object)) {
             return IdeLocalize.nodeStructureviewInvalid().get();
         }
-        for (NavBarModelExtension modelExtension : NavBarModelExtension.EP_NAME.getExtensionList()) {
-            String text = modelExtension.getPresentableText(object, forPopup);
-            if (text != null) {
-                return text;
-            }
-        }
-        return object.toString();
+        String text = Application.get().getExtensionPoint(NavBarModelExtension.class)
+            .computeSafeIfAny(extension -> extension.getPresentableText(object, forPopup));
+        return text != null ? text : object.toString();
     }
 
     protected SimpleTextAttributes getTextAttributes(Object object, boolean selected) {

@@ -15,20 +15,18 @@
  */
 package consulo.execution;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.dataContext.DataContext;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import consulo.annotation.DeprecationInfo;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,8 +36,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
-    public static final ExtensionPointName<BeforeRunTaskProvider> EP_NAME = ExtensionPointName.create(BeforeRunTaskProvider.class);
-
     @Nonnull
     public abstract Key<T> getId();
 
@@ -108,11 +104,6 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     @Nullable
     @SuppressWarnings("unchecked")
     public static <T extends BeforeRunTask> BeforeRunTaskProvider<T> getProvider(Project project, Key<T> key) {
-        for (BeforeRunTaskProvider<BeforeRunTask> provider : BeforeRunTaskProvider.EP_NAME.getExtensionList(project)) {
-            if (provider.getId() == key) {
-                return (BeforeRunTaskProvider<T>)provider;
-            }
-        }
-        return null;
+        return project.getExtensionPoint(BeforeRunTaskProvider.class).findFirstSafe(provider -> provider.getId() == key);
     }
 }

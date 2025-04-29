@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.document;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileDocumentSynchronizationVetoer {
-    public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME =
-        ExtensionPointName.create(FileDocumentSynchronizationVetoer.class);
-
     public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
         return true;
     }

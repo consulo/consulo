@@ -189,7 +189,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         });
     }
 
-    default void forEachExtensionSafe(@Nonnull Function<? super E, Flow> breakableConsumer) {
+    default void forEachBreakable(@Nonnull Function<? super E, Flow> breakableConsumer) {
         computeSafeIfAny(value -> breakableConsumer.apply(value) != Flow.BREAK ? null : Flow.BREAK);
     }
 

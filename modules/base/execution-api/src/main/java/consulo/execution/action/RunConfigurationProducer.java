@@ -17,7 +17,7 @@ package consulo.execution.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.application.Application;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationFactory;
@@ -27,7 +27,6 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.internal.ConfigurationFromContextImpl;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
-import consulo.project.Project;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -43,15 +42,7 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RunConfigurationProducer<T extends RunConfiguration> {
-    public static final ExtensionPointName<RunConfigurationProducer> EP_NAME = ExtensionPointName.create(RunConfigurationProducer.class);
-
     private static final Logger LOG = Logger.getInstance(RunConfigurationProducer.class);
-
-    @Nonnull
-    public static List<RunConfigurationProducer> getProducers(@Nonnull Project project) {
-        // no filter. IDEA have filter for it.
-        return EP_NAME.getExtensionList();
-    }
 
     private final ConfigurationFactory myConfigurationFactory;
 
@@ -229,13 +220,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
     @Nonnull
     @SuppressWarnings("unchecked")
     public static <T extends RunConfigurationProducer> T getInstance(Class<? extends T> aClass) {
-        for (RunConfigurationProducer producer : EP_NAME.getExtensionList()) {
-            if (aClass.isInstance(producer)) {
-                return (T)producer;
-            }
-        }
-        assert false : aClass;
-        return null;
+        return Application.get().getExtensionPoint(RunConfigurationProducer.class).findExtensionOrFail(aClass);
     }
 
     @Nullable

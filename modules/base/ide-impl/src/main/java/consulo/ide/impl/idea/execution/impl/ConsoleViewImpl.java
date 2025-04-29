@@ -1044,13 +1044,11 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         if (group == null) {
             group = (ActionGroup)actionManager.getAction(CONSOLE_VIEW_POPUP_MENU);
         }
-        List<ConsoleActionsPostProcessor> postProcessors = ConsoleActionsPostProcessor.EP_NAME.getExtensionList();
-        AnAction[] result = group.getChildren(null);
 
-        for (ConsoleActionsPostProcessor postProcessor : postProcessors) {
-            result = postProcessor.postProcessPopupActions(this, result);
-        }
-        return new DefaultActionGroup(result);
+        SimpleReference<AnAction[]> result = SimpleReference.create(group.getChildren(null));
+        Application.get().getExtensionPoint(ConsoleActionsPostProcessor.class)
+            .forEach(postProcessor -> result.set(postProcessor.postProcessPopupActions(this, result.get())));
+        return new DefaultActionGroup(result.get());
     }
 
     @RequiredUIAccess
@@ -1214,12 +1212,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
             return myCommandLineFolding;
         }
 
-        for (ConsoleFolding extension : ConsoleFolding.EP_NAME.getExtensionList()) {
-            if (extension.shouldFoldLine(myProject, lineText)) {
-                return extension;
-            }
-        }
-        return null;
+        return myProject.getApplication().getExtensionPoint(ConsoleFolding.class)
+            .findFirstSafe(extension -> extension.shouldFoldLine(myProject, lineText));
     }
 
     private static class ClearThisConsoleAction extends DumbAwareAction {
@@ -1554,12 +1548,11 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         consoleActions.add(ActionManager.getInstance().getAction("Print"));
         consoleActions.add(new ClearThisConsoleAction(this));
         consoleActions.addAll(customActions);
-        List<ConsoleActionsPostProcessor> postProcessors = ConsoleActionsPostProcessor.EP_NAME.getExtensionList();
-        AnAction[] result = consoleActions.toArray(AnAction.EMPTY_ARRAY);
-        for (ConsoleActionsPostProcessor postProcessor : postProcessors) {
-            result = postProcessor.postProcess(this, result);
-        }
-        return result;
+
+        SimpleReference<AnAction[]> result = SimpleReference.create(consoleActions.toArray(AnAction.EMPTY_ARRAY));
+        Application.get().getExtensionPoint(ConsoleActionsPostProcessor.class)
+            .forEach(postProcessor -> result.set(postProcessor.postProcessPopupActions(this, result.get())));
+        return result.get();
     }
 
     @Override

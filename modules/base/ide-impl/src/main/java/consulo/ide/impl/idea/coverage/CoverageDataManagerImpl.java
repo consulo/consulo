@@ -135,15 +135,9 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                 continue;
             }
 
-            CoverageSuite suite = null;
-            for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
-                if (coverageRunner.acceptsCoverageEngine(engine)) {
-                    suite = engine.createEmptyCoverageSuite(coverageRunner);
-                    if (suite != null) {
-                        break;
-                    }
-                }
-            }
+            CoverageSuite suite = myProject.getApplication().getExtensionPoint(CoverageEngine.class).computeSafeIfAny(
+                engine -> coverageRunner.acceptsCoverageEngine(engine) ? engine.createEmptyCoverageSuite(coverageRunner) : null
+            );
             if (suite != null) {
                 try {
                     suite.readExternal(suiteElement);
@@ -645,15 +639,11 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         CoverageRunner coverageRunner,
         DefaultCoverageFileProvider fileProvider
     ) {
-        CoverageSuite suite = null;
-        for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
-            if (coverageRunner.acceptsCoverageEngine(engine) && engine.isApplicableTo(config.getConfiguration())) {
-                suite = engine.createCoverageSuite(coverageRunner, name, fileProvider, config);
-                if (suite != null) {
-                    break;
-                }
-            }
-        }
+        CoverageSuite suite = myProject.getApplication().getExtensionPoint(CoverageEngine.class).computeSafeIfAny(
+            engine -> coverageRunner.acceptsCoverageEngine(engine) && engine.isApplicableTo(config.getConfiguration())
+                ? engine.createCoverageSuite(coverageRunner, name, fileProvider, config)
+                : null
+        );
         LOG.assertTrue(suite != null, "Cannot create coverage suite for runner: " + coverageRunner.getPresentableName());
         return suite;
     }
@@ -669,10 +659,9 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         boolean collectLineInfo,
         boolean tracingEnabled
     ) {
-        CoverageSuite suite = null;
-        for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
-            if (coverageRunner.acceptsCoverageEngine(engine)) {
-                suite = engine.createCoverageSuite(
+        CoverageSuite suite = myProject.getApplication().getExtensionPoint(CoverageEngine.class).computeSafeIfAny(
+            engine -> coverageRunner.acceptsCoverageEngine(engine)
+                ? engine.createCoverageSuite(
                     coverageRunner,
                     name,
                     fileProvider,
@@ -683,13 +672,9 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                     tracingEnabled,
                     false,
                     myProject
-                );
-                if (suite != null) {
-                    break;
-                }
-            }
-        }
-
+                )
+                : null
+        );
         LOG.assertTrue(suite != null, "Cannot create coverage suite for runner: " + coverageRunner.getPresentableName());
         return suite;
     }

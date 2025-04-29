@@ -214,18 +214,10 @@ class BeforeRunStepsPanel {
             return false;
         }
         Set<Key> activeProviderKeys = getActiveProviderKeys();
-        List<BeforeRunTaskProvider> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
-        for (BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
-            if (provider.createTask(myRunConfiguration) != null) {
-                if (!checkOnlyAddAction) {
-                    return true;
-                }
-                else if (!provider.isSingleton() || !activeProviderKeys.contains(provider.getId())) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return myRunConfiguration.getProject().getExtensionPoint(BeforeRunTaskProvider.class).anyMatchSafe(
+            provider -> provider.createTask(myRunConfiguration) != null
+                && (!checkOnlyAddAction || !provider.isSingleton() || !activeProviderKeys.contains(provider.getId()))
+        );
     }
 
     private boolean isUnknown() {
@@ -238,20 +230,21 @@ class BeforeRunStepsPanel {
         }
 
         JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-        List<BeforeRunTaskProvider> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
         Set<Key> activeProviderKeys = getActiveProviderKeys();
 
         ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
-        for (BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
+        myRunConfiguration.getProject().getExtensionPoint(BeforeRunTaskProvider.class).forEach(prov -> {
+            @SuppressWarnings("unchecked")
+            BeforeRunTaskProvider<BeforeRunTask> provider = prov;
             if (provider.createTask(myRunConfiguration) == null) {
-                continue;
+                return;
             }
             if (activeProviderKeys.contains(provider.getId()) && provider.isSingleton()) {
-                continue;
+                return;
             }
             AnAction providerAction = new AnAction(LocalizeValue.of(provider.getName()), LocalizeValue.empty(), provider.getIcon()) {
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {
                     BeforeRunTask task = provider.createTask(myRunConfiguration);
                     if (task == null) {
@@ -284,7 +277,7 @@ class BeforeRunStepsPanel {
                 }
             };
             actionGroup.add(providerAction);
-        }
+        });
 
         DataContext dataContext = DataContext.builder()
             .add(Project.KEY, myRunConfiguration.getProject())

@@ -399,7 +399,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
-    public void forEachExtensionSafe(@Nonnull Function<? super T, Flow> breakableConsumer) {
+    public void forEachBreakable(@Nonnull Function<? super T, Flow> breakableConsumer) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
