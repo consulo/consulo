@@ -20,8 +20,8 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -103,36 +103,36 @@ public class NavBarModel {
             return;
         }
 
-        SimpleReference<PsiElement> psiElement = SimpleReference.create();
-        SimpleReference<NavBarModelExtension> ownerExtension = SimpleReference.create();
-        myProject.getApplication().getExtensionPoint(NavBarModelExtension.class).forEachBreakable(extension -> {
-            psiElement.set(extension.getLeafElement(dataContext));
-            if (!psiElement.isNull()) {
-                ownerExtension.set(extension);
-                return ExtensionPoint.Flow.BREAK;
-            }
-            return ExtensionPoint.Flow.CONTINUE;
-        });
+        Pair<PsiElement,NavBarModelExtension> leafElemExt = myProject.getApplication().getExtensionPoint(NavBarModelExtension.class)
+            .computeSafeIfAny(extension -> {
+                PsiElement leafElement = extension.getLeafElement(dataContext);
+                if (leafElement != null) {
+                    return Pair.create(leafElement, extension);
+                }
+                return null;
+            });
+        PsiElement psiElement = leafElemExt != null ? leafElemExt.getFirst() : null;
+        NavBarModelExtension ownerExtension = leafElemExt != null ? leafElemExt.getSecond() : null;
 
-        if (psiElement.isNull()) {
-            psiElement.set(dataContext.getData(PsiFile.KEY));
+        if (psiElement == null) {
+            psiElement = dataContext.getData(PsiFile.KEY);
         }
-        if (psiElement.isNull()) {
-            psiElement.set(dataContext.getData(PsiElement.KEY));
-            if (psiElement.isNull()) {
-                psiElement.set(findFileSystemItem(dataContext.getData(Project.KEY), dataContext.getData(VirtualFile.KEY)));
+        if (psiElement == null) {
+            psiElement = dataContext.getData(PsiElement.KEY);
+            if (psiElement == null) {
+                psiElement = findFileSystemItem(dataContext.getData(Project.KEY), dataContext.getData(VirtualFile.KEY));
             }
         }
 
-        if (ownerExtension.isNull()) {
-            psiElement.set(normalize(psiElement.get()));
+        if (ownerExtension == null) {
+            psiElement = normalize(psiElement);
         }
         if (!myModel.isEmpty() && Objects.equals(get(myModel.size() - 1), psiElement) && !myChanged) {
             return;
         }
 
-        if (!psiElement.isNull() && psiElement.get().isValid()) {
-            updateModel(psiElement.get(), ownerExtension.get());
+        if (psiElement != null && psiElement.isValid()) {
+            updateModel(psiElement, ownerExtension);
         }
         else {
             if (UISettings.getInstance().getShowNavigationBar() && !myModel.isEmpty()) {
