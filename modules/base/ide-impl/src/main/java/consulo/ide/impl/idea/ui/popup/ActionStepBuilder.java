@@ -156,8 +156,8 @@ class ActionStepBuilder {
 
         textValue = LocalizeValue.of(StringUtil.notNullize(text));
       }
-      else if (myHonorActionMnemonics || presentation.isDisabledMnemonic()) {
-        textValue = presentation.getTextValue();
+      else if (!myHonorActionMnemonics || presentation.isDisabledMnemonic()) {
+        textValue = presentation.getTextValue().map(Presentation.NO_MNEMONIC);
       }
 
       boolean hideIcon = Boolean.TRUE.equals(presentation.getClientProperty(MenuItemPresentationFactory.HIDE_ICON));
