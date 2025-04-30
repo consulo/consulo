@@ -30,6 +30,8 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.RecentProjectsManager;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -38,6 +40,9 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -55,8 +60,8 @@ public class NewProjectAction extends DumbAwareAction {
 
     static class SlideNewProjectPanel extends NewProjectPanel {
         private final WelcomeScreenSlider owner;
-        private JButton myOkButton;
-        private JButton myCancelButton;
+        private Button myOkButton;
+        private Button myCancelButton;
 
         private Runnable myOkAction;
         private Runnable myCancelAction;
@@ -80,12 +85,12 @@ public class NewProjectAction extends DumbAwareAction {
 
         @Override
         public void setOKActionText(@Nonnull LocalizeValue text) {
-            myOkButton.setText(text.get());
+            myOkButton.setText(text);
         }
 
         @Override
         public void setCancelText(@Nonnull LocalizeValue text) {
-            myCancelButton.setText(text.get());
+            myCancelButton.setText(text);
         }
 
         @Override
@@ -101,26 +106,22 @@ public class NewProjectAction extends DumbAwareAction {
         @RequiredUIAccess
         @Nonnull
         @Override
-        protected JPanel createSouthPanel() {
-            JPanel buttonsPanel = new JPanel(new GridLayout(1, 2, SystemInfo.isMacOSLeopard ? 0 : 5, 0));
+        protected JComponent createSouthPanel() {
+            HorizontalLayout buttonsPanel = HorizontalLayout.create();
 
-            myCancelButton = new JButton(CommonLocalize.buttonCancel().get());
-            myCancelButton.addActionListener(e -> doCancelAction());
+            myCancelButton = Button.create(CommonLocalize.buttonCancel());
+            myCancelButton.addClickListener(e -> doCancelAction());
 
             buttonsPanel.add(myCancelButton);
 
-            myOkButton = new JButton(CommonLocalize.buttonOk().get()) {
-                @Override
-                public boolean isDefaultButton() {
-                    return true;
-                }
-            };
+            myOkButton = Button.create(CommonLocalize.buttonOk());
+            myOkButton.addStyle(ButtonStyle.PRIMARY);
             myOkButton.setEnabled(false);
 
-            myOkButton.addActionListener(e -> doOkAction());
+            myOkButton.addClickListener(e -> doOkAction());
             buttonsPanel.add(myOkButton);
 
-            return JBUI.Panels.simplePanel().addToRight(buttonsPanel);
+            return (JComponent) TargetAWT.to(DockLayout.create().right(buttonsPanel));
         }
 
         private void doCancelAction() {
