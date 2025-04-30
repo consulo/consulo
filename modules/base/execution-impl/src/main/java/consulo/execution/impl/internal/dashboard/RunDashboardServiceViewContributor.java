@@ -2,6 +2,7 @@
 package consulo.execution.impl.internal.dashboard;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.component.util.WeighedItem;
 import consulo.dataContext.DataManager;
@@ -45,9 +46,11 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.util.*;
@@ -60,6 +63,13 @@ public final class RunDashboardServiceViewContributor
     public static final String RUN_DASHBOARD_CONTENT_TOOLBAR = "RunDashboardContentToolbar";
 
     private static final Key<DefaultActionGroup> MORE_ACTION_GROUP_KEY = Key.create("ServicesMoreActionGroup");
+
+    private final Application myApplication;
+
+    @Inject
+    public RunDashboardServiceViewContributor(Application application) {
+        myApplication = application;
+    }
 
     @Nonnull
     @Override
@@ -94,20 +104,22 @@ public final class RunDashboardServiceViewContributor
     @Override
     public List<GroupingNode> getGroups(@Nonnull RunConfigurationContributor contributor) {
         List<GroupingNode> result = new ArrayList<>();
-        GroupingNode parentGroupNode = null;
-        for (RunDashboardGroupingRule groupingRule : RunDashboardManagerImpl.GROUPING_RULE_EP_NAME.getExtensions()) {
+        SimpleReference<GroupingNode> parentGroupNode = SimpleReference.create();
+
+        myApplication.getExtensionPoint(RunDashboardGroupingRule.class).forEach(groupingRule -> {
             RunDashboardGroup group = groupingRule.getGroup(contributor.asService());
-            if (group != null) {
-                GroupingNode node = new GroupingNode(
-                    contributor.asService().getProject(),
-                    parentGroupNode == null ? null : parentGroupNode.getGroup(),
-                    group
-                );
-                node.setParent(parentGroupNode);
-                result.add(node);
-                parentGroupNode = node;
+            if (group == null) {
+                return;
             }
-        }
+            GroupingNode node = new GroupingNode(
+                contributor.asService().getProject(),
+                parentGroupNode.isNull() ? null : parentGroupNode.get().getGroup(),
+                group
+            );
+            node.setParent(parentGroupNode.get());
+            result.add(node);
+            parentGroupNode.set(node);
+        });
         return result;
     }
 
@@ -118,7 +130,7 @@ public final class RunDashboardServiceViewContributor
         return group instanceof FolderDashboardGroupingRule.FolderDashboardGroup
             ? new RunDashboardFolderGroupViewDescriptor(node)
             : new RunDashboardGroupViewDescriptor(node);
-        }
+    }
 
     private static ActionGroup getToolbarActions(@Nullable RunContentDescriptor descriptor) {
         DefaultActionGroup actionGroup = new DefaultActionGroup();

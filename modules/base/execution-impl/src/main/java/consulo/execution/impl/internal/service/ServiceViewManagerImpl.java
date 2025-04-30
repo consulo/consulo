@@ -61,14 +61,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static consulo.execution.service.ServiceViewContributor.CONTRIBUTOR_EP_NAME;
-
 @Singleton
 @State(name = "ServiceViewManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public final class ServiceViewManagerImpl implements ServiceViewManager, PersistentStateComponent<ServiceViewManagerImpl.State> {
     private static final String HELP_ID = "services.tool.window";
 
+    @Nonnull
     private final Project myProject;
     private State myState = new State();
 
@@ -773,10 +772,10 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         );
         List<String> includedByDefault = new ArrayList<>();
         List<String> excludedByDefault = new ArrayList<>();
-        for (ServiceViewContributor<?> contributor : CONTRIBUTOR_EP_NAME.getExtensionList()) {
+        myProject.getApplication().getExtensionPoint(ServiceViewContributor.class).forEach(contributor -> {
             String id = contributor.getViewDescriptor(myProject).getId();
             if (id == null) {
-                continue;
+                return;
             }
             if (getContributorToolWindowDescriptor(contributor).isExcludedByDefault()) {
                 excludedByDefault.add(id);
@@ -784,7 +783,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
             else {
                 includedByDefault.add(id);
             }
-        }
+        });
         myState.included.clear();
         myState.included.addAll(excludedByDefault);
         myState.included.retainAll(services);
@@ -852,10 +851,10 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
     void loadGroups() {
-        for (ServiceViewContributor<?> contributor : CONTRIBUTOR_EP_NAME.getExtensionList()) {
+        myProject.getApplication().getExtensionPoint(ServiceViewContributor.class).forEach(contributor -> {
             addToGroup(contributor);
             myNotInitializedContributors.add(contributor);
-        }
+        });
 
         Disposable disposable = Disposable.newDisposable();
         Disposer.register(myProject, disposable);
@@ -1228,12 +1227,12 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         registerToolWindows(toolWindowIds);
 
         // Notify model listeners to update tool windows' content.
-        myModel.getInvoker().invokeLater(() -> {
-            for (ServiceViewContributor<?> contributor : CONTRIBUTOR_EP_NAME.getExtensionList()) {
+        myModel.getInvoker().invokeLater(
+            () -> myProject.getApplication().getExtensionPoint(ServiceViewContributor.class).forEach(contributor -> {
                 ServiceEventListener.ServiceEvent e = ServiceEventListener.ServiceEvent.createResetEvent(contributor.getClass());
                 myModel.notifyListeners(e);
-            }
-        });
+            })
+        );
 
         if (toExclude.isEmpty() && !toInclude.isEmpty()) {
             toolWindowIds.add(ToolWindowId.SERVICES);

@@ -49,6 +49,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
 
     private List<Executor> myExecutors = new ArrayList<>();
     private ActionManager myActionManager;
+    private final Application myApplication;
     private final RunCurrentFileService myRunCurrentFileService;
     private final Map<String, Executor> myId2Executor = new HashMap<>();
     private final Set<String> myContextActionIdSet = new HashSet<>();
@@ -60,6 +61,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
 
     @Inject
     public ExecutorRegistryImpl(Application application, ActionManager actionManager, RunCurrentFileService runCurrentFileService) {
+        myApplication = application;
         myActionManager = actionManager;
         myRunCurrentFileService = runCurrentFileService;
 
@@ -99,7 +101,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
 
     @Override
     public void initExecuteActions() {
-        Executor.EP_NAME.forEachExtensionSafe(this::initExecutor);
+        myApplication.getExtensionPoint(Executor.class).forEachExtensionSafe(this::initExecutor);
     }
 
     synchronized void initExecutor(@Nonnull Executor executor) {
@@ -187,5 +189,4 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
         myExecutors = null;
         myActionManager = null;
     }
-
 }

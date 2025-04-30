@@ -38,10 +38,12 @@ import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.runner.RunnerRegistry;
-import consulo.externalSystem.service.project.autoimport.ExternalSystemAutoImportAware;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
-import consulo.externalSystem.model.*;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
+import consulo.externalSystem.model.Key;
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.model.project.LibraryData;
@@ -52,6 +54,7 @@ import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
 import consulo.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
+import consulo.externalSystem.service.project.autoimport.ExternalSystemAutoImportAware;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.logging.Logger;
@@ -73,7 +76,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.rmi.RemoteUtil;
 import consulo.virtualFileSystem.StandardFileSystems;
@@ -99,7 +101,6 @@ import java.util.regex.Pattern;
  * @since 2013-04-01
  */
 public class ExternalSystemApiUtil {
-
     private static final Logger LOG = Logger.getInstance(ExternalSystemApiUtil.class);
     private static final String LAST_USED_PROJECT_PATH_PREFIX = "LAST_EXTERNAL_PROJECT_PATH_";
 
@@ -519,12 +520,8 @@ public class ExternalSystemApiUtil {
 
     @Nullable
     public static ExternalSystemManager<?, ?, ?, ?, ?> getManager(@Nonnull String externalSystemId) {
-        for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
-            if (Objects.equals(externalSystemId, manager.getSystemId().getId())) {
-                return manager;
-            }
-        }
-        return null;
+        return Application.get().getExtensionPoint(ExternalSystemManager.class)
+            .findFirstSafe(manager -> Objects.equals(externalSystemId, manager.getSystemId().getId()));
     }
 
     @Nullable
@@ -532,14 +529,10 @@ public class ExternalSystemApiUtil {
         return getManager(externalSystemId.getId());
     }
 
-    @SuppressWarnings("ManualArrayToCollectionCopy")
     @Nonnull
+    @SuppressWarnings("unchecked")
     public static Collection<ExternalSystemManager<?, ?, ?, ?, ?>> getAllManagers() {
-        List<ExternalSystemManager<?, ?, ?, ?, ?>> result = new ArrayList<>();
-        for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
-            result.add(manager);
-        }
-        return result;
+        return (Collection)Application.get().getExtensionList(ExternalSystemManager.class);
     }
 
     @Nonnull
@@ -767,10 +760,10 @@ public class ExternalSystemApiUtil {
         return ProjectManager.getInstance().getOpenProjects().length == 0;
     }
 
-//  @NotNull
-//  public static String getLastUsedExternalProjectPath(@NotNull ProjectSystemId externalSystemId) {
-//    return PropertiesComponent.getInstance().getValue(LAST_USED_PROJECT_PATH_PREFIX + externalSystemId.getReadableName(), "");
-//  }
+//    @NotNull
+//    public static String getLastUsedExternalProjectPath(@NotNull ProjectSystemId externalSystemId) {
+//        return PropertiesComponent.getInstance().getValue(LAST_USED_PROJECT_PATH_PREFIX + externalSystemId.getReadableName(), "");
+//    }
 
     public static void storeLastUsedExternalProjectPath(@Nullable String path, @Nonnull ProjectSystemId externalSystemId) {
         if (path != null) {

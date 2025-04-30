@@ -16,15 +16,16 @@
 package consulo.externalService.impl.internal.statistic;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.externalService.statistic.*;
 import consulo.logging.Logger;
 import consulo.util.jdom.JDOMUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.TestOnly;
-
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +39,7 @@ import java.util.Set;
 public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegistry {
     private static final Logger LOG = Logger.getInstance(ProductivityFeaturesRegistryImpl.class);
 
+    private final Application myApplication;
     private final Map<String, FeatureDescriptor> myFeatures = new HashMap<>();
     private final Map<String, GroupDescriptor> myGroups = new HashMap<>();
 
@@ -48,7 +50,9 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
     private static final String TAG_GROUP = "group";
     private static final String TAG_FEATURE = "feature";
 
-    public ProductivityFeaturesRegistryImpl() {
+    @Inject
+    public ProductivityFeaturesRegistryImpl(Application application) {
+        myApplication = application;
         reloadFromXml();
     }
 
@@ -67,15 +71,14 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
     }
 
     private void lazyLoadFromPluginsFeaturesProviders() {
-        if (myAdditionalFeaturesLoaded) {
-            return;
+        if (!myAdditionalFeaturesLoaded) {
+            loadFeaturesFromProviders();
+            myAdditionalFeaturesLoaded = true;
         }
-        loadFeaturesFromProviders(ProductivityFeaturesProvider.EP_NAME.getExtensionList());
-        myAdditionalFeaturesLoaded = true;
     }
 
-    private void loadFeaturesFromProviders(List<ProductivityFeaturesProvider> providers) {
-        for (ProductivityFeaturesProvider provider : providers) {
+    private void loadFeaturesFromProviders() {
+        myApplication.getExtensionPoint(ProductivityFeaturesProvider.class).forEach(provider -> {
             GroupDescriptor[] groupDescriptors = provider.getGroupDescriptors();
             if (groupDescriptors != null) {
                 for (GroupDescriptor groupDescriptor : groupDescriptors) {
@@ -92,7 +95,7 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
                     myFeatures.put(featureDescriptor.getId(), featureDescriptor);
                 }
             }
-        }
+        });
     }
 
     private void readGroups(Element element) {

@@ -6,7 +6,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
-import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -18,7 +17,10 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.ConfigurationTypeUtil;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.dashboard.*;
+import consulo.execution.dashboard.RunDashboardCustomizer;
+import consulo.execution.dashboard.RunDashboardDefaultTypesProvider;
+import consulo.execution.dashboard.RunDashboardListener;
+import consulo.execution.dashboard.RunDashboardManager;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.event.RunManagerListener;
 import consulo.execution.executor.Executor;
@@ -77,13 +79,7 @@ import static consulo.execution.impl.internal.dashboard.RunDashboardServiceViewC
 @ServiceImpl
 @Singleton
 public final class RunDashboardManagerImpl implements RunDashboardManager, PersistentStateComponent<RunDashboardManagerImpl.State> {
-    private static final ExtensionPointName<RunDashboardCustomizer> CUSTOMIZER_EP_NAME =
-        new ExtensionPointName<>(RunDashboardCustomizer.class);
-    private static final ExtensionPointName<RunDashboardDefaultTypesProvider> DEFAULT_TYPES_PROVIDER_EP_NAME =
-        new ExtensionPointName<>(RunDashboardDefaultTypesProvider.class);
-    static final ExtensionPointName<RunDashboardGroupingRule> GROUPING_RULE_EP_NAME =
-        new ExtensionPointName<>(RunDashboardGroupingRule.class);
-
+    @Nonnull
     private final Project myProject;
     private final ContentManager myContentManager;
     private final ContentManagerListener myServiceContentManagerListener;
@@ -119,51 +115,57 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void initExtensionPointListeners() {
-//    ExtensionPointListener dashboardUpdater = new ExtensionPointListener() {
-//      @Override
-//      public void extensionAdded(@Nonnull Object extension, @Nonnull PluginDescriptor pluginDescriptor) {
-//        updateDashboard(true);
-//      }
+//      ExtensionPointListener dashboardUpdater = new ExtensionPointListener() {
+//          @Override
+//          public void extensionAdded(@Nonnull Object extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//              updateDashboard(true);
+//          }
 //
-//      @Override
-//      public void extensionRemoved(@Nonnull Object extension, @Nonnull PluginDescriptor pluginDescriptor) {
-//        myProject.getMessageBus().syncPublisher(ServiceEventListener.TOPIC).handle(
-//          ServiceEventListener.ServiceEvent.createUnloadSyncResetEvent(RunDashboardServiceViewContributor.class));
-//      }
-//    };
-//    CUSTOMIZER_EP_NAME.addExtensionPointListener(dashboardUpdater, myProject);
-//    GROUPING_RULE_EP_NAME.addExtensionPointListener(dashboardUpdater, myProject);
+//          @Override
+//          public void extensionRemoved(@Nonnull Object extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//              myProject.getMessageBus().syncPublisher(ServiceEventListener.TOPIC)
+//                  .handle(ServiceEventListener.ServiceEvent.createUnloadSyncResetEvent(RunDashboardServiceViewContributor.class));
+//          }
+//      };
+//      CUSTOMIZER_EP_NAME.addExtensionPointListener(dashboardUpdater, myProject);
+//      GROUPING_RULE_EP_NAME.addExtensionPointListener(dashboardUpdater, myProject);
 //
-//    DEFAULT_TYPES_PROVIDER_EP_NAME.addExtensionPointListener(new ExtensionPointListener<>() {
-//      @Override
-//      public void extensionAdded(RunDashboardDefaultTypesProvider extension, @Nonnull PluginDescriptor pluginDescriptor) {
-//        Set<String> types = new HashSet<>(getTypes());
-//        types.addAll(extension.getDefaultTypeIds(myProject));
-//        setTypes(types);
-//      }
+//      DEFAULT_TYPES_PROVIDER_EP_NAME.addExtensionPointListener(
+//          new ExtensionPointListener<>() {
+//              @Override
+//              public void extensionAdded(RunDashboardDefaultTypesProvider extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//                  Set<String> types = new HashSet<>(getTypes());
+//                  types.addAll(extension.getDefaultTypeIds(myProject));
+//                  setTypes(types);
+//              }
 //
-//      @Override
-//      public void extensionRemoved(RunDashboardDefaultTypesProvider extension, @Nonnull PluginDescriptor pluginDescriptor) {
-//        Set<String> types = new HashSet<>(getTypes());
-//        types.removeAll(extension.getDefaultTypeIds(myProject));
-//        setTypes(types);
-//        dashboardUpdater.extensionRemoved(extension, pluginDescriptor);
-//      }
-//    }, myProject);
-//    ConfigurationType.CONFIGURATION_TYPE_EP.addExtensionPointListener(new ExtensionPointListener<>() {
-//      @Override
-//      public void extensionAdded(ConfigurationType extension, @Nonnull PluginDescriptor pluginDescriptor) {
-//        setTypes(new HashSet<>(getTypes()));
-//      }
+//              @Override
+//              public void extensionRemoved(RunDashboardDefaultTypesProvider extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//                  Set<String> types = new HashSet<>(getTypes());
+//                  types.removeAll(extension.getDefaultTypeIds(myProject));
+//                  setTypes(types);
+//                  dashboardUpdater.extensionRemoved(extension, pluginDescriptor);
+//              }
+//          },
+//          myProject
+//      );
+//      ConfigurationType.CONFIGURATION_TYPE_EP.addExtensionPointListener(
+//          new ExtensionPointListener<>() {
+//              @Override
+//              public void extensionAdded(ConfigurationType extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//                  setTypes(new HashSet<>(getTypes()));
+//              }
 //
-//      @Override
-//      public void extensionRemoved(ConfigurationType extension, @Nonnull PluginDescriptor pluginDescriptor) {
-//        Set<String> types = new HashSet<>(getTypes());
-//        types.remove(extension.getId());
-//        setTypes(types);
-//        dashboardUpdater.extensionRemoved(extension, pluginDescriptor);
-//      }
-//    }, myProject);
+//              @Override
+//              public void extensionRemoved(ConfigurationType extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//                  Set<String> types = new HashSet<>(getTypes());
+//                  types.remove(extension.getId());
+//                  setTypes(types);
+//                  dashboardUpdater.extensionRemoved(extension, pluginDescriptor);
+//              }
+//          },
+//          myProject
+//      );
     }
 
     private void initServiceContentListeners() {
@@ -393,8 +395,10 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         myHiddenConfigurations.addAll(configurations);
         syncConfigurations();
         if (!configurations.isEmpty()) {
-            moveRemovedContent(settings -> configurations.contains(settings.getConfiguration()) ||
-                configurations.contains(getBaseConfiguration(settings.getConfiguration())));
+            moveRemovedContent(
+                settings -> configurations.contains(settings.getConfiguration())
+                    || configurations.contains(getBaseConfiguration(settings.getConfiguration()))
+            );
         }
         updateDashboard(true);
     }
@@ -403,8 +407,10 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         myHiddenConfigurations.removeAll(configurations);
         syncConfigurations();
         if (!configurations.isEmpty()) {
-            moveAddedContent(settings -> configurations.contains(settings.getConfiguration()) ||
-                configurations.contains(getBaseConfiguration(settings.getConfiguration())));
+            moveAddedContent(
+                settings -> configurations.contains(settings.getConfiguration())
+                    || configurations.contains(getBaseConfiguration(settings.getConfiguration()))
+            );
         }
         updateDashboard(true);
     }
@@ -421,13 +427,8 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         @Nonnull RunnerAndConfigurationSettings settings,
         @Nullable RunContentDescriptor descriptor
     ) {
-        List<RunDashboardCustomizer> customizers = new SmartList<>();
-        for (RunDashboardCustomizer customizer : CUSTOMIZER_EP_NAME.getExtensions()) {
-            if (customizer.isApplicable(settings, descriptor)) {
-                customizers.add(customizer);
-            }
-        }
-        return customizers;
+        return Application.get().getExtensionPoint(RunDashboardCustomizer.class)
+            .collectFiltered(new SmartList<>(), customizer -> customizer.isApplicable(settings, descriptor));
     }
 
     private void updateDashboardIfNeeded(@Nullable RunnerAndConfigurationSettings settings) {
@@ -437,8 +438,8 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     }
 
     private void updateDashboardIfNeeded(@Nonnull RunConfiguration configuration, boolean withStructure) {
-        if (isShowInDashboard(configuration) ||
-            !filterByContent(getConfigurationDescriptors(configuration)).isEmpty()) {
+        if (isShowInDashboard(configuration)
+            || !filterByContent(getConfigurationDescriptors(configuration)).isEmpty()) {
             updateDashboard(withStructure);
         }
     }
@@ -448,8 +449,10 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         if (!(instance instanceof ExecutionManagerImpl)) {
             return Collections.emptyList();
         }
-        return instance.getDescriptors(s -> configuration.equals(s.getConfiguration()) ||
-            configuration.equals(getBaseConfiguration(s.getConfiguration())));
+        return instance.getDescriptors(
+            s -> configuration.equals(s.getConfiguration())
+                || configuration.equals(getBaseConfiguration(s.getConfiguration()))
+        );
     }
 
     @Override
@@ -471,10 +474,13 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 
         Set<RunConfiguration> storedConfigurations = new HashSet<>(RunManager.getInstance(myProject).getAllConfigurationsList());
 
-        return !ContainerUtil.exists(descriptorConfigurations, descriptorConfiguration -> {
-            RunConfiguration configuration = descriptorConfiguration.getConfiguration();
-            return isShowInDashboard(configuration) && storedConfigurations.contains(configuration);
-        });
+        return !ContainerUtil.exists(
+            descriptorConfigurations,
+            descriptorConfiguration -> {
+                RunConfiguration configuration = descriptorConfiguration.getConfiguration();
+                return isShowInDashboard(configuration) && storedConfigurations.contains(configuration);
+            }
+        );
     }
 
     @Override
@@ -765,9 +771,8 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 
     Set<String> getEnableByDefaultTypes() {
         Set<String> result = new HashSet<>();
-        for (RunDashboardDefaultTypesProvider provider : DEFAULT_TYPES_PROVIDER_EP_NAME.getExtensionList()) {
-            result.addAll(provider.getDefaultTypeIds(myProject));
-        }
+        myProject.getApplication().getExtensionPoint(RunDashboardDefaultTypesProvider.class)
+            .forEach(provider -> result.addAll(provider.getDefaultTypeIds(myProject)));
         return result;
     }
 

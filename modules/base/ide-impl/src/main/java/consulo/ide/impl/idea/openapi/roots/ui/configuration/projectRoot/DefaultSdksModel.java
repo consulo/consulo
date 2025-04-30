@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.component.extension.ExtensionPoint;
 import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
@@ -284,9 +285,14 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         Consumer<Sdk> updateTree,
         @Nullable Predicate<SdkTypeId> filter
     ) {
+        ExtensionPoint<SdkType> extensionPoint = Application.get().getExtensionPoint(SdkType.class);
         List<SdkType> list = new ArrayList<>();
-        Application.get().getExtensionPoint(SdkType.class)
-            .collectExtensionsSafe(list, sdkType -> filter == null || filter.test(sdkType) ? sdkType : null);
+        if (filter == null) {
+            list.addAll(extensionPoint.getExtensionList());
+        }
+        else {
+            extensionPoint.collectFiltered(list, filter);
+        }
         Collections.sort(list, (o1, o2) -> StringUtil.compare(o1.getPresentableName(), o2.getPresentableName(), true));
 
         for (SdkType type : list) {

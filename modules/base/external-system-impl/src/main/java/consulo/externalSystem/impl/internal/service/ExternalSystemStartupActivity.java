@@ -39,7 +39,8 @@ import jakarta.annotation.Nonnull;
 public class ExternalSystemStartupActivity implements BackgroundStartupActivity {
     @Override
     public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-        Application.get().invokeLater(
+        Application app = project.getApplication();
+        app.invokeLater(
             () -> {
                 for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
                     if (manager instanceof StartupActivity startupActivity) {
@@ -47,9 +48,8 @@ public class ExternalSystemStartupActivity implements BackgroundStartupActivity 
                     }
                 }
                 if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) != Boolean.TRUE) {
-                    for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
-                        ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false);
-                    }
+                    app.getExtensionList(ExternalSystemManager.class)
+                        .forEach(manager -> ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false));
                 }
                 ExternalSystemAutoImporter.letTheMagicBegin(project);
                 ExternalToolWindowManager.handle(project);

@@ -17,7 +17,6 @@ package consulo.externalService.statistic;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 
 /**
  * @author anna
@@ -25,8 +24,6 @@ import consulo.component.extension.ExtensionPointName;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ProductivityFeaturesProvider {
-    public static ExtensionPointName<ProductivityFeaturesProvider> EP_NAME = ExtensionPointName.create(ProductivityFeaturesProvider.class);
-
     public abstract FeatureDescriptor[] getFeatureDescriptors();
 
     public abstract GroupDescriptor[] getGroupDescriptors();

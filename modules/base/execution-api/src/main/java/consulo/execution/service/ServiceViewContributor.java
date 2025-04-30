@@ -3,7 +3,7 @@ package consulo.execution.service;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.application.Application;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -12,11 +12,9 @@ import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ServiceViewContributor<T> {
-    ExtensionPointName<ServiceViewContributor> CONTRIBUTOR_EP_NAME = ExtensionPointName.create(ServiceViewContributor.class);
-
     @Nullable
     static <V extends ServiceViewContributor<?>> V findRootContributor(@Nonnull Class<V> contributorClass) {
-        return CONTRIBUTOR_EP_NAME.findExtension(contributorClass);
+        return Application.get().getExtensionPoint(ServiceViewContributor.class).findExtension(contributorClass);
     }
 
     @Nonnull

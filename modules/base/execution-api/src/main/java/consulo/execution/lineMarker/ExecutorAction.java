@@ -95,7 +95,7 @@ public class ExecutorAction extends AnAction {
     final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
     if (context.getLocation() == null) return Collections.emptyList();
     return context.getProject().getApplication().getExtensionPoint(RunConfigurationProducer.class)
-        .collectExtensionsToListSafe(producer -> createConfiguration(producer, context));
+        .collectMapped(producer -> createConfiguration(producer, context));
   }
 
   @Nonnull

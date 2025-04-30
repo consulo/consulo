@@ -155,7 +155,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     }
 
     @Nonnull
-    default <R, CR extends Collection<? super R>> CR collectExtensionsSafe(
+    default <R, CR extends Collection<? super R>> CR collectMapped(
         @Nonnull CR results,
         @Nonnull Function<? super E, ? extends R> processor
     ) {
@@ -169,8 +169,23 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     }
 
     @Nonnull
-    default <R> List<R> collectExtensionsToListSafe(@Nonnull Function<? super E, ? extends R> processor) {
-        return collectExtensionsSafe(new ArrayList<R>(), processor);
+    default <R> List<R> collectMapped(@Nonnull Function<? super E, ? extends R> processor) {
+        return collectMapped(new ArrayList<R>(), processor);
+    }
+
+    @Nonnull
+    default <CE extends Collection<E>> CE collectFiltered(@Nonnull CE results, @Nonnull Predicate<? super E> predicate) {
+        forEach(extension -> {
+            if (predicate.test(extension)) {
+                results.add(extension);
+            }
+        });
+        return results;
+    }
+
+    @Nonnull
+    default List<E> collectFiltered(@Nonnull Predicate<? super E> predicate) {
+        return collectFiltered(new ArrayList<>(), predicate);
     }
 
     @Override

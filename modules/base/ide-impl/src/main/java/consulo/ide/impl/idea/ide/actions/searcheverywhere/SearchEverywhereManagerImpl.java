@@ -73,7 +73,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
         );
         List<SearchEverywhereContributor<?>> contributors = new ArrayList<>(serviceContributors);
         myProject.getApplication().getExtensionPoint(SearchEverywhereContributorFactory.class)
-            .collectExtensionsSafe(contributors, factory -> factory.createContributor(initEvent));
+            .collectMapped(contributors, factory -> factory.createContributor(initEvent));
         Collections.sort(contributors, Comparator.comparingInt(SearchEverywhereContributor::getSortWeight));
 
         mySearchEverywhereUI = createView(myProject, contributors);

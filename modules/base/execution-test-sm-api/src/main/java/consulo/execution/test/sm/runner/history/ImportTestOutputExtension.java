@@ -17,12 +17,11 @@ package consulo.execution.test.sm.runner.history;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.application.Application;
 import consulo.execution.test.sm.runner.GeneralTestEventsProcessor;
-import org.xml.sax.helpers.DefaultHandler;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -33,8 +32,6 @@ import java.util.function.Supplier;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImportTestOutputExtension {
-    ExtensionPointName<ImportTestOutputExtension> EP_NAME = ExtensionPointName.create(ImportTestOutputExtension.class);
-
     /**
      * When extension can parse xml file under reader, then it should return corresponding handler. Otherwise return null.
      * <p>
@@ -49,20 +46,17 @@ public interface ImportTestOutputExtension {
 
     @Nonnull
     static DefaultHandler findHandler(Supplier<Reader> readerSupplier, GeneralTestEventsProcessor processor) {
-        for (ImportTestOutputExtension extension : EP_NAME.getExtensionList()) {
+        DefaultHandler handler = Application.get().getExtensionPoint(ImportTestOutputExtension.class).computeSafeIfAny(extension -> {
             Reader reader = readerSupplier.get();
-            if (reader == null) {
-                continue;
-            }
-            try {
-                DefaultHandler handler = extension.createHandler(reader, processor);
-                if (handler != null) {
-                    return handler;
+            if (reader != null) {
+                try {
+                    return extension.createHandler(reader, processor);
+                }
+                catch (IOException ignored) {
                 }
             }
-            catch (IOException ignored) {
-            }
-        }
-        return new ImportedTestContentHandler(processor);
+            return null;
+        });
+        return handler != null ? handler : new ImportedTestContentHandler(processor);
     }
 }
