@@ -16,9 +16,11 @@
 package consulo.web.internal.ui;
 
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LayoutStyle;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -35,6 +37,14 @@ public class WebHorizontalLayoutImpl extends VaadinComponentDelegate<WebHorizont
         public Component toUIComponent() {
             return WebHorizontalLayoutImpl.this;
         }
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public HorizontalLayout add(@Nonnull Component component) {
+        toVaadinComponent().add(TargetVaddin.to(component));
+        return this;
     }
 
     @Override
