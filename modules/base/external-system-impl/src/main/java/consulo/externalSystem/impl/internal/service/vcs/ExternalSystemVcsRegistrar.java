@@ -45,57 +45,54 @@ import java.util.List;
  * The problem is that the ide detects unregistered vcs roots at the newly imported project and shows corresponding notification
  * with suggestion to configure vcs roots for the current project. We want to simplify that in a way to not showing the notification
  * but register them automatically. This class manages that.
- * 
+ *
  * @author Denis Zhdanov
  * @since 7/15/13 6:00 PM
  */
 public class ExternalSystemVcsRegistrar {
 
-  @SuppressWarnings("unchecked")
-  public static void handle(@Nonnull final Project project) {
-    for (final ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-      final AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
-      settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
-        @Override
-        public void onProjectsLinked(@Nonnull final Collection linked) {
-          List<VcsDirectoryMapping> newMappings = new ArrayList<>();
-          final LocalFileSystem fileSystem = LocalFileSystem.getInstance();
-          ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
-          for (Object o : linked) {
-            final ExternalProjectSettings settings = (ExternalProjectSettings)o;
-            VirtualFile dir = fileSystem.refreshAndFindFileByPath(settings.getExternalProjectPath());
-            if (dir == null) {
-              continue;
-            }
-            if (!dir.isDirectory()) {
-              dir = dir.getParent();
-            }
-            newMappings.addAll(VcsUtil.findRoots(dir, project));
-          }
+    @SuppressWarnings("unchecked")
+    public static void handle(@Nonnull final Project project) {
+        for (final ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
+            final AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
+            settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
+                @Override
+                public void onProjectsLinked(@Nonnull final Collection linked) {
+                    List<VcsDirectoryMapping> newMappings = new ArrayList<>();
+                    final LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+                    ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+                    for (Object o : linked) {
+                        final ExternalProjectSettings settings = (ExternalProjectSettings)o;
+                        VirtualFile dir = fileSystem.refreshAndFindFileByPath(settings.getExternalProjectPath());
+                        if (dir == null) {
+                            continue;
+                        }
+                        if (!dir.isDirectory()) {
+                            dir = dir.getParent();
+                        }
+                        newMappings.addAll(VcsUtil.findRoots(dir, project));
+                    }
 
-          // There is a possible case that no VCS mappings are configured for the current project. There is a single
-          // mapping like <Project> - <No VCS> then. We want to replace it if only one mapping to the project root dir
-          // has been detected then.
-          List<VcsDirectoryMapping> oldMappings = vcsManager.getDirectoryMappings();
-          if (oldMappings.size() == 1
-              && newMappings.size() == 1
-              && StringUtil.isEmpty(oldMappings.get(0).getVcs()))
-          {
-            VcsDirectoryMapping newMapping = newMappings.iterator().next();
-            String detectedDirPath = newMapping.getDirectory();
-            VirtualFile detectedDir = fileSystem.findFileByPath(detectedDirPath);
-            if (detectedDir != null && detectedDir.equals(project.getBaseDir())) {
-              newMappings.clear();
-              newMappings.add(new VcsDirectoryMapping("", newMapping.getVcs()));
-              vcsManager.setDirectoryMappings(newMappings);
-              return;
-            }
-          }
+                    // There is a possible case that no VCS mappings are configured for the current project. There is a single
+                    // mapping like <Project> - <No VCS> then. We want to replace it if only one mapping to the project root dir
+                    // has been detected then.
+                    List<VcsDirectoryMapping> oldMappings = vcsManager.getDirectoryMappings();
+                    if (oldMappings.size() == 1 && newMappings.size() == 1 && StringUtil.isEmpty(oldMappings.get(0).getVcs())) {
+                        VcsDirectoryMapping newMapping = newMappings.iterator().next();
+                        String detectedDirPath = newMapping.getDirectory();
+                        VirtualFile detectedDir = fileSystem.findFileByPath(detectedDirPath);
+                        if (detectedDir != null && detectedDir.equals(project.getBaseDir())) {
+                            newMappings.clear();
+                            newMappings.add(new VcsDirectoryMapping("", newMapping.getVcs()));
+                            vcsManager.setDirectoryMappings(newMappings);
+                            return;
+                        }
+                    }
 
-          newMappings.addAll(oldMappings);
-          vcsManager.setDirectoryMappings(newMappings);
+                    newMappings.addAll(oldMappings);
+                    vcsManager.setDirectoryMappings(newMappings);
+                }
+            });
         }
-      });
     }
-  }
 }

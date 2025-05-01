@@ -128,7 +128,7 @@ public class ExternalSystemApiUtil {
         public int compare(@Nonnull Object o1, @Nonnull Object o2) {
             int order1 = getOrder(o1);
             int order2 = getOrder(o2);
-            return (order1 < order2) ? -1 : ((order1 == order2) ? 0 : 1);
+            return order1 < order2 ? -1 : (order1 == order2 ? 0 : 1);
         }
 
         private int getOrder(@Nonnull Object o) {

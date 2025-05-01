@@ -26,23 +26,22 @@ import jakarta.annotation.Nonnull;
 
 /**
  * We need to avoid memory leaks on ide project rename. This class is responsible for that.
- * 
+ *
  * @author Denis Zhdanov
  * @since 7/19/13 1:14 PM
  */
 public class ProjectRenameAware {
-  
-  public static void beAware(@Nonnull Project project) {
-    final ExternalSystemFacadeManager facadeManager = Application.get().getInstance(ExternalSystemFacadeManager.class);
-    for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-      AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
-      //noinspection unchecked
-      settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
-        @Override
-        public void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName) {
-          facadeManager.onProjectRename(oldName, newName);
+    public static void beAware(@Nonnull Project project) {
+        final ExternalSystemFacadeManager facadeManager = Application.get().getInstance(ExternalSystemFacadeManager.class);
+        for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
+            AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
+            //noinspection unchecked
+            settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
+                @Override
+                public void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName) {
+                    facadeManager.onProjectRename(oldName, newName);
+                }
+            });
         }
-      });
     }
-  }
 }
