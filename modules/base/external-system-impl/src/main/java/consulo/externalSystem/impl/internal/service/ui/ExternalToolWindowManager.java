@@ -4,9 +4,9 @@ import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalSystemSettingsListenerAdapter;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
@@ -22,16 +22,17 @@ import java.util.Set;
  * This class encapsulates that functionality.
  *
  * @author Denis Zhdanov
- * @since 6/14/13 7:01 PM
+ * @since 2013-06-14
  */
 public class ExternalToolWindowManager {
-
     @SuppressWarnings("unchecked")
-    public static void handle(@Nonnull final Project project) {
-        for (final ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-            final AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
+    public static void handle(@Nonnull Project project) {
+        project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
+            AbstractExternalSystemSettings<?, ?, ?> settings =
+                ((ExternalSystemManager<?, ?, ?, ?, ?>)manager).getSettingsProvider().apply(project);
             settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
                 @Override
+                @RequiredUIAccess
                 public void onProjectsLinked(@Nonnull Collection linked) {
                     if (settings.getLinkedProjectsSettings().size() != 1) {
                         return;
@@ -47,18 +48,18 @@ public class ExternalToolWindowManager {
                     if (!settings.getLinkedProjectsSettings().isEmpty()) {
                         return;
                     }
-                    final ToolWindow toolWindow = getToolWindow(project, manager.getSystemId());
+                    ToolWindow toolWindow = getToolWindow(project, manager.getSystemId());
                     if (toolWindow != null) {
                         UIUtil.invokeLaterIfNeeded(() -> toolWindow.setAvailable(false, null));
                     }
                 }
             });
-        }
+        });
     }
 
     @Nullable
     private static ToolWindow getToolWindow(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
-        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         if (toolWindowManager == null) {
             return null;
         }

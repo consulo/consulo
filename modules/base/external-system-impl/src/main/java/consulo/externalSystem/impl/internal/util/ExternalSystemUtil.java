@@ -75,6 +75,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.rmi.RemoteUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -102,7 +103,7 @@ public class ExternalSystemUtil {
     public static VirtualFile refreshAndFindFileByIoFile(@Nonnull File file) {
         Application app = Application.get();
         if (!app.isDispatchThread()) {
-            assert !((ApplicationEx) app).holdsReadLock();
+            assert !((ApplicationEx)app).holdsReadLock();
         }
         return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
     }
@@ -464,7 +465,7 @@ public class ExternalSystemUtil {
             ExternalSystemNotificationManager.getInstance(project).processExternalProjectRefreshError(error, projectName, externalSystemId);
         };
 
-        UIUtil.invokeAndWaitIfNeeded((Runnable) () -> {
+        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
             LocalizeValue title;
             switch (progressExecutionMode) {
                 case MODAL_SYNC:
@@ -566,8 +567,8 @@ public class ExternalSystemUtil {
      */
     @RequiredReadAction
     public static boolean isOneToOneMapping(@Nonnull Project ideProject, @Nonnull DataNode<ProjectData> externalProject) {
-        String linkedExternalProjectPath = null;
-        for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
+        SimpleReference<String> linkedExternalProjectPath = SimpleReference.create();
+        boolean isOneToOne = ideProject.getApplication().getExtensionPoint(ExternalSystemManager.class).allMatchSafe(manager -> {
             ProjectSystemId externalSystemId = manager.getSystemId();
             AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(ideProject, externalSystemId);
             Collection projectsSettings = systemSettings.getLinkedProjectsSettings();
@@ -577,18 +578,21 @@ public class ExternalSystemUtil {
                 return false;
             }
             else if (linkedProjectsNumber == 1) {
-                if (linkedExternalProjectPath == null) {
+                if (!linkedExternalProjectPath.isNull()) {
                     // More than one external project of different external system types is linked to the current ide project.
-                    linkedExternalProjectPath = ((ExternalProjectSettings) projectsSettings.iterator().next()).getExternalProjectPath();
-                }
-                else {
                     return false;
                 }
+                linkedExternalProjectPath.set(((ExternalProjectSettings)projectsSettings.iterator().next()).getExternalProjectPath());
             }
+            return true;
+        });
+
+        if (!isOneToOne) {
+            return false;
         }
 
         ProjectData projectData = externalProject.getData();
-        if (linkedExternalProjectPath != null && !linkedExternalProjectPath.equals(projectData.getLinkedExternalProjectPath())) {
+        if (!linkedExternalProjectPath.isNull() && !linkedExternalProjectPath.get().equals(projectData.getLinkedExternalProjectPath())) {
             // New external project is being linked.
             return false;
         }
@@ -597,7 +601,7 @@ public class ExternalSystemUtil {
         for (DataNode<ModuleData> moduleNode : ExternalSystemApiUtil.findAll(externalProject, ProjectKeys.MODULE)) {
             externalModulePaths.add(moduleNode.getData().getLinkedExternalProjectPath());
         }
-        externalModulePaths.remove(linkedExternalProjectPath);
+        externalModulePaths.remove(linkedExternalProjectPath.get());
 
         for (Module module : ModuleManager.getInstance(ideProject).getModules()) {
             String path = ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);

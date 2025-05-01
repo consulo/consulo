@@ -19,7 +19,6 @@ import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.setting.ExternalSystemSettingsListenerAdapter;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -47,22 +46,22 @@ import java.util.List;
  * but register them automatically. This class manages that.
  *
  * @author Denis Zhdanov
- * @since 7/15/13 6:00 PM
+ * @since 2013-07-15
  */
 public class ExternalSystemVcsRegistrar {
-
     @SuppressWarnings("unchecked")
-    public static void handle(@Nonnull final Project project) {
-        for (final ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-            final AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
+    public static void handle(@Nonnull Project project) {
+        project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
+            AbstractExternalSystemSettings<?, ?, ?> settings =
+                ((ExternalSystemManager<?, ?, ?, ?, ?>)manager).getSettingsProvider().apply(project);
             settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
                 @Override
-                public void onProjectsLinked(@Nonnull final Collection linked) {
+                public void onProjectsLinked(@Nonnull Collection linked) {
                     List<VcsDirectoryMapping> newMappings = new ArrayList<>();
-                    final LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+                    LocalFileSystem fileSystem = LocalFileSystem.getInstance();
                     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
                     for (Object o : linked) {
-                        final ExternalProjectSettings settings = (ExternalProjectSettings)o;
+                        ExternalProjectSettings settings = (ExternalProjectSettings)o;
                         VirtualFile dir = fileSystem.refreshAndFindFileByPath(settings.getExternalProjectPath());
                         if (dir == null) {
                             continue;
@@ -93,6 +92,6 @@ public class ExternalSystemVcsRegistrar {
                     vcsManager.setDirectoryMappings(newMappings);
                 }
             });
-        }
+        });
     }
 }

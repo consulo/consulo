@@ -24,7 +24,6 @@ import consulo.externalSystem.impl.internal.service.ui.ExternalToolWindowManager
 import consulo.externalSystem.impl.internal.service.vcs.ExternalSystemVcsRegistrar;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.startup.StartupActivity;
@@ -42,11 +41,11 @@ public class ExternalSystemStartupActivity implements BackgroundStartupActivity 
         Application app = project.getApplication();
         app.invokeLater(
             () -> {
-                for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
+                project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
                     if (manager instanceof StartupActivity startupActivity) {
                         startupActivity.runActivity(project, uiAccess);
                     }
-                }
+                });
                 if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) != Boolean.TRUE) {
                     app.getExtensionList(ExternalSystemManager.class)
                         .forEach(manager -> ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false));

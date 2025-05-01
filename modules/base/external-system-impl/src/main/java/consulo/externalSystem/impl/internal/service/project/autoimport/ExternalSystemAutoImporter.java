@@ -15,14 +15,12 @@
  */
 package consulo.externalSystem.impl.internal.service.project.autoimport;
 
-import consulo.application.Application;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.messagebus.MessageBus;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.externalSystem.service.project.autoimport.ExternalSystemAutoImportAware;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.impl.internal.service.ExternalSystemProcessingManager;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
@@ -34,6 +32,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.externalSystem.service.project.ExternalProjectRefreshCallback;
 import consulo.externalSystem.service.project.ProjectData;
+import consulo.externalSystem.service.project.autoimport.ExternalSystemAutoImportAware;
 import consulo.externalSystem.service.project.manage.ProjectDataManager;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
@@ -61,7 +60,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author Denis Zhdanov
- * @since 6/7/13 6:38 PM
+ * @since 2013-06-07
  */
 public class ExternalSystemAutoImporter implements BulkFileListener, DocumentListener {
     @Nonnull
@@ -87,7 +86,8 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     @Nonnull
     private final ExternalProjectRefreshCallback myRefreshCallback = new ExternalProjectRefreshCallback() {
         @Override
-        public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
+        @RequiredUIAccess
+        public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
             if (externalProject != null) {
                 ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(myProject) {
                     @RequiredUIAccess
@@ -133,20 +133,20 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     @SuppressWarnings("unchecked")
     public static void letTheMagicBegin(@Nonnull Project project) {
         List<MyEntry> autoImportAware = new ArrayList<>();
-        Collection<ExternalSystemManager<?, ?, ?, ?, ?>> managers = ExternalSystemApiUtil.getAllManagers();
-        for (ExternalSystemManager<?, ?, ?, ?, ?> manager : managers) {
-            AbstractExternalSystemSettings<?, ?, ?> systemSettings = manager.getSettingsProvider().apply(project);
+        project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
+            AbstractExternalSystemSettings<?, ?, ?> systemSettings =
+                ((ExternalSystemManager<?, ?, ?, ?, ?>)manager).getSettingsProvider().apply(project);
             ExternalSystemAutoImportAware defaultImportAware = createDefault(systemSettings);
-            final ExternalSystemAutoImportAware aware;
-            aware = manager instanceof ExternalSystemAutoImportAware externalSystemAutoImportAware
-                ? combine(defaultImportAware, externalSystemAutoImportAware) : defaultImportAware;
+            ExternalSystemAutoImportAware aware = manager instanceof ExternalSystemAutoImportAware externalSystemAutoImportAware
+                ? combine(defaultImportAware, externalSystemAutoImportAware)
+                : defaultImportAware;
             autoImportAware.add(new MyEntry(manager.getSystemId(), systemSettings, aware));
-        }
+        });
 
         MyEntry[] entries = autoImportAware.toArray(new MyEntry[autoImportAware.size()]);
         ExternalSystemAutoImporter autoImporter =
-            new ExternalSystemAutoImporter(project, Application.get().getInstance(ProjectDataManager.class), entries);
-        final MessageBus messageBus = project.getMessageBus();
+            new ExternalSystemAutoImporter(project, project.getApplication().getInstance(ProjectDataManager.class), entries);
+        MessageBus messageBus = project.getMessageBus();
         messageBus.connect().subscribe(BulkFileListener.class, autoImporter);
 
         EditorFactory.getInstance().getEventMulticaster().addDocumentListener(autoImporter, project);
@@ -154,8 +154,8 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
 
     @Nonnull
     private static ExternalSystemAutoImportAware combine(
-        @Nonnull final ExternalSystemAutoImportAware aware1,
-        @Nonnull final ExternalSystemAutoImportAware aware2
+        @Nonnull ExternalSystemAutoImportAware aware1,
+        @Nonnull ExternalSystemAutoImportAware aware2
     ) {
         return new ExternalSystemAutoImportAware() {
             @Nullable
@@ -168,7 +168,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     }
 
     @Nonnull
-    private static ExternalSystemAutoImportAware createDefault(@Nonnull final AbstractExternalSystemSettings<?, ?, ?> systemSettings) {
+    private static ExternalSystemAutoImportAware createDefault(@Nonnull AbstractExternalSystemSettings<?, ?, ?> systemSettings) {
         return new ExternalSystemAutoImportAware() {
             @Nullable
             @Override
@@ -217,10 +217,10 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     }
 
     private void saveDocumentsIfNecessary() {
-        final FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
+        FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
         Lock lock = myDocumentLock.writeLock();
         Set<Document> toKeep = new HashSet<>();
-        final Set<Document> toSave = new HashSet<>();
+        Set<Document> toSave = new HashSet<>();
         lock.lock();
         try {
             myDocumentAlarm.cancelAllRequests();
@@ -332,12 +332,11 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
         }
 
         boolean scheduleRefresh = false;
-        ExternalSystemProcessingManager processingManager = Application.get().getInstance(ExternalSystemProcessingManager.class);
+        ExternalSystemProcessingManager processingManager = myProject.getApplication().getInstance(ExternalSystemProcessingManager.class);
         for (Map.Entry<ProjectSystemId, Set<String>> entry : copy.entrySet()) {
             for (String path : entry.getValue()) {
-                final ExternalSystemTask resolveTask =
-                    processingManager.findTask(ExternalSystemTaskType.RESOLVE_PROJECT, entry.getKey(), path);
-                final ExternalSystemTaskState taskState = resolveTask == null ? null : resolveTask.getState();
+                ExternalSystemTask resolveTask = processingManager.findTask(ExternalSystemTaskType.RESOLVE_PROJECT, entry.getKey(), path);
+                ExternalSystemTaskState taskState = resolveTask == null ? null : resolveTask.getState();
                 if (taskState == null || taskState.isStopped()
                     || (taskState == ExternalSystemTaskState.IN_PROGRESS && resolveTask.cancel())) {
                     ExternalSystemUtil.refreshProject(

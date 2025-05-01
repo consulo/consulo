@@ -530,12 +530,6 @@ public class ExternalSystemApiUtil {
     }
 
     @Nonnull
-    @SuppressWarnings("unchecked")
-    public static Collection<ExternalSystemManager<?, ?, ?, ?, ?>> getAllManagers() {
-        return (Collection)Application.get().getExtensionList(ExternalSystemManager.class);
-    }
-
-    @Nonnull
     public static Map<Key<?>, List<DataNode<?>>> group(@Nonnull Collection<DataNode<?>> nodes) {
         return groupBy(nodes, GROUPER);
     }
