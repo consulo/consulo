@@ -25,8 +25,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static consulo.execution.service.ServiceViewContributor.CONTRIBUTOR_EP_NAME;
-
 final class ServiceModel implements Disposable, InvokerSupplier {
     private static final Logger LOG = Logger.getInstance(ServiceModel.class);
 
@@ -52,6 +50,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
     };
     private static final NotNullizer ourNotNullizer = new NotNullizer("ServiceViewTreeTraversal.NotNull");
 
+    @Nonnull
     private final Project myProject;
     private final Invoker myInvoker = InvokerFactory.getInstance().forBackgroundThreadWithoutReadAction(this);
     private final List<ServiceViewItem> myRoots = Lists.newLockFreeCopyOnWriteList();
@@ -202,17 +201,17 @@ final class ServiceModel implements Disposable, InvokerSupplier {
             }
         }
 
-        ContributorNode newRoot = null;
-        for (ServiceViewContributor<?> contributor : CONTRIBUTOR_EP_NAME.getExtensionList()) {
-            if (contributorClass.isInstance(contributor)) {
-                newRoot = new ContributorNode(myProject, contributor);
-                newRoot.loadChildren();
-                if (newRoot.getChildren().isEmpty()) {
-                    newRoot = null;
+        ContributorNode newRoot = myProject.getApplication().getExtensionPoint(ServiceViewContributor.class)
+            .computeSafeIfAny(contributor -> {
+                if (contributorClass.isInstance(contributor)) {
+                    ContributorNode root = new ContributorNode(myProject, contributor);
+                    root.loadChildren();
+                    if (!root.getChildren().isEmpty()) {
+                        return root;
+                    }
                 }
-                break;
-            }
-        }
+                return null;
+            });
         if (newRoot != null) {
             myRoots.add(index, newRoot);
         }
@@ -220,7 +219,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
 
     private int getContributorNodeIndex(Class<?> contributorClass) {
         int index = -1;
-        List<ServiceViewContributor> contributors = CONTRIBUTOR_EP_NAME.getExtensionList();
+        List<ServiceViewContributor> contributors = myProject.getApplication().getExtensionList(ServiceViewContributor.class);
         List<ServiceViewContributor<?>> existingContributors = ContainerUtil.map(myRoots, ServiceViewItem::getContributor);
         for (int i = contributors.size() - 1; i >= 0; i--) {
             ServiceViewContributor<?> contributor = contributors.get(i);
@@ -265,14 +264,14 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         }
         if (contributorNode == null) {
             int index = getContributorNodeIndex(e.contributorClass);
-            for (ServiceViewContributor<?> contributor : CONTRIBUTOR_EP_NAME.getExtensionList()) {
-                if (e.contributorClass.isInstance(contributor)) {
-                    contributorNode = new ContributorNode(myProject, contributor);
-                    myRoots.add(index, contributorNode);
-                    break;
-                }
+            @SuppressWarnings("unchecked")
+            ServiceViewContributor<?> contributor = myProject.getApplication().getExtensionPoint(ServiceViewContributor.class)
+                .findExtension((Class<ServiceViewContributor<?>>)e.contributorClass);
+            if (contributor != null) {
+                contributorNode = new ContributorNode(myProject, contributor);
+                myRoots.add(index, contributorNode);
             }
-            if (contributorNode == null) {
+            else {
                 return;
             }
         }

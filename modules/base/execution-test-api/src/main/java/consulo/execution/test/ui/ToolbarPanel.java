@@ -15,6 +15,7 @@
  */
 package consulo.execution.test.ui;
 
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.action.DumbAwareToggleBooleanProperty;
 import consulo.application.ui.action.DumbAwareToggleInvertedBooleanProperty;
@@ -28,7 +29,8 @@ import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.action.*;
 import consulo.execution.test.export.ExportTestResultsAction;
-import consulo.platform.base.icon.PlatformIconGroup;import consulo.ui.ex.OccurenceNavigator;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.*;
 import jakarta.annotation.Nullable;
 
@@ -68,7 +70,6 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         ));
         actionGroup.addSeparator();
 
-
         actionGroup.addAction(new DumbAwareToggleBooleanProperty(
             ExecutionLocalize.junitRuningInfoSortAlphabeticallyActionName().get(),
             ExecutionLocalize.junitRuningInfoSortAlphabeticallyActionDescription().get(),
@@ -95,11 +96,11 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         actionGroup.add(actionsManager.createPrevOccurenceAction(myOccurenceNavigator));
         actionGroup.add(actionsManager.createNextOccurenceAction(myOccurenceNavigator));
 
-        for (ToggleModelActionProvider actionProvider : ToggleModelActionProvider.EP_NAME.getExtensionList()) {
+        Application.get().getExtensionPoint(ToggleModelActionProvider.class).forEach(actionProvider -> {
             ToggleModelAction toggleModelAction = actionProvider.createToggleModelAction(properties);
             myActions.add(toggleModelAction);
             actionGroup.add(toggleModelAction);
-        }
+        });
 
         RunProfile configuration = properties.getConfiguration();
         if (configuration instanceof RunConfiguration runConfiguration) {

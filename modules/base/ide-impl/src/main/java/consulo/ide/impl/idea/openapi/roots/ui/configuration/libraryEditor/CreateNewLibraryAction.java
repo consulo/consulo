@@ -15,30 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.component.extension.ExtensionPoint;
-import consulo.content.library.ui.DefaultLibraryRootsComponentDescriptor;
-import consulo.ide.localize.IdeLocalize;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.WriteAction;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
+import consulo.component.extension.ExtensionPoint;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryType;
 import consulo.content.library.LibraryTypeService;
 import consulo.content.library.NewLibraryConfiguration;
+import consulo.content.library.ui.DefaultLibraryRootsComponentDescriptor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.BaseLibrariesConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
-import consulo.ui.ex.awt.MasterDetailsComponent;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -147,9 +146,8 @@ public class CreateNewLibraryAction extends DumbAwareAction {
 
         List<LibraryType> suitableTypes;
         if (librariesConfigurable instanceof ProjectLibrariesConfigurable) {
-            suitableTypes = extensionPoint.collectExtensionsToListSafe(
-                extension -> LibraryEditingUtil.getSuitableModules(project, extension.getKind(), null).isEmpty() ? null : extension
-            );
+            suitableTypes = extensionPoint
+                .collectFiltered(extension -> !LibraryEditingUtil.getSuitableModules(project, extension.getKind(), null).isEmpty());
         }
         else {
             suitableTypes = extensionPoint.getExtensionList();

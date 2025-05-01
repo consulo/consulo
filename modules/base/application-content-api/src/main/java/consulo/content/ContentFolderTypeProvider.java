@@ -25,7 +25,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -117,8 +116,7 @@ public abstract class ContentFolderTypeProvider {
 
     @Nonnull
     public static List<ContentFolderTypeProvider> filter(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
-        return Application.get().getExtensionPoint(ContentFolderTypeProvider.class)
-            .collectExtensionsToListSafe(provider -> predicate.test(provider) ? provider : null);
+        return Application.get().getExtensionPoint(ContentFolderTypeProvider.class).collectFiltered(predicate);
     }
 
     @Nullable

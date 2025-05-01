@@ -24,7 +24,6 @@ import consulo.externalSystem.impl.internal.service.ui.ExternalToolWindowManager
 import consulo.externalSystem.impl.internal.service.vcs.ExternalSystemVcsRegistrar;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.startup.StartupActivity;
@@ -39,17 +38,17 @@ import jakarta.annotation.Nonnull;
 public class ExternalSystemStartupActivity implements BackgroundStartupActivity {
     @Override
     public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-        Application.get().invokeLater(
+        Application app = project.getApplication();
+        app.invokeLater(
             () -> {
-                for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
+                project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
                     if (manager instanceof StartupActivity startupActivity) {
                         startupActivity.runActivity(project, uiAccess);
                     }
-                }
+                });
                 if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) != Boolean.TRUE) {
-                    for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
-                        ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false);
-                    }
+                    app.getExtensionList(ExternalSystemManager.class)
+                        .forEach(manager -> ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false));
                 }
                 ExternalSystemAutoImporter.letTheMagicBegin(project);
                 ExternalToolWindowManager.handle(project);

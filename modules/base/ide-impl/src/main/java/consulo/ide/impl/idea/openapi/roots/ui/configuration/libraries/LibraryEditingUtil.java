@@ -157,10 +157,9 @@ public class LibraryEditingUtil {
     public static List<LibraryType> getSuitableTypes(ClasspathPanel classpathPanel) {
         List<LibraryType> suitableTypes = new ArrayList<>();
         suitableTypes.add(null);
-        Application.get().getExtensionPoint(LibraryType.class).collectExtensionsSafe(
+        Application.get().getExtensionPoint(LibraryType.class).collectFiltered(
             suitableTypes,
             libraryType -> libraryType.getCreateActionName() != null && isAvailable(libraryType, classpathPanel.getRootModel())
-                ? libraryType : null
         );
         return suitableTypes;
     }

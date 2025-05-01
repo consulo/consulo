@@ -92,9 +92,8 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
             systemIds.add(externalSystemId);
         }
         else {
-            for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
-                systemIds.add(manager.getSystemId());
-            }
+            Application.get().getExtensionPoint(ExternalSystemManager.class)
+                .collectMapped(systemIds, ExternalSystemManager::getSystemId);
         }
 
         return systemIds;

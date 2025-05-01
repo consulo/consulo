@@ -55,7 +55,7 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
     public static Collection<RunAnythingGroup> createCompletionGroups() {
         return new ArrayList<>(
             Application.get().getExtensionPoint(RunAnythingProvider.class)
-                .collectExtensionsSafe(new LinkedHashSet<>(), RunAnythingProvider::getCompletionGroup)
+                .collectMapped(new LinkedHashSet<>(), RunAnythingProvider::getCompletionGroup)
         );
     }
 }

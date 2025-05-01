@@ -162,7 +162,7 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
             Application.get().getExtensionPoint(ContentFolderPropertyProvider.class);
 
         decorator.setAddAction(anActionButton -> {
-            List<ContentFolderPropertyProvider<?>> list = extensionPoint.collectExtensionsToListSafe(propertyProvider -> {
+            List<ContentFolderPropertyProvider<?>> list = extensionPoint.collectMapped(propertyProvider -> {
                 for (Item item : myItems) {
                     if (item.myProvider == propertyProvider) {
                         return null;

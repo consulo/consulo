@@ -120,7 +120,7 @@ public class PreferredProducerFind {
             configurationsFromContext.add(new ConfigurationFromContextWrapper(producer));
         }
 
-        Application.get().getExtensionPoint(RunConfigurationProducer.class).collectExtensionsSafe(
+        Application.get().getExtensionPoint(RunConfigurationProducer.class).collectMapped(
             configurationsFromContext,
             producer -> producer.findOrCreateConfigurationFromContext(context, preferExisting)
         );

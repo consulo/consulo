@@ -88,8 +88,8 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
         };
         Application app = Application.get();
         SmartList<Pair<LibraryKind, LibraryProperties>> result = new SmartList<>();
-        app.getExtensionPoint(LibraryType.class).collectExtensionsSafe(result, processor);
-        app.getExtensionPoint(LibraryPresentationProvider.class).collectExtensionsSafe(result, processor);
+        app.getExtensionPoint(LibraryType.class).collectMapped(result, processor);
+        app.getExtensionPoint(LibraryPresentationProvider.class).collectMapped(result, processor);
         return result;
     }
 }

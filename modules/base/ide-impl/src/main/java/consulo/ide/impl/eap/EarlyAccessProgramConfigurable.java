@@ -79,7 +79,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
         JPanel panel = new JPanel(new VerticalFlowLayout());
 
         List<EarlyAccessProgramDescription> descriptions = myApplication.getExtensionPoint(EarlyAccessProgramDescriptor.class)
-            .collectExtensionsToListSafe(EarlyAccessProgramDescription::new);
+            .collectMapped(EarlyAccessProgramDescription::new);
         Collections.sort(descriptions);
 
         EarlyAccessProgramManager manager = ConfigurableSession.get().getOrCopy(myApplication, EarlyAccessProgramManager.class);

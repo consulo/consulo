@@ -360,10 +360,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Nonnull
     @Override
-    public <R, CR extends Collection<? super R>> CR collectExtensionsSafe(
-        @Nonnull CR results,
-        @Nonnull Function<? super T, ? extends R> processor
-    ) {
+    public <R, CR extends Collection<? super R>> CR collectMapped(@Nonnull CR results, @Nonnull Function<? super T, ? extends R> processor) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -373,6 +370,26 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
                 R result = processor.apply(t);
                 if (result != null) {
                     results.add(result);
+                }
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, t);
+            }
+        }
+        return results;
+    }
+
+    @Nonnull
+    @Override
+    public <CE extends Collection<T>> CE collectFiltered(@Nonnull CE results, @Nonnull Predicate<? super T> predicate) {
+        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0, n = extensionCache.size(); i < n; i++) {
+            T t = extensionCache.get(i).getKey();
+            try {
+                if (predicate.test(t)) {
+                    results.add(t);
                 }
             }
             catch (Throwable e) {

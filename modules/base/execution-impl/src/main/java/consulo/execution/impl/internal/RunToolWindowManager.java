@@ -116,8 +116,9 @@ public class RunToolWindowManager {
 
     @RequiredUIAccess
     private ContentManager createToolWindow(@Nonnull String toolWindowId) {
-        Executor executor =
-            Executor.EP_NAME.getExtensionList().stream().filter(it -> it.getToolWindowId().equals(toolWindowId)).findFirst().get();
+        Executor executor = myProject.getApplication().getExtensionPoint(Executor.class)
+            .findFirstSafe(e -> e.getToolWindowId().equals(toolWindowId));
+        assert executor != null;
         return registerToolWindow(executor.getToolWindowId(), executor.getToolWindowIcon(), null);
     }
 

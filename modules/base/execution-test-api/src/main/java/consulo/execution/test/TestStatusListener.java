@@ -17,15 +17,12 @@ package consulo.execution.test;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.application.Application;
 import consulo.project.Project;
-
 import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TestStatusListener {
-    public static final ExtensionPointName<TestStatusListener> EP_NAME = ExtensionPointName.create(TestStatusListener.class);
-
     public abstract void testSuiteFinished(@Nullable AbstractTestProxy root);
 
     public void testSuiteFinished(@Nullable AbstractTestProxy root, Project project) {
@@ -35,14 +32,12 @@ public abstract class TestStatusListener {
     @Deprecated
     @SuppressWarnings("UnusedDeclaration")
     public static void notifySuiteFinished(AbstractTestProxy root) {
-        for (TestStatusListener statusListener : EP_NAME.getExtensionList()) {
-            statusListener.testSuiteFinished(root);
-        }
+        Application.get().getExtensionPoint(TestStatusListener.class)
+            .forEach(statusListener -> statusListener.testSuiteFinished(root));
     }
 
     public static void notifySuiteFinished(@Nullable AbstractTestProxy root, Project project) {
-        for (TestStatusListener statusListener : EP_NAME.getExtensionList()) {
-            statusListener.testSuiteFinished(root, project);
-        }
+        Application.get().getExtensionPoint(TestStatusListener.class)
+            .forEach(statusListener -> statusListener.testSuiteFinished(root, project));
     }
 }

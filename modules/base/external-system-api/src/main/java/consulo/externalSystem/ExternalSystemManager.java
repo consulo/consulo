@@ -2,7 +2,6 @@ package consulo.externalSystem;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
@@ -31,57 +30,60 @@ import java.util.function.Supplier;
  * @since 2013-04-04
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface ExternalSystemManager<ProjectSettings extends ExternalProjectSettings, SettingsListener extends ExternalSystemSettingsListener<ProjectSettings>, Settings extends AbstractExternalSystemSettings<Settings, ProjectSettings, SettingsListener>, LocalSettings extends AbstractExternalSystemLocalSettings, ExecutionSettings extends ExternalSystemExecutionSettings> {
+public interface ExternalSystemManager<
+    ProjectSettings extends ExternalProjectSettings,
+    SettingsListener extends ExternalSystemSettingsListener<ProjectSettings>,
+    Settings extends AbstractExternalSystemSettings<Settings, ProjectSettings, SettingsListener>,
+    LocalSettings extends AbstractExternalSystemLocalSettings,
+    ExecutionSettings extends ExternalSystemExecutionSettings
+> {
+    /**
+     * @return id of the external system represented by the current manager
+     */
+    @Nonnull
+    ProjectSystemId getSystemId();
 
-  ExtensionPointName<ExternalSystemManager> EP_NAME = ExtensionPointName.create(ExternalSystemManager.class);
+    /**
+     * @return a strategy which can be queried for external system settings to use with the given project
+     */
+    @Nonnull
+    Function<Project, Settings> getSettingsProvider();
 
-  /**
-   * @return id of the external system represented by the current manager
-   */
-  @Nonnull
-  ProjectSystemId getSystemId();
+    /**
+     * @return a strategy which can be queried for external system local settings to use with the given project
+     */
+    @Nonnull
+    Function<Project, LocalSettings> getLocalSettingsProvider();
 
-  /**
-   * @return a strategy which can be queried for external system settings to use with the given project
-   */
-  @Nonnull
-  Function<Project, Settings> getSettingsProvider();
+    /**
+     * @return a strategy which can be queried for external system execution settings to use with the given project
+     */
+    @Nonnull
+    Function<Pair<Project, String/*linked project path*/>, ExecutionSettings> getExecutionSettingsProvider();
 
-  /**
-   * @return a strategy which can be queried for external system local settings to use with the given project
-   */
-  @Nonnull
-  Function<Project, LocalSettings> getLocalSettingsProvider();
+    /**
+     * Allows to retrieve information about {@link ExternalSystemProjectResolver project resolver} to use for the target external
+     * system.
+     * <p/>
+     * <b>Note:</b> we return a class instance instead of resolver object here because there is a possible case that the resolver
+     * is used at external (non-ide) process, so, it needs information which is enough for instantiating it there. That implies
+     * the requirement that target resolver class is expected to have a no-args constructor
+     *
+     * @return class of the project resolver to use for the target external system
+     */
+    @Nonnull
+    Supplier<? extends ExternalSystemProjectResolver<ExecutionSettings>> getProjectResolverFactory();
 
-  /**
-   * @return a strategy which can be queried for external system execution settings to use with the given project
-   */
-  @Nonnull
-  Function<Pair<Project, String/*linked project path*/>, ExecutionSettings> getExecutionSettingsProvider();
+    /**
+     * @return class of the build manager to use for the target external system
+     * @see #getProjectResolverFactory()
+     */
+    @Nonnull
+    Supplier<? extends ExternalSystemTaskManager<ExecutionSettings>> getTaskManagerFactory();
 
-  /**
-   * Allows to retrieve information about {@link ExternalSystemProjectResolver project resolver} to use for the target external
-   * system.
-   * <p/>
-   * <b>Note:</b> we return a class instance instead of resolver object here because there is a possible case that the resolver
-   * is used at external (non-ide) process, so, it needs information which is enough for instantiating it there. That implies
-   * the requirement that target resolver class is expected to have a no-args constructor
-   *
-   * @return class of the project resolver to use for the target external system
-   */
-  @Nonnull
-  Supplier<? extends ExternalSystemProjectResolver<ExecutionSettings>> getProjectResolverFactory();
-
-  /**
-   * @return class of the build manager to use for the target external system
-   * @see #getProjectResolverFactory()
-   */
-  @Nonnull
-  Supplier<? extends ExternalSystemTaskManager<ExecutionSettings>> getTaskManagerFactory();
-
-  /**
-   * @return file chooser descriptor to use when adding new external project
-   */
-  @Nonnull
-  FileChooserDescriptor getExternalProjectDescriptor();
+    /**
+     * @return file chooser descriptor to use when adding new external project
+     */
+    @Nonnull
+    FileChooserDescriptor getExternalProjectDescriptor();
 }

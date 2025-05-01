@@ -15,34 +15,32 @@
  */
 package consulo.externalSystem.impl.internal.service.project;
 
-import consulo.application.Application;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.impl.internal.service.ExternalSystemFacadeManager;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalSystemSettingsListenerAdapter;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 /**
  * We need to avoid memory leaks on ide project rename. This class is responsible for that.
- * 
+ *
  * @author Denis Zhdanov
- * @since 7/19/13 1:14 PM
+ * @since 2013-07-19
  */
 public class ProjectRenameAware {
-  
-  public static void beAware(@Nonnull Project project) {
-    final ExternalSystemFacadeManager facadeManager = Application.get().getInstance(ExternalSystemFacadeManager.class);
-    for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-      AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
-      //noinspection unchecked
-      settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
-        @Override
-        public void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName) {
-          facadeManager.onProjectRename(oldName, newName);
-        }
-      });
+    public static void beAware(@Nonnull Project project) {
+        ExternalSystemFacadeManager facadeManager = project.getApplication().getInstance(ExternalSystemFacadeManager.class);
+        project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
+            AbstractExternalSystemSettings<?, ?, ?> settings =
+                ((ExternalSystemManager<?, ?, ?, ?, ?>)manager).getSettingsProvider().apply(project);
+            //noinspection unchecked
+            settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
+                @Override
+                public void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName) {
+                    facadeManager.onProjectRename(oldName, newName);
+                }
+            });
+        });
     }
-  }
 }

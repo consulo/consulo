@@ -75,7 +75,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                 ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(t.getModule());
                 return VirtualFileUtil.toVirtualFileArray(
                     Application.get().getExtensionPoint(ContentFolderTypeProvider.class)
-                        .collectExtensionsToListSafe(provider -> v.test(provider) ? compilerPathsManager.getCompilerOutput(provider) : null)
+                        .collectMapped(provider -> v.test(provider) ? compilerPathsManager.getCompilerOutput(provider) : null)
                 );
             }
         };
@@ -88,7 +88,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                 ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(t.getModule());
                 return ArrayUtil.toStringArray(
                     Application.get().getExtensionPoint(ContentFolderTypeProvider.class)
-                        .collectExtensionsToListSafe(provider -> v.test(provider) ? compilerPathsManager.getCompilerOutputUrl(provider) : null)
+                        .collectMapped(provider -> v.test(provider) ? compilerPathsManager.getCompilerOutputUrl(provider) : null)
                 );
             }
         };
