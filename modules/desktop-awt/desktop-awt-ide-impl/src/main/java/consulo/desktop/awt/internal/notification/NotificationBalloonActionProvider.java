@@ -18,7 +18,7 @@ package consulo.desktop.awt.internal.notification;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurable;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ui.ex.awt.JBRectangle;

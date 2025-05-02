@@ -21,7 +21,7 @@ import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.internal.notification.NotificationBalloonShadowBorderProvider;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationType;

@@ -23,7 +23,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.impl.GlassPaneDialogWrapperPeer;
-import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.ui.ex.IdeGlassPane;
@@ -290,8 +289,8 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
       if (event.isAltDown() && SwingUtilities.isLeftMouseButton(event) && event.getID() == MouseEvent.MOUSE_PRESSED) {
         Component c = SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
         Balloon balloon = JBPopupFactory.getInstance().getParentBalloonFor(c);
-        if (balloon instanceof BalloonImpl) {
-          JComponent component = ((BalloonImpl)balloon).getComponent();
+        if (balloon instanceof Balloon awtBallon) {
+          JComponent component = awtBallon.getComponent();
           component.getToolkit().getSystemClipboard().setContents(new StringSelection(UIUtil.getDebugText(component)), EmptyClipboardOwner.INSTANCE);
         }
       }

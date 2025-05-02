@@ -16,9 +16,6 @@
 package consulo.desktop.awt.uiOld.messages;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.desktop.awt.graphics.GraphicsUtilities;
-import consulo.ide.impl.desktop.awt.graphics.ShadowRenderer;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -27,7 +24,10 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
+import org.jdesktop.swingx.graphics.ShadowRenderer;
+import org.jdesktop.swingx.util.GraphicsUtilities;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;

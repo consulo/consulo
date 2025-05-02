@@ -268,7 +268,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     protected abstract ActionMap getActionMap();
 
-    protected final void setParentValue(Object parentValue) {
+    public final void setParentValue(Object parentValue) {
         myParentValue = parentValue;
     }
 

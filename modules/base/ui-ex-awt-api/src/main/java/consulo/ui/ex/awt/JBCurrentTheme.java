@@ -193,11 +193,6 @@ public class JBCurrentTheme {
         public static Color shortcutForeground() {
             return JBColor.namedColor("ToolTip.shortcutForeground", new JBColor(0x787878, 0x999999));
         }
-
-        @Nonnull
-        public static Color borderColor() {
-            return JBColor.namedColor("ToolTip.borderColor", new JBColor(0xadadad, 0x636569));
-        }
     }
 
     public static final class NotificationInfo {

@@ -11,6 +11,7 @@ import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.HintListener;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.TooltipEvent;
+import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -218,7 +219,8 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
 
         Dimension size = myComponent.getPreferredSize();
         Balloon.Position position = myHintHint.getPreferredPosition();
-        int shift = BalloonImpl.getPointerLength(position, false);
+        AWTPopupFactory factory = (AWTPopupFactory) JBPopupFactory.getInstance();
+        int shift = factory.getPointerLength(position, false);
         switch (position) {
             case below:
                 actualPoint.y += shift;
@@ -257,7 +259,8 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
 
             Point target = desiredLocation.getPointOn(pane).getPoint();
             Balloon.Position pos = hintHint.getPreferredPosition();
-            int pointer = BalloonImpl.getPointerLength(pos, false) + BalloonImpl.getNormalInset();
+            AWTPopupFactory factory = (AWTPopupFactory) JBPopupFactory.getInstance();
+            int pointer = factory.getPointerLength(pos, false) + Balloon.getNormalInset();
             if (pos == Balloon.Position.above || pos == Balloon.Position.below) {
                 boolean heightFit = target.y - size.height - pointer > 0 || target.y + size.height + pointer < paneSize.height;
                 return heightFit && size.width + pointer < paneSize.width;

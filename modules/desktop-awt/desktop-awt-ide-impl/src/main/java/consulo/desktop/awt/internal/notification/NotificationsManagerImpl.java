@@ -28,7 +28,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

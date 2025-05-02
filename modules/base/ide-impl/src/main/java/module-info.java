@@ -170,7 +170,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.compiler.setting;
   exports consulo.ide.impl.configurationStore.vcs;
   exports consulo.ide.impl.desktop;
-  exports consulo.ide.impl.desktop.awt.graphics;
   exports consulo.ide.impl.diagram.actions;
   exports consulo.ide.impl.diagram.builder;
   exports consulo.ide.impl.diagram.builder.impl;

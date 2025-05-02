@@ -9,17 +9,18 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.ColoredSideBorder;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.style.StyleManager;
 import consulo.util.lang.ref.Ref;
-import org.intellij.lang.annotations.JdkConstants;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -98,11 +99,7 @@ public class HintUtil {
 
   @Nonnull
   public static HintHint getInformationHint() {
-    return new HintHint()
-      .setBorderColor(INFORMATION_BORDER_COLOR)
-      .setTextBg(TargetAWT.to(getInformationColor()))
-      .setTextFg(StyleManager.get().getCurrentStyle().isDark() ? UIUtil.getLabelForeground() : Color.black)
-      .setFont(getBoldFont()).setAwtTooltip(true);
+    return new HintHint().setFont(getBoldFont()).setAwtTooltip(true);
   }
 
   public static CompoundBorder createHintBorder() {

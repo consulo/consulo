@@ -20,66 +20,79 @@ import consulo.ui.ex.LightweightWindow;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * @see consulo.ide.impl.idea.openapi.ui.popup.JBPopupFactory
+ * @see JBPopupFactory
  */
 public interface Balloon extends Disposable, PositionTracker.Client<Balloon>, LightweightWindow {
 
-  String KEY = "Balloon.property";
+    public static int getNormalInset() {
+        return 3;
+    }
 
-  void show(PositionTracker<Balloon> tracker, Position preferredPosition);
+    String KEY = "Balloon.property";
 
-  void show(RelativePoint target, Position preferredPosition);
+    void show(PositionTracker<Balloon> tracker, Position preferredPosition);
 
-  void show(JLayeredPane pane);
+    void show(RelativePoint target, Position preferredPosition);
 
-  void showInCenterOf(JComponent component);
+    void show(JLayeredPane pane);
 
-  Dimension getPreferredSize();
+    void showInCenterOf(JComponent component);
 
-  void setBounds(Rectangle bounds);
+    Dimension getPreferredSize();
 
-  void addListener(@Nonnull JBPopupListener listener);
+    void setBounds(Rectangle bounds);
 
-  void hide();
-  void hide(boolean ok);
+    void addListener(@Nonnull JBPopupListener listener);
 
-  void setAnimationEnabled(boolean enabled);
+    void hide();
 
-  boolean wasFadedIn();
-  boolean wasFadedOut();
+    void hide(boolean ok);
 
-  boolean isDisposed();
+    void setAnimationEnabled(boolean enabled);
 
-  void setTitle(String title);
+    boolean wasFadedIn();
 
-  default boolean isAnimationEnabled() {
-    return false;
-  }
+    boolean wasFadedOut();
 
-  default boolean isBlockClicks() {
-    return false;
-  }
+    boolean isDisposed();
 
-  default boolean isMovingForward(@Nonnull RelativePoint target) {
-    return false;
-  }
+    void setTitle(String title);
 
-  default boolean isClickProcessor() {
-    return isBlockClicks();
-  }
+    default boolean isAnimationEnabled() {
+        return false;
+    }
 
-  enum Position {
-    below, above, atLeft, atRight
-  }
+    default boolean isBlockClicks() {
+        return false;
+    }
 
-  enum Layer {
-    normal, top
-  }
+    default boolean isMovingForward(@Nonnull RelativePoint target) {
+        return false;
+    }
 
+    default boolean isClickProcessor() {
+        return isBlockClicks();
+    }
+
+    default JComponent getComponent() {
+        throw new UnsupportedOperationException("Wrong Platform");
+    }
+
+    enum Position {
+        below,
+        above,
+        atLeft,
+        atRight
+    }
+
+    enum Layer {
+        normal,
+        top
+    }
 }

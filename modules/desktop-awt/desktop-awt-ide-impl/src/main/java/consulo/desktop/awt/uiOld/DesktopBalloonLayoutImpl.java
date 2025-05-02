@@ -21,7 +21,7 @@ import consulo.desktop.awt.internal.notification.EventLog;
 import consulo.project.ui.notification.Notification;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.popup.Balloon;
-import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.wm.impl.IdeRootPane;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

@@ -41,7 +41,7 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.localize.LocalizeValue;

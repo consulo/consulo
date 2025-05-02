@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.popup;
+package consulo.desktop.awt.ui.popup;
 
-import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.ui.ex.awt.JBUI;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -43,7 +42,7 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
 
   private final JComponent myContent;
 
-  private Color myBorder = IdeTooltipManagerImpl.getInstanceImpl().getBorderColor(true);
+  private Color myBorder = JBColor.border();
   @Nullable
   private Insets myBorderInsets = null;
   private Color myFill = MessageType.INFO.getPopupBackground();

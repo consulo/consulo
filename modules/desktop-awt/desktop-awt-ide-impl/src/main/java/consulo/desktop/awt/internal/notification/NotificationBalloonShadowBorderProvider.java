@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.internal.notification;
 
-import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.popup.Balloon;
 import jakarta.annotation.Nonnull;

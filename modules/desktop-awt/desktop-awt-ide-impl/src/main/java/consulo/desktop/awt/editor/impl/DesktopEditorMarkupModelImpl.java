@@ -44,7 +44,7 @@ import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.project.ui.internal.ToolWindowManagerEx;
-import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.hint.HintManager;

@@ -34,8 +34,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -975,7 +973,6 @@ public class HintManagerImpl implements HintManagerEx {
 
         hintInfo.initStyleFrom(((LightweightHintImpl) hint).getComponent());
         if (showByBalloon) {
-            hintInfo.setBorderColor(new JBColor(JBColor.GRAY, Gray._140));
             hintInfo.setFont(hintInfo.getTextFont().deriveFont(Font.PLAIN));
             hintInfo.setCalloutShift((int) (editor.getLineHeight() * 0.1));
         }

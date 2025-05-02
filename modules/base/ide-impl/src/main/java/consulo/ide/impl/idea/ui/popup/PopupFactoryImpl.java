@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup;
 
-import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.CaretModel;
@@ -10,7 +9,6 @@ import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeEditor.VisualPosition;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
@@ -19,7 +17,6 @@ import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
 import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -31,22 +28,16 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.hint.HintHint;
-import consulo.ui.ex.awt.popup.AWTListPopup;
-import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
 import consulo.ui.ex.awt.popup.AWTPopupFactory;
-import consulo.ui.ex.awt.popup.AWTPopupSubFactory;
-import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.collection.Maps;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import jakarta.inject.Singleton;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -56,65 +47,11 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-@Singleton
-@ServiceImpl
-public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory {
+public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory {
     private static final Logger LOG = Logger.getInstance(PopupFactoryImpl.class);
-
-    private final Map<Disposable, List<Balloon>> myStorage = Maps.newWeakHashMap();
-
-    @Override
-    public AWTListPopup createListPopup(
-        @Nonnull Project project,
-        @Nonnull ListPopupStep step,
-        @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory
-    ) {
-        return new ListPopupImpl(step) {
-            @Override
-            protected ListCellRenderer getListElementRenderer() {
-                return rendererFactory.apply(this);
-            }
-        };
-    }
-
-    @Override
-    public AWTListPopup createListPopup(
-        @Nonnull Project project,
-        @Nonnull ListPopupStep step,
-        @Nullable AWTListPopup parentPopup,
-        @Nonnull Function<AWTListPopup, ListCellRenderer> rendererFactory,
-        @Nonnull AWTPopupSubFactory factory
-    ) {
-        return new ListPopupImpl(project, (WizardPopup)parentPopup, step, null) {
-            @Override
-            protected ListCellRenderer getListElementRenderer() {
-                return rendererFactory.apply(this);
-            }
-
-            @Override
-            protected WizardPopup createPopup(WizardPopup parent, PopupStep step, Object parentValue) {
-                ListPopupImpl popup = (ListPopupImpl)factory.create((AWTListPopup)parent, step);
-                popup.setParentValue(parentValue);
-                return popup;
-            }
-        };
-    }
-
-    @Override
-    public <T> AWTPopupChooserBuilder<T> createListPopupBuilder(@Nonnull JList<T> list) {
-        return new PopupChooserBuilder<>(list);
-    }
-
-    @Nonnull
-    @Override
-    public <T> IPopupChooserBuilder<T> createPopupChooserBuilder(@Nonnull List<? extends T> list) {
-        return new PopupChooserBuilder<>(new JBList<>(new CollectionListModel<>(list)));
-    }
 
     @Nonnull
     @Override
@@ -769,33 +706,6 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     @Override
     public boolean isPopupActive() {
         return IdeEventQueueProxy.getInstance().isPopupActive();
-    }
-
-    @Nonnull
-    @Override
-    public BalloonBuilder createBalloonBuilder(@Nonnull JComponent content) {
-        return new BalloonPopupBuilderImpl(myStorage, content);
-    }
-
-    @Nonnull
-    @Override
-    public BalloonBuilder createDialogBalloonBuilder(@Nonnull JComponent content, String title) {
-        BalloonPopupBuilderImpl builder = new BalloonPopupBuilderImpl(myStorage, content);
-        Color bg = UIManager.getColor("Panel.background");
-        Color borderOriginal = Color.darkGray;
-        Color border = ColorUtil.toAlpha(borderOriginal, 75);
-        builder.setDialogMode(true)
-            .setTitle(title)
-            .setAnimationCycle(200)
-            .setFillColor(bg)
-            .setBorderColor(border)
-            .setHideOnClickOutside(false)
-            .setHideOnKeyOutside(false)
-            .setHideOnAction(false)
-            .setCloseButtonEnabled(true)
-            .setShadow(true);
-
-        return builder;
     }
 
     @Nonnull

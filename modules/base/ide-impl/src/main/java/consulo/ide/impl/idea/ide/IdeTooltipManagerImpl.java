@@ -10,12 +10,6 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.hint.HintHint;
-import consulo.ui.ex.awt.hint.TooltipEvent;
-import consulo.ui.style.StyleManager;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Html;
@@ -26,6 +20,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
+import consulo.ui.ex.awt.hint.HintHint;
+import consulo.ui.ex.awt.hint.TooltipEvent;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.awt.util.Alarm;
@@ -35,7 +31,10 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -72,7 +71,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
   private volatile Component myQueuedComponent;
   private volatile Component myProcessingComponent;
 
-  private BalloonImpl myCurrentTipUi;
+  private Balloon myCurrentTipUi;
   private MouseEvent myCurrentEvent;
   private boolean myCurrentTipIsCentered;
 
@@ -423,9 +422,9 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
       beforeShow.run();
     }
 
-    myCurrentTipUi = (BalloonImpl)builder.createBalloon();
+    myCurrentTipUi = builder.createBalloon();
     myCurrentTipUi.setAnimationEnabled(animationEnabled);
-    tooltip.setUi(myCurrentTipUi);
+    tooltip.setUi((IdeTooltip.Ui) myCurrentTipUi);
     myCurrentComponent = tooltip.getComponent();
     myX = effectivePoint.x;
     myY = effectivePoint.y;
@@ -470,7 +469,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
   @SuppressWarnings({"UnusedParameters"})
   @Deprecated(forRemoval = true)
   public Color getBorderColor(boolean awtTooltip) {
-    return JBCurrentTheme.Tooltip.borderColor();
+    return JBColor.border();
   }
 
   @SuppressWarnings({"UnusedParameters"})
@@ -528,7 +527,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
     if (myCurrentTipUi != null) {
       RelativePoint target = me != null ? new RelativePoint(me) : null;
-      boolean isInsideOrMovingForward = target != null && (myCurrentTipUi.isInside(target) || myCurrentTipUi.isMovingForward(target));
+      boolean isInsideOrMovingForward = target != null && (((IdeTooltip.Ui) myCurrentTipUi).isInside(target) || myCurrentTipUi.isMovingForward(target));
       boolean canAutoHide = myCurrentTooltip.canAutohideOn(new TooltipEvent(me, isInsideOrMovingForward, action, event));
       boolean implicitMouseMove = me != null && (me.getID() == MouseEvent.MOUSE_MOVED || me.getID() == MouseEvent.MOUSE_EXITED || me.getID() == MouseEvent.MOUSE_ENTERED);
       if (!canAutoHide ||
