@@ -6,7 +6,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.concurent.NonUrgentExecutor;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.container.boot.ContainerPathManager;
@@ -101,7 +100,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     Disposer.register(parentDisposable, rootDisposable);
     ReadAction.nonBlocking(() -> rootType.registerTreeUpdater(project, parentDisposable, onUpdate))
       .expireWith(parentDisposable)
-      .submit(NonUrgentExecutor.getInstance());
+      .submitDefault();
   }
 
   private static VirtualFile getNewParent(@Nonnull VFileEvent e) {

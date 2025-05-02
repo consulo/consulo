@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.application.impl.internal.concurent;
+package consulo.application.internal;
 
 import consulo.application.ReadAction;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * A common executor for non-urgent tasks, which are expected to be fast most of the time.
@@ -23,20 +23,21 @@ import java.util.concurrent.Executor;
  * </ul>
  */
 public final class NonUrgentExecutor implements Executor {
-  private static final NonUrgentExecutor ourInstance = new NonUrgentExecutor();
-  private final Executor myBackend;
+    private static final NonUrgentExecutor INSTANCE = new NonUrgentExecutor();
 
-  private NonUrgentExecutor() {
-    myBackend = new BoundedTaskExecutor("NonUrgentExecutor", AppExecutorUtil.getAppExecutorService(), 2, false);
-  }
+    private final Executor myBackend;
 
-  @Override
-  public void execute(@Nonnull Runnable command) {
-    myBackend.execute(command);
-  }
+    private NonUrgentExecutor() {
+        myBackend = Executors.newVirtualThreadPerTaskExecutor();
+    }
 
-  @Nonnull
-  public static NonUrgentExecutor getInstance() {
-    return ourInstance;
-  }
+    @Override
+    public void execute(@Nonnull Runnable command) {
+        myBackend.execute(command);
+    }
+
+    @Nonnull
+    public static NonUrgentExecutor getInstance() {
+        return INSTANCE;
+    }
 }

@@ -3,7 +3,6 @@ package consulo.ide.impl.psi.codeStyle.statusbar;
 
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.concurent.NonUrgentExecutor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedStatusBarPopup;
@@ -180,7 +179,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
         ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project))
             .expireWith(project)
             .finishOnUiThread(Application::getAnyModalityState, manager -> manager.addListener(this, this))
-            .submit(NonUrgentExecutor.getInstance());
+            .submitDefault();
     }
 
     @Override

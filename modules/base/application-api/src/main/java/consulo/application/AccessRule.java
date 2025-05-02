@@ -29,65 +29,39 @@ import java.util.concurrent.CompletableFuture;
  * @author VISTALL
  * @since 2018-04-24
  */
+@Deprecated
 public final class AccessRule {
-  private static final Logger LOG = Logger.getInstance(AccessRule.class);
+    private static final Logger LOG = Logger.getInstance(AccessRule.class);
 
-  public static <E extends Throwable> void read(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
-    Application.get().runReadAction((ThrowableSupplier<Object, E>)() -> {
-      action.run();
-      return null;
-    });
-  }
+    public static <E extends Throwable> void read(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
+        ReadAction.run(action);
+    }
 
-  @Nullable
-  public static <T, E extends Throwable> T read(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> action) throws E {
-    return Application.get().runReadAction(action);
-  }
+    @Nullable
+    public static <T, E extends Throwable> T read(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> action) throws E {
+        return ReadAction.compute(action);
+    }
 
-  @Nonnull
-  public static CompletableFuture<Void> readAsync(@RequiredReadAction @Nonnull ThrowableRunnable<Throwable> action) {
-    return readAsync(() -> {
-      action.run();
-      return null;
-    });
-  }
+    @Nonnull
+    public static CompletableFuture<Void> writeAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
+        return writeAsync(() -> {
+            action.run();
+            return null;
+        });
+    }
 
-  @Nonnull
-  public static <T> CompletableFuture<T> readAsync(@RequiredReadAction @Nonnull ThrowableSupplier<T, Throwable> action) {
-    CompletableFuture<T> result = new CompletableFuture<>();
-    Application application = Application.get();
-    application.executeOnPooledThread(() -> {
-      try {
-        result.complete(application.runReadAction(action));
-      }
-      catch (Throwable throwable) {
-        LOG.error(throwable);
-        result.completeExceptionally(throwable);
-      }
-    });
-    return result;
-  }
-
-  @Nonnull
-  public static CompletableFuture<Void> writeAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
-    return writeAsync(() -> {
-      action.run();
-      return null;
-    });
-  }
-
-  @Nonnull
-  public static <T> CompletableFuture<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableSupplier<T, Throwable> action) {
-    CompletableFuture<T> result = new CompletableFuture<>();
-    AppUIExecutor.onWriteThread().later().execute(() -> {
-      try {
-        result.complete(action.get());
-      }
-      catch (Throwable throwable) {
-        LOG.error(throwable);
-        result.completeExceptionally(throwable);
-      }
-    });
-    return result;
-  }
+    @Nonnull
+    public static <T> CompletableFuture<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableSupplier<T, Throwable> action) {
+        CompletableFuture<T> result = new CompletableFuture<>();
+        AppUIExecutor.onWriteThread().later().execute(() -> {
+            try {
+                result.complete(action.get());
+            }
+            catch (Throwable throwable) {
+                LOG.error(throwable);
+                result.completeExceptionally(throwable);
+            }
+        });
+        return result;
+    }
 }

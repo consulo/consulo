@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.concurent.NonUrgentExecutor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterColors;
@@ -15,16 +14,15 @@ import consulo.ide.impl.idea.openapi.application.impl.NonBlockingReadActionImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
-import consulo.virtualFileSystem.fileType.FileTypeEvent;
-import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.virtualFileSystem.fileType.FileTypeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 /**
  * @author peter
@@ -62,7 +60,7 @@ public class EditorHighlighterUpdater {
             .expireWhen(() -> (myFile != null && !myFile.isValid()) || myEditor.isDisposed())
             .coalesceBy(EditorHighlighterUpdater.class, myEditor)
             .finishOnUiThread(Application::getAnyModalityState, myEditor::setHighlighter)
-            .submit(NonUrgentExecutor.getInstance());
+            .submitDefault();
   }
 
   @Nonnull

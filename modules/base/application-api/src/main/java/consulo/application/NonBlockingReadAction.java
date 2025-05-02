@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application;
 
+import consulo.application.internal.NonUrgentExecutor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -8,9 +9,9 @@ import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -92,11 +93,16 @@ public interface NonBlockingReadAction<T> {
    * is completed on the same thread (in the same read action), or on UI thread if {@link #finishOnUiThread} has been called.
    *
    * @param backgroundThreadExecutor an executor to actually run the computation. Common examples are
-   *                                 {@link consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor#getInstance()} or
+   *                                 {@link NonUrgentExecutor#getInstance()} or
    *                                 {@link AppExecutorUtil#getAppExecutorService()} or
-   *                                 {@link consulo.ide.impl.idea.util.concurrency.BoundedTaskExecutor} on top of that.
+   *                                 {@link BoundedTaskExecutor} on top of that.
    */
   CancellablePromise<T> submit(@Nonnull Executor backgroundThreadExecutor);
+
+  @Nonnull
+  default CancellablePromise<T> submitDefault() {
+      return submit(NonUrgentExecutor.getInstance());
+  }
 
   /**
    * Run this computation on the current thread in a non-blocking read action, when possible.
