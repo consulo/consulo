@@ -47,7 +47,6 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Coordinate2D;
 import consulo.ui.Position2D;
 import consulo.ui.Size;
-import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
@@ -440,7 +439,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     @Override
     public void setAdText(@Nonnull final String s, int alignment) {
         if (myAdComponent == null) {
-            myAdComponent = HintUtil.createAdComponent(s, JBCurrentTheme.Advertiser.border(), alignment);
+            myAdComponent = HintUtil.createAdComponent(s, null, alignment);
             JPanel wrapper = new JPanel(new BorderLayout());
             wrapper.setOpaque(false);
             wrapper.add(myAdComponent, BorderLayout.CENTER);
