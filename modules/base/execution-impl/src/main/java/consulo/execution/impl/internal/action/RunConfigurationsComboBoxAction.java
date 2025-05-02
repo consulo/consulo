@@ -101,7 +101,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                     if (defaultRunImages.size() == 1) {
                         presentation.setIcon(ContainerUtil.getFirstItem(defaultRunImages));
                     } else {
-                        presentation.setIcon(null);
+                        presentation.setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
                     }
                 }
                 presentation.setEnabled(true);
@@ -137,7 +137,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         else {
             if (project != null) {
                 presentation.setTextValue(ExecutionLocalize.runConfigurationsComboRunCurrentFileSelected());
-                presentation.setIcon(null);
+                presentation.setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
                 return;
             }
 
