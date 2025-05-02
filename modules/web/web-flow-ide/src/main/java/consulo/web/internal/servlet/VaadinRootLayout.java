@@ -17,6 +17,7 @@ package consulo.web.internal.servlet;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.RouterLayout;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
@@ -28,41 +29,36 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 26/05/2023
  */
+@PreserveOnRefresh
 public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, FromVaadinComponentWrapper {
-  private UIWindowOverRouterLayout myUIWindow = new UIWindowOverRouterLayout(this);
+    private UIWindowOverRouterLayout myUIWindow = new UIWindowOverRouterLayout(this);
 
-  public VaadinRootLayout() {
-  }
+    @RequiredUIAccess
+    public VaadinRootLayout() {
+        UIServlet.RootUIInfo data = ComponentUtil.getData(UI.getCurrent(), UIServlet.RootUIInfo.class);
+        if (data == null) {
+            return;
+        }
 
-  public void update(Component newContent) {
-    removeAll();
+        Supplier<UIBuilder> builder = data.builder();
 
-    ((HasSize)newContent).setSizeFull();
+        UIBuilder uiBuilder = builder.get();
 
-    add(newContent);
-    setFlexGrow(1, newContent);
-  }
-
-  @Override
-  @RequiredUIAccess
-  protected void onAttach(AttachEvent attachEvent) {
-    super.onAttach(attachEvent);
-
-    UIServlet.RootUIInfo data = ComponentUtil.getData(UI.getCurrent(), UIServlet.RootUIInfo.class);
-    if (data == null) {
-      return;
+        uiBuilder.build(myUIWindow);
     }
 
-    Supplier<UIBuilder> builder = data.builder();
+    public void update(Component newContent) {
+        removeAll();
 
-    UIBuilder uiBuilder = builder.get();
+        ((HasSize) newContent).setSizeFull();
 
-    uiBuilder.build(myUIWindow);
-  }
+        add(newContent);
+        setFlexGrow(1, newContent);
+    }
 
-  @Nullable
-  @Override
-  public consulo.ui.Component toUIComponent() {
-    return myUIWindow;
-  }
+    @Nullable
+    @Override
+    public consulo.ui.Component toUIComponent() {
+        return myUIWindow;
+    }
 }

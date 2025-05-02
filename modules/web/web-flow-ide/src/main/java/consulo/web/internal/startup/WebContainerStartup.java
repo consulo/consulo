@@ -83,6 +83,7 @@ public class WebContainerStartup implements ContainerStartup {
 
     ServletContextHandler handler = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS | ServletContextHandler.SECURITY);
     handler.setClassLoader(getClass().getClassLoader());
+    handler.getSessionHandler().setMaxInactiveInterval(Integer.MAX_VALUE);
 
     List<URL> urls = new ArrayList<>();
     try {

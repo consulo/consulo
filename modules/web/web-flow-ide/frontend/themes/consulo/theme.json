@@ -1,4 +1,3 @@
 {
-  "lumoImports" : [ "typography", "color", "spacing", "badge", "utility" ],
-  "parent": "parity"
+  "lumoImports" : [ "typography", "color", "spacing", "badge", "utility" ]
 }

@@ -43,15 +43,14 @@
         <gwt.version>2.9.0</gwt.version>
         <servlet.version>5.0.0</servlet.version>
         <websocket.version>2.0.0</websocket.version>
-        <vaadin.version>8.12-SNAPSHOT</vaadin.version>
         <jaxb.version>4.0.0</jaxb.version>
         <jetty.version>11.0.15</jetty.version>
         <swt.version>3.120.0</swt.version>
         <flatlaf.version>3.6</flatlaf.version>
 
-        <vaadin.flow.version>24.5.2</vaadin.flow.version>
+        <vaadin.flow.version>24.7.3</vaadin.flow.version>
 
-        <jackson.version>2.14.2</jackson.version>
+        <jackson.version>2.19.0</jackson.version>
 
         <build.number>SNAPSHOT</build.number>
         <dev.mode>true</dev.mode>
@@ -721,11 +720,6 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>flow-data</artifactId>
                 <version>${vaadin.flow.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.vaadin.addons.parttio</groupId>
-                <artifactId>parity-theme</artifactId>
-                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>

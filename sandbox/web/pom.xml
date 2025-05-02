@@ -506,10 +506,6 @@
             <artifactId>ph-commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.vaadin.addons.parttio</groupId>
-            <artifactId>parity-theme</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-ordered-layout-flow</artifactId>
         </dependency>

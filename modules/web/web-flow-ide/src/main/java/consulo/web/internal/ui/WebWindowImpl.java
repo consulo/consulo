@@ -63,6 +63,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     vaadinComponent.setResizable(options.isResizable());
     vaadinComponent.setCloseOnEsc(false);
     vaadinComponent.setCloseOnOutsideClick(false);
+    vaadinComponent.setDraggable(true);
     if (options.isClosable()) {
       addCloseDialogButton(vaadinComponent);
     }

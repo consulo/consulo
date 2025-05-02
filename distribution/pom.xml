@@ -611,10 +611,6 @@
             <artifactId>ph-commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.vaadin.addons.parttio</groupId>
-            <artifactId>parity-theme</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.helger</groupId>
             <artifactId>ph-css</artifactId>
         </dependency>

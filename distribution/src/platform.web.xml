@@ -56,7 +56,6 @@
         <include>com.vaadin:vaadin-renderer-flow</include>
         <include>com.helger.commons:ph-commons</include>
         <include>com.helger:ph-css</include>
-        <include>org.vaadin.addons.parttio:parity-theme</include>
         <include>com.vaadin:vaadin-core-internal</include>
         <include>com.vaadin:vaadin-list-box-flow</include>
         <include>com.vaadin:vaadin-grid-flow</include>

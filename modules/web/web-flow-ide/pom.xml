@@ -99,10 +99,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.vaadin.addons.parttio</groupId>
-      <artifactId>parity-theme</artifactId>
-    </dependency>
-    <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
     </dependency>
