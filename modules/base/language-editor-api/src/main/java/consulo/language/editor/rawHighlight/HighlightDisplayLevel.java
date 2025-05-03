@@ -109,9 +109,9 @@ public class HighlightDisplayLevel {
         return mySeverity;
     }
 
-    public static void registerSeverity(@Nonnull HighlightSeverity severity, final TextAttributesKey key, @Nullable Image icon) {
+    public static void registerSeverity(@Nonnull HighlightSeverity severity, TextAttributesKey key, @Nullable Image icon) {
         Image severityIcon = icon != null ? icon : createBoxIcon(key);
-        final HighlightDisplayLevel level = ourMap.get(severity);
+        HighlightDisplayLevel level = ourMap.get(severity);
         if (level == null) {
             new HighlightDisplayLevel(severity, severityIcon);
         }
@@ -123,7 +123,7 @@ public class HighlightDisplayLevel {
     @Nonnull
     private static ColorValue buildColorValue(@Nonnull TextAttributesKey key) {
         return ColorValue.lazy(() -> {
-            final EditorColorsManager manager = EditorColorsManager.getInstance();
+            EditorColorsManager manager = EditorColorsManager.getInstance();
             TextAttributes attributes = manager.getGlobalScheme().getAttributes(key);
             ColorValue stripe = attributes.getErrorStripeColor();
             if (stripe != null) {
@@ -153,7 +153,7 @@ public class HighlightDisplayLevel {
     }
 
     @Nonnull
-    public static Image createIconByMask(final ColorValue renderColor) {
+    public static Image createIconByMask(ColorValue renderColor) {
         return ImageEffects.colorFilled(getEmptyIconDim(), getEmptyIconDim(), renderColor);
     }
 }

@@ -26,5 +26,5 @@ import jakarta.annotation.Nonnull;
 public interface HighlightVisitor {
     void visit(@Nonnull PsiElement element);
 
-    boolean analyze(@Nonnull PsiFile file, final boolean updateWholeFile, @Nonnull HighlightInfoHolder holder, @Nonnull Runnable action);
+    boolean analyze(@Nonnull PsiFile file, boolean updateWholeFile, @Nonnull HighlightInfoHolder holder, @Nonnull Runnable action);
 }

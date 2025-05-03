@@ -17,8 +17,8 @@ package consulo.language.editor.rawHighlight;
 
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.DeprecationUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.InspectionsBundle;
@@ -28,26 +28,17 @@ import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
-import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.WriteExternalException;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public interface HighlightInfoType {
-    @NonNls
     String UNUSED_SYMBOL_SHORT_NAME = "unused";
-    @NonNls
     String UNUSED_SYMBOL_DISPLAY_NAME = InspectionsBundle.message("inspection.dead.code.display.name");
     @Deprecated
-    @NonNls
     String UNUSED_SYMBOL_ID = "UnusedDeclaration";
 
     HighlightInfoType ERROR = new HighlightInfoTypeImpl(HighlightSeverity.ERROR, CodeInsightColors.ERRORS_ATTRIBUTES);
@@ -173,7 +164,7 @@ public interface HighlightInfoType {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -181,23 +172,16 @@ public interface HighlightInfoType {
                 return false;
             }
 
-            final HighlightInfoTypeImpl that = (HighlightInfoTypeImpl)o;
+            HighlightInfoTypeImpl that = (HighlightInfoTypeImpl)o;
 
-            if (!Comparing.equal(myAttributesKey, that.myAttributesKey)) {
-                return false;
-            }
-            if (!mySeverity.equals(that.mySeverity)) {
-                return false;
-            }
-
-            return true;
+            return Objects.equals(myAttributesKey, that.myAttributesKey)
+                && mySeverity.equals(that.mySeverity);
         }
 
         @Override
         public int hashCode() {
             int result = mySeverity.hashCode();
-            result = 29 * result + myAttributesKey.hashCode();
-            return result;
+            return 29 * result + myAttributesKey.hashCode();
         }
 
         @Override
@@ -219,7 +203,7 @@ public interface HighlightInfoType {
 
         @Override
         @Nonnull
-        public HighlightSeverity getSeverity(final PsiElement psiElement) {
+        public HighlightSeverity getSeverity(PsiElement psiElement) {
             InspectionProfile profile = psiElement == null
                 ? (InspectionProfile)InspectionProfileManager.getInstance().getRootProfile()
                 : InspectionProjectProfileManager.getInstance(psiElement.getProject()).getInspectionProfile();

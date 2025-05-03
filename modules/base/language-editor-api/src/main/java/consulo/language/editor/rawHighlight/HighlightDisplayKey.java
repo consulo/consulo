@@ -36,12 +36,12 @@ public class HighlightDisplayKey {
     private final String myName;
     private final String myID;
 
-    public static HighlightDisplayKey find(@Nonnull final String name) {
+    public static HighlightDisplayKey find(@Nonnull String name) {
         return ourNameToKeyMap.get(name);
     }
 
     @Nullable
-    public static HighlightDisplayKey findById(@Nonnull final String id) {
+    public static HighlightDisplayKey findById(@Nonnull String id) {
         HighlightDisplayKey key = ourIdToKeyMap.get(id);
         if (key != null) {
             return key;
@@ -54,7 +54,7 @@ public class HighlightDisplayKey {
     }
 
     @Nullable
-    public static HighlightDisplayKey register(@Nonnull final String name) {
+    public static HighlightDisplayKey register(@Nonnull String name) {
         if (find(name) != null) {
             LOG.info("Key with name \'" + name + "\' already registered");
             return null;
@@ -66,12 +66,12 @@ public class HighlightDisplayKey {
      * @see #register(String, Supplier)
      */
     @Nullable
-    public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull final String displayName) {
+    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull String displayName) {
         return register(name, displayName, name);
     }
 
     @Nullable
-    public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull Supplier<String> displayName) {
+    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull Supplier<String> displayName) {
         return register(name, displayName, name);
     }
 
@@ -80,16 +80,12 @@ public class HighlightDisplayKey {
      * @see #register(String, Supplier, String)
      */
     @Nullable
-    public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull final String displayName, @Nonnull final String id) {
+    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull String displayName, @Nonnull String id) {
         return register(name, () -> displayName, id);
     }
 
     @Nullable
-    public static HighlightDisplayKey register(
-        @Nonnull final String name,
-        @Nonnull final Supplier<String> displayName,
-        @Nonnull final String id
-    ) {
+    public static HighlightDisplayKey register(@Nonnull String name, @Nonnull Supplier<String> displayName, @Nonnull String id) {
         if (find(name) != null) {
             LOG.info("Key with name \'" + name + "\' already registered");
             return null;
@@ -101,12 +97,12 @@ public class HighlightDisplayKey {
 
     @Nullable
     public static HighlightDisplayKey register(
-        @Nonnull final String name,
-        @Nonnull final Supplier<String> displayName,
-        @Nonnull final String id,
-        @Nullable final String alternativeID
+        @Nonnull String name,
+        @Nonnull Supplier<String> displayName,
+        @Nonnull String id,
+        @Nullable String alternativeID
     ) {
-        final HighlightDisplayKey key = register(name, displayName, id);
+        HighlightDisplayKey key = register(name, displayName, id);
         if (alternativeID != null) {
             ourKeyToAlternativeIDMap.put(key, alternativeID);
         }
@@ -114,16 +110,12 @@ public class HighlightDisplayKey {
     }
 
     @Nonnull
-    public static HighlightDisplayKey findOrRegister(@Nonnull String name, @Nonnull final String displayName) {
+    public static HighlightDisplayKey findOrRegister(@Nonnull String name, @Nonnull String displayName) {
         return findOrRegister(name, displayName, null);
     }
 
     @Nonnull
-    public static HighlightDisplayKey findOrRegister(
-        @Nonnull final String name,
-        @Nonnull final String displayName,
-        @Nullable final String id
-    ) {
+    public static HighlightDisplayKey findOrRegister(@Nonnull String name, @Nonnull String displayName, @Nullable String id) {
         HighlightDisplayKey key = find(name);
         if (key == null) {
             key = register(name, displayName, id != null ? id : name);
@@ -138,7 +130,7 @@ public class HighlightDisplayKey {
             return null;
         }
         else {
-            final Supplier<String> computable = ourKeyToDisplayNameMap.get(key);
+            Supplier<String> computable = ourKeyToDisplayNameMap.get(key);
             return computable == null ? null : computable.get();
         }
     }
@@ -148,11 +140,11 @@ public class HighlightDisplayKey {
     }
 
 
-    private HighlightDisplayKey(@Nonnull final String name) {
+    private HighlightDisplayKey(@Nonnull String name) {
         this(name, name);
     }
 
-    public HighlightDisplayKey(@Nonnull final String name, @Nonnull final String ID) {
+    public HighlightDisplayKey(@Nonnull String name, @Nonnull String ID) {
         myName = name;
         myID = ID;
         ourNameToKeyMap.put(myName, this);

@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.impl.internal.rawHighlight;
 
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterColors;
@@ -36,6 +35,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -50,10 +51,7 @@ import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -106,6 +104,7 @@ public class HighlightInfoImpl implements HighlightInfo {
 
     final int navigationShift;
     public JComponent fileLevelComponent;
+
     /**
      * null means it the same as highlighter
      */
@@ -119,8 +118,7 @@ public class HighlightInfoImpl implements HighlightInfo {
      */
     @Nullable
     public static HighlightInfoImpl fromRangeHighlighter(@Nonnull RangeHighlighter highlighter) {
-        Object errorStripeTooltip = highlighter.getErrorStripeTooltip();
-        return errorStripeTooltip instanceof HighlightInfoImpl ? (HighlightInfoImpl)errorStripeTooltip : null;
+        return highlighter.getErrorStripeTooltip() instanceof HighlightInfoImpl highlightInfo ? highlightInfo : null;
     }
 
     @Nonnull
@@ -132,6 +130,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         setFlag(FROM_INJECTION_MASK, fromInjection);
     }
 
+    @Override
     public PsiElement getPsiElement() {
         return psiElement;
     }
@@ -141,6 +140,7 @@ public class HighlightInfoImpl implements HighlightInfo {
     }
 
     @Nullable
+    @Override
     public String getToolTip() {
         String toolTip = this.toolTip;
         String description = this.description;
@@ -178,12 +178,13 @@ public class HighlightInfoImpl implements HighlightInfo {
         return XmlStringUtil.stripHtml(encoded);
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
-    @Override
     @Nonnull
+    @Override
     public HighlightInfoType getType() {
         return type;
     }
@@ -213,12 +214,13 @@ public class HighlightInfoImpl implements HighlightInfo {
         setFlag(BIJECTIVE_MASK, bijective);
     }
 
-    @Override
     @Nonnull
+    @Override
     public HighlightSeverity getSeverity() {
         return severity;
     }
 
+    @Override
     public RangeHighlighterEx getHighlighter() {
         return highlighter;
     }
@@ -226,8 +228,9 @@ public class HighlightInfoImpl implements HighlightInfo {
     /**
      * Modified only in EDT.
      */
+    @RequiredUIAccess
     public void setHighlighter(@Nullable RangeHighlighterEx highlighter) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         this.highlighter = highlighter;
     }
 
@@ -236,6 +239,7 @@ public class HighlightInfoImpl implements HighlightInfo {
     }
 
     @Nullable
+    @Override
     public TextAttributes getTextAttributes(@Nullable PsiElement element, @Nullable EditorColorsScheme editorColorsScheme) {
         if (forcedTextAttributes != null) {
             return forcedTextAttributes;
@@ -357,46 +361,38 @@ public class HighlightInfoImpl implements HighlightInfo {
 
     private static boolean calcNeedUpdateOnTyping(@Nullable Boolean needsUpdateOnTyping, HighlightInfoType type) {
         if (needsUpdateOnTyping != null) {
-            return needsUpdateOnTyping.booleanValue();
+            return needsUpdateOnTyping;
         }
-        if (type instanceof HighlightInfoType.UpdateOnTypingSuppressible) {
-            return ((HighlightInfoType.UpdateOnTypingSuppressible)type).needsUpdateOnTyping();
+        //noinspection SimplifiableIfStatement
+        if (type instanceof HighlightInfoType.UpdateOnTypingSuppressible updateOnTypingSuppressible) {
+            return updateOnTypingSuppressible.needsUpdateOnTyping();
         }
         return true;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof HighlightInfoImpl)) {
-            return false;
-        }
-        HighlightInfoImpl info = (HighlightInfoImpl)obj;
-
-        return info.getSeverity() == getSeverity()
-            && info.startOffset == startOffset
-            && info.endOffset == endOffset
-            && Comparing.equal(info.type, type)
-            && Comparing.equal(info.gutterIconRenderer, gutterIconRenderer)
-            && Comparing.equal(info.forcedTextAttributes, forcedTextAttributes)
-            && Comparing.equal(info.forcedTextAttributesKey, forcedTextAttributesKey)
-            && Comparing.strEqual(info.getDescription(), getDescription());
+        return obj == this
+            || obj instanceof HighlightInfoImpl that
+            && that.getSeverity() == getSeverity()
+            && that.startOffset == startOffset
+            && that.endOffset == endOffset
+            && Objects.equals(that.type, type)
+            && Objects.equals(that.gutterIconRenderer, gutterIconRenderer)
+            && Objects.equals(that.forcedTextAttributes, forcedTextAttributes)
+            && Objects.equals(that.forcedTextAttributesKey, forcedTextAttributesKey)
+            && Comparing.strEqual(that.getDescription(), getDescription());
     }
 
     public boolean equalsByActualOffset(@Nonnull HighlightInfoImpl info) {
-        if (info == this) {
-            return true;
-        }
-
-        return info.getSeverity() == getSeverity()
+        return info == this
+            || info.getSeverity() == getSeverity()
             && info.getActualStartOffset() == getActualStartOffset()
             && info.getActualEndOffset() == getActualEndOffset()
-            && Comparing.equal(info.type, type)
-            && Comparing.equal(info.gutterIconRenderer, gutterIconRenderer)
-            && Comparing.equal(info.forcedTextAttributes, forcedTextAttributes)
-            && Comparing.equal(info.forcedTextAttributesKey, forcedTextAttributesKey)
+            && Objects.equals(info.type, type)
+            && Objects.equals(info.gutterIconRenderer, gutterIconRenderer)
+            && Objects.equals(info.forcedTextAttributes, forcedTextAttributes)
+            && Objects.equals(info.forcedTextAttributesKey, forcedTextAttributesKey)
             && Comparing.strEqual(info.getDescription(), getDescription());
     }
 
@@ -448,6 +444,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         return true;
     }
 
+    @Override
     public GutterMark getGutterIconRenderer() {
         return gutterIconRenderer;
     }
@@ -640,18 +637,18 @@ public class HighlightInfoImpl implements HighlightInfo {
                     toolWrapper = profile.getInspectionTool(idKey.toString(), element);
                 }
             }
-            if (toolWrapper != null) {
 
+            if (toolWrapper != null) {
                 myCanCleanup = toolWrapper.isCleanupTool();
 
                 IntentionAction fixAllIntention = intentionManager.createFixAllIntention(toolWrapper, myAction);
-                InspectionTool wrappedTool =
-                    toolWrapper instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)toolWrapper).getTool() : ((GlobalInspectionToolWrapper)toolWrapper)
-                        .getTool();
+                InspectionTool wrappedTool = toolWrapper instanceof LocalInspectionToolWrapper localInspectionToolWrapper
+                    ? localInspectionToolWrapper.getTool()
+                    : ((GlobalInspectionToolWrapper)toolWrapper).getTool();
                 if (wrappedTool instanceof AnnotatorBasedInspection) {
                     List<IntentionAction> actions = Collections.emptyList();
-                    if (myProblemGroup instanceof SuppressableProblemGroup) {
-                        actions = Arrays.asList(((SuppressableProblemGroup)myProblemGroup).getSuppressActions(element));
+                    if (myProblemGroup instanceof SuppressableProblemGroup suppressableProblemGroup) {
+                        actions = Arrays.asList(suppressableProblemGroup.getSuppressActions(element));
                     }
                     if (fixAllIntention != null) {
                         if (actions.isEmpty()) {
@@ -665,8 +662,8 @@ public class HighlightInfoImpl implements HighlightInfo {
                     return actions;
                 }
                 ContainerUtil.addIfNotNull(newOptions, fixAllIntention);
-                if (wrappedTool instanceof CustomSuppressableInspectionTool) {
-                    IntentionAction[] suppressActions = ((CustomSuppressableInspectionTool)wrappedTool).getSuppressActions(element);
+                if (wrappedTool instanceof CustomSuppressableInspectionTool customSuppressableInspectionTool) {
+                    IntentionAction[] suppressActions = customSuppressableInspectionTool.getSuppressActions(element);
                     if (suppressActions != null) {
                         ContainerUtil.addAll(newOptions, suppressActions);
                     }
@@ -682,8 +679,8 @@ public class HighlightInfoImpl implements HighlightInfo {
                 }
 
             }
-            if (myProblemGroup instanceof SuppressableProblemGroup) {
-                IntentionAction[] suppressActions = ((SuppressableProblemGroup)myProblemGroup).getSuppressActions(element);
+            if (myProblemGroup instanceof SuppressableProblemGroup suppressableProblemGroup) {
+                IntentionAction[] suppressActions = suppressableProblemGroup.getSuppressActions(element);
                 ContainerUtil.addAll(newOptions, suppressActions);
             }
 
@@ -717,7 +714,7 @@ public class HighlightInfoImpl implements HighlightInfo {
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof IntentionActionDescriptor && myAction.equals(((IntentionActionDescriptor)obj).myAction);
+            return obj instanceof IntentionActionDescriptor descriptor && myAction.equals(descriptor.myAction);
         }
     }
 

@@ -133,8 +133,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
     @RequiredReadAction
     private static HighlightInfo createErrorElementInfo(@Nonnull PsiErrorElement element) {
         HighlightInfo.Builder builder = createInfoWithoutFixes(element);
-        element.getProject()
-            .getExtensionPoint(ErrorQuickFixProvider.class)
+        element.getProject().getExtensionPoint(ErrorQuickFixProvider.class)
             .forEach(it -> it.registerErrorQuickFix(element, builder));
 
         return builder.createUnconditionally();

@@ -15,11 +15,11 @@
  */
 package consulo.language.editor.rawHighlight;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.util.UsedColors;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.util.dataholder.UserDataHolderEx;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -59,13 +59,14 @@ public abstract class RainbowVisitor implements HighlightVisitor {
         myHolder.add(highlightInfo);
     }
 
+    @RequiredReadAction
     protected HighlightInfo getInfo(
-        @Nonnull final PsiElement context,
-        @Nonnull final PsiElement rainbowElement,
-        @Nonnull final String name,
-        @Nullable final TextAttributesKey colorKey
+        @Nonnull PsiElement context,
+        @Nonnull PsiElement rainbowElement,
+        @Nonnull String name,
+        @Nullable TextAttributesKey colorKey
     ) {
-        int colorIndex = UsedColors.getOrAddColorIndex((UserDataHolderEx)context, name, getHighlighter().getColorsCount());
+        int colorIndex = UsedColors.getOrAddColorIndex(context, name, getHighlighter().getColorsCount());
         return getHighlighter().getInfo(colorIndex, rainbowElement, colorKey);
     }
 }

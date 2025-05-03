@@ -25,7 +25,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 11/10/2022
+ * @since 2022-10-11
  */
 public class SeverityRegistrarUtil {
     public static TextAttributes getAttributesByType(

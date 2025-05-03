@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.rawHighlight;
 
+import consulo.application.Application;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
@@ -28,20 +29,20 @@ import java.util.Comparator;
 
 /**
  * @author VISTALL
- * @since 13-Feb-22
+ * @since 2022-02-13
  */
 public interface SeverityRegistrar extends Comparator<HighlightSeverity> {
     @Nonnull
     public static SeverityRegistrar getSeverityRegistrar(@Nullable Project project) {
         return project == null
-            ? InspectionProfileManager.getInstance().getSeverityRegistrar()
+            ? Application.get().getInstance(InspectionProfileManager.class).getSeverityRegistrar()
             : InspectionProjectProfileManager.getInstance(project).getSeverityRegistrar();
     }
 
     int getSeveritiesCount();
 
     @Nullable
-    HighlightSeverity getSeverityByIndex(final int i);
+    HighlightSeverity getSeverityByIndex(int i);
 
     @Nullable
     TextAttributes getTextAttributesBySeverity(@Nonnull HighlightSeverity severity);

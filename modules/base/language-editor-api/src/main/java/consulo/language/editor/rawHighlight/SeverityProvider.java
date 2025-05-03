@@ -16,8 +16,8 @@
 package consulo.language.editor.rawHighlight;
 
 /**
- * User: anna
- * Date: 31-Jul-2007
+ * @author anna
+ * @since 2007-07-31
  */
 public interface SeverityProvider {
     SeverityRegistrar getSeverityRegistrar();

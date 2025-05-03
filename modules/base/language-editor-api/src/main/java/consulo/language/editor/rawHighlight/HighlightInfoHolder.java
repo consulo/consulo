@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.rawHighlight;
 
+import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributesScheme;
 import consulo.language.editor.annotation.AnnotationSession;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -106,7 +107,7 @@ public class HighlightInfoHolder {
 
     @Nonnull
     public TextAttributesScheme getColorsScheme() {
-        return key -> key.getDefaultAttributes();
+        return TextAttributesKey::getDefaultAttributes;
     }
 
     // internal optimization method to reduce latency between creating HighlightInfo and showing it on screen

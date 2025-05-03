@@ -42,7 +42,7 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 13-Feb-22
+ * @since 2022-02-13
  */
 public interface HighlightInfo extends Segment {
     public interface Builder {
@@ -156,8 +156,7 @@ public interface HighlightInfo extends Segment {
 
     @Nullable
     static HighlightInfo fromRangeHighlighter(@Nonnull RangeHighlighter highlighter) {
-        Object errorStripeTooltip = highlighter.getErrorStripeTooltip();
-        return errorStripeTooltip instanceof HighlightInfo ? (HighlightInfo)errorStripeTooltip : null;
+        return highlighter.getErrorStripeTooltip() instanceof HighlightInfo highlightInfo ? highlightInfo : null;
     }
 
     @Nonnull

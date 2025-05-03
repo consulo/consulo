@@ -23,7 +23,7 @@ import consulo.annotation.component.TopicBroadcastDirection;
  * FIXME [VISTALL] this topic is app&project level
  *
  * @author VISTALL
- * @since 29-Jun-22
+ * @since 2022-06-29
  */
 @TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.TO_PARENT)
 public interface SeverityRegistrarChangeListener {

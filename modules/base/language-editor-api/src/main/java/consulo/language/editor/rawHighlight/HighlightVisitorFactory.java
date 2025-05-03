@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 25/03/2023
+ * @since 2023-03-25
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface HighlightVisitorFactory {

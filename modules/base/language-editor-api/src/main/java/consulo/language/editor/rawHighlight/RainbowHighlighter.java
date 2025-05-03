@@ -15,14 +15,15 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributesScheme;
 import consulo.language.Language;
-import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.util.ColorGenerator;
 import consulo.language.psi.PsiElement;
@@ -32,10 +33,9 @@ import consulo.ui.util.ColorValueUtil;
 import consulo.ui.util.LightDarkColorValue;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
 import java.util.List;
@@ -151,11 +151,11 @@ public class RainbowHighlighter {
 
     @Nonnull
     private static ColorValue[] generateColorSequence(@Nonnull TextAttributesScheme colorsScheme) {
-        String colorDump = ApplicationManager.getApplication().isUnitTestMode()
+        String colorDump = Application.get().isUnitTestMode()
             ? UNIT_TEST_COLORS
             : Registry.get("rainbow.highlighter.colors").asString();
 
-        final List<String> registryColors = StringUtil.split(colorDump, ",");
+        List<String> registryColors = StringUtil.split(colorDump, ",");
         if (!registryColors.isEmpty()) {
             return registryColors.stream().map(s -> ColorValueUtil.fromHex(s.trim())).toArray(ColorValue[]::new);
         }
@@ -181,6 +181,7 @@ public class RainbowHighlighter {
         return key.getExternalName().startsWith(RAINBOW_TEMP_PREF);
     }
 
+    @RequiredReadAction
     public HighlightInfo getInfo(int colorIndex, @Nullable PsiElement id, @Nullable TextAttributesKey colorKey) {
         return id == null ? null : getInfoBuilder(colorIndex, colorKey).range(id).create();
     }
@@ -212,12 +213,12 @@ public class RainbowHighlighter {
     }
 
     public static Map<String, TextAttributesKey> createRainbowHLM() {
-        Map<String, TextAttributesKey> hashMap = new HashMap<>();
-        hashMap.put(RAINBOW_ANCHOR.getExternalName(), RAINBOW_ANCHOR);
-        hashMap.put(RAINBOW_GRADIENT_DEMO.getExternalName(), RAINBOW_GRADIENT_DEMO);
+        Map<String, TextAttributesKey> map = new HashMap<>();
+        map.put(RAINBOW_ANCHOR.getExternalName(), RAINBOW_ANCHOR);
+        map.put(RAINBOW_GRADIENT_DEMO.getExternalName(), RAINBOW_GRADIENT_DEMO);
         for (TextAttributesKey key : RAINBOW_TEMP_KEYS) {
-            hashMap.put(key.getExternalName(), key);
+            map.put(key.getExternalName(), key);
         }
-        return hashMap;
+        return map;
     }
 }
