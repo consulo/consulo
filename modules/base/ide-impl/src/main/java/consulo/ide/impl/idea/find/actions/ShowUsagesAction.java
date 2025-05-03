@@ -515,15 +515,18 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         @Nonnull final FindUsagesOptions options,
         boolean isWarning
     ) {
-        JComponent label = HintUtil.createInformationLabel(suggestSecondInvocation(options, handler, text + "&nbsp;"));
+        JComponent label = HintUtil.createInformationLabel(suggestSecondInvocation(options, handler, text));
+        label.setBorder(JBUI.Borders.emptyTop(4));
         if (isWarning) {
             label.setBackground(MessageType.WARNING.getPopupBackground());
         }
         AnAction settingAction = createSettingsAction(handler, popupPosition, editor, maxUsages, cancelAction);
 
-        ActionToolbar hintToolbar = ActionManager.getInstance().createActionToolbar("HintToolbar", ActionGroup.newImmutableBuilder().add(settingAction).build(), true);
+        ActionToolbar hintToolbar = ActionToolbarFactory.getInstance().createActionToolbar("HintToolbar",
+            ActionGroup.of(settingAction),
+            ActionToolbar.Style.INPLACE
+        );
         hintToolbar.setTargetComponent(null);
-        hintToolbar.setMiniMode(true);
 
         JPanel panel = new JPanel(new BorderLayout()) {
             @Override
@@ -540,10 +543,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         };
         panel.setBackground(label.getBackground());
         label.setOpaque(false);
-        label.setBorder(null);
-        panel.setBorder(HintUtil.createHintBorder());
         panel.add(label, BorderLayout.CENTER);
-        panel.add(hintToolbar.getComponent(), BorderLayout.EAST);
         panel.add(hintToolbar.getComponent(), BorderLayout.EAST);
         return panel;
     }

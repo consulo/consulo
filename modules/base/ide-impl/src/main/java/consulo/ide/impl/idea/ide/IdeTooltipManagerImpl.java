@@ -678,7 +678,6 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
         if (b != null) {
           JBInsets.addTo(s, b.getBorderInsets(this));
         }
-        JBInsets.addTo(s, new JBInsets(0, 0, 0, 4)); // TODO idk why - html not extended fully
         return s;
       }
 
@@ -700,7 +699,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
       setColors(pane);
     }
     else {
-      pane.setBorder(null);
+      pane.setBorder(JBUI.Borders.emptyRight(4));
     }
 
     if (!hintHint.isAwtTooltip()) {

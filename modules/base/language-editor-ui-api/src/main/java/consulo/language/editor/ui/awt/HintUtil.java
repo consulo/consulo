@@ -319,6 +319,10 @@ public class HintUtil {
         remove(myIcon);
       }
 
+      if (icon == null) {
+        return;
+      }
+
       myIcon = new JLabel(icon, SwingConstants.CENTER);
       myIcon.setVerticalAlignment(SwingConstants.TOP);
 
