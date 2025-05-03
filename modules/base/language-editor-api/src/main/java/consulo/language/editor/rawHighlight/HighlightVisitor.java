@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.rawHighlight;
 
 import consulo.language.psi.PsiElement;
@@ -25,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * @see HighlightVisitorFactory
  */
 public interface HighlightVisitor {
-  void visit(@Nonnull PsiElement element);
+    void visit(@Nonnull PsiElement element);
 
-  boolean analyze(@Nonnull PsiFile file, final boolean updateWholeFile, @Nonnull HighlightInfoHolder holder, @Nonnull Runnable action);
+    boolean analyze(@Nonnull PsiFile file, boolean updateWholeFile, @Nonnull HighlightInfoHolder holder, @Nonnull Runnable action);
 }

@@ -24,79 +24,85 @@ import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
 public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
-  private final HighlightInfoHolder myHolder;
-  private PsiElement myLevel;
+    private final HighlightInfoHolder myHolder;
+    private PsiElement myLevel;
 
-  public CheckLevelHighlightInfoHolder(@Nonnull PsiFile file, @Nonnull HighlightInfoHolder holder) {
-    super(file, List.of());
-    myHolder = holder;
-  }
-
-  @Nonnull
-  @Override
-  public TextAttributesScheme getColorsScheme() {
-    return myHolder.getColorsScheme();
-  }
-
-  @Nonnull
-  @Override
-  public PsiFile getContextFile() {
-    return myHolder.getContextFile();
-  }
-
-  @Nonnull
-  @Override
-  public Project getProject() {
-    return myHolder.getProject();
-  }
-
-  @Override
-  public boolean hasErrorResults() {
-    return myHolder.hasErrorResults();
-  }
-
-  @Override
-  public boolean add(@Nullable HighlightInfo info) {
-    if (info == null) return false;
-    PsiElement psiElement = info.getPsiElement();
-    if (psiElement != null && !PsiTreeUtil.isAncestor(myLevel, psiElement, false)) {
-      throw new RuntimeException("Info: '" + info + "' reported for the element '" + psiElement + "'; but it was at the level " + myLevel);
+    public CheckLevelHighlightInfoHolder(@Nonnull PsiFile file, @Nonnull HighlightInfoHolder holder) {
+        super(file, List.of());
+        myHolder = holder;
     }
-    return myHolder.add(info);
-  }
 
-  @Override
-  public void clear() {
-    myHolder.clear();
-  }
+    @Nonnull
+    @Override
+    public TextAttributesScheme getColorsScheme() {
+        return myHolder.getColorsScheme();
+    }
 
-  @Override
-  public boolean addAll(@Nonnull Collection<? extends HighlightInfo> highlightInfos) {
-    return myHolder.addAll(highlightInfos);
-  }
+    @Nonnull
+    @Override
+    public PsiFile getContextFile() {
+        return myHolder.getContextFile();
+    }
 
-  @Override
-  public int size() {
-    return myHolder.size();
-  }
+    @Nonnull
+    @Override
+    public Project getProject() {
+        return myHolder.getProject();
+    }
 
-  @Nonnull
-  @Override
-  public HighlightInfo get(int i) {
-    return myHolder.get(i);
-  }
+    @Override
+    public boolean hasErrorResults() {
+        return myHolder.hasErrorResults();
+    }
 
-  @Nonnull
-  @Override
-  public AnnotationSession getAnnotationSession() {
-    return myHolder.getAnnotationSession();
-  }
+    @Override
+    public boolean add(@Nullable HighlightInfo info) {
+        if (info == null) {
+            return false;
+        }
+        PsiElement psiElement = info.getPsiElement();
+        if (psiElement != null && !PsiTreeUtil.isAncestor(myLevel, psiElement, false)) {
+            throw new RuntimeException(
+                "Info: '" + info + "' reported for the element '" + psiElement + "';" +
+                    " but it was at the level " + myLevel
+            );
+        }
+        return myHolder.add(info);
+    }
 
-  public void enterLevel(PsiElement element) {
-    myLevel = element;
-  }
+    @Override
+    public void clear() {
+        myHolder.clear();
+    }
+
+    @Override
+    public boolean addAll(@Nonnull Collection<? extends HighlightInfo> highlightInfos) {
+        return myHolder.addAll(highlightInfos);
+    }
+
+    @Override
+    public int size() {
+        return myHolder.size();
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo get(int i) {
+        return myHolder.get(i);
+    }
+
+    @Nonnull
+    @Override
+    public AnnotationSession getAnnotationSession() {
+        return myHolder.getAnnotationSession();
+    }
+
+    public void enterLevel(PsiElement element) {
+        myLevel = element;
+    }
 }
