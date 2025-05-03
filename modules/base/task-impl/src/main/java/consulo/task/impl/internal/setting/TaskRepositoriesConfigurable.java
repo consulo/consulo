@@ -274,7 +274,10 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
   @RequiredUIAccess
   public void disposeUIResources() {
     for (TaskRepositoryEditor editor : myEditors) {
-      Disposer.dispose(editor);
+      if (!Disposer.isDisposed(editor)) {
+        editor.disposeWithTree();
+      }
     }
+    myEditors.clear();
   }
 }
