@@ -22,19 +22,8 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.localize.UILocalize;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import jakarta.annotation.Nonnull;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -46,28 +35,10 @@ public final class HierarchyBrowserManager implements PersistentStateComponent<H
         public boolean IS_AUTOSCROLL_TO_SOURCE;
         public boolean SORT_ALPHABETICALLY;
         public boolean HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED;
-        @Nonnull
         public String SCOPE;
     }
 
     private State myState = new State();
-
-    private final ContentManager myContentManager;
-
-    @Inject
-    @RequiredUIAccess
-    public HierarchyBrowserManager(Project project) {
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.HIERARCHY, true, ToolWindowAnchor.RIGHT, project);
-        toolWindow.setDisplayName(UILocalize.toolWindowNameHierarchy());
-        toolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowhierarchy());
-        myContentManager = toolWindow.getContentManager();
-        new ContentManagerWatcher(toolWindow, myContentManager);
-    }
-
-    public final ContentManager getContentManager() {
-        return myContentManager;
-    }
 
     @Override
     public State getState() {
@@ -80,6 +51,6 @@ public final class HierarchyBrowserManager implements PersistentStateComponent<H
     }
 
     public static HierarchyBrowserManager getInstance(Project project) {
-        return ServiceManager.getService(project, HierarchyBrowserManager.class);
+        return project.getInstance(HierarchyBrowserManager.class);
     }
 }

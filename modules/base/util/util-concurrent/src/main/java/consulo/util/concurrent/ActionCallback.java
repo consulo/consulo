@@ -70,10 +70,6 @@ public class ActionCallback {
     }
 
     public void setDone() {
-        if (isProcessed()) {
-            LOG.warn("can't change state after set state", new UnsupportedOperationException());
-        }
-
         if (myDone.setExecuted()) {
             myRejected.clear();
             freeResources();

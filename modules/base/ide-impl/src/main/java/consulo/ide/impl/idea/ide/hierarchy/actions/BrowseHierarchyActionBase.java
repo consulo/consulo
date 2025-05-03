@@ -23,7 +23,6 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserManager;
 import consulo.language.editor.hierarchy.HierarchyBrowser;
 import consulo.language.editor.hierarchy.HierarchyProvider;
 import consulo.language.extension.ByLanguageValue;
@@ -42,13 +41,14 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author yole
@@ -86,41 +86,48 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
         if (target == null) {
             return;
         }
-        createAndAddToPanel(project, provider, target);
+
+        createAndAddToPanel(project, provider, target, hierarchyBrowser -> {
+        });
     }
 
     @RequiredUIAccess
-    public static HierarchyBrowser createAndAddToPanel(
+    public static void createAndAddToPanel(
         @Nonnull Project project,
         @Nonnull HierarchyProvider provider,
-        @Nonnull PsiElement target
-    ) {
+        @Nonnull PsiElement target,
+        @Nonnull Consumer<HierarchyBrowser> afterInit
+        ) {
         HierarchyBrowser hierarchyBrowser = provider.createHierarchyBrowser(target);
 
-        Content content;
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.HIERARCHY);
 
-        HierarchyBrowserManager hierarchyBrowserManager = HierarchyBrowserManager.getInstance(project);
+        assert toolWindow != null;
 
-        ContentManager contentManager = hierarchyBrowserManager.getContentManager();
-        Content selectedContent = contentManager.getSelectedContent();
-        if (selectedContent != null && !selectedContent.isPinned()) {
-            content = selectedContent;
-            Component component = content.getComponent();
-            if (component instanceof Disposable disposable) {
-                Disposer.dispose(disposable);
+        toolWindow.activate(() -> {
+            ContentManager contentManager = toolWindow.getContentManager();
+            Content selectedContent = contentManager.getSelectedContent();
+            Content content;
+
+            if (selectedContent != null && !selectedContent.isPinned()) {
+                content = selectedContent;
+                Component component = content.getComponent();
+                if (component instanceof Disposable disposable) {
+                    Disposer.dispose(disposable);
+                }
+                content.setComponent(hierarchyBrowser.getComponent());
             }
-            content.setComponent(hierarchyBrowser.getComponent());
-        }
-        else {
-            content = ContentFactory.getInstance().createContent(hierarchyBrowser.getComponent(), null, true);
-            contentManager.addContent(content);
-        }
-        contentManager.setSelectedContent(content);
-        hierarchyBrowser.setContent(content);
+            else {
+                content = ContentFactory.getInstance().createContent(hierarchyBrowser.getComponent(), null, true);
+                contentManager.addContent(content);
+            }
+            contentManager.setSelectedContent(content);
+            hierarchyBrowser.setContent(content);
 
-        Runnable runnable = () -> provider.browserActivated(hierarchyBrowser);
-        ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.HIERARCHY).activate(runnable);
-        return hierarchyBrowser;
+            toolWindow.activate(() -> provider.browserActivated(hierarchyBrowser));
+
+            afterInit.accept(hierarchyBrowser);
+        });
     }
 
     @Override

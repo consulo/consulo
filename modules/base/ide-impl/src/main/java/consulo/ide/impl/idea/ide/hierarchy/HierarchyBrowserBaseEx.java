@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.scope.NamedScope;
@@ -32,16 +31,16 @@ import consulo.ide.impl.idea.ide.hierarchy.scope.*;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
 import consulo.ide.localize.IdeLocalize;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ui.view.tree.ApplicationFileColorManager;
 import consulo.language.editor.PsiCopyPasteManager;
-import consulo.language.editor.hierarchy.HierarchyBrowser;
 import consulo.language.editor.hierarchy.HierarchyProvider;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.ApplicationFileColorManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.OccurenceNavigator;
@@ -617,7 +616,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         @RequiredUIAccess
         public final void actionPerformed(@Nonnull AnActionEvent event) {
             DataContext dataContext = event.getDataContext();
-            HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx)dataContext.getData(myBrowserDataKey);
+            HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx) dataContext.getData(myBrowserDataKey);
             if (browser == null) {
                 return;
             }
@@ -635,9 +634,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
                 selectedElement.getContainingFile(),
                 event.getDataContext()
             );
-            HierarchyBrowser newBrowser =
-                BrowseHierarchyActionBase.createAndAddToPanel(selectedElement.getProject(), provider, selectedElement);
-            Application.get().invokeLater(() -> ((HierarchyBrowserBaseEx)newBrowser).changeView(correctViewType(browser, currentViewType)));
+
+            UIAccess uiAccess = UIAccess.current();
+
+            BrowseHierarchyActionBase.createAndAddToPanel(selectedElement.getProject(), provider, selectedElement, b -> {
+                uiAccess.give(() -> ((HierarchyBrowserBaseEx) b).changeView(correctViewType(browser, currentViewType)));
+            });
         }
 
         protected String correctViewType(HierarchyBrowserBaseEx browser, String viewType) {
@@ -652,7 +654,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             registerCustomShortcutSet(ActionManager.getInstance().getAction(myActionId).getShortcutSet(), null);
 
             DataContext dataContext = event.getDataContext();
-            HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx)dataContext.getData(myBrowserDataKey);
+            HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx) dataContext.getData(myBrowserDataKey);
             if (browser == null) {
                 presentation.setVisible(false);
                 presentation.setEnabled(false);
