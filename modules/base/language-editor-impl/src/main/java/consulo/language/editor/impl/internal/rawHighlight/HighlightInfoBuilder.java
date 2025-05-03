@@ -41,256 +41,266 @@ import java.util.List;
  * @since 2024-03-09
  */
 class HighlightInfoBuilder implements HighlightInfo.Builder {
-  private static final Logger LOG = Logger.getInstance(HighlightInfoBuilder.class);
+    private static final Logger LOG = Logger.getInstance(HighlightInfoBuilder.class);
 
-  private record FixInfo(@Nonnull IntentionAction action,
-                         @Nullable List<IntentionAction> options,
-                         @Nullable String displayName,
-                         @Nullable TextRange fixRange,
-                         @Nullable HighlightDisplayKey key) {
-  }
-
-  private Boolean myNeedsUpdateOnTyping;
-  private TextAttributes forcedTextAttributes;
-  private TextAttributesKey forcedTextAttributesKey;
-
-  private final HighlightInfoType type;
-  private int startOffset = -1;
-  private int endOffset = -1;
-
-  private String escapedDescription;
-  private String escapedToolTip;
-  private HighlightSeverity severity;
-
-  private boolean isAfterEndOfLine;
-  private boolean isFileLevelAnnotation;
-  private int navigationShift;
-
-  private GutterIconRenderer gutterIconRenderer;
-  private ProblemGroup problemGroup;
-  private String inspectionToolId;
-  private PsiElement psiElement;
-  private int group;
-  private final List<FixInfo> fixes = new ArrayList<>();
-  private boolean created;
-
-  HighlightInfoBuilder(@Nonnull HighlightInfoType type) {
-    this.type = type;
-  }
-
-  private void assertNotCreated() {
-    assert !created : "Must not call this method after Builder.create() was called";
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer) {
-    assertNotCreated();
-    assert this.gutterIconRenderer == null : "gutterIconRenderer already set";
-    this.gutterIconRenderer = gutterIconRenderer;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder problemGroup(@Nonnull ProblemGroup problemGroup) {
-    assertNotCreated();
-    assert this.problemGroup == null : "problemGroup already set";
-    this.problemGroup = problemGroup;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder inspectionToolId(@Nonnull String inspectionToolId) {
-    assertNotCreated();
-    assert this.inspectionToolId == null : "inspectionToolId already set";
-    this.inspectionToolId = inspectionToolId;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder description(@Nonnull String description) {
-    assertNotCreated();
-    assert escapedDescription == null : "description already set";
-    escapedDescription = description;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder textAttributes(@Nonnull TextAttributes attributes) {
-    assertNotCreated();
-    assert forcedTextAttributes == null : "textAttributes already set";
-    forcedTextAttributes = attributes;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder textAttributes(@Nonnull TextAttributesKey attributesKey) {
-    assertNotCreated();
-    assert forcedTextAttributesKey == null : "textAttributesKey already set";
-    forcedTextAttributesKey = attributesKey;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder unescapedToolTip(@Nonnull String unescapedToolTip) {
-    assertNotCreated();
-    assert escapedToolTip == null : "Tooltip was already set";
-    escapedToolTip = HighlightInfoImpl.htmlEscapeToolTip(unescapedToolTip);
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder escapedToolTip(@Nonnull String escapedToolTip) {
-    assertNotCreated();
-    assert this.escapedToolTip == null : "Tooltip was already set";
-    this.escapedToolTip = escapedToolTip;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder range(int start, int end) {
-    assertNotCreated();
-
-    assert startOffset == -1 && endOffset == -1 : "Offsets already set";
-
-    startOffset = start;
-    endOffset = end;
-    return this;
-  }
-
-  @RequiredReadAction
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder range(@Nonnull PsiElement element) {
-    assertNotCreated();
-    assert psiElement == null : " psiElement already set";
-    psiElement = element;
-    return range(element.getTextRange());
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder range(@Nonnull PsiElement element, int start, int end) {
-    assertNotCreated();
-    assert psiElement == null : " psiElement already set";
-    psiElement = element;
-    return range(start, end);
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder endOfLine() {
-    assertNotCreated();
-    isAfterEndOfLine = true;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder needsUpdateOnTyping(boolean update) {
-    assertNotCreated();
-    assert myNeedsUpdateOnTyping == null : " needsUpdateOnTyping already set";
-    myNeedsUpdateOnTyping = update;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder severity(@Nonnull HighlightSeverity severity) {
-    assertNotCreated();
-    assert this.severity == null : " severity already set";
-    this.severity = severity;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder fileLevelAnnotation() {
-    assertNotCreated();
-    isFileLevelAnnotation = true;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder navigationShift(int navigationShift) {
-    assertNotCreated();
-    this.navigationShift = navigationShift;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder group(int group) {
-    assertNotCreated();
-    this.group = group;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfo.Builder registerFix(@Nonnull IntentionAction action,
-                                           @Nullable List<IntentionAction> options,
-                                           @Nls @Nullable String displayName,
-                                           @Nullable TextRange fixRange,
-                                           @Nullable HighlightDisplayKey key) {
-    assertNotCreated();
-    fixes.add(new FixInfo(action, options, displayName, fixRange, key));
-    return this;
-  }
-
-  @Nullable
-  @Override
-  public HighlightInfoImpl create() {
-    HighlightInfoImpl info = createUnconditionally();
-    LOG.assertTrue(psiElement != null ||
-                     severity == HighlightInfoType.SYMBOL_TYPE_SEVERITY ||
-                     severity == HighlightInfoType.INJECTED_FRAGMENT_SEVERITY ||
-                     ArrayUtil.find(HighlightSeverity.DEFAULT_SEVERITIES, severity) != -1,
-                   "Custom type requires not-null element to detect its text attributes");
-
-    if (!HighlightInfoImpl.isAcceptedByFilters(info, psiElement)) return null;
-
-    return info;
-  }
-
-  @Nonnull
-  @Override
-  public HighlightInfoImpl createUnconditionally() {
-    assertNotCreated();
-    created = true;
-
-    if (severity == null) {
-      severity = type.getSeverity(psiElement);
+    private record FixInfo(
+        @Nonnull IntentionAction action,
+        @Nullable List<IntentionAction> options,
+        @Nullable String displayName,
+        @Nullable TextRange fixRange,
+        @Nullable HighlightDisplayKey key
+    ) {
     }
 
-    HighlightInfoImpl info = new HighlightInfoImpl(forcedTextAttributes,
-                                                   forcedTextAttributesKey,
-                                                   type,
-                                                   startOffset,
-                                                   endOffset,
-                                                   escapedDescription,
-                                                   escapedToolTip,
-                                                   severity,
-                                                   isAfterEndOfLine,
-                                                   myNeedsUpdateOnTyping,
-                                                   isFileLevelAnnotation,
-                                                   navigationShift,
-                                                   problemGroup,
-                                                   inspectionToolId,
-                                                   gutterIconRenderer,
-                                                   group);
-    for (FixInfo fix : fixes) {
-      info.registerFix(fix.action(), fix.options(), fix.displayName(), fix.fixRange(), fix.key());
+    private Boolean myNeedsUpdateOnTyping;
+    private TextAttributes forcedTextAttributes;
+    private TextAttributesKey forcedTextAttributesKey;
+
+    private final HighlightInfoType type;
+    private int startOffset = -1;
+    private int endOffset = -1;
+
+    private String escapedDescription;
+    private String escapedToolTip;
+    private HighlightSeverity severity;
+
+    private boolean isAfterEndOfLine;
+    private boolean isFileLevelAnnotation;
+    private int navigationShift;
+
+    private GutterIconRenderer gutterIconRenderer;
+    private ProblemGroup problemGroup;
+    private String inspectionToolId;
+    private PsiElement psiElement;
+    private int group;
+    private final List<FixInfo> fixes = new ArrayList<>();
+    private boolean created;
+
+    HighlightInfoBuilder(@Nonnull HighlightInfoType type) {
+        this.type = type;
     }
-    return info;
-  }
+
+    private void assertNotCreated() {
+        assert !created : "Must not call this method after Builder.create() was called";
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer) {
+        assertNotCreated();
+        assert this.gutterIconRenderer == null : "gutterIconRenderer already set";
+        this.gutterIconRenderer = gutterIconRenderer;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder problemGroup(@Nonnull ProblemGroup problemGroup) {
+        assertNotCreated();
+        assert this.problemGroup == null : "problemGroup already set";
+        this.problemGroup = problemGroup;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder inspectionToolId(@Nonnull String inspectionToolId) {
+        assertNotCreated();
+        assert this.inspectionToolId == null : "inspectionToolId already set";
+        this.inspectionToolId = inspectionToolId;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder description(@Nonnull String description) {
+        assertNotCreated();
+        assert escapedDescription == null : "description already set";
+        escapedDescription = description;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder textAttributes(@Nonnull TextAttributes attributes) {
+        assertNotCreated();
+        assert forcedTextAttributes == null : "textAttributes already set";
+        forcedTextAttributes = attributes;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder textAttributes(@Nonnull TextAttributesKey attributesKey) {
+        assertNotCreated();
+        assert forcedTextAttributesKey == null : "textAttributesKey already set";
+        forcedTextAttributesKey = attributesKey;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder unescapedToolTip(@Nonnull String unescapedToolTip) {
+        assertNotCreated();
+        assert escapedToolTip == null : "Tooltip was already set";
+        escapedToolTip = HighlightInfoImpl.htmlEscapeToolTip(unescapedToolTip);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder escapedToolTip(@Nonnull String escapedToolTip) {
+        assertNotCreated();
+        assert this.escapedToolTip == null : "Tooltip was already set";
+        this.escapedToolTip = escapedToolTip;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder range(int start, int end) {
+        assertNotCreated();
+
+        assert startOffset == -1 && endOffset == -1 : "Offsets already set";
+
+        startOffset = start;
+        endOffset = end;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public HighlightInfo.Builder range(@Nonnull PsiElement element) {
+        assertNotCreated();
+        assert psiElement == null : " psiElement already set";
+        psiElement = element;
+        return range(element.getTextRange());
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder range(@Nonnull PsiElement element, int start, int end) {
+        assertNotCreated();
+        assert psiElement == null : " psiElement already set";
+        psiElement = element;
+        return range(start, end);
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder endOfLine() {
+        assertNotCreated();
+        isAfterEndOfLine = true;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder needsUpdateOnTyping(boolean update) {
+        assertNotCreated();
+        assert myNeedsUpdateOnTyping == null : " needsUpdateOnTyping already set";
+        myNeedsUpdateOnTyping = update;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder severity(@Nonnull HighlightSeverity severity) {
+        assertNotCreated();
+        assert this.severity == null : " severity already set";
+        this.severity = severity;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder fileLevelAnnotation() {
+        assertNotCreated();
+        isFileLevelAnnotation = true;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder navigationShift(int navigationShift) {
+        assertNotCreated();
+        this.navigationShift = navigationShift;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder group(int group) {
+        assertNotCreated();
+        this.group = group;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfo.Builder registerFix(
+        @Nonnull IntentionAction action,
+        @Nullable List<IntentionAction> options,
+        @Nls @Nullable String displayName,
+        @Nullable TextRange fixRange,
+        @Nullable HighlightDisplayKey key
+    ) {
+        assertNotCreated();
+        fixes.add(new FixInfo(action, options, displayName, fixRange, key));
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public HighlightInfoImpl create() {
+        HighlightInfoImpl info = createUnconditionally();
+        LOG.assertTrue(
+            psiElement != null
+                || severity == HighlightInfoType.SYMBOL_TYPE_SEVERITY
+                || severity == HighlightInfoType.INJECTED_FRAGMENT_SEVERITY
+                || ArrayUtil.find(HighlightSeverity.DEFAULT_SEVERITIES, severity) != -1,
+            "Custom type requires not-null element to detect its text attributes"
+        );
+
+        if (!HighlightInfoImpl.isAcceptedByFilters(info, psiElement)) {
+            return null;
+        }
+
+        return info;
+    }
+
+    @Nonnull
+    @Override
+    public HighlightInfoImpl createUnconditionally() {
+        assertNotCreated();
+        created = true;
+
+        if (severity == null) {
+            severity = type.getSeverity(psiElement);
+        }
+
+        HighlightInfoImpl info = new HighlightInfoImpl(
+            forcedTextAttributes,
+            forcedTextAttributesKey,
+            type,
+            startOffset,
+            endOffset,
+            escapedDescription,
+            escapedToolTip,
+            severity,
+            isAfterEndOfLine,
+            myNeedsUpdateOnTyping,
+            isFileLevelAnnotation,
+            navigationShift,
+            problemGroup,
+            inspectionToolId,
+            gutterIconRenderer,
+            group
+        );
+        for (FixInfo fix : fixes) {
+            info.registerFix(fix.action(), fix.options(), fix.displayName(), fix.fixRange(), fix.key());
+        }
+        return info;
+    }
 }

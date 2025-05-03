@@ -20,12 +20,12 @@ import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 
 /**
+ * FIXME [VISTALL] this topic is app&project level
+ *
  * @author VISTALL
  * @since 29-Jun-22
- *
- * FIXME [VISTALL] this topic is app&project level
  */
 @TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.TO_PARENT)
 public interface SeverityRegistrarChangeListener {
-  void severitiesChanged();
+    void severitiesChanged();
 }

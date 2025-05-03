@@ -28,8 +28,8 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class HighlightInfoFactoryImpl implements HighlightInfoFactory {
-  @Override
-  public HighlightInfo.Builder createBuilder(HighlightInfoType infoType) {
-    return HighlightInfoImpl.newHighlightInfo(infoType);
-  }
+    @Override
+    public HighlightInfo.Builder createBuilder(HighlightInfoType infoType) {
+        return HighlightInfoImpl.newHighlightInfo(infoType);
+    }
 }

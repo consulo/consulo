@@ -27,8 +27,8 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface HighlightVisitorFactory {
-  boolean suitableForFile(@Nonnull PsiFile file);
+    boolean suitableForFile(@Nonnull PsiFile file);
 
-  @Nonnull
-  HighlightVisitor createVisitor();
+    @Nonnull
+    HighlightVisitor createVisitor();
 }

@@ -28,40 +28,44 @@ import jakarta.annotation.Nullable;
  * @see RainbowVisitorFactory
  */
 public abstract class RainbowVisitor implements HighlightVisitor {
-  private HighlightInfoHolder myHolder;
-  private RainbowHighlighter myRainbowHighlighter;
+    private HighlightInfoHolder myHolder;
+    private RainbowHighlighter myRainbowHighlighter;
 
-  @Nonnull
-  protected RainbowHighlighter getHighlighter() {
-    return myRainbowHighlighter;
-  }
-
-  @Override
-  public final boolean analyze(@Nonnull PsiFile file,
-                               boolean updateWholeFile,
-                               @Nonnull HighlightInfoHolder holder,
-                               @Nonnull Runnable action) {
-    myHolder = holder;
-    myRainbowHighlighter = new RainbowHighlighter(myHolder.getColorsScheme());
-    try {
-      action.run();
+    @Nonnull
+    protected RainbowHighlighter getHighlighter() {
+        return myRainbowHighlighter;
     }
-    finally {
-      myHolder = null;
-      myRainbowHighlighter = null;
+
+    @Override
+    public final boolean analyze(
+        @Nonnull PsiFile file,
+        boolean updateWholeFile,
+        @Nonnull HighlightInfoHolder holder,
+        @Nonnull Runnable action
+    ) {
+        myHolder = holder;
+        myRainbowHighlighter = new RainbowHighlighter(myHolder.getColorsScheme());
+        try {
+            action.run();
+        }
+        finally {
+            myHolder = null;
+            myRainbowHighlighter = null;
+        }
+        return true;
     }
-    return true;
-  }
 
-  protected void addInfo(@Nullable HighlightInfo highlightInfo) {
-    myHolder.add(highlightInfo);
-  }
+    protected void addInfo(@Nullable HighlightInfo highlightInfo) {
+        myHolder.add(highlightInfo);
+    }
 
-  protected HighlightInfo getInfo(@Nonnull final PsiElement context,
-                                  @Nonnull final PsiElement rainbowElement,
-                                  @Nonnull final String name,
-                                  @Nullable final TextAttributesKey colorKey) {
-    int colorIndex = UsedColors.getOrAddColorIndex((UserDataHolderEx)context, name, getHighlighter().getColorsCount());
-    return getHighlighter().getInfo(colorIndex, rainbowElement, colorKey);
-  }
+    protected HighlightInfo getInfo(
+        @Nonnull final PsiElement context,
+        @Nonnull final PsiElement rainbowElement,
+        @Nonnull final String name,
+        @Nullable final TextAttributesKey colorKey
+    ) {
+        int colorIndex = UsedColors.getOrAddColorIndex((UserDataHolderEx)context, name, getHighlighter().getColorsCount());
+        return getHighlighter().getInfo(colorIndex, rainbowElement, colorKey);
+    }
 }

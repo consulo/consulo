@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.rawHighlight;
 
 import consulo.annotation.component.ComponentScope;
@@ -26,11 +25,10 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface HighlightInfoFilter {
-  ExtensionPointName<HighlightInfoFilter> EXTENSION_POINT_NAME = ExtensionPointName.create(HighlightInfoFilter.class);
+    ExtensionPointName<HighlightInfoFilter> EXTENSION_POINT_NAME = ExtensionPointName.create(HighlightInfoFilter.class);
 
-  /**
-   * @param file - might (and will be) null. Return true in this case if you'd like to switch this kind of highlighting in ANY file
-   */
-  boolean accept(@Nonnull HighlightInfo highlightInfo, @Nullable PsiFile file);
+    /**
+     * @param file - might (and will be) null. Return true in this case if you'd like to switch this kind of highlighting in ANY file
+     */
+    boolean accept(@Nonnull HighlightInfo highlightInfo, @Nullable PsiFile file);
 }
-

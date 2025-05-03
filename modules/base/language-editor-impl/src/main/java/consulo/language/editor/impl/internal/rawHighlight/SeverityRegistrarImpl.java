@@ -305,7 +305,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
         return o1 - o2;
     }
 
-
     @Nonnull
     private ObjectIntMap<HighlightSeverity> getOrderMap() {
         ObjectIntMap<HighlightSeverity> orderMap;

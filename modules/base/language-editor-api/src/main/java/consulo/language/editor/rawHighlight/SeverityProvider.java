@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.editor.rawHighlight;
 
-/*
+/**
  * User: anna
  * Date: 31-Jul-2007
  */
-package consulo.language.editor.rawHighlight;
-
 public interface SeverityProvider {
-  SeverityRegistrar getSeverityRegistrar();
+    SeverityRegistrar getSeverityRegistrar();
 
-  SeverityRegistrar getOwnSeverityRegistrar();
+    SeverityRegistrar getOwnSeverityRegistrar();
 }

@@ -140,8 +140,8 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
         return builder.createUnconditionally();
     }
 
-    @RequiredReadAction
     @Nonnull
+    @RequiredReadAction
     private static HighlightInfo.Builder createInfoWithoutFixes(@Nonnull PsiErrorElement element) {
         TextRange range = element.getTextRange();
         LocalizeValue errorDescription = element.getErrorDescriptionValue();

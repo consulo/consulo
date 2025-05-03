@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
  * @since 25/03/2023
  */
 public interface RainbowVisitorFactory extends HighlightVisitorFactory {
-  @Nonnull
-  @Override
-  RainbowVisitor createVisitor();
+    @Nonnull
+    @Override
+    RainbowVisitor createVisitor();
 }
