@@ -25,14 +25,20 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 11/10/2022
+ * @since 2022-10-11
  */
 public class SeverityRegistrarUtil {
-  public static TextAttributes getAttributesByType(@Nullable PsiElement element, @Nonnull HighlightInfoType type, @Nonnull TextAttributesScheme colorsScheme) {
-    SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(element != null ? element.getProject() : null);
-    TextAttributes textAttributes = severityRegistrar.getTextAttributesBySeverity(type.getSeverity(element));
-    if (textAttributes != null) return textAttributes;
-    TextAttributesKey key = type.getAttributesKey();
-    return colorsScheme.getAttributes(key);
-  }
+    public static TextAttributes getAttributesByType(
+        @Nullable PsiElement element,
+        @Nonnull HighlightInfoType type,
+        @Nonnull TextAttributesScheme colorsScheme
+    ) {
+        SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(element != null ? element.getProject() : null);
+        TextAttributes textAttributes = severityRegistrar.getTextAttributesBySeverity(type.getSeverity(element));
+        if (textAttributes != null) {
+            return textAttributes;
+        }
+        TextAttributesKey key = type.getAttributesKey();
+        return colorsScheme.getAttributes(key);
+    }
 }

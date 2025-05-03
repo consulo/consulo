@@ -23,12 +23,12 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 25/03/2023
+ * @since 2023-03-25
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface HighlightVisitorFactory {
-  boolean suitableForFile(@Nonnull PsiFile file);
+    boolean suitableForFile(@Nonnull PsiFile file);
 
-  @Nonnull
-  HighlightVisitor createVisitor();
+    @Nonnull
+    HighlightVisitor createVisitor();
 }

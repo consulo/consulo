@@ -23,13 +23,13 @@ import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 01-Apr-22
+ * @since 2022-04-01
  */
 @Singleton
 @ServiceImpl
 public class HighlightInfoFactoryImpl implements HighlightInfoFactory {
-  @Override
-  public HighlightInfo.Builder createBuilder(HighlightInfoType infoType) {
-    return HighlightInfoImpl.newHighlightInfo(infoType);
-  }
+    @Override
+    public HighlightInfo.Builder createBuilder(HighlightInfoType infoType) {
+        return HighlightInfoImpl.newHighlightInfo(infoType);
+    }
 }

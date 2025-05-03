@@ -31,21 +31,21 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(order = "last")
 public class DefaultHighlightVisitorFactory implements HighlightVisitorFactory, DumbAware {
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public DefaultHighlightVisitorFactory(Project project) {
-    myProject = project;
-  }
+    @Inject
+    public DefaultHighlightVisitorFactory(Project project) {
+        myProject = project;
+    }
 
-  @Override
-  public boolean suitableForFile(@Nonnull PsiFile file) {
-    return true;
-  }
+    @Override
+    public boolean suitableForFile(@Nonnull PsiFile file) {
+        return true;
+    }
 
-  @Nonnull
-  @Override
-  public HighlightVisitor createVisitor() {
-    return new DefaultHighlightVisitor(myProject);
-  }
+    @Nonnull
+    @Override
+    public HighlightVisitor createVisitor() {
+        return new DefaultHighlightVisitor(myProject);
+    }
 }
