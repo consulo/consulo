@@ -22,7 +22,7 @@ import consulo.component.util.Weighted;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.openapi.ui.impl.GlassPaneDialogWrapperPeer;
+import consulo.ide.impl.idea.openapi.ui.impl.TransparentLayeredPane;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.ui.ex.IdeGlassPane;
@@ -573,7 +573,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
   public boolean isInModalContext() {
     final Component[] components = getComponents();
     for (Component component : components) {
-      if (component instanceof GlassPaneDialogWrapperPeer.TransparentLayeredPane) {
+      if (component instanceof TransparentLayeredPane) {
         return true;
       }
     }
