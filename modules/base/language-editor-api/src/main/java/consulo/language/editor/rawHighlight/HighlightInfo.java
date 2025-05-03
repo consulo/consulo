@@ -131,6 +131,11 @@ public interface HighlightInfo extends Segment {
         Builder group(int group);
 
         @Nonnull
+        default Builder registerFix(@Nonnull IntentionAction action) {
+            return registerFix(action, null, null, null, null);
+        }
+
+        @Nonnull
         Builder registerFix(
             @Nonnull IntentionAction action,
             @Nullable List<IntentionAction> options,
