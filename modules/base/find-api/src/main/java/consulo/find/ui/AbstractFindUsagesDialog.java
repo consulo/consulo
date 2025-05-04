@@ -22,16 +22,22 @@ import consulo.find.FindUsagesOptions;
 import consulo.find.PersistentFindUsagesOptions;
 import consulo.find.localize.FindLocalize;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
+import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.ex.StateRestoringCheckBoxWrapper;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.usage.UsageViewContentManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 /**
  * @author peter
@@ -50,12 +56,12 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
 
     private final boolean mySearchInLibrariesAvailable;
 
-    private JCheckBox myCbToOpenInNewTab;
+    private CheckBox myCbToOpenInNewTab;
 
-    protected StateRestoringCheckBox myCbToSearchForTextOccurrences;
-    protected JCheckBox myCbToSkipResultsWhenOneUsage;
+    protected StateRestoringCheckBoxWrapper myCbToSearchForTextOccurrences;
+    protected StateRestoringCheckBoxWrapper myCbToSkipResultsWhenOneUsage;
 
-    private final ActionListener myUpdateAction;
+    private final ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> myUIUpdateAction;
 
     private ScopeChooserCombo myScopeCombo;
 
@@ -80,7 +86,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
             ((PersistentFindUsagesOptions)myFindUsagesOptions).setDefaults(myProject);
         }
 
-        myUpdateAction = event -> update();
+        myUIUpdateAction = event -> update();
 
         setOKButtonText(FindLocalize.findDialogFindButton());
         setTitle(isSingleFile ? FindLocalize.findUsagesInFileDialogTitle() : FindLocalize.findUsagesDialogTitle());
@@ -117,6 +123,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     public abstract void configureLabelComponent(@Nonnull SimpleColoredComponent coloredComponent);
 
     @Override
+    @RequiredUIAccess
     protected JComponent createCenterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
 
@@ -127,10 +134,10 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         );
 
         if (myIsShowInNewTabVisible) {
-            myCbToOpenInNewTab = new JCheckBox(FindLocalize.findOpenInNewTabCheckbox().get());
-            myCbToOpenInNewTab.setSelected(myToShowInNewTab);
+            myCbToOpenInNewTab = CheckBox.create(FindLocalize.findOpenInNewTabCheckbox());
+            myCbToOpenInNewTab.setValue(myToShowInNewTab);
             myCbToOpenInNewTab.setEnabled(myIsShowInNewTabEnabled);
-            _panel.add(myCbToOpenInNewTab, BorderLayout.EAST);
+            _panel.add(TargetAWT.to(myCbToOpenInNewTab), BorderLayout.EAST);
         }
 
         JPanel allOptionsPanel = createAllOptionsPanel();
@@ -167,11 +174,11 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     }
 
     public boolean isShowInSeparateWindow() {
-        return myCbToOpenInNewTab != null && myCbToOpenInNewTab.isSelected();
+        return myCbToOpenInNewTab != null && myCbToOpenInNewTab.getValue();
     }
 
     public boolean isSkipResultsWhenOneUsage() {
-        return myCbToSkipResultsWhenOneUsage != null && myCbToSkipResultsWhenOneUsage.isSelected();
+        return myCbToSkipResultsWhenOneUsage != null && myCbToSkipResultsWhenOneUsage.getValue();
     }
 
     @Override
@@ -186,7 +193,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
             settings.setDefaultScopeName(myScopeCombo.getSelectedScopeName());
         }
         if (mySearchForTextOccurrencesAvailable && myCbToSearchForTextOccurrences != null && myCbToSearchForTextOccurrences.isEnabled()) {
-            myFindUsagesOptions.isSearchForTextOccurrences = myCbToSearchForTextOccurrences.isSelected();
+            myFindUsagesOptions.isSearchForTextOccurrences = myCbToSearchForTextOccurrences.getValue();
         }
 
         if (myCbToSkipResultsWhenOneUsage != null) {
@@ -200,22 +207,32 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         return myScopeCombo == null || myScopeCombo.getSelectedScope() != null;
     }
 
-    protected static boolean isToChange(JCheckBox cb) {
+    protected static boolean isToChange(StateRestoringCheckBoxWrapper cb) {
+        return cb != null && cb.getParentComponent() != null;
+    }
+
+    protected static boolean isToChange(CheckBox cb) {
         return cb != null && cb.getParent() != null;
     }
 
-    protected static boolean isSelected(JCheckBox cb) {
-        return cb != null && cb.getParent() != null && cb.isSelected();
+    protected static boolean isSelected(CheckBox cb) {
+        return cb != null && cb.getParent() != null && cb.getValue();
     }
 
-    protected StateRestoringCheckBox addCheckboxToPanel(String name, boolean toSelect, JPanel panel, boolean toUpdate) {
-        StateRestoringCheckBox cb = new StateRestoringCheckBox(name);
-        cb.setSelected(toSelect);
-        panel.add(cb);
+    protected static boolean isSelected(StateRestoringCheckBoxWrapper cb) {
+        return cb != null && cb.getParentComponent() != null && cb.getValue();
+    }
+
+    @RequiredUIAccess
+    protected StateRestoringCheckBoxWrapper addCheckboxToPanel(LocalizeValue actionText, boolean toSelect, JPanel panel, boolean toUpdate) {
+        StateRestoringCheckBoxWrapper box = new StateRestoringCheckBoxWrapper(actionText);
+
+        box.setValue(toSelect);
+        panel.add(TargetAWT.to(box.getComponent()));
         if (toUpdate) {
-            cb.addActionListener(myUpdateAction);
+            box.addValueListener(myUIUpdateAction);
         }
-        return cb;
+        return box;
     }
 
     protected JPanel createAllOptionsPanel() {
@@ -254,10 +271,11 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     @Nullable
     protected abstract JPanel createFindWhatPanel();
 
+    @RequiredUIAccess
     protected void addUsagesOptions(JPanel optionsPanel) {
         if (mySearchForTextOccurrencesAvailable) {
             myCbToSearchForTextOccurrences = addCheckboxToPanel(
-                FindLocalize.findOptionsSearchForTextOccurrencesCheckbox().get(),
+                FindLocalize.findOptionsSearchForTextOccurrencesCheckbox(),
                 myFindUsagesOptions.isSearchForTextOccurrences,
                 optionsPanel,
                 false
@@ -266,7 +284,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
 
         if (myIsShowInNewTabVisible) {
             myCbToSkipResultsWhenOneUsage = addCheckboxToPanel(
-                FindLocalize.findOptionsSkipResultsTabWithOneUsageCheckbox().get(),
+                FindLocalize.findOptionsSkipResultsTabWithOneUsageCheckbox(),
                 FindSettings.getInstance().isSkipResultsWithOneUsage(),
                 optionsPanel,
                 false

@@ -43,6 +43,10 @@ public final class StateRestoringCheckBoxWrapper {
         myCheckBox = CheckBox.create(text);
     }
 
+    public boolean isEnabled() {
+        return myCheckBox.isEnabled();
+    }
+
     public Boolean getValue() {
         return myCheckBox.getValue();
     }
