@@ -50,6 +50,8 @@ public class BorderLayoutEx extends VerticalLayout {
     noPaddingMargin(this);
 
     myCenterLayout.setSizeFull();
+    myTopLayout.setWidthFull();
+    myBottomLayout.setWidthFull();
 
     myCenterLayout.setPadding(false);
     myCenterLayout.setMargin(false);

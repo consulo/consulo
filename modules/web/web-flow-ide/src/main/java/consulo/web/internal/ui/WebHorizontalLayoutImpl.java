@@ -16,12 +16,11 @@
 package consulo.web.internal.ui;
 
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.StaticPosition;
 import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.LayoutStyle;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-19
  */
-public class WebHorizontalLayoutImpl extends VaadinComponentDelegate<WebHorizontalLayoutImpl.Vaadin> implements HorizontalLayout {
+public class WebHorizontalLayoutImpl extends WebLayoutImpl<WebHorizontalLayoutImpl.Vaadin, StaticPosition> implements HorizontalLayout {
     public class Vaadin extends com.vaadin.flow.component.orderedlayout.HorizontalLayout implements FromVaadinComponentWrapper {
 
         @Nullable
@@ -39,16 +38,15 @@ public class WebHorizontalLayoutImpl extends VaadinComponentDelegate<WebHorizont
         }
     }
 
-    @RequiredUIAccess
-    @Nonnull
-    @Override
-    public HorizontalLayout add(@Nonnull Component component) {
-        toVaadinComponent().add(TargetVaddin.to(component));
-        return this;
+    public WebHorizontalLayoutImpl() {
+        VaadinSizeUtil.setWidthFull(this);
     }
 
+    @Nonnull
     @Override
-    public void addStyle(LayoutStyle style) {
+    public HorizontalLayout add(@Nonnull Component component, @Nonnull StaticPosition constraint) {
+        toVaadinComponent().add(TargetVaddin.to(component));
+        return this;
     }
 
     @Override

@@ -203,6 +203,16 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         bordersChanged();
     }
 
+    @RequiredUIAccess
+    @Override
+    public void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
+        for (BorderPosition position : BorderPosition.values()) {
+            dataObject().addBorder(position, borderStyle, colorKey, width);
+        }
+
+        bordersChanged();
+    }
+
     @Override
     public boolean isVisible() {
         return myVaadinComponent.isVisible();
