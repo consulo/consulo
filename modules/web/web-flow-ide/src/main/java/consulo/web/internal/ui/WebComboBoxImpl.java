@@ -15,9 +15,11 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
+import consulo.ui.TextItemRender;
 import consulo.ui.model.ListModel;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.vaadin.WebSingleListComponentBase;
@@ -30,27 +32,32 @@ import jakarta.annotation.Nullable;
  */
 @SuppressWarnings("unchecked")
 public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBoxImpl.Vaadin> implements ComboBox<V> {
-  public class Vaadin extends com.vaadin.flow.component.combobox.ComboBox<V> implements FromVaadinComponentWrapper {
-    @Nullable
-    @Override
-    public Component toUIComponent() {
-      return WebComboBoxImpl.this;
+    public class Vaadin extends Select<V> implements FromVaadinComponentWrapper {
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebComboBoxImpl.this;
+        }
     }
-  }
 
-  public WebComboBoxImpl(ListModel<V> model) {
-    super(model);
+    public WebComboBoxImpl(ListModel<V> model) {
+        super(model);
 
-    toVaadinComponent().setRenderer(new ComponentRenderer((c) -> {
-      WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-      myRender.render(presentation, myModel.indexOf((V)c), (V)c);
-      return presentation.toComponent();
-    }));
-  }
+        setRender(TextItemRender.defaultRender());
+    }
 
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Override
+    public void setRender(@Nonnull TextItemRender<V> render) {
+        toVaadinComponent().setRenderer(new ComponentRenderer((c) -> {
+            WebItemPresentationImpl presentation = new WebItemPresentationImpl();
+            render.render(presentation, myModel.indexOf((V) c), (V) c);
+            return presentation.toComponent();
+        }));
+    }
+
+    @Nonnull
+    @Override
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
 }

@@ -34,10 +34,14 @@ public class WebStyleImpl implements Style {
     private Map<StyleColorValue, ColorValue> myColors = new HashMap<>();
     private final String myId;
     private final String myName;
+    private final boolean myIsDark;
+    private final String myVaadinThemeId;
 
-    public WebStyleImpl(String id, String name) {
+    public WebStyleImpl(String id, String name, boolean isDark, String vaadinThemeId) {
         myId = id;
         myName = name;
+        myIsDark = isDark;
+        myVaadinThemeId = vaadinThemeId;
 
         for (StandardColors color : StandardColors.values()) {
             myColors.put(color, color.getStaticValue());
@@ -47,6 +51,15 @@ public class WebStyleImpl implements Style {
         myColors.put(ComponentColors.TEXT, StandardColors.BLACK.getStaticValue());
         myColors.put(ComponentColors.TEXT_FOREGROUND, StandardColors.BLACK.getStaticValue());
         myColors.put(ComponentColors.LAYOUT, StandardColors.WHITE.getStaticValue());
+    }
+
+    public String getVaadinThemeId() {
+        return myVaadinThemeId;
+    }
+
+    @Override
+    public boolean isDark() {
+        return myIsDark;
     }
 
     @Nonnull

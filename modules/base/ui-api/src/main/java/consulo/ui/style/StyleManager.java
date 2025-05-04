@@ -15,6 +15,7 @@
  */
 package consulo.ui.style;
 
+import consulo.disposer.Disposable;
 import consulo.ui.AntialiasingType;
 import consulo.ui.internal.UIInternal;
 import jakarta.annotation.Nonnull;
@@ -52,7 +53,7 @@ public interface StyleManager {
     void setCurrentStyle(@Nonnull Style newStyle);
 
     @Nonnull
-    Runnable addChangeListener(@Nonnull StyleChangeListener listener);
+    Disposable addChangeListener(@Nonnull StyleChangeListener listener);
 
     default void refreshAntialiasingType(@Nonnull AntialiasingType antialiasingType) {
     }

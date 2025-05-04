@@ -23,5 +23,10 @@ import jakarta.annotation.Nullable;
  * @since 12-Jun-16
  */
 public interface TextItemRender<E> {
-  void render(@Nonnull TextItemPresentation render, int index, @Nullable E item);
+    @Nonnull
+    static <V> TextItemRender<V> defaultRender() {
+        return (render, index, item) -> render.append(item == null ? "" : item.toString());
+    }
+
+    void render(@Nonnull TextItemPresentation render, int index, @Nullable E item);
 }

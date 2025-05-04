@@ -15,11 +15,11 @@
  */
 package consulo.ui.impl.style;
 
+import consulo.disposer.Disposable;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleChangeListener;
 import consulo.ui.style.StyleManager;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -35,7 +35,7 @@ public abstract class StyleManagerImpl implements StyleManager {
 
   @Nonnull
   @Override
-  public Runnable addChangeListener(@Nonnull StyleChangeListener listener) {
+  public Disposable addChangeListener(@Nonnull StyleChangeListener listener) {
     myEventDispatcher.addListener(listener);
     return () -> myEventDispatcher.removeListener(listener);
   }

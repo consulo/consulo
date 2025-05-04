@@ -15,11 +15,11 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.theme.lumo.Lumo;
 import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;
-
 import jakarta.annotation.Nonnull;
-import java.util.Arrays;
+
 import java.util.List;
 
 /**
@@ -27,26 +27,31 @@ import java.util.List;
  * @since 15-Sep-17
  */
 public class WebStyleManagerImpl extends StyleManagerImpl {
-  public static final WebStyleManagerImpl ourInstance = new WebStyleManagerImpl();
+    private static final WebStyleImpl LIGHT = new WebStyleImpl("light", "Light", false, Lumo.LIGHT);
+    private static final WebStyleImpl DARK = new WebStyleImpl("dark", "Dark", true, Lumo.DARK);
 
-  private Style myCurrentStyle = new WebStyleImpl("light", "Light");
+    private List<Style> myStyles = List.of(LIGHT, DARK);
 
-  @Nonnull
-  @Override
-  public List<Style> getStyles() {
-    return Arrays.asList(myCurrentStyle);
-  }
+    public static final WebStyleManagerImpl ourInstance = new WebStyleManagerImpl();
 
-  @Nonnull
-  @Override
-  public Style getCurrentStyle() {
-    return myCurrentStyle;
-  }
+    private Style myCurrentStyle = LIGHT;
 
-  @Override
-  public void setCurrentStyle(@Nonnull Style style) {
-    Style oldStyle = myCurrentStyle;
-    myCurrentStyle = style;
-    fireStyleChanged(oldStyle, style);
-  }
+    @Nonnull
+    @Override
+    public List<Style> getStyles() {
+        return myStyles;
+    }
+
+    @Nonnull
+    @Override
+    public Style getCurrentStyle() {
+        return myCurrentStyle;
+    }
+
+    @Override
+    public void setCurrentStyle(@Nonnull Style style) {
+        Style oldStyle = myCurrentStyle;
+        myCurrentStyle = style;
+        fireStyleChanged(oldStyle, style);
+    }
 }

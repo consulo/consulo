@@ -21,6 +21,7 @@ import com.vaadin.flow.data.provider.HasListDataView;
 import consulo.ui.TextItemRender;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.MutableListModelListener;
@@ -37,12 +38,18 @@ import jakarta.annotation.Nullable;
 public abstract class WebSingleListComponentBase<V, C extends Component & HasListDataView & HasValue & FromVaadinComponentWrapper> extends VaadinComponentDelegate<C> implements ValueComponent<V> {
   protected final ListModel<V> myModel;
   protected TextItemRender<V> myRender = (render, index, item) -> {
+     render.append(item == null ? "" : item.toString());
   };
 
+  @SuppressWarnings("unchecked")
   protected WebSingleListComponentBase(ListModel<V> model) {
     myModel = model;
     C component = toVaadinComponent();
     component.setItems(ContainerUtil.collect(model.iterator()));
+
+    component.addValueChangeListener(event -> {
+      getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, event.getValue()));
+    });
 
     if (myModel instanceof MutableListModel mutableListModel) {
       mutableListModel.adddListener(new MutableListModelListener() {
@@ -65,11 +72,6 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
     return myModel;
   }
 
-  //@Override
-  public void setRender(@Nonnull TextItemRender<V> render) {
-    myRender = render;
-  }
-
   @RequiredUIAccess
   public void setValueByIndex(int index) {
     setValue(myModel.get(index));
@@ -77,12 +79,14 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
 
   @Nullable
   @Override
+  @SuppressWarnings("unchecked")
   public V getValue() {
     return (V)toVaadinComponent().getValue();
   }
 
   @RequiredUIAccess
   @Override
+  @SuppressWarnings("unchecked")
   public void setValue(V value, boolean fireListeners) {
     getVaadinComponent().setValue(value);
   }
