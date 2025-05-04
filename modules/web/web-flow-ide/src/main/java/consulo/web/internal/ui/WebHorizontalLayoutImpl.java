@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.layout.HorizontalLayout;
@@ -40,6 +41,7 @@ public class WebHorizontalLayoutImpl extends WebLayoutImpl<WebHorizontalLayoutIm
 
     public WebHorizontalLayoutImpl() {
         VaadinSizeUtil.setWidthFull(this);
+        toVaadinComponent().setAlignItems(FlexComponent.Alignment.CENTER);
     }
 
     @Nonnull
