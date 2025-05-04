@@ -60,6 +60,10 @@ public class HighlightInfoHolder {
         return myInfos.add(info);
     }
 
+    public boolean add(@Nullable HighlightInfo.Builder infoBuilder) {
+        return infoBuilder != null && add(infoBuilder.create());
+    }
+
     public void clear() {
         myErrorCount = 0;
         myInfos.clear();
