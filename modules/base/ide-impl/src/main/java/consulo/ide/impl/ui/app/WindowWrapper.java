@@ -102,6 +102,8 @@ public abstract class WindowWrapper {
 
     HorizontalLayout bottomLayout = HorizontalLayout.create();
     myOkButton = Button.create(CommonLocalize.buttonOk(), e -> doOKAction());
+    myOkButton.addStyle(ButtonStyle.PRIMARY);
+
     if (myPreOkEnabled != null) {
       myOkButton.setEnabled(myPreOkEnabled);
     }

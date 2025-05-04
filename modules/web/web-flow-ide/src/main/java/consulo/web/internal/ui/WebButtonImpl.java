@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.button.ButtonVariant;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
@@ -56,7 +57,15 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
 
     @Override
     public void addStyle(ButtonStyle style) {
-
+        switch (style) {
+            case PRIMARY:
+                toVaadinComponent().addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                break;
+            case BORDERLESS:
+                break;
+            case INPLACE:
+                break;
+        }
     }
 
     @Nonnull
