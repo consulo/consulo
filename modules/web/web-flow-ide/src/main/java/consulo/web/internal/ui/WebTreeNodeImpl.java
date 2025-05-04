@@ -35,6 +35,8 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
                      @Nullable K node,
                      Map<String, WebTreeNodeImpl<K>> stringWebTreeNodeMap) {
       super(parent, node, stringWebTreeNodeMap);
+
+      setLeaf(true);
     }
   }
 

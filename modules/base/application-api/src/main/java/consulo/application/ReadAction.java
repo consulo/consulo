@@ -30,7 +30,6 @@ public final class ReadAction<T> {
         return ApplicationManager.getApplication().acquireReadActionLock();
     }
 
-    @Deprecated
     public static <E extends Throwable> void run(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
         Application.get().runReadAction((ThrowableSupplier<Object, E>) () -> {
             action.run();
@@ -38,7 +37,6 @@ public final class ReadAction<T> {
         });
     }
 
-    @Deprecated
     public static <T, E extends Throwable> T compute(@Nonnull ThrowableSupplier<T, E> action) throws E {
         return Application.get().runReadAction(action);
     }

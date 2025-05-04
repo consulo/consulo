@@ -20,6 +20,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
+import com.vaadin.flow.data.selection.SelectionModel;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
@@ -57,6 +58,10 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
       
       addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_COLUMN_BORDERS, GridVariant.LUMO_NO_BORDER);
 
+      setSelectionMode(SelectionMode.SINGLE);
+
+      ((SelectionModel.Single) getSelectionModel()).setDeselectAllowed(false);
+
       addComponentColumn(node -> {
         WebItemPresentationImpl item = new WebItemPresentationImpl();
         if (node instanceof WebTreeNodeImpl.NotLoaded) {
@@ -68,8 +73,13 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         VaadinGridTreeToggle toggle = new VaadinGridTreeToggle();
         toggle.getElement().setAttribute("leaf", node.isLeaf());
         toggle.getElement().setAttribute("level", String.valueOf(node.getLevel()));
+        if (isExpanded(node)) {
+            toggle.getElement().setAttribute("expanded", true);
+        }
 
         toggle.addClickListener(event -> {
+          select(node);
+
           if (getDataCommunicator().hasChildren(node)) {
             if (isExpanded(node)) {
               collapse(List.of(node), true);
@@ -146,6 +156,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             }
 
             myNodeMap.remove(unloaded.getId());
+
+            getDataProvider().refreshItem(parent, true);
 
             ui.push();
           });
