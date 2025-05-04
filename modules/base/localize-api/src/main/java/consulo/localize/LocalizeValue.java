@@ -48,6 +48,16 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     }
 
     @Nonnull
+    static LocalizeValue dot() {
+        return SingleLocalizeValue.ourDot;
+    }
+
+    @Nonnull
+    static LocalizeValue questionMark() {
+        return SingleLocalizeValue.ourQuestionMark;
+    }
+
+    @Nonnull
     static LocalizeValue of() {
         return empty();
     }

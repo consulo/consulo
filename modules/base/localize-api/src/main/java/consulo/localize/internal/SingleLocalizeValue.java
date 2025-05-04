@@ -28,6 +28,8 @@ public class SingleLocalizeValue implements LocalizeValue {
     public static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
     public static final SingleLocalizeValue ourSpace = new SingleLocalizeValue(" ");
     public static final SingleLocalizeValue ourColon = new SingleLocalizeValue(":");
+    public static final SingleLocalizeValue ourDot = new SingleLocalizeValue(".");
+    public static final SingleLocalizeValue ourQuestionMark = new SingleLocalizeValue("?");
 
     private final String myValue;
 
