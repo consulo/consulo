@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 
 /**
@@ -47,7 +48,9 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
   public void setTextValue(LocalizeValue textValue) {
     myTextValue = textValue;
 
-    setText(textValue.getValue());
+    TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(textValue.get());
+
+    setText(textWithMnemonic.getText());
   }
 
   public LocalizeValue getTextValue() {

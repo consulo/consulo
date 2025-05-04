@@ -21,6 +21,7 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.vaadin.WebBooleanValueComponentBase;
 import jakarta.annotation.Nonnull;
@@ -31,50 +32,52 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-19
  */
 public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImpl.Vaadin> implements CheckBox {
-  public class Vaadin extends Checkbox implements FromVaadinComponentWrapper {
-    private LocalizeValue myLabelText = LocalizeValue.empty();
+    public class Vaadin extends Checkbox implements FromVaadinComponentWrapper {
+        private LocalizeValue myLabelText = LocalizeValue.empty();
 
-    public void setLabelText(LocalizeValue labelText) {
-      myLabelText = labelText;
-      updateLabelText();
+        public void setLabelText(LocalizeValue labelText) {
+            myLabelText = labelText;
+            updateLabelText();
+        }
+
+        public LocalizeValue getLabelText() {
+            return myLabelText;
+        }
+
+        private void updateLabelText() {
+            TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(myLabelText.get());
+
+            setLabel(textWithMnemonic.getText());
+        }
+
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebCheckBoxImpl.this;
+        }
     }
 
-    public LocalizeValue getLabelText() {
-      return myLabelText;
+    public WebCheckBoxImpl() {
+        super(false);
     }
 
-    private void updateLabelText() {
-      setLabel(myLabelText.getValue());
-    }
-
-    @Nullable
+    @Nonnull
     @Override
-    public Component toUIComponent() {
-      return WebCheckBoxImpl.this;
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
-  }
 
-  public WebCheckBoxImpl() {
-    super(false);
-  }
+    @Override
+    @Nonnull
+    public LocalizeValue getLabelText() {
+        return toVaadinComponent().getLabelText();
+    }
 
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @RequiredUIAccess
+    @Override
+    public void setLabelText(@Nonnull LocalizeValue textValue) {
+        UIAccess.assertIsUIThread();
 
-  @Override
-  @Nonnull
-  public LocalizeValue getLabelText() {
-    return toVaadinComponent().getLabelText();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setLabelText(@Nonnull LocalizeValue textValue) {
-    UIAccess.assertIsUIThread();
-
-    toVaadinComponent().setLabelText(textValue);
-  }
+        toVaadinComponent().setLabelText(textValue);
+    }
 }
