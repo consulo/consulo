@@ -22,6 +22,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.ThemableLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.Nullable;
 
 /**
@@ -103,6 +104,7 @@ public class BorderLayoutEx extends VerticalLayout {
     myTopLayout.addClassName(className + "-top");
     myBottomLayout.addClassName(className + "-bottom");
     myCenterLayout.addClassName(className + "-center");
+    myCenterLayout.addClassName(LumoUtility.Overflow.AUTO);
   }
 
   public void addComponent(@Nullable Component component, Constraint constraint) {

@@ -16,7 +16,7 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.html.Div;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LayoutStyle;
@@ -33,7 +33,7 @@ import jakarta.annotation.Nullable;
  * @since 2020-05-10
  */
 public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayoutImpl.Vaadin> implements ScrollableLayout {
-    public class Vaadin extends Scroller implements FromVaadinComponentWrapper {
+    public class Vaadin extends Div implements FromVaadinComponentWrapper {
 
         @Nullable
         @Override
@@ -45,24 +45,32 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
     public WebScrollLayoutImpl(Component component, ScrollableLayoutOptions options) {
         HasSize content = (HasSize) TargetVaddin.to(component);
         content.setSizeFull();
-        getVaadinComponent().setContent((com.vaadin.flow.component.Component) content);
+        getVaadinComponent().add((com.vaadin.flow.component.Component) content);
     }
 
     @Override
     public void remove(@Nonnull Component component) {
         com.vaadin.flow.component.Component vaadinComponent = TargetVaddin.to(component);
-        if (vaadinComponent == toVaadinComponent().getContent()) {
-            toVaadinComponent().setContent(null);
+        if (vaadinComponent == getFirstChild()) {
+            removeAll();
         }
         else {
             throw new IllegalArgumentException("Not content");
         }
     }
 
+    private com.vaadin.flow.component.Component getFirstChild() {
+        int componentCount = toVaadinComponent().getComponentCount();
+        if (componentCount == 1) {
+            return toVaadinComponent().getComponentAt(0);
+        }
+        return null;
+    }
+
     @RequiredUIAccess
     @Override
     public void removeAll() {
-        getVaadinComponent().setContent(null);
+        getVaadinComponent().removeAll();
     }
 
     @Override
