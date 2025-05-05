@@ -22,6 +22,7 @@ import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.selection.SelectionModel;
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.Tree;
@@ -43,6 +44,8 @@ import java.util.*;
  */
 @SuppressWarnings("unchecked")
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
+    private static final List CANCELED_RESULT = new ArrayList<>();
+
     @Tag("vaadin-grid-tree-toggle")
     public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component implements HasComponents, ClickNotifier<VaadinGridTreeToggle> {
     }
@@ -141,6 +144,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                     WebTreeNodeImpl<NODE> unloaded = children.get(0);
 
                     children = fetchChildren(parent, false);
+                    if (children == CANCELED_RESULT) {
+                        return;
+                    }
 
                     final List<WebTreeNodeImpl<NODE>> finalChildren = children;
                     ui.access(() -> {
@@ -198,12 +204,20 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         @Nonnull
         private List<WebTreeNodeImpl<NODE>> fetchChildren(@Nonnull WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
             List<WebTreeNodeImpl<NODE>> list = new ArrayList<>();
+            Map<String, WebTreeNodeImpl<NODE>> nodeMap = new HashMap<>();
 
-            myModel.buildChildren(node -> {
-                WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, myNodeMap);
-                list.add(child);
-                return child;
-            }, parent.getValue());
+            try {
+                myModel.buildChildren(node -> {
+                    WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, nodeMap);
+                    list.add(child);
+                    return child;
+                }, parent.getValue());
+            }
+            catch (ProcessCanceledException ignored) {
+                return CANCELED_RESULT;
+            }
+
+            myNodeMap.putAll(nodeMap);
 
             parent.setChildren(list);
 
