@@ -161,6 +161,7 @@ public interface HighlightInfo extends Segment {
         }
 
         @Nonnull
+        @Deprecated
         @DeprecationInfo("Use #descriptionAndTooltip(LocalizeValue)")
         default HighlightInfo.Builder descriptionAndTooltip(@Nonnull String description) {
             return description(description).unescapedToolTip(description);
