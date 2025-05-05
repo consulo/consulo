@@ -473,7 +473,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
           }
         }
 
-        ApplicationUtil.invokeLaterSomewhere(myApplication, task.whereToRunCallbacks(), modality, () -> {
+        ApplicationUtil.invokeLaterSomewhere(myApplication, () -> {
           finishTask(task, result.isCanceled(), result.getThrowable() instanceof ProcessCanceledException ? null : result.getThrowable());
           if (indicatorDisposable != null) {
             Disposer.dispose(indicatorDisposable);
@@ -504,8 +504,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     boolean result = myApplication.runProcessWithProgressSynchronously(taskContainer, task.getTitle(), task.isCancellable(), task.isModal(),
                                                                        task.getProject(), task.getParentComponent(), task.getCancelTextValue());
 
-    ApplicationUtil.invokeAndWaitSomewhere(myApplication, task.whereToRunCallbacks(),
-                                           myApplication.getDefaultModalityState(), () -> finishTask(task, !result, exceptionRef.get()));
+    ApplicationUtil.invokeAndWaitSomewhere(myApplication, () -> finishTask(task, !result, exceptionRef.get()));
     return result;
   }
 
@@ -551,9 +550,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     boolean finalCanceled = processCanceled || progressIndicator.isCanceled();
     Throwable finalException = exception;
 
-    ApplicationUtil.invokeAndWaitSomewhere(myApplication, task.whereToRunCallbacks(),
-                                           modalityState,
-                                           () -> finishTask(task, finalCanceled, finalException));
+    ApplicationUtil.invokeAndWaitSomewhere(myApplication, () -> finishTask(task, finalCanceled, finalException));
   }
 
   @RequiredUIAccess

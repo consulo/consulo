@@ -16,7 +16,6 @@
 package consulo.application.progress;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.EdtReplacementThread;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -139,14 +138,6 @@ public abstract class Task implements TaskInfo, Progressive {
 
     public final void queue() {
         ProgressManager.getInstance().run(this);
-    }
-
-    /**
-     * Specifies the thread to run callbacks on. See {@link EdtReplacementThread} documentation for more info.
-     */
-    @Nonnull
-    public EdtReplacementThread whereToRunCallbacks() {
-        return EdtReplacementThread.EDT_WITH_IW;
     }
 
     @Nullable

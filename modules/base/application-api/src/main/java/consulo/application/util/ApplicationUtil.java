@@ -17,25 +17,21 @@ package consulo.application.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.EdtReplacementThread;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 public class ApplicationUtil {
@@ -47,7 +43,7 @@ public class ApplicationUtil {
   }
 
   public static void tryRunReadAction(@Nonnull final Runnable computable) throws CannotRunReadActionException {
-    if (!((Application)ApplicationManager.getApplication()).tryRunReadAction(computable)) {
+    if (!ApplicationManager.getApplication().tryRunReadAction(computable)) {
       throw CannotRunReadActionException.create();
     }
   }
@@ -90,78 +86,17 @@ public class ApplicationUtil {
   }
 
   public static void invokeLaterSomewhere(@Nonnull Application application,
-                                          @Nonnull EdtReplacementThread thread,
-                                          @Nonnull ModalityState modalityState,
                                           @Nonnull Runnable r) {
-    switch (thread) {
-      case EDT:
-        application.getLastUIAccess().give(r);
-        break;
-      case WT:
-        application.invokeLaterOnWriteThread(r, modalityState);
-        break;
-      case EDT_WITH_IW:
-        application.invokeLater(r, modalityState);
-        break;
-    }
+    application.getLastUIAccess().give(r);
   }
 
   public static void invokeAndWaitSomewhere(@Nonnull Application application,
-                                            @Nonnull EdtReplacementThread thread,
-                                            @Nonnull ModalityState modalityState,
                                             @Nonnull Runnable r) {
-    switch (thread) {
-      case EDT:
-        if (!UIAccess.isUIThread() && application.isWriteThread()) {
-          Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
-        }
-        Application.get().getLastUIAccess().giveAndWaitIfNeed(r);
-        break;
-      case WT:
-        if (application.isWriteThread()) {
-          r.run();
-        }
-        else if (SwingUtilities.isEventDispatchThread()) {
-          Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from EDT to WT");
-        }
-        else {
-          Semaphore s = new Semaphore(1);
-          AtomicReference<Throwable> throwable = new AtomicReference<>();
-          application.invokeLaterOnWriteThread(() -> {
-            try {
-              r.run();
-            }
-            catch (Throwable t) {
-              throwable.set(t);
-            }
-            finally {
-              s.up();
-            }
-          }, modalityState);
-          s.waitFor();
+    if (!UIAccess.isUIThread() && application.isWriteThread()) {
+      Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
+    }
 
-          if (throwable.get() != null) {
-            ExceptionUtil.rethrow(throwable.get());
-          }
-        }
-        break;
-      case EDT_WITH_IW:
-        if (!UIAccess.isUIThread() && application.isWriteThread()) {
-          Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
-        }
-        application.invokeAndWait(r, modalityState);
-        break;
-    }
-  }
-
-  public static void showDialogAfterWriteAction(@Nonnull Runnable runnable) {
-    Application application = ApplicationManager.getApplication();
-    if (application.isWriteAccessAllowed()) {
-      application.invokeLater(runnable);
-    }
-    else {
-      runnable.run();
-    }
+    application.getLastUIAccess().giveAndWaitIfNeed(r);
   }
 
   public static class CannotRunReadActionException extends ProcessCanceledException {
