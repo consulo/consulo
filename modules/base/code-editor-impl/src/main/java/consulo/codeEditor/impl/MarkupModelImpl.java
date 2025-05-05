@@ -24,7 +24,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.disposer.util.DisposableList;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
 import consulo.document.impl.IntervalTreeImpl;
@@ -33,7 +33,6 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
-import consulo.util.collection.Lists;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.BitUtil;
 import jakarta.annotation.Nonnull;
@@ -48,7 +47,7 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     private final DocumentEx myDocument;
 
     private RangeHighlighter[] myCachedHighlighters;
-    private final List<MarkupModelListener> myListeners = Lists.newLockFreeCopyOnWriteList();
+    private final DisposableList<MarkupModelListener> myListeners = DisposableList.create();
     private final RangeHighlighterTree myHighlighterTree;          // this tree holds regular highlighters with target = HighlighterTargetArea.EXACT_RANGE
     private final RangeHighlighterTree myHighlighterTreeForLines;  // this tree holds line range highlighters with target = HighlighterTargetArea.LINES_IN_RANGE
 
@@ -202,8 +201,7 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
 
     @Override
     public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull final MarkupModelListener listener) {
-        myListeners.add(listener);
-        Disposer.register(parentDisposable, () -> removeMarkupModelListener(listener));
+        myListeners.add(listener, parentDisposable);
     }
 
     private void removeMarkupModelListener(@Nonnull MarkupModelListener listener) {
