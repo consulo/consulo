@@ -625,49 +625,4 @@ public abstract class Task implements TaskInfo, Progressive {
             return myShowWhenFocused;
         }
     }
-
-    public abstract static class WithResult<T, E extends Exception> extends Task.Modal {
-        private final SimpleReference<T> myResult = SimpleReference.create();
-        private final SimpleReference<Throwable> myError = SimpleReference.create();
-
-        public WithResult(
-            @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
-            boolean canBeCancelled
-        ) {
-            super(project, title, canBeCancelled);
-        }
-
-        @Deprecated
-        @DeprecationInfo("Use variant with LocalizeValue")
-        public WithResult(
-            @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
-            boolean canBeCancelled
-        ) {
-            super(project, title, canBeCancelled);
-        }
-
-        @Override
-        public final void run(@Nonnull ProgressIndicator indicator) {
-            try {
-                myResult.set(compute(indicator));
-            }
-            catch (Throwable t) {
-                myError.set(t);
-            }
-        }
-
-        protected abstract T compute(@Nonnull ProgressIndicator indicator) throws E;
-
-        @SuppressWarnings("unchecked")
-        public T getResult() throws E {
-            Throwable t = myError.get();
-            ExceptionUtil.rethrowUnchecked(t);
-            if (t != null) {
-                throw (E)t;
-            }
-            return myResult.get();
-        }
-    }
 }

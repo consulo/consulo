@@ -192,14 +192,6 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
    */
   public abstract void run(@Nonnull Task task);
 
-  /**
-   * Runs a specified computation with a modal progress dialog.
-   */
-  public <T, E extends Exception> T run(@Nonnull Task.WithResult<T, E> task) throws E {
-    run((Task)task);
-    return task.getResult();
-  }
-
   public abstract void runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task,
                                                             @Nonnull ProgressIndicator progressIndicator);
 
