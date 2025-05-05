@@ -27,6 +27,7 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
@@ -41,6 +42,8 @@ import java.util.List;
  * @since 2024-03-09
  */
 class HighlightInfoBuilder implements HighlightInfo.Builder {
+    private static final LocalizeValue UNSET = LocalizeValue.of("__UNSET__");
+
     private static final Logger LOG = Logger.getInstance(HighlightInfoBuilder.class);
 
     private record FixInfo(
@@ -60,8 +63,8 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     private int startOffset = -1;
     private int endOffset = -1;
 
-    private String escapedDescription;
-    private String escapedToolTip;
+    private LocalizeValue escapedDescription = UNSET;
+    private LocalizeValue escapedToolTip = UNSET;
     private HighlightSeverity severity;
 
     private boolean isAfterEndOfLine;
@@ -113,9 +116,9 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
 
     @Nonnull
     @Override
-    public HighlightInfo.Builder description(@Nonnull String description) {
+    public HighlightInfo.Builder description(@Nonnull LocalizeValue description) {
         assertNotCreated();
-        assert escapedDescription == null : "description already set";
+        assert escapedDescription == UNSET : "description already set";
         escapedDescription = description;
         return this;
     }
@@ -140,18 +143,18 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
 
     @Nonnull
     @Override
-    public HighlightInfo.Builder unescapedToolTip(@Nonnull String unescapedToolTip) {
+    public HighlightInfo.Builder unescapedToolTip(@Nonnull LocalizeValue unescapedToolTip) {
         assertNotCreated();
-        assert escapedToolTip == null : "Tooltip was already set";
-        escapedToolTip = HighlightInfoImpl.htmlEscapeToolTip(unescapedToolTip);
+        assert escapedToolTip == UNSET : "Tooltip was already set";
+        escapedToolTip = unescapedToolTip.map((m, text) -> HighlightInfoImpl.htmlEscapeToolTip(text));
         return this;
     }
 
     @Nonnull
     @Override
-    public HighlightInfo.Builder escapedToolTip(@Nonnull String escapedToolTip) {
+    public HighlightInfo.Builder escapedToolTip(@Nonnull LocalizeValue escapedToolTip) {
         assertNotCreated();
-        assert this.escapedToolTip == null : "Tooltip was already set";
+        assert this.escapedToolTip == UNSET : "Tooltip was already set";
         this.escapedToolTip = escapedToolTip;
         return this;
     }
@@ -270,6 +273,11 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return info;
     }
 
+    @Nullable
+    private static String nullizeValue(@Nonnull LocalizeValue localizeValue) {
+        return localizeValue == UNSET ? null : localizeValue.get();
+    }
+
     @Nonnull
     @Override
     public HighlightInfoImpl createUnconditionally() {
@@ -286,8 +294,8 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
             type,
             startOffset,
             endOffset,
-            escapedDescription,
-            escapedToolTip,
+            nullizeValue(escapedDescription),
+            nullizeValue(escapedToolTip),
             severity,
             isAfterEndOfLine,
             myNeedsUpdateOnTyping,

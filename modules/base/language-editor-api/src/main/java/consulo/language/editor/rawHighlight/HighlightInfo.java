@@ -84,14 +84,8 @@ public interface HighlightInfo extends Segment {
         @Nonnull
         Builder inspectionToolId(@Nonnull String inspectionTool);
 
-        // only one allowed
         @Nonnull
-        Builder description(@Nonnull String description);
-
-        @Nonnull
-        default HighlightInfo.Builder descriptionAndTooltip(@Nonnull String description) {
-            return description(description).unescapedToolTip(description);
-        }
+        Builder description(@Nonnull LocalizeValue description);
 
         @Nonnull
         default Builder descriptionAndTooltip(@Nonnull LocalizeValue description) {
@@ -105,12 +99,11 @@ public interface HighlightInfo extends Segment {
         @Nonnull
         Builder textAttributes(@Nonnull TextAttributesKey attributesKey);
 
-        // only one allowed
         @Nonnull
-        Builder unescapedToolTip(@Nonnull String unescapedToolTip);
+        Builder unescapedToolTip(@Nonnull LocalizeValue unescapedToolTip);
 
         @Nonnull
-        Builder escapedToolTip(@Nonnull String escapedToolTip);
+        Builder escapedToolTip(@Nonnull LocalizeValue escapedToolTip);
 
         @Nonnull
         Builder endOfLine();
@@ -136,6 +129,11 @@ public interface HighlightInfo extends Segment {
         }
 
         @Nonnull
+        default Builder registerFix(@Nonnull IntentionAction action, @Nonnull TextRange textRange) {
+            return registerFix(action, null, null, textRange, null);
+        }
+
+        @Nonnull
         Builder registerFix(
             @Nonnull IntentionAction action,
             @Nullable List<IntentionAction> options,
@@ -152,6 +150,38 @@ public interface HighlightInfo extends Segment {
 
         @Nonnull
         HighlightInfo createUnconditionally();
+
+        // region deprecated stuff
+
+        @Nonnull
+        @Deprecated
+        @DeprecationInfo("Use #description(LocalizeValue)")
+        default Builder description(@Nonnull String description) {
+            return description(LocalizeValue.of(description));
+        }
+
+        @Nonnull
+        @DeprecationInfo("Use #descriptionAndTooltip(LocalizeValue)")
+        default HighlightInfo.Builder descriptionAndTooltip(@Nonnull String description) {
+            return description(description).unescapedToolTip(description);
+        }
+
+        // only one allowed
+        @Nonnull
+        @Deprecated
+        @DeprecationInfo("Use #unescapedToolTip(LocalizeValue)")
+        default Builder unescapedToolTip(@Nonnull String unescapedToolTip) {
+            return unescapedToolTip(LocalizeValue.of(unescapedToolTip));
+        }
+
+        @Nonnull
+        @Deprecated
+        @DeprecationInfo("use #escapedToolTip(LocalizeValue)")
+        default Builder escapedToolTip(@Nonnull String escapedToolTip) {
+            return escapedToolTip(LocalizeValue.of(escapedToolTip));
+        }
+
+        // endregion
     }
 
     @Nonnull
