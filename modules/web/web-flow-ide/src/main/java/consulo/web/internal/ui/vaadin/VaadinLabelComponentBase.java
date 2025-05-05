@@ -32,44 +32,44 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
  */
 @Tag("span")
 public abstract class VaadinLabelComponentBase extends SimpleComponent implements FromVaadinComponentWrapper, HasText, HasEnabled, HasSize {
-  private Image myImage;
-  private LocalizeValue myTextValue;
-  private HorizontalAlignment myHorizontalAlignment;
-  private ColorValue myForegroundColor;
+    private Image myImage;
+    private LocalizeValue myTextValue;
+    private HorizontalAlignment myHorizontalAlignment;
+    private ColorValue myForegroundColor;
 
-  public void setImage(Image image) {
-    myImage = image;
-  }
+    public void setImage(Image image) {
+        myImage = image;
+    }
 
-  public Image getImage() {
-    return myImage;
-  }
+    public Image getImage() {
+        return myImage;
+    }
 
-  public void setTextValue(LocalizeValue textValue) {
-    myTextValue = textValue;
+    public void setTextValue(LocalizeValue textValue) {
+        myTextValue = textValue;
 
-    TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(textValue.get());
+        TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(textValue.get());
 
-    setText(textWithMnemonic.getText());
-  }
+        setText(textWithMnemonic.getText());
+    }
 
-  public LocalizeValue getTextValue() {
-    return myTextValue;
-  }
+    public LocalizeValue getTextValue() {
+        return myTextValue;
+    }
 
-  public void setHorizontalAlignment(HorizontalAlignment horizontalAlignment) {
-    myHorizontalAlignment = horizontalAlignment;
-  }
+    public void setHorizontalAlignment(HorizontalAlignment horizontalAlignment) {
+        myHorizontalAlignment = horizontalAlignment;
+    }
 
-  public HorizontalAlignment getHorizontalAlignment() {
-    return myHorizontalAlignment;
-  }
+    public HorizontalAlignment getHorizontalAlignment() {
+        return myHorizontalAlignment;
+    }
 
-  public void setForegroundColor(ColorValue foregroundColor) {
-    myForegroundColor = foregroundColor;
-  }
+    public void setForegroundColor(ColorValue foregroundColor) {
+        myForegroundColor = foregroundColor;
+    }
 
-  public ColorValue getForegroundColor() {
-    return myForegroundColor;
-  }
+    public ColorValue getForegroundColor() {
+        return myForegroundColor;
+    }
 }

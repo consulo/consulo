@@ -7,7 +7,10 @@ import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.internal.ProgressIndicatorEx;
-import consulo.application.progress.*;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.application.util.ClientId;
 import consulo.application.util.Semaphore;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -18,10 +21,9 @@ import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -273,17 +275,18 @@ public final class ProgressRunner<R> {
   // must be handled by very synchronous direct call (alt: use proper progress indicator, i.e. PotemkinProgress or ProgressWindow).
   // Note: running sync task on pooled thread from EDT can lead to deadlock if pooled thread will try to invokeAndWait.
   private boolean checkIfForceDirectExecNeeded() {
-    if (isSync && UIAccess.isUIThread() && !ApplicationManager.getApplication().isWriteThread()) {
+    Application application = ApplicationManager.getApplication();
+    if (isSync && UIAccess.isUIThread() && !application.isWriteThread() && !application.isUnifiedApplication()) {
       throw new IllegalStateException("Running sync tasks on pure EDT (w/o IW lock) is dangerous for several reasons.");
     }
     if (!isSync && isModal && UIAccess.isUIThread()) {
       throw new IllegalStateException("Running async modal tasks from EDT is impossible: modal implies sync dialog show + polling events");
     }
 
-    boolean forceDirectExec = isSync && ApplicationManager.getApplication().isDispatchThread() && (ApplicationManager.getApplication().isWriteAccessAllowed() || !isModal);
+    boolean forceDirectExec = isSync && application.isDispatchThread() && (application.isWriteAccessAllowed() || !isModal);
     if (forceDirectExec) {
-      String reason = ApplicationManager.getApplication().isWriteAccessAllowed() ? "inside Write Action" : "not modal execution";
-      @NonNls String failedConstraints = "";
+      String reason = application.isWriteAccessAllowed() ? "inside Write Action" : "not modal execution";
+      String failedConstraints = "";
       if (isModal) failedConstraints += "Use Modal execution; ";
       if (myThreadToUse == ThreadToUse.POOLED || myThreadToUse == ThreadToUse.FJ) failedConstraints += "Use pooled thread; ";
       failedConstraints = failedConstraints.isEmpty() ? "none" : failedConstraints;

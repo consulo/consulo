@@ -16,8 +16,10 @@
 package consulo.web.internal.ui.base;
 
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.shared.Tooltip;
 import consulo.application.util.matcher.NameUtilCore;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -80,6 +82,11 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     @Nonnull
     public abstract T createVaadinComponent();
+
+    @Override
+    public void setToolTipText(@Nonnull LocalizeValue value) {
+        Tooltip.forComponent(toVaadinComponent()).setText(value.get());
+    }
 
     @Override
     public void setFont(@Nonnull Font font) {

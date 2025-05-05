@@ -71,16 +71,14 @@ public abstract class UnifiedApplication extends BaseApplication {
     @Override
     public void assertReadAccessAllowed() {
         if (!isReadAccessAllowed()) {
-            throw new IllegalArgumentException();
+            LOG.error(new IllegalArgumentException("Read access required"));
         }
     }
 
     @RequiredUIAccess
     @Override
     public void assertIsDispatchThread() {
-        if (!isDispatchThread()) {
-            throw new IllegalArgumentException();
-        }
+        UIAccess.assertIsUIThread();
     }
 
     @Override
@@ -116,6 +114,7 @@ public abstract class UnifiedApplication extends BaseApplication {
         lastUIAccess.give(runnable);
     }
 
+    @RequiredUIAccess
     @Override
     public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
         if (isDispatchThread()) {
@@ -123,7 +122,7 @@ public abstract class UnifiedApplication extends BaseApplication {
             return;
         }
         if (UIAccess.isUIThread()) {
-            runIntendedWriteActionOnCurrentThread(runnable);
+            runnable.run();
             return;
         }
 
@@ -131,7 +130,17 @@ public abstract class UnifiedApplication extends BaseApplication {
             throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
         }
 
-        runIntendedWriteActionOnCurrentThread(runnable);
+        getLastUIAccess().giveAndWait(runnable);
+    }
+
+    @Override
+    public void runIntendedWriteActionOnCurrentThread(@Nonnull Runnable action) {
+        action.run();
+    }
+
+    @Override
+    public boolean isReadAccessAllowed() {
+        return isWriteThread() || myLock.isReadLockedByThisThread(); // no ui thread check
     }
 
     @Nonnull

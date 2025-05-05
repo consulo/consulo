@@ -35,42 +35,45 @@ import consulo.web.internal.ui.WebRootPaneImpl;
  * @since 19-Oct-17
  */
 public class WebIdeRootView {
-  private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
-  private final MenuItemPresentationFactory myPresentationFactory;
-  private Project myProject;
+    private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
+    private final MenuItemPresentationFactory myPresentationFactory;
+    private Project myProject;
 
-  private MenuBar myMenuBar;
+    private MenuBar myMenuBar;
 
-  @RequiredUIAccess
-  public WebIdeRootView(Project project) {
-    myProject = project;
-    myPresentationFactory = new MenuItemPresentationFactory();
+    @RequiredUIAccess
+    public WebIdeRootView(Project project) {
+        myProject = project;
+        myPresentationFactory = new MenuItemPresentationFactory();
 
-    myRootPanel.getComponent().putUserData(Project.KEY, myProject);
+        myRootPanel.getComponent().putUserData(Project.KEY, myProject);
 
-    myMenuBar = MenuBar.create();
-    myRootPanel.setMenuBar(myMenuBar);
-  }
+        myMenuBar = MenuBar.create();
+        myRootPanel.setMenuBar(myMenuBar);
+    }
 
-  @RequiredUIAccess
-  public void setStatusBar(UnifiedStatusBarImpl statusBar) {
-    myRootPanel.setStatusBar(statusBar);
-  }
+    @RequiredUIAccess
+    public void setStatusBar(UnifiedStatusBarImpl statusBar) {
+        myRootPanel.setStatusBar(statusBar);
+    }
 
-  @RequiredUIAccess
-  public void update() {
-    DataContext dataContext = ((BaseDataManager)DataManager.getInstance()).getDataContextTest(myRootPanel.getComponent());
+    @RequiredUIAccess
+    public void update() {
+        DataContext dataContext = ((BaseDataManager) DataManager.getInstance()).getDataContextTest(myRootPanel.getComponent());
 
-    AnAction action = ActionManager.getInstance().getAction(IdeActions.GROUP_MAIN_MENU);
+        AnAction action = ActionManager.getInstance().getAction(IdeActions.GROUP_MAIN_MENU);
 
-    UnifiedActionUtil.expandActionGroup((ActionGroup)action,
-                                        dataContext,
-                                        ActionManager.getInstance(),
-                                        myPresentationFactory,
-                                        menuItem -> myMenuBar.add(menuItem));
-  }
+        // TODO explicit read action - remove in future
+        myProject.getApplication().runReadAction(() -> {
+            UnifiedActionUtil.expandActionGroup((ActionGroup) action,
+                dataContext,
+                ActionManager.getInstance(),
+                myPresentationFactory,
+                menuItem -> myMenuBar.add(menuItem));
+        });
+    }
 
-  public WebRootPaneImpl getRootPanel() {
-    return myRootPanel;
-  }
+    public WebRootPaneImpl getRootPanel() {
+        return myRootPanel;
+    }
 }

@@ -17,6 +17,7 @@ package consulo.application.impl.internal;
 
 import consulo.application.AccessToken;
 import consulo.util.collection.Lists;
+import consulo.util.lang.ExceptionUtil;
 
 import java.util.List;
 import java.util.concurrent.locks.StampedLock;
@@ -106,6 +107,7 @@ public class UnifiedRWLock implements RWLock {
     public void writeLock() {
         myLock.writeLock();
         myWriteThread = Thread.currentThread();
+        System.out.println(ExceptionUtil.getThrowableText(new Exception("write run")));
     }
 
     @Override
