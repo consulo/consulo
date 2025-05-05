@@ -43,235 +43,235 @@ import java.util.*;
  */
 @SuppressWarnings("unchecked")
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
-  @Tag("vaadin-grid-tree-toggle")
-  public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component implements HasComponents, ClickNotifier<VaadinGridTreeToggle> {
-  }
+    @Tag("vaadin-grid-tree-toggle")
+    public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component implements HasComponents, ClickNotifier<VaadinGridTreeToggle> {
+    }
 
-  public class Vaadin extends TreeGrid<WebTreeNodeImpl<NODE>> implements FromVaadinComponentWrapper {
-    private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new LinkedHashMap<>();
+    public class Vaadin extends TreeGrid<WebTreeNodeImpl<NODE>> implements FromVaadinComponentWrapper {
+        private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new LinkedHashMap<>();
 
-    private WebTreeNodeImpl<NODE> myRootNode;
-    private TreeModel<NODE> myModel;
+        private WebTreeNodeImpl<NODE> myRootNode;
+        private TreeModel<NODE> myModel;
 
-    public Vaadin() {
-      setAllRowsVisible(true);
-      
-      addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_COLUMN_BORDERS, GridVariant.LUMO_NO_BORDER);
+        public Vaadin() {
+            setAllRowsVisible(true);
 
-      setSelectionMode(SelectionMode.SINGLE);
+            addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_COLUMN_BORDERS, GridVariant.LUMO_NO_BORDER);
 
-      ((SelectionModel.Single) getSelectionModel()).setDeselectAllowed(false);
+            setSelectionMode(SelectionMode.SINGLE);
 
-      addComponentColumn(node -> {
-        WebItemPresentationImpl item = new WebItemPresentationImpl();
-        if (node instanceof WebTreeNodeImpl.NotLoaded) {
-          item.append("Loading...");
+            ((SelectionModel.Single) getSelectionModel()).setDeselectAllowed(false);
+
+            addComponentColumn(node -> {
+                WebItemPresentationImpl item = new WebItemPresentationImpl();
+                if (node instanceof WebTreeNodeImpl.NotLoaded) {
+                    item.append("Loading...");
+                }
+                else {
+                    node.getRender().accept(node.getValue(), item);
+                }
+                VaadinGridTreeToggle toggle = new VaadinGridTreeToggle();
+                toggle.getElement().setAttribute("leaf", node.isLeaf());
+                toggle.getElement().setAttribute("level", String.valueOf(node.getLevel()));
+                if (isExpanded(node)) {
+                    toggle.getElement().setAttribute("expanded", true);
+                }
+
+                toggle.addClickListener(event -> {
+                    select(node);
+
+                    if (getDataCommunicator().hasChildren(node)) {
+                        if (isExpanded(node)) {
+                            collapse(List.of(node), true);
+                        }
+                        else {
+                            expand(List.of(node), true);
+                        }
+                    }
+                });
+                toggle.add(item.toComponent());
+                return toggle;
+            }).setAutoWidth(true).setFlexGrow(1);
         }
-        else {
-          node.getRender().accept(node.getValue(), item);
-        }
-        VaadinGridTreeToggle toggle = new VaadinGridTreeToggle();
-        toggle.getElement().setAttribute("leaf", node.isLeaf());
-        toggle.getElement().setAttribute("level", String.valueOf(node.getLevel()));
-        if (isExpanded(node)) {
-            toggle.getElement().setAttribute("expanded", true);
+
+        public void init(NODE rootValue, TreeModel<NODE> model) {
+            myModel = model;
+
+            myRootNode = new WebTreeNodeImpl<>(null, rootValue, myNodeMap);
+
+            if (myModel.isNeedBuildChildrenBeforeOpen(myRootNode)) {
+                fetchChildren(myRootNode, false);
+            }
+
+            initTreeData(true);
+
+            addExpandListener(event -> {
+                Collection<WebTreeNodeImpl<NODE>> items = event.getItems();
+
+                for (WebTreeNodeImpl<NODE> item : items) {
+                    if (item.isNotLoaded()) {
+                        UI ui = UI.getCurrent();
+                        // items not loaded
+                        queue(item, ui);
+                    }
+                }
+            });
         }
 
-        toggle.addClickListener(event -> {
-          select(node);
 
-          if (getDataCommunicator().hasChildren(node)) {
-            if (isExpanded(node)) {
-              collapse(List.of(node), true);
+        @Override
+        protected void onAttach(AttachEvent attachEvent) {
+            super.onAttach(attachEvent);
+
+            UI ui = UI.getCurrent();
+
+            invokeLater(() -> {
+                fetchChildren(myRootNode, false);
+
+                ui.access(() -> {
+                    initTreeData(false);
+                });
+            });
+        }
+
+        private void queue(@Nonnull WebTreeNodeImpl<NODE> parent, UI ui) {
+            invokeLater(() -> {
+                List<WebTreeNodeImpl<NODE>> children = parent.getChildren();
+                if (parent.isNotLoaded()) {
+                    WebTreeNodeImpl<NODE> unloaded = children.get(0);
+
+                    children = fetchChildren(parent, false);
+
+                    final List<WebTreeNodeImpl<NODE>> finalChildren = children;
+                    ui.access(() -> {
+                        TreeData<WebTreeNodeImpl<NODE>> data = getTreeData();
+
+                        data.removeItem(unloaded);
+
+                        data.addItems(parent, finalChildren);
+
+                        // add raw children
+                        for (WebTreeNodeImpl<NODE> finalChild : finalChildren) {
+                            data.addItems(finalChild, finalChild.getChildren());
+                        }
+
+                        myNodeMap.remove(unloaded.getId());
+
+                        getDataProvider().refreshItem(parent, true);
+
+                        ui.push();
+                    });
+                }
+            });
+        }
+
+        private void invokeLater(Runnable runnable) {
+            AppExecutorUtil.getAppExecutorService().execute(runnable);
+        }
+
+        private void initTreeData(boolean init) {
+            TreeData<WebTreeNodeImpl<NODE>> data = new TreeData<>();
+            // will set not loaded node
+            if (init) {
+                data.addRootItems(List.of(new WebTreeNodeImpl.NotLoaded<>(null, null, myNodeMap)));
             }
             else {
-              expand(List.of(node), true);
+                data.addRootItems(myRootNode.getChildren());
+                for (WebTreeNodeImpl<NODE> node : myRootNode.getChildren()) {
+                    data.addItems(node, node.getChildren());
+                }
             }
-          }
-        });
-        toggle.add(item.toComponent());
-        return toggle;
-      }).setAutoWidth(true).setFlexGrow(1);
-    }
 
-    public void init(NODE rootValue, TreeModel<NODE> model) {
-      myModel = model;
+            TreeDataProvider<WebTreeNodeImpl<NODE>> provider = new TreeDataProvider<>(data) {
+                @Override
+                public Object getId(WebTreeNodeImpl<NODE> item) {
+                    return item.getId();
+                }
+            };
 
-      myRootNode = new WebTreeNodeImpl<>(null, rootValue, myNodeMap);
+            setUniqueKeyDataGenerator("key", WebTreeNodeImpl::getId);
 
-      if (myModel.isNeedBuildChildrenBeforeOpen(myRootNode)) {
-        fetchChildren(myRootNode, false);
-      }
-
-      initTreeData(true);
-
-      addExpandListener(event -> {
-        Collection<WebTreeNodeImpl<NODE>> items = event.getItems();
-
-        for (WebTreeNodeImpl<NODE> item : items) {
-          if (item.isNotLoaded()) {
-            UI ui = UI.getCurrent();
-            // items not loaded
-            queue(item, ui);
-          }
+            setDataProvider(provider);
+            getDataCommunicator().getKeyMapper().setIdentifierGetter(WebTreeNodeImpl::getId);
         }
-      });
+
+        @Nonnull
+        private List<WebTreeNodeImpl<NODE>> fetchChildren(@Nonnull WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
+            List<WebTreeNodeImpl<NODE>> list = new ArrayList<>();
+
+            myModel.buildChildren(node -> {
+                WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, myNodeMap);
+                list.add(child);
+                return child;
+            }, parent.getValue());
+
+            parent.setChildren(list);
+
+            Comparator<TreeNode<NODE>> nodeComparator = myModel.getNodeComparator();
+            if (nodeComparator != null) {
+                list.sort(nodeComparator);
+            }
+
+            if (list.isEmpty()) {
+                parent.setLeaf(true);
+            }
+
+            if (fetchNext) {
+                for (WebTreeNodeImpl<NODE> child : list) {
+                    if (myModel.isNeedBuildChildrenBeforeOpen(child)) {
+                        fetchChildren(child, false);
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebTreeImpl.this;
+        }
     }
 
+    @RequiredUIAccess
+    public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model, Disposable disposable) {
+        Vaadin vaadin = toVaadinComponent();
+        vaadin.init(rootValue, model);
+        vaadin.asSingleSelect().addValueChangeListener(event -> {
+            WebTreeNodeImpl<NODE> value = event.getValue();
+            if (value == null || value instanceof WebTreeNodeImpl.NotLoaded) {
+                return;
+            }
+
+            getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent(this, value));
+        });
+
+        vaadin.addItemDoubleClickListener(event -> {
+            TreeNode<NODE> selectedNode = getSelectedNode();
+            if (selectedNode == null) {
+                return;
+            }
+
+            model.onDoubleClick(this, selectedNode);
+        });
+    }
 
     @Override
-    protected void onAttach(AttachEvent attachEvent) {
-      super.onAttach(attachEvent);
-
-      UI ui = UI.getCurrent();
-
-      invokeLater(() -> {
-        fetchChildren(myRootNode, false);
-
-        ui.access(() -> {
-          initTreeData(false);
-        });
-      });
-    }
-
-    private void queue(@Nonnull WebTreeNodeImpl<NODE> parent, UI ui) {
-      invokeLater(() -> {
-        List<WebTreeNodeImpl<NODE>> children = parent.getChildren();
-        if (parent.isNotLoaded()) {
-          WebTreeNodeImpl<NODE> unloaded = children.get(0);
-
-          children = fetchChildren(parent, false);
-
-          final List<WebTreeNodeImpl<NODE>> finalChildren = children;
-          ui.access(() -> {
-            TreeData<WebTreeNodeImpl<NODE>> data = getTreeData();
-
-            data.removeItem(unloaded);
-
-            data.addItems(parent, finalChildren);
-
-            // add raw children
-            for (WebTreeNodeImpl<NODE> finalChild : finalChildren) {
-              data.addItems(finalChild, finalChild.getChildren());
-            }
-
-            myNodeMap.remove(unloaded.getId());
-
-            getDataProvider().refreshItem(parent, true);
-
-            ui.push();
-          });
-        }
-      });
-    }
-
-    private void invokeLater(Runnable runnable) {
-      AppExecutorUtil.getAppExecutorService().execute(runnable);
-    }
-
-    private void initTreeData(boolean init) {
-      TreeData<WebTreeNodeImpl<NODE>> data = new TreeData<>();
-      // will set not loaded node
-      if (init) {
-        data.addRootItems(List.of(new WebTreeNodeImpl.NotLoaded<>(null, null, myNodeMap)));
-      }
-      else {
-        data.addRootItems(myRootNode.getChildren());
-        for (WebTreeNodeImpl<NODE> node : myRootNode.getChildren()) {
-          data.addItems(node, node.getChildren());
-        }
-      }
-
-      TreeDataProvider<WebTreeNodeImpl<NODE>> provider = new TreeDataProvider<>(data) {
-        @Override
-        public Object getId(WebTreeNodeImpl<NODE> item) {
-          return item.getId();
-        }
-      };
-
-      setUniqueKeyDataGenerator("key", WebTreeNodeImpl::getId);
-
-      setDataProvider(provider);
-      getDataCommunicator().getKeyMapper().setIdentifierGetter(WebTreeNodeImpl::getId);
-    }
-
     @Nonnull
-    private List<WebTreeNodeImpl<NODE>> fetchChildren(@Nonnull WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
-      List<WebTreeNodeImpl<NODE>> list = new ArrayList<>();
-
-      myModel.buildChildren(node -> {
-        WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, myNodeMap);
-        list.add(child);
-        return child;
-      }, parent.getValue());
-
-      parent.setChildren(list);
-
-      Comparator<TreeNode<NODE>> nodeComparator = myModel.getNodeComparator();
-      if (nodeComparator != null) {
-        list.sort(nodeComparator);
-      }
-
-      if (list.isEmpty()) {
-        parent.setLeaf(true);
-      }
-
-      if (fetchNext) {
-        for (WebTreeNodeImpl<NODE> child : list) {
-          if (myModel.isNeedBuildChildrenBeforeOpen(child)) {
-            fetchChildren(child, false);
-          }
-        }
-      }
-
-      return list;
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
 
     @Nullable
     @Override
-    public Component toUIComponent() {
-      return WebTreeImpl.this;
+    public TreeNode<NODE> getSelectedNode() {
+        Set selectedItems = toVaadinComponent().getSelectedItems();
+        return (TreeNode<NODE>) ContainerUtil.getFirstItem(selectedItems);
     }
-  }
 
-  @RequiredUIAccess
-  public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model, Disposable disposable) {
-    Vaadin vaadin = toVaadinComponent();
-    vaadin.init(rootValue, model);
-    vaadin.asSingleSelect().addValueChangeListener(event -> {
-      WebTreeNodeImpl<NODE> value = event.getValue();
-      if (value == null || value instanceof WebTreeNodeImpl.NotLoaded) {
-        return;
-      }
-
-      getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent(this, value));
-    });
-
-    vaadin.addItemDoubleClickListener(event -> {
-      TreeNode<NODE> selectedNode = getSelectedNode();
-      if (selectedNode == null) {
-        return;
-      }
-      
-      model.onDoubleClick(this, selectedNode);
-    });
-  }
-
-  @Override
-  @Nonnull
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
-  @Nullable
-  @Override
-  public TreeNode<NODE> getSelectedNode() {
-    Set selectedItems = toVaadinComponent().getSelectedItems();
-    return (TreeNode<NODE>)ContainerUtil.getFirstItem(selectedItems);
-  }
-
-  @Override
-  public void expand(@Nonnull TreeNode<NODE> node) {
-    toVaadinComponent().expand(node);
-  }
+    @Override
+    public void expand(@Nonnull TreeNode<NODE> node) {
+        toVaadinComponent().expand(node);
+    }
 }
