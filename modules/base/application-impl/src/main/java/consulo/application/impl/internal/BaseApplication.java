@@ -686,7 +686,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
         ProgressRunner<?> progressRunner = new ProgressRunner<>(process)
             .sync()
-            .onThread(ProgressRunner.ThreadToUse.POOLED)
             .modal()
             .withProgress(progress);
 
