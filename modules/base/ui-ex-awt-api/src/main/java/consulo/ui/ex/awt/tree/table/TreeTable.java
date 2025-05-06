@@ -64,6 +64,7 @@ public class TreeTable extends JBTable {
     if (myTree != null) {
       myTree.removePropertyChangeListener(JTree.ROW_HEIGHT_PROPERTY, myTreeRowHeightPropertyListener);
     }
+    setTableHeader(null);
     myTree = new TreeTableTree(treeTableModel, this);
     setRowHeight(myTree.getRowHeight());
     myTreeRowHeightPropertyListener = new PropertyChangeListener() {

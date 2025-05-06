@@ -25,7 +25,6 @@ import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleState;
 import javax.accessibility.AccessibleStateSet;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
@@ -38,7 +37,6 @@ public class TreeTableCellRenderer implements TableCellRenderer, ClientPropertyH
   private final TreeTableTree myTree;
   private TreeCellRenderer myTreeCellRenderer;
   private TableCellRendererComponent myCellRendererComponent = new TableCellRendererComponent();
-  private Border myDefaultBorder = UIUtil.getTableFocusCellHighlightBorder();
 
   public TreeTableCellRenderer(TreeTable treeTable, TreeTableTree tree) {
     myTreeTable = treeTable;
@@ -48,19 +46,26 @@ public class TreeTableCellRenderer implements TableCellRenderer, ClientPropertyH
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     int modelRow = table.convertRowIndexToModel(row);
-    final boolean lineHasFocus = table.hasFocus();
 
-    if (myTreeCellRenderer != null) myTree.setCellRenderer(myTreeCellRenderer);
+    Color background, foreground;
+
+    if (myTreeCellRenderer != null) {
+      myTree.setCellRenderer(myTreeCellRenderer);
+    }
+
     if (isSelected) {
-      myTree.setBackground(lineHasFocus ? table.getSelectionBackground() : UIUtil.getTreeUnfocusedSelectionBackground());
-      myTree.setForeground(table.getSelectionForeground());
+      background = UIUtil.getTreeSelectionBackground(hasFocus);
+      foreground = UIUtil.getTreeSelectionForeground(hasFocus);
     }
     else {
-      myTree.setBackground(table.getBackground());
-      myTree.setForeground(table.getForeground());
+      background = UIUtil.getTreeBackground();
+      foreground = UIUtil.getTreeForeground();
     }
 
-    myCellRendererComponent.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+    myTree.setBackground(background);
+    myTree.setForeground(foreground);
+    myCellRendererComponent.setBackground(background);
+    myCellRendererComponent.setForeground(foreground);
 
     //TableModel model = myTreeTable.getModel();
     //myTree.setTreeTableTreeBorder(hasFocus && model.getColumnClass(column).equals(TreeTableModel.class) ? myDefaultBorder : null);
@@ -69,7 +74,7 @@ public class TreeTableCellRenderer implements TableCellRenderer, ClientPropertyH
     final Object treeObject = myTree.getPathForRow(modelRow).getLastPathComponent();
     boolean leaf = myTree.getModel().isLeaf(treeObject);
     final boolean expanded = myTree.isExpanded(modelRow);
-    Component component = myTree.getCellRenderer().getTreeCellRendererComponent(myTree, treeObject, isSelected, expanded, leaf, modelRow, lineHasFocus);
+    Component component = myTree.getCellRenderer().getTreeCellRendererComponent(myTree, treeObject, isSelected, expanded, leaf, modelRow, hasFocus);
     if (component instanceof JComponent) {
       table.setToolTipText(((JComponent)component).getToolTipText());
     }
@@ -82,10 +87,6 @@ public class TreeTableCellRenderer implements TableCellRenderer, ClientPropertyH
 
   public void setCellRenderer(TreeCellRenderer treeCellRenderer) {
     myTreeCellRenderer = treeCellRenderer;
-  }
-
-  public void setDefaultBorder(Border border) {
-    myDefaultBorder = border;
   }
 
   @Override

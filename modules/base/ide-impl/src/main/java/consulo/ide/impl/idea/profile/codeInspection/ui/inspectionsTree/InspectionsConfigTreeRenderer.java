@@ -20,20 +20,19 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
 
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
-import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ToolDescriptors;
+import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
@@ -55,12 +54,11 @@ public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer 
 
     Object object = node.getUserObject();
 
-    final Color background = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
-    UIUtil.changeBackGround(component, background);
+    UIUtil.changeBackGround(component, UIUtil.TRANSPARENT_COLOR);
     Color foreground =
-            selected ? UIUtil.getTreeSelectionForeground() : node.isProperSetting() ? JBColor.BLUE : UIUtil.getTreeTextForeground();
+            selected ? UIUtil.getTreeSelectionForeground(hasFocus) : node.isProperSetting() ? JBColor.BLUE : UIUtil.getTreeForeground();
 
-    @NonNls String text;
+    String text;
     int style = SimpleTextAttributes.STYLE_PLAIN;
     String hint = null;
     if (object instanceof String) {
@@ -76,7 +74,7 @@ public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer 
     }
 
     if (text != null) {
-      SearchUtil.appendFragments(getFilter(), text, style, foreground, background, component);
+      SearchUtil.appendFragments(getFilter(), text, style, foreground, UIUtil.TRANSPARENT_COLOR, component);
     }
     if (hint != null) {
       component.append(" " + hint, selected ? new SimpleTextAttributes(Font.PLAIN, foreground) : SimpleTextAttributes.GRAYED_ATTRIBUTES);
@@ -92,6 +90,6 @@ public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer 
         toolWrapper instanceof GlobalInspectionToolWrapper && !((GlobalInspectionToolWrapper)toolWrapper).worksInBatchModeOnly()) {
       return null;
     }
-    return InspectionsBundle.message("inspection.tool.availability.in.tree.node1");
+    return InspectionLocalize.inspectionToolAvailabilityInTreeNode1().get();
   }
 }

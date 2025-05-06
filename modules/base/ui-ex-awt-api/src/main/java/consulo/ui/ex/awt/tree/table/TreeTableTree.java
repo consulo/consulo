@@ -15,12 +15,11 @@
  */
 package consulo.ui.ex.awt.tree.table;
 
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.tree.Tree;
 import jakarta.annotation.Nullable;
 
-import javax.swing.border.Border;
-import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -33,32 +32,18 @@ import java.awt.event.KeyEvent;
 public class TreeTableTree extends Tree {
     public static final String TREE_TABLE_TREE_KEY = "TreeTableTree";
 
-    private Border myBorder;
     private final TreeTable myTreeTable;
     private int myVisibleRow;
-    private boolean myCellFocused;
-
 
     public TreeTableTree(TreeModel model, TreeTable treeTable) {
         super(model);
         myTreeTable = treeTable;
-        setCellRenderer(getCellRenderer());
         putClientProperty(TREE_TABLE_TREE_KEY, treeTable);
+        putClientProperty("JTree.paintSelection", false);
     }
 
     public TreeTable getTreeTable() {
         return myTreeTable;
-    }
-
-    @Override
-    public void updateUI() {
-        super.updateUI();
-        TreeCellRenderer tcr = super.getCellRenderer();
-        if (tcr instanceof DefaultTreeCellRenderer) {
-            DefaultTreeCellRenderer dtcr = (DefaultTreeCellRenderer) tcr;
-            dtcr.setTextSelectionColor(UIUtil.getTableSelectionForeground());
-            dtcr.setBackgroundSelectionColor(UIUtil.getTableSelectionBackground());
-        }
     }
 
     @Override
@@ -83,19 +68,6 @@ public class TreeTableTree extends Tree {
         g1.translate(0, -myVisibleRow * getRowHeight());
         super.paint(g1);
         g1.dispose();
-        if (myBorder != null) {
-            myBorder.paintBorder(this, g, 0, 0, myTreeTable.getWidth(), getRowHeight());
-        }
-    }
-
-    @Override
-    public void setBorder(Border border) {
-        super.setBorder(border);
-        myBorder = border;
-    }
-
-    public void setTreeTableTreeBorder(Border border) {
-        myBorder = border;
     }
 
     public void setVisibleRow(int row) {
@@ -107,16 +79,6 @@ public class TreeTableTree extends Tree {
 
     public void _processKeyEvent(KeyEvent e) {
         super.processKeyEvent(e);
-    }
-
-    public void setCellFocused(boolean focused) {
-        myCellFocused = focused;
-    }
-
-    @Override
-    public void setCellRenderer(final TreeCellRenderer x) {
-        super.setCellRenderer((tree, value, selected, expanded, leaf, row, hasFocus) -> x
-            .getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, myCellFocused));
     }
 
     @Nullable
