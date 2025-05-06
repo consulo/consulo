@@ -55,6 +55,7 @@ import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
@@ -912,7 +913,7 @@ public class SingleInspectionProfilePanel extends JPanel {
           };
 
         severityPanel.add(
-          new JLabel(InspectionLocalize.inspectionSeverity().get()),
+          TargetAWT.to(Label.create(InspectionLocalize.inspectionSeverity())),
           new GridBagConstraints(
             0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
             JBUI.insets(10, 0), 0, 0
