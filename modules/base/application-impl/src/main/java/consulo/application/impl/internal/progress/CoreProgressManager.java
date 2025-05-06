@@ -395,11 +395,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         return runProcessWithProgressAsynchronously(task, progressIndicator, continuation, progressIndicator.getModalityState());
     }
 
-    @Nonnull
-    protected TaskRunnable createTaskRunnable(@Nonnull Task task, @Nonnull ProgressIndicator indicator, @Nullable Runnable continuation) {
-        return new TaskRunnable(task, indicator, continuation);
-    }
-
     private static class IndicatorDisposable implements Disposable {
         @Nonnull
         private final ProgressIndicator myIndicator;
@@ -434,16 +429,15 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         return runProcessWithProgressAsync(task,
             CompletableFuture.completedFuture(progressIndicator),
             continuation,
-            indicatorDisposable,
-            modalityState);
+            indicatorDisposable
+        );
     }
 
     @Nonnull
     protected Future<?> runProcessWithProgressAsync(@Nonnull Task.Backgroundable task,
                                                     @Nonnull CompletableFuture<? extends ProgressIndicator> progressIndicator,
                                                     @Nullable Runnable continuation,
-                                                    @Nullable IndicatorDisposable indicatorDisposable,
-                                                    @Nullable ModalityState modalityState) {
+                                                    @Nullable IndicatorDisposable indicatorDisposable) {
         AtomicLong elapsed = new AtomicLong();
         return new ProgressRunner<>(progress -> {
             long start = System.currentTimeMillis();
@@ -459,19 +453,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
             .whenComplete(ClientId.decorateBiConsumer((result, err) -> {
                 if (!result.isCanceled()) {
                     notifyTaskFinished(task, elapsed.get());
-                }
-
-                ModalityState modality;
-                if (modalityState != null) {
-                    modality = modalityState;
-                }
-                else {
-                    try {
-                        modality = progressIndicator.get().getModalityState();
-                    }
-                    catch (Throwable e) {
-                        modality = ModalityState.nonModal();
-                    }
                 }
 
                 ApplicationUtil.invokeLaterSomewhere(myApplication, () -> {
@@ -509,7 +490,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         return result;
     }
 
-    @Deprecated
     protected void startTask(@Nonnull Task task, @Nonnull ProgressIndicator indicator, @Nullable Runnable continuation) {
         try {
             task.run(indicator);
@@ -593,7 +573,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
             boolean set = progress != null && progress != (oldIndicator = getProgressIndicator());
             if (set) {
                 Thread currentThread = Thread.currentThread();
-                long threadId = currentThread.getId();
+                long threadId = currentThread.threadId();
                 setCurrentIndicator(threadId, progress);
                 try {
                     registerIndicatorAndRun(progress, currentThread, oldIndicator, process);
@@ -914,7 +894,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
     @Nonnull
     public static ModalityState getCurrentThreadProgressModality() {
-        ProgressIndicator indicator = threadTopLevelIndicators.get(Thread.currentThread().getId());
+        ProgressIndicator indicator = threadTopLevelIndicators.get(Thread.currentThread().threadId());
         ModalityState modality = indicator == null ? null : indicator.getModalityState();
         return modality != null ? modality : ModalityState.nonModal();
     }
@@ -933,55 +913,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     private static ProgressIndicator getCurrentIndicator(@Nonnull Thread thread) {
-        return currentIndicators.get(thread.getId());
-    }
-
-    protected abstract static class TaskContainer implements Runnable {
-        private final Task myTask;
-
-        protected TaskContainer(@Nonnull Task task) {
-            myTask = task;
-        }
-
-        @Nonnull
-        public Task getTask() {
-            return myTask;
-        }
-
-        @Override
-        public String toString() {
-            return myTask.toString();
-        }
-    }
-
-    protected static class TaskRunnable extends TaskContainer {
-        private final ProgressIndicator myIndicator;
-        private final Runnable myContinuation;
-
-        TaskRunnable(@Nonnull Task task, @Nonnull ProgressIndicator indicator, @Nullable Runnable continuation) {
-            super(task);
-            myIndicator = indicator;
-            myContinuation = continuation;
-        }
-
-        @Override
-        public void run() {
-            try {
-                getTask().run(myIndicator);
-            }
-            finally {
-                try {
-                    if (myIndicator instanceof ProgressIndicatorEx) {
-                        ((ProgressIndicatorEx) myIndicator).finish(getTask());
-                    }
-                }
-                finally {
-                    if (myContinuation != null) {
-                        myContinuation.run();
-                    }
-                }
-            }
-        }
+        return currentIndicators.get(thread.threadId());
     }
 
     @FunctionalInterface
