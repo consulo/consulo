@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.progress.ProgressBuilderFactory;
-import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Alerts;
@@ -53,17 +52,17 @@ public class TestBackgroundableTaskAction extends DumbAwareAction {
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Background Action..."))
             .cancelable()
             .execute(progressIndicator -> {
-                ProgressIndicatorProvider.checkCanceled();
+                progressIndicator.checkCanceled();
                 TimeoutUtil.sleep(5000L);
-                ProgressIndicatorProvider.checkCanceled();
+                progressIndicator.checkCanceled();
                 progressIndicator.setTextValue(LocalizeValue.of("After 5 seconds"));
-                ProgressIndicatorProvider.checkCanceled();
+                progressIndicator.checkCanceled();
                 TimeoutUtil.sleep(5000L);
-                ProgressIndicatorProvider.checkCanceled();
+                progressIndicator.checkCanceled();
                 progressIndicator.setTextValue(LocalizeValue.of("After 10 seconds"));
-                ProgressIndicatorProvider.checkCanceled();
+                progressIndicator.checkCanceled();
                 TimeoutUtil.sleep(5000L);
-                ProgressIndicatorProvider.checkCanceled();
+                progressIndicator.checkCanceled();
                 return "Success Result";
             });
 

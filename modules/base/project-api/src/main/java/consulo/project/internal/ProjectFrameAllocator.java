@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectFrameAllocator {
     @RequiredUIAccess
-    void allocateFrame(@Nonnull ProjectOpenContext context);
+    Object allocateFrame(@Nonnull ProjectOpenContext context);
 
     @RequiredUIAccess
     void initializeFrame();

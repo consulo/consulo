@@ -49,13 +49,15 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
 
     @RequiredUIAccess
     @Override
-    public void allocateFrame(@Nonnull ProjectOpenContext context) {
+    public Object allocateFrame(@Nonnull ProjectOpenContext context) {
         IdeFrameState state = context.getUserData(IdeFrameState.KEY);
 
-        myWindowManager.allocateFrame(myProject, state);
-        
+        IdeFrameEx frame = myWindowManager.allocateFrame(myProject, state);
+
         // force close welcome frame after frame allocating, since its project open
         myWelcomeFrameManager.closeFrame();
+
+        return frame;
     }
 
     @RequiredUIAccess

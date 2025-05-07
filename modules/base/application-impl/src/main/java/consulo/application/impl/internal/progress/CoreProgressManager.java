@@ -398,7 +398,8 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     @RequiredUIAccess
     @Nonnull
     @Override
-    public <V> CompletableFuture<V> executeTask(@Nullable ComponentManager project,
+    public <V> CompletableFuture<V> executeTask(@Nonnull UIAccess uiAccess,
+                                                @Nullable ComponentManager project,
                                                 @Nonnull LocalizeValue titleText,
                                                 boolean modal,
                                                 boolean cancelable,
@@ -408,8 +409,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         BaseApplication application = (BaseApplication) Application.get();
 
         SimpleReference<IndicatorDisposable> indicatorDisposable = SimpleReference.create();
-
-        UIAccess uiAccess = UIAccess.current();
 
         CompletableFuture<ProgressIndicator> indicatorFuture = CompletableFuture.supplyAsync(() -> {
             ProgressIndicator indicator;

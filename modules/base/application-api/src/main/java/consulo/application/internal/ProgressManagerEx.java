@@ -20,7 +20,7 @@ import consulo.application.progress.Task;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -47,8 +47,8 @@ public interface ProgressManagerEx {
     ProgressIndicator newBackgroundableProcessIndicator(Task.Backgroundable backgroundable);
 
     @Nonnull
-    @RequiredUIAccess
-    <V> CompletableFuture<V> executeTask(@Nullable ComponentManager project,
+    <V> CompletableFuture<V> executeTask(@Nonnull UIAccess uiAccess,
+                                         @Nullable ComponentManager project,
                                          @Nonnull LocalizeValue titleText,
                                          boolean modal,
                                          boolean cancelable,

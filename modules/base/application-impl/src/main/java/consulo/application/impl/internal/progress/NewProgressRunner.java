@@ -9,7 +9,6 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
@@ -36,7 +35,6 @@ public final class NewProgressRunner<R> {
     }
 
     @Nonnull
-    @RequiredUIAccess
     public CompletableFuture<R> submit(Application application) {
         if (application.isWriteAccessAllowed()) {
             throw new IllegalArgumentException("Can't start task under write lock");

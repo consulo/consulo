@@ -15,6 +15,7 @@
  */
 package consulo.application.progress;
 
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
@@ -38,6 +39,22 @@ public interface ProgressBuilder {
     <V> CompletableFuture<V> execute(@Nonnull Function<ProgressIndicator, V> function);
 
     @Nonnull
+    <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess, @Nonnull Function<ProgressIndicator, V> function);
+
+    @Nonnull
     @RequiredUIAccess
-    CompletableFuture<?> executeVoid(Consumer<ProgressIndicator> consumer);
+    default CompletableFuture<?> executeVoid(Consumer<ProgressIndicator> consumer) {
+        return execute(progressIndicator -> {
+            consumer.accept(progressIndicator);
+            return null;
+        });
+    }
+
+    @Nonnull
+    default CompletableFuture<?> executeVoid(@Nonnull UIAccess uiAccess, @Nonnull Consumer<ProgressIndicator> consumer) {
+        return execute(uiAccess, progressIndicator -> {
+            consumer.accept(progressIndicator);
+            return null;
+        });
+    }
 }

@@ -17,7 +17,10 @@ package consulo.application.impl.internal.progress;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.internal.ProgressManagerEx;
-import consulo.application.progress.*;
+import consulo.application.progress.ProgressBuilder;
+import consulo.application.progress.ProgressBuilderFactory;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
@@ -28,7 +31,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -55,19 +57,16 @@ public class ProgressBuilderFactoryImpl implements ProgressBuilderFactory {
             public <V> CompletableFuture<V> execute(@Nonnull Function<ProgressIndicator, V> function) {
                 UIAccess.assertIsUIThread();
                 assertCreated();
-                return myProgressManager.executeTask(myProject, myTitle, myModal, myCancelable, function);
+
+                UIAccess uiAccess = UIAccess.current();
+                return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, function);
             }
 
-            @RequiredUIAccess
             @Nonnull
             @Override
-            public CompletableFuture<?> executeVoid(Consumer<ProgressIndicator> consumer) {
-                UIAccess.assertIsUIThread();
+            public <V> CompletableFuture<V> execute(@Nonnull UIAccess uiAccess, @Nonnull Function<ProgressIndicator, V> function) {
                 assertCreated();
-                return myProgressManager.executeTask(myProject, myTitle, myModal, myCancelable, progressIndicator -> {
-                    consumer.accept(progressIndicator);
-                    return null;
-                });
+                return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, function);
             }
         };
     }
