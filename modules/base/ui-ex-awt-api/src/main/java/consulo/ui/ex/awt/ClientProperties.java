@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,12 @@
  */
 package consulo.ui.ex.awt;
 
-public interface ClientPropertyHolder {
-    void putClientProperty(String key, Object value);
+import consulo.util.dataholder.Key;
+
+/**
+ * @author VISTALL
+ * @since 2025-05-07
+ */
+public final class ClientProperties {
+    public static final Key<String> CUSTOM_WINDOW_TITLE = Key.create("Custom Window Title");
 }

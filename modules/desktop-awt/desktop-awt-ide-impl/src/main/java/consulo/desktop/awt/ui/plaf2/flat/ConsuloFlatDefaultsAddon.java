@@ -66,6 +66,8 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
 
         uiDefaults.put("Menu.selectedCheckboxIcon", new FlatSelectedCheckboxIcon());
 
+        uiDefaults.put("RootPaneUI", ConsuloFlatRootPaneUI.class.getName());
+
         PlatformOperatingSystem os = Platform.current().os();
         if (os instanceof WindowsOperatingSystem win && !win.isWindows11OrNewer()) {
             for (Map.Entry<Object, Object> entry : uiDefaults.entrySet()) {

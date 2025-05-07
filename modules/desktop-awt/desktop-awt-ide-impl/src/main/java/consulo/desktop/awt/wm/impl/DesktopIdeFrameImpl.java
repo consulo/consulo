@@ -434,6 +434,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
             else {
                 titleBuilder.append(title).append(fileTitle);
 
+                // set title without app name to custom title panel
+                frame.getRootPane().putClientProperty(ClientProperties.CUSTOM_WINDOW_TITLE, titleBuilder.sb.toString());
+
                 // only append if title not equal app name
                 if (!Objects.equals(title, applicationName)) {
                     titleBuilder.append(applicationName);
