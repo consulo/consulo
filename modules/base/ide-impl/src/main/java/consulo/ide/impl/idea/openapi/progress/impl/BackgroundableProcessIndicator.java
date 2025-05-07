@@ -16,11 +16,11 @@
 
 package consulo.ide.impl.idea.openapi.progress.impl;
 
+import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.progress.DumbModeAction;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.Task;
 import consulo.application.progress.TaskInfo;
-import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -30,7 +30,6 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 public class BackgroundableProcessIndicator extends ProgressWindow {
     protected StatusBarEx myStatusBar;
@@ -56,7 +55,9 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
         }
     }
 
-    public BackgroundableProcessIndicator(@Nullable final Project project, @Nonnull TaskInfo info, @Nonnull PerformInBackgroundOption option) {
+    public BackgroundableProcessIndicator(@Nullable Project project,
+                                          @Nonnull TaskInfo info,
+                                          @Nonnull PerformInBackgroundOption option) {
         super(info.isCancellable(), true, project, info.getCancelTextValue());
         setOwnerTask(info);
         myOption = option;
@@ -76,7 +77,7 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
     }
 
     public BackgroundableProcessIndicator(Project project,
-                                          @Nls final LocalizeValue progressTitle,
+                                          @Nonnull LocalizeValue progressTitle,
                                           @Nonnull PerformInBackgroundOption option,
                                           @Nonnull LocalizeValue cancelButtonText,
                                           @Nonnull LocalizeValue backgroundStopTooltip,

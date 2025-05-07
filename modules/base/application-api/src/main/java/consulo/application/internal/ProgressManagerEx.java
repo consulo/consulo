@@ -17,26 +17,40 @@ package consulo.application.internal;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.component.ComponentManager;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 03/06/2023
  */
 public interface ProgressManagerEx {
-  boolean runProcessWithProgressSynchronously(@Nonnull final Task task);
+    boolean runProcessWithProgressSynchronously(@Nonnull final Task task);
 
-  void runProcessWithProgressInCurrentThread(@Nonnull final Task task,
-                                             @Nonnull final ProgressIndicator progressIndicator,
-                                             @Nonnull final ModalityState modalityState);
+    void runProcessWithProgressInCurrentThread(@Nonnull final Task task,
+                                               @Nonnull final ProgressIndicator progressIndicator,
+                                               @Nonnull final ModalityState modalityState);
 
-  Future<?> runProcessWithProgressAsynchronously(Task.Backgroundable task,
-                                                 ProgressIndicator indicator,
-                                                 Runnable continuation,
-                                                 ModalityState modalityState);
+    Future<?> runProcessWithProgressAsynchronously(Task.Backgroundable task,
+                                                   ProgressIndicator indicator,
+                                                   Runnable continuation,
+                                                   ModalityState modalityState);
 
-  ProgressIndicator newBackgroundableProcessIndicator(Task.Backgroundable backgroundable);
+    ProgressIndicator newBackgroundableProcessIndicator(Task.Backgroundable backgroundable);
+
+    @Nonnull
+    @RequiredUIAccess
+    <V> CompletableFuture<V> executeTask(@Nullable ComponentManager project,
+                                         @Nonnull LocalizeValue titleText,
+                                         boolean modal,
+                                         boolean cancelable,
+                                         Function<ProgressIndicator, V> func);
 }

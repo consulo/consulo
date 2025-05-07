@@ -16,6 +16,7 @@ import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
@@ -40,6 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CoreProgressManager extends ProgressManager implements ProgressManagerEx, Disposable {
@@ -161,6 +163,13 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
     @Override
     public ProgressIndicator newBackgroundableProcessIndicator(Task.Backgroundable backgroundable) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    public ProgressIndicator newBackgroundableProcessIndicator(@Nullable ComponentManager project,
+                                                               @Nonnull TaskInfo info,
+                                                               @Nonnull PerformInBackgroundOption option) {
         throw new UnsupportedOperationException();
     }
 
@@ -383,9 +392,59 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
     }
 
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public <V> CompletableFuture<V> executeTask(@Nullable ComponentManager project,
+                                                @Nonnull LocalizeValue titleText,
+                                                boolean modal,
+                                                boolean cancelable,
+                                                Function<ProgressIndicator, V> func) {
+        ProgressBuilderTaskInfo info = new ProgressBuilderTaskInfo(titleText, cancelable);
+
+        ProgressIndicator indicator;
+        if (modal) {
+            throw new UnsupportedOperationException();
+        }
+        else {
+            indicator = newBackgroundableProcessIndicator(project, info, PerformInBackgroundOption.ALWAYS_BACKGROUND);
+        }
+
+        IndicatorDisposable indicatorDisposable;
+        if (indicator instanceof Disposable) {
+            // use IndicatorDisposable instead of progressIndicator to
+            // avoid re-registering progressIndicator if it was registered on some other parent before
+            indicatorDisposable = new IndicatorDisposable(indicator);
+            Disposer.register(myApplication, indicatorDisposable);
+        }
+        else {
+            indicatorDisposable = null;
+        }
+
+        AtomicLong elapsed = new AtomicLong();
+        CompletableFuture<V> future = new ProgressRunner<>(progress -> {
+            long start = System.currentTimeMillis();
+            try {
+                return startTask(func, progress, info);
+            }
+            finally {
+                elapsed.set(System.currentTimeMillis() - start);
+            }
+        }, false, modal, CompletableFuture.completedFuture(indicator))
+            .submitNew(Application.get());
+
+        future.whenComplete((v, throwable) -> {
+            if (indicatorDisposable != null) {
+                indicatorDisposable.dispose();
+            }
+        });
+        return future;
+    }
+
     @Nonnull
     public Future<?> runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task) {
-        return runProcessWithProgressAsynchronously(task, new EmptyProgressIndicator(), null);
+        ProgressIndicator indicator = newBackgroundableProcessIndicator(task);
+        return runProcessWithProgressAsynchronously(task, indicator, null);
     }
 
     @Nonnull
@@ -504,6 +563,19 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                 if (continuation != null) {
                     continuation.run();
                 }
+            }
+        }
+    }
+
+    protected <T> T startTask(@Nonnull Function<ProgressIndicator, T> task,
+                              @Nonnull ProgressIndicator indicator,
+                              @Nonnull TaskInfo taskInfo) {
+        try {
+            return task.apply(indicator);
+        }
+        finally {
+            if (indicator instanceof ProgressIndicatorEx progressIndicatorEx) {
+                progressIndicatorEx.finish(taskInfo);
             }
         }
     }

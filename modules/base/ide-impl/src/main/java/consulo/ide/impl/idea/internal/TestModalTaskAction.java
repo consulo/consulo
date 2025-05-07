@@ -28,8 +28,8 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2024-11-23
  */
-public class StartModalTaskAction extends DumbAwareAction {
-    public StartModalTaskAction() {
+public class TestModalTaskAction extends DumbAwareAction {
+    public TestModalTaskAction() {
         super("Start Modal Task");
     }
 
