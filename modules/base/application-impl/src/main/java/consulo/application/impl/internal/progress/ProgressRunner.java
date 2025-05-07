@@ -5,7 +5,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
@@ -20,12 +19,16 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -244,64 +247,6 @@ public final class ProgressRunner<R> {
         });
     }
 
-    @Nonnull
-    public CompletableFuture<R> submitNew(Application application) {
-        boolean forceSyncExec = checkIfForceDirectExecNeeded();
-
-        CompletableFuture<? extends ProgressIndicator> progressFuture = myProgressIndicatorFuture.thenApply(progress -> {
-            // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
-            // does not have a chance to run, and as a result the progress won't be disposed
-            if (progress instanceof Disposable) {
-                Disposer.register(application, (Disposable) progress);
-            }
-            return progress;
-        });
-
-        Semaphore modalityEntered = new Semaphore(forceSyncExec ? 0 : 1);
-
-        Supplier<R> onThreadCallable = () -> {
-            SimpleReference<R> result = SimpleReference.create();
-            if (isModal) {
-                modalityEntered.waitFor();
-            }
-
-            // runProcess handles starting/stopping progress and setting thread's current progress
-            ProgressIndicator progressIndicator;
-            try {
-                progressIndicator = progressFuture.join();
-            }
-            catch (Throwable e) {
-                throw new RuntimeException("Can't get progress", e);
-            }
-            //noinspection ConstantConditions
-            if (progressIndicator == null) {
-                throw new IllegalStateException("Expected not-null progress indicator but got null from " + myProgressIndicatorFuture);
-            }
-
-            ProgressManager.getInstance().runProcess(() -> result.set(myComputation.apply(progressIndicator)), progressIndicator);
-            return result.get();
-        };
-
-        CompletableFuture<R> resultFuture;
-        if (forceSyncExec) {
-            resultFuture = new CompletableFuture<>();
-            try {
-                resultFuture.complete(onThreadCallable.get());
-            }
-            catch (Throwable t) {
-                resultFuture.completeExceptionally(t);
-            }
-        }
-        else if (application.isDispatchThread()) {
-            resultFuture = execFromEDT(progressFuture, modalityEntered, onThreadCallable);
-        }
-        else {
-            resultFuture = normalExec(progressFuture, modalityEntered, onThreadCallable);
-        }
-
-        return resultFuture;
-    }
-
     // The case of sync exec from the EDT without the ability to poll events (no BlockingProgressIndicator#startBlocking or presence of Write Action)
     // must be handled by very synchronous direct call (alt: use proper progress indicator, i.e. PotemkinProgress or ProgressWindow).
     // Note: running sync task on pooled thread from EDT can lead to deadlock if pooled thread will try to invokeAndWait.
@@ -422,24 +367,6 @@ public final class ProgressRunner<R> {
         }
         catch (Throwable ignore) {
         }
-    }
-
-    private static void pollLaterInvocatorActively(@Nonnull CompletableFuture<?> resultFuture, @Nonnull Runnable pollAction) {
-        ((ApplicationWithIntentWriteLock) Application.get()).runUnlockingIntendedWrite(() -> {
-            while (true) {
-                try {
-                    resultFuture.get(10, TimeUnit.MILLISECONDS);
-                }
-                catch (TimeoutException ignore) {
-                    ((ApplicationWithIntentWriteLock) Application.get()).runIntendedWriteActionOnCurrentThread(pollAction);
-                    continue;
-                }
-                catch (Throwable ignored) {
-                }
-                break;
-            }
-            return null;
-        });
     }
 
     public static boolean isCanceled(@Nonnull Future<? extends ProgressIndicator> progressFuture) {

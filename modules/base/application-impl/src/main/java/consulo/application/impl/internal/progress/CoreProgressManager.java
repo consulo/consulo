@@ -2,10 +2,12 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
+import consulo.application.impl.internal.BaseApplication;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.JobScheduler;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.internal.ProgressManagerEx;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.*;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.ClientId;
@@ -21,6 +23,7 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
@@ -402,40 +405,43 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                                                 Function<ProgressIndicator, V> func) {
         ProgressBuilderTaskInfo info = new ProgressBuilderTaskInfo(titleText, cancelable);
 
-        ProgressIndicator indicator;
-        if (modal) {
-            throw new UnsupportedOperationException();
-        }
-        else {
-            indicator = newBackgroundableProcessIndicator(project, info, PerformInBackgroundOption.ALWAYS_BACKGROUND);
-        }
+        BaseApplication application = (BaseApplication) Application.get();
 
-        IndicatorDisposable indicatorDisposable;
-        if (indicator instanceof Disposable) {
-            // use IndicatorDisposable instead of progressIndicator to
-            // avoid re-registering progressIndicator if it was registered on some other parent before
-            indicatorDisposable = new IndicatorDisposable(indicator);
-            Disposer.register(myApplication, indicatorDisposable);
-        }
-        else {
-            indicatorDisposable = null;
-        }
+        SimpleReference<IndicatorDisposable> indicatorDisposable = SimpleReference.create();
 
-        AtomicLong elapsed = new AtomicLong();
-        CompletableFuture<V> future = new ProgressRunner<>(progress -> {
-            long start = System.currentTimeMillis();
-            try {
-                return startTask(func, progress, info);
+        UIAccess uiAccess = UIAccess.current();
+
+        CompletableFuture<ProgressIndicator> indicatorFuture = CompletableFuture.supplyAsync(() -> {
+            ProgressIndicator indicator;
+            if (modal) {
+                indicator = application.createProgressWindow(titleText.get(),
+                    cancelable,
+                    true,
+                    project,
+                    null,
+                    ApplicationLocalize.taskButtonCancel());
             }
-            finally {
-                elapsed.set(System.currentTimeMillis() - start);
+            else {
+                indicator = newBackgroundableProcessIndicator(project, info, PerformInBackgroundOption.ALWAYS_BACKGROUND);
             }
-        }, false, modal, CompletableFuture.completedFuture(indicator))
-            .submitNew(Application.get());
+
+            if (indicator instanceof Disposable) {
+                IndicatorDisposable disposable = new IndicatorDisposable(indicator);
+
+                indicatorDisposable.set(disposable);
+
+                Disposer.register(myApplication, disposable);
+            }
+            return indicator;
+        }, uiAccess);
+
+        CompletableFuture<V> future = new NewProgressRunner<>(progress -> startTask(func, progress, info), modal, indicatorFuture)
+            .submit(application);
 
         future.whenComplete((v, throwable) -> {
-            if (indicatorDisposable != null) {
-                indicatorDisposable.dispose();
+            IndicatorDisposable disposable = indicatorDisposable.get();
+            if (disposable != null) {
+                disposable.dispose();
             }
         });
         return future;

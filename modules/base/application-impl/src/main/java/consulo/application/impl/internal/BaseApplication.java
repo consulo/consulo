@@ -731,7 +731,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Nonnull
-    private ProgressWindow createProgressWindow(
+    public ProgressWindow createProgressWindow(
         @Nonnull String progressTitle,
         boolean canBeCanceled,
         boolean shouldShowModalWindow,

@@ -15,39 +15,74 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.application.progress.Task;
+import consulo.application.progress.ProgressBuilderFactory;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Alerts;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.TimeoutUtil;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 2024-11-23
  */
 public class TestModalTaskAction extends DumbAwareAction {
-    public TestModalTaskAction() {
-        super("Start Modal Task");
+    @Nonnull
+    private final ProgressBuilderFactory myProgressBuilderFactory;
+
+    public TestModalTaskAction(@Nonnull ProgressBuilderFactory progressBuilderFactory) {
+        super(LocalizeValue.of("Test Modal Task"));
+
+        myProgressBuilderFactory = progressBuilderFactory;
     }
 
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        Task.Modal.queue(project, LocalizeValue.of("Running Modal Task"), true, progressIndicator -> {
-            progressIndicator.setTextValue(LocalizeValue.of("Text Value 1..."));
-            progressIndicator.setText2Value(LocalizeValue.of("Text Value 2..."));
-            
-            while (true) {
-                if (progressIndicator.isCanceled()) {
-                    break;
-                }
 
-                TimeoutUtil.sleep(1000);
+        UIAccess uiAccess = UIAccess.current();
+
+        SimpleReference<Boolean> started = SimpleReference.create(Boolean.FALSE);
+
+        CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Modal Action..."))
+            .cancelable()
+            .modal()
+            .execute(progressIndicator -> {
+                started.set(Boolean.TRUE);
+
+                progressIndicator.setIndeterminate(true);
+                ProgressIndicatorProvider.checkCanceled();
+                TimeoutUtil.sleep(5000L);
+                ProgressIndicatorProvider.checkCanceled();
+                progressIndicator.setTextValue(LocalizeValue.of("After 5 seconds"));              
+                ProgressIndicatorProvider.checkCanceled();
+                TimeoutUtil.sleep(5000L);
+                ProgressIndicatorProvider.checkCanceled();
+                progressIndicator.setTextValue(LocalizeValue.of("After 10 seconds"));
+                ProgressIndicatorProvider.checkCanceled();
+                TimeoutUtil.sleep(5000L);
+                ProgressIndicatorProvider.checkCanceled();
+                return "Success Result";
+            });
+
+        future.whenCompleteAsync((s, throwable) -> {
+            if (throwable != null) {
+                Alerts.okError(LocalizeValue.ofNullable(throwable.getLocalizedMessage())).showAsync(project);
             }
-        });
+            else {
+                Alerts.okInfo(LocalizeValue.ofNullable(s)).showAsync(project);
+            }
+        }, uiAccess);
+
+        System.out.println("started: " + started.get());
     }
 }

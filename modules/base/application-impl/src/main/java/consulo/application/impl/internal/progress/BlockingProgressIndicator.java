@@ -16,15 +16,12 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.internal.ProgressIndicatorEx;
-import consulo.application.progress.ProgressManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
 public interface BlockingProgressIndicator extends ProgressIndicatorEx {
-  /**
-   * @deprecated Do not use, it's too low level and dangerous. Instead, consider using run* methods in {@link ProgressManager} or {@link ProgressRunner}
-   */
-  @Deprecated
-  void startBlocking(@Nonnull Runnable init, @Nonnull CompletableFuture<?> stopCondition);
+    @RequiredUIAccess
+    void startBlocking(@Nonnull Runnable init, @Nonnull CompletableFuture<?> stopCondition);
 }

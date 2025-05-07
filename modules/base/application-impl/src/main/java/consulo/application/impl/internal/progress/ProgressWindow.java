@@ -31,6 +31,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.ProjectWindowFocuser;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
@@ -176,9 +177,11 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
         }
     }
 
+    @RequiredUIAccess
     @Override
     public void startBlocking(@Nonnull Runnable init, @Nonnull CompletableFuture<?> stopCondition) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
+
         synchronized (this) {
             LOG.assertTrue(!isRunning());
             LOG.assertTrue(!myStoppedAlready);
