@@ -61,9 +61,9 @@ public class PlatformVirtualFileManager extends BaseVirtualFileManager {
     }
 
     @Override
-    @RequiredUIAccess
     protected long doRefresh(boolean asynchronous, @Nullable Runnable postAction) {
         if (!asynchronous) {
+            //noinspection RequiredXAction
             UIAccess.assertIsUIThread();
         }
 

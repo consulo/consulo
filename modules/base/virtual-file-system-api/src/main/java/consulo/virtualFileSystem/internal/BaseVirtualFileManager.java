@@ -109,9 +109,9 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
         return doRefresh(true, postAction);
     }
 
-    @RequiredUIAccess
     protected long doRefresh(boolean asynchronous, @Nullable Runnable postAction) {
         if (!asynchronous) {
+            //noinspection RequiredXAction
             UIAccess.assertIsUIThread();
         }
 
@@ -125,9 +125,9 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
-    @RequiredUIAccess
     public void refreshWithoutFileWatcher(final boolean asynchronous) {
         if (!asynchronous) {
+            //noinspection RequiredXAction
             UIAccess.assertIsUIThread();
         }
 
