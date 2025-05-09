@@ -27,6 +27,7 @@ import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
+import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.language.codeStyle.CodeStyle;
@@ -325,7 +326,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     @Override
     @RequiredUIAccess
     public void saveAllDocuments(boolean isExplicit) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         myMultiCaster.beforeAllDocumentsSaving();
         if (myUnsavedDocuments.isEmpty()) {
@@ -371,7 +372,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
     @RequiredUIAccess
     public void saveDocument(@Nonnull Document document, boolean explicit) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         if (!myUnsavedDocuments.contains(document)) {
             return;
@@ -671,7 +672,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     @Override
     @RequiredUIAccess
     public void reloadFromDisk(@Nonnull Document document) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         VirtualFile file = getFile(document);
         assert file != null;

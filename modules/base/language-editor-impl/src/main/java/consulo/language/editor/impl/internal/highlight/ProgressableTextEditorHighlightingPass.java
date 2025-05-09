@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.highlight;
 
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
@@ -31,6 +29,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicLong;
@@ -159,8 +159,9 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
   }
 
+  @RequiredUIAccess
   void waitForHighlightInfosApplied() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     HighlightingSessionImpl session = (HighlightingSessionImpl)myHighlightingSession;
     if (session != null) {
       session.waitForHighlightInfosApplied();

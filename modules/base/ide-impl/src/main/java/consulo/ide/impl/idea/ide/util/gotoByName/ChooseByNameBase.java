@@ -62,6 +62,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.CheckBox;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -757,8 +758,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     return false;
   }
 
+  @RequiredUIAccess
   void cancelListUpdater() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (checkDisposed()) return;
 
     final CalcElementsThread calcElementsThread = myCalcElementsThread;
@@ -882,11 +884,12 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     return layeredPane;
   }
 
+  @RequiredUIAccess
   void rebuildList(@Nonnull SelectionPolicy pos,
                    final int delay,
                    @Nonnull final ModalityState modalityState,
                    @Nullable final Runnable postRunnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (!myInitialized) {
       return;
     }
@@ -924,7 +927,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     MatcherHolder.associateMatcher(myList, matcher);
 
     scheduleCalcElements(text, myCheckBox.getValueOrError(), modalityState, pos, elements -> {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
 
       if (postRunnable != null) {
         postRunnable.run();
@@ -1326,8 +1329,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     private final Alarm myShowCardAlarm = new Alarm();
     private final Alarm myUpdateListAlarm = new Alarm();
 
+    @RequiredUIAccess
     void scheduleThread() {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
       myCalcElementsThread = this;
       showCard(SEARCHING_CARD, 200);
       ProgressIndicatorUtils.scheduleWithWriteActionPriority(myProgress, this);
@@ -1463,8 +1467,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       return elementsArray.size() >= myMaximumListSizeLimit;
     }
 
+    @RequiredUIAccess
     private void cancel() {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
       myProgress.cancel();
     }
 

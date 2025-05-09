@@ -36,6 +36,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
@@ -110,7 +111,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   private void fileOpenedImpl(@Nonnull final VirtualFile file,
                               @Nullable final FileEditor fallbackEditor,
                               @Nullable FileEditorProvider fallbackProvider) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     // don't add files that cannot be found via VFM (light & etc.)
     if (VirtualFileManager.getInstance().findFileByUrl(file.getUrl()) == null) return;
 

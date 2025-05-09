@@ -40,6 +40,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.*;
 import consulo.ui.ex.awt.Grayer;
@@ -942,7 +943,7 @@ public class EditorComponentImpl extends JTextComponent
             int dot = caret.getOffset();
             int mark = caret.getLeadSelectionOffset();
             if (myCaretPos != dot) {
-                Application.get().assertIsDispatchThread();
+                UIAccess.assertIsUIThread();
                 firePropertyChange(ACCESSIBLE_CARET_PROPERTY, myCaretPos, dot);
 
                 if (Platform.current().os().isMac()) {
@@ -957,7 +958,7 @@ public class EditorComponentImpl extends JTextComponent
             }
 
             if (mark != dot) {
-                Application.get().assertIsDispatchThread();
+                UIAccess.assertIsUIThread();
                 firePropertyChange(ACCESSIBLE_SELECTION_PROPERTY, null, getSelectedText());
             }
         }

@@ -47,6 +47,8 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Coordinate2D;
 import consulo.ui.Position2D;
 import consulo.ui.Size;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
@@ -882,6 +884,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
     }
 
+    @RequiredUIAccess
     public void show(@Nonnull Component owner, int aScreenX, int aScreenY, final boolean considerForcedXY) {
         if (UiInterceptors.tryIntercept(this)) {
             return;
@@ -893,7 +896,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
             throw new IllegalStateException("Popup was already disposed. Recreate a new instance to show again");
         }
 
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assert myState == State.INIT : "Popup was already shown. Recreate a new instance to show again.";
 
         debugState("show popup", State.INIT);
@@ -1535,6 +1538,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
+    @RequiredUIAccess
     public void dispose() {
         if (myState == State.SHOWN) {
             LOG.debug("shown popup must be cancelled");
@@ -1558,7 +1562,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
         Disposer.dispose(this, false);
 
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         if (myPopup != null) {
             cancel(myDisposeEvent);

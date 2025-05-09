@@ -19,6 +19,8 @@ import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.application.Application;
 import consulo.application.event.ApplicationAdapter;
 import consulo.application.ApplicationManager;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.logging.Logger;
 import consulo.document.Document;
@@ -129,9 +131,9 @@ public abstract class LineStatusTrackerBase {
   // Impl
   //
 
-  @CalledInAwt
+  @RequiredUIAccess
   public void setBaseRevision(@Nonnull final CharSequence vcsContent) {
-    myApplication.assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (myReleased) return;
 
     synchronized (LOCK) {
@@ -394,8 +396,9 @@ public abstract class LineStatusTrackerBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void documentChanged(final DocumentEvent e) {
-      myApplication.assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
 
       if (isSuppressed()) return;
       assert myDocument == e.getDocument();

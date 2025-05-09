@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.application.ApplicationManager;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ObjectUtil;
@@ -114,8 +116,9 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     return i >= 0 ? i : -i - 1;
   }
 
+  @RequiredUIAccess
   void addTargetsNode(@Nonnull Node node, @Nonnull DefaultTreeModel treeModel) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     int index;
     synchronized (this) {
       index = getNodeInsertionIndex(node, getSwingChildren());
@@ -125,8 +128,9 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
   }
 
   @Override
+  @RequiredUIAccess
   public void removeAllChildren() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.removeAllChildren();
     synchronized (this) {
       myChildren.clear();
@@ -152,8 +156,9 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     return null;
   }
 
+  @RequiredUIAccess
   int removeUsagesBulk(@Nonnull Set<UsageNode> usages, @Nonnull DefaultTreeModel treeModel) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     int removed = 0;
     synchronized (this) {
       List<MutableTreeNode> removedNodes = new SmartList<>();
@@ -243,8 +248,9 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     return newNode;
   }
 
+  @RequiredUIAccess
   void incrementUsageCount() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     GroupNode groupNode = this;
     while (true) {
       groupNode.myRecursiveUsageCount++;
@@ -342,8 +348,9 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     return (UsageGroup)getUserObject();
   }
 
+  @RequiredUIAccess
   int getRecursiveUsageCount() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     return myRecursiveUsageCount;
   }
 

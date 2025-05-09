@@ -18,10 +18,11 @@ package consulo.ide.impl.idea.openapi.editor.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.TextBlockTransferable;
 import consulo.ide.impl.idea.codeInsight.editorActions.TextBlockTransferableData;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.editor.*;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.util.TextRange;
 import consulo.application.util.LineTokenizer;
@@ -46,8 +47,9 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   private static final Logger LOG = Logger.getInstance(EditorCopyPasteHelperImpl.class);
 
   @Override
+  @RequiredUIAccess
   public void copySelectionToClipboard(@Nonnull Editor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     List<TextBlockTransferableData> extraData = new ArrayList<TextBlockTransferableData>();
     String s = editor.getCaretModel().supportsMultipleCarets() ? getSelectedTextForClipboard(editor, extraData)
                                                                : editor.getSelectionModel().getSelectedText();

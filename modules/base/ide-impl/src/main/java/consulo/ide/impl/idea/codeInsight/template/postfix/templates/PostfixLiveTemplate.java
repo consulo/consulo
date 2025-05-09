@@ -28,6 +28,7 @@ import consulo.language.util.AttachmentFactoryUtil;
 import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.util.UndoUtil;
@@ -166,10 +167,10 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         return false;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void expand(@Nonnull String key, @Nonnull CustomTemplateCallback callback) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         Editor editor = callback.getEditor();
         PsiFile file = callback.getContext().getContainingFile();
@@ -198,7 +199,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         @Nonnull PostfixTemplateProvider provider,
         @Nonnull PostfixTemplate postfixTemplate
     ) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         FeatureUsageTracker.getInstance().triggerFeatureUsed("editing.completion.postfix");
         PsiFile file = callback.getContext().getContainingFile();
         if (isApplicableTemplate(provider, key, file, editor, postfixTemplate)) {
@@ -289,7 +290,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         @Nonnull Editor editor,
         @Nonnull String key
     ) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         int currentOffset = editor.getCaretModel().getOffset();
         int newOffset = currentOffset - key.length();

@@ -24,6 +24,8 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
@@ -107,9 +109,10 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
         return doRefresh(true, postAction);
     }
 
+    @RequiredUIAccess
     protected long doRefresh(boolean asynchronous, @Nullable Runnable postAction) {
         if (!asynchronous) {
-            myApplication.assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
         }
 
         for (VirtualFileSystem fileSystem : myRefreshableFileSystems) {
@@ -122,9 +125,10 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
+    @RequiredUIAccess
     public void refreshWithoutFileWatcher(final boolean asynchronous) {
         if (!asynchronous) {
-            myApplication.assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
         }
 
         for (VirtualFileSystem fileSystem : myRefreshableFileSystems) {

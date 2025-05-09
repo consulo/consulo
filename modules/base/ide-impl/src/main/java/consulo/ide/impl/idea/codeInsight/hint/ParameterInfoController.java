@@ -45,6 +45,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -888,7 +889,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
         @RequiredUIAccess
         void applyUIChanges() {
-            Application.get().assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
 
             for (int index = 0, len = enabled.length; index < len; index++) {
                 if (enabled[index] != myComponent.isEnabled(index)) {

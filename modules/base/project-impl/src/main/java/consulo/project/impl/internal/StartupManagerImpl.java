@@ -196,7 +196,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
             @Override
             @RequiredUIAccess
             public void run() {
-                app.assertIsDispatchThread();
+                UIAccess.assertIsUIThread();
 
                 // myDumbAwarePostStartupActivities might be non-empty if new activities were registered during dumb mode
                 runActivities(uiAccess, myDumbAwarePostStartupActivities, StartUpMeasurer.Phases.PROJECT_DUMB_POST_STARTUP);

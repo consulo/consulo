@@ -19,7 +19,8 @@ import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.desktop.awt.internal.notification.EventLog;
 import consulo.project.ui.notification.Notification;
-import consulo.application.ApplicationManager;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.Balloon;
 import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.wm.impl.IdeRootPane;
@@ -128,13 +129,15 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
   }
 
   @Override
+  @RequiredUIAccess
   public void add(@Nonnull Balloon balloon) {
     add(balloon, null);
   }
 
   @Override
+  @RequiredUIAccess
   public void add(@Nonnull final Balloon balloon, @Nullable Object layoutData) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     Balloon merge = merge(layoutData);
     if (merge == null) {
       if (!myBalloons.isEmpty() && myBalloons.size() == getVisibleCount()) {

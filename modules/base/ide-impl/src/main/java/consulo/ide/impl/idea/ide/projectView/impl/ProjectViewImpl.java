@@ -84,6 +84,7 @@ import consulo.project.ui.view.tree.*;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CutProvider;
@@ -387,7 +388,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     @Override
     @RequiredUIAccess
     public synchronized void removeProjectPane(@Nonnull ProjectViewPane pane) {
-        myProject.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myUninitializedPanes.remove(pane);
         //assume we are completely initialized here
         String idToRemove = pane.getId();
@@ -455,7 +456,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     @RequiredUIAccess
     private void doAddPane(@Nonnull AbstractProjectViewPane newPane) {
-        myProject.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         int index;
         ContentManager manager = getContentManager();
         for (index = 0; index < manager.getContentCount(); index++) {
@@ -558,14 +559,13 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     @Override
     @RequiredUIAccess
     public void setupToolWindow(@Nonnull ToolWindow toolWindow, boolean loadPaneExtensions) {
-        Application application = myProject.getApplication();
-        application.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myActionGroup = new DefaultActionGroup();
 
         myAutoScrollFromSourceHandler.install();
 
         myContentManager = toolWindow.getContentManager();
-        if (!application.isUnitTestMode()) {
+        if (!myProject.getApplication().isUnitTestMode()) {
             toolWindow.setDefaultContentUiType(ToolWindowContentUiType.COMBO);
             toolWindow.setAdditionalGearActions(myActionGroup);
             toolWindow.getComponent().putClientProperty(ToolWindowContentUI.HIDE_ID_LABEL, "true");

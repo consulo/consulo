@@ -33,6 +33,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.*;
@@ -284,7 +285,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     @Override
     @RequiredWriteAction
     public void nonundoableActionPerformed(@Nonnull final DocumentReference ref, final boolean isGlobal) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myProject != null && myProject.isDisposed()) {
             return;
         }
@@ -364,7 +365,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     @Override
     @RequiredUIAccess
     public void invalidateActionsFor(@Nonnull DocumentReference ref) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myMerger.invalidateActionsFor(ref);
         if (myCurrentMerger != null) {
             myCurrentMerger.invalidateActionsFor(ref);
@@ -376,7 +377,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     @Override
     @RequiredUIAccess
     public void undo(@Nullable Object editor) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         LOG.assertTrue(isUndoAvailable(editor));
         undoOrRedo(editor, true);
     }
@@ -384,7 +385,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     @Override
     @RequiredUIAccess
     public void redo(@Nullable Object editor) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         LOG.assertTrue(isRedoAvailable(editor));
         undoOrRedo(editor, false);
     }
@@ -436,7 +437,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
 
     @RequiredUIAccess
     boolean isUndoOrRedoAvailable(@Nullable Object editor, boolean undo) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         Collection<DocumentReference> refs = getDocRefs(editor);
         return refs != null && isUndoOrRedoAvailable(refs, undo);

@@ -33,7 +33,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
-import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
+import consulo.ui.UIAccess;
 import consulo.versionControlSystem.util.VcsRootIterator;
 import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
 import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
@@ -45,7 +45,6 @@ import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.OptionsAndConfirmations;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.ProjectLevelVcsManagerSerialization;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTreeImpl;
-import consulo.ide.impl.idea.openapi.vcs.update.UpdatedFilesListener;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.content.ContentUtilEx;
 import consulo.versionControlSystem.ui.ViewUpdateInfoNotification;
@@ -785,28 +784,25 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Deprecated
   @RequiredUIAccess
   public BackgroundableActionEnabledHandler getBackgroundableActionHandler(final VcsBackgroundableActions action) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     return new BackgroundableActionEnabledHandler(myProject, action);
   }
 
-  @CalledInAwt
   @RequiredUIAccess
   boolean isBackgroundTaskRunning(@Nonnull Object... keys) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     return myBackgroundRunningTasks.contains(new ActionKey(keys));
   }
 
-  @CalledInAwt
   @RequiredUIAccess
   void startBackgroundTask(@Nonnull Object... keys) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     LOG.assertTrue(myBackgroundRunningTasks.add(new ActionKey(keys)));
   }
 
-  @CalledInAwt
   @RequiredUIAccess
   void stopBackgroundTask(@Nonnull Object... keys) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     LOG.assertTrue(myBackgroundRunningTasks.remove(new ActionKey(keys)));
   }
 

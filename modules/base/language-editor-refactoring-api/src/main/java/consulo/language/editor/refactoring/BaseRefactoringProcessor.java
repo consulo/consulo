@@ -35,6 +35,7 @@ import consulo.module.ModuleManager;
 import consulo.module.UnloadedModuleDescription;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.undoRedo.*;
@@ -633,7 +634,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         }
         Application application = myProject.getApplication();
         if (application.isUnitTestMode()) {
-            application.assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
             runnable.run();
             return;
         }

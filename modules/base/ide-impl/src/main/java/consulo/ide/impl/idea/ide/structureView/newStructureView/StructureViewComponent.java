@@ -30,6 +30,8 @@ import consulo.ide.impl.idea.ide.util.FileStructurePopup;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.GroupWrapper;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeElementWrapper;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.*;
 import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
@@ -508,8 +510,9 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   }
 
   @Override
+  @RequiredUIAccess
   public void setActionActive(String name, boolean state) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     storeState();
     StructureViewFactoryEx.getInstanceEx(myProject).setActiveAction(name, state);
     ourSettingsModificationCount.incrementAndGet();

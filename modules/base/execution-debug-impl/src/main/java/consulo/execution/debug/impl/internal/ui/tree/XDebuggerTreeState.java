@@ -15,10 +15,11 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree;
 
-import consulo.application.ApplicationManager;
 import consulo.execution.debug.impl.internal.ui.tree.node.RestorableStateNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
 import consulo.execution.debug.ui.XNamedTreeNode;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Comparing;
@@ -38,8 +39,9 @@ public class XDebuggerTreeState {
   private final NodeInfo myRootInfo;
   private Rectangle myLastVisibleNodeRect;
 
+  @RequiredUIAccess
   private XDebuggerTreeState(@Nonnull XDebuggerTree tree) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     XDebuggerTreeNode root = tree.getRoot();
     myRootInfo = root != null ? new NodeInfo("", "", tree.isPathSelected(root.getPath())) : null;
     if (root != null) {
@@ -47,8 +49,9 @@ public class XDebuggerTreeState {
     }
   }
 
+  @RequiredUIAccess
   public XDebuggerTreeRestorer restoreState(@Nonnull XDebuggerTree tree) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     XDebuggerTreeRestorer restorer = null;
     if (myRootInfo != null) {
       restorer = new XDebuggerTreeRestorer(tree, myLastVisibleNodeRect);

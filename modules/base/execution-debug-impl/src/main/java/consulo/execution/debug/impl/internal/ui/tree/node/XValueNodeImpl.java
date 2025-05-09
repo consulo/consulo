@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.node;
 
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.util.registry.Registry;
 import consulo.document.Document;
@@ -34,6 +33,8 @@ import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.execution.debug.ui.ValueMarkup;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValuePresentationUtil;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
@@ -226,10 +227,11 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   @Override
+  @RequiredUIAccess
   public void markChanged() {
     if (myChanged) return;
 
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myChanged = true;
     if (myName != null && myValuePresentation != null) {
       updateText();
@@ -289,8 +291,9 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
     return myValuePresentation != null;
   }
 
+  @RequiredUIAccess
   public void setValueModificationStarted() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myRawValue = null;
     myText.clear();
     appendName();

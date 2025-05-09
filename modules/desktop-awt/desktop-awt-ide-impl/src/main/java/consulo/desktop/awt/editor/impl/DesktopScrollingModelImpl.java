@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.desktop.awt.editor.impl;
 
-import consulo.application.Application;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
@@ -30,9 +28,9 @@ import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Animator;
-import consulo.ui.ex.awt.Interpolable;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
@@ -169,7 +167,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
     @RequiredUIAccess
     private static void assertIsDispatchThread() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
     }
 
     @Override

@@ -16,6 +16,8 @@ import consulo.language.editor.internal.EditorFoldingInfoImpl;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.language.psi.PsiDocumentManager;
@@ -55,8 +57,9 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   }
 
   @Override
+  @RequiredUIAccess
   public void releaseFoldings(@Nonnull Editor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     final Project project = editor.getProject();
     if (project != null && (!project.equals(myProject) || !project.isOpen())) return;
 
@@ -104,7 +107,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
     final List<FoldingUpdate.RegionInfo> regionInfos = FoldingUpdate.getFoldingsFor(file, document, true);
 
     return editor -> {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
       if (myProject.isDisposed() || editor.isDisposed()) return;
       final FoldingModelEx foldingModel = (FoldingModelEx)editor.getFoldingModel();
       if (!foldingModel.isFoldingEnabled()) return;
@@ -192,8 +195,9 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   }
 
   @Override
+  @RequiredUIAccess
   public CodeFoldingState saveFoldingState(@Nonnull Editor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     DocumentFoldingInfo info = getDocumentFoldingInfo(editor.getDocument());
     if (isFoldingsInitializedInEditor(editor)) {
       info.loadFromEditor(editor);
@@ -202,8 +206,9 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   }
 
   @Override
+  @RequiredUIAccess
   public void restoreFoldingState(@Nonnull Editor editor, @Nonnull CodeFoldingState state) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (isFoldingsInitializedInEditor(editor)) {
       state.setToEditor(editor);
     }

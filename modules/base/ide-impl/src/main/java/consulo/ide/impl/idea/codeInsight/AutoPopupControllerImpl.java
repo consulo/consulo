@@ -25,6 +25,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
@@ -120,11 +122,12 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
   }
 
   @Override
+  @RequiredUIAccess
   public void autoPopupParameterInfo(@Nonnull final Editor editor, @Nullable final Object highlightedMethod) {
     if (DumbService.isDumb(myProject)) return;
     if (PowerSaveMode.isEnabled()) return;
 
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     final CodeInsightSettings settings = CodeInsightSettings.getInstance();
     if (settings.AUTO_POPUP_PARAMETER_INFO) {
       final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);

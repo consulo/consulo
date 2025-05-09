@@ -30,6 +30,8 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 
@@ -151,8 +153,9 @@ public class HighlightingSessionImpl implements HighlightingSession {
     });
   }
 
+  @RequiredUIAccess
   public void waitForHighlightInfosApplied() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myEDTQueue.drain();
   }
 

@@ -27,6 +27,7 @@ import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.impl.internal.completion.StatisticsUpdate;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.TargetElementUtil;
@@ -175,7 +176,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         );
         myQueue.setPassThrough(false);
 
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         if (hasModifiers && !Application.get().isUnitTestMode()) {
             trackModifiers();
@@ -400,7 +401,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     @RequiredUIAccess
     private void updateLookup(boolean isUpdateSuppressed) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (isOutdated() || !shouldShowLookup() || isUpdateSuppressed) {
             return;
         }
@@ -539,7 +540,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     private void finishCompletionProcess(boolean disposeOffsetMap) {
         cancel();
 
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         Disposer.dispose(myQueue);
         LookupManager.getInstance(getProject()).removePropertyChangeListener(myLookupManagerListener);
 
@@ -778,7 +779,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     @Override
     @RequiredUIAccess
     public void scheduleRestart() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         /*if (myHandler.isTestingMode() && !TestModeFlags.is(CompletionAutoPopupHandler.ourTestingAutopopup)) {
             closeAndFinish(false);
             PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
@@ -924,7 +925,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     @RequiredUIAccess
     private void showIfSuppressed() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         if (myLookup.isShown()) {
             return;

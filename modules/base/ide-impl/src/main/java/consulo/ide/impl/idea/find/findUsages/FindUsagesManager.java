@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.find.findUsages;
 
 import consulo.application.AccessRule;
-import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
@@ -64,6 +63,7 @@ import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -135,7 +135,7 @@ public class FindUsagesManager {
 
     @RequiredUIAccess
     public void clearFindingNextUsageInFile() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myLastSearchInFileData = null;
     }
 
@@ -151,7 +151,7 @@ public class FindUsagesManager {
 
     @RequiredUIAccess
     private boolean findUsageInFile(@Nonnull FileEditor editor, @Nonnull FileSearchScope direction) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         if (myLastSearchInFileData == null) {
             return false;
@@ -201,7 +201,7 @@ public class FindUsagesManager {
         @Nonnull PsiElement[] primaryElements,
         @Nonnull PsiElement[] secondaryElements
     ) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         myLastSearchInFileData = new PsiElement2UsageTargetComposite(primaryElements, secondaryElements, findUsagesOptions);
     }
@@ -430,7 +430,7 @@ public class FindUsagesManager {
         @Nonnull FindUsagesOptions findUsagesOptions,
         @Nonnull Runnable onComplete
     ) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         ProgressIndicatorBase indicator = new ProgressIndicatorBase();
         Task.Backgroundable task = new Task.Backgroundable(handler.getProject(), LocalizeValue.localizeTODO("Finding Usages")) {
             @Override

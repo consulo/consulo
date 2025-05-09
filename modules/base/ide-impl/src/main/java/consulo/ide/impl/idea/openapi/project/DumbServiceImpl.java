@@ -44,6 +44,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
 import consulo.ui.NotificationType;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
@@ -147,7 +148,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     @Override
     @RequiredUIAccess
     public void dispose() {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myUpdatesQueue.clear();
         myQueuedEquivalences.clear();
         synchronized (myRunWhenSmartQueue) {
@@ -348,7 +349,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
         Disposer.register(
             task,
             () -> {
-                myApplication.assertIsDispatchThread();
+                UIAccess.assertIsUIThread();
                 myProgresses.remove(task);
             }
         );
@@ -511,7 +512,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     @Override
     @RequiredUIAccess
     public void completeJustSubmittedTasks() {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assert myProject.isInitialized();
         if (myState.get() != State.SCHEDULED_TASKS) {
             return;

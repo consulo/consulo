@@ -17,11 +17,12 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -163,8 +164,9 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     }
   }
 
+  @RequiredUIAccess
   protected void refreshView() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     if (myInRefresh) return;
     myInRefresh = true;

@@ -2,7 +2,6 @@
 
 package consulo.language.editor.impl.internal.highlight;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.internal.SweepProcessor;
@@ -26,6 +25,8 @@ import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
@@ -47,6 +48,7 @@ public class UpdateHighlightersUtilImpl {
            ((HighlightInfoImpl)info).getGutterIconRenderer() == null;
   }
 
+  @RequiredUIAccess
   public static void addHighlighterToEditorIncrementally(@Nonnull Project project,
                                                          @Nonnull Document document,
                                                          @Nonnull PsiFile file,
@@ -57,7 +59,7 @@ public class UpdateHighlightersUtilImpl {
                                                          // if null global scheme will be used
                                                          final int group,
                                                          @Nonnull Map<TextRange, RangeMarker> ranges2markersCache) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (UpdateHighlightersUtil.isFileLevelOrGutterAnnotation(info)) return;
     if (info.getStartOffset() < startOffset || info.getEndOffset() > endOffset) return;
 
@@ -111,10 +113,11 @@ public class UpdateHighlightersUtilImpl {
     return Comparing.compare(o1.getDescription(), o2.getDescription());
   };
 
+  @RequiredUIAccess
   public static void setHighlightersInRange(@Nonnull final Project project, @Nonnull final Document document, @Nonnull final TextRange range, @Nullable final EditorColorsScheme colorsScheme,
                                             // if null global scheme will be used
                                             @Nonnull final List<? extends HighlightInfo> infos, @Nonnull final MarkupModelEx markup, final int group) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     final HighlightersRecycler infosToRemove = new HighlightersRecycler();
@@ -315,8 +318,9 @@ public class UpdateHighlightersUtilImpl {
     document.putUserData(TYPING_INSIDE_HIGHLIGHTER_OCCURRED, null);
   }
 
+  @RequiredUIAccess
   public static void updateHighlightersByTyping(@Nonnull Project project, @Nonnull DocumentEvent e) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     final Document document = e.getDocument();
     if (document instanceof DocumentEx && ((DocumentEx)document).isInBulkUpdate()) return;
@@ -385,6 +389,7 @@ public class UpdateHighlightersUtilImpl {
 
 
   // set highlights inside startOffset,endOffset but outside priorityRange
+  @RequiredUIAccess
   static void setHighlightersOutsideRange(@Nonnull final Project project,
                                           @Nonnull final Document document,
                                           @Nonnull final PsiFile psiFile,
@@ -395,7 +400,7 @@ public class UpdateHighlightersUtilImpl {
                                           final int endOffset,
                                           @Nonnull final ProperTextRange priorityRange,
                                           final int group) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     final DaemonCodeAnalyzerEx codeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(project);
     if (startOffset == 0 && endOffset == document.getTextLength()) {

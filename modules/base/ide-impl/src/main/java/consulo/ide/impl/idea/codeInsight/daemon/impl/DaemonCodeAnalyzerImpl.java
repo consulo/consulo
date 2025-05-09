@@ -333,7 +333,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     ) throws ProcessCanceledException {
         assert myInitialized;
         assert !myDisposed;
-        application.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (application.isWriteAccessAllowed()) {
             throw new AssertionError("Must not start highlighting from within write action, or deadlock is imminent");
         }
@@ -511,7 +511,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     public void disableUpdateByTimer(@Nonnull Disposable parentDisposable) {
         setUpdateByTimerEnabled(false);
         myDisableCount.incrementAndGet();
-        myProject.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         Disposer.register(
             parentDisposable,
@@ -658,7 +658,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     @TestOnly
     @RequiredUIAccess
     public boolean isRunningOrPending() {
-        myProject.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         return isRunning() || !myUpdateRunnableFuture.isDone() || GeneralHighlightingPass.isRestartPending();
     }
 
@@ -795,7 +795,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     @Nonnull
     @RequiredUIAccess
     public static List<LineMarkerInfo<?>> getLineMarkers(@Nonnull Document document, @Nonnull Project project) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         List<LineMarkerInfo<?>> result = new ArrayList<>();
         LineMarkersUtil.processLineMarkers(
             project,
@@ -1017,8 +1017,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     @Nonnull
     @RequiredUIAccess
     private Collection<FileEditor> getSelectedEditors() {
-        Application app = myProject.getApplication();
-        app.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         // editors in modal context
         EditorTracker editorTracker = EditorTracker.getInstance(myProject);// myProject.getServiceIfCreated(EditorTracker.class);
@@ -1038,6 +1037,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
             }
         }
 
+        Application app = myProject.getApplication();
         if (app.getCurrentModalityState() != ModalityStateImpl.NON_MODAL) {
             return activeTextEditors;
         }

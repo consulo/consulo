@@ -3,7 +3,6 @@ package consulo.execution.impl.internal;
 
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -18,6 +17,8 @@ import consulo.execution.impl.internal.compound.CompoundRunConfiguration;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
@@ -141,8 +142,9 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   }
 
   @Override
+  @RequiredUIAccess
   public void setActiveTarget(@Nonnull ExecutionTarget target) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     RunManagerImpl runManager = getRunManager();
     synchronized (myActiveTargetLock) {
       updateActiveTarget(runManager, runManager.getSelectedConfiguration(), target);
@@ -324,8 +326,9 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   }
 
   @Override
+  @RequiredUIAccess
   public void update() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     updateActiveTarget(getRunManager());
   }
 

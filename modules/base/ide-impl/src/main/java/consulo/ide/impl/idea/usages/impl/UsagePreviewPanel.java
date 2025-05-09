@@ -13,50 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.usages.impl;
 
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.VisibleAreaEvent;
+import consulo.codeEditor.event.VisibleAreaListener;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EffectType;
+import consulo.colorScheme.TextAttributes;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.TextRange;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.colorScheme.TextAttributes;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.dataContext.DataProvider;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.event.VisibleAreaEvent;
-import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.document.FileDocumentManager;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.codeEditor.*;
-import consulo.codeEditor.markup.*;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
+import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
-import consulo.colorScheme.EffectType;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.PositionTracker;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.lang.Comparing;
-import consulo.disposer.Disposer;
-import consulo.document.Document;
-import consulo.logging.Logger;
-import consulo.usage.*;
+import consulo.usage.UsageInfo;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.UsageViewPresentation;
 import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.PositionTracker;
-import consulo.ui.ex.awt.StatusText;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,8 +103,9 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
     return null;
   }
 
+  @RequiredUIAccess
   private void resetEditor(@Nonnull final List<? extends UsageInfo> infos) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     PsiElement psiElement = infos.get(0).getElement();
     if (psiElement == null) return;
     PsiFile psiFile = psiElement.getContainingFile();

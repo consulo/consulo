@@ -16,7 +16,6 @@
 package consulo.ide.impl.language.editor.markup;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonTooltipRendererProvider;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.TrafficLightRenderer;
@@ -30,6 +29,7 @@ import consulo.language.editor.impl.internal.markup.ErrorStripeUpdateManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -56,7 +56,7 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
   @Override
   @RequiredUIAccess
   public void repaintErrorStripePanel(@Nonnull Editor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (!myProject.isInitialized()) return;
 
     PsiFile file = myPsiDocumentManager.getPsiFile(editor.getDocument());
@@ -70,7 +70,7 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
   @Override
   @RequiredUIAccess
   public void setOrRefreshErrorStripeRenderer(@Nonnull EditorMarkupModel editorMarkupModel, @Nullable PsiFile file) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (!editorMarkupModel.isErrorStripeVisible() || !DaemonCodeAnalyzer.getInstance(myProject).isHighlightingAvailable(file)) {
       return;
     }

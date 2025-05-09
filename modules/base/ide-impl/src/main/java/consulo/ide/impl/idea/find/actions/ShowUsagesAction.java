@@ -752,7 +752,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         @Nonnull final UsageViewPresentation presentation,
         @Nonnull final AsyncProcessIcon processIcon
     ) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         Project project = handler.getProject();
 
         PopupChooserBuilder builder = new PopupChooserBuilder(table);
@@ -942,7 +942,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         @Nonnull AtomicInteger outOfScopeUsages,
         @Nonnull SearchScope searchScope
     ) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         final int columnCount = calcColumnCount(data);
         MyModel model = table.getModel() instanceof MyModel ? (MyModel) table.getModel() : null;
         if (model == null || model.getColumnCount() != columnCount) {
@@ -1026,7 +1026,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         @Nonnull AtomicInteger outOfScopeUsages,
         @Nonnull SearchScope searchScope
     ) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         boolean shouldShowMoreSeparator = usages.contains(MORE_USAGES_SEPARATOR);
         if (shouldShowMoreSeparator) {

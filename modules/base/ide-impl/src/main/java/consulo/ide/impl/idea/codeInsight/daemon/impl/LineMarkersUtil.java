@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.application.Application;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.*;
@@ -14,6 +13,8 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
@@ -40,8 +41,9 @@ class LineMarkersUtil {
     });
   }
 
+  @RequiredUIAccess
   static void setLineMarkersToEditor(@Nonnull Project project, @Nonnull Document document, @Nonnull Segment bounds, @Nonnull Collection<? extends LineMarkerInfo<PsiElement>> markers, int group) {
-    Application.get().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     MarkupModelEx markupModel = DocumentMarkupModel.forDocument(document, project, true);
     HighlightersRecycler toReuse = new HighlightersRecycler();
@@ -124,8 +126,9 @@ class LineMarkersUtil {
     return highlighter;
   }
 
+  @RequiredUIAccess
   static void addLineMarkerToEditorIncrementally(@Nonnull Project project, @Nonnull Document document, @Nonnull LineMarkerInfo<?> marker) {
-    Application.get().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     MarkupModelEx markupModel = DocumentMarkupModel.forDocument(document, project, true);
     LineMarkerInfo<?>[] markerInTheWay = {null};

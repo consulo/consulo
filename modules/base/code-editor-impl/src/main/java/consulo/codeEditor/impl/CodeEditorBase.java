@@ -663,7 +663,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     @RequiredUIAccess
     private void beforeChangedUpdate(DocumentEvent e) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         myDocumentChangeInProgress = true;
         if (isStickySelection()) {

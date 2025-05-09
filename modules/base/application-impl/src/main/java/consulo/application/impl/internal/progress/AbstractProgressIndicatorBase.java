@@ -12,6 +12,7 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Stack;
 import consulo.util.collection.primitive.doubles.DoubleList;
@@ -250,7 +251,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     ModalityState modalityState = application.getDefaultModalityState();
 
     if (modalityProgress != null) {
-      application.assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
       modalityState = ((IdeaModalityStateEx)modalityState).appendProgress(modalityProgress);
     }
 

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
-import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
@@ -32,17 +31,16 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.util.FileContentUtilCore;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
-import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
-import consulo.virtualFileSystem.fileType.FileTypeEvent;
-import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
@@ -51,6 +49,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
+import consulo.virtualFileSystem.fileType.FileTypeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -148,7 +148,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
 
   @RequiredUIAccess
   private static void assertThread() {
-    Application.get().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
   }
 
   /**

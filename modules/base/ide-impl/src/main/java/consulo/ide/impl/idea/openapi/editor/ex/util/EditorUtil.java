@@ -45,6 +45,8 @@ import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
@@ -479,8 +481,9 @@ public final class EditorUtil {
         return editor.getCaretModel().getCurrentCaret() == editor.getCaretModel().getPrimaryCaret();
     }
 
+    @RequiredUIAccess
     public static void disposeWithEditor(@Nonnull Editor editor, @Nonnull Disposable disposable) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (Disposer.isDisposed(disposable)) {
             return;
         }

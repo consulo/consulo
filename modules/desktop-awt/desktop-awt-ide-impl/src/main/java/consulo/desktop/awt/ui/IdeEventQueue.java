@@ -49,6 +49,7 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.JBPopupMenu;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.dnd.DnDManager;
@@ -212,7 +213,7 @@ public class IdeEventQueue extends EventQueue {
         // We can get focus event before application is initialized
         return;
       }
-      application.assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
     });
 
     addDispatcher(new WindowsAltSuppressor(), null);

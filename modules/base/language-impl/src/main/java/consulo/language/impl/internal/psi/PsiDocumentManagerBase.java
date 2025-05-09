@@ -311,7 +311,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
      */
     @RequiredUIAccess
     public boolean cancelAndRunWhenAllCommitted(@Nonnull Object key, @Nonnull final Runnable action) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myProject.isDisposed()) {
             action.run();
             return true;
@@ -382,7 +382,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         @Nonnull final Object reason
     ) {
         assert !myProject.isDisposed() : "Already disposed";
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         final boolean[] ok = {true};
         Runnable runnable = new DocumentRunnable(document, myProject) {
             @Override
@@ -415,7 +415,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         final boolean synchronously,
         boolean forceNoPsiCommit
     ) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myProject.isDisposed()) {
             return false;
         }
@@ -624,7 +624,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     @RequiredUIAccess
     private boolean performWhenAllCommitted(@Nonnull ModalityState modality, @Nonnull Runnable action) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         checkWeAreOutsideAfterCommitHandler();
 
         assert !myProject.isDisposed() : "Already disposed: " + myProject;
@@ -700,7 +700,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
             });
             return;
         }
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         List<Runnable> list = getAndClearActionsAfterCommit(document);
         if (list != null) {
             for (final Runnable runnable : list) {
@@ -1191,7 +1191,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     @RequiredUIAccess
     public void reparseFileFromText(@Nonnull PsiFileImpl file) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (isCommitInProgress()) {
             throw new IllegalStateException("Re-entrant commit is not allowed");
         }

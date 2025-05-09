@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
@@ -16,6 +15,8 @@ import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
@@ -99,8 +100,9 @@ public class EditorHighlighterUpdater {
    */
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
+    @RequiredUIAccess
     public void fileTypesChanged(@Nonnull final FileTypeEvent event) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
       // File can be invalid after file type changing. The editor should be removed
       // by the FileEditorManager if it's invalid.
       FileType type = event.getRemovedFileType();

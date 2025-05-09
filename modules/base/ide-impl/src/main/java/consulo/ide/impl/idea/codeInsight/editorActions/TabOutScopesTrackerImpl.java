@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.TabOutScopesTracker;
@@ -15,6 +14,7 @@ import consulo.document.event.DocumentListener;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.document.DocumentWindow;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
@@ -32,7 +32,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
   @Override
   @RequiredUIAccess
   public void registerEmptyScope(@Nonnull Editor editor, int offset, int tabOutOffset) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (editor.isDisposed()) throw new IllegalArgumentException("Editor is already disposed");
     if (tabOutOffset <= offset) throw new IllegalArgumentException("tabOutOffset should be larger than offset");
 
@@ -64,7 +64,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
 
   @RequiredUIAccess
   private static int checkOrRemoveScopeEndingAt(@Nonnull Editor editor, int offset, boolean removeScope) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     if (!CodeInsightSettings.getInstance().TAB_EXITS_BRACKETS_AND_QUOTES) return 0;
 

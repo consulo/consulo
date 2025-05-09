@@ -15,11 +15,11 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.internal.TabFactoryBuilder;
@@ -74,6 +74,7 @@ public class TabbedPaneWrapper {
     init(tabPlacement, installKeyboardNavigation, factory);
   }
 
+  @RequiredUIAccess
   public void init(int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, TabFactoryBuilder.TabFactory tabbedPaneFactory) {
     myFactory = tabbedPaneFactory;
 
@@ -86,27 +87,22 @@ public class TabbedPaneWrapper {
     myTabbedPaneHolder.setFocusCycleRoot(true);
     myTabbedPaneHolder.setFocusTraversalPolicy(new _MyFocusTraversalPolicy());
 
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
   }
 
   public boolean isDisposed() {
     return myTabbedPane != null && myTabbedPane.isDisposed();
   }
 
-  private void assertIsDispatchThread() {
-    final Application application = ApplicationManager.getApplication();
-    if (application != null) {
-      application.assertIsDispatchThread();
-    }
-  }
-
+  @RequiredUIAccess
   public final void addChangeListener(final ChangeListener listener) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.addChangeListener(listener);
   }
 
+  @RequiredUIAccess
   public final void removeChangeListener(final ChangeListener listener) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.removeChangeListener(listener);
   }
 
@@ -114,8 +110,9 @@ public class TabbedPaneWrapper {
     return myFactory.createTabbedPaneHolder();
   }
 
+  @RequiredUIAccess
   public final JComponent getComponent() {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     return myTabbedPaneHolder;
   }
 
@@ -142,13 +139,15 @@ public class TabbedPaneWrapper {
   /**
    * @see javax.swing.JTabbedPane#setTabPlacement
    */
+  @RequiredUIAccess
   public final void setTabPlacement(final int tabPlacement) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.setTabPlacement(tabPlacement);
   }
 
+  @RequiredUIAccess
   public final void addMouseListener(final MouseListener listener) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.addMouseListener(listener);
   }
 
@@ -169,8 +168,9 @@ public class TabbedPaneWrapper {
     setSelectedIndex(index, true);
   }
 
+  @RequiredUIAccess
   public final void setSelectedIndex(final int index, boolean requestFocus) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     final boolean hadFocus = IJSwingUtilities.hasFocus2(myTabbedPaneHolder);
     myTabbedPane.setSelectedIndex(index);
@@ -179,8 +179,9 @@ public class TabbedPaneWrapper {
     }
   }
 
+  @RequiredUIAccess
   public final void setSelectedComponent(final JComponent component) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     final int index = indexOfComponent(component);
     if (index == -1) {
@@ -189,8 +190,9 @@ public class TabbedPaneWrapper {
     setSelectedIndex(index);
   }
 
+  @RequiredUIAccess
   public final synchronized void removeTabAt(final int index) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     final boolean hadFocus = IJSwingUtilities.hasFocus2(myTabbedPaneHolder);
     final TabWrapper wrapper = getWrapperAt(index);
@@ -213,16 +215,18 @@ public class TabbedPaneWrapper {
     return myTabbedPane.getTabCount();
   }
 
+  @RequiredUIAccess
   public final Color getForegroundAt(final int index) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     return myTabbedPane.getForegroundAt(index);
   }
 
   /**
    * @see javax.swing.JTabbedPane#setForegroundAt(int, java.awt.Color)
    */
+  @RequiredUIAccess
   public final void setForegroundAt(final int index, final Color color) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.setForegroundAt(index, color);
   }
 
@@ -237,34 +241,39 @@ public class TabbedPaneWrapper {
     return (TabWrapper)myTabbedPane.getComponentAt(i);
   }
 
+  @RequiredUIAccess
   public final void setTitleAt(final int index, final String title) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.setTitleAt(index, title);
   }
 
+  @RequiredUIAccess
   public final void setToolTipTextAt(final int index, final String toolTipText) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.setToolTipTextAt(index, toolTipText);
   }
 
   /**
    * @see javax.swing.JTabbedPane#setComponentAt(int, java.awt.Component)
    */
+  @RequiredUIAccess
   public final synchronized void setComponentAt(final int index, final JComponent component) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.setComponentAt(index, createTabWrapper(component));
   }
 
   /**
    * @see javax.swing.JTabbedPane#setIconAt(int, javax.swing.Icon)
    */
+  @RequiredUIAccess
   public final void setIconAt(final int index, final consulo.ui.image.Image icon) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.setIconAt(index, icon);
   }
 
+  @RequiredUIAccess
   public final void setEnabledAt(final int index, final boolean enabled) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTabbedPane.setEnabledAt(index, enabled);
   }
 

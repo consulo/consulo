@@ -1,8 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.codeInsight.lookup;
 
-import consulo.application.ApplicationManager;
 import consulo.language.editor.completion.lookup.LookupAdvertiser;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -81,8 +82,9 @@ public class Advertiser implements LookupAdvertiser {
   }
 
   @Override
+  @RequiredUIAccess
   public void clearAdvertisements() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTexts.clear();
     myCurrentItem.set(0);
     updateAdvertisements();
@@ -93,8 +95,9 @@ public class Advertiser implements LookupAdvertiser {
     return font.deriveFont((float)(font.getSize() - JBUIScale.scale(2)));
   }
 
+  @RequiredUIAccess
   public void addAdvertisement(@Nonnull String text, @Nullable Image icon) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myTexts.add(new Item(text, icon));
     updateAdvertisements();
   }

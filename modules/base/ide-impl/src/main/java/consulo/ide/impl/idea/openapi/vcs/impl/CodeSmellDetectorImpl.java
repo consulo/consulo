@@ -45,6 +45,8 @@ import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.MessageCategory;
 import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanel;
 import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanelFactory;
@@ -121,8 +123,9 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
 
   @Nonnull
   @Override
+  @RequiredUIAccess
   public List<CodeSmellInfo> findCodeSmells(@Nonnull final List<VirtualFile> filesToCheck) throws ProcessCanceledException {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     final List<CodeSmellInfo> result = new ArrayList<>();
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
     if (ApplicationManager.getApplication().isWriteAccessAllowed()) throw new RuntimeException("Must not run under write action");

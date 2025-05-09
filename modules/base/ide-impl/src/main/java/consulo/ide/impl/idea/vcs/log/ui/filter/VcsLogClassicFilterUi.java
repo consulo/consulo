@@ -28,6 +28,7 @@ import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.SearchTextField;
@@ -140,7 +141,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
   @Override
   @RequiredUIAccess
   public VcsLogFilterCollection getFilters() {
-    Application.get().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     Pair<VcsLogTextFilter, VcsLogHashFilter> filtersFromText = getFiltersFromTextArea(
       myTextFilterModel.getFilter(),
       myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX),
@@ -194,7 +195,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
   @Override
   @RequiredUIAccess
   public void setFilter(@Nonnull VcsLogFilter filter) {
-    Application.get().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (filter instanceof VcsLogBranchFilter) {
       myBranchFilterModel.setFilter((VcsLogBranchFilter)filter);
     }

@@ -33,6 +33,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
@@ -95,7 +96,7 @@ public class HintManagerImpl implements HintManagerEx {
 
     @RequiredUIAccess
     public boolean canShowQuestionAction(QuestionAction action) {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         return myQuestionAction == null || getPriority(myQuestionAction) <= getPriority(action);
     }
 
@@ -212,7 +213,7 @@ public class HintManagerImpl implements HintManagerEx {
 
     @RequiredUIAccess
     public boolean performCurrentQuestionAction() {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myQuestionAction != null && myQuestionHint != null) {
             if (myQuestionHint.isVisible()) {
                 if (LOG.isDebugEnabled()) {
@@ -306,7 +307,7 @@ public class HintManagerImpl implements HintManagerEx {
         final int timeout,
         final boolean reviveOnEditorChange
     ) {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         editor.getScrollingModel().runActionOnScrollingFinished(() -> {
             LogicalPosition pos = editor.getCaretModel().getLogicalPosition();
@@ -894,7 +895,7 @@ public class HintManagerImpl implements HintManagerEx {
         @Nonnull final QuestionAction action,
         @PositionFlags short constraint
     ) {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         hideQuestionHint();
         TextAttributes attributes = new TextAttributes();
         attributes.setEffectColor(TargetAWT.from(HintColorUtil.QUESTION_UNDERSCORE_COLOR));
@@ -930,7 +931,7 @@ public class HintManagerImpl implements HintManagerEx {
 
     @RequiredUIAccess
     private void hideQuestionHint() {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myQuestionHint != null) {
             myQuestionHint.hide();
             myQuestionHint = null;
@@ -1060,7 +1061,7 @@ public class HintManagerImpl implements HintManagerEx {
         @Override
         @RequiredUIAccess
         public void projectClosed(@Nonnull Project project) {
-            myApplication.assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
 
             // avoid leak through consulo.ide.impl.idea.codeInsight.hint.TooltipController.myCurrentTooltip
             TooltipController.getInstance().cancelTooltips();

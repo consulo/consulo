@@ -16,7 +16,6 @@
 package consulo.desktop.awt.internal.diff;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.diff.DiffUserDataKeys;
@@ -28,6 +27,7 @@ import consulo.diff.request.*;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -89,7 +89,7 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
 
   @RequiredUIAccess
   public void updateRequest(final boolean force, boolean useCache, @Nullable final ScrollToPolicy scrollToChangePolicy) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (isDisposed()) return;
 
     final T requestProvider = getCurrentRequestProvider();
