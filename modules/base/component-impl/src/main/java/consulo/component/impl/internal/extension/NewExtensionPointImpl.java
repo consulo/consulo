@@ -15,6 +15,7 @@
  */
 package consulo.component.impl.internal.extension;
 
+import consulo.annotation.InheritCallerContext;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
@@ -319,7 +320,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Nullable
     @Override
-    public T findFirstSafe(@Nonnull Predicate<T> predicate) {
+    public T findFirstSafe(@Nonnull @InheritCallerContext Predicate<T> predicate) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -339,7 +340,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Nullable
     @Override
-    public <R> R computeSafeIfAny(@Nonnull Function<? super T, ? extends R> processor) {
+    public <R> R computeSafeIfAny(@Nonnull @InheritCallerContext Function<? super T, ? extends R> processor) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -360,7 +361,10 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Nonnull
     @Override
-    public <R, CR extends Collection<? super R>> CR collectMapped(@Nonnull CR results, @Nonnull Function<? super T, ? extends R> processor) {
+    public <R, CR extends Collection<? super R>> CR collectMapped(
+        @Nonnull CR results,
+        @InheritCallerContext @Nonnull Function<? super T, ? extends R> processor
+    ) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -381,7 +385,10 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Nonnull
     @Override
-    public <CE extends Collection<T>> CE collectFiltered(@Nonnull CE results, @Nonnull Predicate<? super T> predicate) {
+    public <CE extends Collection<T>> CE collectFiltered(
+        @Nonnull CE results,
+        @Nonnull @InheritCallerContext Predicate<? super T> predicate
+    ) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -400,7 +407,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
-    public void forEachExtensionSafe(@Nonnull Consumer<? super T> consumer) {
+    public void forEachExtensionSafe(@Nonnull @InheritCallerContext Consumer<? super T> consumer) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -416,7 +423,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
-    public void forEachBreakable(@Nonnull Function<? super T, Flow> breakableConsumer) {
+    public void forEachBreakable(@Nonnull @InheritCallerContext Function<? super T, Flow> breakableConsumer) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -435,7 +442,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
+    public void processWithPluginDescriptor(@Nonnull @InheritCallerContext BiConsumer<? super T, ? super PluginDescriptor> consumer) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach

@@ -16,6 +16,7 @@
 package consulo.component.extension;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.InheritCallerContext;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.internal.ExtensionLogger;
 import consulo.component.util.ModificationTracker;
@@ -107,7 +108,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return extension;
     }
 
-    default void processWithPluginDescriptor(@Nonnull BiConsumer<? super E, ? super PluginDescriptor> consumer) {
+    default void processWithPluginDescriptor(@Nonnull @InheritCallerContext BiConsumer<? super E, ? super PluginDescriptor> consumer) {
         for (E extension : getExtensionList()) {
             PluginDescriptor plugin = PluginManager.getPlugin(extension.getClass());
 
@@ -115,25 +116,25 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         }
     }
 
-    default boolean anyMatchSafe(@Nonnull Predicate<E> predicate) {
+    default boolean anyMatchSafe(@Nonnull @InheritCallerContext Predicate<E> predicate) {
         return findFirstSafe(predicate) != null;
     }
 
-    default boolean allMatchSafe(@Nonnull Predicate<E> predicate) {
+    default boolean allMatchSafe(@Nonnull @InheritCallerContext Predicate<E> predicate) {
         return findFirstSafe(predicate.negate()) == null;
     }
 
-    default boolean noneMatchSafe(@Nonnull Predicate<E> predicate) {
+    default boolean noneMatchSafe(@Nonnull @InheritCallerContext Predicate<E> predicate) {
         return findFirstSafe(predicate) == null;
     }
 
     @Nullable
-    default E findFirstSafe(@Nonnull Predicate<E> predicate) {
+    default E findFirstSafe(@Nonnull @InheritCallerContext Predicate<E> predicate) {
         return computeSafeIfAny(e -> predicate.test(e) ? e : null);
     }
 
     @Nullable
-    default <R> R computeSafeIfAny(@Nonnull Function<? super E, ? extends R> processor) {
+    default <R> R computeSafeIfAny(@Nonnull @InheritCallerContext Function<? super E, ? extends R> processor) {
         for (E extension : getExtensionList()) {
             try {
                 R result = processor.apply(extension);
@@ -149,7 +150,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     }
 
     @Nonnull
-    default <R> R computeSafeIfAny(@Nonnull Function<? super E, ? extends R> processor, @Nonnull R defaultValue) {
+    default <R> R computeSafeIfAny(@Nonnull @InheritCallerContext Function<? super E, ? extends R> processor, @Nonnull R defaultValue) {
         R result = computeSafeIfAny(processor);
         return result == null ? defaultValue : result;
     }
@@ -157,7 +158,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     @Nonnull
     default <R, CR extends Collection<? super R>> CR collectMapped(
         @Nonnull CR results,
-        @Nonnull Function<? super E, ? extends R> processor
+        @Nonnull @InheritCallerContext Function<? super E, ? extends R> processor
     ) {
         forEach(extension -> {
             R result = processor.apply(extension);
@@ -169,12 +170,15 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     }
 
     @Nonnull
-    default <R> List<R> collectMapped(@Nonnull Function<? super E, ? extends R> processor) {
+    default <R> List<R> collectMapped(@Nonnull @InheritCallerContext Function<? super E, ? extends R> processor) {
         return collectMapped(new ArrayList<R>(), processor);
     }
 
     @Nonnull
-    default <CE extends Collection<E>> CE collectFiltered(@Nonnull CE results, @Nonnull Predicate<? super E> predicate) {
+    default <CE extends Collection<E>> CE collectFiltered(
+        @Nonnull CE results,
+        @Nonnull @InheritCallerContext Predicate<? super E> predicate
+    ) {
         forEach(extension -> {
             if (predicate.test(extension)) {
                 results.add(extension);
@@ -184,16 +188,16 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     }
 
     @Nonnull
-    default List<E> collectFiltered(@Nonnull Predicate<? super E> predicate) {
+    default List<E> collectFiltered(@Nonnull @InheritCallerContext Predicate<? super E> predicate) {
         return collectFiltered(new ArrayList<>(), predicate);
     }
 
     @Override
-    default void forEach(Consumer<? super E> action) {
+    default void forEach(@Nonnull @InheritCallerContext Consumer<? super E> action) {
         forEachExtensionSafe(action);
     }
 
-    default void forEachExtensionSafe(@Nonnull Consumer<? super E> consumer) {
+    default void forEachExtensionSafe(@Nonnull @InheritCallerContext Consumer<? super E> consumer) {
         processWithPluginDescriptor((value, pluginDescriptor) -> {
             try {
                 consumer.accept(value);
@@ -204,7 +208,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         });
     }
 
-    default void forEachBreakable(@Nonnull Function<? super E, Flow> breakableConsumer) {
+    default void forEachBreakable(@Nonnull @InheritCallerContext Function<? super E, Flow> breakableConsumer) {
         computeSafeIfAny(value -> breakableConsumer.apply(value) != Flow.BREAK ? null : Flow.BREAK);
     }
 
