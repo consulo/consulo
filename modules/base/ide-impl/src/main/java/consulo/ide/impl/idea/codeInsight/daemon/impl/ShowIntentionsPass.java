@@ -34,6 +34,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.HasFocus;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
@@ -62,7 +63,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         super(project, editor.getDocument(), false);
         myQueryIntentionActions = queryIntentionActions;
         myPassIdToShowIntentionsFor = -1;
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         myEditor = editor;
 
@@ -257,7 +258,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     @Override
     @RequiredUIAccess
     public void doApplyInformationToEditor() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         CachedIntentions cachedIntentions = myCachedIntentions;
         boolean actionsChanged = myActionsChanged;
@@ -298,7 +299,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         @Nonnull IntentionsInfo intentions,
         int passIdToShowIntentionsFor
     ) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         EditorNotificationActions.collectActions(
             hostEditor,
             hostFile,

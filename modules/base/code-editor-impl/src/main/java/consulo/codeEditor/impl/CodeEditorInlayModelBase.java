@@ -19,6 +19,8 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -128,8 +130,9 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
 
   @Nullable
   @Override
+  @RequiredUIAccess
   public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, @Nonnull T renderer) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     Document document = myEditor.getDocument();
     if (DocumentUtil.isInsideSurrogatePair(document, offset)) return null;
     offset = Math.max(0, Math.min(document.getTextLength(), offset));
@@ -140,8 +143,9 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
 
   @Nullable
   @Override
+  @RequiredUIAccess
   public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset, boolean relatesToPrecedingText, boolean showAbove, int priority, @Nonnull T renderer) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     offset = Math.max(0, Math.min(myEditor.getDocument().getTextLength(), offset));
     BlockInlayImpl<T> inlay = new BlockInlayImpl<>(myEditor, offset, relatesToPrecedingText, showAbove, priority, renderer);
     notifyAdded(inlay);
@@ -150,8 +154,9 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
 
   @Nullable
   @Override
+  @RequiredUIAccess
   public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, @Nonnull T renderer) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     Document document = myEditor.getDocument();
     offset = Math.max(0, Math.min(document.getTextLength(), offset));
     AfterLineEndInlayImpl<T> inlay = new AfterLineEndInlayImpl<>(myEditor, offset, relatesToPrecedingText, renderer);

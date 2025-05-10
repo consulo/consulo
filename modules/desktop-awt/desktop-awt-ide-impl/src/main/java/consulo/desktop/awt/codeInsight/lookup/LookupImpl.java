@@ -346,7 +346,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     @Override
     @RequiredUIAccess
     public void requestResize() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myResizePending = true;
     }
 
@@ -466,7 +466,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     @RequiredUIAccess
     private boolean updateList(boolean onExplicitAction, boolean reused) {
         if (!Application.get().isUnitTestMode()) {
-            Application.get().assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
         }
         checkValid();
 
@@ -821,7 +821,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     @RequiredUIAccess
     public boolean isShown() {
         if (!Application.get().isUnitTestMode()) {
-            Application.get().assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
         }
         return myShown;
     }
@@ -829,7 +829,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     @Override
     @RequiredUIAccess
     public boolean showLookup() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         checkValid();
         LOG.assertTrue(!myShown);
         myShown = true;
@@ -1309,7 +1309,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     @Override
     @RequiredUIAccess
     public void hideLookup(boolean explicitly) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         if (myHidden) {
             return;
@@ -1353,7 +1353,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     @Override
     @RequiredUIAccess
     public void dispose() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         assert myHidden;
         if (myDisposed) {
             LOG.error(formatDisposeTrace());

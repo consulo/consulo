@@ -26,6 +26,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
@@ -144,7 +145,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   @Override
   @RequiredUIAccess
   protected void createHighlighter(@Nonnull Range range) {
-    myApplication.assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     if (range.getHighlighter() != null) {
       LOG.error("Multiple highlighters registered for the same Range");

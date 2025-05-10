@@ -33,6 +33,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 
@@ -78,7 +79,7 @@ public class AsyncEditorLoader {
 
   @RequiredUIAccess
   public void start() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     Future<Runnable> asyncLoading = scheduleLoading();
 
@@ -196,7 +197,7 @@ public class AsyncEditorLoader {
   }
 
   public static void performWhenLoaded(@Nonnull Editor editor, @Nonnull Runnable runnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     AsyncEditorLoader loader = editor.getUserData(ASYNC_LOADER);
     if (loader == null) {
       runnable.run();
@@ -209,8 +210,7 @@ public class AsyncEditorLoader {
   @Nonnull
   @RequiredUIAccess
   public TextEditorState getEditorState(@Nonnull FileEditorStateLevel level) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-
+    UIAccess.assertIsUIThread();
 
     TextEditorState state = myProvider.getStateImpl(myProject, myEditor, level);
     if (!isDone() && myDelayedState != null) {
@@ -221,7 +221,7 @@ public class AsyncEditorLoader {
 
   @RequiredUIAccess
   public void setEditorState(@Nonnull final TextEditorState state, boolean exactState) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     if (!isDone()) {
       myDelayedState = state;

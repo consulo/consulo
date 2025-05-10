@@ -11,6 +11,7 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.SmartList;
@@ -50,7 +51,7 @@ public abstract class EditorTracker implements Disposable {
   @Nonnull
   @RequiredUIAccess
   public List<Editor> getActiveEditors() {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     return myActiveEditors;
   }
 
@@ -75,7 +76,7 @@ public abstract class EditorTracker implements Disposable {
 
   @RequiredUIAccess
   public void setActiveEditors(@Nonnull List<Editor> editors) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (editors.equals(myActiveEditors)) {
       return;
     }

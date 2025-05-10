@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.markup.*;
@@ -33,6 +31,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.BitUtil;
 import jakarta.annotation.Nonnull;
@@ -90,10 +89,11 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     // NB: Can return invalid highlighters
-    @Override
     @Nonnull
+    @Override
+    @RequiredUIAccess
     public RangeHighlighter[] getAllHighlighters() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (myCachedHighlighters == null) {
             int size = myHighlighterTree.size() + myHighlighterTreeForLines.size();
             if (size == 0) {
@@ -110,6 +110,7 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
                                                                      int endOffset,
                                                                      int layer,
@@ -123,8 +124,9 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     @Nonnull
+    @RequiredUIAccess
     private RangeHighlighterEx addRangeHighlighter(@Nonnull RangeHighlighterImpl highlighter, @Nullable Consumer<? super RangeHighlighterEx> changeAttributesAction) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myCachedHighlighters = null;
         if (changeAttributesAction != null) {
             highlighter.changeAttributesNoEvents(changeAttributesAction);
@@ -134,6 +136,7 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     @Override
+    @RequiredUIAccess
     public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
         UIAccess.assertIsUIThread();
 
@@ -210,8 +213,9 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     @Override
+    @RequiredUIAccess
     public void setRangeHighlighterAttributes(@Nonnull final RangeHighlighter highlighter, @Nonnull final TextAttributes textAttributes) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         ((RangeHighlighterEx) highlighter).setTextAttributes(textAttributes);
     }
 
@@ -237,8 +241,9 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     @Override
+    @RequiredUIAccess
     public boolean containsHighlighter(@Nonnull final RangeHighlighter highlighter) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         Processor<RangeHighlighterEx> equalId = h -> h.getId() != ((RangeHighlighterEx) highlighter).getId();
         return !treeFor(highlighter).processOverlappingWith(highlighter.getStartOffset(), highlighter.getEndOffset(), equalId);
     }

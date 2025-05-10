@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.find;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -58,6 +57,7 @@ import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -243,7 +243,7 @@ public class FindUtil {
 
     @RequiredUIAccess
     public static void find(@Nonnull final Project project, @Nonnull final Editor editor) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         final FindManager findManager = FindManager.getInstance(project);
         String s = editor.getSelectionModel().getSelectedText();
 

@@ -23,6 +23,8 @@ import consulo.component.util.Iconable;
 import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.RefreshQueue;
@@ -61,7 +63,8 @@ public class PlatformVirtualFileManager extends BaseVirtualFileManager {
     @Override
     protected long doRefresh(boolean asynchronous, @Nullable Runnable postAction) {
         if (!asynchronous) {
-            myApplication.assertIsDispatchThread();
+            //noinspection RequiredXAction
+            UIAccess.assertIsUIThread();
         }
 
         // todo: get an idea how to deliver changes from local FS to jar fs before they go refresh

@@ -13,19 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Apr 19, 2002
- * Time: 2:56:43 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.desktop.awt.editor.impl;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.MarkupModelImpl;
@@ -52,6 +41,7 @@ import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -81,6 +71,10 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * @author max
+ * @since 2002-04-19
+ */
 public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
   private static final int myPreviewLines = 5;// Actually preview has myPreviewLines * 2 + 1 lines (above + below + current one)
   private static final int myCachePreviewLines = 100;// Actually cache image has myCachePreviewLines * 2 + 1 lines (above + below + current one)
@@ -328,7 +322,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   @RequiredUIAccess
   @Override
   public void setErrorPanelPopupHandler(@Nonnull PopupHandler handler) {
-    Application.get().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     DesktopEditorErrorPanel errorPanel = getErrorPanel();
     if (errorPanel != null) {
       errorPanel.setPopupHandler(handler);
@@ -355,18 +349,13 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   @RequiredUIAccess
   @Override
   public void setErrorStripeRenderer(ErrorStripeRenderer renderer) {
-    assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (myErrorStripeRenderer instanceof Disposable) {
       Disposer.dispose((Disposable)myErrorStripeRenderer);
     }
     myErrorStripeRenderer = renderer;
     //try to not cancel tooltips here, since it is being called after every writeAction, even to the console
     //HintManager.getInstance().getTooltipController().cancelTooltips();
-  }
-
-  @RequiredUIAccess
-  private static void assertIsDispatchThread() {
-    Application.get().assertIsDispatchThread();
   }
 
   @Override
@@ -404,7 +393,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   @RequiredUIAccess
   private void fireErrorMarkerClicked(RangeHighlighter marker, MouseEvent e) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     ErrorStripeEvent event = new ErrorStripeEvent(getEditor(), e, marker);
     for (ErrorStripeListener listener : myErrorMarkerListeners) {
       listener.errorMarkerClicked(event);

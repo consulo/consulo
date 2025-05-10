@@ -15,7 +15,6 @@
  */
 package consulo.execution.test.sm.runner;
 
-import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
 import consulo.execution.action.Location;
 import consulo.execution.test.*;
@@ -34,6 +33,8 @@ import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
@@ -204,8 +205,9 @@ public class SMTestProxy extends AbstractTestProxy {
            myState.getMagnitude() == TestStateInfo.Magnitude.PASSED_INDEX;
   }
 
+  @RequiredUIAccess
   public void addChild(@Nonnull SMTestProxy child) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     if (myChildren == null) {
       myChildren = ContainerUtil.newArrayListWithCapacity(4);

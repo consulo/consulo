@@ -21,6 +21,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.util.collection.JBIterable;
@@ -46,7 +47,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
   @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
     final Set<ExpressionTypeProvider> handlers = getHandlers(project, language, file.getViewProvider().getBaseLanguage());

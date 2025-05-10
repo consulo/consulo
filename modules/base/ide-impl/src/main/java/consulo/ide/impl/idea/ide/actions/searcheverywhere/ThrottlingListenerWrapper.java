@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.application.Application;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import jakarta.annotation.Nonnull;
@@ -45,7 +45,7 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
 
     @RequiredUIAccess
     public void clearBuffer() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myBuffer.clear();
         cancelScheduledFlush();
     }
@@ -53,7 +53,7 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
     @Override
     @RequiredUIAccess
     public void elementsAdded(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myBuffer.addEvent(new Event(Event.ADD, list));
         scheduleFlushBuffer();
     }
@@ -61,7 +61,7 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
     @Override
     @RequiredUIAccess
     public void elementsRemoved(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myBuffer.addEvent(new Event(Event.REMOVE, list));
         scheduleFlushBuffer();
     }
@@ -69,7 +69,7 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
     @Override
     @RequiredUIAccess
     public void searchFinished(@Nonnull Map<SearchEverywhereContributor<?>, Boolean> hasMoreContributors) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myBuffer.flush(myFlushConsumer);
         myDelegateExecutor.execute(() -> myDelegateListener.searchFinished(hasMoreContributors));
         cancelScheduledFlush();
@@ -77,11 +77,11 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
 
     @RequiredUIAccess
     private void scheduleFlushBuffer() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         @RequiredUIAccess
         Runnable flushTask = () -> {
-            Application.get().assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
             if (!flushScheduled) {
                 return;
             }
@@ -97,7 +97,7 @@ class ThrottlingListenerWrapper implements MultiThreadSearcher.Listener {
 
     @RequiredUIAccess
     private void cancelScheduledFlush() {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         flushAlarm.cancelAllRequests();
         flushScheduled = false;
     }

@@ -7,6 +7,8 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.fileType.DirectoryFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
@@ -46,8 +48,9 @@ public final class OverrideFileTypeManager extends PersistentFileSetManager {
   }
 
   @TestOnly
+  @RequiredUIAccess
   public static void performTestWithMarkedAsPlainText(@Nonnull VirtualFile file, @Nonnull Runnable runnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     getInstance().addFile(file, PlainTextFileType.INSTANCE);
     UIUtil.dispatchAllInvocationEvents();
     try {

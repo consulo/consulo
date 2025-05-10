@@ -13,6 +13,8 @@ import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
@@ -53,9 +55,10 @@ class DesktopAsyncDataContext extends DesktopDataManagerImpl.MyDataContext imple
 
                                                                                        ContainerUtil::createConcurrentWeakKeySoftValueMap);
 
+  @RequiredUIAccess
   DesktopAsyncDataContext(DesktopDataManagerImpl dataManager, DataContext syncContext) {
     super(dataManager, syncContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     Component component = getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     List<Component> hierarchy = JBIterable.generate(component, Component::getParent).toList();
     for (Component each : hierarchy) {

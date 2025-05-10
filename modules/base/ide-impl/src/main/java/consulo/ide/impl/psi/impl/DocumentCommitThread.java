@@ -168,7 +168,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
       }
       PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(project);
       if (documentManager.isEventSystemEnabled(document)) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
       }
       boolean success = documentManager.finishCommit(document, finishProcessors, reparseInjectedProcessors,
                                                      synchronously, task.reason);

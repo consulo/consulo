@@ -50,6 +50,7 @@ import consulo.project.event.DumbModeListener;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -493,7 +494,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
     @RequiredUIAccess
     private void rebuildList() {
-        myProject.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         stopSearching();
 

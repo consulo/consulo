@@ -15,6 +15,8 @@ import consulo.document.RangeMarker;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
@@ -63,8 +65,9 @@ class DocumentFoldingInfo implements CodeFoldingState {
     myFile = FileDocumentManager.getInstance().getFile(document);
   }
 
+  @RequiredUIAccess
   void loadFromEditor(@Nonnull Editor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     LOG.assertTrue(!editor.isDisposed());
     clear();
 
@@ -90,8 +93,9 @@ class DocumentFoldingInfo implements CodeFoldingState {
   }
 
   @Override
+  @RequiredUIAccess
   public void setToEditor(@Nonnull final Editor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     final PsiManager psiManager = PsiManager.getInstance(myProject);
     if (psiManager.isDisposed()) return;
 

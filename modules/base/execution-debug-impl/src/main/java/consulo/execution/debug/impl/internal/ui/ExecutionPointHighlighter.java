@@ -31,6 +31,8 @@ import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -142,8 +144,9 @@ public class ExecutionPointHighlighter {
         });
     }
 
+    @RequiredUIAccess
     private void doShow(boolean navigate) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         if (ApplicationManager.getApplication().isUnitTestMode()) {
             return;
         }
@@ -224,8 +227,9 @@ public class ExecutionPointHighlighter {
         myRangeHighlighter.setGutterIconRenderer(myGutterIconRenderer);
     }
 
+    @RequiredUIAccess
     public boolean isFullLineHighlighter() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         return myRangeHighlighter != null && myRangeHighlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE;
     }
 

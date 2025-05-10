@@ -18,6 +18,8 @@ import consulo.document.impl.RangeMarkerTree;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Lists;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
@@ -149,8 +151,9 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     return region != null && region.getStartOffset() < offset;
   }
 
+  @RequiredUIAccess
   private static void assertIsDispatchThreadForEditor() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
   }
 
   private static void assertReadAccess() {
@@ -275,8 +278,9 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     region.dispose();
   }
 
+  @RequiredUIAccess
   public void removeRegionFromTree(@Nonnull FoldRegionImpl region) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (!((CodeEditorFoldingModelBase)myEditor.getFoldingModel()).isInBatchFoldingOperation()) {
       LOG.error("Fold regions must be added or removed inside batchFoldProcessing() only.");
     }

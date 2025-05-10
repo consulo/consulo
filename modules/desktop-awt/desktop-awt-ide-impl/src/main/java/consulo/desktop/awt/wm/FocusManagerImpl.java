@@ -214,8 +214,9 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
+  @RequiredUIAccess
   public void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable) {
-    assertDispatchThread();
+    UIAccess.assertIsUIThread();
 
     myRunContext = context;
     try {
@@ -227,8 +228,9 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
+  @RequiredUIAccess
   public Component getLastFocusedFor(FocusableFrame frame) {
-    assertDispatchThread();
+    UIAccess.assertIsUIThread();
 
     return myLastFocused.get(frame);
   }
@@ -238,8 +240,9 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
+  @RequiredUIAccess
   public void toFront(JComponent c) {
-    assertDispatchThread();
+    UIAccess.assertIsUIThread();
 
     if (c == null) return;
 
@@ -334,11 +337,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
       return true;
     }
     return myApplication.isActive() || !Registry.is("actionSystem.suspendFocusTransferIfApplicationInactive");
-  }
-
-  @RequiredUIAccess
-  private void assertDispatchThread() {
-    myApplication.assertIsDispatchThread();
   }
 
   @Override

@@ -35,6 +35,8 @@ import consulo.process.ExecutionException;
 import consulo.process.NopProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.io.NetUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
@@ -161,6 +163,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
     @Nullable
     @Override
+    @RequiredUIAccess
     public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
       if (myProject.isDisposed()) return null;
 
@@ -178,7 +181,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
         debuggerSetup = "-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=" + myDebugPort;
       }
 
-      myProject.getApplication().assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
       FileDocumentManager.getInstance().saveAllDocuments();
 
       ExternalSystemInternalHelper helper = Application.get().getInstance(ExternalSystemInternalHelper.class);

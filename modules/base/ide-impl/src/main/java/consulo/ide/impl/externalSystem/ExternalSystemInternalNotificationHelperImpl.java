@@ -35,6 +35,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
@@ -132,7 +133,7 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
         @Nonnull final NotificationSource notificationSource,
         boolean activateView
     ) {
-        myProject.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         final NewErrorTreeViewPanelImpl errorTreeView;
         final String contentDisplayName = getContentDisplayName(notificationSource, externalSystemId);

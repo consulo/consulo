@@ -16,6 +16,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.function.PairFunction;
@@ -104,7 +105,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
 
   @RequiredUIAccess
   public void setVisiblePack(@Nonnull VisiblePack pack) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     boolean permGraphChanged = myVisiblePack.getDataPack() != pack.getDataPack();
 
@@ -279,27 +280,27 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
   @Nonnull
   @RequiredUIAccess
   public VisiblePack getDataPack() {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     return myVisiblePack;
   }
 
   @Override
   @RequiredUIAccess
   public void addLogListener(@Nonnull VcsLogListener listener) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myLogListeners.add(listener);
   }
 
   @Override
   @RequiredUIAccess
   public void removeLogListener(@Nonnull VcsLogListener listener) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myLogListeners.remove(listener);
   }
 
   @RequiredUIAccess
   private void fireFilterChangeEvent(@Nonnull VisiblePack visiblePack, boolean refresh) {
-    myProject.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     Collection<VcsLogListener> logListeners = new ArrayList<>(myLogListeners);
 
     for (VcsLogListener listener : logListeners) {

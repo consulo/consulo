@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -38,6 +37,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -140,7 +140,7 @@ public class TargetElementUtil {
     @Nullable
     @RequiredUIAccess
     public static PsiElement findTargetElement(Editor editor, @Nonnull Set<String> flags) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         int offset = editor.getCaretModel().getOffset();
         PsiElement result = findTargetElement(editor, flags, offset);

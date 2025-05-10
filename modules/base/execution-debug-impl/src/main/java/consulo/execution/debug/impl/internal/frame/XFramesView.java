@@ -28,6 +28,7 @@ import consulo.execution.debug.impl.internal.action.XFrameThreadsComboBoxGroup;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.PopupMenuListenerAdapter;
@@ -214,7 +215,7 @@ public class XFramesView extends XDebugView {
         XSuspendContext suspendContext = session.getSuspendContext();
 
         if (event == SessionEvent.FRAME_CHANGED && Objects.equals(mySelectedStack, currentExecutionStack)) {
-            ApplicationManager.getApplication().assertIsDispatchThread();
+            UIAccess.assertIsUIThread();
             if (currentStackFrame != null) {
                 myFramesList.setSelectedValue(currentStackFrame, true);
                 mySelectedFrameIndex = myFramesList.getSelectedIndex();

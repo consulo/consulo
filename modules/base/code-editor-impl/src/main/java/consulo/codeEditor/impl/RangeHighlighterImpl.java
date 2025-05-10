@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.markup.*;
@@ -9,6 +8,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.document.internal.DocumentEx;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
@@ -208,8 +209,9 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
+  @RequiredUIAccess
   public void setErrorStripeTooltip(Object tooltipObject) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     Object old = myErrorStripeTooltip;
     myErrorStripeTooltip = tooltipObject;
     if (!Comparing.equal(old, tooltipObject)) {
@@ -223,8 +225,9 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
+  @RequiredUIAccess
   public void setThinErrorStripeMark(boolean value) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     boolean old = isThinErrorStripeMark();
     setFlag(ERROR_STRIPE_IS_THIN_MASK, value);
     if (old != value) {

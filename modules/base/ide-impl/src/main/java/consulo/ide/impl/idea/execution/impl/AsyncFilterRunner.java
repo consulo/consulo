@@ -13,6 +13,8 @@ import consulo.document.impl.DocumentImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.TimeoutUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import jakarta.annotation.Nonnull;
@@ -111,8 +113,9 @@ class AsyncFilterRunner {
     }
   }
 
+  @RequiredUIAccess
   boolean waitForPendingFilters(long timeoutMs) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     long started = System.currentTimeMillis();
     while (true) {

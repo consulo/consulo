@@ -17,7 +17,6 @@ package consulo.desktop.awt.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.fileEditor.event.FileEditorManagerEvent;
@@ -27,6 +26,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.Window;
@@ -99,8 +99,9 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
 
     FocusListener focusListener = new FocusListener() {
       @Override
+      @RequiredUIAccess
       public void focusGained(@Nonnull FocusEvent e) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         Window window = myEditorToWindowMap.get(editor);
         if (window == null) {
           return;

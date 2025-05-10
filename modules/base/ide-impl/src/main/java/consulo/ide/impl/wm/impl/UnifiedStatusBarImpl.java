@@ -159,7 +159,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @RequiredUIAccess
   private void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Position position, @Nonnull List<String> order) {
-    myApplication.assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     PseudoComponent c = wrap(widget);
     HorizontalLayout panel = getTargetPanel(position);
     //if (position == Position2D.LEFT && panel.getComponentCount() == 0) {

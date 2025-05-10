@@ -553,7 +553,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         }
 
         Disposer.register(this, myPopup);
-        Disposer.register(myPopup, ApplicationManager.getApplication()::assertIsDispatchThread);
+        Disposer.register(myPopup, UIAccess::assertIsUIThread);
     }
 
     void canceled(@Nonnull ListPopupStep intentionListStep) {

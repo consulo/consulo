@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.desktop.awt.uiOld;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -26,6 +22,8 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.ui.PaintingParent;
 import consulo.ide.impl.idea.ui.RetrievableIcon;
@@ -52,6 +50,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
+/**
+ * @author max
+ */
 public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DesktopDeferredIconImpl<T>>
   implements DeferredIcon, RetrievableIcon, consulo.ui.image.Image {
   private static final consulo.ui.image.Image EMPTY_ICON = Image.empty(16);
@@ -373,8 +374,10 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     private final Alarm myAlarm = new Alarm();
     private final Set<RepaintRequest> myQueue = new LinkedHashSet<>();
 
+    @RequiredUIAccess
     private void pushDirtyComponent(@Nonnull Component c, final Rectangle rec) {
-      ApplicationManager.getApplication().assertIsDispatchThread(); // assert myQueue accessed from EDT only
+      // assert myQueue accessed from EDT only
+      UIAccess.assertIsUIThread();
       myAlarm.cancelAllRequests();
       myAlarm.addRequest(() -> {
         for (RepaintRequest each : myQueue) {

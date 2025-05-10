@@ -13,6 +13,8 @@ import consulo.ide.impl.idea.openapi.progress.util.PingProgress;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,10 +40,11 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   private final LinkedBlockingQueue<InputEvent> myInputEvents = new LinkedBlockingQueue<>();
   private final LinkedBlockingQueue<InvocationEvent> myInvocationEvents = new LinkedBlockingQueue<>();
 
+  @RequiredUIAccess
   public PotemkinProgress(@Nonnull String title, @Nullable Project project, @Nullable JComponent parentComponent, @Nonnull LocalizeValue cancelText) {
     super(cancelText != LocalizeValue.of(), false, project, parentComponent, cancelText);
     setTitle(title);
-    myApp.assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     startStealingInputEvents();
   }
 
@@ -175,8 +178,9 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   /**
    * Executes the action in EDT, paints itself inside checkCanceled calls.
    */
+  @RequiredUIAccess
   public void runInSwingThread(@Nonnull Runnable action) {
-    myApp.assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     try {
       ProgressManager.getInstance().runProcess(action, this);
     }
@@ -190,8 +194,9 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   /**
    * Executes the action in a background thread, block Swing thread, handles selected input events and paints itself periodically.
    */
+  @RequiredUIAccess
   public void runInBackground(@Nonnull Runnable action) {
-    myApp.assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     enterModality();
 
     try {

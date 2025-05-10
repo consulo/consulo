@@ -21,6 +21,8 @@ import consulo.ide.impl.idea.ide.todo.nodes.TodoFileNode;
 import consulo.ide.impl.idea.ide.todo.nodes.TodoItemNode;
 import consulo.ide.impl.idea.ide.todo.nodes.TodoTreeHelper;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
@@ -307,8 +309,9 @@ public abstract class TodoTreeBuilder implements Disposable {
    * @return {@code true} if specified {@code psiFile} can contains too items.
    * It means that file is in "dirty" file set or in "current" file set.
    */
+  @RequiredUIAccess
   private boolean canContainTodoItems(PsiFile psiFile) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     VirtualFile vFile = psiFile.getVirtualFile();
     return myFileTree.contains(vFile) || myDirtyFileSet.contains(vFile);
   }
@@ -319,8 +322,9 @@ public abstract class TodoTreeBuilder implements Disposable {
    * "dirty" file. This method should be invoked when any modifications inside the file
    * have happened.
    */
+  @RequiredUIAccess
   private void markFileAsDirty(@Nonnull PsiFile psiFile) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     VirtualFile vFile = psiFile.getVirtualFile();
     if (vFile != null && !(vFile instanceof LightVirtualFile)) { // If PSI file isn't valid then its VirtualFile can be null
       myDirtyFileSet.add(vFile);
@@ -346,8 +350,9 @@ public abstract class TodoTreeBuilder implements Disposable {
     }
   }
 
+  @RequiredUIAccess
   void rebuildCache(@Nonnull Set<? extends VirtualFile> files) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myFileTree.clear();
     myDirtyFileSet.clear();
     myFile2Highlighter.clear();
@@ -359,8 +364,9 @@ public abstract class TodoTreeBuilder implements Disposable {
     getTodoTreeStructure().validateCache();
   }
 
+  @RequiredUIAccess
   private void validateCache() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     TodoTreeStructure treeStructure = getTodoTreeStructure();
     // First of all we need to update "dirty" file set.
     for (Iterator<VirtualFile> i = myDirtyFileSet.iterator(); i.hasNext(); ) {

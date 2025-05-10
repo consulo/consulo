@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewPresentation;
-import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultTreeModel;
@@ -80,8 +81,9 @@ public class UsageViewTreeModelBuilder extends DefaultTreeModel {
     }
   }
 
+  @RequiredUIAccess
   private void addTargetNodes() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (myTargets.length == 0) return;
     myTargetNodes = new UsageTargetNode[myTargets.length];
     myTargetsNode.removeAllChildren();
@@ -136,56 +138,65 @@ public class UsageViewTreeModelBuilder extends DefaultTreeModel {
   }
 
   @Override
+  @RequiredUIAccess
   public void nodeChanged(TreeNode node) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.nodeChanged(node);
   }
 
   @Override
+  @RequiredUIAccess
   public void nodesWereInserted(TreeNode node, int[] childIndices) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.nodesWereInserted(node, childIndices);
   }
 
   @Override
+  @RequiredUIAccess
   public void nodesWereRemoved(TreeNode node, int[] childIndices, Object[] removedChildren) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.nodesWereRemoved(node, childIndices, removedChildren);
   }
 
   @Override
+  @RequiredUIAccess
   public void nodesChanged(TreeNode node, int[] childIndices) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.nodesChanged(node, childIndices);
   }
 
   @Override
+  @RequiredUIAccess
   public void nodeStructureChanged(TreeNode node) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.nodeStructureChanged(node);
   }
 
   @Override
+  @RequiredUIAccess
   protected void fireTreeNodesChanged(Object source, Object[] path, int[] childIndices, Object[] children) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.fireTreeNodesChanged(source, path, childIndices, children);
   }
 
   @Override
+  @RequiredUIAccess
   protected void fireTreeNodesInserted(Object source, Object[] path, int[] childIndices, Object[] children) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.fireTreeNodesInserted(source, path, childIndices, children);
   }
 
   @Override
+  @RequiredUIAccess
   protected void fireTreeNodesRemoved(Object source, Object[] path, int[] childIndices, Object[] children) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.fireTreeNodesRemoved(source, path, childIndices, children);
   }
 
   @Override
+  @RequiredUIAccess
   protected void fireTreeStructureChanged(Object source, Object[] path, int[] childIndices, Object[] children) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     super.fireTreeStructureChanged(source, path, childIndices, children);
   }
 }

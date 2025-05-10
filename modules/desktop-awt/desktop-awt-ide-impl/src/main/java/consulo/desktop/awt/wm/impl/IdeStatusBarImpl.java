@@ -35,6 +35,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.*;
 import consulo.ui.NotificationType;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
@@ -133,7 +134,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     @Override
     @RequiredUIAccess
     public StatusBar createChild() {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         IdeStatusBarImpl bar = new IdeStatusBarImpl(myApplication, this);
         bar.setVisible(isVisible());
         myChildren.add(bar);
@@ -239,7 +240,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
 
     @RequiredUIAccess
     private void addWidget(@Nonnull StatusBarWidget widget, @Nonnull List<String> order) {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         JPanel panel = rightPanel();
         JComponent c = wrap(widget);

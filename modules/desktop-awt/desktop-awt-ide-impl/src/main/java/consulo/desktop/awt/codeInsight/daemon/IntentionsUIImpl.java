@@ -10,6 +10,8 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -34,8 +36,9 @@ public class IntentionsUIImpl extends IntentionsUI {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull CachedIntentions cachedIntentions, boolean actionsChanged) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     Editor editor = cachedIntentions.getEditor();
     if (editor == null) return;
     if (!ApplicationManager.getApplication().isUnitTestMode() && !editor.getContentComponent().hasFocus()) return;
@@ -57,8 +60,9 @@ public class IntentionsUIImpl extends IntentionsUI {
   }
 
   @Override
+  @RequiredUIAccess
   public void hide() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     IntentionHintComponent hint = myLastIntentionHint;
     if (hint != null && !hint.isDisposed() && hint.isVisible()) {
       hint.hide();

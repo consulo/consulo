@@ -27,6 +27,8 @@ import consulo.ide.impl.idea.util.ScrambledInputStream;
 import consulo.ide.impl.idea.util.ScrambledOutputStream;
 import consulo.language.statistician.StatisticsInfo;
 import consulo.language.statistician.StatisticsManager;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.SoftReference;
@@ -95,13 +97,14 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
   }
 
   @Override
+  @RequiredUIAccess
   public void incUseCount(@Nonnull final StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return;
     if (ApplicationManager.getApplication().isUnitTestMode() && !myTestingStatistics) {
       return;
     }
 
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     for (StatisticsInfo conjunct : info.getConjuncts()) {
       doIncUseCount(conjunct);
@@ -128,10 +131,11 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
   }
 
   @Override
+  @RequiredUIAccess
   public void save() {
     synchronized (LOCK) {
       if (!ApplicationManager.getApplication().isUnitTestMode()){
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         for (StatisticsUnit unit : myModifiedUnits) {
           saveUnit(unit.getNumber());
         }

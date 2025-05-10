@@ -65,6 +65,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -429,13 +430,13 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         CompilerMessage message,
         boolean checkCachesVersion
     ) {
-        Application application = Application.get();
-        application.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
 
         ProblemsView.getInstance(myProject).clearOldMessages();
 
         LocalizeValue contentName =
             forceCompile ? CompilerLocalize.compilerContentNameCompile() : CompilerLocalize.compilerContentNameMake();
+        Application application = Application.get();
         boolean isUnitTestMode = application.isUnitTestMode();
         CompilerTask compileTask = new CompilerTask(myProject, contentName.get(), true, isCompilationStartedAutomatically(scope));
 

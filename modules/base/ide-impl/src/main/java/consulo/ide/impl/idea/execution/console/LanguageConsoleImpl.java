@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.*;
@@ -41,6 +40,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.JBScrollBar;
@@ -294,8 +295,9 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
   }
 
   @Nonnull
+  @RequiredUIAccess
   protected String addToHistoryInner(@Nonnull final TextRange textRange, @Nonnull final EditorEx editor, boolean erase, final boolean preserveMarkup) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     String result = addTextRangeToHistory(textRange, editor, preserveMarkup);
     if (erase) {

@@ -73,6 +73,7 @@ import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.*;
@@ -2640,7 +2641,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     @TestOnly
     @RequiredUIAccess
     public void waitForVfsEventsExecuted(long timeout, @Nonnull TimeUnit unit) throws Exception {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         BoundedTaskExecutor executor = (BoundedTaskExecutor)getChangedFilesCollector().myVfsEventsExecutor;
         long deadline = System.nanoTime() + unit.toNanos(timeout);
         while (System.nanoTime() < deadline) {

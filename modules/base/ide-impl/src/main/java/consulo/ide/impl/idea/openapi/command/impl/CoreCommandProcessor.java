@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.openapi.command.impl;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
 import consulo.document.Document;
+import consulo.ui.UIAccess;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.undoRedo.internal.CommandToken;
 import consulo.localize.LocalizeValue;
@@ -196,7 +197,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
     @RequiredUIAccess
     protected void executeCommand(CommandDescriptor commandDescriptor) {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         Project project = commandDescriptor.project();
         if (project != null && project.isDisposed()) {
             CommandLog.LOG.error("Project " + project + " already disposed");
@@ -237,7 +238,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     @Nullable
     @RequiredUIAccess
     public CommandToken startCommand(CommandDescriptor commandDescriptor) {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         Project project = commandDescriptor.project();
         if (project != null && project.isDisposed()) {
             return null;
@@ -263,14 +264,14 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
     @RequiredUIAccess
     protected void finishCommand(@Nonnull CommandToken command, @Nullable Throwable throwable) {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         CommandLog.LOG.assertTrue(myCurrentCommand != null, "no current command in progress");
         fireCommandFinished();
     }
 
     @RequiredUIAccess
     protected void fireCommandFinished() {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         CommandDescriptor currentCommand = myCurrentCommand.getDescriptor();
         CommandEvent event = new CommandEvent(
             this,
@@ -295,7 +296,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     @Override
     @RequiredUIAccess
     public void enterModal() {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         Command currentCommand = myCurrentCommand;
         myInterruptedCommands.push(currentCommand);
         if (currentCommand != null) {
@@ -306,7 +307,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     @Override
     @RequiredUIAccess
     public void leaveModal() {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         CommandLog.LOG.assertTrue(myCurrentCommand == null, "Command must not run: " + myCurrentCommand);
 
         myCurrentCommand = myInterruptedCommands.pop();
@@ -318,7 +319,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     @Override
     @RequiredUIAccess
     public void setCurrentCommandName(@Nonnull LocalizeValue name) {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         Command currentCommand = myCurrentCommand;
         assert currentCommand != null;
         currentCommand.setName(name);
@@ -327,7 +328,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     @Override
     @RequiredUIAccess
     public void setCurrentCommandGroupId(Object groupId) {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         Command currentCommand = myCurrentCommand;
         assert currentCommand != null;
         currentCommand.setGroupId(groupId);
@@ -428,7 +429,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
     @RequiredUIAccess
     private void fireCommandStarted() {
-        myApplication.assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         CommandDescriptor currentCommand = myCurrentCommand.getDescriptor();
         CommandEvent event = new CommandEvent(
             this,

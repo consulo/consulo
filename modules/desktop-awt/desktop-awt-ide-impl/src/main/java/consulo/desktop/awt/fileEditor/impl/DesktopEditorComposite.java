@@ -37,6 +37,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ComponentContainer;
@@ -548,7 +549,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
 
     @RequiredUIAccess
     void addEditor(@Nonnull FileEditor editor) {
-        Application.get().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         myEditors = ArrayUtil.append(myEditors, editor);
         if (myTabbedPaneWrapper == null) {
             myTabbedPaneWrapper = createTabbedPaneWrapper(myEditors);

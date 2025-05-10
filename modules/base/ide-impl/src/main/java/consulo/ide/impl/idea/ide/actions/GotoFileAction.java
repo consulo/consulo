@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
@@ -30,6 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.navigation.Navigatable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
@@ -75,11 +75,12 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
             }
 
             @Override
+            @RequiredUIAccess
             public void elementChosen(ChooseByNamePopup popup, Object element) {
                 if (element == null) {
                     return;
                 }
-                ApplicationManager.getApplication().assertIsDispatchThread();
+                UIAccess.assertIsUIThread();
                 Navigatable n = (Navigatable)element;
                 //this is for better cursor position
                 if (element instanceof PsiFile file) {

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.util.UserHomeFileUtil;
@@ -29,6 +27,7 @@ import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
@@ -137,9 +136,10 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
    */
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
     @Override
+    @RequiredUIAccess
     public void propertyChanged(@Nonnull final PsiTreeChangeEvent e) {
       if (PsiTreeChangeEvent.PROP_ROOTS.equals(e.getPropertyName())) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         final VirtualFile[] openFiles = getOpenFiles();
         for (int i = openFiles.length - 1; i >= 0; i--) {
           final VirtualFile file = openFiles[i];

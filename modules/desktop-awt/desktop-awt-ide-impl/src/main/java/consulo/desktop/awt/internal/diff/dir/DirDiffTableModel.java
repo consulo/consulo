@@ -37,6 +37,8 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.JBTable;
@@ -587,8 +589,9 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
       if (source instanceof BackgroundOperatingDiffElement backgroundOperatingDiffElement) {
         final Ref<String> errorMessage = new Ref<>();
         final Ref<DiffElement> diff = new Ref<>();
+        @RequiredUIAccess
         Runnable onFinish = () -> {
-          ApplicationManager.getApplication().assertIsDispatchThread();
+          UIAccess.assertIsUIThread();
           if (!myDisposed) {
             DiffElement newElement = diff.get();
             if (newElement == null && element.getTarget() != null) {
@@ -638,8 +641,9 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
       if (target instanceof BackgroundOperatingDiffElement backgroundOperatingDiffElement) {
         final Ref<String> errorMessage = new Ref<>();
         final Ref<DiffElement> diff = new Ref<>();
+        @RequiredUIAccess
         Runnable onFinish = () -> {
-          ApplicationManager.getApplication().assertIsDispatchThread();
+          UIAccess.assertIsUIThread();
           if (!myDisposed) {
             refreshElementAfterCopyFrom(element, diff.get());
             if (!errorMessage.isNull()) {

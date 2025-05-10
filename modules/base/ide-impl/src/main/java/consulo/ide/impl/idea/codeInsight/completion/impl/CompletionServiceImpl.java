@@ -26,6 +26,8 @@ import consulo.language.Weigher;
 import consulo.language.WeighingService;
 import consulo.language.impl.DebugUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -244,8 +246,9 @@ public final class CompletionServiceImpl extends CompletionService {
     return false;
   }
 
+  @RequiredUIAccess
   public static void setCompletionPhase(@Nonnull CompletionPhase phase) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     CompletionPhase oldPhase = getCompletionPhase();
     CompletionProgressIndicator oldIndicator = oldPhase.indicator;
     if (oldIndicator != null && !(phase instanceof CompletionPhase.BgCalculation)) {

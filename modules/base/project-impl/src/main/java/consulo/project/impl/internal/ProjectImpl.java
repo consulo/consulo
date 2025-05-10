@@ -358,7 +358,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public void dispose() {
     ApplicationEx application = (ApplicationEx)getApplication();
 
-    application.assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     assert application.isWriteAccessAllowed();  // dispose must be under write action
 

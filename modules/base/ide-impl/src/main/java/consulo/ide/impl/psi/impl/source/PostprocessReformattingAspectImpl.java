@@ -42,6 +42,7 @@ import consulo.language.pom.event.TreeChangeEvent;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
@@ -144,7 +145,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     @Override
     @RequiredUIAccess
     public <T> T postponeFormattingInside(@Nonnull Supplier<T> computable) {
-        myProject.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         try {
             incrementPostponedCounter();
             return computable.get();

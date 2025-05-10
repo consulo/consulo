@@ -23,6 +23,8 @@ import consulo.document.FileDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
@@ -210,13 +212,15 @@ public class VcsUtil {
         return roots[0];
     }
 
+    @RequiredUIAccess
     public static void refreshFiles(final FilePath[] roots, final Runnable runnable) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         refreshFiles(collectFilesToRefresh(roots), runnable);
     }
 
+    @RequiredUIAccess
     public static void refreshFiles(final File[] roots, final Runnable runnable) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         refreshFiles(collectFilesToRefresh(roots), runnable);
     }
 

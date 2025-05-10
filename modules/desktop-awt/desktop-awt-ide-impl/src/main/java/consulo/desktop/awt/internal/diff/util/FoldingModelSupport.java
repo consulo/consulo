@@ -31,6 +31,8 @@ import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.diff.DiffDrawUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
@@ -86,12 +88,13 @@ public class FoldingModelSupport {
   /*
    * Iterator returns ranges of changed lines: start1, end1, start2, end2, ...
    */
+  @RequiredUIAccess
   protected void install(
     @Nullable final Iterator<int[]> changedLines,
     @Nonnull final UserDataHolder context,
     @Nonnull final Settings settings
   ) {
-    Application.get().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     if (changedLines == null) return;
     if (settings.range == -1) return;

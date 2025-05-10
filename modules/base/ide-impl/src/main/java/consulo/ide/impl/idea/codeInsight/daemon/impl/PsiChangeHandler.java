@@ -13,6 +13,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
 import consulo.language.editor.ChangeLocalityDetector;
@@ -241,7 +242,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
 
     @RequiredUIAccess
     private void updateByChange(@Nonnull PsiElement child, @Nonnull Document document, boolean whitespaceOptimizationAllowed) {
-        myProject.getApplication().assertIsDispatchThread();
+        UIAccess.assertIsUIThread();
         PsiFile file;
         try {
             file = child.getContainingFile();
