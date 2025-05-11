@@ -55,16 +55,26 @@ public class TreeTable extends JBTable {
   private boolean myProcessCursorKeys = !ScreenReader.isActive();
 
   public TreeTable(TreeTableModel treeTableModel) {
-    super();
-    setModel(treeTableModel);
+    this(treeTableModel, true);
   }
 
-  @SuppressWarnings({"MethodOverloadsMethodOfSuperclass"})
-  public void setModel(TreeTableModel treeTableModel) {// Create the tree. It will be used as a renderer and editor.
+  public TreeTable(TreeTableModel treeTableModel, boolean withHeader) {
+    super();
+    setModel(treeTableModel, withHeader);
+  }
+
+  public void setModel(TreeTableModel treeTableModel) {
+    setModel(treeTableModel, true);
+  }
+
+  public void setModel(TreeTableModel treeTableModel, boolean withHeader) {
     if (myTree != null) {
       myTree.removePropertyChangeListener(JTree.ROW_HEIGHT_PROPERTY, myTreeRowHeightPropertyListener);
     }
-    setTableHeader(null);
+    if (!withHeader) {
+      setTableHeader(null);
+    }
+
     myTree = new TreeTableTree(treeTableModel, this);
     setRowHeight(myTree.getRowHeight());
     myTreeRowHeightPropertyListener = new PropertyChangeListener() {

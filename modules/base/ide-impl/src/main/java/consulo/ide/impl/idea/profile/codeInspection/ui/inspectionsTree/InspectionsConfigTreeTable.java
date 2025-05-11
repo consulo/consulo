@@ -77,7 +77,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
   }
 
   public InspectionsConfigTreeTable(final InspectionsConfigTreeTableModel model) {
-    super(model);
+    super(model, false);
 
     final TableColumn severitiesColumn = getColumnModel().getColumn(SEVERITIES_COLUMN);
     severitiesColumn.setMaxWidth(JBUI.scale(20));
