@@ -18,6 +18,7 @@ package consulo.builtinWebServer.impl.json;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 
 import jakarta.annotation.Nonnull;
@@ -34,7 +35,7 @@ public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
 
   @Nonnull
   @Override
-  public JsonResponse handle() {
+  public JsonResponse handle(HttpRequest request) {
     final FocusableFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
     if (frame != null) {
       frame.activate();

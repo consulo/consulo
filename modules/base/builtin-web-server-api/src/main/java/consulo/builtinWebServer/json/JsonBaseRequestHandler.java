@@ -66,7 +66,7 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
 
   @Override
   public boolean isSupported(HttpRequest request) {
-    return getMethod() == request.method() && myApiUrl.equals(request.uri());
+    return getMethod() == request.method() && myApiUrl.equals(request.path());
   }
 
   @Nonnull

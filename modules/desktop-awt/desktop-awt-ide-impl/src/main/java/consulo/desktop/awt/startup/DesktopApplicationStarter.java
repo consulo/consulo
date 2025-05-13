@@ -301,7 +301,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             jsonPostRequestHandler.handle(content);
         }
         else if (targetRequestHandler instanceof JsonGetRequestHandler jsonGetRequestHandler) {
-            jsonGetRequestHandler.handle();
+            jsonGetRequestHandler.handle(null);
         }
     }
 

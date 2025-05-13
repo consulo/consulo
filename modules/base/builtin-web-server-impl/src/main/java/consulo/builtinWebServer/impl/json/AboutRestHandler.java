@@ -47,7 +47,7 @@ public class AboutRestHandler extends JsonGetRequestHandler {
 
     @Nonnull
     @Override
-    public JsonResponse handle() {
+    public JsonResponse handle(HttpRequest request) {
         Application app = Application.get();
         ApplicationInfo info = ApplicationInfo.getInstance();
         AboutInfo data = new AboutInfo();

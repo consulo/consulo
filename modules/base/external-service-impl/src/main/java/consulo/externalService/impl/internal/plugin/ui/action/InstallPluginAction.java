@@ -53,6 +53,7 @@ public class InstallPluginAction {
                                @Nullable Project project,
                                @Nonnull PluginDescriptor descr,
                                @Nonnull List<PluginDescriptor> allPlugins,
+                               boolean alwaysShowDialog,
                                @Nullable Runnable onSuccess) {
 
         final List<PluginDescriptor> list = new ArrayList<>();
@@ -103,14 +104,15 @@ public class InstallPluginAction {
             }
         };
 
-        downloadAndInstallPlugins(project, list, allPlugins, afterCallback);
+        downloadAndInstallPlugins(project, list, allPlugins, alwaysShowDialog, afterCallback);
     }
 
     @RequiredUIAccess
     public static boolean downloadAndInstallPlugins(@Nullable Project project,
-                                                    @Nonnull final List<PluginDescriptor> toInstall,
-                                                    @Nonnull final List<PluginDescriptor> allPlugins,
-                                                    @Nullable final Consumer<Collection<PluginDescriptor>> afterCallback) {
+                                                    @Nonnull List<PluginDescriptor> toInstall,
+                                                    @Nonnull List<PluginDescriptor> allPlugins,
+                                                    boolean alwaysShowDialog,
+                                                    @Nullable Consumer<Collection<PluginDescriptor>> afterCallback) {
         Set<PluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 
         List<PlatformOrPluginNode> remap = pluginsForInstallWithDependencies.stream().map(x -> new PlatformOrPluginNode(x.getPluginId(), null, x)).collect(Collectors.toList());
@@ -125,7 +127,7 @@ public class InstallPluginAction {
             return true;
         };
         PlatformOrPluginDialog dialog = new PlatformOrPluginDialog(project, result, greenNodeStrategy, afterCallback, true);
-        if (pluginsForInstallWithDependencies.size() == toInstall.size()) {
+        if (pluginsForInstallWithDependencies.size() == toInstall.size() && !alwaysShowDialog) {
             dialog.doOKAction();
             return true;
         }

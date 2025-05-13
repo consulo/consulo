@@ -174,6 +174,7 @@ public class PluginHeaderPanel {
                         null,
                         plugin,
                         allPlugins,
+                        false,
                         () -> update(plugin, installedTab, allPlugins, forceInstall)
                     );
                     break;

@@ -22,6 +22,8 @@ import consulo.logging.Logger;
 import consulo.util.lang.ExceptionUtil;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 
 /**
@@ -36,7 +38,7 @@ public abstract class JsonGetRequestHandler extends JsonBaseRequestHandler {
   }
 
   @Nonnull
-  public abstract JsonResponse handle();
+  public abstract JsonResponse handle(@Nullable HttpRequest request);
 
   @Nonnull
   @Override
@@ -46,10 +48,10 @@ public abstract class JsonGetRequestHandler extends JsonBaseRequestHandler {
 
   @Nonnull
   @Override
-  public HttpResponse process(@Nonnull HttpRequest request) throws IOException {
-    Object handle = null;
+  public HttpResponse process(@Nullable HttpRequest request) throws IOException {
+    Object handle;
     try {
-      handle = handle();
+      handle = handle(request);
     }
     catch (Exception e) {
       LOG.error(e);
