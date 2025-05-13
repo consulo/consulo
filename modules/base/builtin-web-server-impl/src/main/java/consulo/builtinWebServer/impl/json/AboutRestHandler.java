@@ -18,10 +18,10 @@ package consulo.builtinWebServer.impl.json;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
+import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.externalService.update.UpdateChannel;
 import consulo.externalService.update.UpdateSettings;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -30,25 +30,30 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class AboutRestHandler extends JsonGetRequestHandler {
-  public static class AboutInfo {
-    public String name;
-    public int build;
-    public UpdateChannel channel;
-  }
+    public static class AboutInfo {
+        public String name;
+        public int build;
+        public UpdateChannel channel;
+    }
 
-  public AboutRestHandler() {
-    super("about");
-  }
+    public AboutRestHandler() {
+        super("about");
+    }
 
-  @Nonnull
-  @Override
-  public JsonResponse handle() {
-    Application app = Application.get();
-    ApplicationInfo info = ApplicationInfo.getInstance();
-    AboutInfo data = new AboutInfo();
-    data.name = app.getName().get();
-    data.build = info.getBuild().getBuildNumber();
-    data.channel = UpdateSettings.getInstance().getChannel();
-    return JsonResponse.asSuccess(data);
-  }
+    @Override
+    public boolean isAccessible(HttpRequest request) {
+        return true; // trust in any cases
+    }
+
+    @Nonnull
+    @Override
+    public JsonResponse handle() {
+        Application app = Application.get();
+        ApplicationInfo info = ApplicationInfo.getInstance();
+        AboutInfo data = new AboutInfo();
+        data.name = app.getName().get();
+        data.build = info.getBuild().getBuildNumber();
+        data.channel = UpdateSettings.getInstance().getChannel();
+        return JsonResponse.asSuccess(data);
+    }
 }
