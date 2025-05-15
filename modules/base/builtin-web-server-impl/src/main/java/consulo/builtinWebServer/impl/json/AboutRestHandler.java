@@ -20,9 +20,15 @@ import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
 import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.externalService.update.UpdateChannel;
 import consulo.externalService.update.UpdateSettings;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -34,10 +40,16 @@ public class AboutRestHandler extends JsonGetRequestHandler {
         public String name;
         public int build;
         public UpdateChannel channel;
+        public List<String> plugins = List.of();
     }
 
-    public AboutRestHandler() {
+    @Nonnull
+    private final Application myApplication;
+
+    @Inject
+    public AboutRestHandler(@Nonnull Application application) {
         super("about");
+        myApplication = application;
     }
 
     @Override
@@ -48,12 +60,15 @@ public class AboutRestHandler extends JsonGetRequestHandler {
     @Nonnull
     @Override
     public JsonResponse handle(HttpRequest request) {
-        Application app = Application.get();
         ApplicationInfo info = ApplicationInfo.getInstance();
         AboutInfo data = new AboutInfo();
-        data.name = app.getName().get();
+        data.name = myApplication.getName().get();
         data.build = info.getBuild().getBuildNumber();
         data.channel = UpdateSettings.getInstance().getChannel();
+        data.plugins = new ArrayList<>();
+        for (PluginDescriptor plugin : PluginManager.getPlugins()) {
+            data.plugins.add(plugin.getPluginId().getIdString());
+        }
         return JsonResponse.asSuccess(data);
     }
 }
