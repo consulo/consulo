@@ -12,7 +12,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -142,21 +141,24 @@ class ActionStepBuilder {
     LocalizeValue textValue = presentation.getTextValue();
     if ((myShowDisabled || enabled) && presentation.isVisible()) {
       if (myShowNumbers) {
-        String text = presentation.getText();
-        if (myCurrentNumber < 9) {
-          text = "&" + (myCurrentNumber + 1) + ". " + text;
-        }
-        else if (myCurrentNumber == 9) {
-          text = "&" + 0 + ". " + text;
-        }
-        else if (myUseAlphaAsNumbers) {
-          text = "&" + (char)('A' + myCurrentNumber - 10) + ". " + text;
-        }
+        textValue = textValue.map((localizeManager, text) -> {
+          if (myCurrentNumber < 9) {
+            text = "&" + (myCurrentNumber + 1) + ". " + text;
+          }
+          else if (myCurrentNumber == 9) {
+            text = "&" + 0 + ". " + text;
+          }
+          else if (myUseAlphaAsNumbers) {
+            text = "&" + (char) ('A' + myCurrentNumber - 10) + ". " + text;
+          }
+          return text;
+        });
         myCurrentNumber++;
-
-        textValue = LocalizeValue.of(StringUtil.notNullize(text));
       }
-      else if (!myHonorActionMnemonics || presentation.isDisabledMnemonic()) {
+      else if (presentation.isDisabledMnemonic()) {
+        // do nothing, in this case we will show '_' as part of action item
+      }
+      else if (!myHonorActionMnemonics) {
         textValue = presentation.getTextValue().map(Presentation.NO_MNEMONIC);
       }
 
