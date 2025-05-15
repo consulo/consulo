@@ -1,4 +1,4 @@
-package consulo.externalService.impl.internal;
+package consulo.externalService.impl.internal.statistic;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.externalService.statistic.CollectUsagesException;
