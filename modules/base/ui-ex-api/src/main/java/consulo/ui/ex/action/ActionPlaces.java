@@ -88,6 +88,8 @@ public abstract class ActionPlaces {
     public static final String TODO_VIEW_POPUP = "TodoViewPopup";
     public static final String TODO_VIEW_TOOLBAR = "TodoViewToolbar";
 
+    public static final String COPY_REFERENCE_POPUP = "CopyReferencePopup";
+
     public static final String COMPILER_MESSAGES_POPUP = "CompilerMessagesPopup";
     public static final String COMPILER_MESSAGES_TOOLBAR = "CompilerMessagesToolbar";
     public static final String ANT_MESSAGES_POPUP = "AntMessagesPopup";

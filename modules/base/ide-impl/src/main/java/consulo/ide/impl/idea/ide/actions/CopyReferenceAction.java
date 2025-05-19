@@ -48,6 +48,7 @@ public class CopyReferenceAction extends DumbAwareAction {
         boolean plural = false;
         boolean enabled;
         boolean paths = false;
+        boolean calcQualifiedName = ActionPlaces.COPY_REFERENCE_POPUP.equals(e.getPlace());
 
         DataContext dataContext = e.getDataContext();
         Editor editor = dataContext.getData(Editor.KEY);
@@ -59,6 +60,10 @@ public class CopyReferenceAction extends DumbAwareAction {
             enabled = !elements.isEmpty();
             plural = elements.size() > 1;
             paths = elements.stream().allMatch(el -> el instanceof PsiFileSystemItem && getQualifiedNameFromProviders(el) == null);
+
+            if (calcQualifiedName) {
+                e.getPresentation().putClientProperty(CopyPathProvider.QUALIFIED_NAME, getQualifiedName(editor, elements));
+            }
         }
 
         e.getPresentation().setEnabled(enabled);

@@ -2569,7 +2569,7 @@ group.Copy.Paste.Special.description:
 group.Copy.Paste.Special.text:
     text: Copy / Paste Special
 group.CopyReferencePopupGroup.text:
-    text: Copy Path…
+    text: Copy Path/Reference…
 group.CoverageMenu.text:
     text: Code Coverage Actions
 group.CutCopyPasteGroup.text:

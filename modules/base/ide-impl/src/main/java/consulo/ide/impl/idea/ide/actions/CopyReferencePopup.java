@@ -23,7 +23,6 @@ import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,19 +48,21 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
             VirtualFile.KEY_OF_ARRAY,
             Editor.KEY
         ).build();
-        String popupPlace = ActionPlaces.getActionGroupPopupPlace(getClass().getSimpleName());
+        BasePresentationFactory factory = new BasePresentationFactory();
         ListPopup popup = new PopupFactoryImpl.ActionGroupPopup(
             LanguageLocalize.popupTitleCopy().get(),
             this,
             e.getDataContext(),
-            true,
+            false,
             true,
             false,
             true,
             null,
             -1,
             null,
-            popupPlace
+            ActionPlaces.COPY_REFERENCE_POPUP,
+            factory,
+            false
         ) {
             @Override
             protected ListCellRenderer<PopupFactoryImpl.ActionItem> getListElementRenderer() {
@@ -98,14 +99,11 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
                         @Nonnull PopupFactoryImpl.ActionItem actionItem,
                         boolean isSelected
                     ) {
-                        //myNextStepButtonSeparator.setVisible(false);
+                        Presentation presentation = factory.getPresentation(actionItem.getAction());
+
                         AnAction action = actionItem.getAction();
                         Editor editor = dataContext.getData(Editor.KEY);
-                        java.util.List<PsiElement> elements = CopyReferenceUtil.getElementsToCopy(editor, dataContext);
-                        String qualifiedName = null;
-                        if (action instanceof CopyPathProvider copyPathProvider) {
-                            qualifiedName = copyPathProvider.getQualifiedName(getProject(), elements, editor, dataContext);
-                        }
+                        String qualifiedName = presentation.getClientProperty(CopyPathProvider.QUALIFIED_NAME);
 
                         myInfoLabel.setText("");
                         if (qualifiedName != null) {
@@ -141,16 +139,6 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
         updatePopupSize(popup);
 
         popup.showInBestPositionFor(e.getDataContext());
-    }
-
-    @Nullable
-    public ActionGroup getCopyReferenceActionGroup() {
-        AnAction popupGroup = ActionManager.getInstance().getAction("CopyReferencePopupGroup");
-        if (!(popupGroup instanceof DefaultActionGroup)) {
-            LOG.warn("Cannot find 'CopyReferencePopup' action to show popup");
-            return null;
-        }
-        return (ActionGroup)popupGroup;
     }
 
     private static void updatePopupSize(@Nonnull ListPopup popup) {

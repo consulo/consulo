@@ -28,9 +28,11 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -40,8 +42,9 @@ import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Optional;
 
-// from kotlin
 public class CopyPathProvider extends DumbAwareAction {
+    public static final Key<String> QUALIFIED_NAME = Key.of("QUALIFIED_NAME");
+
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -67,14 +70,14 @@ public class CopyPathProvider extends DumbAwareAction {
             return dataContext;
         }
 
-        Object file = ((TabLabel)component).getInfo().getObject();
+        Object file = ((TabLabel) component).getInfo().getObject();
         if (!(file instanceof VirtualFile)) {
             return dataContext;
         }
 
         return SimpleDataContext.builder().setParent(dataContext)
-            .add(VirtualFile.KEY, (VirtualFile)file)
-            .add(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{(VirtualFile)file})
+            .add(VirtualFile.KEY, (VirtualFile) file)
+            .add(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{(VirtualFile) file})
             .build();
     }
 
@@ -87,10 +90,13 @@ public class CopyPathProvider extends DumbAwareAction {
 
         Project project = e.getData(Project.KEY);
 
-        e.getPresentation().setEnabledAndVisible(
-            project != null
-                && getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext) != null
-        );
+        String qualifiedName = project != null
+            ? getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext)
+            : null;
+
+        Presentation presentation = e.getPresentation();
+        presentation.putClientProperty(QUALIFIED_NAME, qualifiedName);
+        presentation.setEnabledAndVisible(qualifiedName != null);
     }
 
     @Nullable
