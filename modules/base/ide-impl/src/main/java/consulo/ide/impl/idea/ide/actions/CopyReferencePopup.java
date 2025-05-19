@@ -102,7 +102,6 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
                         Presentation presentation = factory.getPresentation(actionItem.getAction());
 
                         AnAction action = actionItem.getAction();
-                        Editor editor = dataContext.getData(Editor.KEY);
                         String qualifiedName = presentation.getClientProperty(CopyPathProvider.QUALIFIED_NAME);
 
                         myInfoLabel.setText("");
