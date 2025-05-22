@@ -293,6 +293,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     private boolean myScrollingToCaret;
 
+    private boolean myIsStickyLinePainting;
+
     private StatusComponentContainer myStatusComponentContainer = new StatusComponentContainer();
 
     public DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
@@ -3931,6 +3933,26 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     boolean isInPresentationMode() {
         return UISettings.getInstance().getPresentationMode() && EditorUtil.isRealFileEditor(this);
+    }
+
+    public MouseListener getMouseListener() {
+        return myMouseListener;
+    }
+
+    /**
+     * If true, the editor is in special "clean" mode when editor's content is being rendered on sticky lines panel.
+     * This allows suppressing visual elements like caret row background, vertical indent lines, right margin line, etc.
+     */
+    public boolean isStickyLinePainting() {
+        return myIsStickyLinePainting;
+    }
+
+    public void setStickyLinePainting(boolean stickyLinePainting) {
+        myIsStickyLinePainting = stickyLinePainting;
+    }
+
+    public int getStickyLinesPanelWidth() {
+        return myPanel.getWidth(); //- myVerticalScrollBar.getWidth();
     }
 
     @Override

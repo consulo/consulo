@@ -55,6 +55,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
+import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.Timer;
@@ -3836,6 +3837,18 @@ public class UIUtil {
     // Here we setup window to be checked in IdeEventQueue and reset typeahead state when the window finally appears and gets focus
     public static void markAsTypeAheadAware(Window window) {
         ClientProperty.put(window, "TypeAheadAwareWindow", Boolean.TRUE);
+    }
+
+    /**
+     * Provides all input event modifiers including deprecated, since they are still used in IntelliJ platform
+     */
+    @MagicConstant(flags = {
+        Event.SHIFT_MASK, Event.CTRL_MASK, Event.META_MASK, Event.ALT_MASK, InputEvent.SHIFT_DOWN_MASK,
+        InputEvent.CTRL_DOWN_MASK, InputEvent.META_DOWN_MASK, InputEvent.ALT_DOWN_MASK, InputEvent.BUTTON1_DOWN_MASK,
+        InputEvent.BUTTON2_DOWN_MASK, InputEvent.BUTTON3_DOWN_MASK, InputEvent.ALT_GRAPH_DOWN_MASK,
+    })
+    public static int getAllModifiers(@Nonnull InputEvent event) {
+        return event.getModifiers() | event.getModifiersEx();
     }
 
     @Nonnull

@@ -127,7 +127,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * <li>Folding area</li>
  * </ul>
  */
-class EditorGutterComponentImpl extends JComponent implements EditorGutterComponentEx, MouseListener, MouseMotionListener, DataProvider, Accessible {
+public class EditorGutterComponentImpl extends JComponent implements EditorGutterComponentEx, MouseListener, MouseMotionListener, DataProvider, Accessible {
     private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
         @Override
         protected void hoverChanged(@Nonnull Component component, boolean hovered) {
