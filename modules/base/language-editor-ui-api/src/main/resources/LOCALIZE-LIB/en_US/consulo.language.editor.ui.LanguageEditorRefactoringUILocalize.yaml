@@ -1,0 +1,6 @@
+javadoc.as.is:
+  text: '&As is'
+javadoc.copy:
+  text: '&Copy'
+javadoc.move:
+  text: '&Move'

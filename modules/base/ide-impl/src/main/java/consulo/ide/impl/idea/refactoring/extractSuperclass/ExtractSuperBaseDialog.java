@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.refactoring.extractSuperclass;
 
 import consulo.application.HelpManager;
-import consulo.ide.impl.idea.refactoring.ui.DocCommentPanel;
+import consulo.language.editor.ui.util.DocCommentPanel;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.classMember.MemberInfoBase;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -25,12 +25,14 @@ import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RecentsManager;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -44,7 +46,7 @@ import java.util.List;
  * @author dsl
  */
 public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, MemberInfoType extends MemberInfoBase> extends RefactoringDialog {
-    private String myRefactoringName;
+    private LocalizeValue myRefactoringName;
     protected final ClassType mySourceClass;
     protected PsiDirectory myTargetDirectory;
     protected final List<MemberInfoType> myMemberInfos;
@@ -68,7 +70,8 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
 
     protected abstract JTextField createSourceClassField();
 
-    protected abstract String getDocCommentPanelName();
+    @Nonnull
+    protected abstract LocalizeValue getDocCommentPanelName();
 
     protected abstract String getExtractedSuperNameNotSpecifiedMessage();
 
@@ -96,7 +99,10 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
 
     protected abstract String getDestinationPackageRecentKey();
 
-    public ExtractSuperBaseDialog(Project project, ClassType sourceClass, List<MemberInfoType> members, String refactoringName) {
+    public ExtractSuperBaseDialog(Project project,
+                                  ClassType sourceClass,
+                                  List<MemberInfoType> members,
+                                  @Nonnull LocalizeValue refactoringName) {
         super(project, true);
         myRefactoringName = refactoringName;
 
@@ -211,6 +217,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
         return myTargetDirectory;
     }
 
+    @RequiredUIAccess
     public int getDocCommentPolicy() {
         return myDocCommentPanel.getPolicy();
     }
@@ -255,7 +262,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
         }
         if (errorString[0] != null) {
             if (errorString[0].length() > 0) {
-                CommonRefactoringUtil.showErrorMessage(myRefactoringName, errorString[0], getHelpId(), myProject);
+                CommonRefactoringUtil.showErrorMessage(myRefactoringName.get(), errorString[0], getHelpId(), myProject);
             }
             return;
         }

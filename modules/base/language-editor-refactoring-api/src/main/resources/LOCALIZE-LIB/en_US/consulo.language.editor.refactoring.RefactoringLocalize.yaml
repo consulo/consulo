@@ -592,12 +592,6 @@ source.folder.0.has.package.prefix.1:
   text: |-
     Source folder {0} has package prefix ''{1}''
     Package ''{2}'' cannot be created there.
-javadoc.as.is:
-  text: '&As is'
-javadoc.copy:
-  text: '&Copy'
-javadoc.move:
-  text: '&Move'
 replace.instance.qualifiers.with.class.references:
   text: Replace instance qualifiers with class references
 make.0.static:

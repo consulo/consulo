@@ -25,6 +25,10 @@ import consulo.language.editor.refactoring.ui.MemberSelectionPanelBase;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.usage.UsageViewUtil;
 import jakarta.annotation.Nullable;
 
@@ -80,26 +84,27 @@ public abstract class PullUpDialogBase<Storage extends AbstractMemberInfoStorage
   }
 
   @Override
+  @RequiredUIAccess
   protected JComponent createNorthPanel() {
     JPanel panel = new JPanel();
 
     panel.setLayout(new GridBagLayout());
     GridBagConstraints gbConstraints = new GridBagConstraints();
 
-    gbConstraints.insets = new Insets(4, 0, 4, 8);
+    gbConstraints.insets = JBUI.insets(4, 0, 4, 8);
     gbConstraints.weighty = 1;
     gbConstraints.weightx = 1;
     gbConstraints.gridy = 0;
     gbConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gbConstraints.fill = GridBagConstraints.BOTH;
     gbConstraints.anchor = GridBagConstraints.WEST;
-    final JLabel classComboLabel = new JLabel();
-    panel.add(classComboLabel, gbConstraints);
+    final Label classComboLabel = Label.create();
+    panel.add(TargetAWT.to(classComboLabel), gbConstraints);
 
     myClassCombo = new JComboBox(mySuperClasses.toArray());
     initClassCombo(myClassCombo);
-    classComboLabel.setText(RefactoringLocalize.pullUpMembersTo(UsageViewUtil.getLongName(myClass)).get());
-    classComboLabel.setLabelFor(myClassCombo);
+    classComboLabel.setText(RefactoringLocalize.pullUpMembersTo(UsageViewUtil.getLongName(myClass)));
+    classComboLabel.setTarget(TargetAWT.wrap(myClassCombo));
     final Class preselection = getPreselection();
     int indexToSelect = 0;
     if (preselection != null) {

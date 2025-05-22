@@ -22,7 +22,7 @@
  * To change template for new class use 
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.refactoring.util;
+package consulo.language.editor.ui.util;
 
 import consulo.language.psi.PsiComment;
 import consulo.language.util.IncorrectOperationException;
