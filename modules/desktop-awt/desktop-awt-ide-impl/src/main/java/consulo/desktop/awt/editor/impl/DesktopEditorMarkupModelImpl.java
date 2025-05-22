@@ -201,7 +201,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     final int startOffset = getOffset(fitLineToEditor(visualLine - myPreviewLines), true);
     final int endOffset = getOffset(fitLineToEditor(visualLine + myPreviewLines), false);
     markupModel.processRangeHighlightersOverlappingWith(startOffset, endOffset, highlighter -> {
-      if (highlighter.getErrorStripeMarkColor() != null) {
+      if (highlighter.getErrorStripeMarkColor(myEditor.getColorsScheme()) != null) {
         if (highlighter.getStartOffset() < endOffset && highlighter.getEndOffset() > startOffset) {
           highlighters.add(highlighter);
         }
@@ -232,7 +232,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     int startOffset = yPositionToOffset(scrollBarY - myMinMarkHeight, true);
     int endOffset = yPositionToOffset(scrollBarY + myMinMarkHeight, false);
     markupModel.processRangeHighlightersOverlappingWith(startOffset, endOffset, highlighter -> {
-      if (highlighter.getErrorStripeMarkColor() != null) {
+      if (highlighter.getErrorStripeMarkColor(myEditor.getColorsScheme()) != null) {
         ProperTextRange range = offsetsToYPositions(highlighter.getStartOffset(), highlighter.getEndOffset());
         if (scrollBarY >= range.getStartOffset() - myMinMarkHeight * 2 && scrollBarY <= range.getEndOffset() + myMinMarkHeight * 2) {
           nearest.add(highlighter);
@@ -522,14 +522,11 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
       for (RangeHighlighterEx rangeHighlighter : rangeHighlighters) {
         myHighlighters.add(rangeHighlighter);
       }
-      Collections.sort(myHighlighters, new Comparator<RangeHighlighterEx>() {
-        @Override
-        public int compare(RangeHighlighterEx ex1, RangeHighlighterEx ex2) {
-          LogicalPosition startPos1 = myEditor.offsetToLogicalPosition(ex1.getAffectedAreaStartOffset());
-          LogicalPosition startPos2 = myEditor.offsetToLogicalPosition(ex2.getAffectedAreaStartOffset());
-          if (startPos1.line != startPos2.line) return 0;
-          return startPos1.column - startPos2.column;
-        }
+      Collections.sort(myHighlighters, (ex1, ex2) -> {
+        LogicalPosition startPos1 = myEditor.offsetToLogicalPosition(ex1.getAffectedAreaStartOffset());
+        LogicalPosition startPos2 = myEditor.offsetToLogicalPosition(ex2.getAffectedAreaStartOffset());
+        if (startPos1.line != startPos2.line) return 0;
+        return startPos1.column - startPos2.column;
       });
     }
 
@@ -543,6 +540,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
           private static final int R = 6;
 
           @Override
+          @RequiredUIAccess
           public Dimension getPreferredSize() {
             int width = myEditor.getGutterComponentEx().getWidth() + myEditor.getScrollingModel().getVisibleArea().width;
             if (!ToolWindowManagerEx.getInstanceEx(myEditor.getProject()).getIdsOn(ToolWindowAnchor.LEFT).isEmpty()) width--;

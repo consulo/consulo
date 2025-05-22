@@ -20,13 +20,13 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.util.TextRange;
 import consulo.language.editor.refactoring.internal.unwrap.UnwrapHelper;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -88,9 +88,9 @@ public class ScopeHighlighter {
     return myRanger.apply(e);
   }
 
-  private void addHighlighter(TextRange r, int level, TextAttributes attr) {
+  private void addHighlighter(TextRange r, int level, TextAttributesKey attributesKey) {
     MarkupModel markupModel = myEditor.getMarkupModel();
-    RangeHighlighter highlighter = markupModel.addRangeHighlighter(r.getStartOffset(), r.getEndOffset(), level, attr, HighlighterTargetArea.EXACT_RANGE);
+    RangeHighlighter highlighter = markupModel.addRangeHighlighter(attributesKey, r.getStartOffset(), r.getEndOffset(), level, HighlighterTargetArea.EXACT_RANGE);
     myActiveHighliters.add(highlighter);
   }
 

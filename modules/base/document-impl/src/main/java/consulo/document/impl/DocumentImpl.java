@@ -57,6 +57,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.lang.ref.Reference;
@@ -197,7 +198,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
                 registerRangeMarker(r, r.getStartOffset(), r.getEndOffset(), r.isGreedyToLeft(), r.isGreedyToRight(), 0);
             }
             else {
-                ((RangeMarkerImpl)r).invalidate("document was gc-ed and re-created");
+                ((RangeMarkerImpl) r).invalidate("document was gc-ed and re-created");
             }
             return true;
         });
@@ -217,29 +218,28 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
     static void processQueue() {
         RMTreeReference ref;
-        while ((ref = (RMTreeReference)rmTreeQueue.poll()) != null) {
+        while ((ref = (RMTreeReference) rmTreeQueue.poll()) != null) {
             ref.virtualFile.replace(RANGE_MARKERS_KEY, ref, null);
             ref.virtualFile.replace(PERSISTENT_RANGE_MARKERS_KEY, ref, null);
         }
     }
 
     /**
-     * makes range marker without creating document (which could be expensive)
+     * makes range marker without creating the document (which could be expensive)
      */
-    @Nonnull
-    static RangeMarker createRangeMarkerForVirtualFile(
-        @Nonnull VirtualFile file,
-        int startOffset,
-        int endOffset,
-        int startLine,
-        int startCol,
-        int endLine,
-        int endCol,
-        boolean persistent
-    ) {
+    @NotNull
+    public static RangeMarker createRangeMarkerForVirtualFile(@NotNull VirtualFile file,
+                                                              int offset,
+                                                              int startLine,
+                                                              int startCol,
+                                                              int endLine,
+                                                              int endCol,
+                                                              boolean persistent) {
+        int estimatedLength = RangeMarkerImpl.estimateDocumentLength(file);
+        offset = Math.min(offset, estimatedLength);
         RangeMarkerImpl marker = persistent
-            ? new PersistentRangeMarker(file, startOffset, endOffset, startLine, startCol, endLine, endCol, false)
-            : new RangeMarkerImpl(file, startOffset, endOffset, false);
+            ? new PersistentRangeMarker(file, offset, offset, startLine, startCol, endLine, endCol, estimatedLength, false)
+            : new RangeMarkerImpl(file, offset, offset, estimatedLength, false);
         Key<Reference<RangeMarkerTree<RangeMarkerEx>>> key = persistent ? PERSISTENT_RANGE_MARKERS_KEY : RANGE_MARKERS_KEY;
         RangeMarkerTree<RangeMarkerEx> tree;
         while (true) {
@@ -254,10 +254,9 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
                 break;
             }
         }
-        tree.addInterval(marker, startOffset, endOffset, false, false, false, 0);
+        tree.addInterval(marker, offset, offset, false, false, false, 0);
 
         return marker;
-
     }
 
     @Override
@@ -416,7 +415,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     private static int getMaxSpacesToLeave(int line, @Nonnull List<? extends StripTrailingSpacesFilter> filters) {
         for (StripTrailingSpacesFilter filter : filters) {
             if (filter instanceof SmartStripTrailingSpacesFilter) {
-                return ((SmartStripTrailingSpacesFilter)filter).getTrailingSpacesToLeave(line);
+                return ((SmartStripTrailingSpacesFilter) filter).getTrailingSpacesToLeave(line);
             }
             else if (!filter.isStripSpacesAllowedForLine(line)) {
                 return -1;
@@ -689,7 +688,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     private void fireMoveText(int start, int end, int newBase) {
         for (DocumentListener listener : getListeners()) {
             if (listener instanceof PrioritizedInternalDocumentListener) {
-                ((PrioritizedInternalDocumentListener)listener).moveTextHappened(this, start, end, newBase);
+                ((PrioritizedInternalDocumentListener) listener).moveTextHappened(this, start, end, newBase);
             }
         }
     }
@@ -747,7 +746,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
         ImmutableCharSequence newText;
         if (wholeTextReplaced && s instanceof ImmutableCharSequence) {
-            newText = (ImmutableCharSequence)s;
+            newText = (ImmutableCharSequence) s;
         }
         else {
             newText = myText.delete(startOffset, endOffset).insert(startOffset, changedPart);
@@ -941,7 +940,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         void rethrowPCE() {
             if (myException instanceof ProcessCanceledException) {
                 // the case of some wise inspection modifying non-physical document during highlighting to be interrupted
-                throw (ProcessCanceledException)myException;
+                throw (ProcessCanceledException) myException;
             }
         }
     }

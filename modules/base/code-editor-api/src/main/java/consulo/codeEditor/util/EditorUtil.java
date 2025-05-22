@@ -90,6 +90,14 @@ public class EditorUtil {
         return pos;
     }
 
+    public static boolean attributesImpactFontStyle(@Nullable TextAttributes attributes) {
+        return attributes == TextAttributes.ERASE_MARKER || (attributes != null && attributes.getFontType() != Font.PLAIN);
+    }
+
+    public static boolean attributesImpactForegroundColor(@Nullable TextAttributes attributes) {
+        return attributes == TextAttributes.ERASE_MARKER || (attributes != null && attributes.getForegroundColor() != null);
+    }
+
     public static boolean attributesImpactFontStyleOrColor(@Nullable TextAttributes attributes) {
         return attributes == TextAttributes.ERASE_MARKER || (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
     }

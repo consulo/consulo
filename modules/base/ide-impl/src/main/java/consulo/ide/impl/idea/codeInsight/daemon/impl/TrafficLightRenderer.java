@@ -11,6 +11,7 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.compiler.ProblemsView;
 import consulo.component.ProcessCanceledException;
 import consulo.configurable.ConfigurationException;
@@ -119,12 +120,12 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
         model.addMarkupModelListener(this, new MarkupModelListener() {
             @Override
-            public void afterAdded(@Nonnull RangeHighlighter highlighter) {
+            public void afterAdded(@Nonnull RangeHighlighterEx highlighter) {
                 incErrorCount(highlighter, 1);
             }
 
             @Override
-            public void beforeRemoved(@Nonnull RangeHighlighter highlighter) {
+            public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
                 incErrorCount(highlighter, -1);
             }
         });

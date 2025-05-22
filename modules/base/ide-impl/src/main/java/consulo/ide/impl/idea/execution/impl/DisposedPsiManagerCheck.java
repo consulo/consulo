@@ -16,10 +16,10 @@
 
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.logging.Logger;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 
 public class DisposedPsiManagerCheck {

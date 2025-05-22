@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.impl;
 
-import consulo.application.util.function.Processor;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -28,6 +27,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * This is mock implementation to be used in null-object pattern where necessary.
@@ -59,15 +59,15 @@ public class EmptyMarkupModel implements MarkupModelEx {
         throw new ProcessCanceledException();
     }
 
+    @Nullable
+    @Override
+    public RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
+        throw new ProcessCanceledException();
+    }
+
     @Nonnull
     @Override
-    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
-                                                                     int endOffset,
-                                                                     int layer,
-                                                                     TextAttributes textAttributes,
-                                                                     @Nonnull HighlighterTargetArea targetArea,
-                                                                     boolean isPersistent,
-                                                                     Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(@Nullable TextAttributesKey textAttributesKey, int startOffset, int endOffset, int layer, @Nonnull HighlighterTargetArea targetArea, boolean isPersistent, @Nullable Consumer<? super RangeHighlighterEx> changeAttributesAction) {
         throw new ProcessCanceledException();
     }
 
@@ -128,30 +128,27 @@ public class EmptyMarkupModel implements MarkupModelEx {
     }
 
     @Override
-    public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+    public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor) {
         return false;
     }
 
     @Override
-    public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+    public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor) {
         return false;
     }
 
     @Nonnull
     @Override
+    @SuppressWarnings("unchecked")
     public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
         return MarkupIterator.EMPTY;
     }
 
     @Nonnull
     @Override
+    @SuppressWarnings("unchecked")
     public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
         return MarkupIterator.EMPTY;
-    }
-
-    @Override
-    public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged) {
-
     }
 
     @Override
@@ -161,11 +158,6 @@ public class EmptyMarkupModel implements MarkupModelEx {
 
     @Override
     public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
-
-    }
-
-    @Override
-    public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
 
     }
 }

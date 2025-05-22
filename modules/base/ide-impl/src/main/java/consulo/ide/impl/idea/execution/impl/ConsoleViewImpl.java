@@ -17,6 +17,7 @@ import consulo.codeEditor.action.TypedActionHandler;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
@@ -240,15 +241,15 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         myProject.getApplication().getMessageBus().connect(this).subscribe(
             EditorColorsListener.class,
             scheme -> {
-                UIAccess.assertIsUIThread();
                 if (isDisposed() || myEditor == null) {
                     return;
                 }
                 MarkupModel model = DocumentMarkupModel.forDocument(myEditor.getDocument(), project, false);
                 for (RangeHighlighter tokenMarker : model.getAllHighlighters()) {
                     ConsoleViewContentType contentType = tokenMarker.getUserData(CONTENT_TYPE);
-                    if (contentType != null && tokenMarker instanceof RangeHighlighterEx) {
-                        tokenMarker.setTextAttributes(contentType.getAttributes());
+
+                    if (contentType != null && contentType.getAttributesKey() == null && tokenMarker instanceof RangeHighlighterEx) {
+                        ((RangeHighlighterEx) tokenMarker).setTextAttributes(contentType.getAttributes());
                     }
                 }
             }
@@ -868,15 +869,20 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         text.setLength(newLength);
     }
 
-    @RequiredUIAccess
     private void createTokenRangeHighlighter(@Nonnull ConsoleViewContentType contentType, int startOffset, int endOffset) {
-        UIAccess.assertIsUIThread();
-        TextAttributes attributes = contentType.getAttributes();
-        MarkupModel model = DocumentMarkupModel.forDocument(myEditor.getDocument(), getProject(), true);
+        MarkupModelEx model = DocumentMarkupModel.forDocument(myEditor.getDocument(), getProject(), true);
         int layer = HighlighterLayer.SYNTAX + 1; // make custom filters able to draw their text attributes over the default ones
-        RangeHighlighter tokenMarker =
-            model.addRangeHighlighter(startOffset, endOffset, layer, attributes, HighlighterTargetArea.EXACT_RANGE);
-        tokenMarker.putUserData(CONTENT_TYPE, contentType);
+        TextAttributesKey key = contentType.getAttributesKey();
+
+        model.addRangeHighlighterAndChangeAttributes(
+            key, startOffset, endOffset, layer, HighlighterTargetArea.EXACT_RANGE, false,
+            rm -> {
+                // fallback for contentTypes that provides only attributes
+                if (key == null) {
+                    rm.setTextAttributes(contentType.getAttributes());
+                }
+                saveTokenType(rm, contentType);
+            });
     }
 
     private boolean isDisposed() {
@@ -1259,6 +1265,10 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
     private static ConsoleViewContentType getTokenType(@Nullable RangeMarker m) {
         return m == null ? null : m.getUserData(CONTENT_TYPE);
+    }
+
+    public static void saveTokenType(@Nonnull RangeMarker m, @Nonnull ConsoleViewContentType contentType) {
+        m.putUserData(CONTENT_TYPE, contentType);
     }
 
     private static class MyTypedHandler extends TypedActionHandlerBase {

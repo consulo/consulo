@@ -20,8 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -143,15 +141,13 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
     final PsiElement callee = parentNode != null ? parentNode.getElementToSearch() : null;
     if (caller != null && caller.isPhysical() && callee != null) {
       HighlightManager highlighter = HighlightManager.getInstance(myProject);
-      EditorColorsManager colorManager = EditorColorsManager.getInstance();
-      TextAttributes attributes = colorManager.getGlobalScheme().getAttributes(EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES);
       int start = getStartOffset(caller);
       for (PsiElement element : findElementsToHighlight(caller, callee)) {
         highlighter.addRangeHighlight(
           myCallerEditor,
           element.getTextRange().getStartOffset() - start,
           element.getTextRange().getEndOffset() - start,
-          attributes,
+          EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES,
           false,
           null
         );

@@ -19,10 +19,7 @@ import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.internal.EditorActionPlan;
 import consulo.codeEditor.localize.CodeEditorLocalize;
-import consulo.codeEditor.markup.GutterDraggableObject;
-import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.codeEditor.markup.LineMarkerRenderer;
-import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.*;
 import consulo.colorScheme.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -528,10 +525,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
     @Override
     @RequiredUIAccess
     protected void onHighlighterChanged(
-        @Nonnull RangeHighlighter highlighter,
+        @Nonnull RangeHighlighterEx highlighter,
         boolean canImpactGutterSize,
-        boolean fontStyleOrColorChanged,
-        boolean remove
+        boolean fontStyleChanged,
+        boolean foregroundColorChanged
     ) {
         if (myDocument.isInBulkUpdate()) {
             return; // bulkUpdateFinished() will repaint anything
@@ -541,7 +538,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             updateGutterSize();
         }
 
-        boolean errorStripeNeedsRepaint = highlighter.getErrorStripeMarkColor() != null;
+        boolean errorStripeNeedsRepaint = highlighter.getErrorStripeMarkColor(getColorsScheme()) != null;
         if (myDocumentChangeInProgress) {
             // postpone repaint request, as folding model can be in inconsistent state and so coordinate
             // conversions might give incorrect results
@@ -559,7 +556,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
         int startLine = start == -1 ? 0 : myDocument.getLineNumber(start);
         int endLine = end == -1 ? myDocument.getLineCount() : myDocument.getLineNumber(end);
-        if (start != end && fontStyleOrColorChanged) {
+        if (start != end && (fontStyleChanged || foregroundColorChanged)) {
             myView.invalidateRange(start, end);
         }
         if (!myFoldingModel.isInBatchFoldingOperation()) { // at the end of batch folding operation everything is repainted

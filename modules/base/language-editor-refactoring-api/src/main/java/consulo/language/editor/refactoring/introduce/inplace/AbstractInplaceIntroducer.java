@@ -21,6 +21,7 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentAdapter;
@@ -434,13 +435,12 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     @Override
     @RequiredUIAccess
     protected void addHighlights(
-        @Nonnull Map<TextRange, TextAttributes> ranges,
+        @Nonnull Map<TextRange, TextAttributesKey> ranges,
         @Nonnull Editor editor,
         @Nonnull Collection<RangeHighlighter> highlighters,
         @Nonnull HighlightManager highlightManager
     ) {
-        TextAttributes attributes =
-            EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
+        TextAttributesKey attributesKey = EditorColors.SEARCH_RESULT_ATTRIBUTES;
         V variable = getVariable();
         if (variable != null) {
             String name = variable.getName();
@@ -453,10 +453,9 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
                         editor,
                         startOffset,
                         startOffset + variableNameLength,
-                        attributes,
+                        attributesKey,
                         0,
-                        highlighters,
-                        null
+                        highlighters
                     );
                 }
             }
@@ -466,10 +465,9 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
                     editor,
                     startOffset,
                     startOffset + variableNameLength,
-                    attributes,
+                    attributesKey,
                     0,
-                    highlighters,
-                    null
+                    highlighters
                 );
             }
         }

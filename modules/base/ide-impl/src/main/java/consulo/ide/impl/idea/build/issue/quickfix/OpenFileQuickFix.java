@@ -15,23 +15,20 @@
  */
 package consulo.ide.impl.idea.build.issue.quickfix;
 
+import consulo.application.ApplicationManager;
 import consulo.build.ui.issue.BuildIssueQuickFix;
-import consulo.language.editor.highlight.HighlightManager;
-import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
+import consulo.dataContext.DataProvider;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindResult;
-import consulo.dataContext.DataProvider;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributes;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.project.Project;
+import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.language.editor.highlight.HighlightManager;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.nio.file.Path;
@@ -83,14 +80,10 @@ public class OpenFileQuickFix implements BuildIssueQuickFix {
       FindModel findModel = new FindModel();
       FindModel.initStringToFind(findModel, search);
 
-
       FindResult findResult = FindManager.getInstance(project).findString(editor.getDocument().getCharsSequence(), 0, findModel, file);
       HighlightManager highlightManager = HighlightManager.getInstance(project);
 
-      EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
-      TextAttributes attributes = globalScheme.getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-
-      HighlightUsagesHandler.highlightRanges(highlightManager, editor, attributes, false, List.of(findResult));
+      HighlightUsagesHandler.highlightRanges(highlightManager, editor, EditorColors.SEARCH_RESULT_ATTRIBUTES, false, List.of(findResult));
     });
   }
 }

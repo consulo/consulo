@@ -111,13 +111,11 @@ public class InplaceChangeSignature implements DocumentListener {
         TextRange highlightingRange = myDetector.getHighlightingRange(myStableChange);
 
         HighlightManager highlightManager = HighlightManager.getInstance(myProject);
-        TextAttributes attributes =
-            EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.LIVE_TEMPLATE_ATTRIBUTES);
         highlightManager.addRangeHighlight(
             editor,
             highlightingRange.getStartOffset(),
             highlightingRange.getEndOffset(),
-            attributes,
+            EditorColors.LIVE_TEMPLATE_ATTRIBUTES,
             false,
             myHighlighters
         );

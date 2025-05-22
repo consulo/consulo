@@ -25,7 +25,6 @@ import consulo.document.util.TextRange;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -39,151 +38,169 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 class PersistentRangeMarker extends RangeMarkerImpl {
-  @Nonnull
-  private LinesCols myLinesCols;
+    @Nonnull
+    private LinesCols myLinesCols;
 
-  PersistentRangeMarker(@Nonnull DocumentEx document, int startOffset, int endOffset, boolean register) {
-    super(document, startOffset, endOffset, register, false);
-    myLinesCols = ObjectUtil.assertNotNull(storeLinesAndCols(document, getStartOffset(), getEndOffset()));
-  }
-
-  // constructor which creates marker without document and saves it in the virtual file directly. Can be cheaper than loading document.
-  PersistentRangeMarker(@Nonnull VirtualFile virtualFile, int startOffset, int endOffset, int startLine, int startCol, int endLine, int endCol, boolean register) {
-    super(virtualFile, startOffset, endOffset, register);
-    myLinesCols = new LinesCols(startLine, startCol, endLine, endCol);
-  }
-
-  @Nullable
-  static LinesCols storeLinesAndCols(@Nonnull Document myDocument, int startOffset, int endOffset) {
-    LineCol start = calcLineCol(myDocument, startOffset);
-    LineCol end = calcLineCol(myDocument, endOffset);
-
-    if (start == null || end == null) {
-      return null;
+    PersistentRangeMarker(@Nonnull DocumentEx document, int startOffset, int endOffset, boolean register) {
+        super(document, startOffset, endOffset, register, false);
+        myLinesCols = ObjectUtil.assertNotNull(storeLinesAndCols(document, getStartOffset(), getEndOffset()));
     }
-    return new LinesCols(start.line, start.col, end.line, end.col);
-  }
 
-  private static LineCol calcLineCol(@Nonnull Document document, int offset) {
-    // document might have been changed already
-    if (offset <= document.getTextLength()) {
-      int line = document.getLineNumber(offset);
-      int col = offset - document.getLineStartOffset(line);
-      if (col < 0) {
+    // The constructor which creates a marker without a document and saves it in the virtual file directly. Can be cheaper than loading the entire document.
+    PersistentRangeMarker(@Nonnull VirtualFile virtualFile,
+                          int startOffset,
+                          int endOffset,
+                          int startLine,
+                          int startCol,
+                          int endLine,
+                          int endCol,
+                          int estimatedDocumentLength,
+                          boolean register) {
+        super(virtualFile, startOffset, endOffset, estimatedDocumentLength, register);
+        myLinesCols = new LinesCols(startLine, startCol, endLine, endCol);
+    }
+
+    @Nullable
+    static LinesCols storeLinesAndCols(@Nonnull Document myDocument, int startOffset, int endOffset) {
+        LineCol start = calcLineCol(myDocument, startOffset);
+        LineCol end = calcLineCol(myDocument, endOffset);
+
+        if (start == null || end == null) {
+            return null;
+        }
+        return new LinesCols(start.line, start.col, end.line, end.col);
+    }
+
+    private static LineCol calcLineCol(@Nonnull Document document, int offset) {
+        // document might have been changed already
+        if (offset <= document.getTextLength()) {
+            int line = document.getLineNumber(offset);
+            int col = offset - document.getLineStartOffset(line);
+            if (col < 0) {
+                return null;
+            }
+            return new LineCol(line, col);
+        }
         return null;
-      }
-      return new LineCol(line, col);
-    }
-    return null;
-  }
-
-  private static class LineCol {
-    private final int line;
-    private final int col;
-
-    LineCol(int line, int col) {
-      this.line = line;
-      this.col = col;
-    }
-  }
-
-  @Nullable
-  static Pair.NonNull<TextRange, LinesCols> translateViaDiff(@Nonnull final DocumentEventImpl event, @Nonnull LinesCols linesCols) {
-    try {
-      int myStartLine = event.translateLineViaDiffStrict(linesCols.myStartLine);
-      Document document = event.getDocument();
-      if (myStartLine < 0 || myStartLine >= document.getLineCount()) {
-        return null;
-      }
-
-      int start = document.getLineStartOffset(myStartLine) + linesCols.myStartColumn;
-      if (start >= document.getTextLength()) return null;
-
-      int myEndLine = event.translateLineViaDiffStrict(linesCols.myEndLine);
-      if (myEndLine < 0 || myEndLine >= document.getLineCount()) {
-        return null;
-      }
-
-      int end = document.getLineStartOffset(myEndLine) + linesCols.myEndColumn;
-      if (end > document.getTextLength() || end < start) return null;
-
-      if (end > event.getDocument().getTextLength() ||
-          myEndLine < myStartLine ||
-          myStartLine == myEndLine && linesCols.myEndColumn < linesCols.myStartColumn ||
-          event.getDocument().getLineCount() < myEndLine) {
-        return null;
-      }
-
-      return Pair.createNonNull(new TextRange(start, end), new LinesCols(myStartLine, linesCols.myStartColumn, myEndLine, linesCols.myEndColumn));
-    }
-    catch (FilesTooBigForDiffException e) {
-      return null;
-    }
-  }
-
-  @Override
-  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
-    if (!isValid()) return;
-
-    Pair<TextRange, LinesCols> pair = applyChange(e, this, intervalStart(), intervalEnd(), isGreedyToLeft(), isGreedyToRight(), isStickingToRight(), myLinesCols);
-    if (pair == null) {
-      invalidate(e);
-      return;
     }
 
-    setIntervalStart(pair.first.getStartOffset());
-    setIntervalEnd(pair.first.getEndOffset());
-    myLinesCols = pair.second;
-  }
+    private static class LineCol {
+        private final int line;
+        private final int col;
 
-  @Nullable
-  private static Pair.NonNull<TextRange, LinesCols> applyChange(@Nonnull DocumentEvent event, @Nonnull Segment range,
-                                                                int intervalStart, int intervalEnd,
-                                                                boolean greedyLeft, boolean greedyRight, boolean stickingToRight,
-                                                                @Nonnull LinesCols linesCols) {
-    boolean shouldTranslateViaDiff = PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, range.getStartOffset(), range.getEndOffset());
-    Pair.NonNull<TextRange, LinesCols> translated = null;
-    if (shouldTranslateViaDiff) {
-      translated = translateViaDiff((DocumentEventImpl)event, linesCols);
+        LineCol(int line, int col) {
+            this.line = line;
+            this.col = col;
+        }
     }
-    if (translated == null) {
-      TextRange fallback = RangeMarkerImpl.applyChange(event, intervalStart, intervalEnd, greedyLeft, greedyRight, stickingToRight);
-      if (fallback == null) return null;
 
-      LinesCols lc = storeLinesAndCols(event.getDocument(), fallback.getStartOffset(), fallback.getEndOffset());
-      if (lc == null) return null;
+    @Nullable
+    static Pair.NonNull<TextRange, LinesCols> translateViaDiff(@Nonnull final DocumentEventImpl event, @Nonnull LinesCols linesCols) {
+        try {
+            int myStartLine = event.translateLineViaDiffStrict(linesCols.myStartLine);
+            Document document = event.getDocument();
+            if (myStartLine < 0 || myStartLine >= document.getLineCount()) {
+                return null;
+            }
 
-      translated = Pair.createNonNull(fallback, lc);
+            int start = document.getLineStartOffset(myStartLine) + linesCols.myStartColumn;
+            if (start >= document.getTextLength()) {
+                return null;
+            }
+
+            int myEndLine = event.translateLineViaDiffStrict(linesCols.myEndLine);
+            if (myEndLine < 0 || myEndLine >= document.getLineCount()) {
+                return null;
+            }
+
+            int end = document.getLineStartOffset(myEndLine) + linesCols.myEndColumn;
+            if (end > document.getTextLength() || end < start) {
+                return null;
+            }
+
+            if (end > event.getDocument().getTextLength() ||
+                myEndLine < myStartLine ||
+                myStartLine == myEndLine && linesCols.myEndColumn < linesCols.myStartColumn ||
+                event.getDocument().getLineCount() < myEndLine) {
+                return null;
+            }
+
+            return Pair.createNonNull(new TextRange(start, end), new LinesCols(myStartLine, linesCols.myStartColumn, myEndLine, linesCols.myEndColumn));
+        }
+        catch (FilesTooBigForDiffException e) {
+            return null;
+        }
     }
-    return translated;
-  }
 
-  @Override
-  public String toString() {
-    return "PersistentRangeMarker" +
-           (isGreedyToLeft() ? "[" : "(") +
-           (isValid() ? "valid" : "invalid") + "," + getStartOffset() + "," + getEndOffset() +
-           " " + myLinesCols +
-           (isGreedyToRight() ? "]" : ")");
-  }
+    @Override
+    protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
+        if (!isValid()) {
+            return;
+        }
 
-  static class LinesCols {
-    private final int myStartLine;
-    private final int myStartColumn;
-    private final int myEndLine;
-    private final int myEndColumn;
+        Pair<TextRange, LinesCols> pair = applyChange(e, this, intervalStart(), intervalEnd(), isGreedyToLeft(), isGreedyToRight(), isStickingToRight(), myLinesCols);
+        if (pair == null) {
+            invalidate(e);
+            return;
+        }
 
-    private LinesCols(int startLine, int startColumn, int endLine, int endColumn) {
-      myStartLine = startLine;
-      myStartColumn = startColumn;
-      myEndLine = endLine;
-      myEndColumn = endColumn;
+        setIntervalStart(pair.first.getStartOffset());
+        setIntervalEnd(pair.first.getEndOffset());
+        myLinesCols = pair.second;
+    }
+
+    @Nullable
+    private static Pair.NonNull<TextRange, LinesCols> applyChange(@Nonnull DocumentEvent event, @Nonnull Segment range,
+                                                                  int intervalStart, int intervalEnd,
+                                                                  boolean greedyLeft, boolean greedyRight, boolean stickingToRight,
+                                                                  @Nonnull LinesCols linesCols) {
+        boolean shouldTranslateViaDiff = PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, range.getStartOffset(), range.getEndOffset());
+        Pair.NonNull<TextRange, LinesCols> translated = null;
+        if (shouldTranslateViaDiff) {
+            translated = translateViaDiff((DocumentEventImpl) event, linesCols);
+        }
+        if (translated == null) {
+            TextRange fallback = RangeMarkerImpl.applyChange(event, intervalStart, intervalEnd, greedyLeft, greedyRight, stickingToRight);
+            if (fallback == null) {
+                return null;
+            }
+
+            LinesCols lc = storeLinesAndCols(event.getDocument(), fallback.getStartOffset(), fallback.getEndOffset());
+            if (lc == null) {
+                return null;
+            }
+
+            translated = Pair.createNonNull(fallback, lc);
+        }
+        return translated;
     }
 
     @Override
     public String toString() {
-      return myStartLine + ":" + myStartColumn + "-" + myEndLine + ":" + myEndColumn;
+        return "PersistentRangeMarker" +
+            (isGreedyToLeft() ? "[" : "(") +
+            (isValid() ? "valid" : "invalid") + "," + getStartOffset() + "," + getEndOffset() +
+            " " + myLinesCols +
+            (isGreedyToRight() ? "]" : ")");
     }
-  }
+
+    static class LinesCols {
+        private final int myStartLine;
+        private final int myStartColumn;
+        private final int myEndLine;
+        private final int myEndColumn;
+
+        private LinesCols(int startLine, int startColumn, int endLine, int endColumn) {
+            myStartLine = startLine;
+            myStartColumn = startColumn;
+            myEndLine = endLine;
+            myEndColumn = endColumn;
+        }
+
+        @Override
+        public String toString() {
+            return myStartLine + ":" + myStartColumn + "-" + myEndLine + ":" + myEndColumn;
+        }
+    }
 
 }

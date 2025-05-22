@@ -4,8 +4,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.IdentifierUtil;
 import consulo.language.editor.QualifiedNameProviderUtil;
@@ -29,23 +28,22 @@ import java.util.List;
 public final class CopyReferenceUtil {
     @RequiredReadAction
     static void highlight(Editor editor, Project project, List<? extends PsiElement> elements) {
-        TextAttributes attributes =
-            EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
+        TextAttributesKey attributesKey = EditorColors.SEARCH_RESULT_ATTRIBUTES;
 
         HighlightManager highlightManager = HighlightManager.getInstance(project);
         if (elements.size() == 1 && editor != null && project != null) {
             PsiElement element = elements.get(0);
             PsiElement nameIdentifier = IdentifierUtil.getNameIdentifier(element);
             if (nameIdentifier != null) {
-                highlightManager.addOccurrenceHighlights(editor, new PsiElement[]{nameIdentifier}, attributes, true, null);
+                highlightManager.addOccurrenceHighlights(editor, new PsiElement[]{nameIdentifier}, attributesKey, true, null);
             }
             else {
                 PsiReference reference = TargetElementUtil.findReference(editor, editor.getCaretModel().getOffset());
                 if (reference != null) {
-                    highlightManager.addOccurrenceHighlights(editor, new PsiReference[]{reference}, attributes, true, null);
+                    highlightManager.addOccurrenceHighlights(editor, new PsiReference[]{reference}, attributesKey, true, null);
                 }
                 else if (element != PsiDocumentManager.getInstance(project).getCachedPsiFile(editor.getDocument())) {
-                    highlightManager.addOccurrenceHighlights(editor, new PsiElement[]{element}, attributes, true, null);
+                    highlightManager.addOccurrenceHighlights(editor, new PsiElement[]{element}, attributesKey, true, null);
                 }
             }
         }

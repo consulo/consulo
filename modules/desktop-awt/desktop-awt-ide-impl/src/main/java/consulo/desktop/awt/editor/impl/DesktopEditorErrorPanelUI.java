@@ -17,9 +17,9 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.MarkupIterator;
 import consulo.document.util.ProperTextRange;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,6 +28,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
@@ -202,8 +203,10 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     MarkupIterator<RangeHighlighterEx> iterator2 = markup2.overlappingIterator(startOffset, endOffset);
     MarkupIterator<RangeHighlighterEx> iterator = MarkupIterator.mergeIterators(iterator1, iterator2, RangeHighlighterEx.BY_AFFECTED_START_OFFSET);
     try {
+      EditorColorsScheme scheme = myPanel.getEditor().getColorsScheme();
+
       ContainerUtil.process(iterator, highlighter -> {
-        ColorValue color = highlighter.getErrorStripeMarkColor();
+        ColorValue color = highlighter.getErrorStripeMarkColor(scheme);
         if (color == null) return true;
         boolean isThin = highlighter.isThinErrorStripeMark();
         int[] yStart = isThin ? thinYStart : wideYStart;

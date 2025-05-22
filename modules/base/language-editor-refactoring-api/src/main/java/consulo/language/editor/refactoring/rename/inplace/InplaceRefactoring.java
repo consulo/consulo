@@ -21,7 +21,7 @@ import consulo.application.util.query.Query;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -442,23 +442,25 @@ public abstract class InplaceRefactoring {
     private void highlightTemplateVariables(Template template, Editor topLevelEditor) {
         //add highlights
         if (myHighlighters != null) { // can be null if finish is called during testing
-            Map<TextRange, TextAttributes> rangesToHighlight = new HashMap<>();
+            Map<TextRange, TextAttributesKey> rangesToHighlight = new HashMap<>();
             final TemplateState templateState = TemplateManager.getInstance(myProject).getTemplateState(topLevelEditor);
             if (templateState != null) {
                 EditorColorsManager colorsManager = EditorColorsManager.getInstance();
                 for (int i = 0; i < templateState.getSegmentsCount(); i++) {
                     final TextRange segmentOffset = templateState.getSegmentRange(i);
                     final String name = template.getSegmentName(i);
-                    TextAttributes attributes = null;
+                    TextAttributesKey attributes = null;
                     if (name.equals(PRIMARY_VARIABLE_NAME)) {
-                        attributes = colorsManager.getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+                        attributes = EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES;
                     }
                     else if (name.equals(OTHER_VARIABLE_NAME)) {
-                        attributes = colorsManager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
+                        attributes = EditorColors.SEARCH_RESULT_ATTRIBUTES;
                     }
+
                     if (attributes == null) {
                         continue;
                     }
+
                     rangesToHighlight.put(segmentOffset, attributes);
                 }
             }
@@ -713,22 +715,21 @@ public abstract class InplaceRefactoring {
     }
 
     protected void addHighlights(
-        @Nonnull Map<TextRange, TextAttributes> ranges,
+        @Nonnull Map<TextRange, TextAttributesKey> ranges,
         @Nonnull Editor editor,
         @Nonnull Collection<RangeHighlighter> highlighters,
         @Nonnull HighlightManager highlightManager
     ) {
-        for (Map.Entry<TextRange, TextAttributes> entry : ranges.entrySet()) {
+        for (Map.Entry<TextRange, TextAttributesKey> entry : ranges.entrySet()) {
             TextRange range = entry.getKey();
-            TextAttributes attributes = entry.getValue();
+            TextAttributesKey attributesKey = entry.getValue();
             highlightManager.addOccurrenceHighlight(
                 editor,
                 range.getStartOffset(),
                 range.getEndOffset(),
-                attributes,
+                attributesKey,
                 0,
-                highlighters,
-                null
+                highlighters
             );
         }
 

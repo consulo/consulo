@@ -14,6 +14,7 @@ import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.*;
 import consulo.colorScheme.impl.internal.FontPreferencesImpl;
@@ -50,6 +51,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -377,7 +379,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
         @RequiredUIAccess
         private void executeAction(@Nonnull String actionId, @Nonnull DataContext dataContext) {
-            EditorAction action = (EditorAction)ActionManager.getInstance().getAction(actionId);
+            EditorAction action = (EditorAction) ActionManager.getInstance().getAction(actionId);
             if (action != null) {
                 action.actionPerformed(CodeEditorBase.this, dataContext);
             }
@@ -504,7 +506,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
         myIsViewer = viewer;
         myKind = kind;
-        myDocument = (DocumentEx)document;
+        myDocument = (DocumentEx) document;
         myProject = project;
         myScheme = createBoundColorSchemeDelegate(null);
 
@@ -534,32 +536,33 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
         myMarkupModelListener = new MarkupModelListener() {
             @Override
-            public void afterAdded(@Nonnull RangeHighlighter highlighter) {
-                onHighlighterChanged(
-                    highlighter,
-                    canImpactGutterSize(highlighter),
-                    EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()),
-                    false
+            public void afterAdded(@Nonnull RangeHighlighterEx highlighter) {
+                TextAttributes attributes = highlighter.getTextAttributes(getColorsScheme());
+                onHighlighterChanged(highlighter,
+                    getGutterComponentEx().canImpactSize(highlighter),
+                    EditorUtil.attributesImpactFontStyle(attributes),
+                    EditorUtil.attributesImpactForegroundColor(attributes)
                 );
             }
 
             @Override
-            public void beforeRemoved(@Nonnull RangeHighlighter highlighter) {
-                onHighlighterChanged(
-                    highlighter,
-                    canImpactGutterSize(highlighter),
-                    EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()),
-                    true
+            public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
+                TextAttributes attributes = highlighter.getTextAttributes(getColorsScheme());
+                onHighlighterChanged(highlighter,
+                    getGutterComponentEx().canImpactSize(highlighter),
+                    EditorUtil.attributesImpactFontStyle(attributes),
+                    EditorUtil.attributesImpactForegroundColor(attributes)
                 );
             }
 
             @Override
             public void attributesChanged(
-                @Nonnull RangeHighlighter highlighter,
+                @Nonnull RangeHighlighterEx highlighter,
                 boolean renderersChanged,
-                boolean fontStyleOrColorChanged
+                boolean fontStyleChanged,
+                boolean foregroundColorChanged
             ) {
-                onHighlighterChanged(highlighter, renderersChanged, fontStyleOrColorChanged, false);
+                onHighlighterChanged(highlighter, renderersChanged, fontStyleChanged, foregroundColorChanged);
             }
         };
 
@@ -607,10 +610,10 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     protected void onHighlighterChanged(
-        @Nonnull RangeHighlighter highlighter,
+        @NotNull RangeHighlighterEx highlighter,
         boolean canImpactGutterSize,
-        boolean fontStyleOrColorChanged,
-        boolean remove
+        boolean fontStyleChanged,
+        boolean foregroundColorChanged
     ) {
     }
 
@@ -963,9 +966,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             boolean newAvailable = filter == null || filter.test(highlighter);
             if (oldAvailable != newAvailable) {
                 myMarkupModelListener.attributesChanged(
-                    highlighter,
+                    (RangeHighlighterEx) highlighter,
                     true,
-                    EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes())
+                    EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes(getColorsScheme()))
                 );
             }
         }
@@ -1118,7 +1121,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             @SuppressWarnings("unchecked")
             public <T> T getData(@Nonnull Key<T> dataId) {
                 if (Project.KEY == dataId) {
-                    return (T)myProject;
+                    return (T) myProject;
                 }
                 return original.getData(dataId);
             }
