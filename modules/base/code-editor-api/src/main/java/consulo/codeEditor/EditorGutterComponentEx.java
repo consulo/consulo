@@ -3,11 +3,12 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -15,127 +16,131 @@ import java.util.List;
 import java.util.function.IntUnaryOperator;
 
 public interface EditorGutterComponentEx extends EditorGutter {
-  /**
-   * The key to retrieve a logical editor line position of a latest actionable click inside the gutter.
-   * Available to gutter popup actions (see {@link #setGutterPopupGroup(ActionGroup)},
-   * {@link GutterIconRenderer#getPopupMenuActions()}, {@link TextAnnotationGutterProvider#getPopupActions(int, Editor)})
-   */
-  public static final Key<Integer> LOGICAL_LINE_AT_CURSOR = Key.create("EditorGutter.LOGICAL_LINE_AT_CURSOR");
+    /**
+     * The key to retrieve a logical editor line position of a latest actionable click inside the gutter.
+     * Available to gutter popup actions (see {@link #setGutterPopupGroup(ActionGroup)},
+     * {@link GutterIconRenderer#getPopupMenuActions()}, {@link TextAnnotationGutterProvider#getPopupActions(int, Editor)})
+     */
+    public static final Key<Integer> LOGICAL_LINE_AT_CURSOR = Key.create("EditorGutter.LOGICAL_LINE_AT_CURSOR");
 
-  /**
-   * The key to retrieve a editor gutter icon center position of a latest actionable click inside the gutter.
-   * Available to gutter popup actions (see {@link #setGutterPopupGroup(ActionGroup)},
-   * {@link GutterIconRenderer#getPopupMenuActions()}, {@link TextAnnotationGutterProvider#getPopupActions(int, Editor)})
-   */
-  public static final Key<Point> ICON_CENTER_POSITION = Key.create("EditorGutter.ICON_CENTER_POSITION");
+    /**
+     * The key to retrieve a editor gutter icon center position of a latest actionable click inside the gutter.
+     * Available to gutter popup actions (see {@link #setGutterPopupGroup(ActionGroup)},
+     * {@link GutterIconRenderer#getPopupMenuActions()}, {@link TextAnnotationGutterProvider#getPopupActions(int, Editor)})
+     */
+    public static final Key<Point> ICON_CENTER_POSITION = Key.create("EditorGutter.ICON_CENTER_POSITION");
 
-  @Nullable
-  public abstract FoldRegion findFoldingAnchorAt(int x, int y);
+    @Nullable
+    FoldRegion findFoldingAnchorAt(int x, int y);
 
-  @Nonnull
-  public abstract List<GutterMark> getGutterRenderers(int line);
+    @Nonnull
+    List<GutterMark> getGutterRenderers(int line);
 
-  public abstract int getWhitespaceSeparatorOffset();
+    int getWhitespaceSeparatorOffset();
 
-  public abstract void revalidateMarkup();
+    void revalidateMarkup();
 
-  public abstract int getLineMarkerAreaOffset();
+    int getLineMarkerAreaOffset();
 
-  public abstract int getIconAreaOffset();
+    int getIconAreaOffset();
 
-  public abstract int getLineMarkerFreePaintersAreaOffset();
+    int getLineMarkerFreePaintersAreaOffset();
 
-  public abstract int getIconsAreaWidth();
+    int getIconsAreaWidth();
 
-  public abstract int getAnnotationsAreaOffset();
+    int getAnnotationsAreaOffset();
 
-  public abstract int getAnnotationsAreaWidth();
+    int getAnnotationsAreaWidth();
 
-  @Nullable
-  public abstract Point getCenterPoint(GutterIconRenderer renderer);
+    @Nullable
+    Point getCenterPoint(GutterIconRenderer renderer);
 
-  @Deprecated
-  default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor) {
-    setLineNumberConvertor(lineNumberConvertor, null);
-  }
-
-  @Deprecated
-  default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor1, @Nullable IntUnaryOperator lineNumberConvertor2) {
-    setLineNumberConverter(convertFromOperator(lineNumberConvertor1),
-                           lineNumberConvertor2 == null ? null : convertFromOperator(lineNumberConvertor2));
-  }
-
-  private static LineNumberConverter convertFromOperator(IntUnaryOperator operator) {
-    if (operator == null) {
-      return LineNumberConverter.DEFAULT;
+    @Deprecated
+    default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor) {
+        setLineNumberConvertor(lineNumberConvertor, null);
     }
 
-    return new LineNumberConverter() {
-      @Nullable
-      @Override
-      public Integer convert(@Nonnull Editor editor, int lineNumber) {
-        return operator.applyAsInt(lineNumber);
-      }
+    @Deprecated
+    default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor1, @Nullable IntUnaryOperator lineNumberConvertor2) {
+        setLineNumberConverter(convertFromOperator(lineNumberConvertor1),
+            lineNumberConvertor2 == null ? null : convertFromOperator(lineNumberConvertor2));
+    }
 
-      @Nullable
-      @Override
-      public Integer getMaxLineNumber(@Nonnull Editor editor) {
-        return editor.getDocument().getLineCount();
-      }
-    };
-  }
+    private static LineNumberConverter convertFromOperator(IntUnaryOperator operator) {
+        if (operator == null) {
+            return LineNumberConverter.DEFAULT;
+        }
 
-  /**
-   * Changes how line numbers are displayed in the gutter. Disables showing additional line numbers.
-   *
-   * @see #setLineNumberConverter(LineNumberConverter, LineNumberConverter)
-   */
-  default void setLineNumberConverter(@Nonnull LineNumberConverter converter) {
-    setLineNumberConverter(converter, null);
-  }
+        return new LineNumberConverter() {
+            @Nullable
+            @Override
+            public Integer convert(@Nonnull Editor editor, int lineNumber) {
+                return operator.applyAsInt(lineNumber);
+            }
 
-  /**
-   * Changes how line numbers are displayed in the gutter.
-   *
-   * @param primaryConverter    converter for primary line number shown in gutter
-   * @param additionalConverter if not {@code null}, defines an additional column of numbers to be displayed in the gutter
-   */
-  void setLineNumberConverter(@Nonnull LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter);
+            @Nullable
+            @Override
+            public Integer getMaxLineNumber(@Nonnull Editor editor) {
+                return editor.getDocument().getLineCount();
+            }
+        };
+    }
 
-  public abstract void setShowDefaultGutterPopup(boolean show);
+    /**
+     * Changes how line numbers are displayed in the gutter. Disables showing additional line numbers.
+     *
+     * @see #setLineNumberConverter(LineNumberConverter, LineNumberConverter)
+     */
+    default void setLineNumberConverter(@Nonnull LineNumberConverter converter) {
+        setLineNumberConverter(converter, null);
+    }
 
-  /**
-   * When set to false, makes {@link #closeAllAnnotations()} a no-op and hides the corresponding context menu action.
-   */
-  public abstract void setCanCloseAnnotations(boolean canCloseAnnotations);
+    /**
+     * Changes how line numbers are displayed in the gutter.
+     *
+     * @param primaryConverter    converter for primary line number shown in gutter
+     * @param additionalConverter if not {@code null}, defines an additional column of numbers to be displayed in the gutter
+     */
+    void setLineNumberConverter(@Nonnull LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter);
 
-  public abstract void setGutterPopupGroup(@Nullable ActionGroup group);
+    void setShowDefaultGutterPopup(boolean show);
 
-  public abstract void setPaintBackground(boolean value);
+    /**
+     * When set to false, makes {@link #closeAllAnnotations()} a no-op and hides the corresponding context menu action.
+     */
+    void setCanCloseAnnotations(boolean canCloseAnnotations);
 
-  public abstract void setForceShowLeftFreePaintersArea(boolean value);
+    void setGutterPopupGroup(@Nullable ActionGroup group);
 
-  public abstract void setForceShowRightFreePaintersArea(boolean value);
+    void setPaintBackground(boolean value);
 
-  public abstract void setInitialIconAreaWidth(int width);
+    void setForceShowLeftFreePaintersArea(boolean value);
 
-  default boolean isInsideMarkerArea(@Nonnull MouseEvent e) {
-    throw new AbstractMethodError("unsupported platform");
-  }
+    void setForceShowRightFreePaintersArea(boolean value);
 
-  default int getHoveredFreeMarkersLine() {
-    return -1;
-  }
+    void setInitialIconAreaWidth(int width);
 
-  @Nullable
-  default GutterMark getGutterRenderer(final Point p) {
-    return null;
-  }
+    default boolean canImpactSize(@Nonnull RangeHighlighterEx highlighter) {
+        return false;
+    }
 
-  default void repaint() {
-  }
+    default boolean isInsideMarkerArea(@Nonnull MouseEvent e) {
+        throw new AbstractMethodError("unsupported platform");
+    }
 
-  default JComponent getComponent() {
-    throw new AbstractMethodError("unsupported platform");
-  }
+    default int getHoveredFreeMarkersLine() {
+        return -1;
+    }
+
+    @Nullable
+    default GutterMark getGutterRenderer(final Point p) {
+        return null;
+    }
+
+    default void repaint() {
+    }
+
+    default JComponent getComponent() {
+        throw new AbstractMethodError("unsupported platform");
+    }
 }

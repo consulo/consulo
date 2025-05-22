@@ -24,7 +24,6 @@ import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
@@ -41,14 +40,12 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.color.ColorValue;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.style.ComponentColors;
-import consulo.ui.style.StandardColors;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
@@ -146,33 +143,19 @@ public class BookmarkImpl implements Bookmark {
     }
 
     public RangeHighlighter createHighlighter(@Nonnull MarkupModelEx markup) {
-        final RangeHighlighterEx myHighlighter;
+        final RangeHighlighterEx highlighter;
         int line = getLine();
         if (line >= 0) {
-            myHighlighter = markup.addPersistentLineHighlighter(line, HighlighterLayer.ERROR + 1, null);
-            if (myHighlighter != null) {
-                myHighlighter.setGutterIconRenderer(new MyGutterIconRenderer(this));
-
-                TextAttributes textAttributes =
-                    EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.BOOKMARKS_ATTRIBUTES);
-
-                ColorValue stripeColor = textAttributes.getErrorStripeColor();
-                myHighlighter.setErrorStripeMarkColor(stripeColor != null ? stripeColor : StandardColors.BLACK);
-                myHighlighter.setErrorStripeTooltip(getBookmarkTooltip());
-
-                TextAttributes attributes = myHighlighter.getTextAttributes();
-                if (attributes == null) {
-                    attributes = new TextAttributes();
-                }
-                attributes.setBackgroundColor(textAttributes.getBackgroundColor());
-                attributes.setForegroundColor(textAttributes.getForegroundColor());
-                myHighlighter.setTextAttributes(attributes);
+            highlighter = markup.addPersistentLineHighlighter(line, HighlighterLayer.ERROR + 1, null);
+            if (highlighter != null) {
+                highlighter.setGutterIconRenderer(new MyGutterIconRenderer(this));
+                highlighter.setTextAttributesKey(CodeInsightColors.BOOKMARKS_ATTRIBUTES);
             }
         }
         else {
-            myHighlighter = null;
+            highlighter = null;
         }
-        return myHighlighter;
+        return highlighter;
     }
 
     @Override

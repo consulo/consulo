@@ -22,8 +22,7 @@ import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
@@ -113,9 +112,8 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     List<TextRange> writeUsages = handlerBase.getWriteUsages();
 
     boolean clearHighlights = HighlightUsagesHandler.isClearHighlights(editor);
-    EditorColorsManager manager = EditorColorsManager.getInstance();
-    TextAttributes attributes = manager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-    TextAttributes writeAttributes = manager.getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+    TextAttributesKey attributes = EditorColors.SEARCH_RESULT_ATTRIBUTES;
+    TextAttributesKey writeAttributes = EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES;
     HighlightUsagesHandler.highlightRanges(
       HighlightManager.getInstance(editor.getProject()),
       editor,
@@ -272,11 +270,8 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
 
   @RequiredUIAccess
   public static void highlightOtherOccurrences(List<PsiElement> otherOccurrences, Editor editor, boolean clearHighlights) {
-    EditorColorsManager manager = EditorColorsManager.getInstance();
-    TextAttributes attributes = manager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-
     PsiElement[] elements = PsiUtilCore.toPsiElementArray(otherOccurrences);
-    doHighlightElements(editor, elements, attributes, clearHighlights);
+    doHighlightElements(editor, elements, EditorColors.SEARCH_RESULT_ATTRIBUTES, clearHighlights);
   }
 
   @RequiredUIAccess
@@ -289,9 +284,8 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     boolean clearHighlights
   ) {
     HighlightManager highlightManager = HighlightManager.getInstance(project);
-    EditorColorsManager manager = EditorColorsManager.getInstance();
-    TextAttributes attributes = manager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-    TextAttributes writeAttributes = manager.getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+    TextAttributesKey attributes = EditorColors.SEARCH_RESULT_ATTRIBUTES;
+    TextAttributesKey writeAttributes = EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES;
 
     setupFindModel(project);
 
@@ -318,7 +312,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
 
     TextRange range = getNameIdentifierRange(file, element);
     if (range != null) {
-      TextAttributes nameAttributes = attributes;
+      TextAttributesKey nameAttributes = attributes;
       if (detector != null && detector.isDeclarationWriteAccess(element)) {
         nameAttributes = writeAttributes;
       }
@@ -356,7 +350,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
   }
 
   @RequiredUIAccess
-  public static void doHighlightElements(Editor editor, PsiElement[] elements, TextAttributes attributes, boolean clearHighlights) {
+  public static void doHighlightElements(Editor editor, PsiElement[] elements, TextAttributesKey attributesKey, boolean clearHighlights) {
     HighlightManager highlightManager = HighlightManager.getInstance(editor.getProject());
     List<TextRange> textRanges = new ArrayList<>(elements.length);
     for (PsiElement element : elements) {
@@ -365,18 +359,18 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
       range = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range);
       textRanges.add(range);
     }
-    highlightRanges(highlightManager, editor, attributes, clearHighlights, textRanges);
+    highlightRanges(highlightManager, editor, attributesKey, clearHighlights, textRanges);
   }
 
   @RequiredUIAccess
-  public static void highlightRanges(HighlightManager highlightManager, Editor editor, TextAttributes attributes, boolean clearHighlights, List<TextRange> textRanges) {
+  public static void highlightRanges(HighlightManager highlightManager, Editor editor, TextAttributesKey attributesKey, boolean clearHighlights, List<TextRange> textRanges) {
     if (clearHighlights) {
-      clearHighlights(editor, highlightManager, textRanges, attributes);
+      clearHighlights(editor, highlightManager, textRanges, attributesKey);
       return;
     }
     ArrayList<RangeHighlighter> highlighters = new ArrayList<>();
     for (TextRange range : textRanges) {
-      highlightManager.addRangeHighlight(editor, range.getStartOffset(), range.getEndOffset(), attributes, false, highlighters);
+      highlightManager.addRangeHighlight(editor, range.getStartOffset(), range.getEndOffset(), attributesKey, false, highlighters);
     }
     for (RangeHighlighter highlighter : highlighters) {
       String tooltip = getLineTextErrorStripeTooltip(editor.getDocument(), highlighter.getStartOffset(), true);
@@ -397,7 +391,10 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     return false;
   }
 
-  private static void clearHighlights(Editor editor, HighlightManager highlightManager, List<TextRange> rangesToHighlight, TextAttributes attributes) {
+  private static void clearHighlights(Editor editor,
+                                      HighlightManager highlightManager,
+                                      List<TextRange> rangesToHighlight,
+                                      TextAttributesKey attributesKey) {
     if (editor instanceof EditorWindow editorWindow) editor = editorWindow.getDelegate();
     RangeHighlighter[] highlighters = ((HighlightManagerImpl)highlightManager).getHighlighters(editor);
     Arrays.sort(highlighters, (o1, o2) -> o1.getStartOffset() - o2.getStartOffset());
@@ -408,7 +405,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
       RangeHighlighter highlighter = highlighters[i];
       TextRange highlighterRange = TextRange.create(highlighter);
       TextRange refRange = rangesToHighlight.get(j);
-      if (refRange.equals(highlighterRange) && attributes.equals(highlighter.getTextAttributes()) && highlighter.getLayer() == HighlighterLayer.SELECTION - 1) {
+      if (refRange.equals(highlighterRange) && attributesKey.equals(highlighter.getTextAttributesKey()) && highlighter.getLayer() == HighlighterLayer.SELECTION - 1) {
         highlightManager.removeSegmentHighlighter(editor, highlighter);
         i++;
       }
@@ -426,12 +423,16 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
   }
 
   @RequiredUIAccess
-  private static void doHighlightRefs(HighlightManager highlightManager, @Nonnull Editor editor, @Nonnull List<PsiReference> refs, TextAttributes attributes, boolean clearHighlights) {
+  private static void doHighlightRefs(HighlightManager highlightManager,
+                                      @Nonnull Editor editor,
+                                      @Nonnull List<PsiReference> refs,
+                                      TextAttributesKey attributesKey,
+                                      boolean clearHighlights) {
     List<TextRange> textRanges = new ArrayList<>(refs.size());
     for (PsiReference ref : refs) {
       collectRangesToHighlight(ref, textRanges);
     }
-    highlightRanges(highlightManager, editor, attributes, clearHighlights, textRanges);
+    highlightRanges(highlightManager, editor, attributesKey, clearHighlights, textRanges);
   }
 
   /**

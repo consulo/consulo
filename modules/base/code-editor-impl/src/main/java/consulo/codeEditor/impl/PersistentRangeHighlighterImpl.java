@@ -15,14 +15,14 @@
  */
 package consulo.codeEditor.impl;
 
-import consulo.document.event.DocumentEvent;
-import consulo.document.internal.DocumentEx;
-import consulo.document.impl.event.DocumentEventImpl;
-import consulo.document.impl.PersistentRangeMarkerUtil;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.colorScheme.TextAttributes;
-import consulo.document.util.DocumentUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.document.event.DocumentEvent;
+import consulo.document.impl.PersistentRangeMarkerUtil;
+import consulo.document.impl.event.DocumentEventImpl;
+import consulo.document.internal.DocumentEx;
+import consulo.document.util.DocumentUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,73 +32,78 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 class PersistentRangeHighlighterImpl extends RangeHighlighterImpl {
-  private int myLine; // for PersistentRangeHighlighterImpl only
+    private int myLine; // for PersistentRangeHighlighterImpl only
 
-  static PersistentRangeHighlighterImpl create(@Nonnull MarkupModelImpl model,
-                                               int offset,
-                                               int layer,
-                                               @Nonnull HighlighterTargetArea target,
-                                               @Nullable TextAttributes textAttributes,
-                                               boolean normalizeStartOffset) {
-    int line = model.getDocument().getLineNumber(offset);
-    int startOffset = normalizeStartOffset ? model.getDocument().getLineStartOffset(line) : offset;
-    return new PersistentRangeHighlighterImpl(model, startOffset, line, layer, target, textAttributes);
-  }
-
-  private PersistentRangeHighlighterImpl(@Nonnull MarkupModelImpl model, int startOffset, int line, int layer, @Nonnull HighlighterTargetArea target, @Nullable TextAttributes textAttributes) {
-    super(model, startOffset, model.getDocument().getLineEndOffset(line), layer, target, textAttributes, false, false);
-
-    myLine = line;
-  }
-
-  @Override
-  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
-    // todo Denis Zhdanov
-    DocumentEventImpl event = (DocumentEventImpl)e;
-    final boolean shouldTranslateViaDiff = isValid() && PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, getStartOffset(), getEndOffset());
-    boolean wasTranslatedViaDiff = shouldTranslateViaDiff;
-    if (shouldTranslateViaDiff) {
-      wasTranslatedViaDiff = translatedViaDiff(e, event);
+    static PersistentRangeHighlighterImpl create(@Nonnull MarkupModelImpl model,
+                                                 int offset,
+                                                 int layer,
+                                                 @Nonnull HighlighterTargetArea target,
+                                                 @Nullable TextAttributesKey textAttributes,
+                                                 boolean normalizeStartOffset) {
+        int line = model.getDocument().getLineNumber(offset);
+        int startOffset = normalizeStartOffset ? model.getDocument().getLineStartOffset(line) : offset;
+        return new PersistentRangeHighlighterImpl(model, startOffset, line, layer, target, textAttributes);
     }
-    if (!wasTranslatedViaDiff) {
-      super.changedUpdateImpl(e);
-      if (isValid()) {
-        myLine = getDocument().getLineNumber(getStartOffset());
-        int endLine = getDocument().getLineNumber(getEndOffset());
-        if (endLine != myLine) {
-          setIntervalEnd(getDocument().getLineEndOffset(myLine));
+
+    private PersistentRangeHighlighterImpl(@Nonnull MarkupModelImpl model,
+                                           int startOffset,
+                                           int line,
+                                           int layer,
+                                           @Nonnull HighlighterTargetArea target,
+                                           @Nullable TextAttributesKey textAttributes) {
+        super(model, startOffset, model.getDocument().getLineEndOffset(line), layer, target, textAttributes, false, false);
+
+        myLine = line;
+    }
+
+    @Override
+    protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
+        // todo Denis Zhdanov
+        DocumentEventImpl event = (DocumentEventImpl) e;
+        final boolean shouldTranslateViaDiff = isValid() && PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, getStartOffset(), getEndOffset());
+        boolean wasTranslatedViaDiff = shouldTranslateViaDiff;
+        if (shouldTranslateViaDiff) {
+            wasTranslatedViaDiff = translatedViaDiff(e, event);
         }
-      }
+        if (!wasTranslatedViaDiff) {
+            super.changedUpdateImpl(e);
+            if (isValid()) {
+                myLine = getDocument().getLineNumber(getStartOffset());
+                int endLine = getDocument().getLineNumber(getEndOffset());
+                if (endLine != myLine) {
+                    setIntervalEnd(getDocument().getLineEndOffset(myLine));
+                }
+            }
+        }
+        if (isValid() && getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) {
+            setIntervalStart(DocumentUtil.getFirstNonSpaceCharOffset(getDocument(), myLine));
+            setIntervalEnd(getDocument().getLineEndOffset(myLine));
+        }
     }
-    if (isValid() && getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) {
-      setIntervalStart(DocumentUtil.getFirstNonSpaceCharOffset(getDocument(), myLine));
-      setIntervalEnd(getDocument().getLineEndOffset(myLine));
-    }
-  }
 
-  private boolean translatedViaDiff(DocumentEvent e, DocumentEventImpl event) {
-    try {
-      myLine = event.translateLineViaDiff(myLine);
+    private boolean translatedViaDiff(DocumentEvent e, DocumentEventImpl event) {
+        try {
+            myLine = event.translateLineViaDiff(myLine);
+        }
+        catch (FilesTooBigForDiffException ignored) {
+            return false;
+        }
+        if (myLine < 0 || myLine >= getDocument().getLineCount()) {
+            invalidate(e);
+        }
+        else {
+            DocumentEx document = getDocument();
+            setIntervalStart(document.getLineStartOffset(myLine));
+            setIntervalEnd(document.getLineEndOffset(myLine));
+        }
+        return true;
     }
-    catch (FilesTooBigForDiffException ignored) {
-      return false;
-    }
-    if (myLine < 0 || myLine >= getDocument().getLineCount()) {
-      invalidate(e);
-    }
-    else {
-      DocumentEx document = getDocument();
-      setIntervalStart(document.getLineStartOffset(myLine));
-      setIntervalEnd(document.getLineEndOffset(myLine));
-    }
-    return true;
-  }
 
-  @Override
-  public String toString() {
-    return "PersistentRangeHighlighter" +
-           (isGreedyToLeft() ? "[" : "(") +
-           (isValid() ? "valid" : "invalid") + "," + getStartOffset() + "," + getEndOffset() + " - " + myLine +
-           (isGreedyToRight() ? "]" : ")");
-  }
+    @Override
+    public String toString() {
+        return "PersistentRangeHighlighter" +
+            (isGreedyToLeft() ? "[" : "(") +
+            (isValid() ? "valid" : "invalid") + "," + getStartOffset() + "," + getEndOffset() + " - " + myLine +
+            (isGreedyToRight() ? "]" : ")");
+    }
 }

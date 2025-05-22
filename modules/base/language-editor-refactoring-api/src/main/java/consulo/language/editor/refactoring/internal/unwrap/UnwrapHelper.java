@@ -17,8 +17,7 @@ package consulo.language.editor.refactoring.internal.unwrap;
 
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 
 /**
  * @author VISTALL
@@ -27,13 +26,11 @@ import consulo.colorScheme.TextAttributes;
 public class UnwrapHelper {
   public static final int HIGHLIGHTER_LEVEL = HighlighterLayer.SELECTION + 1;
 
-  public static TextAttributes getTestAttributesForExtract() {
-    EditorColorsManager manager = EditorColorsManager.getInstance();
-    return manager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
+  public static TextAttributesKey getTestAttributesForExtract() {
+    return EditorColors.SEARCH_RESULT_ATTRIBUTES;
   }
 
-  public static TextAttributes getTestAttributesForRemoval() {
-    EditorColorsManager manager = EditorColorsManager.getInstance();
-    return manager.getGlobalScheme().getAttributes(EditorColors.DELETED_TEXT_ATTRIBUTES);
+  public static TextAttributesKey getTestAttributesForRemoval() {
+    return EditorColors.DELETED_TEXT_ATTRIBUTES;
   }
 }

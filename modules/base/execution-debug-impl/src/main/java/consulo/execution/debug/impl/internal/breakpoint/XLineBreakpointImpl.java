@@ -112,7 +112,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     }
 
     RangeHighlighter highlighter = (RangeHighlighter)myHighlighter;
-    if (highlighter != null && (!highlighter.isValid() || !DocumentUtil.isValidOffset(highlighter.getStartOffset(), document) || !Comparing.equal(highlighter.getTextAttributes(), attributes)
+    if (highlighter != null && (!highlighter.isValid() || !DocumentUtil.isValidOffset(highlighter.getStartOffset(), document) || !Comparing.equal(highlighter.getTextAttributes(null), attributes)
                                 // it seems that this check is not needed - we always update line number from the highlighter
                                 // and highlighter is removed on line and file change anyway
             /*|| document.getLineNumber(highlighter.getStartOffset()) != getLine()*/)) {

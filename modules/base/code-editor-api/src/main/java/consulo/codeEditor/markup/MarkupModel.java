@@ -19,7 +19,6 @@ import consulo.codeEditor.Editor;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
-import consulo.document.RangeMarker;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
@@ -65,23 +64,12 @@ public interface MarkupModel extends UserDataHolder {
                                          int layer,
                                          @Nonnull HighlighterTargetArea targetArea);
 
-
     /**
-     * Adds a highlighter covering the specified range of the document, which can modify
-     * the attributes used for text rendering, add a gutter marker and so on. Range highlighters are
-     * {@link RangeMarker} instances and use the same rules for tracking
-     * the range after document changes.
-     *
-     * @param startOffset    the start offset of the range to highlight.
-     * @param endOffset      the end offset of the range to highlight.
-     * @param layer          relative priority of the highlighter (highlighters with higher
-     *                       layer number override highlighters with lower layer number;
-     *                       layer number values for standard IDEA highlighters are given in
-     *                       {@link HighlighterLayer} class)
-     * @param textAttributes the attributes to use for highlighting, or null if the highlighter
-     *                       does not modify the text attributes.
-     * @param targetArea     type of highlighting (specific range or all full lines covered by the range).
-     * @return the highlighter instance.
+     * Consider using {@link #addRangeHighlighter(TextAttributesKey, int, int, int, HighlighterTargetArea)} unless it's really necessary.
+     * Creating a highlighter with hard-coded {@link TextAttributes} makes it stay the same in
+     * all {@link consulo.colorScheme.EditorColorsScheme} and agnostic to their switching.
+     * An editor can provide a custom scheme different from the global one, also a user can change the global scheme explicitly.
+     * Using the overload taking a {@link TextAttributesKey} will make the platform take care of all these cases.
      */
     @Nonnull
     RangeHighlighter addRangeHighlighter(int startOffset,

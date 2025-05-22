@@ -5,6 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.MarkupIterator;
 import consulo.document.internal.RangeMarkerEx;
 import consulo.document.internal.RedBlackTreeVerifier;
+import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.longs.LongSet;
@@ -570,7 +571,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
   }
 
   @Nonnull
-  public MarkupIterator<T> overlappingIterator(@Nonnull final TextRangeInterval rangeInterval, @Nullable Predicate<IntervalNode<T>> nodeFilter) {
+  public MarkupIterator<T> overlappingIterator(@Nonnull final TextRange rangeInterval, @Nullable Predicate<IntervalNode<T>> nodeFilter) {
     l.readLock().lock();
 
     try {
@@ -695,7 +696,9 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
     }
   }
 
-  private boolean overlaps(@Nullable IntervalNode<T> root, @Nonnull TextRangeInterval rangeInterval, int deltaUpToRootExclusive) {
+  private boolean overlaps(@Nullable IntervalNode<T> root,
+                           @Nonnull TextRange rangeInterval,
+                           int deltaUpToRootExclusive) {
     if (root == null) return false;
     int delta = root.delta + deltaUpToRootExclusive;
     int start = root.intervalStart() + delta;
@@ -1204,7 +1207,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
   }
 
   private IntervalNode<T> findMinOverlappingWith(@Nullable IntervalNode<T> root,
-                                                 @Nonnull Interval interval,
+                                                 @Nonnull TextRange interval,
                                                  int modCountBefore,
                                                  int deltaUpToRootExclusive,
                                                  @Nullable Predicate<IntervalNode<T>> nodeFilter) {
@@ -1218,7 +1221,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
     }
 
     int delta = deltaUpToRootExclusive + root.delta;
-    if (interval.intervalStart() > maxEndOf(root, deltaUpToRootExclusive)) {
+    if (interval.getStartOffset() > maxEndOf(root, deltaUpToRootExclusive)) {
       return null; // right of the rightmost interval in the subtree
     }
 
@@ -1226,11 +1229,11 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
     if (inLeft != null) return inLeft;
     int myStartOffset = root.intervalStart() + delta;
     int myEndOffset = root.intervalEnd() + delta;
-    boolean overlaps = Math.max(myStartOffset, interval.intervalStart()) <= Math.min(myEndOffset, interval.intervalEnd());
+    boolean overlaps = Math.max(myStartOffset, interval.getStartOffset()) <= Math.min(myEndOffset, interval.getEndOffset());
     if (overlaps) return root;
     if (getModCount() != modCountBefore) throw new ConcurrentModificationException();
 
-    if (interval.intervalEnd() < myStartOffset) {
+    if (interval.getEndOffset() < myStartOffset) {
       return null; // left of the root, cant be in the right subtree
     }
 
@@ -1375,9 +1378,9 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
   // combines iterators for two trees in one using specified comparator
   @Nonnull
   public static <T> MarkupIterator<T> mergingOverlappingIterator(@Nonnull IntervalTreeImpl<T> tree1,
-                                                                 @Nonnull TextRangeInterval tree1Range,
+                                                                 @Nonnull TextRange tree1Range,
                                                                  @Nonnull IntervalTreeImpl<T> tree2,
-                                                                 @Nonnull TextRangeInterval tree2Range,
+                                                                 @Nonnull TextRange tree2Range,
                                                                  @Nonnull Comparator<? super T> comparator) {
     MarkupIterator<T> exact = tree1.overlappingIterator(tree1Range, null);
     MarkupIterator<T> lines = tree2.overlappingIterator(tree2Range, null);

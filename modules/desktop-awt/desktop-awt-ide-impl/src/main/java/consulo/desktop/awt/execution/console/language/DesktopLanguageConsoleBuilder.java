@@ -228,7 +228,7 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
         // console view can invoke markupModel.removeAllHighlighters(), so, we must be aware of it
         getHistoryViewer().getMarkupModel().addMarkupModelListener(GutteredLanguageConsole.this, new MarkupModelListener() {
           @Override
-          public void beforeRemoved(@Nonnull RangeHighlighter highlighter) {
+          public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
             if (lineSeparatorPainter == highlighter) {
               lineSeparatorPainter = null;
             }

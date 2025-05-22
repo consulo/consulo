@@ -23,15 +23,13 @@ import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.ide.impl.idea.codeInspection.ex.EditInspectionToolsSettingsAction;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionRVContentProvider;
@@ -41,7 +39,6 @@ import consulo.ide.impl.idea.codeInspection.ui.actions.InspectionsOptionsToolbar
 import consulo.ide.impl.idea.codeInspection.ui.actions.InvokeQuickFixAction;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.ui.ex.awt.tree.SmartExpander;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
@@ -57,6 +54,7 @@ import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -77,6 +75,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.tree.SmartExpander;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
@@ -176,8 +175,8 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         final OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, file, e.getStartOffset());
         final Editor editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
         if (editor != null) {
-          final TextAttributes selectionAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-          HighlightManager.getInstance(project).addRangeHighlight(editor, e.getStartOffset(), e.getEndOffset(), selectionAttributes, true, null);
+          TextAttributesKey selectionAttributesKey = EditorColors.SEARCH_RESULT_ATTRIBUTES;
+          HighlightManager.getInstance(project).addRangeHighlight(editor, e.getStartOffset(), e.getEndOffset(), selectionAttributesKey, true, null);
         }
       }
     });

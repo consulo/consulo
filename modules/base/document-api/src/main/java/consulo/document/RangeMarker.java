@@ -16,9 +16,10 @@
 package consulo.document;
 
 import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Comparator;
 
 /**
@@ -33,61 +34,72 @@ import java.util.Comparator;
  * @see Document#createRangeMarker(int, int)
  */
 public interface RangeMarker extends UserDataHolder, Segment {
-  long getId();
+    long getId();
 
-  /**
-   * Returns the document to which the marker belongs.
-   *
-   * @return the document instance.
-   */
-  @Nonnull
-  Document getDocument();
+    /**
+     * Returns the document to which the marker belongs.
+     *
+     * @return the document instance.
+     */
+    @Nonnull
+    Document getDocument();
 
-  /**
-   * Returns the start offset of the text range covered by the marker.
-   *
-   * @return the start offset.
-   */
-  @Override
-  int getStartOffset();
+    /**
+     * Returns the start offset of the text range covered by the marker.
+     *
+     * @return the start offset.
+     */
+    @Override
+    int getStartOffset();
 
-  /**
-   * Returns the end offset of the text range covered by the marker.
-   *
-   * @return the end offset.
-   */
-  @Override
-  int getEndOffset();
+    /**
+     * Returns the end offset of the text range covered by the marker.
+     *
+     * @return the end offset.
+     */
+    @Override
+    int getEndOffset();
 
-  /**
-   * Checks if the marker has been invalidated by deleting the entire fragment of text
-   * containing the marker.
-   *
-   * @return true if the marker is valid, false if it has been invalidated.
-   */
-  boolean isValid();
+    /**
+     * Checks if the marker has been invalidated by deleting the entire fragment of text
+     * containing the marker.
+     *
+     * @return true if the marker is valid, false if it has been invalidated.
+     */
+    boolean isValid();
 
-  /**
-   * Sets the value indicating whether the text added exactly at the beginning of the
-   * marker should be included in the text range of the marker. The default value is false.
-   *
-   * @param greedy true if text added at the beginning is included in the range, false otherwise.
-   */
-  void setGreedyToLeft(boolean greedy);
+    /**
+     * Sets the value indicating whether the text added exactly at the beginning of the
+     * marker should be included in the text range of the marker. The default value is false.
+     *
+     * @param greedy true if text added at the beginning is included in the range, false otherwise.
+     */
+    void setGreedyToLeft(boolean greedy);
 
-  /**
-   * Sets the value indicating whether the text added exactly at the end of the
-   * marker should be included in the text range of the marker. The default value is false.
-   *
-   * @param greedy true if text added at the end is included in the range, false otherwise.
-   */
-  void setGreedyToRight(boolean greedy);
+    /**
+     * Sets the value indicating whether the text added exactly at the end of the
+     * marker should be included in the text range of the marker. The default value is false.
+     *
+     * @param greedy true if text added at the end is included in the range, false otherwise.
+     */
+    void setGreedyToRight(boolean greedy);
 
-  Comparator<? super RangeMarker> BY_START_OFFSET = Segment.BY_START_OFFSET_THEN_END_OFFSET;
+    Comparator<? super RangeMarker> BY_START_OFFSET = Segment.BY_START_OFFSET_THEN_END_OFFSET;
 
-  boolean isGreedyToRight();
+    boolean isGreedyToRight();
 
-  boolean isGreedyToLeft();
+    boolean isGreedyToLeft();
 
-  void dispose();
+    void dispose();
+
+    /**
+     * @return a {@link TextRange} with offsets of this range marker.
+     * This method is preferable because the most implementations are thread-safe, so the returned range is always consistent, whereas
+     * the more conventional {@code TextRange.create(getStartOffset(), getEndOffset())} could return inconsistent range when the selection
+     * changed between {@link #getStartOffset()} and {@link #getEndOffset()} calls.
+     */
+    @Nonnull
+    default TextRange getTextRange() {
+        return new TextRange(getStartOffset(), getEndOffset());
+    }
 }

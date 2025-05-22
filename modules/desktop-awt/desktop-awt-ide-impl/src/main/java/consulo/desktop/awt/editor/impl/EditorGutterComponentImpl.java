@@ -2235,6 +2235,24 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         return this;
     }
 
+    @Override
+    public boolean canImpactSize(@Nonnull RangeHighlighterEx highlighter) {
+        if (highlighter.getGutterIconRenderer() != null) {
+            return true;
+        }
+
+        LineMarkerRenderer lineMarkerRenderer = highlighter.getLineMarkerRenderer();
+        if (lineMarkerRenderer == null) {
+            return false;
+        }
+
+// TODO unsupported
+//        LineMarkerRenderer.Position position = getLineMarkerPosition(lineMarkerRenderer);
+//        return position == LineMarkerRenderer.Position.LEFT && myLeftFreePaintersAreaState == EditorGutterFreePainterAreaState.ON_DEMAND ||
+//            position == LineMarkerRenderer.Position.RIGHT && myRightFreePaintersAreaState == EditorGutterFreePainterAreaState.ON_DEMAND;
+        return false;
+    }
+
     @RequiredUIAccess
     private void invokePopup(MouseEvent e) {
         int logicalLineAtCursor = EditorUtil.yPositionToLogicalLine(myEditor, e);

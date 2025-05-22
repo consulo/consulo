@@ -28,8 +28,6 @@ import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
 import consulo.find.FindManager;
 import consulo.ide.impl.idea.ui.ReplacePromptDialog;
@@ -221,11 +219,9 @@ public class ExtractMethodHelper {
     ) {
         final List<RangeHighlighter> highlighters = new ArrayList<>();
         final HighlightManager highlightManager = HighlightManager.getInstance(project);
-        final EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-        final TextAttributes attributes = colorsManager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
         final int startOffset = match.getStartElement().getTextRange().getStartOffset();
         final int endOffset = match.getEndElement().getTextRange().getEndOffset();
-        highlightManager.addRangeHighlight(editor, startOffset, endOffset, attributes, true, highlighters);
+        highlightManager.addRangeHighlight(editor, startOffset, endOffset, EditorColors.SEARCH_RESULT_ATTRIBUTES, true, highlighters);
         highlighterMap.put(match, highlighters.get(0));
         final LogicalPosition logicalPosition = editor.offsetToLogicalPosition(startOffset);
         editor.getScrollingModel().scrollTo(logicalPosition, ScrollType.MAKE_VISIBLE);

@@ -16,7 +16,6 @@
 
 package consulo.codeEditor.internal;
 
-import consulo.application.util.function.Processor;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -31,6 +30,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author cdr
@@ -63,20 +63,6 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
         TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
         return myHostModel.addRangeHighlighter(textAttributesKey, hostRange.getStartOffset(), hostRange.getEndOffset(), layer, targetArea);
     }
-
-    @Nonnull
-    @Override
-    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
-                                                                     int endOffset,
-                                                                     int layer,
-                                                                     TextAttributes textAttributes,
-                                                                     @Nonnull HighlighterTargetArea targetArea,
-                                                                     boolean isPersistent,
-                                                                     Consumer<? super RangeHighlighterEx> changeAttributesAction) {
-        TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
-        return myHostModel.addRangeHighlighterAndChangeAttributes(hostRange.getStartOffset(), hostRange.getEndOffset(), layer, textAttributes, targetArea, isPersistent, changeAttributesAction);
-    }
-
     @Override
     public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
         myHostModel.changeAttributesInBatch(highlighter, changeAttributesAction);
@@ -110,12 +96,32 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
         myHostModel.dispose();
     }
 
+    @Nullable
+    @Override
+    public RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
+        int hostLine = myDocument.injectedToHostLine(lineNumber);
+        return myHostModel.addPersistentLineHighlighter(textAttributesKey, hostLine, layer);
+    }
+
+    @Nonnull
+    @Override
+    public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(@Nullable TextAttributesKey textAttributesKey, int startOffset, int endOffset, int layer, @Nonnull HighlighterTargetArea targetArea, boolean isPersistent, @Nullable Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+        TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
+        return myHostModel.addRangeHighlighterAndChangeAttributes(textAttributesKey,
+            hostRange.getStartOffset(),
+            hostRange.getEndOffset(),
+            layer,
+            targetArea,
+            isPersistent,
+            changeAttributesAction
+        );
+    }
+
     @Override
     public RangeHighlighterEx addPersistentLineHighlighter(final int line, final int layer, final TextAttributes textAttributes) {
         int hostLine = myDocument.injectedToHostLine(line);
         return myHostModel.addPersistentLineHighlighter(hostLine, layer, textAttributes);
     }
-
 
     @Override
     public boolean containsHighlighter(@Nonnull final RangeHighlighter highlighter) {
@@ -133,21 +139,18 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
     }
 
     @Override
-    public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
-        //todo
+    public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor) {
         return false;
     }
 
     @Override
-    public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
-        //todo
+    public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor) {
         return false;
     }
 
     @Nonnull
     @Override
     public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
-        // todo convert
         return myHostModel.overlappingIterator(startOffset, endOffset);
     }
 
@@ -158,22 +161,12 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
     }
 
     @Override
-    public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged) {
-
-    }
-
-    @Override
     public void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter) {
 
     }
 
     @Override
     public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
-
-    }
-
-    @Override
-    public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
 
     }
 }

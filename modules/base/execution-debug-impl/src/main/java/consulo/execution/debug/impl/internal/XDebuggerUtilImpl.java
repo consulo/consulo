@@ -23,9 +23,6 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -169,12 +166,11 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
                                             range = lineRange;
                                         }
                                         if (range != null && !range.isEmpty()) {
-                                            EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-                                            TextAttributes attributes = scheme.getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
-                                            myHighlighter = editor.getMarkupModel().addRangeHighlighter(range.getStartOffset(),
+                                            myHighlighter = editor.getMarkupModel().addRangeHighlighter(
+                                                DebuggerColors.BREAKPOINT_ATTRIBUTES,
+                                                range.getStartOffset(),
                                                 range.getEndOffset(),
                                                 DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER,
-                                                attributes,
                                                 HighlighterTargetArea.EXACT_RANGE
                                             );
                                         }

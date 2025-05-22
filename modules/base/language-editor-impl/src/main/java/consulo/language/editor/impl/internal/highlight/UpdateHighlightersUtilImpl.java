@@ -260,7 +260,7 @@ public class UpdateHighlightersUtilImpl {
     };
 
     if (highlighter == null) {
-      highlighter = markup.addRangeHighlighterAndChangeAttributes(infoStartOffset, infoEndOffset, layer, null, HighlighterTargetArea.EXACT_RANGE, false, changeAttributes);
+      highlighter = markup.addRangeHighlighterAndChangeAttributes(null, infoStartOffset, infoEndOffset, layer, HighlighterTargetArea.EXACT_RANGE, false, changeAttributes);
       if (HighlightInfoType.VISIBLE_IF_FOLDED.contains(info.type)) {
         highlighter.setVisibleIfFolded(true);
       }
@@ -270,8 +270,8 @@ public class UpdateHighlightersUtilImpl {
     }
 
     if (infoAttributes != null) {
-      boolean attributesSet = Comparing.equal(infoAttributes, highlighter.getTextAttributes());
-      assert attributesSet : "Info: " + infoAttributes + "; colorsScheme: " + (colorsScheme == null ? "[global]" : colorsScheme.getName()) + "; highlighter:" + highlighter.getTextAttributes();
+      boolean attributesSet = Comparing.equal(infoAttributes, highlighter.getTextAttributes(colorsScheme));
+      assert attributesSet : "Info: " + infoAttributes + "; colorsScheme: " + (colorsScheme == null ? "[global]" : colorsScheme.getName()) + "; highlighter:" + highlighter.getTextAttributes(colorsScheme);
     }
   }
 
@@ -323,7 +323,7 @@ public class UpdateHighlightersUtilImpl {
     UIAccess.assertIsUIThread();
 
     final Document document = e.getDocument();
-    if (document instanceof DocumentEx && ((DocumentEx)document).isInBulkUpdate()) return;
+    if (document instanceof DocumentEx && document.isInBulkUpdate()) return;
 
     final MarkupModel markup = DocumentMarkupModel.forDocument(document, project, true);
     assertMarkupConsistent(markup, project);

@@ -16,7 +16,6 @@
 package consulo.codeEditor.impl;
 
 import consulo.application.util.function.FilteringProcessor;
-import consulo.application.util.function.Processor;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
@@ -61,14 +60,14 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     }
 
     @Override
-    public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+    public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor) {
         //noinspection unchecked
         FilteringProcessor<? super RangeHighlighterEx> filteringProcessor = new FilteringProcessor(IS_AVAILABLE, processor);
         return myDelegate.processRangeHighlightersOverlappingWith(start, end, filteringProcessor);
     }
 
     @Override
-    public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+    public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Predicate<? super RangeHighlighterEx> processor) {
         //noinspection unchecked
         FilteringProcessor<? super RangeHighlighterEx> filteringProcessor = new FilteringProcessor(IS_AVAILABLE, processor);
         return myDelegate.processRangeHighlightersOutside(start, end, filteringProcessor);
@@ -110,9 +109,11 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     public void dispose() {
     }
 
-    //
-    // Delegated
-    //
+    @Nullable
+    @Override
+    public RangeHighlighterEx addPersistentLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
+        return myDelegate.addPersistentLineHighlighter(textAttributesKey, lineNumber, layer);
+    }
 
     @Override
     @Nonnull
@@ -123,15 +124,6 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     @Override
     public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
         myDelegate.addMarkupModelListener(parentDisposable, listener);
-    }
-
-    @Override
-    public void fireAttributesChanged(
-        @Nonnull RangeHighlighterEx segmentHighlighter,
-        boolean renderersChanged,
-        boolean fontStyleOrColorChanged
-    ) {
-        myDelegate.fireAttributesChanged(segmentHighlighter, renderersChanged, fontStyleOrColorChanged);
     }
 
     @Override
@@ -148,18 +140,6 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     @Nullable
     public RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
         return myDelegate.addPersistentLineHighlighter(lineNumber, layer, textAttributes);
-    }
-
-    @Override
-    public void addRangeHighlighter(
-        @Nonnull RangeHighlighterEx marker,
-        int start,
-        int end,
-        boolean greedyToLeft,
-        boolean greedyToRight,
-        int layer
-    ) {
-        myDelegate.addRangeHighlighter(marker, start, end, greedyToLeft, greedyToRight, layer);
     }
 
     @Override
@@ -192,25 +172,23 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
         return myDelegate.addLineHighlighter(line, layer, textAttributes);
     }
 
-    @Override
     @Nonnull
+    @Override
     public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(
+        @Nullable TextAttributesKey textAttributesKey,
         int startOffset,
         int endOffset,
         int layer,
-        TextAttributes textAttributes,
         @Nonnull HighlighterTargetArea targetArea,
         boolean isPersistent,
-        Consumer<? super RangeHighlighterEx> changeAttributesAction
+        @Nullable Consumer<? super RangeHighlighterEx> changeAttributesAction
     ) {
-        return myDelegate.addRangeHighlighterAndChangeAttributes(
+        return myDelegate.addRangeHighlighterAndChangeAttributes(textAttributesKey,
             startOffset,
             endOffset,
             layer,
-            textAttributes,
             targetArea,
-            isPersistent,
-            changeAttributesAction
+            isPersistent, changeAttributesAction
         );
     }
 

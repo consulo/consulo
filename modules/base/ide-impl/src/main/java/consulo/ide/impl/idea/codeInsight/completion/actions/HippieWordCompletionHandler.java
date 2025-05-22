@@ -16,28 +16,28 @@
 
 package consulo.ide.impl.idea.codeInsight.completion.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.highlight.HighlightManager;
-import consulo.util.lang.StringUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.CamelHumpMatcher;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 /**
@@ -90,10 +90,9 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     int delta = data.startOffset < variant.offset ? variant.variant.length() - data.myWordUnderCursor.length() : 0;
 
     HighlightManager highlightManager = HighlightManager.getInstance(project);
-    EditorColorsManager colorManager = EditorColorsManager.getInstance();
-    TextAttributes attributes = colorManager.getGlobalScheme().getAttributes(EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES);
-    highlightManager.addOccurrenceHighlight(variant.editor, variant.offset + delta, variant.offset + variant.variant.length() + delta, attributes,
-                                            HighlightManager.HIDE_BY_ANY_KEY, null, null);
+    TextAttributesKey attributesKey = EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES;
+    highlightManager.addOccurrenceHighlight(variant.editor, variant.offset + delta, variant.offset + variant.variant.length() + delta, attributesKey,
+                                            HighlightManager.HIDE_BY_ANY_KEY, null);
   }
 
 

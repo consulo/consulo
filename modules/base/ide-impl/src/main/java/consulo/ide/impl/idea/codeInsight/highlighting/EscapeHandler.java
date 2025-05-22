@@ -28,76 +28,78 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.IdeActions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 @ExtensionImpl(order = "after hide-hints")
 public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
-  private EditorActionHandler myOriginalHandler;
+    private EditorActionHandler myOriginalHandler;
 
-  @Override
-  public void execute(Editor editor, DataContext dataContext) {
-    editor.setHeaderComponent(null);
+    @Override
+    public void execute(Editor editor, DataContext dataContext) {
+        editor.setHeaderComponent(null);
 
-    Project project = dataContext.getData(Project.KEY);
-    if (project != null) {
-      HighlightManagerImpl highlightManager = (HighlightManagerImpl)HighlightManager.getInstance(project);
-      if (highlightManager != null
-        && highlightManager.hideHighlights(editor, HighlightManager.HIDE_BY_ESCAPE | HighlightManager.HIDE_BY_ANY_KEY)) {
-        StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-        if (statusBar != null) {
-          statusBar.setInfo("");
-        }
+        Project project = dataContext.getData(Project.KEY);
+        if (project != null) {
+            HighlightManagerImpl highlightManager = (HighlightManagerImpl) HighlightManager.getInstance(project);
+            if (highlightManager != null
+                && highlightManager.hideHighlights(editor, HighlightManager.HIDE_BY_ESCAPE | HighlightManager.HIDE_BY_ANY_KEY)) {
+                StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
+                if (statusBar != null) {
+                    statusBar.setInfo("");
+                }
 
-        FindManager findManager = FindManager.getInstance(project);
-        if (findManager != null) {
-          FindModel model = findManager.getFindNextModel(editor);
-          if (model != null) {
-            model.setSearchHighlighters(false);
-            findManager.setFindNextModel(model);
-          }
-        }
+                FindManager findManager = FindManager.getInstance(project);
+                if (findManager != null) {
+                    FindModel model = findManager.getFindNextModel(editor);
+                    if (model != null) {
+                        model.setSearchHighlighters(false);
+                        findManager.setFindNextModel(model);
+                    }
+                }
 
-        return;
-      }
-    }
-
-    myOriginalHandler.execute(editor, dataContext);
-  }
-
-  @Override
-  public boolean isEnabled(Editor editor, DataContext dataContext) {
-    if (editor.hasHeaderComponent()) return true;
-    Project project = dataContext.getData(Project.KEY);
-
-    if (project != null) {
-      HighlightManagerImpl highlightManager = (HighlightManagerImpl)HighlightManager.getInstance(project);
-      if (highlightManager != null) {
-        Map<RangeHighlighter, HighlightManagerImpl.HighlightInfo> map = highlightManager.getHighlightInfoMap(editor, false);
-        if (map != null) {
-          for (HighlightManagerImpl.HighlightInfo info : map.values()) {
-            if (!info.editor.equals(editor)) continue;
-            if ((info.flags & HighlightManager.HIDE_BY_ESCAPE) != 0) {
-              return true;
+                return;
             }
-          }
         }
-      }
+
+        myOriginalHandler.execute(editor, dataContext);
     }
 
-    return myOriginalHandler.isEnabled(editor, dataContext);
-  }
+    @Override
+    public boolean isEnabled(Editor editor, DataContext dataContext) {
+        if (editor.hasHeaderComponent()) {
+            return true;
+        }
+        Project project = dataContext.getData(Project.KEY);
 
-  @Override
-  public void init(@Nullable EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
+        if (project != null) {
+            HighlightManagerImpl highlightManager = (HighlightManagerImpl) HighlightManager.getInstance(project);
+            Map<RangeHighlighter, HighlightManagerImpl.HighlightInfoFlags> map = highlightManager.getHighlightInfoMap(editor, false);
+            if (map != null) {
+                for (HighlightManagerImpl.HighlightInfoFlags info : map.values()) {
+                    if (!info.editor().equals(editor)) {
+                        continue;
+                    }
+                    if ((info.flags() & HighlightManager.HIDE_BY_ESCAPE) != 0) {
+                        return true;
+                    }
+                }
+            }
+        }
 
-  @Nonnull
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_ESCAPE;
-  }
+        return myOriginalHandler.isEnabled(editor, dataContext);
+    }
+
+    @Override
+    public void init(@Nullable EditorActionHandler originalHandler) {
+        myOriginalHandler = originalHandler;
+    }
+
+    @Nonnull
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_EDITOR_ESCAPE;
+    }
 }

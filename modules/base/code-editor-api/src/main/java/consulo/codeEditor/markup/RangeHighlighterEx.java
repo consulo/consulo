@@ -2,15 +2,69 @@
 
 package consulo.codeEditor.markup;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.colorScheme.TextAttributes;
 import consulo.document.internal.RangeMarkerEx;
+import consulo.ui.color.ColorValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Comparator;
 
-@Deprecated
-@DeprecationInfo("Use RangeHighlighter")
 public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
-  RangeHighlighterEx[] EMPTY_ARRAY = new RangeHighlighterEx[0];
+    RangeHighlighterEx[] EMPTY_ARRAY = new RangeHighlighterEx[0];
 
-  Comparator<RangeHighlighterEx> BY_AFFECTED_START_OFFSET = Comparator.comparingInt(RangeHighlighterEx::getAffectedAreaStartOffset);
+    Comparator<RangeHighlighterEx> BY_AFFECTED_START_OFFSET = Comparator.comparingInt(RangeHighlighterEx::getAffectedAreaStartOffset);
+
+    @Nullable
+    default TextAttributes getForcedTextAttributes() {
+        return null;
+    }
+
+    @Nullable
+    default ColorValue getForcedErrorStripeMarkColor() {
+        return null;
+    }
+
+    default void fireChanged(boolean renderersChanged, boolean fontStyleChanged, boolean foregroundColorChanged) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Sets text attributes used for highlighting.
+     * Manually set attributes have priority over {@link #getTextAttributesKey()}
+     * during the calculation of {@link #getTextAttributes(EditorColorsScheme)}
+     * <p>
+     * Can be also used to temporary hide the highlighter
+     * {@link TextAttributes#ERASE_MARKER }
+     */
+    void setTextAttributes(@Nullable TextAttributes textAttributes);
+
+    default void copyFrom(@Nonnull RangeHighlighterEx other) {
+        setAfterEndOfLine(other.isAfterEndOfLine());
+        setGreedyToLeft(other.isGreedyToLeft());
+        setGreedyToRight(other.isGreedyToRight());
+        setVisibleIfFolded(other.isVisibleIfFolded());
+
+        if (other.getForcedTextAttributes() != null) {
+            setTextAttributes(other.getForcedTextAttributes());
+        }
+        if (other.getTextAttributesKey() != null) {
+            setTextAttributesKey(other.getTextAttributesKey());
+        }
+
+        setLineMarkerRenderer(other.getLineMarkerRenderer());
+        setCustomRenderer(other.getCustomRenderer());
+        setGutterIconRenderer(other.getGutterIconRenderer());
+
+        setErrorStripeMarkColor(other.getForcedErrorStripeMarkColor());
+        setErrorStripeTooltip(other.getErrorStripeTooltip());
+        setThinErrorStripeMark(other.isThinErrorStripeMark());
+
+        setLineSeparatorColor(other.getLineSeparatorColor());
+        setLineSeparatorPlacement(other.getLineSeparatorPlacement());
+        setLineSeparatorRenderer(other.getLineSeparatorRenderer());
+
+        setEditorFilter(other.getEditorFilter());
+    }
+
 }
