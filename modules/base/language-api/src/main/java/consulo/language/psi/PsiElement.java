@@ -16,6 +16,7 @@
 package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.content.scope.SearchScope;
 import consulo.document.util.TextRange;
@@ -35,12 +36,11 @@ import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * The common base interface for all elements of the PSI tree.
  * <p/>
- * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA Architectural Overview </a>
+ * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA Architectural Overview</a>
  * for high-level overview.
  */
 public interface PsiElement extends UserDataHolder {
@@ -128,8 +128,8 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the first child, or null if the element has no children.
      */
-    @RequiredReadAction
     @Nullable
+    @RequiredReadAction
     PsiElement getFirstChild();
 
     /**
@@ -137,8 +137,8 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the last child, or null if the element has no children.
      */
-    @RequiredReadAction
     @Nullable
+    @RequiredReadAction
     PsiElement getLastChild();
 
     /**
@@ -146,8 +146,8 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the next sibling, or null if the node is the last in the list of siblings.
      */
-    @RequiredReadAction
     @Nullable
+    @RequiredReadAction
     PsiElement getNextSibling();
 
     /**
@@ -155,8 +155,8 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the previous sibling, or null if the node is the first in the list of siblings.
      */
-    @RequiredReadAction
     @Nullable
+    @RequiredReadAction
     PsiElement getPrevSibling();
 
     /**
@@ -173,8 +173,8 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the text range.
      */
-    @RequiredReadAction
     @Nonnull
+    @RequiredReadAction
     TextRange getTextRange();
 
     /**
@@ -238,7 +238,6 @@ public interface PsiElement extends UserDataHolder {
      *
      * @return the element text.
      */
-    @NonNls
     @RequiredReadAction
     String getText();
 
@@ -282,7 +281,7 @@ public interface PsiElement extends UserDataHolder {
      * @param text the character sequence to compare with.
      * @return true if the text is equal, false otherwise.
      */
-    boolean textMatches(@Nonnull @NonNls CharSequence text);
+    boolean textMatches(@Nonnull CharSequence text);
 
     /**
      * Checks if the text of this PSI element is equal to the text of the specified PSI element.
@@ -341,6 +340,7 @@ public interface PsiElement extends UserDataHolder {
      * @return the element which was actually added (either <code>element</code> or its copy).
      * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
      */
+    @RequiredWriteAction
     PsiElement addBefore(@Nonnull PsiElement element, @Nullable PsiElement anchor) throws IncorrectOperationException;
 
     /**
@@ -351,6 +351,7 @@ public interface PsiElement extends UserDataHolder {
      * @return the element which was actually added (either <code>element</code> or its copy).
      * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
      */
+    @RequiredWriteAction
     PsiElement addAfter(@Nonnull PsiElement element, @Nullable PsiElement anchor) throws IncorrectOperationException;
 
     /**
@@ -371,6 +372,7 @@ public interface PsiElement extends UserDataHolder {
      * @return the first child element which was actually added (either <code>first</code> or its copy).
      * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
      */
+    @RequiredWriteAction
     PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException;
 
     /**
@@ -382,6 +384,7 @@ public interface PsiElement extends UserDataHolder {
      * @return the first child element which was actually added (either <code>first</code> or its copy).
      * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
      */
+    @RequiredWriteAction
     PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException;
 
     /**
@@ -393,6 +396,7 @@ public interface PsiElement extends UserDataHolder {
      * @return the first child element which was actually added (either <code>first</code> or its copy).
      * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
      */
+    @RequiredWriteAction
     PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException;
 
     /**
@@ -401,6 +405,7 @@ public interface PsiElement extends UserDataHolder {
      * @throws IncorrectOperationException if the modification is not supported
      *                                     or not possible for some reason (for example, the file containing the element is read-only).
      */
+    @RequiredWriteAction
     void delete() throws IncorrectOperationException;
 
     /**
@@ -419,6 +424,7 @@ public interface PsiElement extends UserDataHolder {
      * @param last  the last child to delete (must be a child of this PSI element)
      * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
      */
+    @RequiredWriteAction
     void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException;
 
     /**
@@ -429,6 +435,7 @@ public interface PsiElement extends UserDataHolder {
      * @return the element which was actually inserted in the tree (either <code>newElement</code> or its copy)
      * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
      */
+    @RequiredWriteAction
     PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException;
 
     /**
@@ -564,7 +571,7 @@ public interface PsiElement extends UserDataHolder {
     /**
      * toString() should never be presented to the user.
      */
-    @NonNls
+    @Override
     String toString();
 
     boolean isEquivalentTo(PsiElement another);

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.inline;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
@@ -62,12 +63,7 @@ public interface InlineHandler extends LanguageExtension {
         /**
          * Special settings for the case when inline cannot be performed due to already reported (by error hint) problem
          */
-        Settings CANNOT_INLINE_SETTINGS = new Settings() {
-            @Override
-            public boolean isOnlyOneReferenceToInline() {
-                return false;
-            }
-        };
+        Settings CANNOT_INLINE_SETTINGS = () -> false;
     }
 
     /**
@@ -82,6 +78,7 @@ public interface InlineHandler extends LanguageExtension {
     /**
      * @param element inlined element
      */
+    @RequiredWriteAction
     void removeDefinition(@Nonnull PsiElement element, @Nonnull Settings settings);
 
     /**
@@ -100,6 +97,7 @@ public interface InlineHandler extends LanguageExtension {
          * or null if no conflicts detected.
          */
         @Nullable
+        @RequiredReadAction
         MultiMap<PsiElement, String> getConflicts(@Nonnull PsiReference reference, @Nonnull PsiElement referenced);
 
         /**
@@ -108,6 +106,7 @@ public interface InlineHandler extends LanguageExtension {
          * @param usage      usage of inlined element
          * @param referenced inlined element
          */
+        @RequiredWriteAction
         void inlineUsage(@Nonnull UsageInfo usage, @Nonnull PsiElement referenced);
     }
 }
