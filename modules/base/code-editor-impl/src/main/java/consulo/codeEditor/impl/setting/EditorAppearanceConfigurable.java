@@ -19,11 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.setting.AdditionalEditorAppearanceSettingProvider;
+import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.PersistentEditorSettings;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
-import consulo.configurable.ApplicationConfigurable;
-import consulo.configurable.SimpleConfigurableByProperties;
-import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
@@ -53,7 +52,9 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
     private final Provider<CodeEditorInternalHelper> myEditorInternalHelper;
 
     @Inject
-    public EditorAppearanceConfigurable(Application application, Provider<PersistentEditorSettings> editorSettingsExternalizable, Provider<CodeEditorInternalHelper> editorInternalHelper) {
+    public EditorAppearanceConfigurable(Application application,
+                                        Provider<PersistentEditorSettings> editorSettingsExternalizable,
+                                        Provider<CodeEditorInternalHelper> editorInternalHelper) {
         myApplication = application;
         myEditorSettingsExternalizable = editorSettingsExternalizable;
         myEditorInternalHelper = editorInternalHelper;
@@ -129,6 +130,14 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         }
 
         return root;
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void apply(@Nonnull LayoutWrapper component) throws ConfigurationException {
+        super.apply(component);
+
+        EditorFactory.getInstance().refreshAllEditors();
     }
 
     @Nonnull

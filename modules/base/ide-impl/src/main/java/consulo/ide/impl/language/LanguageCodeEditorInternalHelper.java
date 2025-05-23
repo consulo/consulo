@@ -17,13 +17,13 @@ package consulo.ide.impl.language;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.progress.ProgressIndicator;
+import consulo.application.ReadAction;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.DocumentMarkupModelImpl;
+import consulo.codeEditor.impl.StickyLinesCollector;
 import consulo.codeEditor.impl.StickyLinesModelImpl;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
-import consulo.codeEditor.internal.stickyLine.StickyLineInfo;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
@@ -37,6 +37,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 import consulo.language.editor.action.WordBoundaryFilter;
@@ -57,8 +58,6 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * @author VISTALL
@@ -223,33 +222,15 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         return StickyLinesModelImpl.getModel(markupModel);
     }
 
-    @Nonnull
     @Override
-    public Set<StickyLineInfo> collectStickyLines(Project project, Document document, VirtualFile vFile, ProgressIndicator progress) {
-        Set<StickyLineInfo> stickyLineInfos = new LinkedHashSet<>();
+    public void restartStickyPass(@Nonnull Project project, @Nonnull Document document) {
+        ReadAction.nonBlocking(() -> {
+                StickyLinesCollector collector = new StickyLinesCollector(project, document);
+                collector.forceCollectPass();
 
-        stickyLineInfos.add(new StickyLineInfo(35, 39, ""));
-//        PsiFileBreadcrumbsCollector psiCollector = new PsiFileBreadcrumbsCollector(project);
-//        Set<StickyLineInfo> infos = new HashSet<>();
-//        int lineCount = document.getLineCount();
-//
-//        for (int line = 0; line < lineCount; line++) {
-//            progress.checkCanceled();
-//            int endOffset = document.getLineEndOffset(line);
-//            List<PsiElement> psiElements = psiCollector.computePsiElements(vFile, document, endOffset);
-//            for (PsiElement element : psiElements) {
-//                infos.add(new StickyLineInfo(
-//                    element.getTextOffset(),
-//                    element.getTextRange().getEndOffset(),
-//                    debugText(element)
-//                ));
-//            }
-//        }
-//
-//        LOG.debug("total lines collected: " + infos.size() + " for " + fileName(vFile));
-//        return infos;
-
-        
-        return stickyLineInfos;
+                DaemonCodeAnalyzer.getInstance(project).restart();
+            })
+            .expireWith(project)
+            .submitDefault();
     }
 }

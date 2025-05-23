@@ -1,11 +1,10 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.stickyLine.StickyLine;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.markup.*;
@@ -229,14 +228,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
     }
 
     private void restartStickyLinesPass(@Nonnull Project project) {
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
-            ReadAction.run(() -> {
-                if (!project.isDisposed()) {
-                    StickyLinesCollector collector = new StickyLinesCollector(project, myMarkupModel.getDocument());
-                    collector.forceCollectPass();
-                }
-            });
-        });
+        CodeEditorInternalHelper.getInstance().restartStickyPass(project, myMarkupModel.getDocument());
     }
 
     private static @Nonnull String editorsAsString(@Nonnull Document document) {

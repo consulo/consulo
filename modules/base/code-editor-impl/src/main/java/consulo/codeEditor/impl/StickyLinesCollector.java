@@ -3,10 +3,8 @@ package consulo.codeEditor.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.stickyLine.StickyLine;
 import consulo.codeEditor.internal.stickyLine.StickyLineInfo;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
@@ -99,16 +97,6 @@ public class StickyLinesCollector {
             VirtualFile file = FileDocumentManager.getInstance().getFile(document);
             LOG.debug("cannot find psi file for " + (file != null ? file.getName() : "UNKNOWN"));
         }
-    }
-
-    @RequiredReadAction
-    public Collection<StickyLineInfo> collectLines(VirtualFile vFile, ProgressIndicator progress) {
-        Application.get().assertReadAccessAllowed();
-
-        Set<StickyLineInfo> infos = CodeEditorInternalHelper.getInstance().collectStickyLines(project, document, vFile, progress);
-
-        LOG.debug("total lines collected: " + infos.size() + " for " + fileName(vFile));
-        return infos;
     }
 
     @RequiredUIAccess

@@ -18,9 +18,7 @@ package consulo.codeEditor.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.*;
-import consulo.codeEditor.internal.stickyLine.StickyLineInfo;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
@@ -36,7 +34,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author VISTALL
@@ -152,8 +149,6 @@ public interface CodeEditorInternalHelper {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    default Set<StickyLineInfo> collectStickyLines(Project project, Document document, VirtualFile vFile, ProgressIndicator progress) {
-        return Set.of();
+    default void restartStickyPass(@Nonnull Project project, @Nonnull Document document) {
     }
 }
