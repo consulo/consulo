@@ -70,4 +70,14 @@ public class StickyLineComponents {
         layeredPane.removeAll();
         return true;
     }
+
+    public int size() {
+        int i = 0;
+        for (StickyLineComponent component : components) {
+            if (component.isVisible()) {
+                i++;
+            }
+        }
+        return i;
+    }
 }

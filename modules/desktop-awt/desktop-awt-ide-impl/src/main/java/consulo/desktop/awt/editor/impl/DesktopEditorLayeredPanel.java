@@ -29,64 +29,78 @@ import java.awt.*;
  * @since 2020-06-19
  */
 public class DesktopEditorLayeredPanel {
-  private final DesktopEditorImpl myEditor;
+    private final DesktopEditorImpl myEditor;
 
-  private final JBLayeredPane myLayeredPane;
+    private final JBLayeredPane myLayeredPane;
 
-  private int myLayerPosition = JLayeredPane.POPUP_LAYER;
+    private int myLayerPosition = JLayeredPane.POPUP_LAYER;
 
-  public DesktopEditorLayeredPanel(DesktopEditorImpl editor) {
-    myEditor = editor;
-    myLayeredPane = new JBLayeredPane() {
-      @Override
-      public void doLayout() {
-        Rectangle bounds = getBounds();
+    public DesktopEditorLayeredPanel(DesktopEditorImpl editor) {
+        myEditor = editor;
+        myLayeredPane = new JBLayeredPane() {
+            @Override
+            public void doLayout() {
+                Rectangle bounds = getBounds();
 
-        int alignPadding = getAlignPadding();
+                int alignPadding = getAlignPadding();
 
-        for (Component component : getComponents()) {
-          if (component instanceof StickyLinesPanel) {
-              continue;
-          }
-          
-          if (component instanceof DesktopEditorPanelLayer) {
-            DesktopEditorPanelLayer layer = (DesktopEditorPanelLayer)component;
+                int stickyLineAllHeight = 0;
+                Component[] components = getComponents();
+                for (Component component : components) {
+                    if (component instanceof StickyLinesPanel linesPanel) {
+                        int stickyLinesCount = linesPanel.getStickyLinesCount();
+                        stickyLineAllHeight = stickyLinesCount * editor.getLineHeight() + JBUI.scale(stickyLinesCount); // extra border
+                    }
+                }
 
-            Dimension preferredSize = component.getPreferredSize();
+                for (Component component : components) {
+                    if (component instanceof StickyLinesPanel) {
+                        continue;
+                    }
 
-            component.setBounds(bounds.width - preferredSize.width - alignPadding, layer.getPositionYInLayer(), preferredSize.width, preferredSize.height);
-          }
-          else {
-            component.setBounds(0, 0, bounds.width, bounds.height);
-          }
-        }
-      }
+                    if (component instanceof DesktopEditorPanelLayer) {
+                        DesktopEditorPanelLayer layer = (DesktopEditorPanelLayer) component;
 
-      @Override
-      public Dimension getPreferredSize() {
-        return myEditor.getScrollPane().getPreferredSize();
-      }
-    };
-  }
+                        Dimension preferredSize = component.getPreferredSize();
 
-  private int getAlignPadding() {
-    JScrollBar bar = myEditor.getVerticalScrollBar();
+                        component.setBounds(
+                            bounds.width - preferredSize.width - alignPadding,
+                            layer.getPositionYInLayer() + stickyLineAllHeight,
+                            preferredSize.width,
+                            preferredSize.height
+                        );
+                    }
+                    else {
+                        component.setBounds(0, 0, bounds.width, bounds.height);
+                    }
+                }
+            }
 
-    int padding = bar.getWidth();
-    padding += JBUI.scale(1); // just spacing
-    return padding;
-  }
+            @Override
+            public Dimension getPreferredSize() {
+                return myEditor.getScrollPane().getPreferredSize();
+            }
+        };
+    }
 
-  public void addLayerPanel(JComponent panel) {
-    myLayeredPane.add(panel, Integer.valueOf(myLayerPosition++));
-  }
+    private int getAlignPadding() {
+        JScrollBar bar = myEditor.getVerticalScrollBar();
 
-  public void setMainPanel(JComponent rootPanel) {
-    myLayeredPane.add(rootPanel, JBLayeredPane.DEFAULT_LAYER);
-  }
+        int padding = bar.getWidth();
+        padding += JBUI.scale(1); // just spacing
+        return padding;
+    }
 
-  @Nonnull
-  public JComponent getPanel() {
-    return myLayeredPane;
-  }
+    public void addLayerPanel(JComponent panel) {
+        myLayeredPane.add(panel, Integer.valueOf(myLayerPosition++));
+    }
+
+    public void setMainPanel(JComponent rootPanel) {
+        myLayeredPane.add(rootPanel, JBLayeredPane.DEFAULT_LAYER);
+    }
+
+    @Nonnull
+    public JComponent getPanel() {
+        return myLayeredPane;
+    }
 }

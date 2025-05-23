@@ -40,7 +40,9 @@ public class StickyLinesPanel extends JBPanel<StickyLinesPanel> {
         add(layeredPane);
     }
 
-    // ------------------------------------------- API -------------------------------------------
+    public int getStickyLinesCount() {
+        return stickyComponents.size();
+    }
 
     public void repaintLines(int startVisualLine, int endVisualLine) {
         if (isPanelEnabled()) {
