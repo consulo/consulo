@@ -32,7 +32,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
 @Deprecated
-@DeprecationInfo("Use JSR305 annotations")
+@DeprecationInfo("Use jakarta.annotation")
 public @interface Nullable {
   String value() default "";
 }
