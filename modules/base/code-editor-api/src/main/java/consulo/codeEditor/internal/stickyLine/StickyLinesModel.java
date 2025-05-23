@@ -1,6 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.codeEditor.internal.stickyLine;
 
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.document.Document;
 import consulo.project.Project;
@@ -19,11 +20,11 @@ import java.util.function.Predicate;
 public interface StickyLinesModel {
     @Nullable
     static  StickyLinesModel getModel(@Nonnull Project project, @Nonnull Document document) {
-        return StickyLinesModelImpl.getModel(project, document);
+        return CodeEditorInternalHelper.getInstance().getStickyLinesModel(project, document);
     }
 
     static @Nonnull StickyLinesModel getModel(@Nonnull MarkupModel markupModel) {
-        return StickyLinesModelImpl.getModel(markupModel);
+        return CodeEditorInternalHelper.getInstance().getStickyLinesModel(markupModel);
     }
 
     default @Nonnull StickyLine addStickyLine(int startOffset, int endOffset, @Nullable String debugText) {

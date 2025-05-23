@@ -67,6 +67,11 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
         return color;
       }
     }
+
+    EditorColorKey fallbackColorKey = key.getFallbackColorKey();
+    if (fallbackColorKey != null) {
+        return getColor(fallbackColorKey);
+    }
     return null;
   }
 

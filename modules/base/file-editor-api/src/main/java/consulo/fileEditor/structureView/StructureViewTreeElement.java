@@ -24,14 +24,14 @@ import consulo.navigation.Navigatable;
  * @see StructureViewModel#getRoot()
  */
 
-public interface StructureViewTreeElement extends TreeElement, Navigatable{
-  StructureViewTreeElement[] EMPTY_ARRAY = new StructureViewTreeElement[0];
+public interface StructureViewTreeElement extends TreeElement, Navigatable {
+    StructureViewTreeElement[] EMPTY_ARRAY = new StructureViewTreeElement[0];
 
-  /**
-   * Returns the data object (usually a PSI element) corresponding to the
-   * structure view element.
-   *
-   * @return the data object instance.
-   */
-  Object getValue();
+    /**
+     * Returns the data object (usually a PSI element) corresponding to the
+     * structure view element.
+     *
+     * @return the data object instance.
+     */
+    Object getValue();
 }

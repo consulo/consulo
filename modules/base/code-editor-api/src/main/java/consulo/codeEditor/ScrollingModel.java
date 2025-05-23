@@ -17,6 +17,7 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.event.VisibleAreaListener;
 
+import consulo.disposer.Disposable;
 import jakarta.annotation.Nonnull;
 import java.awt.*;
 
@@ -57,6 +58,8 @@ public interface ScrollingModel {
   void scroll(int horizontalOffset, int verticalOffset);
 
   void addVisibleAreaListener(@Nonnull VisibleAreaListener listener);
+
+  void addVisibleAreaListener(@Nonnull VisibleAreaListener listener, @Nonnull Disposable disposable);
 
   void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener);
 }

@@ -3,6 +3,7 @@ package consulo.desktop.awt.editor.impl.stickyLine;
 
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.internal.stickyLine.VisualStickyLine;
 import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBLayeredPane;
@@ -123,7 +124,7 @@ public class StickyLinesPanel extends JBPanel<StickyLinesPanel> {
     }
 
     private boolean isPanelEnabled() {
-        boolean isEnabled = editor.getSettings().areStickyLinesShown();
+        boolean isEnabled = editor.getSettings().isStickyLineShown();
         if (!isEnabled && stickyComponents.clear()) {
             panelW = 0;
             panelH = 0;

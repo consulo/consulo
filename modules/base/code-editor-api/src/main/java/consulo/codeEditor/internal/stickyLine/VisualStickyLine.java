@@ -20,6 +20,10 @@ public class VisualStickyLine implements StickyLine {
         this.yLocation = yLocation;
     }
 
+    public int yLocation() {
+        return yLocation;
+    }
+
     @Override
     public int primaryLine() {
         return primaryVisualLine;

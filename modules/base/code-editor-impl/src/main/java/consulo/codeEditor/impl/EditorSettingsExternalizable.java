@@ -105,6 +105,9 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         public int MIN_PARAM_NAME_LENGTH_TO_SHOW = 3;
         public int MIN_PARAMS_TO_SHOW = 2;
 
+        public boolean SHOW_STICKY_LINES = true;
+        public int STICKY_LINES_LIMIT = 5;
+
         public boolean KEEP_TRAILING_SPACE_ON_CARET_LINE = true;
 
         private final Map<String, Boolean> mapLanguageBreadcrumbs = new HashMap<>();
@@ -785,5 +788,25 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @Override
     public void setHighlightSelectionOccurrences(boolean val) {
         myOptions.IS_HIGHLIGHT_SELECTION_OCCURRENCES = val;
+    }
+
+    @Override
+    public boolean isStickyLineShown() {
+        return myOptions.SHOW_STICKY_LINES;
+    }
+
+    @Override
+    public void setStickyLinesShown(boolean value) {
+        myOptions.SHOW_STICKY_LINES = value;
+    }
+
+    @Override
+    public int getStickyLinesLimit() {
+        return myOptions.STICKY_LINES_LIMIT;
+    }
+
+    @Override
+    public void setStickyLinesLimit(int value) {
+        myOptions.STICKY_LINES_LIMIT = value;
     }
 }

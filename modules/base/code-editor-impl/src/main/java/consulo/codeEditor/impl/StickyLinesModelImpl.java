@@ -1,11 +1,13 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package consulo.codeEditor.internal.stickyLine;
+package consulo.codeEditor.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.internal.stickyLine.StickyLine;
+import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
@@ -29,9 +31,8 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
     private static final Key<StickyLinesModelImpl> STICKY_LINES_MODEL_KEY = Key.create("editor.sticky.lines.model");
     private static final Key<StickyLineImpl> STICKY_LINE_IMPL_KEY = Key.create("editor.sticky.line.impl");
     private static final String STICKY_LINE_MARKER = "STICKY_LINE_MARKER";
-    private static final TextAttributesKey STICKY_LINE_ATTRIBUTE = TextAttributesKey.createTextAttributesKey(
-        STICKY_LINE_MARKER
-    );
+    
+    private static final TextAttributesKey STICKY_LINE_ATTRIBUTE = TextAttributesKey.of(STICKY_LINE_MARKER);
 
     public static boolean isStickyLine(@Nonnull RangeHighlighter highlighter) {
         TextAttributesKey key = highlighter.getTextAttributesKey();
@@ -52,18 +53,18 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
         highlighter.setEditorFilter(StickyLinesModelImpl::alwaysFalsePredicate);
     }
 
-    static @Nullable StickyLinesModelImpl getModel(@Nonnull Project project, @Nonnull Document document) {
+    public static @Nullable StickyLinesModelImpl getModel(@Nonnull Project project, @Nonnull Document document) {
         if (project.isDisposed()) {
             String editors = editorsAsString(document);
             LOG.error(
                 """
-                  ______________________________________________________________________________________
-                  getting sticky lines model when project is already disposed
-                  disposed project: %s
-                  editors:
-                  %s
-                  ______________________________________________________________________________________
-                  """.
+                    ______________________________________________________________________________________
+                    getting sticky lines model when project is already disposed
+                    disposed project: %s
+                    editors:
+                    %s
+                    ______________________________________________________________________________________
+                    """.
                     formatted(project, editors),
                 new Throwable()
             );
@@ -74,14 +75,14 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
             String editors = editorsAsString(document);
             // TODO: it should be error but in test `RunWithComposeHotReloadRunGutterSmokeTest` happens something crazy:
             //  editor and markup model do not exist inside `doApplyInformationToEditor`
-            LOG.warn /*error*/ (
+            LOG.warn /*error*/(
                 """
-                  ______________________________________________________________________________________
-                  getting sticky lines model when markup model is not created
-                  editors:
-                  %s
-                  ______________________________________________________________________________________
-                  """.formatted(editors),
+                    ______________________________________________________________________________________
+                    getting sticky lines model when markup model is not created
+                    editors:
+                    %s
+                    ______________________________________________________________________________________
+                    """.formatted(editors),
                 new Throwable()
             );
             return null;
@@ -89,7 +90,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
         return getModel(markupModel);
     }
 
-    static @Nonnull StickyLinesModelImpl getModel(@Nonnull MarkupModel markupModel) {
+    public static @Nonnull StickyLinesModelImpl getModel(@Nonnull MarkupModel markupModel) {
         StickyLinesModelImpl stickyModel = markupModel.getUserData(STICKY_LINES_MODEL_KEY);
         if (stickyModel == null) {
             stickyModel = new StickyLinesModelImpl((MarkupModelEx) markupModel);
@@ -132,7 +133,7 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
 
     @Override
     public void removeStickyLine(@Nonnull StickyLine stickyLine) {
-        RangeMarker rangeMarker = ((StickyLineImpl)stickyLine).rangeMarker();
+        RangeMarker rangeMarker = ((StickyLineImpl) stickyLine).rangeMarker();
         myMarkupModel.removeHighlighter((RangeHighlighter) rangeMarker);
     }
 
@@ -211,7 +212,8 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
                         stickyLine = new StickyLineImpl(highlighter.getDocument(), highlighter, "StickyZombie");
                     }
                     return processor.test(stickyLine);
-                } else {
+                }
+                else {
                     return true;
                 }
             }
@@ -276,8 +278,12 @@ public final class StickyLinesModelImpl implements StickyLinesModel {
 
         @Override
         public boolean equals(Object other) {
-            if (this == other) return true;
-            if (!(other instanceof StickyLineImpl impl)) return false;
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof StickyLineImpl impl)) {
+                return false;
+            }
             return textRange().equals(impl.textRange());
         }
 

@@ -23,6 +23,9 @@ module consulo.code.editor.api {
     exports consulo.codeEditor.util.popup;
 
     exports consulo.codeEditor.internal.stickyLine to
+        consulo.code.editor.impl,
+        consulo.ide.impl,
+        consulo.language.editor.impl,
         consulo.desktop.awt.ide.impl;
 
     exports consulo.codeEditor.internal to consulo.ide.impl,

@@ -39,7 +39,9 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
     private static final Map<String, EditorColorKey> ourRegistry = new HashMap<>();
 
     private final String myExternalName;
+
     private ColorValue myDefaultColorValue;
+    private EditorColorKey myFallbackColorKey;
 
     private EditorColorKey(String externalName) {
         myExternalName = externalName;
@@ -62,6 +64,11 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return myExternalName;
     }
 
+    @Nullable
+    public EditorColorKey getFallbackColorKey() {
+        return myFallbackColorKey;
+    }
+
     @Nonnull
     public String getExternalName() {
         return myExternalName;
@@ -77,11 +84,21 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return myDefaultColorValue;
     }
 
-    public static EditorColorKey createColorKey(String externalName) {
+    public static EditorColorKey createColorKey(@Nonnull String externalName) {
         return find(externalName);
     }
 
-    public static EditorColorKey createColorKey(String externalName, ColorValue defaultColor) {
+    public static EditorColorKey createColorKeyWithFallback(@Nonnull String externalName, @Nonnull EditorColorKey fallbackColor) {
+        EditorColorKey key = ourRegistry.get(externalName);
+        if (key == null) {
+            key = find(externalName);
+        }
+
+        key.myFallbackColorKey = key;
+        return fallbackColor;
+    }
+
+    public static EditorColorKey createColorKey(@Nonnull String externalName, ColorValue defaultColor) {
         EditorColorKey key = ourRegistry.get(externalName);
         if (key == null) {
             key = find(externalName);

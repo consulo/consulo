@@ -18,7 +18,11 @@ package consulo.codeEditor.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.*;
+import consulo.codeEditor.internal.stickyLine.StickyLineInfo;
+import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
+import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
@@ -32,6 +36,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -135,5 +140,20 @@ public interface CodeEditorInternalHelper {
     }
 
     default void updateFoldRegions(@Nonnull Project project, @Nonnull Editor editor) {
+    }
+
+    @Nullable
+    default StickyLinesModel getStickyLinesModel(@Nonnull Project project, @Nonnull Document document) {
+        return null;
+    }
+
+    @Nonnull
+    default StickyLinesModel getStickyLinesModel(@Nonnull MarkupModel markupModel) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    default Set<StickyLineInfo> collectStickyLines(Project project, Document document, VirtualFile vFile, ProgressIndicator progress) {
+        return Set.of();
     }
 }

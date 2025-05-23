@@ -214,4 +214,12 @@ public interface EditorSettings {
     default SoftWrapAppliancePlaces getSoftWrapAppliancePlace() {
         return SoftWrapAppliancePlaces.MAIN_EDITOR;
     }
+
+    boolean isStickyLineShown();
+
+    void setStickyLinesShown(boolean value);
+
+    int getStickyLinesLimit();
+
+    void setStickyLinesLimit(int value);
 }

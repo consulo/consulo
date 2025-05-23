@@ -15,11 +15,12 @@
  */
 package consulo.desktop.awt.editor.impl;
 
+import consulo.desktop.awt.editor.impl.stickyLine.StickyLinesPanel;
 import consulo.desktop.awt.language.editor.DesktopEditorPanelLayer;
 import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.JBUI;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -44,6 +45,10 @@ public class DesktopEditorLayeredPanel {
         int alignPadding = getAlignPadding();
 
         for (Component component : getComponents()) {
+          if (component instanceof StickyLinesPanel) {
+              continue;
+          }
+          
           if (component instanceof DesktopEditorPanelLayer) {
             DesktopEditorPanelLayer layer = (DesktopEditorPanelLayer)component;
 

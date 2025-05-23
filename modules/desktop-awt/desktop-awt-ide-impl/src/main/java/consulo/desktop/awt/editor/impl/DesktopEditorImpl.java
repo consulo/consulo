@@ -18,11 +18,16 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.internal.EditorActionPlan;
+import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.desktop.awt.editor.impl.stickyLine.StickyLineShadowPainter;
+import consulo.desktop.awt.editor.impl.stickyLine.StickyLinesManager;
+import consulo.desktop.awt.editor.impl.stickyLine.StickyLinesPanel;
+import consulo.desktop.awt.editor.impl.stickyLine.VisualStickyLines;
 import consulo.desktop.awt.editor.impl.view.EditorView;
 import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
 import consulo.desktop.awt.language.editor.StatusComponentContainer;
@@ -92,6 +97,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -150,6 +156,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private final EditorComponentImpl myEditorComponent;
     @Nonnull
     private final EditorGutterComponentImpl myGutterComponent;
+    @Nullable
+    private final StickyLinesManager myStickyLinesManager;
     private final FocusModeModel myFocusModeModel;
     private volatile long myLastTypedActionTimestamp = -1;
     private String myLastTypedAction;
@@ -352,13 +360,13 @@ public final class DesktopEditorImpl extends CodeEditorBase
                     myPrimaryCaret.updateVisualPosition(); // repainting old primary caret's row background
                 }
                 repaintCaretRegion(e);
-                myPrimaryCaret = (DesktopCaretImpl)myCaretModel.getPrimaryCaret();
+                myPrimaryCaret = (DesktopCaretImpl) myCaretModel.getPrimaryCaret();
             }
 
             @Override
             public void caretRemoved(@Nonnull CaretEvent e) {
                 repaintCaretRegion(e);
-                myPrimaryCaret = (DesktopCaretImpl)myCaretModel.getPrimaryCaret(); // repainting new primary caret's row background
+                myPrimaryCaret = (DesktopCaretImpl) myCaretModel.getPrimaryCaret(); // repainting new primary caret's row background
                 myPrimaryCaret.updateVisualPosition();
             }
         });
@@ -388,7 +396,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         new FoldingPopupManager(this);
 
         myEditorComponent = new EditorComponentImpl(this);
-        myVerticalScrollBar = (MyVerticalScrollBar)myScrollPane.getVerticalScrollBar();
+        myVerticalScrollBar = (MyVerticalScrollBar) myScrollPane.getVerticalScrollBar();
         myPanel = new JPanel(new BorderLayout());
 
         getMarkupModel().updateUI();
@@ -396,7 +404,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         UIUtil.putClientProperty(
             myPanel,
             UIUtil.NOT_IN_HIERARCHY_COMPONENTS,
-            (Iterable<JComponent>)() -> {
+            (Iterable<JComponent>) () -> {
                 JComponent component = getPermanentHeaderComponent();
                 if (component != null && component.getParent() == null) {
                     return Collections.singleton(component).iterator();
@@ -407,7 +415,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         myHeaderPanel = new MyHeaderPanel();
         myGutterComponent = new EditorGutterComponentImpl(this);
-        initComponent();
+
+        Pair<StickyLinesManager, StickyLinesPanel> stickyInfo = createStickyLinesPanel();
+
+        myStickyLinesManager = stickyInfo == null ? null : stickyInfo.getFirst();
+
+        initComponent(stickyInfo == null ? null : stickyInfo.getSecond());
 
         myView = new EditorView(this);
         myView.reinitSettings();
@@ -621,7 +634,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @RequiredUIAccess
     private void repaintCaretRegion(CaretEvent e) {
-        DesktopCaretImpl caretImpl = (DesktopCaretImpl)e.getCaret();
+        DesktopCaretImpl caretImpl = (DesktopCaretImpl) e.getCaret();
         if (caretImpl != null) {
             caretImpl.updateVisualPosition();
             if (caretImpl.hasSelection()) {
@@ -638,7 +651,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @Override
     public int getPrefixTextWidthInPixels() {
-        return (int)myView.getPrefixTextWidthInPixels();
+        return (int) myView.getPrefixTextWidthInPixels();
     }
 
     @Override
@@ -671,43 +684,43 @@ public final class DesktopEditorImpl extends CodeEditorBase
     @Override
     @Nonnull
     public DesktopSelectionModelImpl getSelectionModel() {
-        return (DesktopSelectionModelImpl)super.getSelectionModel();
+        return (DesktopSelectionModelImpl) super.getSelectionModel();
     }
 
     @Override
     @Nonnull
     public DesktopEditorMarkupModelImpl getMarkupModel() {
-        return (DesktopEditorMarkupModelImpl)super.getMarkupModel();
+        return (DesktopEditorMarkupModelImpl) super.getMarkupModel();
     }
 
     @Override
     @Nonnull
     public DesktopFoldingModelImpl getFoldingModel() {
-        return (DesktopFoldingModelImpl)super.getFoldingModel();
+        return (DesktopFoldingModelImpl) super.getFoldingModel();
     }
 
     @Override
     @Nonnull
     public DesktopCaretModelImpl getCaretModel() {
-        return (DesktopCaretModelImpl)super.getCaretModel();
+        return (DesktopCaretModelImpl) super.getCaretModel();
     }
 
     @Override
     @Nonnull
     public DesktopScrollingModelImpl getScrollingModel() {
-        return (DesktopScrollingModelImpl)super.getScrollingModel();
+        return (DesktopScrollingModelImpl) super.getScrollingModel();
     }
 
     @Override
     @Nonnull
     public SoftWrapModelImpl getSoftWrapModel() {
-        return (SoftWrapModelImpl)super.getSoftWrapModel();
+        return (SoftWrapModelImpl) super.getSoftWrapModel();
     }
 
     @Nonnull
     @Override
     public InlayModelImpl getInlayModel() {
-        return (InlayModelImpl)super.getInlayModel();
+        return (InlayModelImpl) super.getInlayModel();
     }
 
     @Override
@@ -731,7 +744,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         assertIsDispatchThread();
 
         for (EditorColorsScheme scheme = myScheme; scheme instanceof DelegateColorScheme;
-             scheme = ((DelegateColorScheme)scheme).getDelegate()) {
+             scheme = ((DelegateColorScheme) scheme).getDelegate()) {
             if (scheme instanceof MyColorSchemeDelegate colorSchemeDelegate) {
                 colorSchemeDelegate.updateGlobalScheme();
                 break;
@@ -783,6 +796,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
         if (myFocusModeModel != null) {
             myFocusModeModel.clearFocusMode();
         }
+
+        if (myStickyLinesManager != null) {
+            myStickyLinesManager.reinitSettings();
+        }
     }
 
     // EditorFactory.releaseEditor should be used to release editor
@@ -833,7 +850,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
     }
 
-    private void initComponent() {
+    private DesktopEditorLayeredPanel initComponent(@Nullable StickyLinesPanel panel) {
         myPanel.add(myHeaderPanel, BorderLayout.NORTH);
 
         myGutterComponent.setOpaque(true);
@@ -850,9 +867,15 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         DesktopEditorLayeredPanel layeredPanel = new DesktopEditorLayeredPanel(this);
         layeredPanel.setMainPanel(myScrollPane);
+
+        if (panel != null) {
+            layeredPanel.addLayerPanel(panel);
+        }
+
         if (mayShowToolbar()) {
             layeredPanel.addLayerPanel(new ContextMenuImpl(myScrollPane, this));
         }
+
         layeredPanel.addLayerPanel(myStatusComponentContainer.getPanel());
 
         myPanel.add(layeredPanel.getPanel(), BorderLayout.CENTER);
@@ -957,6 +980,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 myCaretCursor.repaint();
             }
         });
+
+        return layeredPanel;
     }
 
     private boolean mayShowToolbar() {
@@ -1043,7 +1068,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         Graphics graphics = GraphicsUtil.safelyGetGraphics(myEditorComponent);
         if (graphics != null) { // editor component is not showing
-            PaintUtil.alignTxToInt((Graphics2D)graphics, PaintUtil.insets2offset(getInsets()), true, false, RoundingMode.CEIL);
+            PaintUtil.alignTxToInt((Graphics2D) graphics, PaintUtil.insets2offset(getInsets()), true, false, RoundingMode.CEIL);
             processKeyTypedImmediately(c, graphics, context);
             graphics.dispose();
         }
@@ -1113,7 +1138,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     @Nonnull
     public Point offsetToXY(int offset, boolean leanForward, boolean beforeSoftWrap) {
         Point2D point2D = offsetToPoint2D(offset, leanForward, beforeSoftWrap);
-        return new Point((int)point2D.getX(), (int)point2D.getY());
+        return new Point((int) point2D.getX(), (int) point2D.getY());
     }
 
     @Override
@@ -1192,7 +1217,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     @Nonnull
     public Point visualPositionToXY(@Nonnull VisualPosition visible) {
         Point2D point2D = myView.visualPositionToXY(visible);
-        return new Point((int)point2D.getX(), (int)point2D.getY());
+        return new Point((int) point2D.getX(), (int) point2D.getY());
     }
 
     @Override
@@ -1295,6 +1320,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
         int height = visualLineToY(endVisualLine) + getLineHeight() + 2 - yStart;
         myEditorComponent.repaintEditorComponent(visibleArea.x, yStart, visibleArea.x + visibleArea.width, height);
         myGutterComponent.repaint(0, yStart, myGutterComponent.getWidth(), height);
+
+        if (myStickyLinesManager != null) {
+            myStickyLinesManager.repaintLines(startVisualLine, endVisualLine);
+        }
     }
 
     @Override
@@ -1303,7 +1332,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         myView.getPreferredSize(); // make sure size is calculated (in case it will be required while bulk mode is active)
 
-        ((DesktopScrollingModelImpl)myScrollingModel).onBulkDocumentUpdateStarted();
+        ((DesktopScrollingModelImpl) myScrollingModel).onBulkDocumentUpdateStarted();
     }
 
     @Override
@@ -1518,7 +1547,17 @@ public final class DesktopEditorImpl extends CodeEditorBase
             return;
         }
         putUserData(BUFFER, null);
-        Rectangle rect = ((JViewport)myEditorComponent.getParent()).getViewRect();
+
+
+        Rectangle rect = ((JViewport) myEditorComponent.getParent()).getViewRect();
+        if (rect.isEmpty()) {
+            return;
+        }
+
+        if (myStickyLinesManager != null) {
+            myStickyLinesManager.startDumb();
+        }
+
         // The LCD text loop is enabled only for opaque images
         BufferedImage image = UIUtil.createImage(myEditorComponent, rect.width, rect.height, BufferedImage.TYPE_INT_RGB);
         Graphics imageGraphics = image.createGraphics();
@@ -1610,7 +1649,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     @Nullable
     public JComponent getHeaderComponent() {
         if (myHeaderPanel.getComponentCount() > 0) {
-            return (JComponent)myHeaderPanel.getComponent(0);
+            return (JComponent) myHeaderPanel.getComponent(0);
         }
         return null;
     }
@@ -2324,9 +2363,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 Math.max(0, caretPosition.column + (isRtl ? -1 : 1)),
                 isRtl
             ));
-            float width = (float)Math.abs(pos2.getX() - pos1.getX());
+            float width = (float) Math.abs(pos2.getX() - pos1.getX());
             if (!isRtl && myInlayModel.hasInlineElementAt(caretPosition)) {
-                width = Math.min(width, (float)Math.ceil(myView.getPlainSpaceWidth()));
+                width = Math.min(width, (float) Math.ceil(myView.getPlainSpaceWidth()));
             }
             caretPoints.add(new CaretRectangle(pos1, width, caret, isRtl));
         }
@@ -2682,7 +2721,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @Nonnull
     MyVerticalScrollBar getHorizontalScrollBar() {
-        return (MyVerticalScrollBar)myScrollPane.getHorizontalScrollBar();
+        return (MyVerticalScrollBar) myScrollPane.getHorizontalScrollBar();
     }
 
     @MouseSelectionState
@@ -2786,7 +2825,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @RequiredUIAccess
     public void beforeModalityStateChanged() {
-        ((DesktopScrollingModelImpl)myScrollingModel).beforeModalityStateChanged();
+        ((DesktopScrollingModelImpl) myScrollingModel).beforeModalityStateChanged();
     }
 
     EditorDropHandler getDropHandler() {
@@ -3687,7 +3726,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
             long currentTimeMillis = System.currentTimeMillis();
 
-            float alpha = 1 - (float)frameIndex / TOTAL_FRAMES;
+            float alpha = 1 - (float) frameIndex / TOTAL_FRAMES;
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             Image scaledImage = ImageUtil.scaleImage(myImage, alpha);
 
@@ -3796,7 +3835,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
                     EditorActionHandler pasteHandler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
                     LOG.assertTrue(pasteHandler instanceof EditorTextInsertHandler, String.valueOf(pasteHandler));
-                    ((EditorTextInsertHandler)pasteHandler).execute(editor, editor.getDataContext(), () -> t);
+                    ((EditorTextInsertHandler) pasteHandler).execute(editor, editor.getDataContext(), () -> t);
 
                     TextRange range = editor.getUserData(LAST_PASTED_REGION);
                     if (range != null) {
@@ -3814,7 +3853,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     private static class MyTransferHandler extends TransferHandler {
         private static DesktopEditorImpl getEditor(@Nonnull JComponent comp) {
-            EditorComponentImpl editorComponent = (EditorComponentImpl)comp;
+            EditorComponentImpl editorComponent = (EditorComponentImpl) comp;
             return editorComponent.getEditor();
         }
 
@@ -3950,6 +3989,27 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     public int getStickyLinesPanelWidth() {
         return myPanel.getWidth(); //- myVerticalScrollBar.getWidth();
+    }
+
+    @Nullable
+    private Pair<StickyLinesManager, StickyLinesPanel> createStickyLinesPanel() {
+        if (myProject != null && myKind == EditorKind.MAIN_EDITOR && !isMirrored()) {
+            StickyLinesModel stickyModel = StickyLinesModel.getModel(myDocumentMarkupModel.getDelegate());
+            VisualStickyLines visualStickyLines = new VisualStickyLines(this, stickyModel);
+            StickyLineShadowPainter shadowPainter = new StickyLineShadowPainter();
+            StickyLinesPanel stickyPanel = new StickyLinesPanel(this, shadowPainter, visualStickyLines);
+            StickyLinesManager stickyManager = new StickyLinesManager(
+                this, stickyModel,
+                stickyPanel,
+                shadowPainter,
+                visualStickyLines,
+                myDisposable
+            );
+            return Pair.create(stickyManager, stickyPanel);
+        }
+        else {
+            return null;
+        }
     }
 
     @Override
@@ -4121,7 +4181,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private class MyTextDrawingCallback implements TextDrawingCallback {
         @Override
         public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, @Nonnull Object f) {
-            FontInfo fontInfo = (FontInfo)f;
+            FontInfo fontInfo = (FontInfo) f;
 
             myView.drawChars(g, data, start, end, x, y, color, fontInfo);
         }

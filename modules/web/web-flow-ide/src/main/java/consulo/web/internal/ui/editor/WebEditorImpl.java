@@ -19,7 +19,6 @@ import com.vaadin.flow.component.textfield.TextArea;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.*;
-import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
@@ -158,39 +157,6 @@ public class WebEditorImpl extends CodeEditorBase {
 //
 //    return map;
 //  }
-
-  @Override
-  protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter,
-                                      boolean canImpactGutterSize,
-                                      boolean fontStyleOrColorChanged,
-                                      boolean remove) {
-    if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
-
-//    Vaadin vaadin = myEditorComponent.toVaadinComponent();
-//
-//    Integer annId = highlighter.getUserData(ANNOTATION_ID);
-//    if (annId != null) {
-//      vaadin.removeAnnotation(annId);
-//    }
-//
-//    if (remove) {
-//      return;
-//    }
-//
-//    int textLength = myDocument.getTextLength();
-//
-//    int start = Math.min(Math.max(highlighter.getAffectedAreaStartOffset(), 0), textLength);
-//    int end = Math.min(Math.max(highlighter.getAffectedAreaEndOffset(), 0), textLength);
-//
-//    TextAttributes textAttributes = highlighter.getTextAttributes();
-//    if (textAttributes == null) {
-//      return;
-//    }
-//
-//    annId = vaadin.addAnnotation(start, end, "orion.annotation.info", convertToCssProperties(textAttributes));
-//
-//    highlighter.putUserData(ANNOTATION_ID, annId);
-  }
 
 //  private void runMousePressedCommand(@Nonnull final MouseDownEvent e) {
 //    //myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());

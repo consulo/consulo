@@ -15,100 +15,106 @@
  */
 package consulo.ide.impl.idea.openapi.editor.textarea;
 
-import consulo.codeEditor.ScrollingModel;
-import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.event.VisibleAreaListener;
+import consulo.disposer.Disposable;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.text.JTextComponent;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 /**
  * @author yole
  */
 public class TextComponentScrollingModel implements ScrollingModel {
-  private final JTextComponent myTextComponent;
+    private final JTextComponent myTextComponent;
 
-  public TextComponentScrollingModel(@Nonnull JTextComponent textComponent) {
-    myTextComponent = textComponent;
-  }
-
-  @Nonnull
-  @Override
-  public Rectangle getVisibleArea() {
-    throw new UnsupportedOperationException("Not implemented");
-  }
-
-  @Nonnull
-  @Override
-  public Rectangle getVisibleAreaOnScrollingFinished() {
-    throw new UnsupportedOperationException("Not implemented");
-  }
-
-  @Override
-  public void scrollToCaret(@Nonnull final ScrollType scrollType) {
-    final int position = myTextComponent.getCaretPosition();
-    try {
-      final Rectangle rectangle = myTextComponent.modelToView(position);
-      myTextComponent.scrollRectToVisible(rectangle);
+    public TextComponentScrollingModel(@Nonnull JTextComponent textComponent) {
+        myTextComponent = textComponent;
     }
-    catch (BadLocationException e) {
-      throw new RuntimeException(e);
+
+    @Nonnull
+    @Override
+    public Rectangle getVisibleArea() {
+        throw new UnsupportedOperationException("Not implemented");
     }
-  }
 
-  @Override
-  public void scrollTo(@Nonnull final LogicalPosition pos, @Nonnull final ScrollType scrollType) {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+    @Nonnull
+    @Override
+    public Rectangle getVisibleAreaOnScrollingFinished() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 
-  @Override
-  public void runActionOnScrollingFinished(@Nonnull final Runnable action) {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+    @Override
+    public void scrollToCaret(@Nonnull final ScrollType scrollType) {
+        final int position = myTextComponent.getCaretPosition();
+        try {
+            final Rectangle rectangle = myTextComponent.modelToView(position);
+            myTextComponent.scrollRectToVisible(rectangle);
+        }
+        catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-  @Override
-  public void disableAnimation() {
-  }
+    @Override
+    public void scrollTo(@Nonnull final LogicalPosition pos, @Nonnull final ScrollType scrollType) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 
-  @Override
-  public void enableAnimation() {
-  }
+    @Override
+    public void runActionOnScrollingFinished(@Nonnull final Runnable action) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 
-  @Override
-  public int getVerticalScrollOffset() {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+    @Override
+    public void disableAnimation() {
+    }
 
-  @Override
-  public int getHorizontalScrollOffset() {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+    @Override
+    public void enableAnimation() {
+    }
 
-  @Override
-  public void scrollVertically(final int scrollOffset) {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+    @Override
+    public int getVerticalScrollOffset() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 
-  @Override
-  public void scrollHorizontally(final int scrollOffset) {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+    @Override
+    public int getHorizontalScrollOffset() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 
-  @Override
-  public void scroll(int horizontalOffset, int verticalOffset) {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+    @Override
+    public void scrollVertically(final int scrollOffset) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 
-  @Override
-  public void addVisibleAreaListener(@Nonnull final VisibleAreaListener listener) {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+    @Override
+    public void scrollHorizontally(final int scrollOffset) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 
-  @Override
-  public void removeVisibleAreaListener(@Nonnull final VisibleAreaListener listener) {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+    @Override
+    public void scroll(int horizontalOffset, int verticalOffset) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void addVisibleAreaListener(@Nonnull final VisibleAreaListener listener) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener, @Nonnull Disposable disposable) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void removeVisibleAreaListener(@Nonnull final VisibleAreaListener listener) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

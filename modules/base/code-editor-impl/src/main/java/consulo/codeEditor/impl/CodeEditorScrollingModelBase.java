@@ -17,40 +17,44 @@ package consulo.codeEditor.impl;
 
 import consulo.codeEditor.ScrollingModelEx;
 import consulo.codeEditor.event.VisibleAreaListener;
+import consulo.disposer.Disposable;
+import consulo.disposer.util.DisposableList;
 import consulo.logging.Logger;
-import consulo.util.collection.Lists;
-
 import jakarta.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Common part from desktop scrolling model
  */
 public abstract class CodeEditorScrollingModelBase implements ScrollingModelEx {
-  private static final Logger LOG = Logger.getInstance(CodeEditorScrollingModelBase.class);
+    private static final Logger LOG = Logger.getInstance(CodeEditorScrollingModelBase.class);
 
-  protected final CodeEditorBase myEditor;
+    protected final CodeEditorBase myEditor;
 
-  protected final List<VisibleAreaListener> myVisibleAreaListeners = Lists.newLockFreeCopyOnWriteList();
+    protected final DisposableList<VisibleAreaListener> myVisibleAreaListeners = DisposableList.create();
 
-  public CodeEditorScrollingModelBase(CodeEditorBase editor) {
-    myEditor = editor;
-  }
+    public CodeEditorScrollingModelBase(CodeEditorBase editor) {
+        myEditor = editor;
+    }
 
-  public void finishAnimation() {
-  }
+    public void finishAnimation() {
+    }
 
-  @Override
-  public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
-    myVisibleAreaListeners.add(listener);
-  }
+    @Override
+    public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
+        myVisibleAreaListeners.add(listener);
+    }
 
-  @Override
-  public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
-    boolean success = myVisibleAreaListeners.remove(listener);
-    LOG.assertTrue(success);
-  }
+    @Override
+    public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener, @Nonnull Disposable disposable) {
+        myVisibleAreaListeners.add(listener, disposable);
+    }
 
-  public void dispose() {
-  }
+    @Override
+    public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
+        boolean success = myVisibleAreaListeners.remove(listener);
+        LOG.assertTrue(success);
+    }
+
+    public void dispose() {
+    }
 }

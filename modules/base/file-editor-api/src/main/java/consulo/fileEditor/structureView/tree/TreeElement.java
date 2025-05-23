@@ -21,9 +21,8 @@ import jakarta.annotation.Nonnull;
 /**
  * An element in a generic tree control displayed in the IDEA user interface.
  *
- * @see consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeModel#getRoot()
+ * @see TreeModel#getRoot()
  */
-
 public interface TreeElement {
   TreeElement[] EMPTY_ARRAY = new TreeElement[0];
 

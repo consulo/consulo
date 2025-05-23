@@ -46,17 +46,16 @@ public interface EditorColors {
             EffectType.LINE_UNDERSCORE,
             0));
 
-    TextAttributesKey SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("SEARCH_RESULT_ATTRIBUTES");
-    TextAttributesKey LIVE_TEMPLATE_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("LIVE_TEMPLATE_ATTRIBUTES");
-    TextAttributesKey WRITE_SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("WRITE_SEARCH_RESULT_ATTRIBUTES");
-    TextAttributesKey IDENTIFIER_UNDER_CARET_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("IDENTIFIER_UNDER_CARET_ATTRIBUTES");
-    TextAttributesKey WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES =
-        TextAttributesKey.createTextAttributesKey("WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES");
-    TextAttributesKey TEXT_SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("TEXT_SEARCH_RESULT_ATTRIBUTES");
+    TextAttributesKey SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.of("SEARCH_RESULT_ATTRIBUTES");
+    TextAttributesKey LIVE_TEMPLATE_ATTRIBUTES = TextAttributesKey.of("LIVE_TEMPLATE_ATTRIBUTES");
+    TextAttributesKey WRITE_SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.of("WRITE_SEARCH_RESULT_ATTRIBUTES");
+    TextAttributesKey IDENTIFIER_UNDER_CARET_ATTRIBUTES = TextAttributesKey.of("IDENTIFIER_UNDER_CARET_ATTRIBUTES");
+    TextAttributesKey WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES = TextAttributesKey.of("WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES");
+    TextAttributesKey TEXT_SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.of("TEXT_SEARCH_RESULT_ATTRIBUTES");
 
-    TextAttributesKey FOLDED_TEXT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("FOLDED_TEXT_ATTRIBUTES");
+    TextAttributesKey FOLDED_TEXT_ATTRIBUTES = TextAttributesKey.of("FOLDED_TEXT_ATTRIBUTES");
     EditorColorKey FOLDED_TEXT_BORDER_COLOR = EditorColorKey.createColorKey("FOLDED_TEXT_BORDER_COLOR");
-    TextAttributesKey DELETED_TEXT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("DELETED_TEXT_ATTRIBUTES");
+    TextAttributesKey DELETED_TEXT_ATTRIBUTES = TextAttributesKey.of("DELETED_TEXT_ATTRIBUTES");
 
     /**
      * This key is used in New UI only (instead of GUTTER_BACKGROUND) and it is null by default.
@@ -81,16 +80,16 @@ public interface EditorColors {
     EditorColorKey WHITESPACES_MODIFIED_LINES_COLOR = EditorColorKey.createColorKey("WHITESPACES_MODIFIED_LINES_COLOR");
     EditorColorKey BORDER_LINES_COLOR = EditorColorKey.createColorKey("BORDER_LINES_COLOR");
 
-    TextAttributesKey BREADCRUMBS_DEFAULT = TextAttributesKey.createTextAttributesKey("BREADCRUMBS_DEFAULT");
-    TextAttributesKey BREADCRUMBS_HOVERED = TextAttributesKey.createTextAttributesKey("BREADCRUMBS_HOVERED");
-    TextAttributesKey BREADCRUMBS_CURRENT = TextAttributesKey.createTextAttributesKey("BREADCRUMBS_CURRENT");
-    TextAttributesKey BREADCRUMBS_INACTIVE = TextAttributesKey.createTextAttributesKey("BREADCRUMBS_INACTIVE");
+    TextAttributesKey BREADCRUMBS_DEFAULT = TextAttributesKey.of("BREADCRUMBS_DEFAULT");
+    TextAttributesKey BREADCRUMBS_HOVERED = TextAttributesKey.of("BREADCRUMBS_HOVERED");
+    TextAttributesKey BREADCRUMBS_CURRENT = TextAttributesKey.of("BREADCRUMBS_CURRENT");
+    TextAttributesKey BREADCRUMBS_INACTIVE = TextAttributesKey.of("BREADCRUMBS_INACTIVE");
 
-    TextAttributesKey INJECTED_LANGUAGE_FRAGMENT = TextAttributesKey.createTextAttributesKey("INJECTED_LANGUAGE_FRAGMENT");
+    TextAttributesKey INJECTED_LANGUAGE_FRAGMENT = TextAttributesKey.of("INJECTED_LANGUAGE_FRAGMENT");
 
     EditorColorKey VISUAL_INDENT_GUIDE_COLOR = EditorColorKey.createColorKey("VISUAL_INDENT_GUIDE");
 
     EditorColorKey STICKY_LINES_BACKGROUND = EditorColorKey.createColorKey("STICKY_LINES_BACKGROUND");
-    EditorColorKey STICKY_LINES_HOVERED_COLOR = EditorColorKey.createColorKey("STICKY_LINES_HOVERED_COLOR", CARET_ROW_COLOR);
-    EditorColorKey STICKY_LINES_BORDER_COLOR = EditorColorKey.createColorKey("STICKY_LINES_BORDER_COLOR", RIGHT_MARGIN_COLOR);
+    EditorColorKey STICKY_LINES_HOVERED_COLOR = EditorColorKey.createColorKeyWithFallback("STICKY_LINES_HOVERED_COLOR", CARET_ROW_COLOR);
+    EditorColorKey STICKY_LINES_BORDER_COLOR = EditorColorKey.createColorKeyWithFallback("STICKY_LINES_BORDER_COLOR", RIGHT_MARGIN_COLOR);
 }

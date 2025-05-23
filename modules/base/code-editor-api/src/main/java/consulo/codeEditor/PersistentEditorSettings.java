@@ -277,4 +277,12 @@ public interface PersistentEditorSettings {
     boolean isHighlightSelectionOccurrences();
 
     void setHighlightSelectionOccurrences(boolean val);
+
+    boolean isStickyLineShown();
+
+    void setStickyLinesShown(boolean value);
+
+    int getStickyLinesLimit();
+
+    void setStickyLinesLimit(int value);
 }

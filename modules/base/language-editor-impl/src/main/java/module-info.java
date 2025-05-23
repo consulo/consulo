@@ -14,6 +14,7 @@ module consulo.language.editor.impl {
   requires consulo.application.impl;
   requires consulo.project.impl;
   requires consulo.project.ui.view.api;
+  requires consulo.code.editor.impl;
 
   requires consulo.language.impl;
 

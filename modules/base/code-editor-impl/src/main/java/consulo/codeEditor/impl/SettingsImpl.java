@@ -24,6 +24,7 @@
  */
 package consulo.codeEditor.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.EditorSettings;
@@ -97,8 +98,12 @@ public class SettingsImpl implements EditorSettings {
     private Boolean myWrapWhenTypingReachesRightMargin = null;
     private Boolean myShowIntentionBulb = null;
     private Boolean myIsHighlightSelectionOccurrences = null;
+    private Boolean myStickyLinesEnabled;
+    private Integer myStickLinesCount;
 
     private List<Integer> mySoftMargins = null;
+    
+    private final EditorSettingsExternalizable myPersistentEditorSettings;
 
     public SettingsImpl() {
         this(null, null, EditorKind.MAIN_EDITOR);
@@ -116,11 +121,13 @@ public class SettingsImpl implements EditorSettings {
         else {
             mySoftWrapAppliancePlace = SoftWrapAppliancePlaces.MAIN_EDITOR;
         }
+
+        myPersistentEditorSettings = EditorSettingsExternalizable.getInstance();
     }
 
     @Override
     public boolean isRightMarginShown() {
-        return myIsRightMarginShown != null ? myIsRightMarginShown : EditorSettingsExternalizable.getInstance().isRightMarginShown();
+        return myIsRightMarginShown != null ? myIsRightMarginShown : myPersistentEditorSettings.isRightMarginShown();
     }
 
     @Override
@@ -135,7 +142,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isWhitespacesShown() {
-        return myIsWhitespacesShown != null ? myIsWhitespacesShown : EditorSettingsExternalizable.getInstance().isWhitespacesShown();
+        return myIsWhitespacesShown != null ? myIsWhitespacesShown : myPersistentEditorSettings.isWhitespacesShown();
     }
 
     @Override
@@ -145,7 +152,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isLeadingWhitespaceShown() {
-        return myIsLeadingWhitespacesShown != null ? myIsLeadingWhitespacesShown : EditorSettingsExternalizable.getInstance().isLeadingWhitespacesShown();
+        return myIsLeadingWhitespacesShown != null ? myIsLeadingWhitespacesShown : myPersistentEditorSettings.isLeadingWhitespacesShown();
     }
 
     @Override
@@ -155,7 +162,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isInnerWhitespaceShown() {
-        return myIsInnerWhitespacesShown != null ? myIsInnerWhitespacesShown : EditorSettingsExternalizable.getInstance().isInnerWhitespacesShown();
+        return myIsInnerWhitespacesShown != null ? myIsInnerWhitespacesShown : myPersistentEditorSettings.isInnerWhitespacesShown();
     }
 
     @Override
@@ -165,7 +172,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isTrailingWhitespaceShown() {
-        return myIsTrailingWhitespacesShown != null ? myIsTrailingWhitespacesShown : EditorSettingsExternalizable.getInstance().isTrailingWhitespacesShown();
+        return myIsTrailingWhitespacesShown != null ? myIsTrailingWhitespacesShown : myPersistentEditorSettings.isTrailingWhitespacesShown();
     }
 
     @Override
@@ -175,7 +182,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isIndentGuidesShown() {
-        return myIndentGuidesShown != null ? myIndentGuidesShown : EditorSettingsExternalizable.getInstance().isIndentGuidesShown();
+        return myIndentGuidesShown != null ? myIndentGuidesShown : myPersistentEditorSettings.isIndentGuidesShown();
     }
 
     @Override
@@ -191,7 +198,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isLineNumbersShown() {
-        return myAreLineNumbersShown != null ? myAreLineNumbersShown : EditorSettingsExternalizable.getInstance().isLineNumbersShown();
+        return myAreLineNumbersShown != null ? myAreLineNumbersShown : myPersistentEditorSettings.isLineNumbersShown();
     }
 
     @Override
@@ -206,7 +213,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean areGutterIconsShown() {
-        return myGutterIconsShown != null ? myGutterIconsShown : EditorSettingsExternalizable.getInstance().areGutterIconsShown();
+        return myGutterIconsShown != null ? myGutterIconsShown : myPersistentEditorSettings.areGutterIconsShown();
     }
 
     @Override
@@ -225,6 +232,7 @@ public class SettingsImpl implements EditorSettings {
     }
 
     @Nullable
+    @RequiredReadAction
     private static Language getDocumentLanguage(@Nullable Project project, @Nonnull Document document) {
         if (project != null) {
             PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
@@ -239,7 +247,7 @@ public class SettingsImpl implements EditorSettings {
     @Override
     public boolean isWrapWhenTypingReachesRightMargin(Project project) {
         if (myWrapWhenTypingReachesRightMargin != null) {
-            return myWrapWhenTypingReachesRightMargin.booleanValue();
+            return myWrapWhenTypingReachesRightMargin;
         }
         return myEditor == null ? CodeStyle.getDefaultSettings().isWrapOnTyping(myLanguage) : CodeStyle.getSettings(myEditor.getProject(), myEditor.getDocument()).isWrapOnTyping(myLanguage);
     }
@@ -325,7 +333,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isFoldingOutlineShown() {
-        return myIsFoldingOutlineShown != null ? myIsFoldingOutlineShown : EditorSettingsExternalizable.getInstance().isFoldingOutlineShown();
+        return myIsFoldingOutlineShown != null ? myIsFoldingOutlineShown : myPersistentEditorSettings.isFoldingOutlineShown();
     }
 
     @Override
@@ -447,7 +455,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isSmartHome() {
-        return myIsSmartHome != null ? myIsSmartHome : EditorSettingsExternalizable.getInstance().isSmartHome();
+        return myIsSmartHome != null ? myIsSmartHome : myPersistentEditorSettings.isSmartHome();
     }
 
     @Override
@@ -465,7 +473,7 @@ public class SettingsImpl implements EditorSettings {
         if (myEditor != null && myEditor.isColumnMode()) {
             return true;
         }
-        return myIsVirtualSpace != null ? myIsVirtualSpace : EditorSettingsExternalizable.getInstance().isVirtualSpace();
+        return myIsVirtualSpace != null ? myIsVirtualSpace : myPersistentEditorSettings.isVirtualSpace();
     }
 
     @Override
@@ -480,7 +488,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isAdditionalPageAtBottom() {
-        return myIsAdditionalPageAtBottom != null ? myIsAdditionalPageAtBottom : EditorSettingsExternalizable.getInstance().isAdditionalPageAtBottom();
+        return myIsAdditionalPageAtBottom != null ? myIsAdditionalPageAtBottom : myPersistentEditorSettings.isAdditionalPageAtBottom();
     }
 
     @Override
@@ -493,7 +501,7 @@ public class SettingsImpl implements EditorSettings {
         if (myEditor != null && myEditor.isColumnMode()) {
             return true;
         }
-        return myIsCaretInsideTabs != null ? myIsCaretInsideTabs : EditorSettingsExternalizable.getInstance().isCaretInsideTabs();
+        return myIsCaretInsideTabs != null ? myIsCaretInsideTabs : myPersistentEditorSettings.isCaretInsideTabs();
     }
 
     @Override
@@ -508,7 +516,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isBlockCursor() {
-        return myIsBlockCursor != null ? myIsBlockCursor : EditorSettingsExternalizable.getInstance().isBlockCursor();
+        return myIsBlockCursor != null ? myIsBlockCursor : myPersistentEditorSettings.isBlockCursor();
     }
 
     @Override
@@ -523,7 +531,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isCaretRowShown() {
-        return myCaretRowShown != null ? myCaretRowShown : EditorSettingsExternalizable.getInstance().isCaretRowShown();
+        return myCaretRowShown != null ? myCaretRowShown : myPersistentEditorSettings.isCaretRowShown();
     }
 
     @Override
@@ -548,7 +556,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isAnimatedScrolling() {
-        return myIsAnimatedScrolling != null ? myIsAnimatedScrolling : EditorSettingsExternalizable.getInstance().isSmoothScrolling();
+        return myIsAnimatedScrolling != null ? myIsAnimatedScrolling : myPersistentEditorSettings.isSmoothScrolling();
     }
 
     @Override
@@ -558,7 +566,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isCamelWords() {
-        return myIsCamelWords != null ? myIsCamelWords : EditorSettingsExternalizable.getInstance().isCamelWords();
+        return myIsCamelWords != null ? myIsCamelWords : myPersistentEditorSettings.isCamelWords();
     }
 
     @Override
@@ -573,7 +581,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isBlinkCaret() {
-        return myIsCaretBlinking != null ? myIsCaretBlinking : EditorSettingsExternalizable.getInstance().isBlinkCaret();
+        return myIsCaretBlinking != null ? myIsCaretBlinking : myPersistentEditorSettings.isBlinkCaret();
     }
 
     @Override
@@ -588,7 +596,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public int getCaretBlinkPeriod() {
-        return myCaretBlinkingPeriod != null ? myCaretBlinkingPeriod : EditorSettingsExternalizable.getInstance().getBlinkPeriod();
+        return myCaretBlinkingPeriod != null ? myCaretBlinkingPeriod : myPersistentEditorSettings.getBlinkPeriod();
     }
 
     @Override
@@ -603,7 +611,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isDndEnabled() {
-        return myIsDndEnabled != null ? myIsDndEnabled : EditorSettingsExternalizable.getInstance().isDndEnabled();
+        return myIsDndEnabled != null ? myIsDndEnabled : myPersistentEditorSettings.isDndEnabled();
     }
 
     @Override
@@ -613,7 +621,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isWheelFontChangeEnabled() {
-        return myIsWheelFontChangeEnabled != null ? myIsWheelFontChangeEnabled : EditorSettingsExternalizable.getInstance().isWheelFontChangeEnabled();
+        return myIsWheelFontChangeEnabled != null ? myIsWheelFontChangeEnabled : myPersistentEditorSettings.isWheelFontChangeEnabled();
     }
 
     @Override
@@ -625,7 +633,7 @@ public class SettingsImpl implements EditorSettings {
     public boolean isMouseClickSelectionHonorsCamelWords() {
         return myIsMouseClickSelectionHonorsCamelWords != null
             ? myIsMouseClickSelectionHonorsCamelWords
-            : EditorSettingsExternalizable.getInstance().isMouseClickSelectionHonorsCamelWords();
+            : myPersistentEditorSettings.isMouseClickSelectionHonorsCamelWords();
     }
 
     @Override
@@ -635,7 +643,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isVariableInplaceRenameEnabled() {
-        return myIsRenameVariablesInplace != null ? myIsRenameVariablesInplace : EditorSettingsExternalizable.getInstance().isVariableInplaceRenameEnabled();
+        return myIsRenameVariablesInplace != null ? myIsRenameVariablesInplace : myPersistentEditorSettings.isVariableInplaceRenameEnabled();
     }
 
     @Override
@@ -648,7 +656,7 @@ public class SettingsImpl implements EditorSettings {
         if (myIsRefrainFromScrolling != null) {
             return myIsRefrainFromScrolling;
         }
-        return EditorSettingsExternalizable.getInstance().isRefrainFromScrolling();
+        return myPersistentEditorSettings.isRefrainFromScrolling();
     }
 
 
@@ -659,7 +667,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isUseSoftWraps() {
-        return myUseSoftWraps != null ? myUseSoftWraps : EditorSettingsExternalizable.getInstance().isUseSoftWraps(mySoftWrapAppliancePlace);
+        return myUseSoftWraps != null ? myUseSoftWraps : myPersistentEditorSettings.isUseSoftWraps(mySoftWrapAppliancePlace);
     }
 
     @Override
@@ -678,12 +686,12 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isAllSoftWrapsShown() {
-        return myIsAllSoftWrapsShown != null ? myIsWhitespacesShown : EditorSettingsExternalizable.getInstance().isAllSoftWrapsShown();
+        return myIsAllSoftWrapsShown != null ? myIsWhitespacesShown : myPersistentEditorSettings.isAllSoftWrapsShown();
     }
 
     @Override
     public boolean isUseCustomSoftWrapIndent() {
-        return myUseCustomSoftWrapIndent == null ? EditorSettingsExternalizable.getInstance().isUseCustomSoftWrapIndent() : myUseCustomSoftWrapIndent;
+        return myUseCustomSoftWrapIndent == null ? myPersistentEditorSettings.isUseCustomSoftWrapIndent() : myUseCustomSoftWrapIndent;
     }
 
     @Override
@@ -693,7 +701,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public int getCustomSoftWrapIndent() {
-        return myCustomSoftWrapIndent == null ? EditorSettingsExternalizable.getInstance().getCustomSoftWrapIndent() : myCustomSoftWrapIndent;
+        return myCustomSoftWrapIndent == null ? myPersistentEditorSettings.getCustomSoftWrapIndent() : myCustomSoftWrapIndent;
     }
 
     @Override
@@ -719,7 +727,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isPreselectRename() {
-        return myRenamePreselect == null ? EditorSettingsExternalizable.getInstance().isPreselectRename() : myRenamePreselect;
+        return myRenamePreselect == null ? myPersistentEditorSettings.isPreselectRename() : myRenamePreselect;
     }
 
     @Override
@@ -729,7 +737,7 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isShowIntentionBulb() {
-        return myShowIntentionBulb == null ? EditorSettingsExternalizable.getInstance().isShowIntentionBulb() : myShowIntentionBulb;
+        return myShowIntentionBulb == null ? myPersistentEditorSettings.isShowIntentionBulb() : myShowIntentionBulb;
     }
 
     @Override
@@ -739,11 +747,37 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public boolean isHighlightSelectionOccurrences() {
-        return myIsHighlightSelectionOccurrences == null ? EditorSettingsExternalizable.getInstance().isHighlightSelectionOccurrences() : myIsHighlightSelectionOccurrences;
+        return myIsHighlightSelectionOccurrences == null ? myPersistentEditorSettings.isHighlightSelectionOccurrences() : myIsHighlightSelectionOccurrences;
     }
 
     @Override
     public void setHighlightSelectionOccurrences(boolean val) {
         myIsHighlightSelectionOccurrences = val;
+    }
+
+    @Override
+    public boolean isStickyLineShown() {
+        if (myStickyLinesEnabled != null) {
+            return myStickyLinesEnabled;
+        }
+        return myPersistentEditorSettings.isStickyLineShown();
+    }
+
+    @Override
+    public void setStickyLinesShown(boolean value) {
+        myStickyLinesEnabled = value;
+    }
+
+    @Override
+    public int getStickyLinesLimit() {
+        if (myStickLinesCount != null) {
+            return myStickLinesCount;
+        }
+        return myPersistentEditorSettings.getStickyLinesLimit();
+    }
+
+    @Override
+    public void setStickyLinesLimit(int value) {
+        myStickLinesCount = value;
     }
 }

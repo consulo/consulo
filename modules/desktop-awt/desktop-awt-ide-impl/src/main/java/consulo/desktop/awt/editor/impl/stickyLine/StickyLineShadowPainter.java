@@ -25,6 +25,10 @@ public class StickyLineShadowPainter {
         this.isDarkColorScheme = isDarkColorScheme;
     }
 
+    public void setDarkColorScheme(boolean darkColorScheme) {
+        isDarkColorScheme = darkColorScheme;
+    }
+
     public void paintShadow(Graphics2D g, int panelHeight, int panelWidth, int lineHeight) {
         if (isEnabled()) {
             int shadowHeight = shadowHeight(lineHeight);
