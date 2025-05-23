@@ -3988,7 +3988,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     public int getStickyLinesPanelWidth() {
-        return myPanel.getWidth(); //- myVerticalScrollBar.getWidth();
+        return myScrollPane.getWidth() - myVerticalScrollBar.getWidth();
     }
 
     @Nullable
