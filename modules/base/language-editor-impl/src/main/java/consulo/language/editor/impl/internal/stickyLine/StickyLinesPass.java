@@ -74,6 +74,10 @@ public class StickyLinesPass extends EditorBoundHighlightingPass implements Dumb
     @RequiredReadAction
     private StickyLineInfo convertToStickyLine(@Nonnull PsiElement element) {
         TextRange elementTextRange = element.getTextRange();
+        if (elementTextRange.isEmpty() || TextRange.EMPTY_RANGE.equals(elementTextRange)) {
+            return null;
+        }
+
         if (element instanceof PsiNameIdentifierOwner nameOwner) {
             PsiElement nameIdentifier = nameOwner.getNameIdentifier();
 
