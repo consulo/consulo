@@ -61,8 +61,12 @@ public class RegistryValue {
   }
 
   public boolean asBoolean() {
+     return asBoolean(false);
+  }
+
+  public boolean asBoolean(boolean defaultValue) {
     if (myBooleanCachedValue == null) {
-      myBooleanCachedValue = Boolean.valueOf(get(myKey, "false"));
+      myBooleanCachedValue = Boolean.valueOf(get(myKey, String.valueOf(defaultValue)));
     }
 
     return myBooleanCachedValue;

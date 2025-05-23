@@ -65,7 +65,7 @@ public class Registry {
 
   public static boolean is(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key, boolean defaultValue) {
     try {
-      return get(key).asBoolean();
+      return get(key).asBoolean(defaultValue);
     }
     catch (MissingResourceException ex) {
       return defaultValue;
