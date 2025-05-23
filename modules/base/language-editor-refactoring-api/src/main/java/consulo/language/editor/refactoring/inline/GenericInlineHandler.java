@@ -17,6 +17,7 @@
 package consulo.language.editor.refactoring.inline;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
@@ -66,19 +67,19 @@ public class GenericInlineHandler {
 
     @RequiredReadAction
     public static void collectConflicts(
-        final PsiReference reference,
-        final PsiElement element,
-        final Map<Language, InlineHandler.Inliner> inliners,
-        final MultiMap<PsiElement, String> conflicts
+        PsiReference reference,
+        PsiElement element,
+        Map<Language, InlineHandler.Inliner> inliners,
+        MultiMap<PsiElement, String> conflicts
     ) {
-        final PsiElement referenceElement = reference.getElement();
+        PsiElement referenceElement = reference.getElement();
         if (referenceElement == null) {
             return;
         }
-        final Language language = referenceElement.getLanguage();
-        final InlineHandler.Inliner inliner = inliners.get(language);
+        Language language = referenceElement.getLanguage();
+        InlineHandler.Inliner inliner = inliners.get(language);
         if (inliner != null) {
-            final MultiMap<PsiElement, String> refConflicts = inliner.getConflicts(reference, element);
+            MultiMap<PsiElement, String> refConflicts = inliner.getConflicts(reference, element);
             if (refConflicts != null) {
                 for (PsiElement psiElement : refConflicts.keySet()) {
                     conflicts.putValues(psiElement, refConflicts.get(psiElement));
@@ -90,26 +91,23 @@ public class GenericInlineHandler {
         }
     }
 
-    @RequiredReadAction
-    public static void inlineReference(
-        final UsageInfo usage,
-        final PsiElement element,
-        final Map<Language, InlineHandler.Inliner> inliners
-    ) {
+    @RequiredWriteAction
+    public static void inlineReference(UsageInfo usage, PsiElement element, Map<Language, InlineHandler.Inliner> inliners) {
         PsiElement usageElement = usage.getElement();
         if (usageElement == null) {
             return;
         }
-        final Language language = usageElement.getLanguage();
-        final InlineHandler.Inliner inliner = inliners.get(language);
+        Language language = usageElement.getLanguage();
+        InlineHandler.Inliner inliner = inliners.get(language);
         if (inliner != null) {
             inliner.inlineUsage(usage, element);
         }
     }
 
     //order of usages across different files is irrelevant
-    public static PsiReference[] sortDepthFirstRightLeftOrder(final Collection<? extends PsiReference> allReferences) {
-        final PsiReference[] usages = allReferences.toArray(new PsiReference[allReferences.size()]);
+    @RequiredReadAction
+    public static PsiReference[] sortDepthFirstRightLeftOrder(Collection<? extends PsiReference> allReferences) {
+        PsiReference[] usages = allReferences.toArray(new PsiReference[allReferences.size()]);
         Arrays.sort(
             usages,
             (usage1, usage2) -> {
