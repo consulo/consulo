@@ -93,10 +93,10 @@ import java.util.function.Predicate;
  * @author Eugene Zhuravlev
  * @since 2003-01-17
  */
-public class CompileDriver implements consulo.compiler.CompileDriver {
+public class CompileDriverImpl implements CompileDriver {
     public static final int DEPENDENCY_FORMAT_VERSION = 55;
 
-    private static final Logger LOG = Logger.getInstance(CompileDriver.class);
+    private static final Logger LOG = Logger.getInstance(CompileDriverImpl.class);
     // to be used in tests only for debug output
     public static volatile boolean ourDebugMode = false;
 
@@ -124,7 +124,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     private static final long ONE_MINUTE_MS = 60L /*sec*/ * 1000L /*millisec*/;
 
     @RequiredReadAction
-    public CompileDriver(Project project) {
+    public CompileDriverImpl(Project project) {
         myProject = project;
         myCachesDirectoryPath = CompilerPaths.getCacheStoreDirectory(myProject).getPath().replace('/', File.separatorChar);
         myShouldClearOutputDirectory = CompilerWorkspaceConfiguration.getInstance(myProject).CLEAR_OUTPUT_DIRECTORY;

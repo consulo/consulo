@@ -163,43 +163,43 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     @Override
     @RequiredUIAccess
     public void compile(@Nonnull Module module, CompileStatusNotification callback) {
-        new CompileDriver(myProject).compile(createModuleCompileScope(module, false), new ListenerNotificator(callback), true);
+        new CompileDriverImpl(myProject).compile(createModuleCompileScope(module, false), new ListenerNotificator(callback), true);
     }
 
     @Override
     @RequiredUIAccess
     public void compile(@Nonnull CompileScope scope, CompileStatusNotification callback) {
-        new CompileDriver(myProject).compile(scope, new ListenerNotificator(callback), false);
+        new CompileDriverImpl(myProject).compile(scope, new ListenerNotificator(callback), false);
     }
 
     @Override
     @RequiredUIAccess
     public void make(CompileStatusNotification callback) {
-        new CompileDriver(myProject).make(createProjectCompileScope(), new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).make(createProjectCompileScope(), new ListenerNotificator(callback));
     }
 
     @Override
     @RequiredUIAccess
     public void make(@Nonnull Module module, CompileStatusNotification callback) {
-        new CompileDriver(myProject).make(createModuleCompileScope(module, true), new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).make(createModuleCompileScope(module, true), new ListenerNotificator(callback));
     }
 
     @Override
     @RequiredUIAccess
     public void make(@Nonnull Project project, @Nonnull Module[] modules, CompileStatusNotification callback) {
-        new CompileDriver(myProject).make(createModuleGroupCompileScope(project, modules, true), new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).make(createModuleGroupCompileScope(project, modules, true), new ListenerNotificator(callback));
     }
 
     @Override
     @RequiredUIAccess
     public void make(@Nonnull CompileScope scope, CompileStatusNotification callback) {
-        new CompileDriver(myProject).make(scope, new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).make(scope, new ListenerNotificator(callback));
     }
 
     @Override
     @RequiredUIAccess
     public void make(@Nonnull CompileScope scope, Predicate<Compiler> filter, @Nullable CompileStatusNotification callback) {
-        CompileDriver compileDriver = new CompileDriver(myProject);
+        CompileDriverImpl compileDriver = new CompileDriverImpl(myProject);
         compileDriver.setCompilerFilter(filter);
         compileDriver.make(scope, new ListenerNotificator(callback));
     }
@@ -207,19 +207,19 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     @Override
     @RequiredReadAction
     public boolean isUpToDate(@Nonnull CompileScope scope) {
-        return new CompileDriver(myProject).isUpToDate(scope);
+        return new CompileDriverImpl(myProject).isUpToDate(scope);
     }
 
     @Override
     @RequiredUIAccess
     public void rebuild(CompileStatusNotification callback) {
-        new CompileDriver(myProject).rebuild(new ListenerNotificator(callback));
+        new CompileDriverImpl(myProject).rebuild(new ListenerNotificator(callback));
     }
 
     @Override
     @RequiredReadAction
     public void executeTask(@Nonnull CompileTask task, @Nonnull CompileScope scope, String contentName, Runnable onTaskFinished) {
-        CompileDriver compileDriver = new CompileDriver(myProject);
+        CompileDriverImpl compileDriver = new CompileDriverImpl(myProject);
         compileDriver.executeCompileTask(task, scope, contentName, onTaskFinished);
     }
 
