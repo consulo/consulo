@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.MarkupModelWindow;
 import consulo.codeEditor.markup.MarkupModelEx;
@@ -36,8 +35,6 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @author yole
  */
-@Deprecated
-@DeprecationInfo("Use DocumentMarkupModel")
 public class DocumentMarkupModelImpl {
     private static final Key<MarkupModelEx> MARKUP_MODEL_KEY = Key.create("DocumentMarkupModel.MarkupModel");
     private static final Key<ConcurrentMap<Project, MarkupModelImpl>> MARKUP_MODEL_MAP_KEY = Key.create("DocumentMarkupModel.MarkupModelMap");
