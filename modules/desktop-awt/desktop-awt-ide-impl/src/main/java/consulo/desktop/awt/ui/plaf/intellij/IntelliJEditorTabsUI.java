@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.plaf.intellij;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.ui.tabs.impl.ShapeTransform;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
+import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.ide.impl.ui.laf.JBEditorTabsUI;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -365,17 +366,14 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
             return;
         }
 
-        Color color = tabs.holdsFocus() ? getFocusColor() : getInactiveFocusColor();
-
-        g2d.setColor(color);
-
-        int underlineSize = JBUI.scale(3);
-
         switch (tabs.getTabsPosition()) {
             case top:
-                RectanglePainter2D.FILL.paint(g2d, rect.x, rect.y + rect.height - underlineSize, rect.width, underlineSize);
+                ToolwindowPaintUtil.paintUnderlineColor(g2d, rect.x, rect.y, rect.width, rect.height, tabs.holdsFocus());
                 break;
             case left:
+                Color color = tabs.holdsFocus() ? getFocusColor() : getInactiveFocusColor();
+                int underlineSize = JBUI.scale(3);
+                g2d.setColor(color);
                 RectanglePainter2D.FILL.paint(g2d, rect.x + rect.width - underlineSize, rect.y, underlineSize, rect.height);
                 break;
         }
@@ -389,16 +387,8 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
         return color;
     }
 
-    private Color getFocusColor() {
-        Color color = UIManager.getColor("TabbedPane.underlineColor");
-        if (color == null) {
-            color = UIManager.getColor("Component.focusColor");
-        }
-
-        if (color == null) {
-            color = JBColor.BLUE;
-        }
-        return color;
+    public static Color getFocusColor() {
+        return ToolwindowPaintUtil.getFocusColor();
     }
 
     protected void doPaintInactive(JBTabsImpl tabs, Graphics2D g2d, TabLabel label) {

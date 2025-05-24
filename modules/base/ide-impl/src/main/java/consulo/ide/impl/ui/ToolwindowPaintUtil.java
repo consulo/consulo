@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.ui;
 
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.paint.RectanglePainter2D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,6 +48,33 @@ public class ToolwindowPaintUtil {
         if (drawBottomLine) {
             g.drawLine(x, height - JBUI.scale(1), width, height - JBUI.scale(1));
         }
+    }
+
+    public static void paintUnderlineColor(Graphics2D g2d, int x, int y, int width, int height, boolean focused) {
+        int underlineSize = JBUI.scale(3);
+
+        g2d.setColor(focused
+            ? getFocusColor()
+            : UIManager.getColor("TabbedPane.focusColor"));
+
+        int arc = UIManager.getInt("Component.arc");
+        if (arc != 0) {
+            RectanglePainter2D.FILL.paint(g2d, x, y + height - underlineSize, width, underlineSize, 3d);
+        } else {
+            RectanglePainter2D.FILL.paint(g2d, x, y + height - underlineSize, width, underlineSize);
+        }
+    }
+
+    public static Color getFocusColor() {
+        Color color = UIManager.getColor("TabbedPane.underlineColor");
+        if (color == null) {
+            color = UIManager.getColor("Component.focusColor");
+        }
+
+        if (color == null) {
+            color = JBColor.BLUE;
+        }
+        return color;
     }
 
     public static Color getActiveToolWindowHeaderColor() {

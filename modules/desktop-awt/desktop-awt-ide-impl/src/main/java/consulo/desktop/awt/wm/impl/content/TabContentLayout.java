@@ -282,9 +282,8 @@ class TabContentLayout extends ContentLayout {
 
                 g2d.fillRect(isIdVisible() ? r.x : r.x, r.y, r.width, r.height);
 
-                if (each.isSelected() && myUi.myWindow.isActive()) {
-                    g2d.setColor(ToolwindowPaintUtil.getActiveToolWindowHeaderColor());
-                    g2d.fillRect(isIdVisible() ? r.x : r.x, r.y, r.width, r.height);
+                if (each.isSelected()) {
+                    ToolwindowPaintUtil.paintUnderlineColor(g2d, r.x, r.y, r.width, r.height, myUi.myWindow.isActive());
                 }
 
                 g2d.dispose();
