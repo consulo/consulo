@@ -517,7 +517,6 @@ public class AllIcons {
         public static final Image Variable = PlatformIconGroup.nodesVariable(); // 16x16
         public static final Image Value = PlatformIconGroup.nodesValue(); // 16x16
         public static final Image WebFolder = PlatformIconGroup.nodesWebfolder(); // 16x16
-        public static final Image Weblistener = PlatformIconGroup.nodesWeblistener(); // 16x16
         public static final Image Write_access = PlatformIconGroup.nodesWrite_access(); // 13x9
         public static final Image CustomRegion = PlatformIconGroup.nodesCustomregion();
 
