@@ -80,3 +80,26 @@ iw.found.so.far.suffix:
   text: found so far
 checkbox.show.editor.preview.popup:
   text: Show editor preview tooltip
+group.EditorStickyLinesSettings.text:
+    text: Sticky Lines
+group.EditorStickyLinesSettings.description:
+    text: Toggle sticky lines panel settings
+action.EditorStickyConfigure.text:
+    text: Configure Sticky Lines…
+action.EditorStickyConfigure.description:
+    text: Show sticky lines settings dialog
+action.EditorStickyLinesDisableForLang.text:
+    text: Disable for Language
+action.EditorStickyLinesDisableForLang.for.lang.text:
+    text: Disable for {0}
+action.EditorStickyLinesDisableForLang.description:
+    text: Hide the sticky lines panel for language
+action.EditorStickyLinesDisable.text:
+    text: Disable
+action.EditorStickyLinesDisable.description:
+    text: Hide the sticky lines panel
+action.EditorGutterToggleGlobalStickyLines.text:
+    text: Show Sticky Lines
+action.EditorGutterToggleGlobalStickyLines.description:
+    text: Show the sticky lines panel
+

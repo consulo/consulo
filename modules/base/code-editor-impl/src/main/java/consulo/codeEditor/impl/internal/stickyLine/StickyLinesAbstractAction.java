@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.language.editor;
+package consulo.codeEditor.impl.internal.stickyLine;
 
-import consulo.annotation.component.ActionImpl;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.DumbAwareAction;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2025-05-23
+ * @since 2025-05-24
  */
-@ActionImpl(id = "EditorStickyLinesSettings")
-public class EditorStickyLinesSettingsGroup extends DefaultActionGroup {
+public abstract class StickyLinesAbstractAction extends DumbAwareAction {
+    public StickyLinesAbstractAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
+    @Nonnull
     @Override
-    public boolean isPopup() {
-        return true;
+    public ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 }

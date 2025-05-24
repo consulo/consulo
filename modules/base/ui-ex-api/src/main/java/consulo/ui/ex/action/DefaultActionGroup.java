@@ -100,6 +100,11 @@ public class DefaultActionGroup extends ActionGroup {
         super(text, description, icon);
     }
 
+    public DefaultActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, boolean popup) {
+        super(text, description, null);
+        setPopup(popup);
+    }
+
     private void addActions(@Nonnull List<? extends AnAction> actions) {
         Set<Object> actionSet = new HashSet<>();
         List<AnAction> uniqueActions = new ArrayList<>(actions.size());
