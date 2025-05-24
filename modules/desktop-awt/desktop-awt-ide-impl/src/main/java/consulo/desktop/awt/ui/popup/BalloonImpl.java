@@ -77,7 +77,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     public static final Key<Boolean> FORCED_NO_SHADOW = Key.create("BALLOON_FORCED_NO_SHADOW");
 
     private static final JBValue DIALOG_ARC = new JBValue.Float(6);
-    public static final JBValue ARC = new JBValue.Float(4);
+    public static final JBValue ARC = new JBValue.UIInteger("TextComponent.arc", 4);
     private static final JBValue DIALOG_TOPBOTTOM_POINTER_WIDTH = new JBValue.Float(24);
     public static final JBValue DIALOG_POINTER_WIDTH = new JBValue.Float(17);
     private static final JBValue TOPBOTTOM_POINTER_WIDTH = new JBValue.Float(14);
@@ -1167,6 +1167,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         myShowPointer = show;
     }
 
+    public void setPointerShiftedToStart(boolean pointerShiftedToStart) {
+        myPointerShiftedToStart = pointerShiftedToStart;
+    }
+
     public consulo.ui.image.Image getCloseButton() {
         return AllIcons.Ide.Notification.Close;
     }
@@ -1571,7 +1575,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         protected Shape getPointingShape(final Rectangle bounds, Point pointTarget, final BalloonImpl balloon) {
             pointTarget = new Point(pointTarget.x, Math.max((int) bounds.getMaxY(), pointTarget.y));
             final Shaper shaper = new Shaper(balloon, bounds, pointTarget, SwingConstants.BOTTOM);
-            shaper.line(-balloon.getPointerWidth(this) / 2, -balloon.getPointerLength(this) + JBUIScale.scale(1));
+            int pointerWidth = balloon.getPointerWidth(this);
+            int pointerLength = balloon.getPointerLength(this);
+
+            shaper.line(-pointerWidth / 2, -pointerLength + JBUIScale.scale(1));
             shaper.toLeftCurve()
                 .roundLeftUp()
                 .toTopCurve()
@@ -1581,7 +1588,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                 .toBottomCurve()
                 .line(0, 2)
                 .roundLeftDown()
-                .lineTo(pointTarget.x + balloon.getPointerWidth(this) / 2, shaper.getCurrent().y)
+                .lineTo(pointTarget.x + pointerWidth / 2, shaper.getCurrent().y)
                 .lineTo(pointTarget.x, pointTarget.y)
                 .close();
 

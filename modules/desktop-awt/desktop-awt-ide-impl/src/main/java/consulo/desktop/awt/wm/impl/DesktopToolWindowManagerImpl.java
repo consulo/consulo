@@ -711,6 +711,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             .setHideOnClickOutside(false)
             .setBorderColor(messageType.getBorderColor())
             .setHideOnFrameResize(false)
+            .setPointerShiftedToStart(true)
             .createBalloon();
         FrameStateManager.getInstance().getApplicationActive().doWhenDone(() -> {
             Alarm alarm = new Alarm();
