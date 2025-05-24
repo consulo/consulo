@@ -32,93 +32,102 @@ import jakarta.annotation.Nonnull;
  * @author Dmitry Avdeev
  */
 public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
-  private static final Key<?> PSI_MOD_COUNT_OPTIMIZATION = Key.create("PSI_MOD_COUNT_OPTIMIZATION");
-  private final PsiManager myManager;
+    private static final Key<?> PSI_MOD_COUNT_OPTIMIZATION = Key.create("PSI_MOD_COUNT_OPTIMIZATION");
+    private final PsiManager myManager;
 
-  PsiCachedValue(@Nonnull PsiManager manager, boolean trackValue, CachedValuesFactory factory) {
-    super(trackValue, factory);
-    myManager = manager;
-  }
-
-  @Nonnull
-  @Override
-  protected Object[] normalizeDependencies(@Nonnull CachedValueProvider.Result<T> result) {
-    Object[] dependencies = super.normalizeDependencies(result);
-    if (dependencies.length > 0 && ContainerUtil.and(dependencies, this::anyChangeImpliesPsiCounterChange)) {
-      return ArrayUtil.prepend(PSI_MOD_COUNT_OPTIMIZATION, dependencies);
-    }
-    return dependencies;
-  }
-
-  private boolean anyChangeImpliesPsiCounterChange(@Nonnull Object dependency) {
-    return dependency instanceof PsiElement && isVeryPhysical((PsiElement)dependency) ||
-           dependency instanceof ProjectRootModificationTracker ||
-           dependency instanceof PsiModificationTracker ||
-           dependency == PsiModificationTracker.MODIFICATION_COUNT ||
-           dependency == PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT ||
-           dependency == PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT;
-  }
-
-  private boolean isVeryPhysical(@Nonnull PsiElement dependency) {
-    if (!dependency.isValid()) {
-      return false;
-    }
-    if (!dependency.isPhysical()) {
-      return false;
-    }
-    // injected files are physical but can sometimes (look at you, completion)
-    // be inexplicably injected into non-physical element, in which case PSI_MODIFICATION_COUNT doesn't change and thus can't be relied upon
-    InjectedLanguageManager manager = InjectedLanguageManager.getInstance(myManager.getProject());
-    PsiFile topLevelFile = manager.getTopLevelFile(dependency);
-    return topLevelFile != null && topLevelFile.isPhysical();
-  }
-
-  @Override
-  protected boolean isUpToDate(@Nonnull Data data) {
-    if (myManager.isDisposed()) return false;
-
-    Object[] dependencies = data.getDependencies();
-    if (dependencies.length > 0 && dependencies[0] == PSI_MOD_COUNT_OPTIMIZATION && data.getTimeStamps()[0] == myManager.getModificationTracker().getModificationCount()) {
-      return true;
+    PsiCachedValue(@Nonnull PsiManager manager, boolean trackValue, CachedValuesFactory factory) {
+        super(trackValue, factory);
+        myManager = manager;
     }
 
-    return super.isUpToDate(data);
-  }
-
-  @Override
-  protected boolean isDependencyOutOfDate(@Nonnull Object dependency, long oldTimeStamp) {
-    if (dependency == PSI_MOD_COUNT_OPTIMIZATION) return false;
-    return super.isDependencyOutOfDate(dependency, oldTimeStamp);
-  }
-
-  @Override
-  protected long getTimeStamp(@Nonnull Object dependency) {
-    if (dependency instanceof PsiDirectory) {
-      return myManager.getModificationTracker().getOutOfCodeBlockModificationCount();
+    @Nonnull
+    @Override
+    protected Object[] normalizeDependencies(@Nonnull CachedValueProvider.Result<T> result) {
+        Object[] dependencies = super.normalizeDependencies(result);
+        if (dependencies.length > 0 && ContainerUtil.and(dependencies, this::anyChangeImpliesPsiCounterChange)) {
+            return ArrayUtil.prepend(PSI_MOD_COUNT_OPTIMIZATION, dependencies);
+        }
+        return dependencies;
     }
 
-    if (dependency instanceof PsiElement) {
-      PsiElement element = (PsiElement)dependency;
-      if (!element.isValid()) return -1;
-      PsiFile containingFile = element.getContainingFile();
-      if (containingFile != null) return containingFile.getModificationStamp();
+    private boolean anyChangeImpliesPsiCounterChange(@Nonnull Object dependency) {
+        return dependency instanceof PsiElement && isVeryPhysical((PsiElement)dependency) ||
+            dependency instanceof ProjectRootModificationTracker ||
+            dependency instanceof PsiModificationTracker ||
+            dependency == PsiModificationTracker.MODIFICATION_COUNT ||
+            dependency == PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT ||
+            dependency == PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT;
     }
 
-    if (dependency == PsiModificationTracker.MODIFICATION_COUNT || dependency == PSI_MOD_COUNT_OPTIMIZATION) {
-      return myManager.getModificationTracker().getModificationCount();
-    }
-    if (dependency == PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT) {
-      return myManager.getModificationTracker().getOutOfCodeBlockModificationCount();
-    }
-    if (dependency == PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT) {
-      return myManager.getModificationTracker().getJavaStructureModificationCount();
+    private boolean isVeryPhysical(@Nonnull PsiElement dependency) {
+        if (!dependency.isValid()) {
+            return false;
+        }
+        if (!dependency.isPhysical()) {
+            return false;
+        }
+        // injected files are physical but can sometimes (look at you, completion)
+        // be inexplicably injected into non-physical element, in which case PSI_MODIFICATION_COUNT doesn't change and thus can't be relied upon
+        InjectedLanguageManager manager = InjectedLanguageManager.getInstance(myManager.getProject());
+        PsiFile topLevelFile = manager.getTopLevelFile(dependency);
+        return topLevelFile != null && topLevelFile.isPhysical();
     }
 
-    return super.getTimeStamp(dependency);
-  }
+    @Override
+    protected boolean isUpToDate(@Nonnull Data data) {
+        if (myManager.isDisposed()) {
+            return false;
+        }
 
-  @Override
-  public boolean isFromMyProject(@Nonnull Project project) {
-    return myManager.getProject() == project;
-  }
+        Object[] dependencies = data.getDependencies();
+        if (dependencies.length > 0 && dependencies[0] == PSI_MOD_COUNT_OPTIMIZATION && data.getTimeStamps()[0] == myManager.getModificationTracker()
+            .getModificationCount()) {
+            return true;
+        }
+
+        return super.isUpToDate(data);
+    }
+
+    @Override
+    protected boolean isDependencyOutOfDate(@Nonnull Object dependency, long oldTimeStamp) {
+        if (dependency == PSI_MOD_COUNT_OPTIMIZATION) {
+            return false;
+        }
+        return super.isDependencyOutOfDate(dependency, oldTimeStamp);
+    }
+
+    @Override
+    protected long getTimeStamp(@Nonnull Object dependency) {
+        if (dependency instanceof PsiDirectory) {
+            return myManager.getModificationTracker().getOutOfCodeBlockModificationCount();
+        }
+
+        if (dependency instanceof PsiElement) {
+            PsiElement element = (PsiElement)dependency;
+            if (!element.isValid()) {
+                return -1;
+            }
+            PsiFile containingFile = element.getContainingFile();
+            if (containingFile != null) {
+                return containingFile.getModificationStamp();
+            }
+        }
+
+        if (dependency == PsiModificationTracker.MODIFICATION_COUNT || dependency == PSI_MOD_COUNT_OPTIMIZATION) {
+            return myManager.getModificationTracker().getModificationCount();
+        }
+        if (dependency == PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT) {
+            return myManager.getModificationTracker().getOutOfCodeBlockModificationCount();
+        }
+        if (dependency == PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT) {
+            return myManager.getModificationTracker().getJavaStructureModificationCount();
+        }
+
+        return super.getTimeStamp(dependency);
+    }
+
+    @Override
+    public boolean isFromMyProject(@Nonnull Project project) {
+        return myManager.getProject() == project;
+    }
 }

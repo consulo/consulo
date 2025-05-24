@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.impl.internal.util;
 
 import consulo.application.util.CachedValue;
@@ -23,35 +22,35 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValue<T> {
-  private final CachedValueProvider<T> myProvider;
+    private final CachedValueProvider<T> myProvider;
 
-  public CachedValueImpl(@Nonnull CachedValueProvider<T> provider, CachedValuesFactory factory) {
-    this(provider, false, factory);
-  }
+    public CachedValueImpl(@Nonnull CachedValueProvider<T> provider, CachedValuesFactory factory) {
+        this(provider, false, factory);
+    }
 
-  CachedValueImpl(@Nonnull CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
-    super(trackValue, factory);
-    myProvider = provider;
-  }
+    CachedValueImpl(@Nonnull CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
+        super(trackValue, factory);
+        myProvider = provider;
+    }
 
-  @Override
-  protected <P> CachedValueProvider.Result<T> doCompute(P param) {
-    return myProvider.compute();
-  }
+    @Override
+    protected <P> CachedValueProvider.Result<T> doCompute(P param) {
+        return myProvider.compute();
+    }
 
-  @Nonnull
-  @Override
-  public CachedValueProvider<T> getValueProvider() {
-    return myProvider;
-  }
+    @Nonnull
+    @Override
+    public CachedValueProvider<T> getValueProvider() {
+        return myProvider;
+    }
 
-  @Override
-  public T getValue() {
-    return getValueWithLock(null);
-  }
+    @Override
+    public T getValue() {
+        return getValueWithLock(null);
+    }
 
-  @Override
-  public boolean isFromMyProject(@Nonnull Project project) {
-    return true;
-  }
+    @Override
+    public boolean isFromMyProject(@Nonnull Project project) {
+        return true;
+    }
 }

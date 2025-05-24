@@ -24,34 +24,39 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 public class ParameterizedCachedValueImpl<T, P> extends CachedValueBase<T> implements ParameterizedCachedValue<T, P> {
-  @Nonnull
-  private final Project myProject;
-  private final ParameterizedCachedValueProvider<T, P> myProvider;
+    @Nonnull
+    private final Project myProject;
+    private final ParameterizedCachedValueProvider<T, P> myProvider;
 
-  ParameterizedCachedValueImpl(@Nonnull Project project, @Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue, CachedValuesFactory factory) {
-    super(trackValue, factory);
-    myProject = project;
-    myProvider = provider;
-  }
+    ParameterizedCachedValueImpl(
+        @Nonnull Project project,
+        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        boolean trackValue,
+        CachedValuesFactory factory
+    ) {
+        super(trackValue, factory);
+        myProject = project;
+        myProvider = provider;
+    }
 
-  @Override
-  public T getValue(P param) {
-    return getValueWithLock(param);
-  }
+    @Override
+    public T getValue(P param) {
+        return getValueWithLock(param);
+    }
 
-  @Override
-  public boolean isFromMyProject(@Nonnull Project project) {
-    return myProject == project;
-  }
+    @Override
+    public boolean isFromMyProject(@Nonnull Project project) {
+        return myProject == project;
+    }
 
-  @Override
-  @Nonnull
-  public ParameterizedCachedValueProvider<T, P> getValueProvider() {
-    return myProvider;
-  }
+    @Override
+    @Nonnull
+    public ParameterizedCachedValueProvider<T, P> getValueProvider() {
+        return myProvider;
+    }
 
-  @Override
-  protected <X> CachedValueProvider.Result<T> doCompute(X param) {
-    return myProvider.compute((P)param);
-  }
+    @Override
+    protected <X> CachedValueProvider.Result<T> doCompute(X param) {
+        return myProvider.compute((P)param);
+    }
 }

@@ -38,8 +38,10 @@ public class LightCachedValuesManager extends CachedValuesManager {
 
     @Nonnull
     @Override
-    public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider,
-                                                                                boolean trackValue) {
+    public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
+        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        boolean trackValue
+    ) {
         return new LightParameterizedCachedValue<>(provider);
     }
 
@@ -49,10 +51,12 @@ public class LightCachedValuesManager extends CachedValuesManager {
     }
 
     @Override
-    public <T> T getCachedValue(@Nonnull UserDataHolder dataHolder,
-                                @Nonnull Key<CachedValue<T>> key,
-                                @Nonnull CachedValueProvider<T> provider,
-                                boolean trackValue) {
+    public <T> T getCachedValue(
+        @Nonnull UserDataHolder dataHolder,
+        @Nonnull Key<CachedValue<T>> key,
+        @Nonnull CachedValueProvider<T> provider,
+        boolean trackValue
+    ) {
         CachedValue<T> value = dataHolder.getUserData(key);
         if (value != null) {
             return value.getValue();

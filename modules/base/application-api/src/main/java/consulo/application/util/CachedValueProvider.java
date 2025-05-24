@@ -18,39 +18,40 @@ package consulo.application.util;
 import consulo.util.collection.ArrayUtil;
 
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 public interface CachedValueProvider<T> {
-  @Nullable
-  Result<T> compute();
+    @Nullable
+    Result<T> compute();
 
-  class Result<T> {
-    private final T myValue;
-    private final Object[] myDependencyItems;
+    class Result<T> {
+        private final T myValue;
+        private final Object[] myDependencyItems;
 
-    public Result(@Nullable T value, Object... dependencyItems) {
-      myValue = value;
-      myDependencyItems = dependencyItems;
+        public Result(@Nullable T value, Object... dependencyItems) {
+            myValue = value;
+            myDependencyItems = dependencyItems;
+        }
+
+        public T getValue() {
+            return myValue;
+        }
+
+        public Object[] getDependencyItems() {
+            return myDependencyItems;
+        }
+
+        public static <T> Result<T> createSingleDependency(@Nullable T value, Object dependency) {
+            return create(value, dependency);
+        }
+
+        public static <T> Result<T> create(@Nullable T value, Object... dependencies) {
+            return new Result<T>(value, dependencies);
+        }
+
+        public static <T> Result<T> create(@Nullable T value, Collection<?> dependencies) {
+            return new Result<T>(value, ArrayUtil.toObjectArray(dependencies));
+        }
     }
-
-    public T getValue() {
-      return myValue;
-    }
-
-    public Object[] getDependencyItems() {
-      return myDependencyItems;
-    }
-
-    public static <T> Result<T> createSingleDependency(@Nullable T value, Object dependency) {
-      return create(value, dependency);
-    }
-
-    public static <T> Result<T> create(@Nullable T value, Object... dependencies) {
-      return new Result<T>(value, dependencies);
-    }
-
-    public static <T> Result<T> create(@Nullable T value, Collection<?> dependencies) {
-      return new Result<T>(value, ArrayUtil.toObjectArray(dependencies));
-    }
-  }
 }

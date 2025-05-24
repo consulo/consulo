@@ -2,6 +2,7 @@
 package consulo.application.util;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -77,25 +78,24 @@ import java.util.function.Supplier;
  * @see CachedValuesManager
  */
 public interface CachedValue<T> {
+    /**
+     * @return cached value if it's already computed and not outdated, newly computed value otherwise
+     */
+    T getValue();
 
-  /**
-   * @return cached value if it's already computed and not outdated, newly computed value otherwise
-   */
-  T getValue();
+    /**
+     * @return the object calculating the value to cache
+     */
+    @Nonnull
+    CachedValueProvider<T> getValueProvider();
 
-  /**
-   * @return the object calculating the value to cache
-   */
-  @Nonnull
-  CachedValueProvider<T> getValueProvider();
+    /**
+     * @return whether there is a cached result inside this object and it's not outdated
+     */
+    boolean hasUpToDateValue();
 
-  /**
-   * @return whether there is a cached result inside this object and it's not outdated
-   */
-  boolean hasUpToDateValue();
-
-  /**
-   * @return if {@link #hasUpToDateValue()}, then a wrapper around the cached value, otherwise {@code null}.
-   */
-  Supplier<T> getUpToDateOrNull();
+    /**
+     * @return if {@link #hasUpToDateValue()}, then a wrapper around the cached value, otherwise {@code null}.
+     */
+    Supplier<T> getUpToDateOrNull();
 }
