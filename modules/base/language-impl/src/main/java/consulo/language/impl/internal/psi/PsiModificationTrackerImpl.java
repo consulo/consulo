@@ -43,21 +43,24 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
     public PsiModificationTrackerImpl(@Nonnull Application application, @Nonnull Project project) {
         MessageBus bus = project.getMessageBus();
         myPublisher = bus.syncPublisher(PsiModificationTrackerListener.class);
-        bus.connect().subscribe(DumbModeListener.class, new DumbModeListener() {
-            private void doIncCounter() {
-                application.runWriteAction(() -> incCounter());
-            }
+        bus.connect().subscribe(
+            DumbModeListener.class,
+            new DumbModeListener() {
+                private void doIncCounter() {
+                    application.runWriteAction(() -> incCounter());
+                }
 
-            @Override
-            public void enteredDumbMode() {
-                doIncCounter();
-            }
+                @Override
+                public void enteredDumbMode() {
+                    doIncCounter();
+                }
 
-            @Override
-            public void exitDumbMode() {
-                doIncCounter();
+                @Override
+                public void exitDumbMode() {
+                    doIncCounter();
+                }
             }
-        });
+        );
     }
 
     @Override
@@ -78,12 +81,14 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
         fireEvent();
     }
 
+    @RequiredWriteAction
     public void treeChanged(@Nonnull PsiTreeChangeEvent event) {
-        if (!canAffectPsi((PsiTreeChangeEventImpl)event)) {
+        PsiTreeChangeEventImpl eventImpl = (PsiTreeChangeEventImpl)event;
+        if (!canAffectPsi(eventImpl)) {
             return;
         }
 
-        incLanguageCounters((PsiTreeChangeEventImpl)event);
+        incLanguageCounters(eventImpl);
         incCountersInner();
     }
 
@@ -123,8 +128,8 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
             if (o instanceof PsiDirectory) {
                 continue;
             }
-            if (o instanceof PsiFile) {
-                for (Language language : ((PsiFile)o).getViewProvider().getLanguages()) {
+            if (o instanceof PsiFile file) {
+                for (Language language : file.getViewProvider().getLanguages()) {
                     incLanguageModificationCount(language);
                 }
             }

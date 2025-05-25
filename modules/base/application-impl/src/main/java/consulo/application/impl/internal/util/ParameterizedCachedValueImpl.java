@@ -56,6 +56,7 @@ public class ParameterizedCachedValueImpl<T, P> extends CachedValueBase<T> imple
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected <X> CachedValueProvider.Result<T> doCompute(X param) {
         return myProvider.compute((P)param);
     }

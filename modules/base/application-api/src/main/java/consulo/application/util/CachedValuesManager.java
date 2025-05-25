@@ -64,8 +64,7 @@ public abstract class CachedValuesManager {
     ) {
         ParameterizedCachedValue<T, P> value;
 
-        if (dataHolder instanceof UserDataHolderEx) {
-            UserDataHolderEx dh = (UserDataHolderEx)dataHolder;
+        if (dataHolder instanceof UserDataHolderEx dh) {
             value = dh.getUserData(key);
             if (value == null) {
                 trackKeyHolder(dataHolder, key);
@@ -91,13 +90,14 @@ public abstract class CachedValuesManager {
 
     /**
      * Utility method storing created cached values in a {@link UserDataHolder}.
-     * The passed cached value provider may only depend on the passed user data holder and longer-living system state (e.g. project/application components/services),
-     * see {@link CachedValue} documentation for more details.
+     * The passed cached value provider may only depend on the passed user data holder and longer-living system state
+     * (e.g. project/application components/services), see {@link CachedValue} documentation for more details.
      *
      * @param dataHolder holder to store the cached value, e.g. a PsiElement.
      * @param key        key to store the cached value.
      * @param provider   provider creating the cached value.
-     * @param trackValue if value tracking is required (T should be trackable in that case). See {@link #createCachedValue(CachedValueProvider, boolean)} for more details.
+     * @param trackValue if value tracking is required (T should be trackable in that case).
+     *                   See {@link #createCachedValue(CachedValueProvider, boolean)} for more details.
      * @return up-to-date value.
      */
     public abstract <T> T getCachedValue(
@@ -108,9 +108,10 @@ public abstract class CachedValuesManager {
     );
 
     /**
-     * Create a cached value with the given provider and non-tracked return value, store it in the first argument's user data. If it's already stored, reuse it.
-     * The passed cached value provider may only depend on the passed user data holder and longer-living system state (e.g. project/application components/services),
-     * see {@link CachedValue} documentation for more details.
+     * Create a cached value with the given provider and non-tracked return value, store it in the first argument's user data.
+     * If it's already stored, reuse it.
+     * The passed cached value provider may only depend on the passed user data holder and longer-living system state
+     * (e.g. project/application components/services), see {@link CachedValue} documentation for more details.
      *
      * @return The cached value
      */

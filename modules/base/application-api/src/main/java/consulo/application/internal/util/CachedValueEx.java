@@ -22,6 +22,6 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2023-11-05
  */
-public interface CachaValueEx<T> {
+public interface CachedValueEx<T> {
     T setValue(@Nonnull CachedValueProvider.Result<T> result);
 }

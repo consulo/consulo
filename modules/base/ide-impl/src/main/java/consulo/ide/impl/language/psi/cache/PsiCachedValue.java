@@ -51,12 +51,12 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
     }
 
     private boolean anyChangeImpliesPsiCounterChange(@Nonnull Object dependency) {
-        return dependency instanceof PsiElement && isVeryPhysical((PsiElement)dependency) ||
-            dependency instanceof ProjectRootModificationTracker ||
-            dependency instanceof PsiModificationTracker ||
-            dependency == PsiModificationTracker.MODIFICATION_COUNT ||
-            dependency == PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT ||
-            dependency == PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT;
+        return dependency instanceof PsiElement element && isVeryPhysical(element)
+            || dependency instanceof ProjectRootModificationTracker
+            || dependency instanceof PsiModificationTracker
+            || dependency == PsiModificationTracker.MODIFICATION_COUNT
+            || dependency == PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT
+            || dependency == PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT;
     }
 
     private boolean isVeryPhysical(@Nonnull PsiElement dependency) {
@@ -80,8 +80,9 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
         }
 
         Object[] dependencies = data.getDependencies();
-        if (dependencies.length > 0 && dependencies[0] == PSI_MOD_COUNT_OPTIMIZATION && data.getTimeStamps()[0] == myManager.getModificationTracker()
-            .getModificationCount()) {
+        if (dependencies.length > 0
+            && dependencies[0] == PSI_MOD_COUNT_OPTIMIZATION
+            && data.getTimeStamps()[0] == myManager.getModificationTracker().getModificationCount()) {
             return true;
         }
 
@@ -102,8 +103,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
             return myManager.getModificationTracker().getOutOfCodeBlockModificationCount();
         }
 
-        if (dependency instanceof PsiElement) {
-            PsiElement element = (PsiElement)dependency;
+        if (dependency instanceof PsiElement element) {
             if (!element.isValid()) {
                 return -1;
             }

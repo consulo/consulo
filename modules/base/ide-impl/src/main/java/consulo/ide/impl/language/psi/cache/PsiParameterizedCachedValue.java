@@ -48,6 +48,7 @@ public class PsiParameterizedCachedValue<T, P> extends PsiCachedValue<T> impleme
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected <X> CachedValueProvider.Result<T> doCompute(X param) {
         return myProvider.compute((P)param);
     }

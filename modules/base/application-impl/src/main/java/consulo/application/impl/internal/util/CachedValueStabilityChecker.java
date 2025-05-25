@@ -2,18 +2,15 @@
 package consulo.application.impl.internal.util;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.util.ConcurrentFactoryMap;
-import consulo.component.util.PluginExceptionUtil;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
+import consulo.application.util.ConcurrentFactoryMap;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.reflect.ReflectionUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -70,7 +67,7 @@ final class CachedValueStabilityChecker {
     private static final boolean DO_CHECKS = shouldDoChecks();
 
     private static boolean shouldDoChecks() {
-        Application app = ApplicationManager.getApplication();
+        Application app = Application.get();
         return app.isUnitTestMode() || app.isInternal();
     }
 
@@ -159,12 +156,13 @@ final class CachedValueStabilityChecker {
             return true;
         }
 
-        if (v1 instanceof Object[] && v2 instanceof Object[]) {
-            return Arrays.deepEquals((Object[])v1, (Object[])v2);
+        if (v1 instanceof Object[] objects1 && v2 instanceof Object[] objects2) {
+            return Arrays.deepEquals(objects1, objects2);
         }
 
-        if (v1 instanceof Reference && v2 instanceof Reference) {
-            return Objects.equals(((Reference<?>)v1).get(), ((Reference<?>)v2).get());
+        //noinspection SimplifiableIfStatement
+        if (v1 instanceof Reference r1 && v2 instanceof Reference r2) {
+            return Objects.equals(r1.get(), r2.get());
         }
 
         return false;
@@ -180,7 +178,7 @@ final class CachedValueStabilityChecker {
             "Either make `equals()` hold for these values, or avoid this dependency, e.g. by extracting CV provider into a static method.";
     }
 
-    private static void complain(@NonNls String message, String key, @Nonnull Class<?> pluginClass) {
+    private static void complain(String message, String key, @Nonnull Class<?> pluginClass) {
         if (ourReportedKeys.add(key)) {
             // curious why you've gotten this error? Maybe this class' javadoc will help.
             PluginExceptionUtil.logPluginError(LOG, message, null, pluginClass);
@@ -198,6 +196,7 @@ final class CachedValueStabilityChecker {
             return false;
         }
 
+        //noinspection SimplifiableIfStatement
         if ((o instanceof Supplier || o instanceof Function) && Object.class.equals(clazz.getSuperclass())) {
             return true;
         }

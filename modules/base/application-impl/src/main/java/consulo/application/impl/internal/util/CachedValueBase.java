@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal.util;
 
-import consulo.application.internal.util.CachaValueEx;
+import consulo.application.internal.util.CachedValueEx;
 import consulo.application.internal.util.CachedValueProfiler;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.RecursionGuard;
@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 /**
  * @author Dmitry Avdeev
  */
-public abstract class CachedValueBase<T> implements CachaValueEx<T> {
+public abstract class CachedValueBase<T> implements CachedValueEx<T> {
     private static final Logger LOG = Logger.getInstance(CachedValueBase.class);
     private final boolean myTrackValue;
     private volatile SoftReference<Data<T>> myData;
@@ -133,8 +133,8 @@ public abstract class CachedValueBase<T> implements CachaValueEx<T> {
     }
 
     protected boolean isDependencyOutOfDate(@Nonnull Object dependency, long oldTimeStamp) {
-        if (dependency instanceof CachedValueBase) {
-            return !((CachedValueBase<?>)dependency).hasUpToDateValue();
+        if (dependency instanceof CachedValueBase cachedValueBase) {
+            return !cachedValueBase.hasUpToDateValue();
         }
         final long timeStamp = getTimeStamp(dependency);
         return timeStamp < 0 || timeStamp != oldTimeStamp;
@@ -156,37 +156,25 @@ public abstract class CachedValueBase<T> implements CachaValueEx<T> {
     }
 
     protected long getTimeStamp(@Nonnull Object dependency) {
-        if (dependency instanceof VirtualFile) {
-            return ((VirtualFile)dependency).getModificationStamp();
-        }
-        if (dependency instanceof ModificationTracker) {
-            return ((ModificationTracker)dependency).getModificationCount();
-        }
-        else if (dependency instanceof Reference) {
-            Object original = ((Reference<?>)dependency).get();
-            if (original == null) {
-                return -1;
+        return switch (dependency) {
+            case VirtualFile virtualFile -> virtualFile.getModificationStamp();
+            case ModificationTracker modificationTracker -> modificationTracker.getModificationCount();
+            case Reference reference -> {
+                Object original = reference.get();
+                yield original == null ? -1 : getTimeStamp(original);
             }
-            return getTimeStamp(original);
-        }
-        else if (dependency instanceof SimpleReference) {
-            Object original = ((SimpleReference<?>)dependency).get();
-            if (original == null) {
-                return -1;
+            case SimpleReference simpleReference -> {
+                Object original = simpleReference.get();
+                yield original == null ? -1 : getTimeStamp(original);
             }
-            return getTimeStamp(original);
-        }
-        else if (dependency instanceof Document) {
-            return ((Document)dependency).getModificationStamp();
-        }
-        else if (dependency instanceof CachedValueBase) {
+            case Document document -> document.getModificationStamp();
             // to check for up to date for a cached value dependency we use .isUpToDate() method, not the timestamp
-            return 0;
-        }
-        else {
-            LOG.error("Wrong dependency type: " + dependency.getClass());
-            return -1;
-        }
+            case CachedValueBase cachedValueBase -> 0;
+            default -> {
+                LOG.error("Wrong dependency type: " + dependency.getClass());
+                yield -1;
+            }
+        };
     }
 
     @Override
@@ -206,9 +194,8 @@ public abstract class CachedValueBase<T> implements CachaValueEx<T> {
         private final Object[] myDependencies;
         @Nonnull
         private final long[] myTimeStamps;
-        final
         @Nullable
-        CachedValueProfiler.ValueTracker trackingInfo;
+        final CachedValueProfiler.ValueTracker trackingInfo;
 
         Data(T value, @Nonnull Object[] dependencies, @Nonnull long[] timeStamps, @Nullable CachedValueProfiler.ValueTracker trackingInfo) {
             myValue = value;

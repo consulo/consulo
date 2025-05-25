@@ -38,11 +38,14 @@ public class LightParameterizedCachedValue<T, P> implements ParameterizedCachedV
 
     @Override
     public T getValue(P param) {
-        return myCache.computeIfAbsent(param, p -> {
-            CachedValueProvider.Result<T> result = myProvider.compute(param);
-            T value = result == null ? null : result.getValue();
-            return new SimpleReference<>(value);
-        }).get();
+        return myCache.computeIfAbsent(
+            param,
+            p -> {
+                CachedValueProvider.Result<T> result = myProvider.compute(param);
+                T value = result == null ? null : result.getValue();
+                return new SimpleReference<>(value);
+            }
+        ).get();
     }
 
     @Override

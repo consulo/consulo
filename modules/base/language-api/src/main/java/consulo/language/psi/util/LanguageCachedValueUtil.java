@@ -23,9 +23,7 @@ import consulo.application.util.CachedValuesManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,7 +32,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 24-Apr-22
+ * @since 2022-04-24
  */
 public class LanguageCachedValueUtil {
     /**
@@ -45,7 +43,7 @@ public class LanguageCachedValueUtil {
      *
      * @return The cached value
      */
-    public static <T> T getCachedValue(final @Nonnull PsiElement context, final @Nonnull CachedValueProvider<T> provider) {
+    public static <T> T getCachedValue(@Nonnull PsiElement context, @Nonnull CachedValueProvider<T> provider) {
         return getCachedValue(context, CachedValueManagerHelper.getKeyForClass(provider.getClass()), provider);
     }
 
@@ -61,12 +59,16 @@ public class LanguageCachedValueUtil {
         @Nonnull E context,
         @Nonnull Function<? super E, ? extends T> provider
     ) {
-        return getCachedValue(context, CachedValueManagerHelper.getKeyForClass(provider.getClass()), () -> {
-            CachedValueProvider.Result<? extends T> result =
-                CachedValueProvider.Result.create(provider.apply(context), PsiModificationTracker.MODIFICATION_COUNT);
-            CachedValueProfiler.onResultCreated(result, provider);
-            return result;
-        });
+        return getCachedValue(
+            context,
+            CachedValueManagerHelper.getKeyForClass(provider.getClass()),
+            () -> {
+                CachedValueProvider.Result<? extends T> result =
+                    CachedValueProvider.Result.create(provider.apply(context), PsiModificationTracker.MODIFICATION_COUNT);
+                CachedValueProfiler.onResultCreated(result, provider);
+                return result;
+            }
+        );
     }
 
     /**
@@ -93,19 +95,15 @@ public class LanguageCachedValueUtil {
         return CachedValuesManager.getManager(context.getProject()).getCachedValue(
             context,
             key,
-            new CachedValueProvider<T>() {
-                @Override
-                public
+            new CachedValueProvider<>() {
                 @Nullable
-                Result<T> compute() {
+                @Override
+                public Result<T> compute() {
                     CachedValueProvider.Result<T> result = provider.compute();
                     if (result != null && !context.isPhysical()) {
                         PsiFile file = context.getContainingFile();
                         if (file != null) {
-                            Result<T> adjusted = Result.create(
-                                result.getValue(),
-                                ArrayUtil.append(result.getDependencyItems(), file, ArrayUtil.OBJECT_ARRAY_FACTORY)
-                            );
+                            Result<T> adjusted = result.addSingleDependency(file);
                             CachedValueProfiler.onResultCreated(adjusted, result);
                             return adjusted;
                         }

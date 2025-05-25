@@ -17,7 +17,6 @@ package consulo.application.internal.util;
 
 import consulo.application.util.CachedValue;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,26 +24,26 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author VISTALL
- * @since 24-Apr-22
+ * @since 2022-04-24
  */
 public class CachedValueManagerHelper {
-    private static final ConcurrentMap<String, Key<CachedValue<?>>> globalKeyForProvider = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<String, Key<CachedValue<?>>> KEY_BY_CLASS = new ConcurrentHashMap<>();
 
     @Nonnull
     public static <T> Key<CachedValue<T>> getKeyForClass(@Nonnull Class<?> providerClass) {
-        return getKeyForClass(providerClass, globalKeyForProvider);
+        return getKeyForClass(providerClass, KEY_BY_CLASS);
     }
 
     @Nonnull
     @SuppressWarnings("unchecked")
     public static <T> Key<CachedValue<T>> getKeyForClass(
         @Nonnull Class<?> providerClass,
-        ConcurrentMap<String, Key<CachedValue<?>>> keyForProvider
+        ConcurrentMap<String, Key<CachedValue<?>>> keyByClassMap
     ) {
         String name = providerClass.getName();
-        Key<CachedValue<?>> key = keyForProvider.get(name);
+        Key<CachedValue<?>> key = keyByClassMap.get(name);
         if (key == null) {
-            key = keyForProvider.computeIfAbsent(name, Key::create);
+            key = keyByClassMap.computeIfAbsent(name, Key::create);
         }
         return (Key)key;
     }
