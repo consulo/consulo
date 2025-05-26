@@ -17,9 +17,9 @@ package consulo.ide.impl.moduleImport;
 
 import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.ProjectImplUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.moduleImport.ModuleImportContext;
 import consulo.ide.moduleImport.ModuleImportProcessor;
 import consulo.ide.moduleImport.ModuleImportProvider;

@@ -37,7 +37,7 @@ public interface ProjectOpenProcessors {
   }
 
   @Nonnull
-  public List<ProjectOpenProcessor> getProcessors();
+  List<ProjectOpenProcessor> getProcessors();
 
   @Nullable
   default ProjectOpenProcessor findProcessor(@Nonnull File file) {
