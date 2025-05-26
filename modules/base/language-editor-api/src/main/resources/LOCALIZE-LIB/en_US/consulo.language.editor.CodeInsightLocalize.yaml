@@ -1045,3 +1045,7 @@ completion.automatic.command.name:
   text: Autocompletion
 command.fix.documentation:
   text: Fix documentation
+reformat.directory.dialog.options:
+  text: Options
+reformat.directory.dialog.filters:
+  text: Filters

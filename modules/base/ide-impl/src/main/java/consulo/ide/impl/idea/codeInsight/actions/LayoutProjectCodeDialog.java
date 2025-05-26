@@ -16,27 +16,30 @@
 
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.language.editor.CodeInsightBundle;
+import consulo.application.AllIcons;
+import consulo.application.HelpManager;
+import consulo.content.scope.SearchScope;
+import consulo.disposer.Disposer;
 import consulo.find.FindSettings;
+import consulo.find.ui.ScopeChooserCombo;
 import consulo.ide.impl.idea.find.impl.FindDialog;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.find.ui.ScopeChooserCombo;
-import consulo.application.HelpManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposer;
-import consulo.content.scope.SearchScope;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.regex.PatternSyntaxException;
 
 /**
@@ -79,7 +82,7 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
     myEnableOnlyVCSChangedTextCb = enableOnlyVCSChangedTextCb;
     myLastRunOptions = new LastRunReformatCodeOptionsProvider(PropertiesComponent.getInstance());
 
-    setOKButtonText(CodeInsightBundle.message("reformat.code.accept.button.text"));
+    setOKButtonText(CodeInsightLocalize.reformatCodeAcceptButtonText());
     setTitle(title);
     init();
   }
@@ -87,8 +90,8 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
   @Override
   protected JComponent createCenterPanel() {
     myTitle.setText(myText);
-    myOptionsPanel.setBorder(IdeBorderFactory.createTitledBorder(CodeInsightBundle.message("reformat.directory.dialog.options")));
-    myFiltersPanel.setBorder(IdeBorderFactory.createTitledBorder(CodeInsightBundle.message("reformat.directory.dialog.filters")));
+    myOptionsPanel.setBorder(IdeBorderFactory.createTitledBorder(CodeInsightLocalize.reformatDirectoryDialogOptions().get()));
+    myFiltersPanel.setBorder(IdeBorderFactory.createTitledBorder(CodeInsightLocalize.reformatDirectoryDialogFilters().get()));
 
     myMaskWarningLabel.setIcon(TargetAWT.to(AllIcons.General.Warning));
     myMaskWarningLabel.setVisible(false);
