@@ -364,6 +364,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         if (data != null) {
             return data;
         }
+
         if (Navigatable.KEY_OF_ARRAY == dataId) {
             TreePath[] paths = getSelectionPaths();
             if (paths == null) {
@@ -382,6 +383,18 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             }
             return navigatables.isEmpty() ? null : navigatables.toArray(Navigatable[]::new);
         }
+
+        if (PlatformDataKeys.SELECTED_ITEMS == dataId) {
+            TreePath[] paths = getSelectionPaths();
+            if (paths == null) {
+                return null;
+            }
+            return Arrays.stream(paths)
+                .map(TreeUtil::getUserObject)
+                .filter(Objects::nonNull)
+                .toArray();
+        }
+
         return null;
     }
 

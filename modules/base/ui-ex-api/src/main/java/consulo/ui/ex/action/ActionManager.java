@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -28,6 +29,7 @@ import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.util.Objects;
 
 /**
  * A manager for actions. Used to register and unregister actions, also
@@ -75,9 +77,19 @@ public abstract class ActionManager {
    *
    * @exception java.lang.IllegalArgumentException if <code>actionId</code> is <code>null</code>
    *
-   * @see consulo.ide.impl.idea.openapi.actionSystem.IdeActions
+   * @see IdeActions
    */
   public abstract AnAction getAction(@Nonnull String actionId);
+
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  public <T extends AnAction> T getAction(@Nonnull Class<T> actionClass) {
+    ActionImpl annotation = actionClass.getAnnotation(ActionImpl.class);
+    if (annotation == null) {
+      throw new IllegalArgumentException("Action Class is not annotated by @ActionImpl");
+    }
+    return Objects.requireNonNull((T) getAction(annotation.id()));
+  }
 
   /**
    * Returns actionId associated with the specified action.

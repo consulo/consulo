@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
@@ -41,6 +40,7 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
+import consulo.ide.impl.idea.ide.projectView.actions.ProjectViewToolbarGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
 import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
@@ -801,10 +801,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
 
     protected void createTitleActions(@Nonnull List<? super AnAction> titleActions) {
-        AnAction action = ActionManager.getInstance().getAction("ProjectViewToolbar");
-        if (action != null) {
-            titleActions.add(action);
-        }
+        ProjectViewToolbarGroup action = ActionManager.getInstance().getAction(ProjectViewToolbarGroup.class);
+        titleActions.add(action);
     }
 
     protected boolean isShowMembersOptionSupported() {

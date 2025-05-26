@@ -16,18 +16,27 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.image.ImageEffects;
+import consulo.util.collection.ArrayUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.function.Predicate;
@@ -35,7 +44,7 @@ import java.util.function.Predicate;
 /**
  * @author Konstantin Bulenkov
  */
-@SuppressWarnings({"MethodMayBeStatic"})
+@ActionImpl(id = "NewElement")
 public class NewElementAction extends AnAction implements DumbAware, PopupAction {
     @Override
     @RequiredUIAccess
@@ -97,21 +106,39 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
         Presentation presentation = e.getPresentation();
         DataContext context = e.getDataContext();
         Project project = context.getData(Project.KEY);
+
         if (project == null) {
             presentation.setEnabled(false);
             return;
         }
-        if (Boolean.TRUE.equals(context.getData(LangDataKeys.NO_NEW_ACTION))) {
-            presentation.setEnabled(false);
-            return;
-        }
-        IdeView ideView = context.getData(IdeView.KEY);
-        if (ideView == null) {
-            presentation.setEnabled(false);
-            return;
-        }
 
+        if (isProjectView(e)) {
+            presentation.setTextValue(ProjectUIViewLocalize.actionNewelementProjectviewText());
+            presentation.setIcon(ImageEffects.layered(PlatformIconGroup.generalAdd(), PlatformIconGroup.generalDropdown()));
+
+            if (ArrayUtil.isEmpty(e.getData(PlatformDataKeys.SELECTED_ITEMS))) {
+                presentation.setEnabled(false);
+                return;
+            }
+        } else {
+            if (Boolean.TRUE.equals(context.getData(LangDataKeys.NO_NEW_ACTION))) {
+                presentation.setEnabled(false);
+                return;
+            }
+
+            IdeView ideView = context.getData(IdeView.KEY);
+            if (ideView == null) {
+                presentation.setEnabled(false);
+                return;
+            }
+        }
+        
         presentation.setEnabled(!ActionGroupUtil.isGroupEmpty(getGroup(context), e));
+    }
+
+    private static boolean isProjectView(@Nonnull AnActionEvent e) {
+        var toolWindow = e.getData(ToolWindow.KEY);
+        return toolWindow != null && ToolWindowId.PROJECT_VIEW.equals(toolWindow.getId());
     }
 
     protected ActionGroup getGroup(DataContext dataContext) {

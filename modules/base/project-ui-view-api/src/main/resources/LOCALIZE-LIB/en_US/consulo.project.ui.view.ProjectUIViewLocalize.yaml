@@ -12,3 +12,5 @@ select.in.favorites:
   text: Favorites
 select.in.scope:
   text: Scope
+action.NewElement.ProjectView.text:
+  text: New File or Directory…

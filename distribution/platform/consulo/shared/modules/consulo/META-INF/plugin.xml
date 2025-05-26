@@ -2212,8 +2212,6 @@
             <add-to-group group-id="FileOpenGroup" anchor="first"/>
         </group>
 
-        <action id="NewElement" class="consulo.ide.impl.idea.ide.actions.NewElementAction"/>
-
         <group>
             <add-to-group group-id="ExportImportGroup" anchor="first"/>
         </group>
@@ -2549,15 +2547,6 @@
         </group>
 
         <action id="ShowSearchHistory" class="consulo.ui.ex.action.EmptyAction" text="Show Search History"/>
-
-        <action id="SelectInProjectView" icon="consulo.platform.base.PlatformIconGroup@general.locate"
-                class="consulo.ide.impl.idea.ide.projectView.impl.SelectFileAction"/>
-
-        <group id="ProjectViewToolbar">
-            <reference ref="SelectInProjectView"/>
-            <reference ref="ExpandAll"/>
-            <reference ref="CollapseAll"/>
-        </group>
 
         <group id="SettingsEntryPointGroup">
             <reference id="RunAnything"/>

@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.projectView.impl;
+package consulo.ide.impl.idea.ide.projectView.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
@@ -27,6 +29,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 27/02/2021
  */
+@ActionImpl(id = "SelectInProjectView")
 public class SelectFileAction extends DumbAwareAction {
   public SelectFileAction() {
     super("Scroll from Source", "Select the file open in the active editor", PlatformIconGroup.generalLocate());
