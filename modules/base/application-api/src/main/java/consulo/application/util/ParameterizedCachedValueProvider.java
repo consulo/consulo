@@ -18,6 +18,6 @@ package consulo.application.util;
 import jakarta.annotation.Nullable;
 
 public interface ParameterizedCachedValueProvider<T, P> {
-  @Nullable
-  CachedValueProvider.Result<T> compute(P param);
+    @Nullable
+    CachedValueProvider.Result<T> compute(P param);
 }

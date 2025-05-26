@@ -28,10 +28,9 @@ package consulo.application.util;
  * depending on which thread called it first with which argument.<p></p>
  */
 public interface ParameterizedCachedValue<T, P> {
+    T getValue(P param);
 
-  T getValue(P param);
+    ParameterizedCachedValueProvider<T, P> getValueProvider();
 
-  ParameterizedCachedValueProvider<T, P> getValueProvider();
-
-  boolean hasUpToDateValue();
+    boolean hasUpToDateValue();
 }

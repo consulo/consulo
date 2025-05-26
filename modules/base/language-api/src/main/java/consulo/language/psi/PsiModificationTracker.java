@@ -28,95 +28,95 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface PsiModificationTracker extends ModificationTracker {
-  /**
-   * Provides a way to get the instance of {@link PsiModificationTracker} corresponding to a given project.
-   *
-   * @see #getInstance(Project)
-   */
-  @Deprecated
-  @DeprecationInfo("#getInstance(Project)")
-  class SERVICE {
-    private SERVICE() {
+    /**
+     * Provides a way to get the instance of {@link PsiModificationTracker} corresponding to a given project.
+     *
+     * @see #getInstance(Project)
+     */
+    @Deprecated
+    @DeprecationInfo("#getInstance(Project)")
+    class SERVICE {
+        private SERVICE() {
+        }
+
+        /**
+         * @return The instance of {@link PsiModificationTracker} corresponding to the given project.
+         */
+        public static PsiModificationTracker getInstance(Project project) {
+            return PsiModificationTracker.getInstance(project);
+        }
+    }
+
+    @Nonnull
+    static PsiModificationTracker getInstance(Project project) {
+        return project.getInstance(PsiModificationTracker.class);
     }
 
     /**
-     * @return The instance of {@link PsiModificationTracker} corresponding to the given project.
+     * This key can be passed as a dependency in a {@link CachedValueProvider}.
+     * The corresponding {@link CachedValue} will then be flushed on every physical PSI change.
+     *
+     * @see #getModificationCount()
      */
-    public static PsiModificationTracker getInstance(Project project) {
-      return PsiModificationTracker.getInstance(project);
+    Key MODIFICATION_COUNT = Key.create("MODIFICATION_COUNT");
+
+    /**
+     * This key can be passed as a dependency in a {@link CachedValueProvider}.
+     * The corresponding {@link CachedValue} will then be flushed on every physical PSI change that doesn't happen inside a Java code block.
+     * This can include changes on Java class or file level, or changes in non-Java files, e.g. XML. Rarely needed.
+     *
+     * @see #getOutOfCodeBlockModificationCount()
+     * @deprecated rarely supported by language plugins; also a wrong way for optimisations
+     */
+    @Deprecated
+    Key OUT_OF_CODE_BLOCK_MODIFICATION_COUNT = Key.create("OUT_OF_CODE_BLOCK_MODIFICATION_COUNT");
+
+    /**
+     * This key can be passed as a dependency in a {@link CachedValueProvider}.
+     * The corresponding {@link CachedValue} will then be flushed on every physical PSI change that can affect Java structure and resolve.
+     *
+     * @see #getJavaStructureModificationCount()
+     * @deprecated rarely supported by JVM language plugins; also a wrong way for optimisations
+     */
+    @Deprecated
+    Key JAVA_STRUCTURE_MODIFICATION_COUNT = Key.create("JAVA_STRUCTURE_MODIFICATION_COUNT");
+
+    /**
+     * Tracks any PSI modification.
+     *
+     * @return current counter value. Increased whenever any physical PSI is changed.
+     */
+    @Override
+    long getModificationCount();
+
+    /**
+     * Increase count. Required write action. Please we careful calling this method
+     */
+    @RequiredWriteAction
+    void incCounter();
+
+    @Nonnull
+    ModificationTracker getModificationTracker();
+
+    @Deprecated
+    default long getOutOfCodeBlockModificationCount() {
+        return getModificationCount();
     }
-  }
 
-  @Nonnull
-  static PsiModificationTracker getInstance(Project project) {
-    return project.getInstance(PsiModificationTracker.class);
-  }
+    @Deprecated
+    @Nonnull
+    default ModificationTracker getOutOfCodeBlockModificationTracker() {
+        return getModificationTracker();
+    }
 
-  /**
-   * This key can be passed as a dependency in a {@link CachedValueProvider}.
-   * The corresponding {@link CachedValue} will then be flushed on every physical PSI change.
-   *
-   * @see #getModificationCount()
-   */
-  Key MODIFICATION_COUNT = Key.create("MODIFICATION_COUNT");
+    @Deprecated
+    default long getJavaStructureModificationCount() {
+        return getModificationCount();
+    }
 
-  /**
-   * This key can be passed as a dependency in a {@link CachedValueProvider}.
-   * The corresponding {@link CachedValue} will then be flushed on every physical PSI change that doesn't happen inside a Java code block.
-   * This can include changes on Java class or file level, or changes in non-Java files, e.g. XML. Rarely needed.
-   *
-   * @see #getOutOfCodeBlockModificationCount()
-   * @deprecated rarely supported by language plugins; also a wrong way for optimisations
-   */
-  @Deprecated
-  Key OUT_OF_CODE_BLOCK_MODIFICATION_COUNT = Key.create("OUT_OF_CODE_BLOCK_MODIFICATION_COUNT");
-
-  /**
-   * This key can be passed as a dependency in a {@link CachedValueProvider}.
-   * The corresponding {@link CachedValue} will then be flushed on every physical PSI change that can affect Java structure and resolve.
-   *
-   * @see #getJavaStructureModificationCount()
-   * @deprecated rarely supported by JVM language plugins; also a wrong way for optimisations
-   */
-  @Deprecated
-  Key JAVA_STRUCTURE_MODIFICATION_COUNT = Key.create("JAVA_STRUCTURE_MODIFICATION_COUNT");
-
-  /**
-   * Tracks any PSI modification.
-   *
-   * @return current counter value. Increased whenever any physical PSI is changed.
-   */
-  @Override
-  long getModificationCount();
-
-  /**
-   * Increase count. Required write action. Please we careful calling this method
-   */
-  @RequiredWriteAction
-  void incCounter();
-
-  @Nonnull
-  ModificationTracker getModificationTracker();
-
-  @Deprecated
-  default long getOutOfCodeBlockModificationCount() {
-    return getModificationCount();
-  }
-
-  @Deprecated
-  @Nonnull
-  default ModificationTracker getOutOfCodeBlockModificationTracker() {
-    return getModificationTracker();
-  }
-
-  @Deprecated
-  default long getJavaStructureModificationCount() {
-    return getModificationCount();
-  }
-
-  @Deprecated
-  @Nonnull
-  default ModificationTracker getJavaStructureModificationTracker() {
-    return getModificationTracker();
-  }
+    @Deprecated
+    @Nonnull
+    default ModificationTracker getJavaStructureModificationTracker() {
+        return getModificationTracker();
+    }
 }

@@ -28,31 +28,36 @@ import jakarta.annotation.Nullable;
  * @author Dmitry Avdeev
  */
 public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedValue<T> {
-  private final CachedValueProvider<T> myProvider;
+    private final CachedValueProvider<T> myProvider;
 
-  public PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, CachedValuesFactory factory) {
-    this(manager, provider, false, factory);
-  }
+    public PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, CachedValuesFactory factory) {
+        this(manager, provider, false, factory);
+    }
 
-  PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
-    super(manager, trackValue, factory);
-    myProvider = provider;
-  }
+    PsiCachedValueImpl(
+        @Nonnull PsiManager manager,
+        @Nonnull CachedValueProvider<T> provider,
+        boolean trackValue,
+        CachedValuesFactory factory
+    ) {
+        super(manager, trackValue, factory);
+        myProvider = provider;
+    }
 
-  @Override
-  @Nullable
-  public T getValue() {
-    return getValueWithLock(null);
-  }
+    @Override
+    @Nullable
+    public T getValue() {
+        return getValueWithLock(null);
+    }
 
-  @Nonnull
-  @Override
-  public CachedValueProvider<T> getValueProvider() {
-    return myProvider;
-  }
+    @Nonnull
+    @Override
+    public CachedValueProvider<T> getValueProvider() {
+        return myProvider;
+    }
 
-  @Override
-  protected <P> CachedValueProvider.Result<T> doCompute(P param) {
-    return myProvider.compute();
-  }
+    @Override
+    protected <P> CachedValueProvider.Result<T> doCompute(P param) {
+        return myProvider.compute();
+    }
 }
