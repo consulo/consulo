@@ -24,42 +24,54 @@ import java.util.function.Supplier;
 @Singleton
 @ServiceImpl
 public final class PsiCachedValuesFactory implements CachedValuesFactory {
-  private final PsiManager myManager;
+    private final PsiManager myManager;
 
-  @Inject
-  public PsiCachedValuesFactory(@Nonnull PsiManager psiManager) {
-    myManager = psiManager;
-  }
+    @Inject
+    public PsiCachedValuesFactory(@Nonnull PsiManager psiManager) {
+        myManager = psiManager;
+    }
 
-  @Nonnull
-  @Override
-  public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
-    return new PsiCachedValueImpl<>(myManager, provider, trackValue, this);
-  }
+    @Nonnull
+    @Override
+    public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
+        return new PsiCachedValueImpl<>(myManager, provider, trackValue, this);
+    }
 
-  @Nonnull
-  @Override
-  public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue) {
-    return new PsiParameterizedCachedValue<>(myManager, provider, trackValue, this);
-  }
+    @Nonnull
+    @Override
+    public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
+        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        boolean trackValue
+    ) {
+        return new PsiParameterizedCachedValue<>(myManager, provider, trackValue, this);
+    }
 
-  @Override
-  public void checkProviderForMemoryLeak(@Nonnull CachedValueProvider<?> provider, @Nonnull Key<?> key, @Nonnull UserDataHolder userDataHolder) {
-    CachedValueLeakChecker.checkProvider(provider, key, userDataHolder);
-  }
+    @Override
+    public void checkProviderForMemoryLeak(
+        @Nonnull CachedValueProvider<?> provider,
+        @Nonnull Key<?> key,
+        @Nonnull UserDataHolder userDataHolder
+    ) {
+        CachedValueLeakChecker.checkProvider(provider, key, userDataHolder);
+    }
 
-  @Override
-  public boolean areRandomChecksEnabled() {
-    return IdempotenceChecker.areRandomChecksEnabled();
-  }
+    @Override
+    public boolean areRandomChecksEnabled() {
+        return IdempotenceChecker.areRandomChecksEnabled();
+    }
 
-  @Override
-  public <T> void applyForRandomCheck(T data, Object provider, Supplier<? extends T> recomputeValue) {
-    IdempotenceChecker.applyForRandomCheck(data, provider, recomputeValue);
-  }
+    @Override
+    public <T> void applyForRandomCheck(T data, Object provider, Supplier<? extends T> recomputeValue) {
+        IdempotenceChecker.applyForRandomCheck(data, provider, recomputeValue);
+    }
 
-  @Override
-  public <T> void checkEquivalence(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue) {
-    IdempotenceChecker.checkEquivalence(existing, fresh, providerClass, recomputeValue);
-  }
+    @Override
+    public <T> void checkEquivalence(
+        @Nullable T existing,
+        @Nullable T fresh,
+        @Nonnull Class<?> providerClass,
+        @Nullable Supplier<? extends T> recomputeValue
+    ) {
+        IdempotenceChecker.checkEquivalence(existing, fresh, providerClass, recomputeValue);
+    }
 }

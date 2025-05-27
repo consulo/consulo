@@ -26,6 +26,7 @@ import consulo.util.dataholder.UserDataHolder;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Supplier;
 
 /**
@@ -33,24 +34,36 @@ import java.util.function.Supplier;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface CachedValuesFactory {
-  <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue);
+    <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue);
 
-  <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue);
+    <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
+        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        boolean trackValue
+    );
 
-  default void checkProviderForMemoryLeak(@Nonnull CachedValueProvider<?> provider, @Nonnull Key<?> key, @Nonnull UserDataHolder userDataHolder) {
-  }
+    default void checkProviderForMemoryLeak(
+        @Nonnull CachedValueProvider<?> provider,
+        @Nonnull Key<?> key,
+        @Nonnull UserDataHolder userDataHolder
+    ) {
+    }
 
-  default boolean areRandomChecksEnabled() {
-    return false;
-  }
+    default boolean areRandomChecksEnabled() {
+        return false;
+    }
 
-  /**
-   * Call this when accessing an already cached value by enabling areRandomChecksEnabled()
-   */
-  default <T> void applyForRandomCheck(T data, Object provider, Supplier<? extends T> recomputeValue) {
-    throw new UnsupportedOperationException();
-  }
+    /**
+     * Call this when accessing an already cached value by enabling areRandomChecksEnabled()
+     */
+    default <T> void applyForRandomCheck(T data, Object provider, Supplier<? extends T> recomputeValue) {
+        throw new UnsupportedOperationException();
+    }
 
-  default <T> void checkEquivalence(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue) {
-  }
+    default <T> void checkEquivalence(
+        @Nullable T existing,
+        @Nullable T fresh,
+        @Nonnull Class<?> providerClass,
+        @Nullable Supplier<? extends T> recomputeValue
+    ) {
+    }
 }

@@ -2,20 +2,18 @@
 package consulo.application.impl.internal.util;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.util.ConcurrentFactoryMap;
-import consulo.component.util.PluginExceptionUtil;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
+import consulo.application.util.ConcurrentFactoryMap;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.reflect.ReflectionUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -35,8 +33,8 @@ import java.util.function.Supplier;
  * <p>
  * The fix usually involves getting rid of the problematic dependency. This often can be done by moving some sub-expressions
  * in or out of the cached value provider, or extracting the whole cached value access into a static method (to avoid capturing "this").
- * In rare cases, if the values are equivalent and "safe" (don't leak anything short-lived and don't contain different data depending on calling context),
- * it makes sense to define {@link Object#equals(Object)} in their class.<p></p>
+ * In rare cases, if the values are equivalent and "safe" (don't leak anything short-lived and don't contain different data
+ * depending on calling context), it makes sense to define {@link Object#equals(Object)} in their class.<p></p>
  * <p>
  * Occasionally, false positives may be reported:
  * <ol>
@@ -63,128 +61,150 @@ import java.util.function.Supplier;
  * but no checks can catch that for you, you're on your own.
  */
 final class CachedValueStabilityChecker {
-  private static final Logger LOG = Logger.getInstance(CachedValueStabilityChecker.class);
-  private static final Set<String> ourReportedKeys = ContainerUtil.newConcurrentSet();
-  private static final ConcurrentMap<Class<?>, List<Field>> ourFieldCache = ConcurrentFactoryMap.createMap(ReflectionUtil::collectFields);
-  private static final boolean DO_CHECKS = shouldDoChecks();
+    private static final Logger LOG = Logger.getInstance(CachedValueStabilityChecker.class);
+    private static final Set<String> ourReportedKeys = ContainerUtil.newConcurrentSet();
+    private static final ConcurrentMap<Class<?>, List<Field>> ourFieldCache = ConcurrentFactoryMap.createMap(ReflectionUtil::collectFields);
+    private static final boolean DO_CHECKS = shouldDoChecks();
 
-  private static boolean shouldDoChecks() {
-    Application app = ApplicationManager.getApplication();
-    return app.isUnitTestMode() || app.isInternal();
-  }
-
-  static void checkProvidersEquivalent(CachedValueProvider<?> p1, CachedValueProvider<?> p2, Key<?> key) throws Exception {
-    if (p1 == p2 || !DO_CHECKS) return;
-
-    if (p1.getClass() != p2.getClass()) {
-      if (!seemConcurrentlyCreatedLambdas(p1.getClass(), p2.getClass())) {
-        complain("Incorrect CachedValue use: different providers supplied for the same key: " + p1 + " and " + p2, key.toString(), p1.getClass());
-      }
-      return;
+    private static boolean shouldDoChecks() {
+        Application app = Application.get();
+        return app.isUnitTestMode() || app.isInternal();
     }
 
-    checkFieldEquivalence(p1, p2, key.toString(), 0, p1.getClass());
-  }
-
-  /**
-   * Several classes can be generated concurrently at runtime for the same lambda,
-   * we can neither avoid that nor check equivalence in this case.
-   */
-  private static boolean seemConcurrentlyCreatedLambdas(Class<?> c1, Class<?> c2) {
-    if (c1 == c2) return false;
-
-    String name1 = c1.getName();
-    String name2 = c2.getName();
-    int index = name1.indexOf("$$Lambda");
-    return index > 0 && index == name2.indexOf("$$Lambda") && name2.startsWith(name1.substring(0, index)) && ourFieldCache.get(c1).size() == ourFieldCache.get(c2).size();
-  }
-
-  private static boolean checkFieldEquivalence(Object o1, Object o2, String key, int depth, @Nonnull Class<?> pluginClass) throws Exception {
-    if (depth > 100) {
-      complain("Too deep function delegation inside CachedValueProvider. If you have cyclic dependencies, please remove them.", key, pluginClass);
-      return false;
-    }
-
-    for (Field field : ourFieldCache.get(o1.getClass())) {
-      Object v1;
-      Object v2;
-      field.setAccessible(true);
-      v1 = field.get(o1);
-      v2 = field.get(o2);
-
-      if (areEqual(v1, v2)) continue;
-
-      if (v1 != null && v2 != null && seemConcurrentlyCreatedLambdas(v1.getClass(), v2.getClass())) {
-        continue;
-      }
-
-      if (v1 != null && v2 != null && v1.getClass() == v2.getClass() && shouldGoDeeper(v1)) {
-        if (!checkFieldEquivalence(v1, v2, key, depth + 1, v1.getClass())) {
-          return false;
+    static void checkProvidersEquivalent(CachedValueProvider<?> p1, CachedValueProvider<?> p2, Key<?> key) throws Exception {
+        if (p1 == p2 || !DO_CHECKS) {
+            return;
         }
-      }
-      else {
-        complain(nonEquivalence(o1.getClass(), field, v1, v2), key, pluginClass);
+
+        if (p1.getClass() != p2.getClass()) {
+            if (!seemConcurrentlyCreatedLambdas(p1.getClass(), p2.getClass())) {
+                complain(
+                    "Incorrect CachedValue use: different providers supplied for the same key: " + p1 + " and " + p2,
+                    key.toString(),
+                    p1.getClass()
+                );
+            }
+            return;
+        }
+
+        checkFieldEquivalence(p1, p2, key.toString(), 0, p1.getClass());
+    }
+
+    /**
+     * Several classes can be generated concurrently at runtime for the same lambda,
+     * we can neither avoid that nor check equivalence in this case.
+     */
+    private static boolean seemConcurrentlyCreatedLambdas(Class<?> c1, Class<?> c2) {
+        if (c1 == c2) {
+            return false;
+        }
+
+        String name1 = c1.getName();
+        String name2 = c2.getName();
+        int index = name1.indexOf("$$Lambda");
+        return index > 0 && index == name2.indexOf("$$Lambda")
+            && name2.startsWith(name1.substring(0, index))
+            && ourFieldCache.get(c1).size() == ourFieldCache.get(c2).size();
+    }
+
+    private static boolean checkFieldEquivalence(
+        Object o1,
+        Object o2,
+        String key,
+        int depth,
+        @Nonnull Class<?> pluginClass
+    ) throws Exception {
+        if (depth > 100) {
+            complain(
+                "Too deep function delegation inside CachedValueProvider. If you have cyclic dependencies, please remove them.",
+                key,
+                pluginClass
+            );
+            return false;
+        }
+
+        for (Field field : ourFieldCache.get(o1.getClass())) {
+            Object v1;
+            Object v2;
+            field.setAccessible(true);
+            v1 = field.get(o1);
+            v2 = field.get(o2);
+
+            if (areEqual(v1, v2)) {
+                continue;
+            }
+
+            if (v1 != null && v2 != null && seemConcurrentlyCreatedLambdas(v1.getClass(), v2.getClass())) {
+                continue;
+            }
+
+            if (v1 != null && v2 != null && v1.getClass() == v2.getClass() && shouldGoDeeper(v1)) {
+                if (!checkFieldEquivalence(v1, v2, key, depth + 1, v1.getClass())) {
+                    return false;
+                }
+            }
+            else {
+                complain(nonEquivalence(o1.getClass(), field, v1, v2), key, pluginClass);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean areEqual(Object v1, Object v2) {
+        if (Objects.equals(v1, v2)) {
+            return true;
+        }
+
+        if (v1 instanceof Object[] objects1 && v2 instanceof Object[] objects2) {
+            return Arrays.deepEquals(objects1, objects2);
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (v1 instanceof Reference r1 && v2 instanceof Reference r2) {
+            return Objects.equals(r1.get(), r2.get());
+        }
+
         return false;
-      }
-    }
-    return true;
-  }
-
-  private static boolean areEqual(Object v1, Object v2) {
-    if (Objects.equals(v1, v2)) return true;
-
-    if (v1 instanceof Object[] && v2 instanceof Object[]) {
-      return Arrays.deepEquals((Object[])v1, (Object[])v2);
     }
 
-    if (v1 instanceof Reference && v2 instanceof Reference) {
-      return Objects.equals(((Reference<?>)v1).get(), ((Reference<?>)v2).get());
+    @Nonnull
+    private static String nonEquivalence(Class<?> objectClass, Field field, @Nullable Object v1, @Nullable Object v2) {
+        return "Incorrect CachedValue use: same CV with different captured context, " +
+            "this can cause unstable results and invalid PSI access." +
+            "\nField " + field.getName() + " in " + objectClass + " has non-equivalent values:\n" +
+            "  " + v1 + (v1 == null ? "" : " (" + v1.getClass().getName() + ")") + " and\n" +
+            "  " + v2 + (v2 == null ? "" : " (" + v2.getClass().getName() + ")") + "\n" +
+            "Either make `equals()` hold for these values, or avoid this dependency, e.g. by extracting CV provider into a static method.";
     }
 
-    return false;
-  }
-
-  @Nonnull
-  private static String nonEquivalence(Class<?> objectClass, Field field, @Nullable Object v1, @Nullable Object v2) {
-    return "Incorrect CachedValue use: same CV with different captured context, this can cause unstable results and invalid PSI access." +
-           "\nField " +
-           field.getName() +
-           " in " +
-           objectClass +
-           " has non-equivalent values:" +
-           "\n  " +
-           v1 +
-           (v1 == null ? "" : " (" + v1.getClass().getName() + ")") +
-           " and" +
-           "\n  " +
-           v2 +
-           (v2 == null ? "" : " (" + v2.getClass().getName() + ")") +
-           "\nEither make `equals()` hold for these values, or avoid this dependency, e.g. by extracting CV provider into a static method.";
-  }
-
-  private static void complain(@NonNls String message, String key, @Nonnull Class<?> pluginClass) {
-    if (ourReportedKeys.add(key)) {
-      // curious why you've gotten this error? Maybe this class' javadoc will help.
-      PluginExceptionUtil.logPluginError(LOG, message, null, pluginClass);
-    }
-  }
-
-  private static boolean shouldGoDeeper(Object o) {
-    if (o instanceof CachedValueProvider) return true;
-
-    Class<?> clazz = o.getClass();
-    Class<?> superclass = clazz.getSuperclass();
-    if (superclass == null) return false;
-
-    if ((o instanceof Supplier || o instanceof Function) && Object.class.equals(clazz.getSuperclass())) {
-      return true;
+    private static void complain(String message, String key, @Nonnull Class<?> pluginClass) {
+        if (ourReportedKeys.add(key)) {
+            // curious why you've gotten this error? Maybe this class' javadoc will help.
+            PluginExceptionUtil.logPluginError(LOG, message, null, pluginClass);
+        }
     }
 
-    return "kotlin.jvm.internal.Lambda".equals(superclass.getName());
-  }
+    private static boolean shouldGoDeeper(Object o) {
+        if (o instanceof CachedValueProvider) {
+            return true;
+        }
 
-  static void cleanupFieldCache() {
-    ourFieldCache.clear();
-  }
+        Class<?> clazz = o.getClass();
+        Class<?> superclass = clazz.getSuperclass();
+        if (superclass == null) {
+            return false;
+        }
+
+        //noinspection SimplifiableIfStatement
+        if ((o instanceof Supplier || o instanceof Function) && Object.class.equals(clazz.getSuperclass())) {
+            return true;
+        }
+
+        return "kotlin.jvm.internal.Lambda".equals(superclass.getName());
+    }
+
+    static void cleanupFieldCache() {
+        ourFieldCache.clear();
+    }
 }

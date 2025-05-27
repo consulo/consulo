@@ -4,7 +4,7 @@ package consulo.language.inject.impl.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.internal.util.CachaValueEx;
+import consulo.application.internal.util.CachedValueEx;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
 import consulo.application.util.ParameterizedCachedValue;
@@ -125,7 +125,7 @@ public final class ConcatenationInjectorManager extends SimpleModificationTracke
                     return result1 == null ? null : CachedValueProvider.Result.create(result1, manager);
                 }, false);
 
-                ((CachaValueEx<InjectionResult>)data).setValue(cachedResult);
+                ((CachedValueEx<InjectionResult>)data).setValue(cachedResult);
 
                 anchor.putUserData(INJECTED_PSI_IN_CONCATENATION, data);
                 if (anchor.getUserData(NO_CONCAT_INJECTION_TIMESTAMP) != null) {

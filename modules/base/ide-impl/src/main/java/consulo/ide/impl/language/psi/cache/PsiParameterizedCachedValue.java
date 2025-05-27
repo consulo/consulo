@@ -24,26 +24,32 @@ import consulo.application.util.ParameterizedCachedValueProvider;
 import jakarta.annotation.Nonnull;
 
 public class PsiParameterizedCachedValue<T, P> extends PsiCachedValue<T> implements ParameterizedCachedValue<T, P> {
-  private final ParameterizedCachedValueProvider<T, P> myProvider;
+    private final ParameterizedCachedValueProvider<T, P> myProvider;
 
-  PsiParameterizedCachedValue(@Nonnull PsiManager manager, @Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue, CachedValuesFactory factory) {
-    super(manager, trackValue, factory);
-    myProvider = provider;
-  }
+    PsiParameterizedCachedValue(
+        @Nonnull PsiManager manager,
+        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        boolean trackValue,
+        CachedValuesFactory factory
+    ) {
+        super(manager, trackValue, factory);
+        myProvider = provider;
+    }
 
-  @Override
-  public T getValue(P param) {
-    return getValueWithLock(param);
-  }
+    @Override
+    public T getValue(P param) {
+        return getValueWithLock(param);
+    }
 
-  @Nonnull
-  @Override
-  public ParameterizedCachedValueProvider<T, P> getValueProvider() {
-    return myProvider;
-  }
+    @Nonnull
+    @Override
+    public ParameterizedCachedValueProvider<T, P> getValueProvider() {
+        return myProvider;
+    }
 
-  @Override
-  protected <X> CachedValueProvider.Result<T> doCompute(X param) {
-    return myProvider.compute((P)param);
-  }
+    @Override
+    @SuppressWarnings("unchecked")
+    protected <X> CachedValueProvider.Result<T> doCompute(X param) {
+        return myProvider.compute((P)param);
+    }
 }

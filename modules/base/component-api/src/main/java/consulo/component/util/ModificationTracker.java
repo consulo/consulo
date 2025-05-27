@@ -19,15 +19,15 @@ package consulo.component.util;
  * @author dyoma
  */
 public interface ModificationTracker {
-  long getModificationCount();
+    long getModificationCount();
 
-  ModificationTracker EVER_CHANGED = new ModificationTracker() {
-    private long myCounter = 0;
+    ModificationTracker EVER_CHANGED = new ModificationTracker() {
+        private long myCounter = 0;
 
-    @Override
-    public long getModificationCount() {
-      return myCounter++;
-    }
-  };
-  ModificationTracker NEVER_CHANGED = () -> 0;
+        @Override
+        public long getModificationCount() {
+            return myCounter++;
+        }
+    };
+    ModificationTracker NEVER_CHANGED = () -> 0;
 }
