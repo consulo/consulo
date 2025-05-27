@@ -76,3 +76,14 @@ If you want run Consulo from repository
 * [Issues](https://github.com/consulo/consulo/issues)
 * [Forum](https://https://github.com/consulo/consulo/discussions/)
 * [Discord Channel](https://discord.gg/Ab3Ka5gTFv)
+
+## We are using YourKit Java Profiler!
+
+![](https://www.yourkit.com/images/yklogo.png)
+
+YourKit supports open source projects with innovative and intelligent tools
+for monitoring and profiling Java and .NET applications.
+
+YourKit is the creator of <a href="https://www.yourkit.com/java/profiler/">YourKit Java Profiler</a>,
+<a href="https://www.yourkit.com/dotnet-profiler/">YourKit .NET Profiler</a>,
+and <a href="https://www.yourkit.com/youmonitor/">YourKit YouMonitor</a>.
