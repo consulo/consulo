@@ -16,21 +16,19 @@
 package consulo.desktop.awt.wm.impl.content;
 
 import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowImpl;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl;
 import consulo.disposer.Disposer;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowContentAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.ui.ex.content.TabbedContent;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
 import consulo.ide.impl.idea.ui.popup.PopupState;
-import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -43,6 +41,8 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUtilEx;
+import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.popup.JBPopup;
@@ -55,12 +55,11 @@ import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-import kava.beans.PropertyChangeEvent;
-import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -656,7 +655,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
   @Override
   @Nullable
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (ToolWindow.KEY == dataId) return myWindow;
 
     if (CloseAction.CloseTarget.KEY == dataId) {

@@ -29,7 +29,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @since 2025-05-25
  */
 @ActionImpl(id = ActionPlaces.PROJECT_VIEW_TOOLBAR, children = {
-    //@ActionRef(type = NewElementAction.class),
+    @ActionRef(type = ProjectNewElementAction.class),
     @ActionRef(type = AnSeparator.class),
     @ActionRef(type = SelectFileAction.class),
     @ActionRef(type = ExpandAllAction.class),

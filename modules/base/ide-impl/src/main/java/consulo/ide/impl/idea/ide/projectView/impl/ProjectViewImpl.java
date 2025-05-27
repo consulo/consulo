@@ -98,8 +98,8 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.tree.NodeDescriptor;
@@ -565,11 +565,12 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         myAutoScrollFromSourceHandler.install();
 
         myContentManager = toolWindow.getContentManager();
-        if (!myProject.getApplication().isUnitTestMode()) {
-            toolWindow.setDefaultContentUiType(ToolWindowContentUiType.COMBO);
-            toolWindow.setAdditionalGearActions(myActionGroup);
-            toolWindow.getComponent().putClientProperty(ToolWindowContentUI.HIDE_ID_LABEL, "true");
-        }
+
+        toolWindow.setDefaultContentUiType(ToolWindowContentUiType.COMBO);
+        toolWindow.setAdditionalGearActions(myActionGroup);
+        toolWindow.getComponent().putClientProperty(ToolWindowContentUI.HIDE_ID_LABEL, "true");
+
+        myContentManager.addDataProvider(dataId -> myDataProvider.getData(dataId));
 
         GuiUtils.replaceJSplitPaneWithIDEASplitter(myPanel);
         SwingUtilities.invokeLater(() -> splitterProportions.restoreSplitterProportions(myPanel));
@@ -580,7 +581,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         isInitialized = true;
         doAddUninitializedPanes();
 
-        getContentManager().addContentManagerListener(new ContentManagerAdapter() {
+        getContentManager().addContentManagerListener(new ContentManagerListener() {
             @Override
             @RequiredUIAccess
             public void selectionChanged(ContentManagerEvent event) {

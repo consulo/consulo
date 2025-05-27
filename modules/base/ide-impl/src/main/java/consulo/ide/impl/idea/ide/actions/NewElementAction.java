@@ -23,21 +23,16 @@ import consulo.ide.IdeView;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.view.localize.ProjectUIViewLocalize;
-import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.image.ImageEffects;
-import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import java.util.function.Predicate;
 
@@ -46,19 +41,28 @@ import java.util.function.Predicate;
  */
 @ActionImpl(id = "NewElement")
 public class NewElementAction extends AnAction implements DumbAware, PopupAction {
-    @Override
-    @RequiredUIAccess
-    public void actionPerformed(AnActionEvent event) {
-        showPopup(event.getDataContext());
+    private final ActionManager myActionManager;
+
+    @Inject
+    public NewElementAction(ActionManager actionManager) {
+        myActionManager = actionManager;
     }
 
-    protected void showPopup(DataContext context) {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent event) {
+        showPopup(event);
+    }
+
+    protected void showPopup(AnActionEvent event) {
+        DataContext context = event.getDataContext();
         createPopup(context).showInBestPositionFor(context);
     }
 
+    @Nonnull
     protected ListPopup createPopup(DataContext dataContext) {
         return JBPopupFactory.getInstance().createActionGroupPopup(
-            getPopupTitle(),
+            getPopupTitle().get(),
             getGroup(dataContext),
             dataContext,
             isShowNumbers(),
@@ -96,8 +100,9 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
         return false;
     }
 
-    protected String getPopupTitle() {
-        return IdeLocalize.titlePopupNewElement().get();
+    @Nonnull
+    protected LocalizeValue getPopupTitle() {
+        return IdeLocalize.titlePopupNewElement();
     }
 
     @Override
@@ -112,36 +117,30 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
             return;
         }
 
-        if (isProjectView(e)) {
-            presentation.setTextValue(ProjectUIViewLocalize.actionNewelementProjectviewText());
-            presentation.setIcon(ImageEffects.layered(PlatformIconGroup.generalAdd(), PlatformIconGroup.generalDropdown()));
-
-            if (ArrayUtil.isEmpty(e.getData(PlatformDataKeys.SELECTED_ITEMS))) {
-                presentation.setEnabled(false);
-                return;
-            }
-        } else {
-            if (Boolean.TRUE.equals(context.getData(LangDataKeys.NO_NEW_ACTION))) {
-                presentation.setEnabled(false);
-                return;
-            }
-
-            IdeView ideView = context.getData(IdeView.KEY);
-            if (ideView == null) {
-                presentation.setEnabled(false);
-                return;
-            }
+        IdeView ideView = context.getData(IdeView.KEY);
+        if (ideView == null) {
+            presentation.setEnabled(false);
+            return;
         }
-        
+
+        if (!isEnabled(e, ideView)) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        if (Boolean.TRUE.equals(context.getData(LangDataKeys.NO_NEW_ACTION))) {
+            presentation.setEnabled(false);
+            return;
+        }
+
         presentation.setEnabled(!ActionGroupUtil.isGroupEmpty(getGroup(context), e));
     }
 
-    private static boolean isProjectView(@Nonnull AnActionEvent e) {
-        var toolWindow = e.getData(ToolWindow.KEY);
-        return toolWindow != null && ToolWindowId.PROJECT_VIEW.equals(toolWindow.getId());
+    protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull IdeView ideView) {
+        return true;
     }
 
     protected ActionGroup getGroup(DataContext dataContext) {
-        return (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_WEIGHING_NEW);
+        return (ActionGroup) myActionManager.getAction(IdeActions.GROUP_WEIGHING_NEW);
     }
 }

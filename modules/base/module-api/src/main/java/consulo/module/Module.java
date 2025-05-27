@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

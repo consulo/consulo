@@ -1609,14 +1609,6 @@
         <group id="WeighingNewGroup" class="consulo.ide.impl.idea.ide.actions.WeighingNewActionGroup"/>
 
 
-        <!-- Toolbar -->
-        <!--
-        <group id="ToolbarNewElement">
-          <action id="NewElementToolbarAction" class="consulo.ide.impl.idea.ide.actions.NewElementToolbarAction" icon="/general/add.png"/>
-          <add-to-group group-id="MainToolBar" anchor="first"/>
-        </group>
-        -->
-
         <group id="ToolbarFindGroup">
             <separator/>
 
@@ -1900,8 +1892,6 @@
                     icon="consulo.platform.base.PlatformIconGroup@actions.back"
                     use-shortcut-of="RecentFiles"/>
         </group>
-
-        <action id="NewElementSamePlace" class="consulo.ide.impl.idea.ide.actions.NewElementSamePlaceAction"/>
 
         <action id="ChangeCodeStyleScheme" class="consulo.ide.impl.idea.ide.actions.QuickChangeCodeStyleSchemeAction">
             <add-to-group group-id="ChangeScheme" anchor="after" relative-to-action="ChangeColorScheme"/>

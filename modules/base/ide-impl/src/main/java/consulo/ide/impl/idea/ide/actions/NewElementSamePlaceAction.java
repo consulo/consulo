@@ -16,11 +16,23 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.ActionManager;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
+@ActionImpl(id = "NewElementSamePlace")
 public class NewElementSamePlaceAction extends NewElementAction {
+    @Inject
+    public NewElementSamePlaceAction(ActionManager actionManager) {
+        super(actionManager);
+    }
+
+    @Nonnull
     @Override
-    protected String getPopupTitle() {
-        return IdeBundle.message("title.popup.new.element.same.place");
+    protected LocalizeValue getPopupTitle() {
+        return IdeLocalize.titlePopupNewElementSamePlace();
     }
 }

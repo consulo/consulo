@@ -89,7 +89,6 @@ public interface DataManager {
     throw new UnsupportedOperationException();
   }
 
-  @NonNls
   public static final String CLIENT_PROPERTY_DATA_PROVIDER = "DataProvider";
 
   public static void registerDataProvider(@Nonnull javax.swing.JComponent component, @Nonnull DataProvider provider) {
