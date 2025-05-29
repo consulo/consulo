@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.editor.ex.util;
 
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
@@ -574,30 +575,35 @@ public final class EditorUtil {
      * excluded
      */
     public static boolean isPointOverText(@Nonnull Editor editor, @Nonnull Point point) {
-        VisualPosition visualPosition = editor.xyToVisualPosition(point);
-        int visualLineStartY = editor.visualLineToY(visualPosition.line);
-        if (point.y < visualLineStartY || point.y >= visualLineStartY + editor.getLineHeight()) {
-            return false; // block inlay space
-        }
-        if (editor.getSoftWrapModel().isInsideOrBeforeSoftWrap(visualPosition)) {
-            return false; // soft wrap
-        }
-        LogicalPosition logicalPosition = editor.visualToLogicalPosition(visualPosition);
-        int offset = editor.logicalPositionToOffset(logicalPosition);
-        if (!logicalPosition.equals(editor.offsetToLogicalPosition(offset))) {
-            return false; // virtual space
-        }
-        List<Inlay<?>> inlays = editor.getInlayModel().getInlineElementsInRange(offset, offset);
-        if (!inlays.isEmpty()) {
-            VisualPosition inlaysStart = editor.offsetToVisualPosition(offset);
-            if (inlaysStart.line == visualPosition.line) {
-                int relX = point.x - editor.visualPositionToXY(inlaysStart).x;
-                if (relX >= 0 && relX < inlays.stream().mapToInt(Inlay::getWidthInPixels).sum()) {
-                    return false; // inline inlay
+        return ReadAction.compute(() -> {
+            VisualPosition visualPosition = editor.xyToVisualPosition(point);
+            int visualLineStartY = editor.visualLineToY(visualPosition.line);
+            if (point.y < visualLineStartY || point.y >= visualLineStartY + editor.getLineHeight()) {
+                return false; // block inlay space
+            }
+            if (editor.getSoftWrapModel().isInsideOrBeforeSoftWrap(visualPosition)) {
+                return false; // soft wrap
+            }
+            LogicalPosition logicalPosition = editor.visualToLogicalPosition(visualPosition);
+            int offset = editor.logicalPositionToOffset(logicalPosition);
+            if (editor.getFoldingModel().getCollapsedRegionAtOffset(offset) instanceof CustomFoldRegion) {
+                return false;
+            }
+            if (!logicalPosition.equals(editor.offsetToLogicalPosition(offset))) {
+                return false; // virtual space
+            }
+            List<Inlay<?>> inlays = editor.getInlayModel().getInlineElementsInRange(offset, offset);
+            if (!inlays.isEmpty()) {
+                VisualPosition inlaysStart = editor.offsetToVisualPosition(offset);
+                if (inlaysStart.line == visualPosition.line) {
+                    int relX = point.x - editor.visualPositionToXY(inlaysStart).x;
+                    if (relX >= 0 && relX < inlays.stream().mapToInt(Inlay::getWidthInPixels).sum()) {
+                        return false; // inline inlay
+                    }
                 }
             }
-        }
-        return true;
+            return true;
+        });
     }
 
     /**

@@ -111,6 +111,14 @@ public class EditorUtil {
         return editor.getSettings().getTabSize(editor.getProject());
     }
 
+    public static int getInlaysHeight(@Nonnull Editor editor, int visualLine, boolean above) {
+        return getInlaysHeight(editor.getInlayModel(), visualLine, above);
+    }
+
+    public static int getInlaysHeight(@Nonnull InlayModel inlayModel, int visualLine, boolean above) {
+        return getTotalInlaysHeight(inlayModel.getBlockElementsForVisualLine(visualLine, above));
+    }
+
     public static int getTotalInlaysHeight(@Nonnull List<? extends Inlay> inlays) {
         int sum = 0;
         for (Inlay inlay : inlays) {
@@ -229,6 +237,21 @@ public class EditorUtil {
         }
         int lineNumber = document.getLineNumber(offset);
         return document.getLineEndOffset(lineNumber);
+    }
+
+    public static int getNotFoldedLineStartOffset(@Nonnull Document document, @Nonnull FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
+        int offset = startOffset;
+        while (true) {
+            offset = DocumentUtil.getLineStartOffset(offset, document);
+            FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset - 1);
+            if (foldRegion == null ||
+                stopAtInvisibleFoldRegions && foldRegion.getPlaceholderText().isEmpty() ||
+                foldRegion.getStartOffset() >= offset) {
+                break;
+            }
+            offset = foldRegion.getStartOffset();
+        }
+        return offset;
     }
 
     /**
