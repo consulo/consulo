@@ -18,9 +18,9 @@ package consulo.codeEditor.event;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.ui.event.details.InputDetails;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
@@ -36,148 +36,148 @@ import java.util.EventObject;
  * {@link MouseEvent#MOUSE_EXITED MOUSE_EXITED} events. Return values of corresponding event getters are unspecified for those events.
  */
 public class EditorMouseEvent extends EventObject {
-  // create with holder. because we not use at AWT impl it for now
-  static class FakeHolder {
-    // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system
-    private static final JLabel fakeLabel = new JLabel("fake");
+    // create with holder. because we not use at AWT impl it for now
+    static class FakeHolder {
+        // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system
+        private static final JLabel fakeLabel = new JLabel("fake");
 
-    private static MouseEvent createFake() {
-      return new MouseEvent(fakeLabel, 0, 0, 0, 0, 0, 1, false);
+        private static MouseEvent createFake() {
+            return new MouseEvent(fakeLabel, 0, 0, 0, 0, 0, 1, false);
+        }
     }
-  }
 
-  @Nonnull
-  private final MouseEvent myMouseEvent;
-  @Nullable
-  private final InputDetails myInputDetails;
-  private boolean myConsumed;
-  private final boolean myPopupTrigger;
+    @Nonnull
+    private final MouseEvent myMouseEvent;
+    @Nullable
+    private final InputDetails myInputDetails;
+    private boolean myConsumed;
+    private final boolean myPopupTrigger;
 
-  private final EditorMouseEventArea myEditorArea;
-  private final int myOffset;
-  private final LogicalPosition myLogicalPosition;
-  private final VisualPosition myVisualPosition;
-  private final boolean myIsOverText;
-  private final FoldRegion myCollapsedFoldRegion;
-  private final Inlay myInlay;
-  private final GutterIconRenderer myGutterIconRenderer;
+    private final EditorMouseEventArea myEditorArea;
+    private final int myOffset;
+    private final LogicalPosition myLogicalPosition;
+    private final VisualPosition myVisualPosition;
+    private final boolean myIsOverText;
+    private final FoldRegion myCollapsedFoldRegion;
+    private final Inlay myInlay;
+    private final GutterIconRenderer myGutterIconRenderer;
 
-  public EditorMouseEvent(@Nonnull Editor editor, @Nonnull MouseEvent mouseEvent, EditorMouseEventArea area) {
-    this(editor, mouseEvent, null, mouseEvent.isPopupTrigger(), area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
-  }
-
-  public EditorMouseEvent(@Nonnull Editor editor, @Nonnull InputDetails inputDetails, boolean popupTrigger, EditorMouseEventArea area) {
-    this(editor, FakeHolder.createFake(), inputDetails, popupTrigger, area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
-  }
-
-  public EditorMouseEvent(@Nonnull Editor editor,
-                          @Nonnull MouseEvent mouseEvent,
-                          @Nullable InputDetails inputDetails,
-                          boolean popupTrigger,
-                          EditorMouseEventArea area,
-                          int offset,
-                          @Nonnull LogicalPosition logicalPosition,
-                          @Nonnull VisualPosition visualPosition,
-                          boolean isOverText,
-                          FoldRegion collapsedFoldRegion,
-                          Inlay inlay,
-                          GutterIconRenderer gutterIconRenderer) {
-    super(editor);
-
-    myMouseEvent = mouseEvent;
-    myInputDetails = inputDetails;
-    myPopupTrigger = popupTrigger;
-    myEditorArea = area;
-    myOffset = offset;
-    myLogicalPosition = logicalPosition;
-    myVisualPosition = visualPosition;
-    myIsOverText = isOverText;
-    myCollapsedFoldRegion = collapsedFoldRegion;
-    myInlay = inlay;
-    myGutterIconRenderer = gutterIconRenderer;
-  }
-
-  @Nonnull
-  public Editor getEditor() {
-    return (Editor)getSource();
-  }
-
-  @Nonnull
-  public MouseEvent getMouseEvent() {
-    return myMouseEvent;
-  }
-
-  @Nullable
-  public InputDetails getInputDetails() {
-    return myInputDetails;
-  }
-
-  public void consume() {
-    if (myInputDetails != null) {
-      myConsumed = true;
+    public EditorMouseEvent(@Nonnull Editor editor, @Nonnull MouseEvent mouseEvent, EditorMouseEventArea area) {
+        this(editor, mouseEvent, null, mouseEvent.isPopupTrigger(), area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
     }
-    else {
-      myMouseEvent.consume();
+
+    public EditorMouseEvent(@Nonnull Editor editor, @Nonnull InputDetails inputDetails, boolean popupTrigger, EditorMouseEventArea area) {
+        this(editor, FakeHolder.createFake(), inputDetails, popupTrigger, area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
     }
-  }
 
-  public boolean isConsumed() {
-    if(myInputDetails != null) {
-      return myConsumed;
+    public EditorMouseEvent(@Nonnull Editor editor,
+                            @Nonnull MouseEvent mouseEvent,
+                            @Nullable InputDetails inputDetails,
+                            boolean popupTrigger,
+                            EditorMouseEventArea area,
+                            int offset,
+                            @Nonnull LogicalPosition logicalPosition,
+                            @Nonnull VisualPosition visualPosition,
+                            boolean isOverText,
+                            FoldRegion collapsedFoldRegion,
+                            Inlay inlay,
+                            GutterIconRenderer gutterIconRenderer) {
+        super(editor);
+
+        myMouseEvent = mouseEvent;
+        myInputDetails = inputDetails;
+        myPopupTrigger = popupTrigger;
+        myEditorArea = area;
+        myOffset = offset;
+        myLogicalPosition = logicalPosition;
+        myVisualPosition = visualPosition;
+        myIsOverText = isOverText;
+        myCollapsedFoldRegion = collapsedFoldRegion;
+        myInlay = inlay;
+        myGutterIconRenderer = gutterIconRenderer;
     }
-    else {
-      return myMouseEvent.isConsumed();
+
+    @Nonnull
+    public Editor getEditor() {
+        return (Editor) getSource();
     }
-  }
 
-  public boolean isPopupTrigger() {
-    if(myInputDetails != null) {
-      return myPopupTrigger;
+    @Nonnull
+    public MouseEvent getMouseEvent() {
+        return myMouseEvent;
     }
-    else {
-      return myMouseEvent.isPopupTrigger();
+
+    @Nullable
+    public InputDetails getInputDetails() {
+        return myInputDetails;
     }
-  }
 
-  public EditorMouseEventArea getArea() {
-    return myEditorArea;
-  }
+    public void consume() {
+        if (myInputDetails != null) {
+            myConsumed = true;
+        }
+        else {
+            myMouseEvent.consume();
+        }
+    }
 
-  public int getOffset() {
-    return myOffset;
-  }
+    public boolean isConsumed() {
+        if (myInputDetails != null) {
+            return myConsumed;
+        }
+        else {
+            return myMouseEvent.isConsumed();
+        }
+    }
 
-  public
-  @Nonnull
-  LogicalPosition getLogicalPosition() {
-    return myLogicalPosition;
-  }
+    public boolean isPopupTrigger() {
+        if (myInputDetails != null) {
+            return myPopupTrigger;
+        }
+        else {
+            return myMouseEvent.isPopupTrigger();
+        }
+    }
 
-  public
-  @Nonnull
-  VisualPosition getVisualPosition() {
-    return myVisualPosition;
-  }
+    public EditorMouseEventArea getArea() {
+        return myEditorArea;
+    }
 
-  /**
-   * Returns {@code false} if mouse is below the last line of text, to the right of the last character on the line, or over an inlay.
-   */
-  public boolean isOverText() {
-    return myIsOverText;
-  }
+    public int getOffset() {
+        return myOffset;
+    }
 
-  @Nullable
-  public FoldRegion getCollapsedFoldRegion() {
-    return myCollapsedFoldRegion == null || !myCollapsedFoldRegion.isValid() ? null : myCollapsedFoldRegion;
-  }
+    public
+    @Nonnull
+    LogicalPosition getLogicalPosition() {
+        return myLogicalPosition;
+    }
 
-  @Nullable
-  public Inlay getInlay() {
-    return myInlay == null || !myInlay.isValid() ? null : myInlay;
-  }
+    public
+    @Nonnull
+    VisualPosition getVisualPosition() {
+        return myVisualPosition;
+    }
 
-  @Nullable
-  public GutterIconRenderer getGutterIconRenderer() {
-    return myGutterIconRenderer;
-  }
+    /**
+     * Returns {@code false} if mouse is below the last line of text, to the right of the last character on the line, or over an inlay.
+     */
+    public boolean isOverText() {
+        return myIsOverText;
+    }
+
+    @Nullable
+    public FoldRegion getCollapsedFoldRegion() {
+        return myCollapsedFoldRegion == null || !myCollapsedFoldRegion.isValid() ? null : myCollapsedFoldRegion;
+    }
+
+    @Nullable
+    public Inlay getInlay() {
+        return myInlay == null || !myInlay.isValid() ? null : myInlay;
+    }
+
+    @Nullable
+    public GutterIconRenderer getGutterIconRenderer() {
+        return myGutterIconRenderer;
+    }
 }

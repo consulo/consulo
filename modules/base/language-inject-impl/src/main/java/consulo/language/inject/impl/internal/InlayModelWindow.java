@@ -71,14 +71,14 @@ class InlayModelWindow implements InlayModel {
 
     @Nonnull
     @Override
-    public List<Inlay> getBlockElementsInRange(int startOffset, int endOffset) {
+    public List<Inlay<?>> getBlockElementsInRange(int startOffset, int endOffset) {
         logUnsupported();
         return Collections.emptyList();
     }
 
     @Nonnull
     @Override
-    public List<Inlay> getBlockElementsForVisualLine(int visualLine, boolean above) {
+    public List<Inlay<?>> getBlockElementsForVisualLine(int visualLine, boolean above) {
         logUnsupported();
         return Collections.emptyList();
     }
@@ -112,7 +112,7 @@ class InlayModelWindow implements InlayModel {
 
     @Nonnull
     @Override
-    public List<Inlay> getAfterLineEndElementsForLogicalLine(int logicalLine) {
+    public List<Inlay<?>> getAfterLineEndElementsForLogicalLine(int logicalLine) {
         logUnsupported();
         return Collections.emptyList();
     }

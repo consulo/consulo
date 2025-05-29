@@ -2837,6 +2837,32 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myDropHandler = dropHandler;
     }
 
+    @Nonnull
+    private EditorMouseEvent createEditorMouseEvent(@Nonnull MouseEvent e) {
+        Point point = e.getPoint();
+        EditorMouseEventArea area = getMouseEventArea(e);
+        boolean inEditingArea = area == EditorMouseEventArea.EDITING_AREA;
+        EditorLocation location = new EditorLocation(this, inEditingArea ? point : new Point(0, point.y));
+        VisualPosition visualPosition = location.getVisualPosition();
+        LogicalPosition logicalPosition = location.getLogicalPosition();
+        int offset = location.getOffset();
+        int relX = point.x - myEditorComponent.getInsets().left;
+        Inlay<?> inlayCandidate = inEditingArea ? myInlayModel.getElementAt(location, true) : null;
+        Inlay<?> inlay = inlayCandidate == null ||
+            (inlayCandidate.getPlacement() == Inlay.Placement.BELOW_LINE ||
+                inlayCandidate.getPlacement() == Inlay.Placement.ABOVE_LINE) &&
+                inlayCandidate.getWidthInPixels() <= relX ? null : inlayCandidate;
+        FoldRegion foldRegionCandidate = inEditingArea ? myFoldingModel.getFoldingPlaceholderAt(location, true) : null;
+        FoldRegion foldRegion = foldRegionCandidate instanceof CustomFoldRegion &&
+            ((CustomFoldRegion) foldRegionCandidate).getWidthInPixels() <= relX ? null : foldRegionCandidate;
+        GutterIconRenderer gutterIconRenderer = inEditingArea ? null : myGutterComponent.getGutterRenderer(point);
+        boolean overText = inlayCandidate == null &&
+            (foldRegionCandidate == null || foldRegion != null) &&
+            offsetToLogicalPosition(offset).equals(logicalPosition);
+        return new EditorMouseEvent(this, e, null, e.isPopupTrigger(), area, offset, logicalPosition, visualPosition,
+            overText, foldRegion, inlay, gutterIconRenderer);
+    }
+
     private static class MyInputMethodHandleSwingThreadWrapper implements InputMethodRequests {
         private final InputMethodRequests myDelegate;
 
@@ -3170,7 +3196,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @Override
         public void mouseExited(@Nonnull MouseEvent e) {
             runMouseExitedCommand(e);
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
                 myGutterComponent.mouseExited(e);
             }
@@ -3186,7 +3212,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
             boolean forceProcessing = false;
             myMousePressedEvent = e;
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
 
             myExpectedCaretOffset = logicalPositionToOffset(myLastMousePressedLocation);
             try {
@@ -3235,7 +3261,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         private void runMouseClickedCommand(@Nonnull final MouseEvent e) {
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             for (EditorMouseListener listener : myMouseListeners) {
                 listener.mouseClicked(event);
                 if (isReleased) {
@@ -3258,7 +3284,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 return;
             }
 
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             for (EditorMouseListener listener : myMouseListeners) {
                 listener.mouseReleased(event);
                 if (isReleased || event.isConsumed()) {
@@ -3284,7 +3310,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         private void runMouseEnteredCommand(@Nonnull MouseEvent e) {
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             for (EditorMouseListener listener : myMouseListeners) {
                 listener.mouseEntered(event);
                 if (isReleased) {
@@ -3298,7 +3324,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         private void runMouseExitedCommand(@Nonnull MouseEvent e) {
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             for (EditorMouseListener listener : myMouseListeners) {
                 listener.mouseExited(event);
                 if (isReleased) {
@@ -3646,7 +3672,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             }
             validateMousePointer(e);
             runMouseDraggedCommand(e);
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
                 myGutterComponent.mouseDragged(e);
             }
@@ -3681,7 +3707,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
             myMouseMovedEvent = e;
 
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             if (e.getSource() == myGutterComponent) {
                 myGutterComponent.mouseMoved(e);
             }
@@ -3973,6 +3999,16 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     public MouseListener getMouseListener() {
         return myMouseListener;
+    }
+
+    public EditorView getView() {
+        return myView;
+    }
+
+    @Override
+    @Nonnull
+    public int[] visualLineToYRange(int visualLine) {
+        return myView.visualLineToYRange(visualLine);
     }
 
     /**

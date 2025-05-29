@@ -60,13 +60,13 @@ public class TextComponentInlayModel implements InlayModel {
 
     @Nonnull
     @Override
-    public List<Inlay> getBlockElementsInRange(int startOffset, int endOffset) {
+    public List<Inlay<?>> getBlockElementsInRange(int startOffset, int endOffset) {
         return Collections.emptyList();
     }
 
     @Nonnull
     @Override
-    public List<Inlay> getBlockElementsForVisualLine(int visualLine, boolean above) {
+    public List<Inlay<?>> getBlockElementsForVisualLine(int visualLine, boolean above) {
         return Collections.emptyList();
     }
 
@@ -95,7 +95,7 @@ public class TextComponentInlayModel implements InlayModel {
 
     @Nonnull
     @Override
-    public List<Inlay> getAfterLineEndElementsForLogicalLine(int logicalLine) {
+    public List<Inlay<?>> getAfterLineEndElementsForLogicalLine(int logicalLine) {
         return Collections.emptyList();
     }
 

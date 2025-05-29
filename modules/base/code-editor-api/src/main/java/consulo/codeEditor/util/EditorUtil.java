@@ -15,13 +15,14 @@
  */
 package consulo.codeEditor.util;
 
+import consulo.application.ReadAction;
 import consulo.application.util.Dumpable;
-import consulo.logging.util.LoggerUtil;
 import consulo.codeEditor.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
+import consulo.logging.util.LoggerUtil;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -74,20 +75,24 @@ public class EditorUtil {
      */
     @Nonnull
     public static VisualPosition inlayAwareOffsetToVisualPosition(@Nonnull Editor editor, int offset) {
-        LogicalPosition logicalPosition = editor.offsetToLogicalPosition(offset);
-        if (editor instanceof InjectedEditor) {
-            logicalPosition = ((InjectedEditor) editor).injectedToHost(logicalPosition);
-            editor = ((InjectedEditor) editor).getDelegate();
-        }
-        VisualPosition pos = editor.logicalToVisualPosition(logicalPosition);
-        Inlay inlay;
-        while ((inlay = editor.getInlayModel().getInlineElementAt(pos)) != null) {
-            if (inlay.isRelatedToPrecedingText()) {
-                break;
+        return ReadAction.compute(() -> {
+            Editor e = editor;
+            LogicalPosition logicalPosition = e.offsetToLogicalPosition(offset);
+            if (e instanceof InjectedEditor) {
+                logicalPosition = ((InjectedEditor) e).injectedToHost(logicalPosition);
+                e = ((InjectedEditor) e).getDelegate();
             }
-            pos = new VisualPosition(pos.line, pos.column + 1);
-        }
-        return pos;
+
+            VisualPosition pos = e.logicalToVisualPosition(logicalPosition);
+            Inlay inlay;
+            while ((inlay = e.getInlayModel().getInlineElementAt(pos)) != null) {
+                if (inlay.isRelatedToPrecedingText()) {
+                    break;
+                }
+                pos = new VisualPosition(pos.line, pos.column + 1);
+            }
+            return pos;
+        });
     }
 
     public static boolean attributesImpactFontStyle(@Nullable TextAttributes attributes) {

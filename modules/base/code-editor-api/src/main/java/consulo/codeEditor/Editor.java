@@ -561,4 +561,22 @@ public interface Editor extends UserDataHolder {
     default VirtualFile getVirtualFile() {
         return null;
     }
+
+    default int visualPositionToOffset(@Nonnull VisualPosition pos) {
+        return logicalPositionToOffset(visualToLogicalPosition(pos));
+    }
+
+    /**
+     * Returns the range of Y coordinates corresponding to the given visual line (not including associated block inlays).
+     *
+     * @return array of length 2, containing boundaries of the target Y range
+     */
+    @Nonnull
+    default int[] visualLineToYRange(int visualLine) {
+        int startY = visualLineToY(visualLine);
+        int startOffset = visualPositionToOffset(new VisualPosition(visualLine, 0));
+        FoldRegion foldRegion = getFoldingModel().getCollapsedRegionAtOffset(startOffset);
+        int endY = startY + (foldRegion instanceof CustomFoldRegion ? ((CustomFoldRegion) foldRegion).getHeightInPixels() : getLineHeight());
+        return new int[]{startY, endY};
+    }
 }

@@ -23,5 +23,7 @@ public enum EffectType {
     BOLD_LINE_UNDERSCORE,
     BOLD_DOTTED_LINE,
     SEARCH_MATCH,
-    ROUNDED_BOX
+    ROUNDED_BOX,
+    SLIGHTLY_WIDER_BOX,
+    FADED
 }

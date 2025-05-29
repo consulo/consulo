@@ -5,6 +5,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.InlayModel;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.ui.UIAccess;
@@ -116,7 +117,7 @@ public abstract class InlayImpl<R extends EditorCustomElementRenderer, T extends
     @Nullable
     @Override
     public Rectangle getBounds() {
-        if (myEditor.getFoldingModel().isOffsetCollapsed(getOffset())) {
+        if (EditorImplUtil.isInlayFolded(this)) {
             return null;
         }
         Point pos = getPosition();

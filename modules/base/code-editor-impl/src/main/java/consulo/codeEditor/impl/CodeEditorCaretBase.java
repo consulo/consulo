@@ -534,12 +534,14 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   }
 
   private void updateOffsetsFromLogicalPosition() {
-    int offset = myEditor.logicalPositionToOffset(myLogicalCaret);
-    PositionMarker oldMarker = myPositionMarker;
-    myPositionMarker = new PositionMarker(offset);
-    oldMarker.dispose();
-    myLeansTowardsLargerOffsets = myLogicalCaret.leansForward;
-    myLogicalColumnAdjustment = myLogicalCaret.column - myEditor.offsetToLogicalPosition(offset).column;
+      int offset = myEditor.logicalPositionToOffset(myLogicalCaret);
+      PositionMarker oldMarker = myPositionMarker;
+      if (!oldMarker.isValid() || oldMarker.getStartOffset() != offset || oldMarker.getEndOffset() != offset) {
+          myPositionMarker = new PositionMarker(offset);
+          oldMarker.dispose();
+      }
+      myLeansTowardsLargerOffsets = myLogicalCaret.leansForward;
+      myLogicalColumnAdjustment = myLogicalCaret.column - myEditor.offsetToLogicalPosition(offset).column;
   }
 
   private void setLastColumnNumber(int lastColumnNumber) {

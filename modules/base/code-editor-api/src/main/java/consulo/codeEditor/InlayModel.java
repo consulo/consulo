@@ -141,7 +141,7 @@ public interface InlayModel {
      * (higher priority ones appear first). Both visible and invisible (due to folding) elements are returned.
      */
     @Nonnull
-    List<Inlay> getBlockElementsInRange(int startOffset, int endOffset);
+    List<Inlay<?>> getBlockElementsInRange(int startOffset, int endOffset);
 
     /**
      * Same as {@link #getBlockElementsInRange(int, int)}, but returned list contains only inlays with renderer of given type.
@@ -156,7 +156,7 @@ public interface InlayModel {
      * Only visible (not folded) elements are returned.
      */
     @Nonnull
-    List<Inlay> getBlockElementsForVisualLine(int visualLine, boolean above);
+    List<Inlay<?>> getBlockElementsForVisualLine(int visualLine, boolean above);
 
     /**
      * Tells whether there exists at least one block element currently.
@@ -241,7 +241,7 @@ public interface InlayModel {
      * @see #addAfterLineEndElement(int, boolean, EditorCustomElementRenderer)
      */
     @Nonnull
-    List<Inlay> getAfterLineEndElementsForLogicalLine(int logicalLine);
+    List<Inlay<?>> getAfterLineEndElementsForLogicalLine(int logicalLine);
 
     /**
      * When text is inserted at inline element's offset, resulting element's position is determined by its

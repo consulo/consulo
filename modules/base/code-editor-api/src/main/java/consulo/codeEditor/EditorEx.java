@@ -360,4 +360,8 @@ public interface EditorEx extends Editor {
 
     default void resetSizes() {
     }
+
+    default boolean isAd() {
+        return false;
+    }
 }
