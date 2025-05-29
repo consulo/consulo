@@ -231,6 +231,21 @@ public class EditorUtil {
         return offset;
     }
 
+    public static int getNotFoldedLineEndOffset(@Nonnull Document document, @Nonnull FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
+        int offset = startOffset;
+        while (true) {
+            offset = getLineEndOffset(offset, document);
+            FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset);
+            if (foldRegion == null ||
+                stopAtInvisibleFoldRegions && foldRegion.getPlaceholderText().isEmpty() ||
+                foldRegion.getEndOffset() <= offset) {
+                break;
+            }
+            offset = foldRegion.getEndOffset();
+        }
+        return offset;
+    }
+
     private static int getLineEndOffset(int offset, Document document) {
         if (offset >= document.getTextLength()) {
             return offset;

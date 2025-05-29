@@ -103,4 +103,12 @@ public interface RealEditor extends EditorEx {
     default int getDescent() {
         return 0;
     }
+
+    default boolean isStickyLinePainting() {
+        return false;
+    }
+
+    default boolean isRightAligned() {
+        return false;
+    }
 }

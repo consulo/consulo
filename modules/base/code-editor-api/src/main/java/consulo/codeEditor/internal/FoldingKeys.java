@@ -15,4 +15,6 @@ public interface FoldingKeys {
      * This key forces the platform to consider the folding region as an additional caret position.
      */
     Key<Boolean> ADDITIONAL_CARET_POSITION_FOR_EMPTY_PLACEHOLDER = Key.create("folding.additional.caret.position.for.empty.placeholder");
+
+    Key<Boolean> ZOMBIE_REGION_KEY = Key.create("zombie.fold.region");
 }

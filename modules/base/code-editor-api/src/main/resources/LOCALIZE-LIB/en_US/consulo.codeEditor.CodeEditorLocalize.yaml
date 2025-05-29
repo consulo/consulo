@@ -102,4 +102,10 @@ action.EditorGutterToggleGlobalStickyLines.text:
     text: Show Sticky Lines
 action.EditorGutterToggleGlobalStickyLines.description:
     text: Show the sticky lines panel
+radio.editor.tab.long.arrow:
+    text: Long arrow
+radio.editor.tab.arrow:
+    text: '> symbol'
+radio.editor.tab.horizontal.line:
+    text: Horizontal line
 

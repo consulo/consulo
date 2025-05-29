@@ -1,68 +1,143 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.codeEditor;
 
 import consulo.ui.color.ColorValue;
-
+import consulo.util.lang.MathUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Used to override caret painting color and, for non-block carets, their width.
+ * Used to override caret attributes such as shape, size or painting color.
  */
 public final class CaretVisualAttributes {
-  public static final CaretVisualAttributes DEFAULT = new CaretVisualAttributes(null, Weight.NORMAL);
 
-  @Nullable
-  private final ColorValue myColor;
-  @Nonnull
-  private final Weight myWeight;
+    /**
+     * @deprecated use {@link #getDefault()} instead
+     */
+    @Deprecated
+    public static final CaretVisualAttributes DEFAULT = new CaretVisualAttributes(null, Weight.NORMAL, Shape.DEFAULT, 1.0f);
 
-  public CaretVisualAttributes(@Nullable ColorValue color, @Nonnull Weight weight) {
-    myColor = color;
-    myWeight = weight;
-  }
-
-  @Nullable
-  public ColorValue getColor() {
-    return myColor;
-  }
-
-  @Nonnull
-  public Weight getWeight() {
-    return myWeight;
-  }
-
-  public int getWidth(int defaultWidth) {
-    return Math.max(1, defaultWidth + myWeight.delta);
-  }
-
-  public enum Weight {
-    THIN(-1),
-    NORMAL(0),
-    HEAVY(1);
-
-    private final int delta;
-
-    Weight(int delta) {
-      this.delta = delta;
+    public static CaretVisualAttributes getDefault() {
+        return DEFAULT;
     }
 
-    public int getDelta() {
-      return delta;
+    private final @Nullable ColorValue myColor;
+    private final @Nonnull Weight myWeight;
+    private final @Nonnull Shape myShape;
+    private final float myThickness;
+
+    /**
+     * Creates an instance of {@link CaretVisualAttributes} using the {@link Shape#DEFAULT} shape.
+     *
+     * @param color  The color to draw the caret. If {@code null}, the caret will be drawn using {@link com.intellij.openapi.editor.colors.EditorColors#CARET_COLOR}.
+     * @param weight Describes the thickness of the caret when drawn as a vertical bar.
+     */
+    public CaretVisualAttributes(@Nullable ColorValue color, @Nonnull Weight weight) {
+        this(color, weight, Shape.DEFAULT, 1.0f);
     }
-  }
+
+    /**
+     * Creates an instance of {@link CaretVisualAttributes} with full control of color, shape and caret size.
+     *
+     * @param color     The color to draw the caret. If {@code null}, the caret will be drawn using {@link com.intellij.openapi.editor.colors.EditorColors#CARET_COLOR}.
+     * @param weight    The weight of the vertical bar. This is only used when shape is {@link Shape#DEFAULT}.
+     * @param shape     The shape to draw the caret.
+     * @param thickness The thickness used to draw the caret, as a factor of height or width. The value is clamped between 0 and 1.0f
+     *                  This only applies when shape is either {@link Shape#BAR} or {@link Shape#UNDERSCORE}.
+     */
+    public CaretVisualAttributes(@Nullable ColorValue color, @Nonnull Weight weight, @Nonnull Shape shape, float thickness) {
+        myColor = color;
+        myWeight = weight;
+        myShape = shape;
+        myThickness = MathUtil.clamp(thickness, 0, 1.0f);
+    }
+
+    /**
+     * @return The color used to paint the caret. If {@code null}, the caret will be drawn using {@link com.intellij.openapi.editor.colors.EditorColors#CARET_COLOR}.
+     */
+    public @Nullable ColorValue getColor() {
+        return myColor;
+    }
+
+    /**
+     * @return The {@link Shape} to draw the caret.
+     */
+    public @Nonnull Shape getShape() {
+        return myShape;
+    }
+
+    /**
+     * Thickness of a {@link Shape#BAR} or {@link Shape#UNDERSCORE} caret expressed as a factor of width or height.
+     * <p>
+     * The value is clamped between 0 and 1.0f. If the value is 0, the caret is effectively hidden. Any value greater than zero is subject to
+     * a minimum line size. It might be useful for a plugin to hide the caret e.g. to visually emulate block selection as a selection rather
+     * than as multiple carets with discrete selections.
+     *
+     * @return A factor to multiply against width or height.
+     */
+    public float getThickness() {
+        return myThickness;
+    }
+
+    /**
+     * The weight used to modify the width of the vertical bar when shape is {@link Shape#DEFAULT}.
+     *
+     * @return The {@link Weight} of the {@link Shape#DEFAULT} caret when drawn as a vertical bar, used to modify the thickness.
+     */
+    public @Nonnull Weight getWeight() {
+        return myWeight;
+    }
+
+    /**
+     * Modifies the width of the {@link Shape#DEFAULT} caret when drawn as a vertical bar, according to {@link #getWeight}.
+     *
+     * @param defaultWidth The width that would be used to draw the bar, before applying weight.
+     * @return The width of the vertical bar caret to draw, after applying weight.
+     */
+    public int getWidth(int defaultWidth) {
+        return Math.max(1, defaultWidth + myWeight.delta);
+    }
+
+    public enum Weight {
+        THIN(-1),
+        NORMAL(0),
+        HEAVY(1);
+
+        private final int delta;
+
+        Weight(int delta) {
+            this.delta = delta;
+        }
+
+        public int getDelta() {
+            return delta;
+        }
+    }
+
+    public enum Shape {
+        /**
+         * Use the default caret shape. This is either block or vertical bar, depending on user settings and insert/overwrite mode.
+         */
+        DEFAULT,
+
+        /**
+         * Use a block shape.
+         */
+        BLOCK,
+
+        /**
+         * Use a vertical bar caret. The thickness of the caret comes from {@link #getThickness()}.
+         */
+        BAR,
+
+        /**
+         * Use an underscore caret. The thickness of the caret comes from {@link #getThickness()}.
+         */
+        UNDERSCORE,
+
+        /**
+         * Use a box caret. This is like the block caret, but is drawn as an outline.
+         */
+        BOX
+    }
 }

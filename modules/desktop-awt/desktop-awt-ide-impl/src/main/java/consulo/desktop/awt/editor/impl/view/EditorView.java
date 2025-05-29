@@ -752,6 +752,15 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         mySizeManager.validateState();
     }
 
+    public int getCaretHeight() {
+        synchronized (myLock) {
+            initMetricsIfNeeded();
+            return myEditor.getSettings().isFullLineHeightCursor()
+                ? myLineHeight
+                : myLineHeight + myTopOverhang + myBottomOverhang;
+        }
+    }
+
     private void assertNotInBulkMode() {
         if (myDocument instanceof DocumentImpl) {
             ((DocumentImpl) myDocument).assertNotInBulkUpdate();

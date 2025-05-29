@@ -117,7 +117,6 @@ public class TextAttributes implements Cloneable {
         setAttributes(foregroundColor, backgroundColor, effectColor, errorStripeColor, effectType, Collections.emptyMap(), fontType);
     }
 
-    //@ApiStatus.Experimental
     public void setAttributes(
         ColorValue foregroundColor,
         ColorValue backgroundColor,
@@ -137,6 +136,24 @@ public class TextAttributes implements Cloneable {
             errorStripeColor
         );
     }
+
+    public void setAttributesNoCache(ColorValue foregroundColor,
+                                     ColorValue backgroundColor,
+                                     ColorValue effectColor,
+                                     ColorValue errorStripeColor,
+                                     EffectType effectType,
+                                     @JdkConstants.FontStyle int fontType) {
+        myAttrs = AttributesFlyweight.createNoCache(
+            foregroundColor,
+            backgroundColor,
+            fontType,
+            effectColor,
+            effectType,
+            Collections.emptyMap(),
+            errorStripeColor
+        );
+    }
+
 
     public boolean isFallbackEnabled() {
         return isEmpty() && !myEnforceEmpty;
