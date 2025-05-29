@@ -14,7 +14,7 @@ import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
-public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, InlineInlayImpl> {
+public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, InlineInlayImpl<?>> {
     private static final Key<Integer> ORDER_BEFORE_DISPOSAL = Key.create("inlay.order.before.disposal");
 
     private final int myPriority;
@@ -30,7 +30,7 @@ public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends Inla
 
 
     @Override
-    RangeMarkerTree<InlineInlayImpl> getTree() {
+    RangeMarkerTree<InlineInlayImpl<?>> getTree() {
         return myEditor.getInlayModel().myInlineElementsTree;
     }
 
@@ -39,18 +39,18 @@ public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends Inla
         myEditor.getInlayModel().myPutMergedIntervalsAtBeginning = intervalStart() == e.getOffset();
         super.changedUpdateImpl(e);
         if (isValid() && DocumentUtil.isInsideSurrogatePair(getDocument(), intervalStart())) {
-            invalidate(e);
+            invalidate();
         }
     }
 
     @Override
-    protected void onReTarget(int startOffset, int endOffset, int destOffset) {
+    protected void onReTarget(@Nonnull DocumentEvent e) {
         CodeEditorInlayModelBase inlayModel = myEditor.getInlayModel();
-        inlayModel.myPutMergedIntervalsAtBeginning = intervalStart() == endOffset;
+        inlayModel.myPutMergedIntervalsAtBeginning = intervalStart() == e.getMoveOffset() + e.getNewLength();
         if (DocumentUtil.isInsideSurrogatePair(getDocument(), getOffset())) {
             inlayModel.myMoveInProgress = true;
             try {
-                invalidate("moved inside surrogate pair on retarget");
+                invalidate();
             }
             finally {
                 inlayModel.myMoveInProgress = false;

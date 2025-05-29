@@ -169,4 +169,9 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
     public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
 
     }
+
+    @Override
+    public void fireAfterRemoved(@Nonnull RangeHighlighterEx highlighter) {
+
+    }
 }

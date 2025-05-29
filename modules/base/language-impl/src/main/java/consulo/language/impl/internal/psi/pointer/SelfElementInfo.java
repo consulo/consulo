@@ -12,24 +12,25 @@ import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.language.Language;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 public class SelfElementInfo extends SmartPointerElementInfo {
   private static final FileDocumentManager ourFileDocManager = FileDocumentManager.getInstance();
-  private volatile IdentikitImpl myIdentikit;
+  private volatile Identikit myIdentikit;
   private final VirtualFile myFile;
   private final boolean myForInjected;
   private int myStartOffset;
   private int myEndOffset;
 
-  SelfElementInfo(@Nullable ProperTextRange range, @Nonnull IdentikitImpl identikit, @Nonnull PsiFile containingFile, boolean forInjected) {
+  SelfElementInfo(@Nullable ProperTextRange range, @Nonnull Identikit identikit, @Nonnull PsiFile containingFile, boolean forInjected) {
     myForInjected = forInjected;
     myIdentikit = identikit;
 

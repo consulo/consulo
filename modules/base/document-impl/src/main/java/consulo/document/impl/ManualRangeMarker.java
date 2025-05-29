@@ -1,27 +1,13 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.document.impl;
 
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.event.DocumentEventImpl;
-import consulo.document.impl.event.RetargetRangeMarkers;
+import consulo.document.util.DocumentEventUtil;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.document.util.TextRangeScalarUtil;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,63 +16,62 @@ import jakarta.annotation.Nullable;
  * Can hold PSI-based range and be updated when the document is committed.
  */
 public class ManualRangeMarker implements Segment {
-  private final int myStart;
-  private final int myEnd;
-  private final boolean myGreedyLeft;
-  private final boolean myGreedyRight;
-  private final boolean mySurviveOnExternalChange;
-  private final PersistentRangeMarker.LinesCols myLinesCols;
+    private final boolean myGreedyLeft;
+    private final boolean myGreedyRight;
+    private final boolean mySurviveOnExternalChange;
+    private final PersistentRangeMarker.LinesCols myLinesCols;
+    private final long myRange;
 
-  public ManualRangeMarker(int start, int end,
-                           boolean greedyLeft,
-                           boolean greedyRight,
-                           boolean surviveOnExternalChange,
-                           @Nullable PersistentRangeMarker.LinesCols linesCols) {
-    myStart = start;
-    myEnd = end;
-    myGreedyLeft = greedyLeft;
-    myGreedyRight = greedyRight;
-    mySurviveOnExternalChange = surviveOnExternalChange;
-    myLinesCols = linesCols;
-  }
-
-  @Nullable
-  public ManualRangeMarker getUpdatedRange(@Nonnull DocumentEvent event, @Nonnull FrozenDocument documentBefore) {
-    if (event instanceof RetargetRangeMarkers) {
-      int start = ((RetargetRangeMarkers)event).getStartOffset();
-      if (myStart >= start && myEnd <= ((RetargetRangeMarkers)event).getEndOffset()) {
-        int delta = ((RetargetRangeMarkers)event).getMoveDestinationOffset() - start;
-        return new ManualRangeMarker(myStart + delta, myEnd + delta, myGreedyLeft, myGreedyRight, mySurviveOnExternalChange, null);
-      }
+    public ManualRangeMarker(int start, int end,
+                             boolean greedyLeft,
+                             boolean greedyRight,
+                             boolean surviveOnExternalChange,
+                             @Nullable PersistentRangeMarker.LinesCols linesCols) {
+        myRange = TextRangeScalarUtil.toScalarRange(start, end);
+        myGreedyLeft = greedyLeft;
+        myGreedyRight = greedyRight;
+        mySurviveOnExternalChange = surviveOnExternalChange;
+        myLinesCols = linesCols;
     }
 
-    if (mySurviveOnExternalChange && PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, myStart, myEnd)) {
-      PersistentRangeMarker.LinesCols linesCols = myLinesCols != null ? myLinesCols
-                                                                      : PersistentRangeMarker.storeLinesAndCols(documentBefore, myStart, myEnd);
-      Pair<TextRange, PersistentRangeMarker.LinesCols> pair =
-              linesCols == null ? null : PersistentRangeMarker.translateViaDiff((DocumentEventImpl)event, linesCols);
-      if (pair != null) {
-        return new ManualRangeMarker(pair.first.getStartOffset(), pair.first.getEndOffset(), myGreedyLeft, myGreedyRight, true, pair.second);
-      }
+    public @Nullable ManualRangeMarker getUpdatedRange(@Nonnull DocumentEvent event, @Nonnull FrozenDocument documentBefore) {
+        if (mySurviveOnExternalChange && PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, myRange)) {
+            PersistentRangeMarker.LinesCols linesCols = myLinesCols != null ? myLinesCols
+                : PersistentRangeMarker.storeLinesAndCols(documentBefore, myRange);
+            Pair<TextRange, PersistentRangeMarker.LinesCols> pair =
+                linesCols == null ? null : PersistentRangeMarker.translateViaDiff((DocumentEventImpl) event, linesCols);
+            if (pair != null) {
+                return new ManualRangeMarker(pair.first.getStartOffset(), pair.first.getEndOffset(), myGreedyLeft, myGreedyRight, true, pair.second);
+            }
+        }
+
+        long newRange = RangeMarkerImpl.applyChange(event, myRange, myGreedyLeft, myGreedyRight, false);
+        if (newRange == -1) return null;
+
+        int delta = 0;
+        if (DocumentEventUtil.isMoveInsertion(event)) {
+            int srcOffset = event.getMoveOffset();
+            if (srcOffset <= TextRangeScalarUtil.startOffset(newRange) && TextRangeScalarUtil.endOffset(newRange) <= srcOffset + event.getNewLength()) {
+                delta = event.getOffset() - srcOffset;
+            }
+        }
+        return new ManualRangeMarker(TextRangeScalarUtil.startOffset(newRange) + delta, TextRangeScalarUtil.endOffset(newRange) + delta, myGreedyLeft, myGreedyRight,
+            mySurviveOnExternalChange, null);
     }
 
-    TextRange range = RangeMarkerImpl.applyChange(event, myStart, myEnd, myGreedyLeft, myGreedyRight, false);
-    return range == null ? null : new ManualRangeMarker(range.getStartOffset(), range.getEndOffset(), myGreedyLeft, myGreedyRight, mySurviveOnExternalChange, null);
-  }
+    @Override
+    public int getStartOffset() {
+        return TextRangeScalarUtil.startOffset(myRange);
+    }
 
-  @Override
-  public int getStartOffset() {
-    return myStart;
-  }
+    @Override
+    public int getEndOffset() {
+        return TextRangeScalarUtil.endOffset(myRange);
+    }
 
-  @Override
-  public int getEndOffset() {
-    return myEnd;
-  }
-
-  @Override
-  public String toString() {
-    return "ManualRangeMarker" + TextRange.create(this);
-  }
+    @Override
+    public String toString() {
+        return "ManualRangeMarker " + TextRange.create(this);
+    }
 
 }

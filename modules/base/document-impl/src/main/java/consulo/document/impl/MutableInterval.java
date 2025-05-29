@@ -15,12 +15,10 @@
  */
 package consulo.document.impl;
 
-/**
- * User: cdr
- */
 public interface MutableInterval extends Interval {
-  int setIntervalStart(int start);
-  int setIntervalEnd(int end);
-  boolean isValid();
-  boolean setValid(boolean value);
+    void setRange(long scalarRange);
+
+    boolean isValid();
+
+    boolean setValid(boolean value);
 }

@@ -22,6 +22,8 @@ module consulo.application.api {
     requires static com.sun.jna;
     requires static com.sun.jna.platform;
 
+    requires it.unimi.dsi.fastutil;
+
     exports consulo.application;
     exports consulo.application.concurrent;
     exports consulo.application.dumb;

@@ -182,4 +182,34 @@ public final class DocumentUtil {
         int lineOffset = getLineStartOffset(offset, document);
         return document.getCharsSequence().subSequence(lineOffset, lineOffset + getIndentLengthAtLineStart(document, lineOffset));
     }
+
+    public static int calculateOffset(@Nonnull Document document, int line, int column, int tabSize) {
+        int offset;
+        if (0 <= line && line < document.getLineCount()) {
+            final int lineStart = document.getLineStartOffset(line);
+            final int lineEnd = document.getLineEndOffset(line);
+            final CharSequence docText = document.getCharsSequence();
+
+            offset = lineStart;
+            int col = 0;
+            while (offset < lineEnd && col < column) {
+                col += docText.charAt(offset) == '\t' ? tabSize : 1;
+                offset++;
+            }
+        }
+        else {
+            offset = document.getTextLength();
+        }
+        return offset;
+    }
+
+    /**
+     * Tells whether given offset lies between surrogate pair characters or between characters of Windows-style line break (\r\n).
+     */
+    public static boolean isInsideCharacterPair(@Nonnull Document document, int offset) {
+        if (offset <= 0 || offset >= document.getTextLength()) return false;
+        CharSequence text = document.getImmutableCharSequence();
+        char prev = text.charAt(offset - 1);
+        return prev == '\r' ? text.charAt(offset) == '\n' : Character.isHighSurrogate(prev) && Character.isLowSurrogate(text.charAt(offset));
+    }
 }

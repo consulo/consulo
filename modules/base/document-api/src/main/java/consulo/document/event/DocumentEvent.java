@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.document.event;
 
 import consulo.document.Document;
@@ -21,28 +7,77 @@ import jakarta.annotation.Nonnull;
 import java.util.EventObject;
 
 public abstract class DocumentEvent extends EventObject {
-  protected DocumentEvent(@Nonnull Document document) {
-    super(document);
-  }
+    protected DocumentEvent(@Nonnull Document document) {
+        super(document);
+    }
 
-  @Nonnull
-  public abstract Document getDocument();
+    public @Nonnull Document getDocument() {
+        return (Document) getSource();
+    }
 
-  public abstract int getOffset();
+    /**
+     * The start offset of a text change.
+     */
+    public abstract int getOffset();
 
-  public abstract int getOldLength();
+    /**
+     * In case of any document modifications other than moving text, this method returns the same as {@link #getOffset()}.
+     * <p>
+     * Moving a text fragment using {@link com.intellij.openapi.editor.ex.DocumentEx#moveText} is accomplished by a combination of
+     * insertion and deletion. For these two events this method returns the offset of the complementary deletion/insertion event: <ul>
+     * <li/> On insertion: returns the source offset, that is, the offset of the original text fragment, which will be removed.
+     * <li/> On deletion: returns the destination offset, that is, the offset of the newly inserted text fragment.
+     * </ul>
+     * Note that the result of this method points to a relevant fragment of the document content only as long as
+     * both the source and the destination copies of the fragment are still there, that is, only:
+     * a) during {@link DocumentListener#documentChanged} of the insertion event, and
+     * b) during {@link DocumentListener#beforeDocumentChange} of the deletion event.
+     * <p>
+     * In order to obtain an adjusted value before the new fragment is inserted or after deleting the original one, consider using
+     * the {@link com.intellij.util.DocumentEventUtil#getMoveOffsetBeforeInsertion}
+     * and the {@link com.intellij.util.DocumentEventUtil#getMoveOffsetAfterDeletion} methods, accordingly.
+     * <p>
+     * <p/> Examples:
+     * <p>
+     * Moving text to the left:
+     * <pre>
+     *   document.moveText(2, 6, 0);  //  aa^^^^bb  ->  ^^^^aa^^^^bb  ->  ^^^^aabb
+     * </pre>
+     * In this example the following listener calls are performed:
+     * <pre>
+     *   beforeDocumentChange(insert):  aa^^^^bb      [ offset: 0, oldLength: 0, newLength: 4, moveOffset: 6, moveOffsetBeforeInsertion: 2 ]
+     *        documentChanged(insert):  ^^^^aa^^^^bb  [ offset: 0, oldLength: 0, newLength: 4, moveOffset: 6 ] // moveOffset == delete.offset
+     *   beforeDocumentChange(delete):  ^^^^aa^^^^bb  [ offset: 6, oldLength: 4, newLength: 0, moveOffset: 0 ] // moveOffset == insert.offset
+     *        documentChanged(delete):  ^^^^aabb      [ offset: 6, oldLength: 4, newLength: 0, moveOffset: 0, moveOffsetAfterDeletion: 0 ]
+     * </pre>
+     * <p>
+     * Moving text to the right:
+     * <pre>
+     *   document.moveText(2, 6, 8);  //  aa^^^^bb  ->  aa^^^^bb^^^^  ->  aabb^^^^
+     * </pre>
+     * In this example the following listener calls are performed:
+     * <pre>
+     *   beforeDocumentChange(insert):  aa^^^^bb      [ offset: 8, oldLength: 0, newLength: 4, moveOffset: 2, moveOffsetBeforeInsertion: 2 ]
+     *        documentChanged(insert):  aa^^^^bb^^^^  [ offset: 8, oldLength: 0, newLength: 4, moveOffset: 2 ] // moveOffset == delete.offset
+     *   beforeDocumentChange(delete):  aa^^^^bb^^^^  [ offset: 2, oldLength: 4, newLength: 0, moveOffset: 8 ] // moveOffset == insert.offset
+     *        documentChanged(delete):  aabb^^^^      [ offset: 2, oldLength: 4, newLength: 0, moveOffset: 8, moveOffsetAfterDeletion: 4 ]
+     * </pre>
+     */
+    public int getMoveOffset() {
+        return getOffset();
+    }
 
-  public abstract int getNewLength();
+    public abstract int getOldLength();
 
-  @Nonnull
-  public abstract CharSequence getOldFragment();
+    public abstract int getNewLength();
 
-  @Nonnull
-  public abstract CharSequence getNewFragment();
+    public abstract @Nonnull CharSequence getOldFragment();
 
-  public abstract long getOldTimeStamp();
+    public abstract @Nonnull CharSequence getNewFragment();
 
-  public boolean isWholeTextReplaced() {
-    return getOffset() == 0 && getNewLength() == getDocument().getTextLength();
-  }
+    public abstract long getOldTimeStamp();
+
+    public boolean isWholeTextReplaced() {
+        return getOffset() == 0 && getNewLength() == getDocument().getTextLength();
+    }
 }

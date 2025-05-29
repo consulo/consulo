@@ -17,10 +17,9 @@ package consulo.util.collection;
 
 import consulo.util.lang.CharArrayCharSequence;
 import consulo.util.lang.Comparing;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -949,6 +948,12 @@ public class ArrayUtil {
     @Contract(pure = true)
     public static int[] newIntArray(int count) {
         return count == 0 ? EMPTY_INT_ARRAY : new int[count];
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static byte[] newByteArray(int count) {
+        return count == 0 ? EMPTY_BYTE_ARRAY : new byte[count];
     }
 
     @Nonnull

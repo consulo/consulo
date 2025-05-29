@@ -12,21 +12,23 @@ import consulo.document.impl.IntervalTreeImpl;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.EditorDocumentPriorities;
-import consulo.document.internal.PrioritizedInternalDocumentListener;
+import consulo.document.internal.PrioritizedDocumentListener;
+import consulo.document.util.DocumentEventUtil;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -55,9 +57,9 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     private final EventDispatcher<Listener> myDispatcher = EventDispatcher.create(Listener.class);
 
     private final List<InlayImpl> myInlaysInvalidatedOnMove = new ArrayList<>();
-    public final RangeMarkerTree<InlineInlayImpl> myInlineElementsTree;
-    public final MarkerTreeWithPartialSums<BlockInlayImpl> myBlockElementsTree;
-    public final RangeMarkerTree<AfterLineEndInlayImpl> myAfterLineEndElementsTree;
+    public final RangeMarkerTree<InlineInlayImpl<?>> myInlineElementsTree;
+    public final MarkerTreeWithPartialSums<BlockInlayImpl<?>> myBlockElementsTree;
+    public final RangeMarkerTree<AfterLineEndInlayImpl<?>> myAfterLineEndElementsTree;
 
     public boolean myMoveInProgress;
     public boolean myPutMergedIntervalsAtBeginning;
@@ -70,7 +72,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         myInlineElementsTree = new InlineElementsTree(editor.getDocument());
         myBlockElementsTree = new BlockElementsTree(editor.getDocument());
         myAfterLineEndElementsTree = new AfterLineEndElementTree(editor.getDocument());
-        myEditor.getDocument().addDocumentListener(new PrioritizedInternalDocumentListener() {
+        myEditor.getDocument().addDocumentListener(new PrioritizedDocumentListener() {
             @Override
             public int getPriority() {
                 return EditorDocumentPriorities.INLAY_MODEL;
@@ -101,19 +103,18 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
             @Override
             public void documentChanged(@Nonnull DocumentEvent event) {
                 if (myInlaysAtCaret != null) {
-                    for (Inlay inlay : myInlaysAtCaret) {
-                        ((InlayImpl) inlay).setStickingToRight(inlay.isRelatedToPrecedingText());
+                    for (Inlay<?> inlay : myInlaysAtCaret) {
+                        ((InlayImpl<?, ?>) inlay).setStickingToRight(inlay.isRelatedToPrecedingText());
                     }
                     myInlaysAtCaret = null;
                 }
-            }
 
-            @Override
-            public void moveTextHappened(@Nonnull Document document, int start, int end, int base) {
-                for (InlayImpl inlay : myInlaysInvalidatedOnMove) {
-                    notifyRemoved(inlay);
+                if (DocumentEventUtil.isMoveInsertion(event)) {
+                    for (InlayImpl<?, ?> inlay : myInlaysInvalidatedOnMove) {
+                        notifyRemoved(inlay);
+                    }
+                    myInlaysInvalidatedOnMove.clear();
                 }
-                myInlaysInvalidatedOnMove.clear();
             }
         }, this);
     }
@@ -565,6 +566,24 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return "Inline elements: " + dumpInlays(myInlineElementsTree) + ", after-line-end elements: " + dumpInlays(myAfterLineEndElementsTree) + ", block elements: " + dumpInlays(myBlockElementsTree);
     }
 
+    /**
+     * Optimized method making {@link EditorView#getPreferredSize()} faster.
+     * Unlike {@link #getElementsInRange}, this method does not allocate and sort an array
+     */
+    public @Nullable Inlay<?> getWidestVisibleBlockInlay() {
+        AtomicInteger maxWidth = new AtomicInteger(-1);
+        Ref<Inlay<?>> inlayRef = new Ref<>(null);
+        myBlockElementsTree.processAll(inlay -> {
+            int width = inlay.getWidthInPixels();
+            if (width > maxWidth.get() && !EditorImplUtil.isInlayFolded(inlay)) {
+                maxWidth.set(width);
+                inlayRef.set(inlay);
+            }
+            return true;
+        });
+        return inlayRef.get();
+    }
+
     private static String dumpInlays(RangeMarkerTree<? extends InlayImpl> tree) {
         StringJoiner joiner = new StringJoiner(",", "[", "]");
         tree.processAll(o -> {
@@ -574,21 +593,22 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         return joiner.toString();
     }
 
-    private class InlineElementsTree extends HardReferencingRangeMarkerTree<InlineInlayImpl> {
+    private class InlineElementsTree extends HardReferencingRangeMarkerTree<InlineInlayImpl<?>> {
         InlineElementsTree(@Nonnull Document document) {
             super(document);
         }
 
-        @Nonnull
         @Override
-        protected Node<InlineInlayImpl> createNewNode(@Nonnull InlineInlayImpl key, int start, int end, boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
-            return new Node<InlineInlayImpl>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight) {
+        @Nonnull
+        protected RMNode<InlineInlayImpl<?>> createNewNode(@Nonnull InlineInlayImpl key, int start, int end,
+                                                           boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
+            return new RMNode<InlineInlayImpl<?>>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight) {
                 @Override
-                public void addIntervalsFrom(@Nonnull IntervalNode<InlineInlayImpl> otherNode) {
+                public void addIntervalsFrom(@Nonnull IntervalNode<InlineInlayImpl<?>> otherNode) {
                     super.addIntervalsFrom(otherNode);
                     if (myPutMergedIntervalsAtBeginning) {
-                        List<Supplier<InlineInlayImpl>> added = ContainerUtil.subList(intervals, intervals.size() - otherNode.intervals.size());
-                        List<Supplier<InlineInlayImpl>> addedCopy = new ArrayList<>(added);
+                        List<Supplier<? extends InlineInlayImpl<?>>> added = ContainerUtil.subList(intervals, intervals.size() - otherNode.intervals.size());
+                        List<Supplier<? extends InlineInlayImpl<?>>> addedCopy = new ArrayList<>(added);
                         added.clear();
                         intervals.addAll(0, addedCopy);
                     }
@@ -597,7 +617,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         }
 
         @Override
-        public void fireBeforeRemoved(@Nonnull InlineInlayImpl inlay, @Nonnull @NonNls Object reason) {
+        public void fireBeforeRemoved(@Nonnull InlineInlayImpl inlay) {
             if (inlay.getUserData(InlayImpl.OFFSET_BEFORE_DISPOSAL) == null) {
                 if (myMoveInProgress) {
                     // delay notification about invalidated inlay - folding model is not consistent at this point
@@ -611,26 +631,26 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         }
     }
 
-    private class BlockElementsTree extends MarkerTreeWithPartialSums<BlockInlayImpl> {
+    private class BlockElementsTree extends MarkerTreeWithPartialSums<BlockInlayImpl<?>> {
         BlockElementsTree(@Nonnull Document document) {
             super(document);
         }
 
         @Override
-        public void fireBeforeRemoved(@Nonnull BlockInlayImpl inlay, @Nonnull @NonNls Object reason) {
+        public void fireBeforeRemoved(@Nonnull BlockInlayImpl inlay) {
             if (inlay.getUserData(InlayImpl.OFFSET_BEFORE_DISPOSAL) == null) {
                 notifyRemoved(inlay);
             }
         }
     }
 
-    private class AfterLineEndElementTree extends HardReferencingRangeMarkerTree<AfterLineEndInlayImpl> {
+    private class AfterLineEndElementTree extends HardReferencingRangeMarkerTree<AfterLineEndInlayImpl<?>> {
         AfterLineEndElementTree(@Nonnull Document document) {
             super(document);
         }
 
         @Override
-        public void fireBeforeRemoved(@Nonnull AfterLineEndInlayImpl inlay, @Nonnull @NonNls Object reason) {
+        public void fireBeforeRemoved(@Nonnull AfterLineEndInlayImpl inlay) {
             if (inlay.getUserData(InlayImpl.OFFSET_BEFORE_DISPOSAL) == null) {
                 notifyRemoved(inlay);
             }

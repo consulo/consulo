@@ -15,10 +15,7 @@ import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.impl.*;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
-import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
-import consulo.desktop.awt.editor.impl.DesktopFoldingModelImpl;
-import consulo.desktop.awt.editor.impl.InlayModelImpl;
-import consulo.desktop.awt.editor.impl.SoftWrapModelImpl;
+import consulo.desktop.awt.editor.impl.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.impl.DocumentImpl;
@@ -731,6 +728,14 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         return myEditor.getFoldingModel();
     }
 
+    public DesktopCaretModelImpl getCaretModel() {
+        return myEditor.getCaretModel();
+    }
+
+    public DesktopScrollingModelImpl getScrollingModel() {
+        return myEditor.getScrollingModel();
+    }
+
     public InlayModelImpl getInlayModel() {
         return myEditor.getInlayModel();
     }
@@ -754,5 +759,9 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         else if (myDocument.isInBulkUpdate()) {
             throw new IllegalStateException("Current operation is not available in bulk mode");
         }
+    }
+
+   public boolean isAd() {
+        return myEditor.isAd();
     }
 }

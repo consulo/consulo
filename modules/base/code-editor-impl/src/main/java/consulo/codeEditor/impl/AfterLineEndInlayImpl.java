@@ -12,7 +12,7 @@ import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
-public class AfterLineEndInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, AfterLineEndInlayImpl> {
+public class AfterLineEndInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, AfterLineEndInlayImpl<?>> {
     private static int ourGlobalCounter = 0;
     final boolean mySoftWrappable;
     final int myPriority;
@@ -32,7 +32,7 @@ public class AfterLineEndInlayImpl<R extends EditorCustomElementRenderer> extend
     }
 
     @Override
-    RangeMarkerTree<AfterLineEndInlayImpl> getTree() {
+    RangeMarkerTree<AfterLineEndInlayImpl<?>> getTree() {
         return myEditor.getInlayModel().myAfterLineEndElementsTree;
     }
 

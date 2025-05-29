@@ -28,6 +28,8 @@ import consulo.desktop.awt.editor.impl.stickyLine.StickyLineShadowPainter;
 import consulo.desktop.awt.editor.impl.stickyLine.StickyLinesManager;
 import consulo.desktop.awt.editor.impl.stickyLine.StickyLinesPanel;
 import consulo.desktop.awt.editor.impl.stickyLine.VisualStickyLines;
+import consulo.desktop.awt.editor.impl.view.CharacterGrid;
+import consulo.desktop.awt.editor.impl.view.CharacterGridImpl;
 import consulo.desktop.awt.editor.impl.view.EditorView;
 import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
 import consulo.desktop.awt.language.editor.StatusComponentContainer;
@@ -284,6 +286,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     public final Object myFractionalMetricsHintValue =
         Registry.is("editor.text.fractional.metrics") ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
     public final EditorView myView;
+    private @Nullable CharacterGridImpl myCharacterGrid;
 
     private boolean myCharKeyPressed;
     private boolean myNeedToSelectPreviousChar;
@@ -4071,6 +4074,27 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
     }
 
+    /**
+     * Returns the instance of the character grid corresponding to this editor
+     * <p>
+     * A non-{@code null} value is only returned when the character grid mode is enabled,
+     * see {@link EditorSettings#setCharacterGridWidthMultiplier(Float)}.
+     * </p>
+     *
+     * @return the current character grid instance or {@code null} if the editor is not in the grid mode
+     */
+    public @Nullable CharacterGrid getCharacterGrid() {
+        if (getSettings().getCharacterGridWidthMultiplier() == null) {
+            myCharacterGrid = null;
+            return null;
+        }
+        else {
+            if (myCharacterGrid == null) {
+                myCharacterGrid = new CharacterGridImpl(this);
+            }
+            return myCharacterGrid;
+        }
+    }
     @TestOnly
     void validateState() {
         myView.validateState();

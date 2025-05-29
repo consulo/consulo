@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.function.IntSupplier;
 
-public class BlockInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, BlockInlayImpl> implements IntSupplier {
+public class BlockInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, BlockInlayImpl<?>> implements IntSupplier {
     public final boolean myShowAbove;
     public final boolean myShowWhenFolded;
     public final int myPriority;
@@ -38,7 +38,7 @@ public class BlockInlayImpl<R extends EditorCustomElementRenderer> extends Inlay
     }
 
     @Override
-    MarkerTreeWithPartialSums<BlockInlayImpl> getTree() {
+    MarkerTreeWithPartialSums<BlockInlayImpl<?>> getTree() {
         return myEditor.getInlayModel().myBlockElementsTree;
     }
 

@@ -222,4 +222,9 @@ public interface EditorSettings {
     int getStickyLinesLimit();
 
     void setStickyLinesLimit(int value);
+
+    @Nullable
+    default Float getCharacterGridWidthMultiplier() {
+        return null;
+    }
 }

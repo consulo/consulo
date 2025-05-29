@@ -27,9 +27,6 @@ import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
-import consulo.ui.UIAccess;
-import consulo.util.lang.ExceptionUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
@@ -44,14 +41,17 @@ import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.*;
@@ -132,7 +132,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
     @Inject
     public FileDocumentManagerImpl(Application application, ProjectManager projectManager) {
-        ((ProjectManagerEx)projectManager).registerCloseProjectVeto(new MyProjectCloseHandler());
+        ((ProjectManagerEx) projectManager).registerCloseProjectVeto(new MyProjectCloseHandler());
 
         myBus = application.getMessageBus();
         InvocationHandler handler = (proxy, method, args) -> {
@@ -142,14 +142,14 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
         ClassLoader loader = FileDocumentManagerListener.class.getClassLoader();
         myMultiCaster =
-            (FileDocumentManagerListener)Proxy.newProxyInstance(loader, new Class[]{FileDocumentManagerListener.class}, handler);
+            (FileDocumentManagerListener) Proxy.newProxyInstance(loader, new Class[]{FileDocumentManagerListener.class}, handler);
     }
 
     static final class MyProjectCloseHandler implements Predicate<Project> {
         @Override
         @RequiredUIAccess
         public boolean test(@Nonnull Project project) {
-            FileDocumentManagerImpl manager = (FileDocumentManagerImpl)FileDocumentManager.getInstance();
+            FileDocumentManagerImpl manager = (FileDocumentManagerImpl) FileDocumentManager.getInstance();
             if (!manager.myUnsavedDocuments.isEmpty()) {
                 manager.myOnClose = true;
                 try {
@@ -198,7 +198,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     @RequiredUIAccess
     public Document getDocument(@Nonnull VirtualFile file) {
         Application.get().assertReadAccessAllowed();
-        DocumentEx document = (DocumentEx)getCachedDocument(file);
+        DocumentEx document = (DocumentEx) getCachedDocument(file);
         if (document == null) {
             if (!file.isValid() || file.isDirectory() || isBinaryWithoutDecompiler(file)) {
                 return null;
@@ -211,12 +211,12 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
             CharSequence text = tooLarge ? LoadTextUtil.loadText(file, getPreviewCharCount(file)) : LoadTextUtil.loadText(file);
             synchronized (lock) {
-                document = (DocumentEx)getCachedDocument(file);
+                document = (DocumentEx) getCachedDocument(file);
                 if (document != null) {
                     return document; // Double checking
                 }
 
-                document = (DocumentEx)createDocument(text, file);
+                document = (DocumentEx) createDocument(text, file);
                 document.setModificationStamp(file.getModificationStamp());
                 document.putUserData(BIG_FILE_PREVIEW, tooLarge ? Boolean.TRUE : null);
                 FileType fileType = file.getFileType();
@@ -259,9 +259,23 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     private static Document createDocument(@Nonnull CharSequence text, @Nonnull VirtualFile file) {
         boolean acceptSlashR = file instanceof LightVirtualFile && StringUtil.indexOf(text, '\r') >= 0;
         boolean freeThreaded = Boolean.TRUE.equals(file.getUserData(AbstractFileViewProvider.FREE_THREADED));
-        DocumentImpl document =
-            (DocumentImpl)((EditorFactoryImpl)EditorFactory.getInstance()).createDocument(text, acceptSlashR, freeThreaded);
-        document.documentCreatedFrom(file);
+        DocumentImpl document = (DocumentImpl) ((EditorFactoryImpl) EditorFactory.getInstance()).createDocument(text, acceptSlashR, freeThreaded);
+        Project project = ProjectUtil.guessProjectForFile(file);
+        int tabSize;
+        if (project == null) {
+            tabSize = CodeStyle.getDefaultSettings().getTabSize(file.getFileType());
+        }
+        else {
+            PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+            if (psiFile != null) {
+                tabSize = CodeStyle.getSettings(psiFile).getTabSize(file.getFileType());
+            } else {
+                tabSize = CodeStyle.getSettings(project, document).getTabSize(file.getFileType());
+            }
+        }
+        // calculate and pass tab size here since it's the ony place we have access to CodeStyle.
+        // tabSize might be needed by PersistentRangeMarkers to be able to restore from (line;col) info to offset
+        document.documentCreatedFrom(file, tabSize);
         return document;
     }
 
@@ -543,7 +557,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     public String getLineSeparator(@Nullable VirtualFile file, @Nullable ComponentManager project) {
         String lineSeparator = file == null ? null : LoadTextUtil.getDetectedLineSeparator(file);
         if (lineSeparator == null) {
-            lineSeparator = CodeStyle.getProjectOrDefaultSettings((Project)project).getLineSeparator();
+            lineSeparator = CodeStyle.getProjectOrDefaultSettings((Project) project).getLineSeparator();
         }
         return lineSeparator;
     }
@@ -704,7 +718,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
                                 CharSequence reloaded = tooLarge
                                     ? LoadTextUtil.loadText(file, getPreviewCharCount(file))
                                     : LoadTextUtil.loadText(file);
-                                ((DocumentEx)document).replaceText(reloaded, file.getModificationStamp());
+                                ((DocumentEx) document).replaceText(reloaded, file.getModificationStamp());
                                 document.putUserData(BIG_FILE_PREVIEW, tooLarge ? Boolean.TRUE : null);
                             }
                             document.setReadOnly(!wasWritable);
@@ -768,7 +782,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     private static int getPreviewCharCount(@Nonnull VirtualFile file) {
         Charset charset = EncodingManager.getInstance().getEncoding(file, false);
         float bytesPerChar = charset == null ? 2 : charset.newEncoder().averageBytesPerChar();
-        return (int)(RawFileLoaderImpl.LARGE_FILE_PREVIEW_SIZE / bytesPerChar);
+        return (int) (RawFileLoaderImpl.LARGE_FILE_PREVIEW_SIZE / bytesPerChar);
     }
 
     @RequiredUIAccess

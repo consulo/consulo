@@ -6,9 +6,12 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.document.internal.DocumentEx;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -30,6 +33,7 @@ import java.util.function.Supplier;
  * @author max
  */
 class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx, Supplier<RangeHighlighterEx> {
+    private static final Logger LOG = Logger.getInstance(RangeHighlighterImpl.class);
     private static final ColorValue NULL_COLOR = ColorValue.dummy("must be never called");
     private static final Key<Boolean> VISIBLE_IF_FOLDED = Key.create("visible.folded");
 
@@ -452,13 +456,9 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    protected boolean unregisterInTree() {
-        if (!isValid()) {
-            return false;
-        }
+    protected void unregisterInTree() {
         // we store highlighters in MarkupModel
         getMarkupModel().removeHighlighter(this);
-        return true;
     }
 
     @Override
@@ -467,9 +467,29 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
+    public void dispose() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("RangeHighlighterImpl: dispose " + this);
+        }
+
+        super.dispose();
+
+        GutterIconRenderer renderer = getGutterIconRenderer();
+        if (renderer instanceof Disposable disposableRenderer) {
+            Disposer.dispose(disposableRenderer);
+        }
+    }
+
+    @Override
     public int getLayer() {
         RangeHighlighterTree.RHNode node = (RangeHighlighterTree.RHNode) (Object) myNode;
         return node == null ? -1 : node.myLayer;
+    }
+
+    @Override
+    public boolean isRenderedInGutter() {
+        RangeHighlighterTree.RHNode node = (RangeHighlighterTree.RHNode) (Object) myNode;
+        return node != null && node.isRenderedInGutter() || RangeHighlighterEx.super.isRenderedInGutter();
     }
 
     @Override

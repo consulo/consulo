@@ -1,27 +1,24 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.impl.event;
 
-import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
-import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
-import consulo.language.editor.impl.internal.markup.ErrorStripeListener;
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.event.*;
 import consulo.codeEditor.RealEditor;
+import consulo.codeEditor.event.*;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.document.internal.EditorDocumentPriorities;
-import consulo.document.internal.DocumentEx;
-import consulo.document.internal.EditReadOnlyListener;
-import consulo.document.internal.PrioritizedInternalDocumentListener;
+import consulo.document.internal.*;
+import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.ErrorStripeListener;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
@@ -30,8 +27,8 @@ public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
   private static final ExtensionPointName<EditorDocumentListener> DOCUMENT_EP = ExtensionPointName.create(EditorDocumentListener.class);
 
   private final EventDispatcher<DocumentListener> myDocumentMulticaster = EventDispatcher.create(DocumentListener.class);
-  private final EventDispatcher<PrioritizedInternalDocumentListener> myPrioritizedDocumentMulticaster =
-          EventDispatcher.create(PrioritizedInternalDocumentListener.class, Collections.singletonMap("getPriority", EditorDocumentPriorities.RANGE_MARKER));
+  private final EventDispatcher<PrioritizedDocumentListener> myPrioritizedDocumentMulticaster =
+          EventDispatcher.create(PrioritizedDocumentListener.class, Collections.singletonMap("getPriority", EditorDocumentPriorities.RANGE_MARKER));
   private final EventDispatcher<EditReadOnlyListener> myEditReadOnlyMulticaster = EventDispatcher.create(EditReadOnlyListener.class);
 
   private final EventDispatcher<EditorMouseListener> myEditorMouseMulticaster = EventDispatcher.create(EditorMouseListener.class);
@@ -139,7 +136,7 @@ public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
    *
    * @see EditorDocumentPriorities
    */
-  public void addPrioritizedDocumentListener(@Nonnull PrioritizedInternalDocumentListener listener, @Nonnull Disposable parent) {
+  public void addPrioritizedDocumentListener(@Nonnull PrioritizedDocumentListener listener, @Nonnull Disposable parent) {
     myPrioritizedDocumentMulticaster.addListener(listener, parent);
   }
 
