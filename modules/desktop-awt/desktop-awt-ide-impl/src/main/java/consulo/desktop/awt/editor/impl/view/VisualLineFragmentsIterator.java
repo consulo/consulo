@@ -56,7 +56,7 @@ class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterato
   private int mySegmentEndOffset;
   private int myCurrentFoldRegionIndex;
   private Iterator<LineLayout.VisualFragment> myFragmentIterator;
-  private List<Inlay> myInlays;
+  private List<Inlay<?>> myInlays;
   private int myCurrentInlayIndex;
   private float myCurrentX;
   private int myCurrentVisualColumn;

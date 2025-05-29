@@ -30,73 +30,77 @@ import java.util.function.Predicate;
  * Base interface for real implementation for editors (not editor windows)
  */
 public interface RealEditor extends EditorEx {
-  Key<Boolean> DO_DOCUMENT_UPDATE_TEST = Key.create("DoDocumentUpdateTest");
-  Key<Boolean> FORCED_SOFT_WRAPS = Key.create("forced.soft.wraps");
-  Key<Boolean> SOFT_WRAPS_EXIST = Key.create("soft.wraps.exist");
+    Key<Boolean> DO_DOCUMENT_UPDATE_TEST = Key.create("DoDocumentUpdateTest");
+    Key<Boolean> FORCED_SOFT_WRAPS = Key.create("forced.soft.wraps");
+    Key<Boolean> SOFT_WRAPS_EXIST = Key.create("soft.wraps.exist");
 
-  void throwEditorNotDisposedError(@Nonnull final String msg);
+    void throwEditorNotDisposedError(@Nonnull final String msg);
 
-  void release();
+    void release();
 
-  default int offsetToVisualLine(int offset) {
-    return offsetToVisualLine(offset, false);
-  }
+    default int offsetToVisualLine(int offset) {
+        return offsetToVisualLine(offset, false);
+    }
 
-  int offsetToVisualLine(int offset, boolean beforeSoftWrap);
+    int offsetToVisualLine(int offset, boolean beforeSoftWrap);
 
-  int visualLineStartOffset(int visualLine);
+    int visualLineStartOffset(int visualLine);
 
-  default void validateSize() {
-  }
+    default void validateSize() {
+    }
 
-  @Nonnull
-  Disposable getDisposable();
+    @Nonnull
+    Disposable getDisposable();
 
-  boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter);
+    boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter);
 
-  boolean isScrollToCaret();
+    boolean isScrollToCaret();
 
-  boolean shouldSoftWrapsBeForced();
+    boolean shouldSoftWrapsBeForced();
 
-  void setHighlightingFilter(@Nullable Predicate<RangeHighlighter> filter);
+    void setHighlightingFilter(@Nullable Predicate<RangeHighlighter> filter);
 
-  int getFontSize();
+    int getFontSize();
 
-  void startDumb();
+    void startDumb();
 
-  void stopDumbLater();
+    void stopDumbLater();
 
-  default void reinitViewSettings() {
-    reinitSettings();
-  }
+    default void reinitViewSettings() {
+        reinitSettings();
+    }
 
-  default int getVisibleLineCount() {
-    return getDocument().getLineCount();
-  }
+    default int getVisibleLineCount() {
+        return getDocument().getLineCount();
+    }
 
-  default boolean isInDistractionFreeMode() {
-    return false;
-  }
+    default boolean isInDistractionFreeMode() {
+        return false;
+    }
 
-  default void updateCaretCursor() {
-  }
+    default void updateCaretCursor() {
+    }
 
-  default boolean isRtlLocation(@Nonnull VisualPosition visualPosition) {
-    return false;
-  }
+    default boolean isRtlLocation(@Nonnull VisualPosition visualPosition) {
+        return false;
+    }
 
-  default boolean isAtBidiRunBoundary(@Nonnull VisualPosition visualPosition) {
-    return false;
-  }
+    default boolean isAtBidiRunBoundary(@Nonnull VisualPosition visualPosition) {
+        return false;
+    }
 
-  default int findNearestDirectionBoundary(int offset, boolean lookForward) {
-    return offset;
-  }
+    default int findNearestDirectionBoundary(int offset, boolean lookForward) {
+        return offset;
+    }
 
-  default float getScale() {
-    return 1;
-  }
+    default float getScale() {
+        return 1;
+    }
 
-  default void hideCursor() {
-  }
+    default void hideCursor() {
+    }
+
+    default int getDescent() {
+        return 0;
+    }
 }

@@ -18,31 +18,31 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.ServiceManager;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.colorScheme.TextAttributes;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.ServiceManager;
+import consulo.language.editor.inlay.InlayParameterHintsProvider;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -98,7 +98,7 @@ public class ParameterHintsPresentationManager implements Disposable {
   private void updateRenderer(@Nonnull Editor editor, @Nonnull Inlay hint, @Nullable InlayParameterHintsProvider parameterHintsProvider, @Nullable String newText) {
     MyRenderer renderer = (MyRenderer)hint.getRenderer();
     renderer.update(editor, parameterHintsProvider, newText);
-    hint.updateSize();
+    hint.update();
     scheduleRendererUpdate(editor, hint);
   }
 
@@ -206,8 +206,8 @@ public class ParameterHintsPresentationManager implements Disposable {
     }
 
     @Override
-    public int calcWidthInPixels(@Nonnull Editor editor) {
-      FontMetrics metrics = getFontMetrics(editor).metrics;
+    public int calcWidthInPixels(@Nonnull Inlay<?> inlay) {
+      FontMetrics metrics = getFontMetrics(inlay.getEditor()).metrics;
       int endWidth = doCalcWidth(myText, metrics);
       return step <= steps ? Math.max(1, startWidth + (endWidth - startWidth) / steps * step) : endWidth;
     }
@@ -217,7 +217,8 @@ public class ParameterHintsPresentationManager implements Disposable {
     }
 
     @Override
-    public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+    public void paint(@Nonnull Inlay<?> inlay, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+      Editor editor = inlay.getEditor();
       if (myText != null && (step > steps || startWidth != 0)) {
         TextAttributes attributes = editor.getColorsScheme().getAttributes(DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT);
         if (attributes != null) {
@@ -265,11 +266,11 @@ public class ParameterHintsPresentationManager implements Disposable {
           if (!renderer.nextStep()) {
             it.remove();
           }
-          if (renderer.calcWidthInPixels(myEditor) == 0) {
+          if (renderer.calcWidthInPixels(inlay) == 0) {
             Disposer.dispose(inlay);
           }
           else {
-            inlay.updateSize();
+            inlay.update();
           }
         }
         else {

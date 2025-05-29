@@ -14,6 +14,8 @@ open module consulo.ide.impl {
   requires consulo.container.api;
   requires consulo.util.nodep;
 
+  requires it.unimi.dsi.fastutil;
+
   requires consulo.bootstrap;
 
   requires consulo.desktop.awt.hacking;

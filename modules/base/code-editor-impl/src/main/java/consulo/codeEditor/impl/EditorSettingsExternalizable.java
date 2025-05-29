@@ -108,6 +108,8 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         public boolean SHOW_STICKY_LINES = true;
         public int STICKY_LINES_LIMIT = 5;
 
+        public boolean USE_EDITOR_FONT_IN_INLAYS = false;
+
         public boolean KEEP_TRAILING_SPACE_ON_CARET_LINE = true;
 
         private final Map<String, Boolean> mapLanguageBreadcrumbs = new HashMap<>();
@@ -808,5 +810,10 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @Override
     public void setStickyLinesLimit(int value) {
         myOptions.STICKY_LINES_LIMIT = value;
+    }
+
+    @Override
+    public boolean isUseEditorFontInInlays() {
+        return myOptions.USE_EDITOR_FONT_IN_INLAYS;
     }
 }

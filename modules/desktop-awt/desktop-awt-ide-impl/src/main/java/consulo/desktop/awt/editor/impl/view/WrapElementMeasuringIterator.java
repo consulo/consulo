@@ -17,8 +17,8 @@ import java.util.List;
 public class WrapElementMeasuringIterator extends WrapElementIterator {
   private final EditorView myView;
   private final Document myDocument;
-  private final List<Inlay> inlineInlays;
-  private final List<Inlay> afterLineEndInlays;
+  private final List<Inlay<?>> inlineInlays;
+  private final List<Inlay<?>> afterLineEndInlays;
 
   private int inlineInlayIndex;
   private int afterLineEndInlayIndex;

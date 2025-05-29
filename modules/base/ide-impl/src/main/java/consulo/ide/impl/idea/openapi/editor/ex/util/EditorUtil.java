@@ -587,12 +587,12 @@ public final class EditorUtil {
         if (!logicalPosition.equals(editor.offsetToLogicalPosition(offset))) {
             return false; // virtual space
         }
-        List<Inlay> inlays = editor.getInlayModel().getInlineElementsInRange(offset, offset);
+        List<Inlay<?>> inlays = editor.getInlayModel().getInlineElementsInRange(offset, offset);
         if (!inlays.isEmpty()) {
             VisualPosition inlaysStart = editor.offsetToVisualPosition(offset);
             if (inlaysStart.line == visualPosition.line) {
                 int relX = point.x - editor.visualPositionToXY(inlaysStart).x;
-                if (relX >= 0 && relX < inlays.stream().mapToInt(i -> i.getWidthInPixels()).sum()) {
+                if (relX >= 0 && relX < inlays.stream().mapToInt(Inlay::getWidthInPixels).sum()) {
                     return false; // inline inlay
                 }
             }

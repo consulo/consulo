@@ -48,8 +48,8 @@ public class XDebuggerInlayUtil {
         int insertOffset = offset;
         while (insertOffset < text.length() && Character.isJavaIdentifierPart(text.charAt(insertOffset))) insertOffset++;
 
-        List<Inlay> existing = e.getInlayModel().getInlineElementsInRange(insertOffset, insertOffset);
-        for (Inlay inlay : existing) {
+        List<Inlay<?>> existing = e.getInlayModel().getInlineElementsInRange(insertOffset, insertOffset);
+        for (Inlay<?> inlay : existing) {
           if (inlay.getRenderer() instanceof MyRenderer) {
             Disposer.dispose(inlay);
           }
@@ -66,7 +66,7 @@ public class XDebuggerInlayUtil {
       for (FileEditor editor : editors) {
         if (editor instanceof TextEditor) {
           Editor e = ((TextEditor)editor).getEditor();
-          List<Inlay> existing = e.getInlayModel().getInlineElementsInRange(0, e.getDocument().getTextLength());
+          List<Inlay<?>> existing = e.getInlayModel().getInlineElementsInRange(0, e.getDocument().getTextLength());
           for (Inlay inlay : existing) {
             if (inlay.getRenderer() instanceof MyRenderer) {
               Disposer.dispose(inlay);

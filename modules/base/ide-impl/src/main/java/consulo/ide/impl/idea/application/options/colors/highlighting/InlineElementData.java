@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.application.options.colors.highlighting;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.ParameterHintsPresentationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.ParameterHintsPresentationManager;
 import consulo.localize.LocalizeValue;
-
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -57,7 +56,7 @@ public class InlineElementData extends HighlightData {
   public void addHighlToView(Editor view, EditorColorsScheme scheme, Map<TextAttributesKey, LocalizeValue> displayText) {
     int offset = getStartOffset();
     ParameterHintsPresentationManager.getInstance().addHint(view, offset, null, myText, false);
-    List<Inlay> inlays = view.getInlayModel().getInlineElementsInRange(offset, offset);
+    List<Inlay<?>> inlays = view.getInlayModel().getInlineElementsInRange(offset, offset);
     for (Inlay inlay : inlays) {
       EditorCustomElementRenderer renderer = inlay.getRenderer();
       if (!(renderer instanceof RendererWrapper)) {
