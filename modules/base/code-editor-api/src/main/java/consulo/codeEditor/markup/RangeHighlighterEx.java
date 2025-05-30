@@ -67,4 +67,13 @@ public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
         setEditorFilter(other.getEditorFilter());
     }
 
+    /**
+     * If {@code true}, this highlighter is persistent and is retained between code analyzer runs and IDE restarts.
+     *
+     * @see MarkupModelEx#addPersistentLineHighlighter(consulo.colorScheme.TextAttributesKey, int, int)
+     * @see MarkupModelEx#addRangeHighlighterAndChangeAttributes(consulo.colorScheme.TextAttributesKey, int, int, int, HighlighterTargetArea, boolean, java.util.function.Consumer)
+     */
+    default boolean isPersistent() {
+        return false;
+    }
 }

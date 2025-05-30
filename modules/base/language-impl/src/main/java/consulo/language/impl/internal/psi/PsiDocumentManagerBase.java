@@ -2,7 +2,10 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.*;
+import consulo.application.AppUIExecutor;
+import consulo.application.Application;
+import consulo.application.ReadAction;
+import consulo.application.WriteAction;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -19,10 +22,9 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.impl.FrozenDocument;
-import consulo.document.impl.event.RetargetRangeMarkers;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.EditorDocumentPriorities;
-import consulo.document.internal.PrioritizedInternalDocumentListener;
+import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.document.util.FileContentUtilCore;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
@@ -185,7 +187,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     @Nonnull
     private FileManager getFileManager() {
-        return ((PsiManagerEx)myPsiManager).getFileManager();
+        return ((PsiManagerEx) myPsiManager).getFileManager();
     }
 
     @Override
@@ -493,7 +495,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     public void forceReload(VirtualFile virtualFile, @Nullable FileViewProvider viewProvider) {
         if (viewProvider != null) {
-            ((AbstractFileViewProvider)viewProvider).markInvalidated();
+            ((AbstractFileViewProvider) viewProvider).markInvalidated();
         }
         if (virtualFile != null) {
             getFileManager().forceReload(virtualFile);
@@ -632,7 +634,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
             action.run();
             return true;
         }
-        CompositeRunnable actions = (CompositeRunnable)actionsWhenAllDocumentsAreCommitted.get(PERFORM_ALWAYS_KEY);
+        CompositeRunnable actions = (CompositeRunnable) actionsWhenAllDocumentsAreCommitted.get(PERFORM_ALWAYS_KEY);
         if (actions == null) {
             actions = new CompositeRunnable();
             actionsWhenAllDocumentsAreCommitted.put(PERFORM_ALWAYS_KEY, actions);
@@ -811,14 +813,14 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     @Nonnull
     public DocumentEx getLastCommittedDocument(@Nonnull Document document) {
         if (document instanceof FrozenDocument) {
-            return (DocumentEx)document;
+            return (DocumentEx) document;
         }
 
         if (document instanceof DocumentWindow) {
-            DocumentWindow window = (DocumentWindow)document;
+            DocumentWindow window = (DocumentWindow) document;
             Document delegate = window.getDelegate();
             if (delegate instanceof FrozenDocument) {
-                return (DocumentEx)window;
+                return (DocumentEx) window;
             }
 
             if (!window.isValid()) {
@@ -833,12 +835,12 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
             if (info != null) {
                 answer = Maps.cacheOrGet(info.myFrozenWindows, window, answer);
             }
-            return (DocumentEx)answer;
+            return (DocumentEx) answer;
         }
 
         assert document instanceof DocumentImpl;
         UncommittedInfo info = myUncommittedInfos.get(document);
-        return info != null ? info.myFrozen : ((DocumentImpl)document).freeze();
+        return info != null ? info.myFrozen : ((DocumentImpl) document).freeze();
     }
 
     @Nonnull
@@ -852,7 +854,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         UncommittedInfo info = myUncommittedInfos.get(document);
         if (info != null) {
             //noinspection unchecked
-            return (List<DocumentEvent>)info.myEvents.clone();
+            return (List<DocumentEvent>) info.myEvents.clone();
         }
         return Collections.emptyList();
 
@@ -888,7 +890,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     @Nonnull
     private static Document getTopLevelDocument(@Nonnull Document document) {
-        return document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
+        return document instanceof DocumentWindow ? ((DocumentWindow) document).getDelegate() : document;
     }
 
     @Override
@@ -908,7 +910,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         boolean isRelevant = virtualFile != null && isRelevant(virtualFile);
 
         if (document instanceof DocumentImpl && !myUncommittedInfos.containsKey(document)) {
-            myUncommittedInfos.put(document, new UncommittedInfo((DocumentImpl)document));
+            myUncommittedInfos.put(document, new UncommittedInfo((DocumentImpl) document));
         }
 
         final FileViewProvider viewProvider = getCachedViewProvider(document);
@@ -1026,18 +1028,10 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         );
     }
 
-    public class PriorityEventCollector implements PrioritizedInternalDocumentListener {
+    public class PriorityEventCollector implements PrioritizedDocumentListener {
         @Override
         public int getPriority() {
             return EditorDocumentPriorities.RANGE_MARKER;
-        }
-
-        @Override
-        public void moveTextHappened(@Nonnull Document document, int start, int end, int base) {
-            UncommittedInfo info = myUncommittedInfos.get(document);
-            if (info != null) {
-                info.myEvents.add(new RetargetRangeMarkers(document, start, end, base));
-            }
         }
 
         @Override
@@ -1068,10 +1062,10 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
             FileViewProvider viewProvider = fileManager.findCachedViewProvider(virtualFile);
             if (viewProvider != null) {
                 // we can end up outside write action here if the document has forUseInNonAWTThread=true
-                Application.get().runWriteAction(((AbstractFileViewProvider)viewProvider)::onContentReload);
+                Application.get().runWriteAction(((AbstractFileViewProvider) viewProvider)::onContentReload);
             }
             else if (FileIndexFacade.getInstance(myProject).isInContent(virtualFile)) {
-                Application.get().runWriteAction((Runnable)((FileManagerImpl)fileManager)::firePropertyChangedForUnloadedPsi);
+                Application.get().runWriteAction((Runnable) ((FileManagerImpl) fileManager)::firePropertyChangedForUnloadedPsi);
             }
         }
 
@@ -1088,7 +1082,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     private SmartPointerManagerImpl getSmartPointerManager() {
-        return (SmartPointerManagerImpl)SmartPointerManager.getInstance(myProject);
+        return (SmartPointerManagerImpl) SmartPointerManager.getInstance(myProject);
     }
 
     private boolean isRelevant(@Nonnull VirtualFile virtualFile) {
@@ -1157,7 +1151,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
                 error += "context: " + context + "; text: '" + context.getText() + "'\n";
                 error += "context file: " + context.getContainingFile() + "\n";
             }
-            error += "document window ranges: " + Arrays.asList(((DocumentWindow)document).getHostRanges()) + "\n";
+            error += "document window ranges: " + Arrays.asList(((DocumentWindow) document).getHostRanges()) + "\n";
         }
         LOG.error(error);
         //document.replaceString(0, documentLength, psiFile.getText());

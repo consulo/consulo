@@ -42,6 +42,10 @@ public interface EditorSettings {
 
     void setTrailingWhitespaceShown(boolean val);
 
+    default boolean isSelectionWhitespaceShown() {
+        return false; // TODO unsupported
+    }
+
     /**
      * Retrieves a list of soft margins (visual indent guides) to be used in the editor. If soft margins haven't been explicitly set
      * with {@link #setSoftMargins(List)} method, they are obtained from code style settings: {@code CodeStyleSettings.getSoftMargins()}.
@@ -222,4 +226,22 @@ public interface EditorSettings {
     int getStickyLinesLimit();
 
     void setStickyLinesLimit(int value);
+
+    @Nullable
+    default Float getCharacterGridWidthMultiplier() {
+        return null;
+    }
+
+    default boolean isFullLineHeightCursor() {
+        return false; // TODO
+    }
+
+    @Nonnull
+    default TabCharacterPaintMode getTabCharacterPaintMode() {
+        return TabCharacterPaintMode.HORIZONTAL_LINE; // TODO !
+    }
+
+    default boolean isShowingSpecialChars() {
+        return false;  // TODO !
+    }
 }

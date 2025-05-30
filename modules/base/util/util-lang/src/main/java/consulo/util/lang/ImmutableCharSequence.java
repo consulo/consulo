@@ -16,23 +16,32 @@
 package consulo.util.lang;
 
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Contract;
 
 public abstract class ImmutableCharSequence implements CharSequence {
 
-  public static CharSequence asImmutable(@Nonnull final CharSequence cs) {
-    return isImmutable(cs) ? cs : cs.toString();
-  }
+    public static CharSequence asImmutable(@Nonnull final CharSequence cs) {
+        return isImmutable(cs) ? cs : cs.toString();
+    }
 
-  public static boolean isImmutable(@Nonnull final CharSequence cs) {
-    if (cs instanceof ImmutableCharSequence) return true;
-    return cs instanceof CharSequenceSubSequence && isImmutable(((CharSequenceSubSequence)cs).getBaseSequence());
-  }
+    public static boolean isImmutable(@Nonnull final CharSequence cs) {
+        if (cs instanceof ImmutableCharSequence) {
+            return true;
+        }
+        return cs instanceof CharSequenceSubSequence && isImmutable(((CharSequenceSubSequence) cs).getBaseSequence());
+    }
 
-  public abstract ImmutableCharSequence concat(CharSequence sequence);
+    @Contract(pure = true)
+    @Nonnull
+    public ImmutableCharSequence replace(int start, int end, @Nonnull CharSequence seq) {
+        return delete(start, end).insert(start, seq);
+    }
 
-  public abstract ImmutableCharSequence insert(int index, CharSequence seq);
+    public abstract ImmutableCharSequence concat(CharSequence sequence);
 
-  public abstract ImmutableCharSequence delete(int start, int end);
+    public abstract ImmutableCharSequence insert(int index, CharSequence seq);
 
-  public abstract ImmutableCharSequence subtext(int start, int end);
+    public abstract ImmutableCharSequence delete(int start, int end);
+
+    public abstract ImmutableCharSequence subtext(int start, int end);
 }

@@ -22,6 +22,7 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
@@ -150,5 +151,9 @@ public interface CodeEditorInternalHelper {
     }
 
     default void restartStickyPass(@Nonnull Project project, @Nonnull Document document) {
+    }
+
+    default int compareByHighlightInfoSeverity(@Nonnull RangeHighlighterEx o1, @Nonnull RangeHighlighterEx o2) {
+        return 0;
     }
 }

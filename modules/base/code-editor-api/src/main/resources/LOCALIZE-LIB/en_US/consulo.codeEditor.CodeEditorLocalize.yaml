@@ -102,4 +102,20 @@ action.EditorGutterToggleGlobalStickyLines.text:
     text: Show Sticky Lines
 action.EditorGutterToggleGlobalStickyLines.description:
     text: Show the sticky lines panel
+radio.editor.tab.long.arrow:
+    text: Long arrow
+radio.editor.tab.arrow:
+    text: '> symbol'
+radio.editor.tab.horizontal.line:
+    text: Horizontal line
+inlay.hints.declarative.enable.action.text:
+    text: Enable ''{0}'' inlay hints
+inlay.hints.declarative.disable.action.text:
+    text: Disable ''{0}'' Inlay Hints
+inlay.hints.declarative.disable.action.no.provider.text:
+    text: Disable Inlay Hints
+inlay.hints.declarative.enable.option.action.text:
+    text: Enable option ''{0}'' for ''{1}'' inlay hints
+inlay.hints.declarative.disable.option.action.text:
+    text: Disable option ''{0}'' for ''{1}'' inlay hints
 

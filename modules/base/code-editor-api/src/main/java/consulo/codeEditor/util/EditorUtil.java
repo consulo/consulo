@@ -15,13 +15,14 @@
  */
 package consulo.codeEditor.util;
 
+import consulo.application.ReadAction;
 import consulo.application.util.Dumpable;
-import consulo.logging.util.LoggerUtil;
 import consulo.codeEditor.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
+import consulo.logging.util.LoggerUtil;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -74,20 +75,24 @@ public class EditorUtil {
      */
     @Nonnull
     public static VisualPosition inlayAwareOffsetToVisualPosition(@Nonnull Editor editor, int offset) {
-        LogicalPosition logicalPosition = editor.offsetToLogicalPosition(offset);
-        if (editor instanceof InjectedEditor) {
-            logicalPosition = ((InjectedEditor) editor).injectedToHost(logicalPosition);
-            editor = ((InjectedEditor) editor).getDelegate();
-        }
-        VisualPosition pos = editor.logicalToVisualPosition(logicalPosition);
-        Inlay inlay;
-        while ((inlay = editor.getInlayModel().getInlineElementAt(pos)) != null) {
-            if (inlay.isRelatedToPrecedingText()) {
-                break;
+        return ReadAction.compute(() -> {
+            Editor e = editor;
+            LogicalPosition logicalPosition = e.offsetToLogicalPosition(offset);
+            if (e instanceof InjectedEditor) {
+                logicalPosition = ((InjectedEditor) e).injectedToHost(logicalPosition);
+                e = ((InjectedEditor) e).getDelegate();
             }
-            pos = new VisualPosition(pos.line, pos.column + 1);
-        }
-        return pos;
+
+            VisualPosition pos = e.logicalToVisualPosition(logicalPosition);
+            Inlay inlay;
+            while ((inlay = e.getInlayModel().getInlineElementAt(pos)) != null) {
+                if (inlay.isRelatedToPrecedingText()) {
+                    break;
+                }
+                pos = new VisualPosition(pos.line, pos.column + 1);
+            }
+            return pos;
+        });
     }
 
     public static boolean attributesImpactFontStyle(@Nullable TextAttributes attributes) {
@@ -104,6 +109,14 @@ public class EditorUtil {
 
     public static int getTabSize(@Nonnull Editor editor) {
         return editor.getSettings().getTabSize(editor.getProject());
+    }
+
+    public static int getInlaysHeight(@Nonnull Editor editor, int visualLine, boolean above) {
+        return getInlaysHeight(editor.getInlayModel(), visualLine, above);
+    }
+
+    public static int getInlaysHeight(@Nonnull InlayModel inlayModel, int visualLine, boolean above) {
+        return getTotalInlaysHeight(inlayModel.getBlockElementsForVisualLine(visualLine, above));
     }
 
     public static int getTotalInlaysHeight(@Nonnull List<? extends Inlay> inlays) {
@@ -218,12 +231,42 @@ public class EditorUtil {
         return offset;
     }
 
+    public static int getNotFoldedLineEndOffset(@Nonnull Document document, @Nonnull FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
+        int offset = startOffset;
+        while (true) {
+            offset = getLineEndOffset(offset, document);
+            FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset);
+            if (foldRegion == null ||
+                stopAtInvisibleFoldRegions && foldRegion.getPlaceholderText().isEmpty() ||
+                foldRegion.getEndOffset() <= offset) {
+                break;
+            }
+            offset = foldRegion.getEndOffset();
+        }
+        return offset;
+    }
+
     private static int getLineEndOffset(int offset, Document document) {
         if (offset >= document.getTextLength()) {
             return offset;
         }
         int lineNumber = document.getLineNumber(offset);
         return document.getLineEndOffset(lineNumber);
+    }
+
+    public static int getNotFoldedLineStartOffset(@Nonnull Document document, @Nonnull FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
+        int offset = startOffset;
+        while (true) {
+            offset = DocumentUtil.getLineStartOffset(offset, document);
+            FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset - 1);
+            if (foldRegion == null ||
+                stopAtInvisibleFoldRegions && foldRegion.getPlaceholderText().isEmpty() ||
+                foldRegion.getStartOffset() >= offset) {
+                break;
+            }
+            offset = foldRegion.getStartOffset();
+        }
+        return offset;
     }
 
     /**

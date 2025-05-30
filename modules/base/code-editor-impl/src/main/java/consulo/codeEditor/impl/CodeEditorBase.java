@@ -51,7 +51,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -546,7 +545,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             }
 
             @Override
-            public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
+            public void afterRemoved(@Nonnull RangeHighlighterEx highlighter) {
                 TextAttributes attributes = highlighter.getTextAttributes(getColorsScheme());
                 onHighlighterChanged(highlighter,
                     getGutterComponentEx().canImpactSize(highlighter),
@@ -610,7 +609,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     protected void onHighlighterChanged(
-        @NotNull RangeHighlighterEx highlighter,
+        @Nonnull RangeHighlighterEx highlighter,
         boolean canImpactGutterSize,
         boolean fontStyleChanged,
         boolean foregroundColorChanged

@@ -27,15 +27,14 @@ import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -80,7 +79,7 @@ public class AttributesFlyweight {
                 return false;
             }
 
-            FlyweightKey key = (FlyweightKey)o;
+            FlyweightKey key = (FlyweightKey) o;
 
             if (fontType != key.fontType) {
                 return false;
@@ -122,7 +121,7 @@ public class AttributesFlyweight {
         @Override
         protected FlyweightKey clone() {
             try {
-                return (FlyweightKey)super.clone();
+                return (FlyweightKey) super.clone();
             }
             catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
@@ -152,6 +151,34 @@ public class AttributesFlyweight {
         @Nonnull Map<EffectType, ColorValue> additionalEffects,
         ColorValue errorStripeColor
     ) {
+        FlyweightKey key = createKey(foreground, background, fontType, effectColor, effectType, additionalEffects, errorStripeColor);
+
+        AttributesFlyweight flyweight = entries.get(key);
+        if (flyweight != null) {
+            return flyweight;
+        }
+
+        return Maps.cacheOrGet(entries, key.clone(), new AttributesFlyweight(key));
+    }
+
+    public static @Nonnull AttributesFlyweight createNoCache(ColorValue foreground,
+                                                             ColorValue background,
+                                                             @JdkConstants.FontStyle int fontType,
+                                                             ColorValue effectColor,
+                                                             EffectType effectType,
+                                                             @Nonnull Map<EffectType, ? extends ColorValue> additionalEffects,
+                                                             ColorValue errorStripeColor) {
+        FlyweightKey key = createKey(foreground, background, fontType, effectColor, effectType, additionalEffects, errorStripeColor);
+        return new AttributesFlyweight(key);
+    }
+
+    private static @Nonnull FlyweightKey createKey(@Nullable ColorValue foreground,
+                                                   @Nullable ColorValue background,
+                                                   @JdkConstants.FontStyle int fontType,
+                                                   @Nullable ColorValue effectColor,
+                                                   @Nullable EffectType effectType,
+                                                   @Nonnull Map<EffectType, ? extends ColorValue> additionalEffects,
+                                                   @Nullable ColorValue errorStripeColor) {
         FlyweightKey key = ourKey.get();
         if (key == null) {
             ourKey.set(key = new FlyweightKey());
@@ -161,15 +188,9 @@ public class AttributesFlyweight {
         key.fontType = fontType;
         key.effectColor = effectColor;
         key.effectType = effectType;
-        key.myAdditionalEffects = additionalEffects.isEmpty() ? Collections.emptyMap() : new HashMap<>(additionalEffects);
+        key.myAdditionalEffects = additionalEffects.isEmpty() ? Collections.emptyMap() : new EnumMap<>(additionalEffects);
         key.errorStripeColor = errorStripeColor;
-
-        AttributesFlyweight flyweight = entries.get(key);
-        if (flyweight != null) {
-            return flyweight;
-        }
-
-        return Maps.cacheOrGet(entries, key.clone(), new AttributesFlyweight(key));
+        return key;
     }
 
     private AttributesFlyweight(@Nonnull FlyweightKey key) {
@@ -455,7 +476,7 @@ public class AttributesFlyweight {
             return false;
         }
 
-        AttributesFlyweight that = (AttributesFlyweight)o;
+        AttributesFlyweight that = (AttributesFlyweight) o;
 
         if (myFontType != that.myFontType) {
             return false;

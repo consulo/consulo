@@ -31,6 +31,7 @@ public interface EditorColors {
     EditorColorKey READONLY_BACKGROUND_COLOR = EditorColorKey.createColorKey("READONLY_BACKGROUND");
     EditorColorKey READONLY_FRAGMENT_BACKGROUND_COLOR = EditorColorKey.createColorKey("READONLY_FRAGMENT_BACKGROUND");
     EditorColorKey WHITESPACES_COLOR = EditorColorKey.createColorKey("WHITESPACES");
+    EditorColorKey TABS_COLOR = EditorColorKey.createColorKeyWithFallback("TABS", WHITESPACES_COLOR);
     EditorColorKey INDENT_GUIDE_COLOR = EditorColorKey.createColorKey("INDENT_GUIDE");
     EditorColorKey SOFT_WRAP_SIGN_COLOR = EditorColorKey.createColorKey("SOFT_WRAP_SIGN_COLOR");
     EditorColorKey SELECTED_INDENT_GUIDE_COLOR = EditorColorKey.createColorKey("SELECTED_INDENT_GUIDE");

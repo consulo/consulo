@@ -1204,9 +1204,9 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     int fontType;
     boolean skipToLineEnd;
 
-    List<Inlay> inlineInlays;
+    List<Inlay<?>> inlineInlays;
     int inlineInlayIndex;
-    List<Inlay> afterLineEndInlays;
+    List<Inlay<?>> afterLineEndInlays;
     int afterLineEndInlayIndex;
 
     @Override

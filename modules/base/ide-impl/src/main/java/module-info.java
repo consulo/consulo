@@ -14,6 +14,8 @@ open module consulo.ide.impl {
   requires consulo.container.api;
   requires consulo.util.nodep;
 
+  requires it.unimi.dsi.fastutil;
+
   requires consulo.bootstrap;
 
   requires consulo.desktop.awt.hacking;
@@ -431,7 +433,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.editor;
   exports consulo.ide.impl.idea.openapi.editor.actionSystem;
   exports consulo.ide.impl.idea.openapi.editor.actions;
-  exports consulo.ide.impl.idea.openapi.editor.event;
   exports consulo.ide.impl.idea.openapi.editor.ex;
   exports consulo.ide.impl.idea.openapi.editor.ex.util;
   exports consulo.ide.impl.idea.openapi.editor.highlighter;

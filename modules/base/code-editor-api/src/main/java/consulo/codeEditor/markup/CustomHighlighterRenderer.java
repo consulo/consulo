@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,40 @@
 package consulo.codeEditor.markup;
 
 import consulo.codeEditor.Editor;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 
+/**
+ * Specifies custom representation for an editor highlighter.
+ *
+ * @see RangeHighlighter#setCustomRenderer(CustomHighlighterRenderer)
+ * @see RangeHighlighter#getCustomRenderer()
+ */
 public interface CustomHighlighterRenderer {
-  void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g);
+    void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g);
+
+    /**
+     * @deprecated please use {@link #getOrder()} instead
+     */
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated(forRemoval = true)
+    default boolean isForeground() {
+        return false;
+    }
+
+    /**
+     * Allows specifying the order of painting for this highlighter.
+     * Default is {@link CustomHighlighterOrder#AFTER_BACKGROUND} - paint highlighter over the background and before the text.
+     *
+     * @see CustomHighlighterOrder
+     */
+    default @Nonnull CustomHighlighterOrder getOrder() {
+        if (isForeground()) {
+            return CustomHighlighterOrder.AFTER_TEXT;
+        }
+        else {
+            return CustomHighlighterOrder.AFTER_BACKGROUND;
+        }
+    }
 }

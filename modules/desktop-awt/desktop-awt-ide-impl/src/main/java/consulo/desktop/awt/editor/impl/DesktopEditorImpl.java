@@ -28,6 +28,8 @@ import consulo.desktop.awt.editor.impl.stickyLine.StickyLineShadowPainter;
 import consulo.desktop.awt.editor.impl.stickyLine.StickyLinesManager;
 import consulo.desktop.awt.editor.impl.stickyLine.StickyLinesPanel;
 import consulo.desktop.awt.editor.impl.stickyLine.VisualStickyLines;
+import consulo.desktop.awt.editor.impl.view.CharacterGrid;
+import consulo.desktop.awt.editor.impl.view.CharacterGridImpl;
 import consulo.desktop.awt.editor.impl.view.EditorView;
 import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
 import consulo.desktop.awt.language.editor.StatusComponentContainer;
@@ -148,6 +150,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private static final boolean HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK =
         Boolean.parseBoolean(System.getProperty("idea.honor.camel.humps.on.triple.click"));
     private static final Key<BufferedImage> BUFFER = Key.create("buffer");
+    static final Key<Boolean> CONTAINS_BIDI_TEXT = Key.create("contains.bidi.text");  // TODO BidiContentNotificationProvider
 
     private final JPanel myPanel;
     @Nonnull
@@ -284,6 +287,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     public final Object myFractionalMetricsHintValue =
         Registry.is("editor.text.fractional.metrics") ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
     public final EditorView myView;
+    private @Nullable CharacterGridImpl myCharacterGrid;
 
     private boolean myCharKeyPressed;
     private boolean myNeedToSelectPreviousChar;
@@ -1610,6 +1614,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
         //}
     }
 
+    public void bidiTextFound() {
+        if (myProject != null && myVirtualFile != null && replace(CONTAINS_BIDI_TEXT, null, Boolean.TRUE)) {
+            EditorNotifications.getInstance(myProject).updateNotifications(myVirtualFile);
+        }
+    }
+
     Color getDisposedBackground() {
         return new JBColor(new Color(128, 255, 128), new Color(128, 255, 128));
     }
@@ -2837,6 +2847,32 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myDropHandler = dropHandler;
     }
 
+    @Nonnull
+    private EditorMouseEvent createEditorMouseEvent(@Nonnull MouseEvent e) {
+        Point point = e.getPoint();
+        EditorMouseEventArea area = getMouseEventArea(e);
+        boolean inEditingArea = area == EditorMouseEventArea.EDITING_AREA;
+        EditorLocation location = new EditorLocation(this, inEditingArea ? point : new Point(0, point.y));
+        VisualPosition visualPosition = location.getVisualPosition();
+        LogicalPosition logicalPosition = location.getLogicalPosition();
+        int offset = location.getOffset();
+        int relX = point.x - myEditorComponent.getInsets().left;
+        Inlay<?> inlayCandidate = inEditingArea ? myInlayModel.getElementAt(location, true) : null;
+        Inlay<?> inlay = inlayCandidate == null ||
+            (inlayCandidate.getPlacement() == Inlay.Placement.BELOW_LINE ||
+                inlayCandidate.getPlacement() == Inlay.Placement.ABOVE_LINE) &&
+                inlayCandidate.getWidthInPixels() <= relX ? null : inlayCandidate;
+        FoldRegion foldRegionCandidate = inEditingArea ? myFoldingModel.getFoldingPlaceholderAt(location, true) : null;
+        FoldRegion foldRegion = foldRegionCandidate instanceof CustomFoldRegion &&
+            ((CustomFoldRegion) foldRegionCandidate).getWidthInPixels() <= relX ? null : foldRegionCandidate;
+        GutterIconRenderer gutterIconRenderer = inEditingArea ? null : myGutterComponent.getGutterRenderer(point);
+        boolean overText = inlayCandidate == null &&
+            (foldRegionCandidate == null || foldRegion != null) &&
+            offsetToLogicalPosition(offset).equals(logicalPosition);
+        return new EditorMouseEvent(this, e, null, e.isPopupTrigger(), area, offset, logicalPosition, visualPosition,
+            overText, foldRegion, inlay, gutterIconRenderer);
+    }
+
     private static class MyInputMethodHandleSwingThreadWrapper implements InputMethodRequests {
         private final InputMethodRequests myDelegate;
 
@@ -3170,7 +3206,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @Override
         public void mouseExited(@Nonnull MouseEvent e) {
             runMouseExitedCommand(e);
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
                 myGutterComponent.mouseExited(e);
             }
@@ -3186,7 +3222,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
             boolean forceProcessing = false;
             myMousePressedEvent = e;
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
 
             myExpectedCaretOffset = logicalPositionToOffset(myLastMousePressedLocation);
             try {
@@ -3235,7 +3271,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         private void runMouseClickedCommand(@Nonnull final MouseEvent e) {
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             for (EditorMouseListener listener : myMouseListeners) {
                 listener.mouseClicked(event);
                 if (isReleased) {
@@ -3258,7 +3294,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 return;
             }
 
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             for (EditorMouseListener listener : myMouseListeners) {
                 listener.mouseReleased(event);
                 if (isReleased || event.isConsumed()) {
@@ -3284,7 +3320,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         private void runMouseEnteredCommand(@Nonnull MouseEvent e) {
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             for (EditorMouseListener listener : myMouseListeners) {
                 listener.mouseEntered(event);
                 if (isReleased) {
@@ -3298,7 +3334,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         private void runMouseExitedCommand(@Nonnull MouseEvent e) {
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             for (EditorMouseListener listener : myMouseListeners) {
                 listener.mouseExited(event);
                 if (isReleased) {
@@ -3646,7 +3682,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             }
             validateMousePointer(e);
             runMouseDraggedCommand(e);
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
                 myGutterComponent.mouseDragged(e);
             }
@@ -3681,7 +3717,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
             myMouseMovedEvent = e;
 
-            EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+            EditorMouseEvent event = createEditorMouseEvent(e);
             if (e.getSource() == myGutterComponent) {
                 myGutterComponent.mouseMoved(e);
             }
@@ -3975,6 +4011,16 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return myMouseListener;
     }
 
+    public EditorView getView() {
+        return myView;
+    }
+
+    @Override
+    @Nonnull
+    public int[] visualLineToYRange(int visualLine) {
+        return myView.visualLineToYRange(visualLine);
+    }
+
     /**
      * If true, the editor is in special "clean" mode when editor's content is being rendered on sticky lines panel.
      * This allows suppressing visual elements like caret row background, vertical indent lines, right margin line, etc.
@@ -4035,6 +4081,27 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
     }
 
+    /**
+     * Returns the instance of the character grid corresponding to this editor
+     * <p>
+     * A non-{@code null} value is only returned when the character grid mode is enabled,
+     * see {@link EditorSettings#setCharacterGridWidthMultiplier(Float)}.
+     * </p>
+     *
+     * @return the current character grid instance or {@code null} if the editor is not in the grid mode
+     */
+    public @Nullable CharacterGrid getCharacterGrid() {
+        if (getSettings().getCharacterGridWidthMultiplier() == null) {
+            myCharacterGrid = null;
+            return null;
+        }
+        else {
+            if (myCharacterGrid == null) {
+                myCharacterGrid = new CharacterGridImpl(this);
+            }
+            return myCharacterGrid;
+        }
+    }
     @TestOnly
     void validateState() {
         myView.validateState();

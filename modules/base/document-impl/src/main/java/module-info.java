@@ -8,6 +8,8 @@ module consulo.document.impl {
   requires transitive consulo.document.api;
   requires transitive consulo.undo.redo.api;
 
+  requires it.unimi.dsi.fastutil;
+
   exports consulo.document.impl to consulo.ide.impl,
           consulo.language.impl,
           consulo.test.impl,

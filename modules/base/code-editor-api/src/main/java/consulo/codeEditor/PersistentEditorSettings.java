@@ -285,4 +285,6 @@ public interface PersistentEditorSettings {
     int getStickyLinesLimit();
 
     void setStickyLinesLimit(int value);
+
+    boolean isUseEditorFontInInlays();
 }

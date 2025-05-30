@@ -137,6 +137,11 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     }
 
     @Override
+    public void fireAfterRemoved(@Nonnull RangeHighlighterEx highlighter) {
+        myDelegate.fireAfterRemoved(highlighter);
+    }
+
+    @Override
     @Nullable
     public RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
         return myDelegate.addPersistentLineHighlighter(lineNumber, layer, textAttributes);

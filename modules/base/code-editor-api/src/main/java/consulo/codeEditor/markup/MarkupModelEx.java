@@ -55,6 +55,8 @@ public interface MarkupModelEx extends MarkupModel {
 
     void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter);
 
+    void fireAfterRemoved(@Nonnull RangeHighlighterEx highlighter);
+
     boolean containsHighlighter(@Nonnull RangeHighlighter highlighter);
 
     void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener);

@@ -14,6 +14,15 @@ public interface MarkupModelListener extends EventListener {
     default void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
     }
 
+    /**
+     * Called when the {@code highlighter} is disposed.
+     * Inside this method the {@code highlighter.isValid()} returns {@code false}, so some methods might be unavailable or have undefined behaviour.
+     * For example, all {@code setXXX} methods, e.g., {@link RangeHighlighterEx#setTextAttributes(TextAttributes)} might fail.
+     * Only getters are guaranteed to work.
+     */
+    default void afterRemoved(@Nonnull RangeHighlighterEx highlighter) {
+    }
+
     default void attributesChanged(@Nonnull RangeHighlighterEx highlighter,
                                    boolean renderersChanged,
                                    boolean fontStyleOrColorChanged) {

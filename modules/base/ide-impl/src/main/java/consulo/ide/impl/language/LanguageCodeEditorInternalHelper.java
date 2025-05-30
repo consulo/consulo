@@ -27,6 +27,7 @@ import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.EditorNotifications;
@@ -41,9 +42,11 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 import consulo.language.editor.action.WordBoundaryFilter;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -232,5 +235,19 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
             })
             .expireWith(project)
             .submitDefault();
+    }
+
+    @Override
+    public int compareByHighlightInfoSeverity(@Nonnull RangeHighlighterEx o1, @Nonnull RangeHighlighterEx o2) {
+        HighlightInfo info1 = HighlightInfo.fromRangeHighlighter(o1);
+        HighlightInfo info2 = HighlightInfo.fromRangeHighlighter(o2);
+        HighlightSeverity severity1 = info1 == null ? null : info1.getSeverity();
+        HighlightSeverity severity2 = info2 == null ? null : info2.getSeverity();
+        if (severity1 != null && severity2 != null) {
+            // higher severity should win
+            return severity2.compareTo(severity1);
+        }
+        // having severity has more priority than no severity
+        return Boolean.compare(severity1 == null, severity2 == null);
     }
 }

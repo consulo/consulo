@@ -160,4 +160,9 @@ public class EmptyMarkupModel implements MarkupModelEx {
     public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
 
     }
+
+    @Override
+    public void fireAfterRemoved(@Nonnull RangeHighlighterEx highlighter) {
+
+    }
 }

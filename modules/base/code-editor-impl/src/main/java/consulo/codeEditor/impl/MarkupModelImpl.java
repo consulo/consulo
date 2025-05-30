@@ -51,14 +51,14 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
 
     public MarkupModelImpl(@Nonnull DocumentEx document) {
         myDocument = document;
-        myHighlighterTree = new RangeHighlighterTree(document, this);
-        myHighlighterTreeForLines = new RangeHighlighterTree(document, this);
+        myHighlighterTree = new RangeHighlighterTree(this);
+        myHighlighterTreeForLines = new RangeHighlighterTree(this);
     }
 
     @Override
     public void dispose() {
-        myHighlighterTree.dispose(myDocument);
-        myHighlighterTreeForLines.dispose(myDocument);
+        myHighlighterTree.dispose();
+        myHighlighterTreeForLines.dispose();
     }
 
     @Override
@@ -264,9 +264,16 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     }
 
     @Override
-    public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
+    public void fireBeforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
+        myCachedHighlighters = null;
         for (MarkupModelListener listener : myListeners) {
-            listener.beforeRemoved(segmentHighlighter);
+            listener.beforeRemoved(highlighter);
+        }
+    }
+
+    public void fireAfterRemoved(@Nonnull RangeHighlighterEx highlighter) {
+        for (MarkupModelListener listener : myListeners) {
+            listener.afterRemoved(highlighter);
         }
     }
 
