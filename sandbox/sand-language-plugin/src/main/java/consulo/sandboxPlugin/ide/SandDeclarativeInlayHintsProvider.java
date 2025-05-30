@@ -44,6 +44,9 @@ public class SandDeclarativeInlayHintsProvider implements DeclarativeInlayHintsP
                 if (PsiUtilCore.getElementType(element) == SandTokens.IDENTIFIER) {
                     sink.addPresentation(
                         new DeclarativeInlayPosition.InlineInlayPosition(element.getTextOffset(), true),
+                        null,
+                        null,
+                        new HintFormat(HintColorKind.TextWithoutBackground, HintFontSize.AsInEditor, HintMarginPadding.OnlyPadding),
                         presentationTreeBuilder -> {
                             Image image = ImageEffects.colorFilled(12, 12, StandardColors.RED);
                             presentationTreeBuilder.icon(image);

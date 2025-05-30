@@ -66,7 +66,10 @@ public class IconInlayPresentationEntry extends InlayPresentationEntry {
                        int yOffset,
                        int rectHeight,
                        Editor editor) {
-        TargetAWT.to(myImage).paintIcon(editor.getComponent(), graphics, 0, yOffset);
+        int centerImage = computeHeight(metrics) / 2;
+        int centerRect = rectHeight / 2;
+
+        TargetAWT.to(myImage).paintIcon(editor.getComponent(), graphics, 0, centerRect - centerImage);
     }
 
     @Override

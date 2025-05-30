@@ -75,8 +75,7 @@ public class PresentationEntryBuilder {
                 Object dataPayload = state.getDataPayload(childIndex);
                 if (dataPayload instanceof Image image) {
                     InlayMouseArea area = currentClickArea;
-                    IconInlayPresentationEntry entry =
-                        new IconInlayPresentationEntry(image, parentIndexToSwitch, area);
+                    IconInlayPresentationEntry entry = new IconInlayPresentationEntry(image, parentIndexToSwitch, area);
                     addEntry(entry);
                     if (area != null) {
                         area.getEntries().add(entry);
