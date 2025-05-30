@@ -29,6 +29,12 @@ public interface DeclarativeInlayTreeSink {
             builder);
     }
 
+    default void addPresentation(@Nonnull DeclarativeInlayPosition position,
+                                 @Nonnull HintFormat format,
+                                 @Nonnull Consumer<DeclarativePresentationTreeBuilder> builder) {
+        addPresentation(position, null, null, format, builder);
+    }
+
     /**
      * Saves presentation for later application.
      *

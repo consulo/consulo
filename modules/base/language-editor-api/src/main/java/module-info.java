@@ -36,6 +36,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.highlight.usage;
   exports consulo.language.editor.inject;
   exports consulo.language.editor.inlay;
+  exports consulo.language.editor.inlay.chain;
   exports consulo.language.editor.inspection;
   exports consulo.language.editor.inspection.localize;
   exports consulo.language.editor.inspection.reference;
