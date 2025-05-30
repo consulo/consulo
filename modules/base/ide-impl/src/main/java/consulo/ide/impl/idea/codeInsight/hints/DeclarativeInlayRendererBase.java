@@ -6,7 +6,7 @@ import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.colorScheme.TextAttributes;
-import consulo.language.editor.inlay.InlayPosition;
+import consulo.language.editor.inlay.DeclarativeInlayPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.hint.LightweightHint;
 
@@ -105,25 +105,25 @@ public abstract class DeclarativeInlayRendererBase<M> implements EditorCustomEle
         return toInlayData(true);
     }
 
-    private static InlayPosition copyAndUpdateOffset(InlayPosition position, Inlay<?> inlay) {
+    private static DeclarativeInlayPosition copyAndUpdateOffset(DeclarativeInlayPosition position, Inlay<?> inlay) {
         int newOffset = inlay.getOffset();
-        if (position instanceof InlayPosition.AboveLineIndentedPosition) {
-            InlayPosition.AboveLineIndentedPosition orig = (InlayPosition.AboveLineIndentedPosition) position;
-            return new InlayPosition.AboveLineIndentedPosition(newOffset, orig.getVerticalPriority(), orig.getPriority());
+        if (position instanceof DeclarativeInlayPosition.AboveLineIndentedPosition) {
+            DeclarativeInlayPosition.AboveLineIndentedPosition orig = (DeclarativeInlayPosition.AboveLineIndentedPosition) position;
+            return new DeclarativeInlayPosition.AboveLineIndentedPosition(newOffset, orig.getVerticalPriority(), orig.getPriority());
         }
-        else if (position instanceof InlayPosition.EndOfLinePosition) {
+        else if (position instanceof DeclarativeInlayPosition.EndOfLinePosition) {
             Editor editor = inlay.getEditor();
-            return new InlayPosition.EndOfLinePosition(editor.getDocument().getLineNumber(newOffset));
+            return new DeclarativeInlayPosition.EndOfLinePosition(editor.getDocument().getLineNumber(newOffset));
         }
-        else if (position instanceof InlayPosition.InlineInlayPosition) {
-            InlayPosition.InlineInlayPosition orig = (InlayPosition.InlineInlayPosition) position;
-            return new InlayPosition.InlineInlayPosition(newOffset, orig.isRelatedToPrevious(), orig.getPriority());
+        else if (position instanceof DeclarativeInlayPosition.InlineInlayPosition) {
+            DeclarativeInlayPosition.InlineInlayPosition orig = (DeclarativeInlayPosition.InlineInlayPosition) position;
+            return new DeclarativeInlayPosition.InlineInlayPosition(newOffset, orig.isRelatedToPrevious(), orig.getPriority());
         }
         throw new IllegalArgumentException("Unknown InlayPosition type: " + position.getClass());
     }
 
     private static InlayData copyAndUpdatePosition(InlayData data, Inlay<?> inlay) {
-        InlayPosition updated = copyAndUpdateOffset(data.getPosition(), inlay);
+        DeclarativeInlayPosition updated = copyAndUpdateOffset(data.getPosition(), inlay);
         return new InlayData(
             updated,
             data.getTooltip(),

@@ -87,7 +87,7 @@ public class PresentationFactory implements InlayPresentationFactory {
     public InlayPresentation container(InlayPresentation presentation,
                                        Padding padding,
                                        RoundedCorners roundedCorners,
-                                       java.awt.Color background,
+                                       ColorValue background,
                                        float backgroundAlpha) {
         return new ContainerInlayPresentation(presentation, padding, roundedCorners, background, backgroundAlpha);
     }
@@ -174,7 +174,7 @@ public class PresentationFactory implements InlayPresentationFactory {
 
     @Override
     @Contract(pure = true)
-    public IconPresentation icon(Icon icon) {
+    public IconPresentation icon(Image icon) {
         return new IconPresentation(icon, editor.getComponent());
     }
 

@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.codeInsight.hints;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.language.editor.inlay.InlayActionData;
 import consulo.language.editor.inlay.InlayActionPayload;
+import consulo.ui.image.Image;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,19 @@ public class PresentationEntryBuilder {
                 }
                 finally {
                     parentIndexToSwitch = savedIndexToSwitch;
+                }
+                break;
+            }
+            case InlayTags.ICON_TAG: {
+                Object dataPayload = state.getDataPayload(childIndex);
+                if (dataPayload instanceof Image image) {
+                    InlayMouseArea area = currentClickArea;
+                    IconInlayPresentationEntry entry =
+                        new IconInlayPresentationEntry(image, parentIndexToSwitch, area);
+                    addEntry(entry);
+                    if (area != null) {
+                        area.getEntries().add(entry);
+                    }
                 }
                 break;
             }

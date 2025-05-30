@@ -1,9 +1,10 @@
 // Copyright 2000-2023 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.inlay;
 
+import consulo.ui.color.ColorValue;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Contract;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -34,14 +35,14 @@ public interface InlayPresentationFactory {
     InlayPresentation container(InlayPresentation presentation,
                                 Padding padding,
                                 RoundedCorners roundedCorners,
-                                Color background,
+                                ColorValue background,
                                 float backgroundAlpha);
 
     /**
      * Renders an icon inline.
      */
     @Contract(pure = true)
-    InlayPresentation icon(Icon icon);
+    InlayPresentation icon(Image icon);
 
     /**
      * Attaches mouse handlers to a presentation.

@@ -3,10 +3,12 @@ package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.application.ApplicationManager;
 import consulo.language.editor.inlay.*;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
-public class PresentationTreeBuilderImpl implements CollapsiblePresentationTreeBuilder {
+public class PresentationTreeBuilderImpl implements DeclarativeCollapsiblePresentationTreeBuilder {
     private final byte index;
     private final InlayTreeBuildingContext context;
 
@@ -18,13 +20,13 @@ public class PresentationTreeBuilderImpl implements CollapsiblePresentationTreeB
     /**
      * Creates the root builder. Position may be null in unit tests only.
      */
-    public static PresentationTreeBuilderImpl createRoot(InlayPosition position) {
+    public static PresentationTreeBuilderImpl createRoot(DeclarativeInlayPosition position) {
         if (position == null && !ApplicationManager.getApplication().isUnitTestMode()) {
             throw new IllegalArgumentException("Position must not be null in production");
         }
-        InlayPosition pos = position != null
+        DeclarativeInlayPosition pos = position != null
             ? position
-            : new InlayPosition.InlineInlayPosition(0, false, 0);
+            : new DeclarativeInlayPosition.InlineInlayPosition(0, false, 0);
         InlayTreeBuildingContext context = new InlayTreeBuildingContext(pos);
         return new PresentationTreeBuilderImpl((byte) 0, context);
     }
@@ -34,21 +36,21 @@ public class PresentationTreeBuilderImpl implements CollapsiblePresentationTreeB
     public static final byte DOESNT_FIT_INDEX = -10;
 
     @Override
-    public void list(Consumer<PresentationTreeBuilder> builder) {
+    public void list(Consumer<DeclarativePresentationTreeBuilder> builder) {
         byte listIndex = context.addNode(index, InlayTags.LIST_TAG, null);
         builder.accept(new PresentationTreeBuilderImpl(listIndex, context));
     }
 
     @Override
-    public void toggleButton(Consumer<PresentationTreeBuilder> builder) {
+    public void toggleButton(Consumer<DeclarativePresentationTreeBuilder> builder) {
         byte buttonIndex = context.addNode(index, InlayTags.COLLAPSE_BUTTON_TAG, null);
         builder.accept(new PresentationTreeBuilderImpl(buttonIndex, context));
     }
 
     @Override
     public void collapsibleList(CollapseState state,
-                                Consumer<CollapsiblePresentationTreeBuilder> expandedState,
-                                Consumer<CollapsiblePresentationTreeBuilder> collapsedState) {
+                                Consumer<DeclarativeCollapsiblePresentationTreeBuilder> expandedState,
+                                Consumer<DeclarativeCollapsiblePresentationTreeBuilder> collapsedState) {
         byte tag;
         switch (state) {
             case Expanded:
@@ -87,6 +89,13 @@ public class PresentationTreeBuilderImpl implements CollapsiblePresentationTreeB
     }
 
     @Override
+    public void icon(@Nonnull Image image) {
+        context.incrementTextElementCount();
+
+        context.addNode(index, InlayTags.ICON_TAG, image);
+    }
+
+    @Override
     public void text(String text, InlayActionData actionData) {
         if (text == null || text.isEmpty()) {
             throw new IllegalArgumentException("Text entry may not be empty. Please fix the provider implementation.");
@@ -106,7 +115,7 @@ public class PresentationTreeBuilderImpl implements CollapsiblePresentationTreeB
     }
 
     @Override
-    public void clickHandlerScope(InlayActionData actionData, Consumer<PresentationTreeBuilder> builder) {
+    public void clickHandlerScope(InlayActionData actionData, Consumer<DeclarativePresentationTreeBuilder> builder) {
         byte nodeIndex = context.addNode(index, InlayTags.CLICK_HANDLER_SCOPE_TAG, actionData);
         builder.accept(new PresentationTreeBuilderImpl(nodeIndex, context));
     }
@@ -125,9 +134,9 @@ public class PresentationTreeBuilderImpl implements CollapsiblePresentationTreeB
 
     private static class Branch {
         final byte payload;
-        final Consumer<CollapsiblePresentationTreeBuilder> builder;
+        final Consumer<DeclarativeCollapsiblePresentationTreeBuilder> builder;
 
-        Branch(byte payload, Consumer<CollapsiblePresentationTreeBuilder> builder) {
+        Branch(byte payload, Consumer<DeclarativeCollapsiblePresentationTreeBuilder> builder) {
             this.payload = payload;
             this.builder = builder;
         }

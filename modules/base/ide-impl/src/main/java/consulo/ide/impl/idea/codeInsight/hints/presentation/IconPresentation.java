@@ -3,39 +3,40 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.BasePresentation;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class IconPresentation extends BasePresentation {
     private final Component component;
-    private Icon icon;
+    private Image icon;
 
-    public IconPresentation(Icon icon, Component component) {
+    public IconPresentation(Image icon, Component component) {
         this.icon = icon;
         this.component = component;
     }
 
-    public void setIcon(Icon icon) {
+    public void setIcon(Image icon) {
         this.icon = icon;
         fireContentChanged(new Rectangle(getWidth(), getHeight()));
     }
 
     @Override
     public int getWidth() {
-        return icon.getIconWidth();
+        return icon.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return icon.getIconHeight();
+        return icon.getHeight();
     }
 
     @Override
     public void paint(Graphics2D g, TextAttributes attributes) {
         Graphics2D graphics = (Graphics2D) g.create();
         graphics.setComposite(AlphaComposite.SrcAtop.derive(1.0f));
-        icon.paintIcon(component, graphics, 0, 0);
+        TargetAWT.to(icon).paintIcon(component, graphics, 0, 0);
         graphics.dispose();
     }
 

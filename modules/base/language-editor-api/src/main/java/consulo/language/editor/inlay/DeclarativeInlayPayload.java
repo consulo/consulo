@@ -18,11 +18,11 @@ package consulo.language.editor.inlay;
 /**
  * The payload for the whole inlay. It may be used later by the actions from the right-click menu.
  */
-public class InlayPayload {
+public class DeclarativeInlayPayload {
     private final String payloadName;
     private final InlayActionPayload payload;
 
-    public InlayPayload(String payloadName, InlayActionPayload payload) {
+    public DeclarativeInlayPayload(String payloadName, InlayActionPayload payload) {
         this.payloadName = payloadName;
         this.payload = payload;
     }

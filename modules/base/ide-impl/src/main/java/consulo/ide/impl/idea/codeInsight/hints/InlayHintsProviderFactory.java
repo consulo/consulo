@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.application.Application;
 import consulo.language.Language;
-import consulo.language.editor.inlay.InlayHintsProvider;
+import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -21,13 +21,13 @@ public class InlayHintsProviderFactory {
     @Nonnull
     static List<InlayProviderInfo> findProvidersForLanguage(Language language) {
         List<InlayProviderInfo> result = new ArrayList<>();
-        for (InlayHintsProvider inlayHintsProvider : Application.get().getExtensionList(InlayHintsProvider.class)) {
-            if (language.isKindOf(inlayHintsProvider.getLanguage())) {
-                result.add(new InlayProviderInfo(inlayHintsProvider,
-                    inlayHintsProvider.getProviderId(),
-                    inlayHintsProvider.getOptions(),
-                    inlayHintsProvider.isEnabledByDefault(),
-                    inlayHintsProvider.getProviderName()
+        for (DeclarativeInlayHintsProvider declarativeInlayHintsProvider : Application.get().getExtensionList(DeclarativeInlayHintsProvider.class)) {
+            if (language.isKindOf(declarativeInlayHintsProvider.getLanguage())) {
+                result.add(new InlayProviderInfo(declarativeInlayHintsProvider,
+                    declarativeInlayHintsProvider.getProviderId(),
+                    declarativeInlayHintsProvider.getOptions(),
+                    declarativeInlayHintsProvider.isEnabledByDefault(),
+                    declarativeInlayHintsProvider.getProviderName()
                 ));
             }
         }

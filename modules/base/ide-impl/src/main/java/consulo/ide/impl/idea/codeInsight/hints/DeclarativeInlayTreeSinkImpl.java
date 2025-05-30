@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class InlayTreeSinkImpl implements InlayTreeSink {
+public class DeclarativeInlayTreeSinkImpl implements DeclarativeInlayTreeSink {
     private final String providerId;
     private final Map<String, Boolean> enabledOptions;
     private final boolean isInPreview;
@@ -21,12 +21,12 @@ public class InlayTreeSinkImpl implements InlayTreeSink {
     private final List<InlayData> inlayDataToPresentation = new ArrayList<>();
     private final Map<String, Boolean> activeOptions = new HashMap<>();
 
-    public InlayTreeSinkImpl(String providerId,
-                             Map<String, Boolean> enabledOptions,
-                             boolean isInPreview,
-                             boolean providerIsDisabled,
-                             Class<?> providerClass,
-                             String sourceId) {
+    public DeclarativeInlayTreeSinkImpl(String providerId,
+                                        Map<String, Boolean> enabledOptions,
+                                        boolean isInPreview,
+                                        boolean providerIsDisabled,
+                                        Class<?> providerClass,
+                                        String sourceId) {
         this.providerId = providerId;
         this.enabledOptions = enabledOptions;
         this.isInPreview = isInPreview;
@@ -36,11 +36,11 @@ public class InlayTreeSinkImpl implements InlayTreeSink {
     }
 
     @Override
-    public void addPresentation(InlayPosition position,
-                                List<InlayPayload> payloads,
+    public void addPresentation(DeclarativeInlayPosition position,
+                                List<DeclarativeInlayPayload> payloads,
                                 String tooltip,
                                 HintFormat hintFormat,
-                                Consumer<PresentationTreeBuilder> builder) {
+                                Consumer<DeclarativePresentationTreeBuilder> builder) {
         PresentationTreeBuilderImpl b = PresentationTreeBuilderImpl.createRoot(position);
         builder.accept(b);
         TinyTree<Object> tree = b.complete();

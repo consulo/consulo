@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints;
 
-import consulo.language.editor.inlay.InlayHintsProvider;
+import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import consulo.language.editor.inlay.InlayOptionInfo;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
@@ -27,13 +27,13 @@ import java.util.Set;
  * Information about an inlay hints provider.
  */
 public final class InlayProviderInfo {
-    private final InlayHintsProvider provider;
+    private final DeclarativeInlayHintsProvider provider;
     private final String providerId;
     private final Set<InlayOptionInfo> options;
     private final boolean isEnabledByDefault;
     private final LocalizeValue providerName;
 
-    public InlayProviderInfo(InlayHintsProvider provider,
+    public InlayProviderInfo(DeclarativeInlayHintsProvider provider,
                              String providerId,
                              Set<InlayOptionInfo> options,
                              boolean isEnabledByDefault,
@@ -45,7 +45,7 @@ public final class InlayProviderInfo {
         this.providerName = providerName;
     }
 
-    public InlayHintsProvider getProvider() {
+    public DeclarativeInlayHintsProvider getProvider() {
         return provider;
     }
 

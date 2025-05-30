@@ -21,6 +21,6 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2025-05-27
  */
-public interface CollapsiblePresentationTreeBuilder extends PresentationTreeBuilder {
-    void toggleButton(Consumer<PresentationTreeBuilder> builder);
+public interface DeclarativeCollapsiblePresentationTreeBuilder extends DeclarativePresentationTreeBuilder {
+    void toggleButton(Consumer<DeclarativePresentationTreeBuilder> builder);
 }

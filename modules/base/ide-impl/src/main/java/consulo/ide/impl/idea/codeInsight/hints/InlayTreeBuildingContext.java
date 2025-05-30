@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints;
 
-import consulo.language.editor.inlay.InlayPosition;
+import consulo.language.editor.inlay.DeclarativeInlayPosition;
 
 class InlayTreeBuildingContext {
     final TinyTree<Object> tree;
-    private final InlayPosition position;
+    private final DeclarativeInlayPosition position;
     int depth = 0;
     private int nodeCount = 1;
     private boolean limitReached = false;
     private int textElementCount = 0;
 
-    InlayTreeBuildingContext(InlayPosition position) {
+    InlayTreeBuildingContext(DeclarativeInlayPosition position) {
         this.position = position;
         this.tree = new TinyTree<>(InlayTags.LIST_TAG, null);
     }
@@ -44,7 +44,7 @@ class InlayTreeBuildingContext {
     }
 
     boolean isTruncateTextNodes() {
-        return position instanceof InlayPosition.InlineInlayPosition;
+        return position instanceof DeclarativeInlayPosition.InlineInlayPosition;
     }
 
     void incrementTextElementCount() {

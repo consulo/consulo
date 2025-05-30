@@ -12,7 +12,9 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;
-import consulo.language.editor.inlay.*;
+import consulo.language.editor.inlay.DeclarativeInlayHintsCollector;
+import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
+import consulo.language.editor.inlay.DeclarativeInlayPosition;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SyntaxTraverser;
 import consulo.project.DumbService;
@@ -57,15 +59,15 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
 
     @Override
     public void doCollectInformation(ProgressIndicator progress) {
-        List<CollectionInfo<OwnBypassCollector>> ownCollectors = new ArrayList<>();
-        List<CollectionInfo<SharedBypassCollector>> sharedCollectors = new ArrayList<>();
-        List<InlayTreeSinkImpl> sinks = new ArrayList<>();
+        List<CollectionInfo<DeclarativeInlayHintsCollector.OwnBypassCollector>> ownCollectors = new ArrayList<>();
+        List<CollectionInfo<DeclarativeInlayHintsCollector.SharedBypassCollector>> sharedCollectors = new ArrayList<>();
+        List<DeclarativeInlayTreeSinkImpl> sinks = new ArrayList<>();
         for (InlayProviderPassInfo providerInfo : providerInfos) {
-            InlayHintsProvider provider = providerInfo.getProvider();
+            DeclarativeInlayHintsProvider provider = providerInfo.getProvider();
             if (DumbService.isDumb(myProject) && !(provider instanceof DumbAware)) {
                 continue;
             }
-            InlayTreeSinkImpl sink = new InlayTreeSinkImpl(
+            DeclarativeInlayTreeSinkImpl sink = new DeclarativeInlayTreeSinkImpl(
                 providerInfo.getProviderId(),
                 providerInfo.getOptionToEnabled(),
                 isPreview,
@@ -74,24 +76,24 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
                 passSourceId
             );
             sinks.add(sink);
-            InlayHintsCollector collector = provider.createCollector(myFile, editor);
-            if (collector instanceof OwnBypassCollector) {
-                ownCollectors.add(new CollectionInfo<>(sink, (OwnBypassCollector) collector));
+            DeclarativeInlayHintsCollector collector = provider.createCollector(myFile, editor);
+            if (collector instanceof DeclarativeInlayHintsCollector.OwnBypassCollector ownBypassCollector) {
+                ownCollectors.add(new CollectionInfo<>(sink, ownBypassCollector));
             }
-            else if (collector instanceof SharedBypassCollector) {
-                sharedCollectors.add(new CollectionInfo<>(sink, (SharedBypassCollector) collector));
+            else if (collector instanceof DeclarativeInlayHintsCollector.SharedBypassCollector sharedBypassCollector) {
+                sharedCollectors.add(new CollectionInfo<>(sink, sharedBypassCollector));
             }
         }
-        for (CollectionInfo<OwnBypassCollector> info : ownCollectors) {
+        for (CollectionInfo<DeclarativeInlayHintsCollector.OwnBypassCollector> info : ownCollectors) {
             info.collector.collectHintsForFile(myFile, info.sink);
         }
         for (PsiElement element : SyntaxTraverser.psiTraverser(rootElement)) {
-            for (CollectionInfo<SharedBypassCollector> info : sharedCollectors) {
+            for (CollectionInfo<DeclarativeInlayHintsCollector.SharedBypassCollector> info : sharedCollectors) {
                 info.collector.collectFromElement(element, info.sink);
             }
         }
         List<InlayData> allInlayData = new ArrayList<>();
-        for (InlayTreeSinkImpl sink : sinks) {
+        for (DeclarativeInlayTreeSinkImpl sink : sinks) {
             allInlayData.addAll(sink.finish());
         }
         preprocessedInlayData = preprocessCollectedInlayData(allInlayData, editor.getDocument());
@@ -106,10 +108,10 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
     }
 
     private static class CollectionInfo<T> {
-        final InlayTreeSinkImpl sink;
+        final DeclarativeInlayTreeSinkImpl sink;
         final T collector;
 
-        CollectionInfo(InlayTreeSinkImpl sink, T collector) {
+        CollectionInfo(DeclarativeInlayTreeSinkImpl sink, T collector) {
             this.sink = sink;
             this.collector = collector;
         }
@@ -124,9 +126,9 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
             this.inlayData = inlayData;
         }
 
-        public InlayPosition.AboveLineIndentedPosition getAboveLineIndentedPosition() {
-            if (inlayData.getPosition() instanceof InlayPosition.AboveLineIndentedPosition) {
-                return (InlayPosition.AboveLineIndentedPosition) inlayData.getPosition();
+        public DeclarativeInlayPosition.AboveLineIndentedPosition getAboveLineIndentedPosition() {
+            if (inlayData.getPosition() instanceof DeclarativeInlayPosition.AboveLineIndentedPosition) {
+                return (DeclarativeInlayPosition.AboveLineIndentedPosition) inlayData.getPosition();
             }
             else {
                 throw new IllegalStateException("Expected AboveLineIndentedPosition, got " + inlayData.getPosition());
@@ -198,7 +200,7 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
             if (!sourceId.equals(inlayData.getSourceId())) {
                 throw new IllegalStateException("Inconsistent sourceId=" + sourceId + ", inlayData=" + inlayData);
             }
-            InlayPosition.EndOfLinePosition position = (InlayPosition.EndOfLinePosition) inlayData.getPosition();
+            DeclarativeInlayPosition.EndOfLinePosition position = (DeclarativeInlayPosition.EndOfLinePosition) inlayData.getPosition();
             int lineEndOffset = document.getLineEndOffset(position.getLine());
             boolean updated = tryUpdateInlayAndRemoveFromDeleteList(
                 offsetToExistingEolInlays,
@@ -224,7 +226,7 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
             if (!sourceId.equals(inlayData.getSourceId())) {
                 throw new IllegalStateException("Inconsistent sourceId=" + sourceId + ", inlayData=" + inlayData);
             }
-            InlayPosition.InlineInlayPosition position = (InlayPosition.InlineInlayPosition) inlayData.getPosition();
+            DeclarativeInlayPosition.InlineInlayPosition position = (DeclarativeInlayPosition.InlineInlayPosition) inlayData.getPosition();
             boolean updated = tryUpdateInlayAndRemoveFromDeleteList(
                 offsetToExistingInlineInlays,
                 inlayData,
@@ -263,7 +265,7 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
                     DocumentUtil.getLineStartIndentedOffset(document, line)
                 );
                 int offset = inlayData.stream()
-                    .mapToInt(d -> ((InlayPosition.AboveLineIndentedPosition) d.getPosition()).getOffset())
+                    .mapToInt(d -> ((DeclarativeInlayPosition.AboveLineIndentedPosition) d.getPosition()).getOffset())
                     .min().orElseThrow();
                 var inlay = inlayModel.addBlockElement(offset, false, true, verticalPriority, renderer);
                 if (inlay != null) {
@@ -373,14 +375,14 @@ public class DeclarativeInlayHintsPass extends EditorBoundHighlightingPass imple
         List<InlayData> eolData = new ArrayList<>();
         List<AboveLineIndentedPositionDetail> aboveLineData = new ArrayList<>();
         for (InlayData data : inlayData) {
-            if (data.getPosition() instanceof InlayPosition.AboveLineIndentedPosition) {
-                int line = document.getLineNumber(((InlayPosition.AboveLineIndentedPosition) data.getPosition()).getOffset());
+            if (data.getPosition() instanceof DeclarativeInlayPosition.AboveLineIndentedPosition) {
+                int line = document.getLineNumber(((DeclarativeInlayPosition.AboveLineIndentedPosition) data.getPosition()).getOffset());
                 aboveLineData.add(new AboveLineIndentedPositionDetail(line, data));
             }
-            else if (data.getPosition() instanceof InlayPosition.EndOfLinePosition) {
+            else if (data.getPosition() instanceof DeclarativeInlayPosition.EndOfLinePosition) {
                 eolData.add(data);
             }
-            else if (data.getPosition() instanceof InlayPosition.InlineInlayPosition) {
+            else if (data.getPosition() instanceof DeclarativeInlayPosition.InlineInlayPosition) {
                 inlineData.add(data);
             }
         }

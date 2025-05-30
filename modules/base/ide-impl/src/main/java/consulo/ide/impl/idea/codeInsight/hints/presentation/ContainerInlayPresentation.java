@@ -4,8 +4,10 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.language.editor.inlay.InlayPresentationFactory;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -14,14 +16,14 @@ import java.util.function.Consumer;
 public class ContainerInlayPresentation extends StaticDelegatePresentation {
     private final InlayPresentationFactory.Padding padding;
     private final InlayPresentationFactory.RoundedCorners roundedCorners;
-    private final Color background;
+    private final ColorValue background;
     private final float backgroundAlpha;
     private boolean presentationIsUnderCursor = false;
 
     public ContainerInlayPresentation(InlayPresentation presentation,
                                       InlayPresentationFactory.Padding padding,
                                       InlayPresentationFactory.RoundedCorners roundedCorners,
-                                      Color background,
+                                      ColorValue background,
                                       float backgroundAlpha) {
         super(presentation);
         this.padding = padding;
@@ -44,7 +46,7 @@ public class ContainerInlayPresentation extends StaticDelegatePresentation {
     public void paint(Graphics2D g, TextAttributes attributes) {
         if (background != null) {
             Color preservedBackground = g.getBackground();
-            g.setColor(background);
+            g.setColor(TargetAWT.to(background));
             if (roundedCorners != null) {
                 int arcWidth = roundedCorners.getArcWidth();
                 int arcHeight = roundedCorners.getArcHeight();

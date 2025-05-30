@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface InlayHintsProvider extends PossiblyDumbAware {
+public interface DeclarativeInlayHintsProvider extends PossiblyDumbAware {
     Key<LocalizeValue> PROVIDER_NAME = Key.create("declarative.hints.provider.name");
     Key<String> PROVIDER_ID = Key.create("declarative.hints.provider.id");
     Key<Map<String, InlayActionPayload>> INLAY_PAYLOADS = Key.create("declarative.hints.inlay.payload");
@@ -25,7 +25,7 @@ public interface InlayHintsProvider extends PossiblyDumbAware {
      * Creates collector for given file and editor if it may create inlays, or null otherwise.
      */
     @Nullable
-    InlayHintsCollector createCollector(PsiFile file, Editor editor);
+    DeclarativeInlayHintsCollector createCollector(PsiFile file, Editor editor);
 
     @Nonnull
     Language getLanguage();

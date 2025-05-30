@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.codeInsight.hints;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.colorScheme.TextAttributes;
-import consulo.language.editor.inlay.InlayPosition;
+import consulo.language.editor.inlay.DeclarativeInlayPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.util.lang.TriPredicate;
@@ -279,15 +279,15 @@ public abstract class CompositeDeclarativeHintWithMarginsView<Model, SubView ext
         }
     }
 
-    private static int getPriority(InlayPosition pos) {
-        if (pos instanceof InlayPosition.AboveLineIndentedPosition) {
-            return ((InlayPosition.AboveLineIndentedPosition) pos).getPriority();
+    private static int getPriority(DeclarativeInlayPosition pos) {
+        if (pos instanceof DeclarativeInlayPosition.AboveLineIndentedPosition) {
+            return ((DeclarativeInlayPosition.AboveLineIndentedPosition) pos).getPriority();
         }
-        else if (pos instanceof InlayPosition.EndOfLinePosition) {
-            return ((InlayPosition.EndOfLinePosition) pos).getPriority();
+        else if (pos instanceof DeclarativeInlayPosition.EndOfLinePosition) {
+            return ((DeclarativeInlayPosition.EndOfLinePosition) pos).getPriority();
         }
-        else if (pos instanceof InlayPosition.InlineInlayPosition) {
-            return ((InlayPosition.InlineInlayPosition) pos).getPriority();
+        else if (pos instanceof DeclarativeInlayPosition.InlineInlayPosition) {
+            return ((DeclarativeInlayPosition.InlineInlayPosition) pos).getPriority();
         }
         throw new IllegalArgumentException("Unknown InlayPosition: " + pos.getClass());
     }

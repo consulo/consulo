@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints;
 
-import consulo.language.editor.inlay.InlayHintsProvider;
+import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 
 import java.util.Map;
 
@@ -23,11 +23,11 @@ import java.util.Map;
  * @param optionToEnabled exhaustive set of options for a given provider
  */
 public final class InlayProviderPassInfo {
-    private final InlayHintsProvider provider;
+    private final DeclarativeInlayHintsProvider provider;
     private final String providerId;
     private final Map<String, Boolean> optionToEnabled;
 
-    public InlayProviderPassInfo(InlayHintsProvider provider,
+    public InlayProviderPassInfo(DeclarativeInlayHintsProvider provider,
                                  String providerId,
                                  Map<String, Boolean> optionToEnabled) {
         this.provider = provider;
@@ -35,7 +35,7 @@ public final class InlayProviderPassInfo {
         this.optionToEnabled = optionToEnabled;
     }
 
-    public InlayHintsProvider getProvider() {
+    public DeclarativeInlayHintsProvider getProvider() {
         return provider;
     }
 

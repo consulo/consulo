@@ -19,8 +19,8 @@ package consulo.language.editor.inlay;
  * @author VISTALL
  * @since 2025-05-27
  */
-public sealed interface InlayPosition {
-    public final class InlineInlayPosition implements InlayPosition {
+public sealed interface DeclarativeInlayPosition {
+    public final class InlineInlayPosition implements DeclarativeInlayPosition {
         private final int offset;
         private final boolean relatedToPrevious;
         private final int priority;
@@ -48,7 +48,7 @@ public sealed interface InlayPosition {
         }
     }
 
-    public final class EndOfLinePosition implements InlayPosition {
+    public final class EndOfLinePosition implements DeclarativeInlayPosition {
         private final int line;
         private final int priority;
 
@@ -79,7 +79,7 @@ public sealed interface InlayPosition {
      *                         will be placed on the same line
      * @param priority         within a single line, hints are sorted by priority in descending order
      */
-    public final class AboveLineIndentedPosition implements InlayPosition {
+    public final class AboveLineIndentedPosition implements DeclarativeInlayPosition {
         private final int offset;
         private final int verticalPriority;
         private final int priority;

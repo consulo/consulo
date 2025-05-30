@@ -25,6 +25,9 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StandardColors;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -32,20 +35,18 @@ import jakarta.annotation.Nonnull;
  * @since 2025-05-29
  */
 @ExtensionImpl
-public class SandInlayHintsProvider implements InlayHintsProvider {
+public class SandDeclarativeInlayHintsProvider implements DeclarativeInlayHintsProvider {
     @Override
-    public InlayHintsCollector createCollector(PsiFile file, Editor editor) {
-        return new SharedBypassCollector() {
+    public DeclarativeInlayHintsCollector createCollector(PsiFile file, Editor editor) {
+        return new DeclarativeInlayHintsCollector.SharedBypassCollector() {
             @Override
-            public void collectFromElement(PsiElement element, InlayTreeSink sink) {
+            public void collectFromElement(PsiElement element, DeclarativeInlayTreeSink sink) {
                 if (PsiUtilCore.getElementType(element) == SandTokens.IDENTIFIER) {
                     sink.addPresentation(
-                        new InlayPosition.InlineInlayPosition(element.getTextOffset(), true),
-                        null,
-                        null,
-                        HintFormat.DEFAULT,
+                        new DeclarativeInlayPosition.InlineInlayPosition(element.getTextOffset(), true),
                         presentationTreeBuilder -> {
-                            presentationTreeBuilder.text("InlayBBBB");
+                            Image image = ImageEffects.colorFilled(12, 12, StandardColors.RED);
+                            presentationTreeBuilder.icon(image);
                         }
                     );
                 }

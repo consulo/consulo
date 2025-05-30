@@ -12,7 +12,7 @@ import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.inlay.InlayHintsProvider;
+import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.project.DumbService;
@@ -36,7 +36,7 @@ public class DeclarativeInlayHintsPassFactory
     public static DeclarativeInlayHintsPass createPassForPreview(
         PsiFile file,
         Editor editor,
-        InlayHintsProvider provider,
+        DeclarativeInlayHintsProvider provider,
         String providerId,
         Map<String, Boolean> optionsToEnabled,
         boolean isDisabled

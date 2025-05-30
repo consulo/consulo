@@ -16,29 +16,29 @@
 package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.language.editor.inlay.HintFormat;
-import consulo.language.editor.inlay.InlayPayload;
-import consulo.language.editor.inlay.InlayPosition;
+import consulo.language.editor.inlay.DeclarativeInlayPayload;
+import consulo.language.editor.inlay.DeclarativeInlayPosition;
 
 import java.util.List;
 
 public final class InlayData {
-    private final InlayPosition position;
+    private final DeclarativeInlayPosition position;
     private final String tooltip;
     private final HintFormat hintFormat;
     private final TinyTree<Object> tree;
     private final String providerId;
     private final boolean disabled;
-    private final List<InlayPayload> payloads;
+    private final List<DeclarativeInlayPayload> payloads;
     private final Class<?> providerClass;
     private final String sourceId;
 
-    public InlayData(InlayPosition position,
+    public InlayData(DeclarativeInlayPosition position,
                      String tooltip,
                      HintFormat hintFormat,
                      TinyTree<Object> tree,
                      String providerId,
                      boolean disabled,
-                     List<InlayPayload> payloads,
+                     List<DeclarativeInlayPayload> payloads,
                      Class<?> providerClass,
                      String sourceId) {
         this.position = position;
@@ -52,7 +52,7 @@ public final class InlayData {
         this.sourceId = sourceId;
     }
 
-    public InlayPosition getPosition() {
+    public DeclarativeInlayPosition getPosition() {
         return position;
     }
 
@@ -76,7 +76,7 @@ public final class InlayData {
         return disabled;
     }
 
-    public List<InlayPayload> getPayloads() {
+    public List<DeclarativeInlayPayload> getPayloads() {
         return payloads;
     }
 
