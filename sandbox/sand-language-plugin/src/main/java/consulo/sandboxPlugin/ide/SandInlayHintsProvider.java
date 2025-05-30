@@ -42,10 +42,10 @@ public class SandInlayHintsProvider implements InlayHintsProvider {
                     sink.addPresentation(
                         new InlayPosition.InlineInlayPosition(element.getTextOffset(), true),
                         null,
-                        "Test",
+                        null,
                         HintFormat.DEFAULT,
                         presentationTreeBuilder -> {
-                            presentationTreeBuilder.text("Inlay");
+                            presentationTreeBuilder.text("InlayBBBB");
                         }
                     );
                 }

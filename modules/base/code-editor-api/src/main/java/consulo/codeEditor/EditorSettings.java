@@ -240,4 +240,8 @@ public interface EditorSettings {
     default TabCharacterPaintMode getTabCharacterPaintMode() {
         return TabCharacterPaintMode.HORIZONTAL_LINE; // TODO !
     }
+
+    default boolean isShowingSpecialChars() {
+        return false;  // TODO !
+    }
 }

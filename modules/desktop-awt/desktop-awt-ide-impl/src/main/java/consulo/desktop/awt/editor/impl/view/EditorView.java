@@ -6,13 +6,13 @@ package consulo.desktop.awt.editor.impl.view;
 import consulo.application.ApplicationManager;
 import consulo.application.util.Dumpable;
 import consulo.application.util.registry.Registry;
-import consulo.codeEditor.FoldRegion;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.TextDrawingCallback;
-import consulo.codeEditor.VisualPosition;
+import consulo.codeEditor.*;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.codeEditor.impl.*;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.FontInfo;
+import consulo.codeEditor.impl.FontLayoutService;
+import consulo.codeEditor.impl.LogicalPositionCache;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.desktop.awt.editor.impl.*;
@@ -67,6 +67,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     private int myDescent; // guarded by myLock
     private int myCharHeight; // guarded by myLock
     private float myMaxCharWidth; // guarded by myLock
+    private int myCapHeight; // guarded by myLock
     private int myTabSize; // guarded by myLock
     private int myTopOverhang; //guarded by myLock
     private int myBottomOverhang; //guarded by myLock
@@ -549,6 +550,8 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         // assuming that bold italic 'W' gives a good approximation of font's widest character
         FontMetrics fmBI = FontInfo.getFontMetrics(myEditor.getColorsScheme().getFont(EditorFontType.BOLD_ITALIC), myFontRenderContext);
         myMaxCharWidth = FontLayoutService.getInstance().charWidth2D(fmBI, 'W');
+
+        myCapHeight = (int) font.createGlyphVector(myFontRenderContext, "H").getVisualBounds().getHeight();
     }
 
     public int getTabSize() {
@@ -736,6 +739,11 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         return myEditor.getScrollingModel();
     }
 
+    @RequiredUIAccess
+    public EditorHighlighter getHighlighter() {
+        return myEditor.getHighlighter();
+    }
+
     public InlayModelImpl getInlayModel() {
         return myEditor.getInlayModel();
     }
@@ -750,6 +758,13 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     public void validateState() {
         myLogicalPositionCache.validateState();
         mySizeManager.validateState();
+    }
+
+    int getCapHeight() {
+        synchronized (myLock) {
+            initMetricsIfNeeded();
+            return myCapHeight;
+        }
     }
 
     public int getCaretHeight() {
@@ -770,7 +785,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         }
     }
 
-   public boolean isAd() {
+    public boolean isAd() {
         return myEditor.isAd();
     }
 }

@@ -150,6 +150,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private static final boolean HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK =
         Boolean.parseBoolean(System.getProperty("idea.honor.camel.humps.on.triple.click"));
     private static final Key<BufferedImage> BUFFER = Key.create("buffer");
+    static final Key<Boolean> CONTAINS_BIDI_TEXT = Key.create("contains.bidi.text");  // TODO BidiContentNotificationProvider
 
     private final JPanel myPanel;
     @Nonnull
@@ -1611,6 +1612,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
         //  updateOpaque(myScrollPane.getHorizontalScrollBar());
         //  updateOpaque(myScrollPane.getVerticalScrollBar());
         //}
+    }
+
+    public void bidiTextFound() {
+        if (myProject != null && myVirtualFile != null && replace(CONTAINS_BIDI_TEXT, null, Boolean.TRUE)) {
+            EditorNotifications.getInstance(myProject).updateNotifications(myVirtualFile);
+        }
     }
 
     Color getDisposedBackground() {
