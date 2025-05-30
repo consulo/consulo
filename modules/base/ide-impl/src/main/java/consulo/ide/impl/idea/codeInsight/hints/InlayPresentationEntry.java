@@ -21,6 +21,10 @@ public abstract class InlayPresentationEntry {
         return isHoveredWithCtrl;
     }
 
+    public void setHoveredWithCtrl(boolean hoveredWithCtrl) {
+        isHoveredWithCtrl = hoveredWithCtrl;
+    }
+
     @TestOnly
     public InlayMouseArea getClickArea() {
         return clickArea;

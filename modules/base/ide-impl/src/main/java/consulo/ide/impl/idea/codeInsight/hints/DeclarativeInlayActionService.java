@@ -4,23 +4,22 @@ package consulo.ide.impl.idea.codeInsight.hints;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.inlay.InlayActionData;
-import consulo.language.editor.inlay.InlayActionHandler;
+import consulo.ide.impl.idea.codeInsight.hints.action.InlayMenuGroup;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import consulo.language.editor.inlay.DeclarativeInlayPayload;
+import consulo.language.editor.inlay.InlayActionData;
+import consulo.language.editor.inlay.InlayActionHandler;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import jakarta.inject.Singleton;
@@ -50,13 +49,13 @@ public class DeclarativeInlayActionService {
         }
         LocalizeValue providerName = providerInfo.getProviderName();
 
-        AnAction inlayMenu = ActionManager.getInstance().getAction("InlayMenu");
-        ActionGroup inlayMenuActionGroup = (ActionGroup) inlayMenu;
+        InlayMenuGroup inlayMenuActionGroup = ActionManager.getInstance().getAction(InlayMenuGroup.class);
 
-        DataContext dataContext = SimpleDataContext.builder()
-            .add(CommonDataKeys.PROJECT, project)
-            .add(CommonDataKeys.PSI_FILE, psiFile)
-            .add(CommonDataKeys.EDITOR, e.getEditor())
+        DataContext dataContext = DataContext.builder()
+            .add(Project.KEY, project)
+            .add(PsiFile.KEY, psiFile)
+            .add(Editor.KEY, e.getEditor())
+            .add(UIExAWTDataKey.CONTEXT_COMPONENT, e.getEditor().getComponent())
             .add(DeclarativeInlayHintsProvider.PROVIDER_ID, providerId)
             .add(DeclarativeInlayHintsProvider.PROVIDER_NAME, providerName)
             .add(DeclarativeInlayHintsProvider.INLAY_PAYLOADS,
