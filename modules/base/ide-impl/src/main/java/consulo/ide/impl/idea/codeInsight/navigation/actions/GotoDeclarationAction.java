@@ -16,17 +16,19 @@
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutter;
+import consulo.codeEditor.EditorKeys;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.component.extension.ExtensionException;
-import consulo.component.extension.Extensions;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
@@ -50,16 +52,16 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -69,6 +71,13 @@ import java.util.Set;
 
 public class GotoDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
     private static final Logger LOG = Logger.getInstance(GotoDeclarationAction.class);
+
+    private final Application myApplication;
+
+    @Inject
+    public GotoDeclarationAction(Application application) {
+        myApplication = application;
+    }
 
     @Nonnull
     @Override
@@ -288,7 +297,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         }
 
         PsiElement elementAt = file.findElementAt(TargetElementUtil.adjustOffset(file, document, offset));
-        for (GotoDeclarationHandler handler : Extensions.getExtensions(GotoDeclarationHandler.EP_NAME)) {
+        for (GotoDeclarationHandler handler : GotoDeclarationHandler.EP_NAME.getExtensionList()) {
             try {
                 PsiElement[] result = handler.getGotoDeclarationTargets(elementAt, offset, editor);
                 if (result != null && result.length > 0) {
@@ -332,30 +341,31 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent event) {
-        if (event.getInputEvent() instanceof MouseEvent mouseEvent) {
-            Component component = mouseEvent.getComponent();
-            if (component != null) {
-                Point point = mouseEvent.getPoint();
-                Component componentAt = SwingUtilities.getDeepestComponentAt(component, point.x, point.y);
-                if (componentAt instanceof EditorGutterComponentEx) {
-                    event.getPresentation().setEnabled(false);
-                    return;
-                }
-            }
+        InputEvent inputEvent = event.getInputEvent();
+        boolean isMouseShortcut = inputEvent instanceof MouseEvent && ActionPlaces.MOUSE_SHORTCUT.equals(event.getPlace());
+
+        Project project = event.getData(Project.KEY);
+
+        if (project == null ||
+            event.getData(EditorGutter.KEY) != null ||
+            !isMouseShortcut && Boolean.TRUE.equals(event.getData(EditorKeys.EDITOR_VIRTUAL_SPACE))) {
+            event.getPresentation().setEnabled(false);
+            return;
         }
 
-        for (GotoDeclarationHandler handler : GotoDeclarationHandler.EP_NAME.getExtensionList()) {
-            try {
-                String text = handler.getActionText(event.getDataContext());
-                if (text != null) {
-                    Presentation presentation = event.getPresentation();
-                    presentation.setText(text);
-                    break;
-                }
-            }
-            catch (AbstractMethodError e) {
-                LOG.error(handler.toString(), e);
-            }
+        Editor editor = event.getData(Editor.KEY);
+        if (editor != null
+            && isMouseShortcut
+            && !EditorUtil.isPointOverText(editor, new RelativePoint((MouseEvent) inputEvent).getPoint(editor.getContentComponent()))) {
+            event.getPresentation().setEnabled(false);
+            return;
+        }
+
+        String actionText = myApplication.getExtensionPoint(GotoDeclarationHandler.class)
+            .computeSafeIfAny(g -> g.getActionText(event.getDataContext()));
+
+        if (actionText != null) {
+            event.getPresentation().setText(actionText);
         }
 
         super.update(event);

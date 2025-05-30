@@ -48,5 +48,7 @@ public interface GotoDeclarationHandler {
    * @param context the action data context
    */
   @Nullable
-  String getActionText(DataContext context);
+  default String getActionText(DataContext context) {
+    return null;
+  }
 }

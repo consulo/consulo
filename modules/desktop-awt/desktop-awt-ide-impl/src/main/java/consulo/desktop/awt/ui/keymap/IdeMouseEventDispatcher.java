@@ -55,302 +55,314 @@ import static java.awt.event.MouseEvent.*;
  * @author Konstantin Bulenkov
  */
 public final class IdeMouseEventDispatcher {
-  private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
-  private final ArrayList<AnAction> myActions = new ArrayList<>(1);
-  private final Map<Container, BlockState> myRootPane2BlockedId = new HashMap<>();
-  private boolean myPressedModifiersStored;
-  @JdkConstants.InputEventMask
-  private int myModifiers;
-  @JdkConstants.InputEventMask
-  private int myModifiersEx;
+    private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
+    private final ArrayList<AnAction> myActions = new ArrayList<>(1);
+    private final Map<Container, BlockState> myRootPane2BlockedId = new HashMap<>();
+    private boolean myPressedModifiersStored;
+    @JdkConstants.InputEventMask
+    private int myModifiers;
+    @JdkConstants.InputEventMask
+    private int myModifiersEx;
 
-  private static boolean myForceTouchIsAllowed = true;
+    private static boolean myForceTouchIsAllowed = true;
 
-  public static void forbidForceTouch() {
-    myForceTouchIsAllowed = false;
-  }
+    public static void forbidForceTouch() {
+        myForceTouchIsAllowed = false;
+    }
 
-  public static boolean isForceTouchAllowed() {
-    return myForceTouchIsAllowed;
-  }
+    public static boolean isForceTouchAllowed() {
+        return myForceTouchIsAllowed;
+    }
 
-  // Don't compare MouseEvent ids. Swing has wrong sequence of events: first is mouse_clicked(500)
-  // then mouse_pressed(501), mouse_released(502) etc. Here, mouse events sorted so we can compare
-  // theirs ids to properly use method blockNextEvents(MouseEvent)
-  private static final List<Integer> SWING_EVENTS_PRIORITY = Arrays.asList(MOUSE_PRESSED, MOUSE_ENTERED, MOUSE_EXITED, MOUSE_MOVED, MOUSE_DRAGGED, MOUSE_WHEEL, MOUSE_RELEASED, MOUSE_CLICKED);
+    // Don't compare MouseEvent ids. Swing has wrong sequence of events: first is mouse_clicked(500)
+    // then mouse_pressed(501), mouse_released(502) etc. Here, mouse events sorted so we can compare
+    // theirs ids to properly use method blockNextEvents(MouseEvent)
+    private static final List<Integer> SWING_EVENTS_PRIORITY = Arrays.asList(MOUSE_PRESSED, MOUSE_ENTERED, MOUSE_EXITED, MOUSE_MOVED, MOUSE_DRAGGED, MOUSE_WHEEL, MOUSE_RELEASED, MOUSE_CLICKED);
 
-  public IdeMouseEventDispatcher() {
-  }
+    public IdeMouseEventDispatcher() {
+    }
 
-  private void fillActionsList(Component component, MouseShortcut mouseShortcut, boolean isModalContext) {
-    myActions.clear();
+    private void fillActionsList(Component component, MouseShortcut mouseShortcut, boolean isModalContext) {
+        myActions.clear();
 
-    // here we try to find "local" shortcuts
-    for (; component != null; component = component.getParent()) {
-      if (component instanceof JComponent) {
-        for (AnAction action : ActionUtil.getActions((JComponent)component)) {
-          for (Shortcut shortcut : action.getShortcutSet().getShortcuts()) {
-            if (mouseShortcut.equals(shortcut) && !myActions.contains(action)) {
-              myActions.add(action);
+        // here we try to find "local" shortcuts
+        for (; component != null; component = component.getParent()) {
+            if (component instanceof JComponent) {
+                for (AnAction action : ActionUtil.getActions((JComponent) component)) {
+                    for (Shortcut shortcut : action.getShortcutSet().getShortcuts()) {
+                        if (mouseShortcut.equals(shortcut) && !myActions.contains(action)) {
+                            myActions.add(action);
+                        }
+                    }
+                }
+                // once we've found a proper local shortcut(s), we exit
+                if (!myActions.isEmpty()) {
+                    return;
+                }
             }
-          }
         }
-        // once we've found a proper local shortcut(s), we exit
-        if (!myActions.isEmpty()) {
-          return;
-        }
-      }
-    }
 
-    // search in main keymap
-    if (KeymapManagerImpl.ourKeymapManagerInitialized) {
-      final KeymapManager keymapManager = KeymapManager.getInstance();
-      if (keymapManager != null) {
-        final Keymap keymap = keymapManager.getActiveKeymap();
-        final String[] actionIds = keymap.getActionIds(mouseShortcut);
+        // search in main keymap
+        if (KeymapManagerImpl.ourKeymapManagerInitialized) {
+            final KeymapManager keymapManager = KeymapManager.getInstance();
+            if (keymapManager != null) {
+                final Keymap keymap = keymapManager.getActiveKeymap();
+                final String[] actionIds = keymap.getActionIds(mouseShortcut);
 
-        ActionManager actionManager = ActionManager.getInstance();
-        for (String actionId : actionIds) {
-          AnAction action = actionManager.getAction(actionId);
+                ActionManager actionManager = ActionManager.getInstance();
+                for (String actionId : actionIds) {
+                    AnAction action = actionManager.getAction(actionId);
 
-          if (action == null) continue;
+                    if (action == null) {
+                        continue;
+                    }
 
-          if (isModalContext && !action.isEnabledInModalContext()) continue;
+                    if (isModalContext && !action.isEnabledInModalContext()) {
+                        continue;
+                    }
 
-          if (!myActions.contains(action)) {
-            myActions.add(action);
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * @return <code>true</code> if and only if the passed event is already dispatched by the
-   * <code>IdeMouseEventDispatcher</code> and there is no need for any other processing of the event.
-   * If the method returns <code>false</code> then it means that the event should be delivered
-   * to normal event dispatching.
-   */
-  @RequiredUIAccess
-  public boolean dispatchMouseEvent(MouseEvent e) {
-    Component c = e.getComponent();
-
-    //frame activation by mouse click
-    if (e.getID() == MOUSE_PRESSED && !c.hasFocus()) {
-      if (c instanceof Window) {
-        Window awtWindow = (Window)c;
-
-        consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
-
-        IdeFrame ideFrame = uiWindow == null ? null : uiWindow.getUserData(IdeFrame.KEY);
-        if (ideFrame != null) {
-          IdeFocusManager focusManager = IdeFocusManager.getGlobalInstance();
-          if (focusManager instanceof FocusManagerImpl) {
-            Component at = SwingUtilities.getDeepestComponentAt(c, e.getX(), e.getY());
-            if (at != null && at.isFocusable()) {
-              ((FocusManagerImpl)focusManager).setLastFocusedAtDeactivation(ideFrame, at);
+                    if (!myActions.contains(action)) {
+                        myActions.add(action);
+                    }
+                }
             }
-          }
         }
-      }
     }
 
-    if (Platform.current().os().isXWindow() && e.isPopupTrigger() && e.getButton() != 3) {
-      // we can do better than silly triggering popup on everything but left click
-      resetPopupTrigger(e);
-    }
+    /**
+     * @return <code>true</code> if and only if the passed event is already dispatched by the
+     * <code>IdeMouseEventDispatcher</code> and there is no need for any other processing of the event.
+     * If the method returns <code>false</code> then it means that the event should be delivered
+     * to normal event dispatching.
+     */
+    @RequiredUIAccess
+    public boolean dispatchMouseEvent(MouseEvent e) {
+        Component c = e.getComponent();
 
-    boolean ignore = false;
-    if (!(e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_RELEASED || e.getID() == MOUSE_WHEEL && 0 < e.getModifiersEx() || e.getID() == MOUSE_CLICKED)) {
-      ignore = true;
-    }
+        //frame activation by mouse click
+        if (e.getID() == MOUSE_PRESSED && !c.hasFocus()) {
+            if (c instanceof Window) {
+                Window awtWindow = (Window) c;
 
-    patchClickCount(e);
+                consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
 
-    int clickCount = e.getClickCount();
-    int button = MouseShortcut.getButton(e);
-    if (button == MouseShortcut.BUTTON_WHEEL_UP || button == MouseShortcut.BUTTON_WHEEL_DOWN) {
-      clickCount = 1;
-    }
+                IdeFrame ideFrame = uiWindow == null ? null : uiWindow.getUserData(IdeFrame.KEY);
+                if (ideFrame != null) {
+                    IdeFocusManager focusManager = IdeFocusManager.getGlobalInstance();
+                    if (focusManager instanceof FocusManagerImpl) {
+                        Component at = SwingUtilities.getDeepestComponentAt(c, e.getX(), e.getY());
+                        if (at != null && at.isFocusable()) {
+                            ((FocusManagerImpl) focusManager).setLastFocusedAtDeactivation(ideFrame, at);
+                        }
+                    }
+                }
+            }
+        }
 
-    if (e.isConsumed() ||
-        e.isPopupTrigger() ||
-        (button > 3 ? e.getID() != MOUSE_PRESSED && e.getID() != MOUSE_WHEEL : e.getID() != MOUSE_RELEASED) ||
-        clickCount < 1 ||
-        button == NOBUTTON) { // See #16995. It did happen
-      ignore = true;
-    }
+        if (Platform.current().os().isXWindow() && e.isPopupTrigger() && e.getButton() != 3) {
+            // we can do better than silly triggering popup on everything but left click
+            resetPopupTrigger(e);
+        }
 
-    @JdkConstants.InputEventMask int modifiers = e.getModifiers();
-    @JdkConstants.InputEventMask int modifiersEx = e.getModifiersEx();
-    if (e.getID() == MOUSE_PRESSED) {
-      myPressedModifiersStored = true;
-      myModifiers = modifiers;
-      myModifiersEx = modifiersEx;
-    }
-    else if (e.getID() == MOUSE_RELEASED) {
-      myForceTouchIsAllowed = true;
-      if (myPressedModifiersStored) {
-        myPressedModifiersStored = false;
-        modifiers = myModifiers;
-        modifiersEx = myModifiersEx;
-      }
-    }
-
-    final JRootPane root = findRoot(e);
-    if (root != null) {
-      BlockState blockState = myRootPane2BlockedId.get(root);
-      if (blockState != null) {
-        if (SWING_EVENTS_PRIORITY.indexOf(blockState.currentEventId) < SWING_EVENTS_PRIORITY.indexOf(e.getID())) {
-          blockState.currentEventId = e.getID();
-          if (blockState.blockMode == IdeEventQueue.BlockMode.COMPLETE) {
-            return true;
-          }
-          else {
+        boolean ignore = false;
+        if (!(e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_RELEASED || e.getID() == MOUSE_WHEEL && 0 < e.getModifiersEx() || e.getID() == MOUSE_CLICKED)) {
             ignore = true;
-          }
         }
-        else {
-          myRootPane2BlockedId.remove(root);
+
+        patchClickCount(e);
+
+        int clickCount = e.getClickCount();
+        int button = MouseShortcut.getButton(e);
+        if (button == MouseShortcut.BUTTON_WHEEL_UP || button == MouseShortcut.BUTTON_WHEEL_DOWN) {
+            clickCount = 1;
         }
-      }
-    }
 
-    if (c == null) {
-      throw new IllegalStateException("component cannot be null");
-    }
-    c = SwingUtilities.getDeepestComponentAt(c, e.getX(), e.getY());
-
-    if (c instanceof IdeGlassPaneImpl) {
-      c = ((IdeGlassPaneImpl)c).getTargetComponentFor(e);
-    }
-
-    if (c == null) { // do nothing if component doesn't contains specified point
-      return false;
-    }
-
-    if (c instanceof MouseShortcutPanel || c.getParent() instanceof MouseShortcutPanel) {
-      return false; // forward mouse processing to the special shortcut panel
-    }
-
-
-    if (ignore) return false;
-
-    // avoid "cyclic component initialization error" in case of dialogs shown because of component initialization failure
-    if (!KeymapManagerImpl.ourKeymapManagerInitialized) {
-      return false;
-    }
-
-    final MouseShortcut shortcut = new MouseShortcut(button, modifiersEx, clickCount);
-    fillActionsList(c, shortcut, IdeKeyEventDispatcher.isModalContext(c));
-    ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-    if (actionManager != null) {
-      AnAction[] actions = myActions.toArray(new AnAction[myActions.size()]);
-      for (AnAction action : actions) {
-        DataContext dataContext = DataManager.getInstance().getDataContext(c);
-        Presentation presentation = myPresentationFactory.getPresentation(action);
-        AnActionEvent actionEvent = new AnActionEvent(e, dataContext, ActionPlaces.MAIN_MENU, presentation, ActionManager.getInstance(), modifiers);
-        action.beforeActionPerformedUpdate(actionEvent);
-
-        if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
-          actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
-          final Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-
-          if (context != null && !context.isShowing()) continue;
-
-          ActionUtil.performActionDumbAware(action, actionEvent);
-          actionManager.fireAfterActionPerformed(action, dataContext, actionEvent);
-          e.consume();
+        if (e.isConsumed() ||
+            e.isPopupTrigger() ||
+            (button > 3 ? e.getID() != MOUSE_PRESSED && e.getID() != MOUSE_WHEEL : e.getID() != MOUSE_RELEASED) ||
+            clickCount < 1 ||
+            button == NOBUTTON) { // See #16995. It did happen
+            ignore = true;
         }
-      }
+
+        @JdkConstants.InputEventMask int modifiers = e.getModifiers();
+        @JdkConstants.InputEventMask int modifiersEx = e.getModifiersEx();
+        if (e.getID() == MOUSE_PRESSED) {
+            myPressedModifiersStored = true;
+            myModifiers = modifiers;
+            myModifiersEx = modifiersEx;
+        }
+        else if (e.getID() == MOUSE_RELEASED) {
+            myForceTouchIsAllowed = true;
+            if (myPressedModifiersStored) {
+                myPressedModifiersStored = false;
+                modifiers = myModifiers;
+                modifiersEx = myModifiersEx;
+            }
+        }
+
+        final JRootPane root = findRoot(e);
+        if (root != null) {
+            BlockState blockState = myRootPane2BlockedId.get(root);
+            if (blockState != null) {
+                if (SWING_EVENTS_PRIORITY.indexOf(blockState.currentEventId) < SWING_EVENTS_PRIORITY.indexOf(e.getID())) {
+                    blockState.currentEventId = e.getID();
+                    if (blockState.blockMode == IdeEventQueue.BlockMode.COMPLETE) {
+                        return true;
+                    }
+                    else {
+                        ignore = true;
+                    }
+                }
+                else {
+                    myRootPane2BlockedId.remove(root);
+                }
+            }
+        }
+
+        if (c == null) {
+            throw new IllegalStateException("component cannot be null");
+        }
+        c = SwingUtilities.getDeepestComponentAt(c, e.getX(), e.getY());
+
+        if (c instanceof IdeGlassPaneImpl) {
+            c = ((IdeGlassPaneImpl) c).getTargetComponentFor(e);
+        }
+
+        if (c == null) { // do nothing if component doesn't contains specified point
+            return false;
+        }
+
+        if (c instanceof MouseShortcutPanel || c.getParent() instanceof MouseShortcutPanel) {
+            return false; // forward mouse processing to the special shortcut panel
+        }
+
+
+        if (ignore) {
+            return false;
+        }
+
+        // avoid "cyclic component initialization error" in case of dialogs shown because of component initialization failure
+        if (!KeymapManagerImpl.ourKeymapManagerInitialized) {
+            return false;
+        }
+
+        final MouseShortcut shortcut = new MouseShortcut(button, modifiersEx, clickCount);
+        fillActionsList(c, shortcut, IdeKeyEventDispatcher.isModalContext(c));
+        ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
+        AnAction[] actions = myActions.toArray(new AnAction[myActions.size()]);
+        for (AnAction action : actions) {
+            DataContext dataContext = DataManager.getInstance().getDataContext(c);
+            Presentation presentation = myPresentationFactory.getPresentation(action);
+            AnActionEvent actionEvent = new AnActionEvent(e, dataContext, ActionPlaces.MOUSE_SHORTCUT, presentation, ActionManager.getInstance(), modifiers);
+            action.beforeActionPerformedUpdate(actionEvent);
+
+            if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
+                actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
+                final Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+
+                if (context != null && !context.isShowing()) {
+                    continue;
+                }
+
+                ActionUtil.performActionDumbAware(action, actionEvent);
+                actionManager.fireAfterActionPerformed(action, dataContext, actionEvent);
+                e.consume();
+            }
+        }
+        return e.getButton() > 3;
     }
-    return e.getButton() > 3;
-  }
 
-  private static void resetPopupTrigger(final MouseEvent e) {
-    ReflectionUtil.setField(MouseEvent.class, e, boolean.class, "popupTrigger", false);
-  }
-
-  /**
-   * This method patches event if it concerns side buttons like 4 (Backward) or 5 (Forward)
-   * AND it's not single-click event. We won't support double-click for side buttons.
-   * Also some JDK bugs produce zero-click events for side buttons.
-   *
-   * @return true if event was patched
-   */
-  public static boolean patchClickCount(final MouseEvent e) {
-    if (e.getClickCount() != 1 && e.getButton() > 3) {
-      ReflectionUtil.setField(MouseEvent.class, e, int.class, "clickCount", 1);
-      return true;
-    }
-    return false;
-  }
-
-  public void blockNextEvents(final MouseEvent e, IdeEventQueue.BlockMode blockMode) {
-    final JRootPane root = findRoot(e);
-    if (root == null) return;
-
-    myRootPane2BlockedId.put(root, new BlockState(e.getID(), blockMode));
-  }
-
-  @Nullable
-  private static JRootPane findRoot(MouseEvent e) {
-    final Component parent = UIUtil.findUltimateParent(e.getComponent());
-    JRootPane root = null;
-
-    if (parent instanceof JWindow) {
-      root = ((JWindow)parent).getRootPane();
-    }
-    else if (parent instanceof JDialog) {
-      root = ((JDialog)parent).getRootPane();
-    }
-    else if (parent instanceof JFrame) {
-      root = ((JFrame)parent).getRootPane();
+    private static void resetPopupTrigger(final MouseEvent e) {
+        ReflectionUtil.setField(MouseEvent.class, e, boolean.class, "popupTrigger", false);
     }
 
-    return root;
-  }
-
-  public static void requestFocusInNonFocusedWindow(@Nonnull MouseEvent event) {
-    if (event.getID() == MOUSE_PRESSED) {
-      // request focus by mouse pressed before focus settles down
-      requestFocusInNonFocusedWindow(event.getComponent());
+    /**
+     * This method patches event if it concerns side buttons like 4 (Backward) or 5 (Forward)
+     * AND it's not single-click event. We won't support double-click for side buttons.
+     * Also some JDK bugs produce zero-click events for side buttons.
+     *
+     * @return true if event was patched
+     */
+    public static boolean patchClickCount(final MouseEvent e) {
+        if (e.getClickCount() != 1 && e.getButton() > 3) {
+            ReflectionUtil.setField(MouseEvent.class, e, int.class, "clickCount", 1);
+            return true;
+        }
+        return false;
     }
-  }
 
-  private static void requestFocusInNonFocusedWindow(@Nullable Component component) {
-    Window window = UIUtil.getWindow(component);
-    if (window != null && !UIUtil.isFocusAncestor(window)) {
-      Component focusable = UIUtil.isFocusable(component) ? component : findDefaultFocusableComponent(component);
-      if (focusable != null) focusable.requestFocus();
+    public void blockNextEvents(final MouseEvent e, IdeEventQueue.BlockMode blockMode) {
+        final JRootPane root = findRoot(e);
+        if (root == null) {
+            return;
+        }
+
+        myRootPane2BlockedId.put(root, new BlockState(e.getID(), blockMode));
     }
-  }
 
-  @Nullable
-  private static Component findDefaultFocusableComponent(@Nullable Component component) {
-    Container provider = findFocusTraversalPolicyProvider(component);
-    return provider == null ? null : provider.getFocusTraversalPolicy().getDefaultComponent(provider);
-  }
+    @Nullable
+    private static JRootPane findRoot(MouseEvent e) {
+        final Component parent = UIUtil.findUltimateParent(e.getComponent());
+        JRootPane root = null;
 
-  @Nullable
-  private static Container findFocusTraversalPolicyProvider(@Nullable Component component) {
-    Container container = component == null || component instanceof Container ? (Container)component : component.getParent();
-    while (container != null) {
-      // ensure that container is focus cycle root and provides focus traversal policy
-      // it means that Container.getFocusTraversalPolicy() returns non-null object
-      if (container.isFocusCycleRoot() && container.isFocusTraversalPolicyProvider()) return container;
-      container = container.getParent();
+        if (parent instanceof JWindow) {
+            root = ((JWindow) parent).getRootPane();
+        }
+        else if (parent instanceof JDialog) {
+            root = ((JDialog) parent).getRootPane();
+        }
+        else if (parent instanceof JFrame) {
+            root = ((JFrame) parent).getRootPane();
+        }
+
+        return root;
     }
-    return null;
-  }
 
-  private static class BlockState {
-    private int currentEventId;
-    private final IdeEventQueue.BlockMode blockMode;
-
-    private BlockState(int id, IdeEventQueue.BlockMode mode) {
-      currentEventId = id;
-      blockMode = mode;
+    public static void requestFocusInNonFocusedWindow(@Nonnull MouseEvent event) {
+        if (event.getID() == MOUSE_PRESSED) {
+            // request focus by mouse pressed before focus settles down
+            requestFocusInNonFocusedWindow(event.getComponent());
+        }
     }
-  }
+
+    private static void requestFocusInNonFocusedWindow(@Nullable Component component) {
+        Window window = UIUtil.getWindow(component);
+        if (window != null && !UIUtil.isFocusAncestor(window)) {
+            Component focusable = UIUtil.isFocusable(component) ? component : findDefaultFocusableComponent(component);
+            if (focusable != null) {
+                focusable.requestFocus();
+            }
+        }
+    }
+
+    @Nullable
+    private static Component findDefaultFocusableComponent(@Nullable Component component) {
+        Container provider = findFocusTraversalPolicyProvider(component);
+        return provider == null ? null : provider.getFocusTraversalPolicy().getDefaultComponent(provider);
+    }
+
+    @Nullable
+    private static Container findFocusTraversalPolicyProvider(@Nullable Component component) {
+        Container container = component == null || component instanceof Container ? (Container) component : component.getParent();
+        while (container != null) {
+            // ensure that container is focus cycle root and provides focus traversal policy
+            // it means that Container.getFocusTraversalPolicy() returns non-null object
+            if (container.isFocusCycleRoot() && container.isFocusTraversalPolicyProvider()) {
+                return container;
+            }
+            container = container.getParent();
+        }
+        return null;
+    }
+
+    private static class BlockState {
+        private int currentEventId;
+        private final IdeEventQueue.BlockMode blockMode;
+
+        private BlockState(int id, IdeEventQueue.BlockMode mode) {
+            currentEventId = id;
+            blockMode = mode;
+        }
+    }
 }

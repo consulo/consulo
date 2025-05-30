@@ -16,9 +16,7 @@
 package consulo.language.editor.navigation;
 
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -34,9 +32,4 @@ public abstract class GotoDeclarationHandlerBase implements GotoDeclarationHandl
 
   @Nullable
   public abstract PsiElement getGotoDeclarationTarget(PsiElement sourceElement, Editor editor);
-
-  @Override
-  public String getActionText(DataContext context) {
-    return null;
-  }
 }
