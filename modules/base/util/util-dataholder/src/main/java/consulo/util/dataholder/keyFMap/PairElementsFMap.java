@@ -58,8 +58,8 @@ public class PairElementsFMap implements KeyFMap {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <V> V get(@Nonnull Key<V> key) {
-        //noinspection unchecked
         return key == key1 ? (V)value1 : key == key2 ? (V)value2 : null;
     }
 

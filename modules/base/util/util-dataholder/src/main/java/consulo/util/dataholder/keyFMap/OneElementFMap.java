@@ -32,7 +32,7 @@ public class OneElementFMap<V> implements KeyFMap {
     @Override
     public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
         if (myKey == key) {
-            return new OneElementFMap<V>(key, value);
+            return new OneElementFMap<>(key, value);
         }
         return new PairElementsFMap(myKey, myValue, key, value);
     }
@@ -44,8 +44,8 @@ public class OneElementFMap<V> implements KeyFMap {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <V> V get(@Nonnull Key<V> key) {
-        //noinspection unchecked
         return myKey == key ? (V)myValue : null;
     }
 
@@ -75,29 +75,14 @@ public class OneElementFMap<V> implements KeyFMap {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof OneElementFMap)) {
-            return false;
-        }
-
-        OneElementFMap map = (OneElementFMap)o;
-
-        if (myKey != map.myKey) {
-            return false;
-        }
-        if (!myValue.equals(map.myValue)) {
-            return false;
-        }
-
-        return true;
+        return this == o
+            || o instanceof OneElementFMap that
+            && myKey == that.myKey
+            && myValue.equals(that.myValue);
     }
 
     @Override
     public int hashCode() {
-        int result = myKey.hashCode();
-        result = 31 * result + myValue.hashCode();
-        return result;
+        return 31 * myKey.hashCode() + myValue.hashCode();
     }
 }

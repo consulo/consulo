@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 15-Oct-17
+ * @since 2017-10-15
  */
 public class KeyRegistry {
     public static final KeyRegistry ourInstance = new KeyRegistry();

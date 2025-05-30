@@ -62,6 +62,7 @@ public class ArrayBackedFMap implements KeyFMap {
             newKeys = ArrayUtil.append(keys, keyCode);
             newValues = ArrayUtil.append(values, value, ArrayUtil.OBJECT_ARRAY_FACTORY);
         }
+        //noinspection ConstantConditions
         return new ArrayBackedFMap(newKeys, newValues);
     }
 
@@ -102,13 +103,13 @@ public class ArrayBackedFMap implements KeyFMap {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <V> V get(@Nonnull Key<V> key) {
         int oldSize = size();
         int keyCode = key.hashCode();
         for (int i = 0; i < oldSize; i++) {
             int oldKey = keys[i];
             if (keyCode == oldKey) {
-                //noinspection unchecked
                 return (V)values[i];
             }
         }

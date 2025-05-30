@@ -71,7 +71,6 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
 
     @Override
     public <T> T getUserData(@Nonnull Key<T> key) {
-        //noinspection unchecked
         return getUserMap().get(key);
     }
 

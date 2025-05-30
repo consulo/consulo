@@ -25,6 +25,7 @@ import java.util.function.Function;
 public class NotNullLazyKey<T, H extends UserDataHolder> extends Key<T> {
     private final Function<H, T> myFunction;
 
+    @SuppressWarnings("deprecation")
     private NotNullLazyKey(@Nonnull String name, @Nonnull Function<H, T> function) {
         super(name);
         myFunction = function;

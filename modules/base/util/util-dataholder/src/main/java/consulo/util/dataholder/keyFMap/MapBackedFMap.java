@@ -111,9 +111,12 @@ class MapBackedFMap implements KeyFMap {
     @Override
     public String toString() {
         final StringBuilder s = new StringBuilder();
-        myMap.forEach((key, value) -> {
-            s.append(s.length() == 0 ? "" : ", ").append(ourRegistry.getKeyByIndex(key)).append(" -> ").append(value);
-        });
+        myMap.forEach(
+            (key, value) -> s.append(s.length() == 0 ? "" : ", ")
+                .append(ourRegistry.getKeyByIndex(key))
+                .append(" -> ")
+                .append(value)
+        );
         return "[" + s.toString() + "]";
     }
 }

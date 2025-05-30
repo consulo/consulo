@@ -25,12 +25,12 @@ import java.util.function.Supplier;
 public final class KeyWithDefaultValue<T> extends Key<T> {
     @Nonnull
     public static <T> KeyWithDefaultValue<T> create(@Nonnull String name, final T defValue) {
-        return new KeyWithDefaultValue<T>(name, () -> defValue);
+        return new KeyWithDefaultValue<>(name, () -> defValue);
     }
 
     @Nonnull
     public static <T> KeyWithDefaultValue<T> create(@Nonnull String name, final Supplier<? extends T> supplier) {
-        return new KeyWithDefaultValue<T>(name, supplier);
+        return new KeyWithDefaultValue<>(name, supplier);
     }
 
     @Nonnull

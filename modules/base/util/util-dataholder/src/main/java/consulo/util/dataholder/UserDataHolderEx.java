@@ -28,6 +28,7 @@ public interface UserDataHolderEx extends UserDataHolder {
      * @return written value
      */
     @Nonnull
+    @Override
     <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value);
 
     /**
@@ -36,5 +37,6 @@ public interface UserDataHolderEx extends UserDataHolder {
      * @return true if old value got replaced, false otherwise
      * @see ConcurrentMap#replace(Object, Object, Object)
      */
+    @Override
     <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue);
 }
