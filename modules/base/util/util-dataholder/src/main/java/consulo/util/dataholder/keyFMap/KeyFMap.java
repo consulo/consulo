@@ -27,20 +27,21 @@ import jakarta.annotation.Nullable;
  * @author peter
  */
 public interface KeyFMap {
-  KeyFMap EMPTY_MAP = new EmptyFMap();
+    KeyFMap EMPTY_MAP = new EmptyFMap();
 
-  @Nonnull
-  <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value);
-  @Nonnull
-  KeyFMap minus(@Nonnull Key<?> key);
+    @Nonnull
+    <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value);
 
-  @Nullable
-  <V> V get(@Nonnull Key<V> key);
+    @Nonnull
+    KeyFMap minus(@Nonnull Key<?> key);
 
-  @Nonnull
-  Key[] getKeys();
+    @Nullable
+    <V> V get(@Nonnull Key<V> key);
 
-  String toString();
+    @Nonnull
+    Key[] getKeys();
 
-  boolean isEmpty();
+    String toString();
+
+    boolean isEmpty();
 }

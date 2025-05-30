@@ -4,6 +4,7 @@ package consulo.util.dataholder;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,24 +12,25 @@ import java.util.Map;
  * Non thread safe version of {@link UserDataHolderBase}.
  */
 public class UnprotectedUserDataHolder implements UserDataHolder {
+    private Map<Key, Object> myUserData;
 
-  private Map<Key, Object> myUserData;
-
-  @Nullable
-  @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    //noinspection unchecked
-    T value = myUserData != null ? (T)myUserData.get(key) : null;
-    if (value == null && key instanceof KeyWithDefaultValue) {
-      value = ((KeyWithDefaultValue<T>)key).getDefaultValue();
-      putUserData(key, value);
+    @Nullable
+    @Override
+    public <T> T getUserData(@Nonnull Key<T> key) {
+        //noinspection unchecked
+        T value = myUserData != null ? (T)myUserData.get(key) : null;
+        if (value == null && key instanceof KeyWithDefaultValue) {
+            value = ((KeyWithDefaultValue<T>)key).getDefaultValue();
+            putUserData(key, value);
+        }
+        return value;
     }
-    return value;
-  }
 
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    if (myUserData == null) myUserData = new HashMap<>();
-    myUserData.put(key, value);
-  }
+    @Override
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        if (myUserData == null) {
+            myUserData = new HashMap<>();
+        }
+        myUserData.put(key, value);
+    }
 }

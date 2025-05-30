@@ -20,41 +20,41 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 class EmptyFMap implements KeyFMap {
-  private static final Key[] EMPTY_KEYS_ARRAY = {};
+    private static final Key[] EMPTY_KEYS_ARRAY = {};
 
-  EmptyFMap() {
-  }
+    EmptyFMap() {
+    }
 
-  @Nonnull
-  @Override
-  public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
-    return new OneElementFMap<>(key, value);
-  }
+    @Nonnull
+    @Override
+    public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
+        return new OneElementFMap<>(key, value);
+    }
 
-  @Nonnull
-  @Override
-  public KeyFMap minus(@Nonnull Key<?> key) {
-    return this;
-  }
+    @Nonnull
+    @Override
+    public KeyFMap minus(@Nonnull Key<?> key) {
+        return this;
+    }
 
-  @Override
-  public <V> V get(@Nonnull Key<V> key) {
-    return null;
-  }
+    @Override
+    public <V> V get(@Nonnull Key<V> key) {
+        return null;
+    }
 
-  @Nonnull
-  @Override
-  public Key[] getKeys() {
-    return EMPTY_KEYS_ARRAY;
-  }
+    @Nonnull
+    @Override
+    public Key[] getKeys() {
+        return EMPTY_KEYS_ARRAY;
+    }
 
-  @Override
-  public String toString() {
-    return "<empty>";
-  }
+    @Override
+    public String toString() {
+        return "<empty>";
+    }
 
-  @Override
-  public boolean isEmpty() {
-    return true;
-  }
+    @Override
+    public boolean isEmpty() {
+        return true;
+    }
 }

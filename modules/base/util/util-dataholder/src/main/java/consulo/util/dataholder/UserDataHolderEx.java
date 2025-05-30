@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.util.dataholder;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author cdr
  */
 public interface UserDataHolderEx extends UserDataHolder {
-  /**
-   * @return written value
-   */
-  @Nonnull
-  <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value);
+    /**
+     * @return written value
+     */
+    @Nonnull
+    <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value);
 
-  /**
-   * Replaces (atomically) old value in the map with the new one
-   * @return true if old value got replaced, false otherwise
-   * @see ConcurrentMap#replace(Object, Object, Object)
-   */
-  <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue);
+    /**
+     * Replaces (atomically) old value in the map with the new one
+     *
+     * @return true if old value got replaced, false otherwise
+     * @see ConcurrentMap#replace(Object, Object, Object)
+     */
+    <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue);
 }
