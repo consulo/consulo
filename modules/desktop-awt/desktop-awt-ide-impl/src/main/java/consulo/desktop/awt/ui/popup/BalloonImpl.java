@@ -67,7 +67,131 @@ import java.util.function.Consumer;
 import static consulo.ui.ex.awt.UIUtil.useSafely;
 
 public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
+    private class BalloonEventListener implements AWTEventListener {
+        @Override
+        public void eventDispatched(AWTEvent e) {
+            if (mySmartFadeoutDelay > 0) {
+                startFadeoutTimer(mySmartFadeoutDelay);
+                mySmartFadeoutDelay = 0;
+            }
+
+            if (e instanceof MouseEvent me) {
+                onMouseEvent(me);
+            }
+            else if (e instanceof KeyEvent ke && e.getID() == KeyEvent.KEY_PRESSED) {
+                onKeyPressedEvent(ke);
+            }
+        }
+
+        private boolean onMouseEvent(MouseEvent me) {
+            int id = me.getID();
+            boolean forcedExit = id == MouseEvent.MOUSE_EXITED && me.getButton() != MouseEvent.NOBUTTON && !myBlockClicks;
+            boolean insideBalloon = isInsideBalloon(me);
+            if (myHideOnMouse && (id == MouseEvent.MOUSE_PRESSED || forcedExit)) {
+                if ((!insideBalloon || forcedExit) && !isWithinChildWindow(me)) {
+                    if (myHideListener == null) {
+                        onHideDefault(me, forcedExit);
+                    }
+                    else {
+                        myHideListener.run();
+                    }
+                }
+                return true;
+            }
+
+            if (myClickHandler != null && id == MouseEvent.MOUSE_CLICKED) {
+                if (!(me.getComponent() instanceof CloseButton) && insideBalloon) {
+                    myClickHandler.actionPerformed(new ActionEvent(me, ActionEvent.ACTION_PERFORMED, "click", me.getModifiersEx()));
+                    if (myCloseOnClick) {
+                        hide();
+                        return true;
+                    }
+                }
+            }
+
+            if (myEnableButtons && id == MouseEvent.MOUSE_MOVED) {
+                boolean moveChanged = insideBalloon != myLastMoveWasInsideBalloon;
+                myLastMoveWasInsideBalloon = insideBalloon;
+                if (moveChanged) {
+                    if (insideBalloon && myFadeoutAlarm.getActiveRequestCount() > 0) {
+                        //Pause hiding timer when mouse is hover
+                        myFadeoutAlarm.cancelAllRequests();
+                        myFadeoutRequestDelay -= System.currentTimeMillis() - myFadeoutRequestMillis;
+                    }
+                    if (!insideBalloon && myFadeoutRequestDelay > 0) {
+                        startFadeoutTimer(myFadeoutRequestDelay);
+                    }
+                    myComp.repaintButton();
+                }
+            }
+
+            if (myHideOnCloseClick && UIUtil.isCloseClick(me)) {
+                if (isInsideBalloon(me)) {
+                    hide();
+                    me.consume();
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private void onHideDefault(MouseEvent me, boolean forcedExit) {
+            hide();
+            if (forcedExit) {
+                for (int id_ : FORCED_EXIT_DISPATCH_EVENT_IDS) {
+                    IdeEventQueueProxy.getInstance().dispatchEvent(new MouseEvent(
+                        me.getComponent(),
+                        id_,
+                        me.getWhen(),
+                        me.getModifiers(),
+                        me.getX(),
+                        me.getY(),
+                        me.getClickCount(),
+                        me.isPopupTrigger(),
+                        me.getButton()
+                    ));
+                }
+            }
+        }
+
+        private void onKeyPressedEvent(KeyEvent ke) {
+            if (!myHideOnKey && myHideListener == null) {
+                return;
+            }
+
+            int keyCode = ke.getKeyCode();
+            if (myHideListener != null) {
+                if (keyCode == KeyEvent.VK_ESCAPE) {
+                    myHideListener.run();
+                }
+                return;
+            }
+            if (keyCode != KeyEvent.VK_SHIFT
+                && keyCode != KeyEvent.VK_CONTROL
+                && keyCode != KeyEvent.VK_ALT
+                && keyCode != KeyEvent.VK_META) {
+                // Close the balloon is ESC is pressed inside the balloon
+                if ((keyCode == KeyEvent.VK_ESCAPE && SwingUtilities.isDescendingFrom(ke.getComponent(), myComp))
+                    // Close the balloon if any key is pressed outside the balloon
+                    || (myHideOnKey && !SwingUtilities.isDescendingFrom(ke.getComponent(), myComp))) {
+                    hide();
+                }
+            }
+        }
+
+        private boolean isInsideBalloon(@Nonnull MouseEvent me) {
+            return isInside(new RelativePoint(me));
+        }
+    }
+
     private static final Logger LOG = Logger.getInstance(BalloonImpl.class);
+
+    private static final int[] FORCED_EXIT_DISPATCH_EVENT_IDS = {
+        MouseEvent.MOUSE_ENTERED,
+        MouseEvent.MOUSE_PRESSED,
+        MouseEvent.MOUSE_RELEASED,
+        MouseEvent.MOUSE_CLICKED
+    };
 
     /**
      * This key is supposed to be used as client property of content component (with value Boolean.TRUE) to suppress shadow painting
@@ -117,109 +241,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     private List<ActionButton> myActionButtons;
     private boolean invalidateShadow;
 
-    private final AWTEventListener myAwtActivityListener = new AWTEventListener() {
-        @Override
-        public void eventDispatched(AWTEvent e) {
-            if (mySmartFadeoutDelay > 0) {
-                startFadeoutTimer(mySmartFadeoutDelay);
-                mySmartFadeoutDelay = 0;
-            }
-
-            int id = e.getID();
-            if (e instanceof MouseEvent me) {
-                boolean insideBalloon = isInsideBalloon(me);
-
-                boolean forcedExit = id == MouseEvent.MOUSE_EXITED && me.getButton() != MouseEvent.NOBUTTON && !myBlockClicks;
-                if (myHideOnMouse && (id == MouseEvent.MOUSE_PRESSED || forcedExit)) {
-                    if ((!insideBalloon || forcedExit) && !isWithinChildWindow(me)) {
-                        if (myHideListener == null) {
-                            hide();
-                            if (forcedExit) {
-                                int[] ids = {
-                                    MouseEvent.MOUSE_ENTERED,
-                                    MouseEvent.MOUSE_PRESSED,
-                                    MouseEvent.MOUSE_RELEASED,
-                                    MouseEvent.MOUSE_CLICKED
-                                };
-                                for (int id_ : ids) {
-                                    IdeEventQueueProxy.getInstance().dispatchEvent(new MouseEvent(
-                                        me.getComponent(),
-                                        id_,
-                                        me.getWhen(),
-                                        me.getModifiers(),
-                                        me.getX(),
-                                        me.getY(),
-                                        me.getClickCount(),
-                                        me.isPopupTrigger(),
-                                        me.getButton()
-                                    ));
-                                }
-                            }
-                        }
-                        else {
-                            myHideListener.run();
-                        }
-                    }
-                    return;
-                }
-
-                if (myClickHandler != null && id == MouseEvent.MOUSE_CLICKED) {
-                    if (!(me.getComponent() instanceof CloseButton) && insideBalloon) {
-                        myClickHandler.actionPerformed(new ActionEvent(me, ActionEvent.ACTION_PERFORMED, "click", me.getModifiersEx()));
-                        if (myCloseOnClick) {
-                            hide();
-                            return;
-                        }
-                    }
-                }
-
-                if (myEnableButtons && id == MouseEvent.MOUSE_MOVED) {
-                    boolean moveChanged = insideBalloon != myLastMoveWasInsideBalloon;
-                    myLastMoveWasInsideBalloon = insideBalloon;
-                    if (moveChanged) {
-                        if (insideBalloon && myFadeoutAlarm.getActiveRequestCount() > 0) {
-                            //Pause hiding timer when mouse is hover
-                            myFadeoutAlarm.cancelAllRequests();
-                            myFadeoutRequestDelay -= System.currentTimeMillis() - myFadeoutRequestMillis;
-                        }
-                        if (!insideBalloon && myFadeoutRequestDelay > 0) {
-                            startFadeoutTimer(myFadeoutRequestDelay);
-                        }
-                        myComp.repaintButton();
-                    }
-                }
-
-                if (myHideOnCloseClick && UIUtil.isCloseClick(me)) {
-                    if (isInsideBalloon(me)) {
-                        hide();
-                        me.consume();
-                    }
-                    return;
-                }
-            }
-
-            if ((myHideOnKey || myHideListener != null) && e instanceof KeyEvent ke && id == KeyEvent.KEY_PRESSED) {
-                int keyCode = ke.getKeyCode();
-                if (myHideListener != null) {
-                    if (keyCode == KeyEvent.VK_ESCAPE) {
-                        myHideListener.run();
-                    }
-                    return;
-                }
-                if (keyCode != KeyEvent.VK_SHIFT
-                    && keyCode != KeyEvent.VK_CONTROL
-                    && keyCode != KeyEvent.VK_ALT
-                    && keyCode != KeyEvent.VK_META) {
-                    // Close the balloon is ESC is pressed inside the balloon
-                    if ((keyCode == KeyEvent.VK_ESCAPE && SwingUtilities.isDescendingFrom(ke.getComponent(), myComp))
-                        // Close the balloon if any key is pressed outside the balloon
-                        || (myHideOnKey && !SwingUtilities.isDescendingFrom(ke.getComponent(), myComp))) {
-                        hide();
-                    }
-                }
-            }
-        }
-    };
+    private final AWTEventListener myAwtActivityListener = new BalloonEventListener();
 
     private boolean isWithinChildWindow(@Nonnull MouseEvent event) {
         Component owner = UIUtil.getWindow(myContent);
@@ -276,10 +298,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     private final Layer myLayer;
     private final boolean myBlockClicks;
     private RelativePoint myPrevMousePoint;
-
-    private boolean isInsideBalloon(@Nonnull MouseEvent me) {
-        return isInside(new RelativePoint(me));
-    }
 
     @Override
     public boolean isInside(@Nonnull RelativePoint target) {
@@ -447,7 +465,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     }
 
     @Override
-    public void show(RelativePoint target, Balloon.Position position) {
+    public void show(RelativePoint target, Position position) {
         show(target, getAbstractPositionFor(position));
     }
 
@@ -469,7 +487,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     }
 
     @Override
-    public void show(PositionTracker<Balloon> tracker, Balloon.Position position) {
+    public void show(PositionTracker<Balloon> tracker, Position position) {
         show(tracker, getAbstractPositionFor(position));
     }
 
@@ -928,14 +946,14 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     @Override
     public void showInCenterOf(JComponent component) {
         Dimension size = component.getSize();
-        show(new RelativePoint(component, new Point(size.width / 2, size.height / 2)), Balloon.Position.above);
+        show(new RelativePoint(component, new Point(size.width / 2, size.height / 2)), Position.above);
     }
 
     public void show(JLayeredPane pane, @Nullable Rectangle bounds) {
         if (bounds != null) {
             myForcedBounds = bounds;
         }
-        show(new RelativePoint(pane, new Point(0, 0)), Balloon.Position.above);
+        show(new RelativePoint(pane, new Point(0, 0)), Position.above);
     }
 
     private void runAnimation(boolean forward, final JLayeredPane layeredPane, @Nullable final Runnable onDone) {
@@ -1361,7 +1379,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                 Area area = new Area(shape);
                 area.intersect(new Area(titleBounds));
 
-
                 Color fgColor = UIManager.getColor("Label.foreground");
                 fgColor = ColorUtil.toAlpha(fgColor, 140);
                 g.setColor(fgColor);
@@ -1418,7 +1435,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         @Nonnull
         Set<AbstractPosition> getOtherPositions() {
-            LinkedHashSet<AbstractPosition> all = new LinkedHashSet<>();
+            Set<AbstractPosition> all = new LinkedHashSet<>();
             all.add(BELOW);
             all.add(ABOVE);
             all.add(AT_RIGHT);
@@ -1476,7 +1493,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         int getChangeShift(AbstractPosition original, int xShift, int yShift) {
             return original == ABOVE ? yShift : 0;
         }
-
 
         @Override
         protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
@@ -1714,7 +1730,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         int getChangeShift(AbstractPosition original, int xShift, int yShift) {
             return original == AT_RIGHT ? -xShift : 0;
         }
-
 
         @Override
         protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
