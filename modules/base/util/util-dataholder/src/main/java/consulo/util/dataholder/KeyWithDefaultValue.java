@@ -13,36 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.util.dataholder;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
  * @author peter
  */
 public final class KeyWithDefaultValue<T> extends Key<T> {
-  @Nonnull
-  public static <T> KeyWithDefaultValue<T> create(@Nonnull String name, final T defValue) {
-    return new KeyWithDefaultValue<T>(name, () -> defValue);
-  }
+    @Nonnull
+    public static <T> KeyWithDefaultValue<T> create(@Nonnull String name, final T defValue) {
+        return new KeyWithDefaultValue<>(name, () -> defValue);
+    }
 
-  @Nonnull
-  public static <T> KeyWithDefaultValue<T> create(@Nonnull String name, final Supplier<? extends T> supplier) {
-    return new KeyWithDefaultValue<T>(name, supplier);
-  }
+    @Nonnull
+    public static <T> KeyWithDefaultValue<T> create(@Nonnull String name, final Supplier<? extends T> supplier) {
+        return new KeyWithDefaultValue<>(name, supplier);
+    }
 
-  @Nonnull
-  private final Supplier<? extends T> myValueGetter;
+    @Nonnull
+    private final Supplier<? extends T> myValueGetter;
 
-  @SuppressWarnings("deprecation")
-  private KeyWithDefaultValue(@Nonnull String name, @Nonnull Supplier<? extends T> valueGetter) {
-    super(name);
-    myValueGetter = valueGetter;
-  }
+    @SuppressWarnings("deprecation")
+    private KeyWithDefaultValue(@Nonnull String name, @Nonnull Supplier<? extends T> valueGetter) {
+        super(name);
+        myValueGetter = valueGetter;
+    }
 
-  public T getDefaultValue() {
-    return myValueGetter.get();
-  }
+    public T getDefaultValue() {
+        return myValueGetter.get();
+    }
 }

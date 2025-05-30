@@ -20,74 +20,69 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 public class OneElementFMap<V> implements KeyFMap {
-  private final Key myKey;
-  private final V myValue;
+    private final Key myKey;
+    private final V myValue;
 
-  public OneElementFMap(@Nonnull Key key, @Nonnull V value) {
-    myKey = key;
-    myValue = value;
-  }
+    public OneElementFMap(@Nonnull Key key, @Nonnull V value) {
+        myKey = key;
+        myValue = value;
+    }
 
-  @Nonnull
-  @Override
-  public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
-    if (myKey == key) return new OneElementFMap<V>(key, value);
-    return new PairElementsFMap(myKey, myValue, key, value);
-  }
+    @Nonnull
+    @Override
+    public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
+        if (myKey == key) {
+            return new OneElementFMap<>(key, value);
+        }
+        return new PairElementsFMap(myKey, myValue, key, value);
+    }
 
-  @Nonnull
-  @Override
-  public KeyFMap minus(@Nonnull Key<?> key) {
-    return key == myKey ? KeyFMap.EMPTY_MAP : this;
-  }
+    @Nonnull
+    @Override
+    public KeyFMap minus(@Nonnull Key<?> key) {
+        return key == myKey ? KeyFMap.EMPTY_MAP : this;
+    }
 
-  @Override
-  public <V> V get(@Nonnull Key<V> key) {
-    //noinspection unchecked
-    return myKey == key ? (V)myValue : null;
-  }
+    @Override
+    @SuppressWarnings("unchecked")
+    public <V> V get(@Nonnull Key<V> key) {
+        return myKey == key ? (V)myValue : null;
+    }
 
-  @Nonnull
-  @Override
-  public Key[] getKeys() {
-    return new Key[] { myKey };
-  }
+    @Nonnull
+    @Override
+    public Key[] getKeys() {
+        return new Key[]{myKey};
+    }
 
-  @Override
-  public String toString() {
-    return "<" + myKey + " -> " + myValue+">";
-  }
+    @Override
+    public String toString() {
+        return "<" + myKey + " -> " + myValue + ">";
+    }
 
-  @Override
-  public boolean isEmpty() {
-    return false;
-  }
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-  public Key getKey() {
-    return myKey;
-  }
+    public Key getKey() {
+        return myKey;
+    }
 
-  public V getValue() {
-    return myValue;
-  }
+    public V getValue() {
+        return myValue;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof OneElementFMap)) return false;
+    @Override
+    public boolean equals(Object o) {
+        return this == o
+            || o instanceof OneElementFMap that
+            && myKey == that.myKey
+            && myValue.equals(that.myValue);
+    }
 
-    OneElementFMap map = (OneElementFMap)o;
-
-    if (myKey != map.myKey) return false;
-    if (!myValue.equals(map.myValue)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = myKey.hashCode();
-    result = 31 * result + myValue.hashCode();
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        return 31 * myKey.hashCode() + myValue.hashCode();
+    }
 }
