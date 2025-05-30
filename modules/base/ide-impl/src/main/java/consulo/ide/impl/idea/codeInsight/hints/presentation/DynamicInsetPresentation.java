@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.codeInsight.hints.presentation;
 import consulo.colorScheme.TextAttributes;
 import consulo.ide.impl.idea.codeInsight.hints.InsetValueProvider;
 import consulo.language.editor.inlay.InlayPresentation;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -47,12 +48,8 @@ public class DynamicInsetPresentation extends StaticDelegatePresentation {
 
     @Override
     public void paint(Graphics2D g, TextAttributes attributes) {
-        g.translate(getLeft(), getTop());
-        try {
+        try (var ignored = GraphicsUtil.withTranslated(g, getLeft(), getTop())) {
             presentation.paint(g, attributes);
-        }
-        finally {
-            g.translate(-getLeft(), -getTop());
         }
     }
 

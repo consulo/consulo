@@ -223,43 +223,42 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
                     : DefaultLanguageHighlighterColors.INLAY_TEXT_WITHOUT_BACKGROUND
             );
 
-        // Draw background
-        int tx = (int) targetRegion.getX();
-        int ty = (int) targetRegion.getY();
-        g.translate(tx, ty);
-        if (model.getHintFormat().getColorKind().hasBackground()) {
-            int rectHeight = ((int) targetRegion.getHeight()) - gap * 2;
-            var cfg = GraphicsUtil.setupAAPainting(g);
-            GraphicsUtil.paintWithAlpha(g, BACKGROUND_ALPHA);
-            ColorValue colorValue = attrs.getBackgroundColor() != null
-                ? attrs.getBackgroundColor()
-                : textAttributes.getBackgroundColor();
-            g.setColor(TargetAWT.to(colorValue));
-            g.fillRoundRect(0, gap, getBoxWidth(storage, false), rectHeight, ARC_WIDTH, ARC_HEIGHT);
-            cfg.restore();
-        }
-        g.translate(-tx, -ty);
-
-        // Draw entries
-        int xOffset = 0;
-        g.translate(tx + getMarginAndPadding()[1], ty);
-        for (int i = 0; i < entries.length; i++) {
-            InlayPresentationEntry entry = entries[i];
-            boolean hoveredWithCtrl = entry.isHoveredWithCtrl();
-            TextAttributes finalAttrs = attrs;
-            if (hoveredWithCtrl) {
-                TextAttributes ref = editor.getColorsScheme()
-                    .getAttributes(EditorColors.REFERENCE_HYPERLINK_COLOR);
-                finalAttrs = attrs.clone();
-                finalAttrs.setForegroundColor(ref.getForegroundColor());
+        try (var ignored = GraphicsUtil.withTranslated(g, targetRegion.getX(), targetRegion.getY())) {
+            if (model.getHintFormat().getColorKind().hasBackground()) {
+                int rectHeight = ((int) targetRegion.getHeight()) - gap * 2;
+                var cfg = GraphicsUtil.setupAAPainting(g);
+                GraphicsUtil.paintWithAlpha(g, BACKGROUND_ALPHA);
+                ColorValue colorValue = attrs.getBackgroundColor() != null
+                    ? attrs.getBackgroundColor()
+                    : textAttributes.getBackgroundColor();
+                g.setColor(TargetAWT.to(colorValue));
+                g.fillRoundRect(0, gap, getBoxWidth(storage, false), rectHeight, ARC_WIDTH, ARC_HEIGHT);
+                cfg.restore();
             }
-            entry.render(g, metrics, finalAttrs, model.isDisabled(),
-                gap, (int) targetRegion.getHeight(), editor);
-            int nextX = getPartialWidthSums(storage, false)[i];
-            g.translate(nextX - xOffset, 0);
-            xOffset = nextX;
         }
-        g.translate(-(tx + getMarginAndPadding()[1]), -ty);
+
+        int xOffset = 0;
+        try (var ignored = GraphicsUtil.withTranslated(g, targetRegion.getX() + getMarginAndPadding()[1], targetRegion.getY())) {
+            int[] partialWidthSums = getPartialWidthSums(storage, false);
+
+            for (int i = 0; i < entries.length; i++) {
+                InlayPresentationEntry entry = entries[i];
+                boolean hoveredWithCtrl = entry.isHoveredWithCtrl();
+                TextAttributes finalAttrs = attrs;
+
+                if (hoveredWithCtrl) {
+                    TextAttributes ref = editor.getColorsScheme().getAttributes(EditorColors.REFERENCE_HYPERLINK_COLOR);
+                    finalAttrs = attrs.clone();
+                    finalAttrs.setForegroundColor(ref.getForegroundColor());
+                }
+
+                try (var ignored2 = GraphicsUtil.withTranslated(g, xOffset, 0)) {
+                    entry.render(g, metrics, finalAttrs, model.isDisabled(), gap, (int) targetRegion.getHeight(), editor);
+                }
+
+                xOffset = partialWidthSums[i];
+            }
+        }
     }
 
     private InlayTextMetrics getMetrics(InlayTextMetricsStorage storage) {

@@ -55,13 +55,9 @@ public class ContainerInlayPresentation extends StaticDelegatePresentation {
             }
             g.setColor(preservedBackground);
         }
-        Graphics2D g2 = (Graphics2D) g.create();
-        try {
-            g2.translate(leftInset(), topInset());
-            presentation.paint(g2, attributes);
-        }
-        finally {
-            g2.dispose();
+        
+        try (var ignored = GraphicsUtil.withTranslated(g, leftInset(), topInset())) {
+            presentation.paint(g, attributes);
         }
     }
 
