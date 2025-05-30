@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
@@ -39,6 +40,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -105,7 +107,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
             return ImageEffects.canvas(colors.getWidth(), colors.getHeight(), canvas2D -> {
                 for (int i = 0; i < 4; i++) {
                     // backward
-                    MyInfo info = i >= infos.size() ? null : (MyInfo)infos.get(infos.size() - i - 1);
+                    MyInfo info = i >= infos.size() ? null : (MyInfo) infos.get(infos.size() - i - 1);
                     if (info == null) {
                         continue;
                     }
@@ -146,6 +148,13 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
         }
     }
 
+    private final Application myApplication;
+
+    @Inject
+    public ColorLineMarkerProvider(Application application) {
+        myApplication = application;
+    }
+
     @Nonnull
     @Override
     public Language getLanguage() {
@@ -155,7 +164,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
     @Override
     @RequiredReadAction
     public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
-        ExtensionPoint<ElementColorProvider> point = element.getProject().getExtensionPoint(ElementColorProvider.class);
+        ExtensionPoint<ElementColorProvider> point = myApplication.getExtensionPoint(ElementColorProvider.class);
         Map.Entry<ElementColorProvider, ColorValue> colorInfo = point.computeSafeIfAny(it -> {
             ColorValue value = it.getColorFrom(element);
             return value != null ? Map.entry(it, value) : null;

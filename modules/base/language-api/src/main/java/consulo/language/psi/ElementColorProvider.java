@@ -19,18 +19,16 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionList;
-import consulo.project.Project;
+import consulo.language.extension.LanguageExtension;
 import consulo.ui.color.ColorValue;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
-@ExtensionAPI(ComponentScope.PROJECT)
-public interface ElementColorProvider {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface ElementColorProvider extends LanguageExtension {
   @Nullable
   @RequiredReadAction
   ColorValue getColorFrom(@Nonnull PsiElement element);
