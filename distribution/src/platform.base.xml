@@ -23,6 +23,7 @@
                 <include>consulo:consulo-annotation</include>
                 <include>jakarta.annotation:jakarta.annotation-api</include>
                 <include>org.jspecify:jspecify</include>
+                <include>org.apiguardian:apiguardian-api</include>
                 <include>consulo:consulo-component-api</include>
                 <include>consulo:consulo-application-api</include>
                 <include>consulo:consulo-bookmark-api</include>

@@ -1,6 +1,7 @@
 module consulo.annotation {
   requires transitive jakarta.annotation;
   requires transitive org.jspecify;
+  requires transitive org.apiguardian.api;
 
   requires java.desktop;
 
