@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.language.Language;
 import consulo.language.editor.inlay.*;
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
@@ -38,21 +37,18 @@ import jakarta.annotation.Nonnull;
 public class SandDeclarativeInlayHintsProvider implements DeclarativeInlayHintsProvider {
     @Override
     public DeclarativeInlayHintsCollector createCollector(PsiFile file, Editor editor) {
-        return new DeclarativeInlayHintsCollector.SharedBypassCollector() {
-            @Override
-            public void collectFromElement(PsiElement element, DeclarativeInlayTreeSink sink) {
-                if (PsiUtilCore.getElementType(element) == SandTokens.IDENTIFIER) {
-                    sink.addPresentation(
-                        new DeclarativeInlayPosition.InlineInlayPosition(element.getTextOffset(), true),
-                        null,
-                        null,
-                        new HintFormat(HintColorKind.TextWithoutBackground, HintFontSize.AsInEditor, HintMarginPadding.OnlyPadding),
-                        presentationTreeBuilder -> {
-                            Image image = ImageEffects.colorFilled(12, 12, StandardColors.RED);
-                            presentationTreeBuilder.icon(image);
-                        }
-                    );
-                }
+        return (DeclarativeInlayHintsCollector.SharedBypassCollector) (element, sink) -> {
+            if (PsiUtilCore.getElementType(element) == SandTokens.IDENTIFIER) {
+                sink.addPresentation(
+                    new DeclarativeInlayPosition.InlineInlayPosition(element.getTextOffset(), true),
+                    null,
+                    null,
+                    new HintFormat(HintColorKind.TextWithoutBackground, HintFontSize.AsInEditor, HintMarginPadding.OnlyPadding),
+                    presentationTreeBuilder -> {
+                        Image image = ImageEffects.colorFilled(12, 12, StandardColors.RED);
+                        presentationTreeBuilder.icon(image);
+                    }
+                );
             }
         };
     }
