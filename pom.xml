@@ -136,6 +136,7 @@
     <module>modules/base/virtual-file-status-impl</module>
     <module>modules/base/find-api</module>
     <module>modules/base/project-ui-view-api</module>
+    <module>modules/base/project-ui-view-impl</module>
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
     <module>modules/base/local-history-api</module>

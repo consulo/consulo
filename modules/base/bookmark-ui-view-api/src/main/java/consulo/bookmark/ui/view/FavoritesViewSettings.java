@@ -15,6 +15,7 @@
  */
 package consulo.bookmark.ui.view;
 
+import consulo.project.ui.view.tree.ProjectViewSettings;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import jakarta.annotation.Nonnull;
@@ -23,45 +24,41 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2023-11-09
  */
-public interface FavoritesViewSettings extends ViewSettings {
-  @Override
-  boolean isShowMembers();
+public interface FavoritesViewSettings extends ViewSettings, ProjectViewSettings {
+    @Override
+    boolean isShowMembers();
 
-  void setShowMembers(boolean showMembers);
+    void setShowMembers(boolean showMembers);
 
-  @Override
-  boolean isStructureView();
+    @Override
+    boolean isStructureView();
 
-  @Override
-  boolean isShowModules();
+    @Override
+    boolean isShowModules();
 
-  @Override
-  boolean isFlattenPackages();
+    @Override
+    boolean isFlattenPackages();
 
-  boolean isAutoScrollFromSource();
+    boolean isAutoScrollFromSource();
 
-  void setAutoScrollFromSource(boolean autoScrollFromSource);
+    void setAutoScrollFromSource(boolean autoScrollFromSource);
 
-  void setFlattenPackages(boolean flattenPackages);
+    void setFlattenPackages(boolean flattenPackages);
 
-  @Override
-  boolean isAbbreviatePackageNames();
+    @Override
+    boolean isAbbreviatePackageNames();
 
-  @Override
-  boolean isHideEmptyMiddlePackages();
+    @Override
+    boolean isHideEmptyMiddlePackages();
 
-  @Override
-  boolean isShowLibraryContents();
+    @Override
+    boolean isShowLibraryContents();
 
-  @Nonnull
-  @Override
-  <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option);
+    boolean isAutoScrollToSource();
 
-  boolean isAutoScrollToSource();
+    void setAutoScrollToSource(boolean autoScrollToSource);
 
-  void setAutoScrollToSource(boolean autoScrollToSource);
+    void setHideEmptyMiddlePackages(boolean hide);
 
-  void setHideEmptyMiddlePackages(boolean hide);
-
-  void setAbbreviateQualifiedPackages(boolean abbreviate);
+    void setAbbreviateQualifiedPackages(boolean abbreviate);
 }

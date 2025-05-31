@@ -14,3 +14,30 @@ select.in.scope:
   text: Scope
 action.NewElement.ProjectView.text:
   text: New File or Directory…
+file.nesting.dialog.title:
+  text: File Nesting
+file.nesting.feature.enabled.checkbox:
+  text: '&Show files with the same names as nested'
+file.nesting.table.title:
+  text: 'Nesting rules:'
+file.nesting.reset.to.default.button:
+  text: '&Reset to Default'
+parent.file.suffix.column.name:
+  text: Parent File Suffix
+child.file.suffix.column.name:
+  text: Child File Suffix
+dialog.message.parent.file.suffix.must.be.empty.see.row:
+  text: Parent file suffix must not be empty (see row {0})
+dialog.message.child.file.suffix.must.be.empty.see.row:
+  text: Child file suffix must not be empty (see row {0})
+dialog.message.parent.child.file.suffixes.must.be.equal.see.row:
+  text: Parent and child file suffixes must not be equal (''{0}'', see row {1})
+action.ProjectView.FileNesting.text:
+  text: File Nesting…
+action.ProjectView.FileNesting.description:
+  text: Configure file nesting
+action.show.excluded.files:
+  text: Show Excluded Files
+action.show.hide.excluded.files:
+  text: Show/Hide Excluded Files
+

@@ -25,65 +25,61 @@ import jakarta.annotation.Nonnull;
  * @see ViewSettings
  */
 public interface NodeOptions {
-  /**
-   * Gets the value of the "Flatten Packages" option.
-   *
-   * @return the value of the "Flatten Packages" option.
-   */
-  boolean isFlattenPackages();
+    /**
+     * Gets the value of the "Flatten Packages" option.
+     *
+     * @return the value of the "Flatten Packages" option.
+     */
+    boolean isFlattenPackages();
 
-  /**
-   * Gets the value of the "Abbreviate Qualified Package Names" option.
-   *
-   * @return the value of the "Abbreviate Qualified Package Names" option.
-   */
-  boolean isAbbreviatePackageNames();
+    /**
+     * Gets the value of the "Abbreviate Qualified Package Names" option.
+     *
+     * @return the value of the "Abbreviate Qualified Package Names" option.
+     */
+    boolean isAbbreviatePackageNames();
 
-  /**
-   * Gets the value of the "Compact Empty Middle Packages" option.
-   *
-   * @return the value of the "Compact Empty Middle Packages" option.
-   */
-  boolean isHideEmptyMiddlePackages();
+    /**
+     * Gets the value of the "Compact Empty Middle Packages" option.
+     *
+     * @return the value of the "Compact Empty Middle Packages" option.
+     */
+    boolean isHideEmptyMiddlePackages();
 
-  /**
-   * Gets the value of the "Show/Hide Library Contents" option.
-   *
-   * @return true if the library contents are shown, false otherwise.
-   */
-  boolean isShowLibraryContents();
-
-  @Nonnull
-  <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option);
-
-  /**
-   * The default tree view settings.
-   */
-  NodeOptions DEFAULT_OPTIONS = new NodeOptions() {
-    @Override
-    public boolean isFlattenPackages() {
-      return false;
-    }
-
-    @Override
-    public boolean isAbbreviatePackageNames() {
-      return false;
-    }
-
-    @Override
-    public boolean isHideEmptyMiddlePackages() {
-      return false;
-    }
-
-    @Override
-    public boolean isShowLibraryContents() {
-      return false;
-    }
+    /**
+     * Gets the value of the "Show/Hide Library Contents" option.
+     *
+     * @return true if the library contents are shown, false otherwise.
+     */
+    boolean isShowLibraryContents();
 
     @Nonnull
-    @Override
-    public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
-      return option.getDefaultValue();
+    default <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
+        return option.getDefaultValue();
     }
-  };
+
+    /**
+     * The default tree view settings.
+     */
+    NodeOptions DEFAULT_OPTIONS = new NodeOptions() {
+        @Override
+        public boolean isFlattenPackages() {
+            return false;
+        }
+
+        @Override
+        public boolean isAbbreviatePackageNames() {
+            return false;
+        }
+
+        @Override
+        public boolean isHideEmptyMiddlePackages() {
+            return false;
+        }
+
+        @Override
+        public boolean isShowLibraryContents() {
+            return false;
+        }
+    };
 }

@@ -18,6 +18,7 @@ import consulo.project.Project;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.BaseProjectViewDirectoryHelper;
+import consulo.project.ui.view.tree.ProjectViewSettings;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
@@ -123,7 +124,7 @@ public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
         }
     }
 
-    private class ProjectViewPaneTreeStructure extends ProjectTreeStructure {
+    private class ProjectViewPaneTreeStructure extends ProjectTreeStructure implements ProjectViewSettings {
         public ProjectViewPaneTreeStructure() {
             super(ProjectViewPaneImpl.this.myProject, ID);
         }

@@ -53,12 +53,6 @@ public interface ViewSettings extends NodeOptions {
       return false;
     }
 
-    @Nonnull
-    @Override
-    public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
-      return option.getDefaultValue();
-    }
-
     @Override
     public boolean isStructureView() {
       return false;

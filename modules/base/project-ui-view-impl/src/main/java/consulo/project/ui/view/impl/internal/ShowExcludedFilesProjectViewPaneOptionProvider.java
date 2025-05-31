@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.projectView;
+package consulo.project.ui.view.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.IdeBundle;
-import consulo.project.ui.view.ProjectView;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.project.Project;
+import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.ProjectViewPaneOptionProvider;
 import consulo.project.ui.view.internal.ProjectViewInternalHelper;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.dataholder.KeyWithDefaultValue;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -43,7 +41,7 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
     private ProjectViewPane myPane;
 
     private ShowExcludedFilesAction(ProjectViewPane pane) {
-      super(IdeBundle.message("action.show.excluded.files"), IdeBundle.message("action.show.hide.excluded.files"), null);
+      super(ProjectUIViewLocalize.actionShowExcludedFiles(), ProjectUIViewLocalize.actionShowHideExcludedFiles());
       myPane = pane;
     }
 
@@ -80,7 +78,7 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
 
   @Override
   public void addToolbarActions(@Nonnull ProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup) {
-    if (pane instanceof ProjectViewPaneImpl) {
+    if (pane instanceof ProjectViewPane) {
       actionGroup.addAction(new ShowExcludedFilesAction(pane));
     }
   }

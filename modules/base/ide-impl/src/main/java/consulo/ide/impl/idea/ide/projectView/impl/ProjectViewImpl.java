@@ -21,8 +21,6 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
-import consulo.application.ui.UISettings;
-import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
@@ -78,6 +76,7 @@ import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.view.internal.ProjectViewSharedSettings;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.*;
@@ -139,6 +138,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     private static final Logger LOG = Logger.getInstance(ProjectViewImpl.class);
     private static final Key<String> ID_KEY = Key.create("pane-id");
     private static final Key<String> SUB_ID_KEY = Key.create("pane-sub-id");
+
     private final CopyPasteDelegator myCopyPasteDelegator;
     private boolean isInitialized;
     private boolean myExtensionsLoaded = false;
@@ -157,22 +157,18 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     private final Map<String, Boolean> mySortByType = new HashMap<>();
     private static final boolean ourSortByTypeDefaults = false;
     private final Map<String, Boolean> myShowModules = new HashMap<>();
-    private static final boolean ourShowModulesDefaults = true;
     private final Map<String, Boolean> myShowLibraryContents = new HashMap<>();
-    private static final boolean ourShowLibraryContentsDefaults = true;
     private final Map<String, Boolean> myHideEmptyPackages = new HashMap<>();
     private static final boolean ourHideEmptyPackagesDefaults = true;
     private final Map<String, Boolean> myAbbreviatePackageNames = new HashMap<>();
     private static final boolean ourAbbreviatePackagesDefaults = false;
     private final Map<String, Boolean> myAutoscrollToSource = new HashMap<>();
     private final Map<String, Boolean> myAutoscrollFromSource = new HashMap<>();
-    private static final boolean ourAutoscrollFromSourceDefaults = false;
 
     private boolean myFoldersAlwaysOnTop = true;
 
     private String myCurrentViewId;
     private String myCurrentViewSubId;
-    // - options
 
     private final AutoScrollToSourceHandler myAutoScrollToSourceHandler;
     private final MyAutoScrollFromSourceHandler myAutoScrollFromSourceHandler;
@@ -662,9 +658,9 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
                 AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
                 SelectionInfo selectionInfo = SelectionInfo.create(viewPane);
-                if (isGlobalOptions()) {
-                    setFlattenPackages(flag, viewPane.getId());
-                }
+
+                setFlattenPackages(flag, viewPane.getId());
+
                 super.setSelected(event, flag);
 
                 selectionInfo.apply(viewPane);
@@ -672,10 +668,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
             @Override
             public boolean isSelected(@Nonnull AnActionEvent event) {
-                if (isGlobalOptions()) {
-                    return getGlobalOptions().getFlattenPackages();
-                }
-                return super.isSelected(event);
+                return getGlobalOptions().isFlattenPackages();
             }
 
             @Override
@@ -705,9 +698,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             @Override
             @RequiredUIAccess
             public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
-                if (isGlobalOptions()) {
-                    getGlobalOptions().setFlattenPackages(flag);
-                }
+                getGlobalOptions().setFlattenPackages(flag);
+
                 super.setSelected(event, flag);
             }
 
@@ -742,9 +734,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             @Override
             @RequiredUIAccess
             public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
-                if (isGlobalOptions()) {
-                    setAbbreviatePackageNames(flag, myCurrentViewId);
-                }
+                setAbbreviatePackageNames(flag, myCurrentViewId);
+
                 setPaneOption(myOptionsMap, flag, myCurrentViewId, true);
             }
 
@@ -767,18 +758,14 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             ) {
                 @Override
                 public boolean isSelected(@Nonnull AnActionEvent event) {
-                    if (isGlobalOptions()) {
-                        return getGlobalOptions().getShowMembers();
-                    }
-                    return super.isSelected(event);
+                    return getGlobalOptions().isShowMembers();
                 }
 
                 @Override
                 @RequiredUIAccess
                 public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
-                    if (isGlobalOptions()) {
-                        getGlobalOptions().setShowMembers(flag);
-                    }
+                    getGlobalOptions().setShowMembers(flag);
+
                     super.setSelected(event, flag);
                 }
             }).setAsSecondary(true);
@@ -1554,80 +1541,56 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         }
     }
 
-    boolean isGlobalOptions() {
-        return Registry.is("ide.projectView.globalOptions");
-    }
-
     public ProjectViewSharedSettings getGlobalOptions() {
         return myProjectViewSharedSettings;
     }
 
     @Override
     public boolean isAutoscrollToSource(String paneId) {
-        if (isGlobalOptions()) {
-            return getGlobalOptions().getAutoscrollToSource();
-        }
-
-        return getPaneOptionValue(myAutoscrollToSource, paneId, UISettings.getInstance().DEFAULT_AUTOSCROLL_TO_SOURCE);
+        return getGlobalOptions().isAutoscrollToSource();
     }
 
     public void setAutoscrollToSource(boolean autoscrollMode, String paneId) {
-        if (isGlobalOptions()) {
-            getGlobalOptions().setAutoscrollToSource(autoscrollMode);
-        }
+        getGlobalOptions().setAutoscrollToSource(autoscrollMode);
+
         myAutoscrollToSource.put(paneId, autoscrollMode);
     }
 
     @Override
     public boolean isAutoscrollFromSource(String paneId) {
-        if (isGlobalOptions()) {
-            return getGlobalOptions().getAutoscrollFromSource();
-        }
-
-        return getPaneOptionValue(myAutoscrollFromSource, paneId, ourAutoscrollFromSourceDefaults);
+        return getGlobalOptions().isAutoscrollFromSource();
     }
 
     @RequiredUIAccess
     public void setAutoscrollFromSource(boolean autoscrollMode, String paneId) {
-        if (isGlobalOptions()) {
-            getGlobalOptions().setAutoscrollFromSource(autoscrollMode);
-        }
+        getGlobalOptions().setAutoscrollFromSource(autoscrollMode);
+
         setPaneOption(myAutoscrollFromSource, autoscrollMode, paneId, false);
     }
 
     @Override
     public boolean isFlattenPackages(String paneId) {
-        if (isGlobalOptions()) {
-            return getGlobalOptions().getFlattenPackages();
-        }
-
-        return getPaneOptionValue(myFlattenPackages, paneId, ourFlattenPackagesDefaults);
+        return getGlobalOptions().isFlattenPackages();
     }
 
     @RequiredUIAccess
     public void setFlattenPackages(boolean flattenPackages, String paneId) {
-        if (isGlobalOptions()) {
-            getGlobalOptions().setFlattenPackages(flattenPackages);
-            for (String pane : myFlattenPackages.keySet()) {
-                setPaneOption(myFlattenPackages, flattenPackages, pane, true);
-            }
+        getGlobalOptions().setFlattenPackages(flattenPackages);
+
+        for (String pane : myFlattenPackages.keySet()) {
+            setPaneOption(myFlattenPackages, flattenPackages, pane, true);
         }
+
         setPaneOption(myFlattenPackages, flattenPackages, paneId, true);
     }
 
     @Override
     public boolean isFoldersAlwaysOnTop() {
-        if (isGlobalOptions()) {
-            return getGlobalOptions().getFoldersAlwaysOnTop();
-        }
-
-        return myFoldersAlwaysOnTop;
+        return getGlobalOptions().isFoldersAlwaysOnTop();
     }
 
     public void setFoldersAlwaysOnTop(boolean foldersAlwaysOnTop) {
-        if (isGlobalOptions()) {
-            getGlobalOptions().setFoldersAlwaysOnTop(foldersAlwaysOnTop);
-        }
+        getGlobalOptions().setFoldersAlwaysOnTop(foldersAlwaysOnTop);
 
         if (myFoldersAlwaysOnTop != foldersAlwaysOnTop) {
             myFoldersAlwaysOnTop = foldersAlwaysOnTop;
@@ -1641,11 +1604,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     @Override
     public boolean isShowMembers(String paneId) {
-        if (isGlobalOptions()) {
-            return getGlobalOptions().getShowMembers();
-        }
-
-        return getPaneOptionValue(myShowMembers, paneId, ourShowMembersDefaults);
+        return getGlobalOptions().isShowMembers();
     }
 
     @RequiredUIAccess
@@ -1655,37 +1614,24 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     @Override
     public boolean isHideEmptyMiddlePackages(String paneId) {
-        if (isGlobalOptions()) {
-            return getGlobalOptions().getHideEmptyPackages();
-        }
-
-        return getPaneOptionValue(myHideEmptyPackages, paneId, ourHideEmptyPackagesDefaults);
+        return getGlobalOptions().isHideEmptyPackages();
     }
 
     @Override
     public boolean isAbbreviatePackageNames(String paneId) {
-        if (isGlobalOptions()) {
-            return getGlobalOptions().getAbbreviatePackages();
-        }
-
-        return getPaneOptionValue(myAbbreviatePackageNames, paneId, ourAbbreviatePackagesDefaults);
+        return getGlobalOptions().isAbbreviatePackages();
     }
 
     @Override
     public boolean isShowLibraryContents(String paneId) {
-        if (isGlobalOptions()) {
-            return getGlobalOptions().getShowLibraryContents();
-        }
-
-        return getPaneOptionValue(myShowLibraryContents, paneId, ourShowLibraryContentsDefaults);
+        return getGlobalOptions().isShowLibraryContents();
     }
 
     @Override
     @RequiredUIAccess
     public void setShowLibraryContents(boolean showLibraryContents, @Nonnull String paneId) {
-        if (isGlobalOptions()) {
-            getGlobalOptions().setShowLibraryContents(showLibraryContents);
-        }
+        getGlobalOptions().setShowLibraryContents(showLibraryContents);
+
         setPaneOption(myShowLibraryContents, showLibraryContents, paneId, true);
     }
 
@@ -1697,40 +1643,34 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     @Override
     public boolean isShowModules(String paneId) {
-        if (isGlobalOptions()) {
-            return getGlobalOptions().getShowModules();
-        }
-
-        return getPaneOptionValue(myShowModules, paneId, ourShowModulesDefaults);
+        return getGlobalOptions().getShowModules();
     }
 
     @Override
     @RequiredUIAccess
     public void setShowModules(boolean showModules, @Nonnull String paneId) {
-        if (isGlobalOptions()) {
-            getGlobalOptions().setShowModules(showModules);
-        }
+        getGlobalOptions().setShowModules(showModules);
+
         setPaneOption(myShowModules, showModules, paneId, true);
     }
 
     @Override
     @RequiredUIAccess
     public void setHideEmptyPackages(boolean hideEmptyPackages, @Nonnull String paneId) {
-        if (isGlobalOptions()) {
-            getGlobalOptions().setHideEmptyPackages(hideEmptyPackages);
-            for (String pane : myHideEmptyPackages.keySet()) {
-                setPaneOption(myHideEmptyPackages, hideEmptyPackages, pane, true);
-            }
+        getGlobalOptions().setHideEmptyPackages(hideEmptyPackages);
+
+        for (String pane : myHideEmptyPackages.keySet()) {
+            setPaneOption(myHideEmptyPackages, hideEmptyPackages, pane, true);
         }
+
         setPaneOption(myHideEmptyPackages, hideEmptyPackages, paneId, true);
     }
 
     @Override
     @RequiredUIAccess
     public void setAbbreviatePackageNames(boolean abbreviatePackageNames, @Nonnull String paneId) {
-        if (isGlobalOptions()) {
-            getGlobalOptions().setAbbreviatePackages(abbreviatePackageNames);
-        }
+        getGlobalOptions().setAbbreviatePackages(abbreviatePackageNames);
+
         setPaneOption(myAbbreviatePackageNames, abbreviatePackageNames, paneId, true);
     }
 
@@ -1765,9 +1705,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             SelectionInfo selectionInfo = SelectionInfo.create(viewPane);
 
-            if (isGlobalOptions()) {
-                getGlobalOptions().setHideEmptyPackages(flag);
-            }
+            getGlobalOptions().setHideEmptyPackages(flag);
+
             super.setSelected(event, flag);
 
             selectionInfo.apply(viewPane);
@@ -1775,10 +1714,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
         @Override
         public boolean isSelected(@Nonnull AnActionEvent event) {
-            if (isGlobalOptions()) {
-                return getGlobalOptions().getHideEmptyPackages();
-            }
-            return super.isSelected(event);
+            return getGlobalOptions().isHideEmptyPackages();
         }
 
         @RequiredUIAccess
