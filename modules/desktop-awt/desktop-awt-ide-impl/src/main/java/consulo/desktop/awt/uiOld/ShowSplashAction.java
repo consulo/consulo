@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 
 import java.awt.event.*;
@@ -30,7 +29,7 @@ import java.util.concurrent.Future;
 /**
  * @author Konstantin Bulenkov
  */
-public class ShowSplashAction extends AnAction {
+public class ShowSplashAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
