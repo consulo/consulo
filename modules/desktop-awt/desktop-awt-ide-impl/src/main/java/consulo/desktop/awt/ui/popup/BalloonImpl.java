@@ -226,7 +226,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     private final Color myBorderColor;
     private final Insets myBorderInsets;
     private Color myFillColor;
-    private Color myPointerColor;
 
     private final Insets myContainerInsets;
 
@@ -257,14 +256,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
     public void setFillColor(Color fillColor) {
         myFillColor = fillColor;
-    }
-
-    public Color getPointerColor() {
-        return myPointerColor;
-    }
-
-    public void setPointerColor(Color pointerColor) {
-        myPointerColor = pointerColor;
     }
 
     private final long myFadeoutTime;
@@ -2093,13 +2084,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
             g.setPaint(myFillColor);
             g.fill(shape);
-            if (myShowPointer && myPointerColor != null) {
-                Shape balloonShape = myPosition.getPointlessContentRec(myBounds, this.myPosition.getPointerLength(myDialogMode) + 1);
-                Area area = new Area(shape);
-                area.subtract(new Area(balloonShape));
-                g.setColor(myPointerColor);
-                g.fill(area);
-            }
+
             g.setColor(myBorderColor);
 
             if (myTitleLabel != null) {
