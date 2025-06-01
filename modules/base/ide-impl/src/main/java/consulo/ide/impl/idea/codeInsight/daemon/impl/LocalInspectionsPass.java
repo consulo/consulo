@@ -22,7 +22,6 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
@@ -284,7 +283,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             myRestrictRange,
             myPriorityRange,
             SHOULD_INSPECT_FILTER,
-            new CommonProcessors.CollectProcessor<>(allDivided)
+            allDivided::add
         );
         List<PsiElement> inside = ContainerUtil.concat((List<List<PsiElement>>)ContainerUtil.map(allDivided, d -> d.inside));
         List<PsiElement> outside =

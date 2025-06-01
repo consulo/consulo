@@ -42,7 +42,7 @@ import java.util.function.Supplier;
 /**
  * @author dyoma
  */
-public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, Cloneable, RunnerAndConfigurationSettings, Comparable {
+public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, Cloneable, RunnerAndConfigurationSettings, Comparable<RunnerAndConfigurationSettingsImpl> {
     private static final Logger LOG = Logger.getInstance(RunnerAndConfigurationSettingsImpl.class);
 
     private static final String RUNNER_ELEMENT = "RunnerSettings";
@@ -480,11 +480,8 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
     }
 
     @Override
-    public int compareTo(@Nonnull final Object o) {
-        if (o instanceof RunnerAndConfigurationSettings) {
-            return getName().compareTo(((RunnerAndConfigurationSettings) o).getName());
-        }
-        return 0;
+    public int compareTo(@Nonnull final RunnerAndConfigurationSettingsImpl r) {
+        return getName().compareTo(r.getName());
     }
 
     public void setFilePathIfRunningCurrentFile(String filePathIfRunningCurrentFile) {

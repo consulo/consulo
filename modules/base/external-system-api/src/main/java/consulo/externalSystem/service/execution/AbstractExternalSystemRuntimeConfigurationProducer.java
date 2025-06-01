@@ -99,7 +99,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
   }
 
   @Override
-  public int compareTo(@Nonnull Object o) {
+  public int compareTo(@Nonnull RuntimeConfigurationProducer o) {
     return PREFERED;
   }
 }

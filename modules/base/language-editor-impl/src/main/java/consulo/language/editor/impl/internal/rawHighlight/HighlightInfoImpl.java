@@ -716,6 +716,11 @@ public class HighlightInfoImpl implements HighlightInfo {
         public boolean equals(Object obj) {
             return obj instanceof IntentionActionDescriptor descriptor && myAction.equals(descriptor.myAction);
         }
+
+        @Override
+        public int hashCode() {
+            return myAction.hashCode();
+        }
     }
 
     @Override

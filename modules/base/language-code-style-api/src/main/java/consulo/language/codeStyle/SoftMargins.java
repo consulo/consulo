@@ -76,6 +76,7 @@ class SoftMargins implements Cloneable {
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(Object obj) {
         if (obj instanceof SoftMargins softMargins) {
             List<Integer> otherMargins = softMargins.getValues();

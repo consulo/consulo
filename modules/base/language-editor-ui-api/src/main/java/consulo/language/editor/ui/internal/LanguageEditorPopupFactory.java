@@ -23,10 +23,10 @@ import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.popup.JBPopup;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Map;
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -42,5 +42,9 @@ public interface LanguageEditorPopupFactory {
   PsiElementListNavigator.NavigateOrPopupBuilder builder(@Nonnull NavigatablePsiElement[] targets, String title);
 
   @Nonnull
-  JBPopup getPsiElementPopup(final Object[] elements, final Map<PsiElement, GotoRelatedItem> itemsMap, final String title, final boolean showContainingModules, final Predicate<Object> processor);
+  JBPopup getPsiElementPopup(Object[] elements,
+                             Map<PsiElement, GotoRelatedItem> itemsMap,
+                             String title,
+                             boolean showContainingModules,
+                             Consumer<Object> processor);
 }

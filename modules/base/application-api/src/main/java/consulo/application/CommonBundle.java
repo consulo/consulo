@@ -19,11 +19,9 @@ package consulo.application;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.BundleBase;
 import consulo.platform.Platform;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ResourceBundle;
@@ -35,15 +33,14 @@ import java.util.ResourceBundle;
 @DeprecationInfo("Use CommonLocalize")
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public class CommonBundle extends BundleBase {
-  public static boolean assertKeyIsFound = false;
+  private static final String BUNDLE = "consulo.application.CommonBundle";
 
-  @NonNls private static final String BUNDLE = "consulo.application.CommonBundle";
+  @Nullable
   private static Reference<ResourceBundle> ourBundle;
 
   private CommonBundle() {}
 
-  @Nonnull
-  public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, @Nonnull Object... params) {
+  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return message(getCommonBundle(), key, params);
   }
 
@@ -52,7 +49,7 @@ public class CommonBundle extends BundleBase {
     if (ourBundle != null) bundle = ourBundle.get();
     if (bundle == null) {
       bundle = ResourceBundle.getBundle(BUNDLE);
-      ourBundle = new SoftReference<ResourceBundle>(bundle);
+      ourBundle = new SoftReference<>(bundle);
     }
     return bundle;
   }
@@ -64,12 +61,10 @@ public class CommonBundle extends BundleBase {
     return BundleBase.messageOrDefault(bundle, key, defaultValue, params);
   }
 
-  @Nonnull
-  public static String message(@Nonnull ResourceBundle bundle, @Nonnull String key, @Nonnull Object... params) {
+  public static String message(ResourceBundle bundle, String key, Object... params) {
     return BundleBase.message(bundle, key, params);
   }
 
-  @Nonnull
   public static String getCancelButtonText() {
     return message("button.cancel");
   }

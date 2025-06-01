@@ -373,6 +373,7 @@ public abstract class MapReduceIndex<Key, Value, Input> implements InvertedIndex
     }
   }
 
+  @SuppressWarnings("IdentityBinaryExpression") // FIXME error about value.hashCode() == value.hashCode()
   public static <Key, Value> void checkValuesHaveProperEqualsAndHashCode(@Nonnull Map<Key, Value> data, @Nonnull IndexId<Key, Value> indexId, @Nonnull DataExternalizer<Value> valueExternalizer) {
     if (DebugAssertions.DEBUG) {
       for (Map.Entry<Key, Value> e : data.entrySet()) {

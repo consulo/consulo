@@ -44,7 +44,7 @@ import java.util.List;
  * @deprecated please use {@link RunConfigurationProducer} instead
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class RuntimeConfigurationProducer implements Comparable, Cloneable {
+public abstract class RuntimeConfigurationProducer implements Comparable<RuntimeConfigurationProducer>, Cloneable {
   public static final ExtensionPointName<RuntimeConfigurationProducer> RUNTIME_CONFIGURATION_PRODUCER = ExtensionPointName.create(RuntimeConfigurationProducer.class);
 
   public static final Comparator<RuntimeConfigurationProducer> COMPARATOR = new ProducerComparator();

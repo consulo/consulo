@@ -49,7 +49,7 @@ import org.jdom.JDOMException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.function.BiPredicate;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -414,7 +414,6 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                     || ContainerUtil.find(remove, LANGUAGE_INJECTION_CONDITION) != null) {
                     FileContentUtil.reparseOpenedFiles();
                 }
-                return true;
             }
         );
     }
@@ -429,17 +428,17 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         final T add,
         final T remove,
         final List<? extends PsiElement> psiElementsToRemove,
-        final BiPredicate<T, T> actualProcessor
+        final BiConsumer<T, T> actualProcessor
     ) {
         final UndoableAction action = new GlobalUndoableAction() {
             @Override
             public void undo() {
-                actualProcessor.test(remove, add);
+                actualProcessor.accept(remove, add);
             }
 
             @Override
             public void redo() {
-                actualProcessor.test(add, remove);
+                actualProcessor.accept(add, remove);
             }
         };
         final List<PsiFile> psiFiles = ContainerUtil.mapNotNull(
@@ -452,7 +451,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                 for (PsiElement annotation : psiElementsToRemove) {
                     annotation.delete();
                 }
-                actualProcessor.test(add, remove);
+                actualProcessor.accept(add, remove);
                 ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
             }
 

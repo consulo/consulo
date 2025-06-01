@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
  * TODO [VISTALL] move all methods to InspectionProfile and drop
  */
 @Deprecated
-public interface Profile extends JDOMExternalizable, Comparable, Named {
+public interface Profile extends JDOMExternalizable, Comparable<Profile>, Named {
   void copyFrom(@Nonnull Profile profile);
 
   void setLocal(boolean isLocal);

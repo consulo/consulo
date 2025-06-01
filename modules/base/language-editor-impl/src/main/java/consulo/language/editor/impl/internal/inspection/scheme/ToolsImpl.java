@@ -468,6 +468,7 @@ public class ToolsImpl implements Tools {
   }
 
   @Override
+  @SuppressWarnings("EqualsHashCode")
   public boolean equals(Object o) {
     ToolsImpl tools = (ToolsImpl)o;
     if (myEnabled != tools.myEnabled) return false;
@@ -480,7 +481,6 @@ public class ToolsImpl implements Tools {
       }
     }
     return true;
-
   }
 
   public void setLevel(@Nonnull HighlightDisplayLevel level, @Nullable String scopeName, Project project) {

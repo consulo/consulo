@@ -151,10 +151,7 @@ public class TemporaryPlacesRegistry {
             nextPlace,
             place,
             Collections.<PsiElement>emptyList(),
-            (add, remove) -> {
-                addInjectionPlace(add);
-                return true;
-            }
+            (add, remove) -> addInjectionPlace(add)
         );
         return true;
     }
@@ -171,10 +168,7 @@ public class TemporaryPlacesRegistry {
             place,
             prevPlace,
             Collections.<PsiElement>emptyList(),
-            (add, remove) -> {
-                addInjectionPlace(add);
-                return true;
-            }
+            (add, remove) -> addInjectionPlace(add)
         );
     }
 

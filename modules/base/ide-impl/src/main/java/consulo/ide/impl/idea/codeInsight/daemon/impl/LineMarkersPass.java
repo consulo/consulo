@@ -99,7 +99,6 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
           }, myProject.getDisposed());
         });
         queryProviders(elements.outside, root, providersList, (element, info) -> lineMarkers.add(info));
-        return true;
       });
     }
 

@@ -67,7 +67,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 /**
  * @author mike
@@ -112,7 +112,7 @@ public class BraceHighlightingHandler {
     static void lookForInjectedAndMatchBracesInOtherThread(
         @Nonnull Editor editor,
         @Nonnull Alarm alarm,
-        @Nonnull Predicate<BraceHighlightingHandler> processor
+        @Nonnull Consumer<BraceHighlightingHandler> processor
     ) {
         UIAccess.assertIsUIThread();
         if (!isValidEditor(editor)) {
@@ -152,7 +152,7 @@ public class BraceHighlightingHandler {
                             if (isValidEditor(editor) && isValidFile(injected)) {
                                 Editor newEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(editor, injected);
                                 BraceHighlightingHandler handler = new BraceHighlightingHandler(project, newEditor, alarm, injected);
-                                processor.test(handler);
+                                processor.accept(handler);
                             }
                         }
                         finally {

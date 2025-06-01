@@ -24,7 +24,6 @@ import consulo.module.ModuleManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
 import consulo.ui.ComboBox;
 import consulo.ui.PseudoComponent;
@@ -34,9 +33,9 @@ import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -75,6 +74,7 @@ public class BundleBox implements PseudoComponent {
       return bundle != null ? bundle.getName() : null;
     }
 
+    @SuppressWarnings("EqualsHashCode")
     public abstract boolean equals(Object o);
   }
 
@@ -216,6 +216,7 @@ public class BundleBox implements PseudoComponent {
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(Object o) {
       return o instanceof NullBundleBoxItem;
     }

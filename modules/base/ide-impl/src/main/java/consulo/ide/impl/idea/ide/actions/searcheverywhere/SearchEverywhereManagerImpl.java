@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.wm.WindowManager;
@@ -66,11 +65,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
         Project project = initEvent.getData(Project.KEY);
         Component contextComponent = initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         List<SearchEverywhereContributor<?>> serviceContributors = Collections.emptyList();
-        Arrays.asList(
-            //new TopHitSEContributor(project, contextComponent, s -> mySearchEverywhereUI.getSearchField().setValue(s)),
-            new RecentFilesSEContributor(project, GotoActionBase.getPsiContext(initEvent)),
-            new RunConfigurationsSEContributor(project, contextComponent, () -> mySearchEverywhereUI.getSearchField().getValue())
-        );
+
         List<SearchEverywhereContributor<?>> contributors = new ArrayList<>(serviceContributors);
         myProject.getApplication().getExtensionPoint(SearchEverywhereContributorFactory.class)
             .collectMapped(contributors, factory -> factory.createContributor(initEvent));

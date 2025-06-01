@@ -6,7 +6,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
@@ -186,7 +185,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                 myRestrictRange,
                 myPriorityRange,
                 SHOULD_HIGHLIGHT_FILTER,
-                new CommonProcessors.CollectProcessor<>(dividedElements)
+                dividedElements::add
             );
             List<PsiElement> allInsideElements =
                 ContainerUtil.concat((List<List<PsiElement>>)ContainerUtil.map(dividedElements, dividedForRoot -> {

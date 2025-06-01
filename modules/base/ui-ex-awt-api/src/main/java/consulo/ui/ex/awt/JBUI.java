@@ -805,6 +805,7 @@ public class JBUI {
         }
 
         @Override
+        @SuppressWarnings("EqualsHashCode")
         public boolean equals(Object obj) {
             if (obj == this) {
                 return true;
@@ -1117,6 +1118,7 @@ public class JBUI {
         }
 
         @Override
+        @SuppressWarnings("EqualsHashCode")
         public boolean equals(Object obj) {
             if (super.equals(obj) && obj instanceof ScaleContext) {
                 ScaleContext that = (ScaleContext) obj;

@@ -23,6 +23,7 @@ import jakarta.annotation.Nullable;
 /**
  * @author Dmitry Avdeev
  */
+@SuppressWarnings("ComparableType")
 class GutterIntentionAction implements Comparable<IntentionAction>, Iconable, ShortcutProvider, PriorityAction, SyntheticIntentionAction {
   private final AnAction myAction;
   private final int myOrder;

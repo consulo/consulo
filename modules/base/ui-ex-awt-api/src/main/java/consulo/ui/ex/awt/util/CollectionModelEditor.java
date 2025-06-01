@@ -25,7 +25,6 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
 public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>> implements ElementProducer<T> {
@@ -77,9 +76,8 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
         return false;
     }
 
-    public void processModifiedItems(@Nonnull final BiPredicate<T, T> processor) {
-        // don't want to expose TObjectObjectProcedure - avoid implementation details
-        helper.process((newItem, oldItem) -> processor.test(newItem, oldItem));
+    public void processModifiedItems(@Nonnull final BiConsumer<T, T> processor) {
+        helper.process(processor);
     }
 
     @Nonnull

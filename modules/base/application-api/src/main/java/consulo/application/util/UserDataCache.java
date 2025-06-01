@@ -19,6 +19,7 @@ package consulo.application.util;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @deprecated For recalculate-able caches, use {@link CachedValuesManager#getCachedValue},
@@ -30,7 +31,7 @@ import consulo.util.dataholder.UserDataHolderEx;
 @Deprecated
 public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> extends FieldCache<T, Owner, Key<T>, Param> {
   private static final RecursionGuard ourGuard = RecursionManager.createGuard("userDataCache");
-  private final Key<T> myKey;
+  private final @Nullable Key<T> myKey;
 
   protected UserDataCache() {
     myKey = null;

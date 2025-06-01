@@ -228,6 +228,8 @@ public class Tool implements SchemeElement {
     myOutputFilters = new ArrayList<>(Arrays.asList(source.getOutputFilters()));
   }
 
+  @SuppressWarnings("EqualsHashCode")
+  @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof Tool)) return false;
     Tool secondTool = (Tool)obj;

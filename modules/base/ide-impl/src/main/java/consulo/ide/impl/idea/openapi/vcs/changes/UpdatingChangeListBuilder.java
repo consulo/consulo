@@ -43,7 +43,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   private final Supplier<Boolean> myDisposedGetter;
   private VcsDirtyScope myScope;
   private FoldersCutDownWorker myFoldersCutDownWorker;
-  private final ChangeListManager myСhangeListManager;
+  private final ChangeListManager myChangeListManager;
   private final ProjectLevelVcsManager myVcsManager;
   private final ChangeListManagerGate myGate;
   private Supplier<JComponent> myAdditionalInfo;
@@ -51,12 +51,12 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   UpdatingChangeListBuilder(final ChangeListWorker changeListWorker,
                             final FileHolderComposite composite,
                             final Supplier<Boolean> disposedGetter,
-                            final ChangeListManager сhangeListManager,
+                            final ChangeListManager changeListManager,
                             final ChangeListManagerGate gate) {
     myChangeListWorker = changeListWorker;
     myComposite = composite;
     myDisposedGetter = disposedGetter;
-    myСhangeListManager = сhangeListManager;
+    myChangeListManager = changeListManager;
     myGate = gate;
     myVcsManager = ProjectLevelVcsManager.getInstance(changeListWorker.getProject());
   }
@@ -137,7 +137,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     checkIfDisposed();
     if (isIgnoredByVcs(file)) return;
     if (myScope.belongsTo(VcsUtil.getFilePath(file))) {
-      if (myСhangeListManager.isIgnoredFile(file)) {
+      if (myChangeListManager.isIgnoredFile(file)) {
         myComposite.getIgnoredFileHolder().addFile(file);
       }
       else if (myComposite.getIgnoredFileHolder().containsFile(file)) {

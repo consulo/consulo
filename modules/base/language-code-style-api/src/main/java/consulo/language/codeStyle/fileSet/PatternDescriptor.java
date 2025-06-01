@@ -171,6 +171,7 @@ public class PatternDescriptor implements FileSetDescriptor {
   }
 
   @Override
+  @SuppressWarnings("EqualsHashCode")
   public boolean equals(Object obj) {
     return obj instanceof PatternDescriptor && Comparing.equal(myRawPattern, ((PatternDescriptor)obj).getPattern());
   }

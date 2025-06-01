@@ -91,6 +91,7 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(Object o) {
         if (this == o) {
             return true;

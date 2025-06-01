@@ -72,7 +72,7 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
     XmlSerializerUtil.copyBean(state, this);
   }
 
-  public static class LinkMatch implements Comparable {
+  public static class LinkMatch implements Comparable<LinkMatch> {
     private final TextRange myRange;
     private final String myTargetUrl;
 
@@ -90,11 +90,7 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
     }
 
     @Override
-    public int compareTo(@Nonnull Object o) {
-      if (!(o instanceof LinkMatch)) {
-        return 0;
-      }
-      LinkMatch rhs = (LinkMatch)o;
+    public int compareTo(@Nonnull LinkMatch rhs) {
       return myRange.getStartOffset() - rhs.getRange().getStartOffset();
     }
   }

@@ -68,9 +68,6 @@ class LocalFileSystemRefreshWorker {
       root.markClean();
       return;
     }
-    if (rootAttributes.isDirectory()) {
-      fs = fs;
-    }
 
     RefreshContext context = createRefreshContext(fs, PersistentFS.getInstance(), FilePathHashingStrategy.create(fs.isCaseSensitive()));
     context.submitRefreshRequest(() -> processFile(root, context));

@@ -16,6 +16,7 @@ import jakarta.annotation.Nonnull;
  * Note, that this action should be non-selectable in any UI, since it does
  * not have any implementation for invoke.
  */
+@SuppressWarnings("ComparableType") // FIXME [VISTALL] need understand why comparable used here
 public class ChoiceTitleIntentionAction extends AbstractEmptyIntentionAction implements CustomizableIntentionAction, SyntheticIntentionAction, LocalQuickFix, Comparable<IntentionAction> {
   private final String myTitle;
 

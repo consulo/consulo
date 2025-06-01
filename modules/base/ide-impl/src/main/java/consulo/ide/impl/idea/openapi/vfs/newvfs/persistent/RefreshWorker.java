@@ -72,9 +72,6 @@ public class RefreshWorker {
 
     NewVirtualFile root = myRefreshQueue.pullFirst();
     NewVirtualFileSystem fs = root.getFileSystem();
-    if (root.isDirectory()) {
-      fs = fs;
-    }
     PersistentFS persistence = PersistentFS.getInstance();
 
     FileAttributes attributes = fs.getAttributes(root);

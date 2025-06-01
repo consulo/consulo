@@ -47,6 +47,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Objects;
 
@@ -185,7 +186,7 @@ public class ActionsTree {
 
     Shortcut[] oldShortcuts = oldKeymap.getShortcuts(actionId);
     Shortcut[] newShortcuts = newKeymap.getShortcuts(actionId);
-    return !Objects.equals(oldShortcuts, newShortcuts);
+    return !Arrays.equals(oldShortcuts, newShortcuts);
   }
 
   private static boolean isGroupChanged(KeymapGroupImpl group, Keymap oldKeymap, Keymap newKeymap) {

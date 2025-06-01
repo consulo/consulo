@@ -55,6 +55,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@SuppressWarnings("ComparableType")
 public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointProperties, S extends BreakpointState> extends UserDataHolderBase implements XBreakpoint<P>, Comparable<Self> {
     private static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
     private static final String BR_NBSP = "<br>" + CommonXmlStrings.NBSP;

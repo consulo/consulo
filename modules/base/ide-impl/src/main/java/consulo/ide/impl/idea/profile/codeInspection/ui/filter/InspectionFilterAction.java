@@ -39,6 +39,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -189,7 +190,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
 
     @Override
     public boolean isSelected(final AnActionEvent e) {
-      return myInspectionsFilter.getSuitableInspectionsStates() == myShowEnabledActions;
+      return Objects.equals(myInspectionsFilter.getSuitableInspectionsStates(), myShowEnabledActions);
     }
 
     @Override

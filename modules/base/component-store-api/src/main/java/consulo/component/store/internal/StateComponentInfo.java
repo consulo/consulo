@@ -119,6 +119,7 @@ public class StateComponentInfo<T> {
   }
 
   @Override
+  @SuppressWarnings("EqualsHashCode")
   public boolean equals(Object obj) {
     return obj instanceof StateComponentInfo && ((StateComponentInfo)obj).getComponent().equals(((StateComponentInfo)obj).getComponent());
   }

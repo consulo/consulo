@@ -168,7 +168,6 @@ public final class PopupNavigationUtil {
             else {
                 ((GotoRelatedItem)element).navigate();
             }
-            return true;
         });
     }
 

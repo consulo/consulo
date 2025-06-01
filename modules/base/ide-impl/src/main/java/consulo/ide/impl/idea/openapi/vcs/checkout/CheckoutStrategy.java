@@ -20,7 +20,7 @@ import java.io.File;
 /**
  * author: lesya
  */
-public abstract class CheckoutStrategy implements Comparable{
+public abstract class CheckoutStrategy implements Comparable<CheckoutStrategy> {
   private final File mySelectedLocation;
   private final File myCvsPath;
   private final boolean myIsForFile;
@@ -40,11 +40,8 @@ public abstract class CheckoutStrategy implements Comparable{
     };
   }
 
-  public int compareTo(Object o) {
-    if (o instanceof CheckoutStrategy){
-      return getResult().compareTo(((CheckoutStrategy)o).getResult());
-    }
-    return 0;
+  public int compareTo(CheckoutStrategy o) {
+    return getResult().compareTo(((CheckoutStrategy)o).getResult());
   }
 
   public File getSelectedLocation() {

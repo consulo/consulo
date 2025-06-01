@@ -153,6 +153,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;

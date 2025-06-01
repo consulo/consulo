@@ -24,6 +24,8 @@ import consulo.util.dataholder.KeyWithDefaultValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
  * @since 09.05.2015
@@ -42,7 +44,7 @@ public interface ProjectViewPaneOptionProvider<T> {
     @Nullable
     @Override
     public String toString(@Nullable Boolean value) {
-      if(value == null || getKey().getDefaultValue() == value) {
+      if(value == null || Objects.equals(getKey().getDefaultValue(), value)) {
         return null;
       }
       return value.toString();

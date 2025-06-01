@@ -20,7 +20,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.application.util.registry.Registry;
@@ -30,6 +29,7 @@ import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
@@ -42,7 +42,6 @@ import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.editor.util.CollectHighlightsUtil;
-import consulo.document.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -54,9 +53,9 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
@@ -84,7 +83,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     if (!Registry.is("editor.injected.highlighting.enabled")) return;
 
     List<Divider.DividedElements> allDivided = new ArrayList<>();
-    Divider.divideInsideAndOutsideAllRoots(myFile, myRestrictRange, myPriorityRange, SHOULD_HIGHLIGHT_FILTER, new CommonProcessors.CollectProcessor<>(allDivided));
+    Divider.divideInsideAndOutsideAllRoots(myFile, myRestrictRange, myPriorityRange, SHOULD_HIGHLIGHT_FILTER, allDivided::add);
 
     List<PsiElement> allInsideElements = ContainerUtil.concat((List<List<PsiElement>>)ContainerUtil.map(allDivided, d -> d.inside));
     List<PsiElement> allOutsideElements = ContainerUtil.concat((List<List<PsiElement>>)ContainerUtil.map(allDivided, d -> d.outside));

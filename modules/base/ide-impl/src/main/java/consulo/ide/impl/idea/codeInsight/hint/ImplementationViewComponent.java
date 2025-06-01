@@ -352,6 +352,7 @@ public class ImplementationViewComponent extends JPanel {
     }
 
     @RequiredUIAccess
+    @SuppressWarnings("ReturnValueIgnored") // ignored result of fun call
     private static void update(
         @Nonnull PsiElement[] elements,
         @RequiredUIAccess @Nonnull BiFunction<PsiElement[], List<FileDescriptor>, Boolean> fun

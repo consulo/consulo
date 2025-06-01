@@ -15,6 +15,7 @@ import jakarta.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -61,7 +62,7 @@ public final class TransientCodeStyleSettings extends CodeStyleSettings {
         @Nullable PsiFile file,
         @Nullable TextRange formatRange,
         boolean ignoreDocOptions,
-        @Nullable Predicate<FileIndentOptionsProvider> providerProcessor
+        @Nullable Consumer<FileIndentOptionsProvider> providerProcessor
     ) {
         if (file != null && file.isValid()) {
             FileType fileType = file.getFileType();

@@ -33,6 +33,7 @@ import jakarta.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class Divider {
@@ -67,7 +68,7 @@ public class Divider {
                                                     @Nonnull TextRange restrictRange,
                                                     @Nonnull TextRange priorityRange,
                                                     @Nonnull Predicate<PsiFile> rootFilter,
-                                                    @Nonnull Predicate<DividedElements> processor) {
+                                                    @Nonnull Consumer<DividedElements> processor) {
     final FileViewProvider viewProvider = file.getViewProvider();
     for (Language language : viewProvider.getLanguages()) {
       final PsiFile root = viewProvider.getPsi(language);
@@ -78,7 +79,7 @@ public class Divider {
     }
   }
 
-  public static void divideInsideAndOutsideInOneRoot(@Nonnull PsiFile root, @Nonnull TextRange restrictRange, @Nonnull TextRange priorityRange, @Nonnull Predicate<DividedElements> processor) {
+  public static void divideInsideAndOutsideInOneRoot(@Nonnull PsiFile root, @Nonnull TextRange restrictRange, @Nonnull TextRange priorityRange, @Nonnull Consumer<DividedElements> processor) {
     long modificationStamp = root.getModificationStamp();
     DividedElements cached = SoftReference.dereference(root.getUserData(DIVIDED_ELEMENTS_KEY));
     DividedElements elements;
@@ -91,7 +92,7 @@ public class Divider {
     else {
       elements = cached;
     }
-    processor.test(elements);
+    processor.accept(elements);
   }
 
   private static final PsiElement HAVE_TO_GET_CHILDREN = PsiUtilCore.NULL_PSI_ELEMENT;

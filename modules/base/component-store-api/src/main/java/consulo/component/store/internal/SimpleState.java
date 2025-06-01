@@ -26,7 +26,9 @@ import java.lang.annotation.Annotation;
  * @author VISTALL
  * @since 27-Feb-17
  */
+@SuppressWarnings("BadAnnotationImplementation")
 public class SimpleState implements State {
+  @SuppressWarnings("BadAnnotationImplementation")
   private static class SimpleStorage implements Storage {
     private String myFileSpec;
     private RoamingType myType;

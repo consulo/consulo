@@ -24,6 +24,7 @@ import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -49,7 +50,7 @@ class WindowsScrollBarOptionTracker implements AWTEventListener {
     Boolean oldValue = myDynamicScrollBars;
     myDynamicScrollBars = calcState();
 
-    if (oldValue != myDynamicScrollBars) {
+    if (!Objects.equals(oldValue, myDynamicScrollBars)) {
       SwingUtilities.invokeLater(this::updateAll);
     }
   }

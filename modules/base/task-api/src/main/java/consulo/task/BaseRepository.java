@@ -94,6 +94,7 @@ public abstract class BaseRepository extends TaskRepository {
   public abstract BaseRepository clone();
 
   @Override
+  @SuppressWarnings("EqualsHashCode")
   public boolean equals(Object o) {
     if (this == o) {
       return true;

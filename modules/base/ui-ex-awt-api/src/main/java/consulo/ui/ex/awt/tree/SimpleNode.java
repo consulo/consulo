@@ -29,14 +29,14 @@ import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 public abstract class SimpleNode extends PresentableNodeDescriptor implements ComparableObject, LeafState.Supplier {
   protected static final SimpleNode[] NO_CHILDREN = new SimpleNode[0];
@@ -207,8 +207,8 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
 
   public abstract SimpleNode[] getChildren();
 
-  public void accept(Predicate<SimpleNode> visitor) {
-    visitor.test(this);
+  public void accept(Consumer<SimpleNode> visitor) {
+    visitor.accept(this);
   }
 
   public void handleSelection(SimpleTree tree) {

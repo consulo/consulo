@@ -286,6 +286,7 @@ public abstract class TaskRepository {
   private TaskRepositoryType myType;
 
   @Override
+  @SuppressWarnings("EqualsHashCode")
   public boolean equals(Object o) {
     if (this == o) {
       return true;

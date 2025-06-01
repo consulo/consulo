@@ -216,6 +216,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   }
 
   @Override
+  @SuppressWarnings("EqualsHashCode")
   public final boolean equals(Object obj) {
     return obj == this;
   }

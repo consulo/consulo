@@ -132,7 +132,7 @@ public class VisibleTreeState{
   }
 
 
-  public static class State implements Comparable{
+  public static class State implements Comparable<State> {
     @Tag("id")
     public String myKey;
     Descriptor myDescriptor;
@@ -170,9 +170,7 @@ public class VisibleTreeState{
     }
 
     @Override
-    public int compareTo(Object o) {
-      if (!(o instanceof State)) return -1;
-      final State other = (State)o;
+    public int compareTo(State other) {
       if (myKey.equals(other.myKey)) {
         if (myDescriptor != null && other.myDescriptor != null) {
           final String scope1 = myDescriptor.getScopeName();

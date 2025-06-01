@@ -121,6 +121,7 @@ public class DFAMap<V> {
   }
 
   @Override
+  @SuppressWarnings("EqualsHashCode")
   public boolean equals(Object obj) {
     if (!(obj instanceof DFAMap)) return false;
     @SuppressWarnings({"unchecked"}) DFAMap<V> rhs = (DFAMap<V>) obj;

@@ -178,6 +178,7 @@ public class VcsRootIterator {
    * Invoke the {@code iterator} for all files in the dirty scope.
    * For recursively dirty directories all children are processed.
    */
+  @SuppressWarnings("ReturnValueIgnored")
   public static void iterate(@Nonnull VcsDirtyScope scope, @Nonnull Predicate<? super FilePath> iterator) {
     Project project = scope.getProject();
     if (project.isDisposed()) return;
@@ -200,6 +201,7 @@ public class VcsRootIterator {
     }
   }
 
+  @SuppressWarnings("ReturnValueIgnored")
   public static void iterateExistingInsideScope(@Nonnull VcsDirtyScope scope, @Nonnull Predicate<? super VirtualFile> iterator) {
     Project project = scope.getProject();
     if (project.isDisposed()) return;

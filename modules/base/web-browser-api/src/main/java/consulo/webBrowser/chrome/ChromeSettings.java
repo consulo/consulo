@@ -95,6 +95,7 @@ public final class ChromeSettings extends BrowserSpecificSettings {
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(Object o) {
         if (this == o) {
             return true;

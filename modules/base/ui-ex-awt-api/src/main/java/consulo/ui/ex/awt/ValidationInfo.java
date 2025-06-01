@@ -111,4 +111,9 @@ public final class ValidationInfo {
             && this.okEnabled == that.okEnabled
             && this.warning == that.warning;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(message, component, okEnabled, warning);
+    }
 }

@@ -41,7 +41,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -1090,7 +1090,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
         @Nullable PsiFile file,
         @Nullable TextRange formatRange,
         boolean ignoreDocOptions,
-        @Nullable Predicate<FileIndentOptionsProvider> providerProcessor
+        @Nullable Consumer<FileIndentOptionsProvider> providerProcessor
     ) {
         if (file != null && file.isValid()) {
             boolean isFullReformat = isFileFullyCoveredByRange(file, formatRange);
@@ -1099,7 +1099,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
                 if (options != null) {
                     FileIndentOptionsProvider provider = options.getFileIndentOptionsProvider();
                     if (providerProcessor != null && provider != null) {
-                        providerProcessor.test(provider);
+                        providerProcessor.accept(provider);
                     }
                     return options;
                 }
@@ -1110,7 +1110,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
                     CommonCodeStyleSettings.IndentOptions indentOptions = provider.getIndentOptions(this, file);
                     if (indentOptions != null) {
                         if (providerProcessor != null) {
-                            providerProcessor.test(provider);
+                            providerProcessor.accept(provider);
                         }
                         indentOptions.setFileIndentOptionsProvider(provider);
                         logIndentOptions(file, provider, indentOptions);
@@ -1492,6 +1492,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(Object obj) {
         return obj == this
             || obj instanceof CodeStyleSettings that

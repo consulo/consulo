@@ -24,17 +24,17 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 2024-12-05
  */
 public class PinToToolWindowAction extends DumbAwareAction {
-    private final Predicate<? super JBPopup> myPinTester;
+    private final Consumer<? super JBPopup> myPinTester;
     private final JBPopup myPopup;
 
-    public PinToToolWindowAction(Predicate<? super JBPopup> pinTester, Image icon, JBPopup popup) {
+    public PinToToolWindowAction(Consumer<? super JBPopup> pinTester, Image icon, JBPopup popup) {
         super(IdeLocalize.showInFindWindowButtonName(), LocalizeValue.of(), icon);
         myPinTester = pinTester;
         myPopup = popup;
@@ -43,6 +43,6 @@ public class PinToToolWindowAction extends DumbAwareAction {
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        myPinTester.test(myPopup);
+        myPinTester.accept(myPopup);
     }
 }

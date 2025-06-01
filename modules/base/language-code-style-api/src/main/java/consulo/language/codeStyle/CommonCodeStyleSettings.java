@@ -1059,6 +1059,7 @@ public class CommonCodeStyleSettings {
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(Object obj) {
         if (obj instanceof CommonCodeStyleSettings) {
             if (ReflectionUtil.comparePublicNonFinalFields(this, obj) &&

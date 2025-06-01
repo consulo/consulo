@@ -20,7 +20,6 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.util.function.CommonProcessors;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
@@ -173,7 +172,7 @@ public class InspectionEngine {
             range,
             range,
             Predicates.alwaysTrue(),
-            new CommonProcessors.CollectProcessor<>(allDivided)
+            allDivided::add
         );
 
         List<PsiElement> elements = ContainerUtil.concat(

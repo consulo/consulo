@@ -68,6 +68,7 @@ public class DefaultPatchBaseVersionProvider {
     myRevisionPattern = null;
   }
 
+  @SuppressWarnings("ReturnValueIgnored")
   public void getBaseVersionContent(
     final FilePath filePath,
     final Predicate<CharSequence> processor,

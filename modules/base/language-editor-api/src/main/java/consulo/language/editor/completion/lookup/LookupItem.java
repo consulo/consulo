@@ -35,7 +35,7 @@ import java.util.Set;
 /**
  * This class represents an item of a lookup list.
  */
-public class LookupItem<T> extends MutableLookupElement<T> implements Comparable {
+public class LookupItem<T> extends MutableLookupElement<T> implements Comparable<LookupItem<?>> {
     public static final ClassConditionKey<LookupItem> CLASS_CONDITION_KEY = ClassConditionKey.create(LookupItem.class);
 
     public static final Object HIGHLIGHTED_ATTR = Key.create("highlighted");
@@ -241,14 +241,8 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
     }
 
     @Override
-    public int compareTo(@Nonnull Object o) {
-        if (o instanceof String string) {
-            return getLookupString().compareTo(string);
-        }
-        if (!(o instanceof LookupItem)) {
-            throw new RuntimeException("Trying to compare LookupItem with " + o.getClass() + "!!!");
-        }
-        return getLookupString().compareTo(((LookupItem)o).getLookupString());
+    public int compareTo(@Nonnull LookupItem<?> o) {
+        return getLookupString().compareTo(o.getLookupString());
     }
 
     @Override

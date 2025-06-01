@@ -56,6 +56,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @ExtensionImpl
@@ -114,7 +115,6 @@ public class InjectLanguageAction implements IntentionAction {
                     invokeImpl(project, editor, file, injectable);
                 }
             });
-            return false;
         });
     }
 
@@ -167,7 +167,7 @@ public class InjectLanguageAction implements IntentionAction {
         return Configuration.getProjectInstance(host.getProject()).setHostInjectionEnabled(host, Collections.singleton(id), true);
     }
 
-    private static boolean doChooseLanguageToInject(Editor editor, final Predicate<Injectable> onChosen) {
+    private static boolean doChooseLanguageToInject(Editor editor, Consumer<Injectable> onChosen) {
         final List<Injectable> injectables = getAllInjectables();
 
         IPopupChooserBuilder<Injectable> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(injectables);
@@ -192,7 +192,7 @@ public class InjectLanguageAction implements IntentionAction {
 
         builder = builder.setItemSelectedCallback(value -> {
             if (value != null) {
-                onChosen.test(value);
+                onChosen.accept(value);
                 ApplicationPropertiesComponent.getInstance().setValue(LAST_INJECTED_LANGUAGE, value.getId());
             }
         });

@@ -277,6 +277,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
     // whose state (active=true->false) changes over time due to long computation.
     //
     @Override
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(Object obj) {
         return obj instanceof CodeStyleCachedValueProvider valueProvider
             && Objects.equals(this.myFileRef.get(), valueProvider.myFileRef.get());

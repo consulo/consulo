@@ -58,6 +58,7 @@ public class ExcludedFiles {
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(@Nonnull Object o) {
         return o instanceof ExcludedFiles excludedFiles && myDescriptors.equals(excludedFiles.myDescriptors);
     }

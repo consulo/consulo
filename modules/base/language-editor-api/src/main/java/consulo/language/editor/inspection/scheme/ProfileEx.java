@@ -148,11 +148,8 @@ public abstract class ProfileEx implements Profile {
   }
 
   @Override
-  public int compareTo(@Nonnull Object o) {
-    if (o instanceof Profile) {
-      return getName().compareToIgnoreCase(((Profile)o).getName());
-    }
-    return 0;
+  public int compareTo(@Nonnull Profile o) {
+    return getName().compareToIgnoreCase(o.getName());
   }
 
   public void convert(@Nonnull Element element, @Nonnull Project project) {

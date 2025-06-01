@@ -17,6 +17,7 @@ import jakarta.annotation.Nullable;
  * Actions requires [index] param so it can maintain order of variants in
  * quick-fix popup.
  */
+@SuppressWarnings("ComparableType") // FIXME [VISTALL] need understand why comparable used here
 public abstract class ChoiceVariantIntentionAction extends IntentionAndQuickFixAction implements HighlightInfoType.Iconable, Iconable, CustomizableIntentionAction, Comparable<IntentionAction> {
   public abstract int getIndex();
 

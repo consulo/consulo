@@ -46,6 +46,7 @@ public abstract class Content {
   }
 
   @Override
+  @SuppressWarnings("EqualsHashCode")
   public boolean equals(Object o) {
     return o != null && getClass().equals(o.getClass());
   }

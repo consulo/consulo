@@ -169,7 +169,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     return null;
   }
 
-  public static class ExtensionSortKey implements Comparable {
+  public static class ExtensionSortKey implements Comparable<ExtensionSortKey> {
     private final String myExtension;
 
     public ExtensionSortKey(final String extension) {
@@ -177,9 +177,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     }
 
     @Override
-    public int compareTo(final Object o) {
-      if (!(o instanceof ExtensionSortKey)) return 0;
-      ExtensionSortKey rhs = (ExtensionSortKey) o;
+    public int compareTo(final ExtensionSortKey rhs) {
       return myExtension.compareTo(rhs.myExtension);
     }
   }

@@ -13,6 +13,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -156,7 +157,6 @@ public class UpdaterTreeState {
                     if (myUi.getTree().isRootVisible() || !myUi.getTreeStructure().getRootElement().equals(o)) {
                         addSelection(o);
                     }
-                    return o;
                 }, originallySelected);
 
                 processAdjusted(adjusted, originallySelected).doWhenDone(new TreeRunnable("UpdaterTreeState.restore: on done") {
@@ -202,7 +202,7 @@ public class UpdaterTreeState {
         myCanRunRestore = true;
     }
 
-    private void processUnsuccessfulSelections(Object[] toSelect, Function<Object, Object> restore, Set<Object> originallySelected) {
+    private void processUnsuccessfulSelections(Object[] toSelect, Consumer<Object> restore, Set<Object> originallySelected) {
         Set<Object> selected = myUi.getSelectedElements();
 
         boolean wasFullyRejected = false;
@@ -223,7 +223,7 @@ public class UpdaterTreeState {
 
         for (Object eachToSelect : toSelect) {
             if (!selected.contains(eachToSelect)) {
-                restore.apply(eachToSelect);
+                restore.accept(eachToSelect);
             }
         }
     }
@@ -266,7 +266,6 @@ public class UpdaterTreeState {
                         else {
                             addAdjustedSelection(o, adjusted.get(o), null);
                         }
-                        return null;
                     }, originallySelected);
 
                     processHangByParent(hangByParent).notify(result);

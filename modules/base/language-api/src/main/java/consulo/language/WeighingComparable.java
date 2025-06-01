@@ -23,7 +23,8 @@ import java.util.function.Supplier;
  * @author peter
  */
 public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable<T, Loc>>, ForceableComparable {
-  private static final Comparable NULL = new Comparable() {
+  @SuppressWarnings("ComparableType")
+  private static final Comparable<Object> NULL = new Comparable<>() {
     @Override
     public int compareTo(final Object o) {
       throw new UnsupportedOperationException("Method compareTo is not yet implemented in " + getClass().getName());

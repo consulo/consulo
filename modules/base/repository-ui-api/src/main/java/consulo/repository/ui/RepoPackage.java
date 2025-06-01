@@ -6,7 +6,7 @@ import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
-public class RepoPackage implements Comparable {
+public class RepoPackage implements Comparable<RepoPackage> {
   private final String myName;
   @Nullable
   final String myRepoUrl;
@@ -48,8 +48,7 @@ public class RepoPackage implements Comparable {
   }
 
   @Override
-  public int compareTo(Object o) {
-    if (o instanceof RepoPackage r) return myName.compareTo(r.getName());
-    return 0;
+  public int compareTo(RepoPackage o) {
+    return myName.compareTo(o.getName());
   }
 }

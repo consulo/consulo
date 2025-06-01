@@ -20,8 +20,8 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -38,7 +38,7 @@ abstract class Timed<T> implements Disposable {
 
   private int myLastCheckedAccessCount;
   int myAccessCount;
-  protected T myT;
+  protected @Nullable T myT;
   private boolean myPolled;
 
   protected Timed(@Nullable final Disposable parentDisposable) {

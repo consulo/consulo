@@ -238,6 +238,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Nonnull
+    @SuppressWarnings("ReturnValueIgnored")
     protected AbstractPopup init(Project project,
                                  @Nonnull JComponent component,
                                  @Nullable JComponent preferredFocusedComponent,
@@ -342,7 +343,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                     .getInstanceEx(myProject != null ? myProject : ProjectUtil.guessCurrentProject((JComponent) myOwner))
                     .getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab());
 
-                rightActions.add(new PinToToolWindowAction(pinCallback, icon, this));
+                rightActions.add(new PinToToolWindowAction(pinCallback::test, icon, this));
             }
             else if (cancelButtonInfo != null) {
                 ClosePopupAction action = new ClosePopupAction(cancelButtonInfo.tooltipText(), cancelButtonInfo.icon(), this);

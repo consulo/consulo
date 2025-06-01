@@ -212,6 +212,7 @@ public class UITester {
     private Component tree(Disposable uiDisposable) {
       Tree<String> tree = Tree.create(new TreeModel<String>() {
         @Override
+        @SuppressWarnings("ReturnValueIgnored")
         public void buildChildren(@Nonnull Function<String, TreeNode<String>> nodeFactory, @Nullable String parentValue) {
           if (parentValue == null) {
             for (int i = 0; i < 50; i++) {

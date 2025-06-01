@@ -261,14 +261,12 @@ public class BackgroundHighlighter implements PostStartupActivity {
 
         BraceHighlightingHandler.lookForInjectedAndMatchBracesInOtherThread(editor, alarm, handler -> {
             handler.updateBraces();
-            return false;
         });
     }
 
     private void clearBraces(@Nonnull final Editor editor, @Nonnull Alarm braceAlarm) {
         BraceHighlightingHandler.lookForInjectedAndMatchBracesInOtherThread(editor, braceAlarm, handler -> {
             handler.clearBraceHighlighters();
-            return false;
         });
     }
 }
