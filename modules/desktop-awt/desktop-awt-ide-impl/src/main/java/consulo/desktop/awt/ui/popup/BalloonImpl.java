@@ -10,7 +10,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
-import consulo.document.util.UnfairTextRange;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
@@ -1310,41 +1309,13 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         protected abstract Insets getTitleInsets(int normalInset, int pointerLength);
 
-        boolean isOkToHavePointer(@Nonnull Point targetPoint, @Nonnull Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
-            if (bounds.x < targetPoint.x
-                && bounds.x + bounds.width > targetPoint.x
-                && bounds.y < targetPoint.y
-                && bounds.y + bounds.height > targetPoint.y) {
-                return false;
-            }
-
-            Rectangle pointless = getPointlessContentRec(bounds, pointerLength);
-
-            int distance = getDistanceToTarget(pointless, targetPoint);
-            if (distance < pointerLength - 1 || distance > 2 * pointerLength) {
-                return false;
-            }
-
-            UnfairTextRange balloonRange;
-            UnfairTextRange pointerRange;
-            if (isTopBottomPointer()) {
-                balloonRange = new UnfairTextRange(bounds.x + arc - 1, bounds.x + bounds.width - arc * 2 + 1);
-                pointerRange = new UnfairTextRange(targetPoint.x - pointerWidth / 2, targetPoint.x + pointerWidth / 2);
-            }
-            else {
-                balloonRange = new UnfairTextRange(bounds.y + arc - 1, bounds.y + bounds.height - arc * 2 + 1);
-                pointerRange = new UnfairTextRange(targetPoint.y - pointerWidth / 2, targetPoint.y + pointerWidth / 2);
-            }
-            return balloonRange.contains(pointerRange);
-        }
-
-        protected abstract int getDistanceToTarget(Rectangle rectangle, Point targetPoint);
-
         boolean isTopBottomPointer() {
             return false;
         }
 
         protected abstract Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength);
+
+        protected abstract Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc);
 
         @Nonnull
         Set<AbstractPosition> getOtherPositions() {
@@ -1419,13 +1390,30 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         @Override
-        protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
-            return rectangle.y - targetPoint.y;
-        }
-
-        @Override
         protected Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength) {
             return new Rectangle(bounds.x, bounds.y + pointerLength, bounds.width, bounds.height - pointerLength);
+        }
+
+        /**
+         *   +---------------+
+         *   |               |
+         *   | allowed range | <- pointerLength
+         *   |               |
+         * +-------------------+
+         * |                   |
+         * |      bounds       |
+         * |                   |
+         * +-------------------+
+         */
+        @Override
+        protected Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
+            int deadFromCorner = arc + (pointerWidth / 2) - 1;
+            return new Rectangle(
+                (int)bounds.getMinX() + deadFromCorner,
+                (int)bounds.getMinY() - pointerLength,
+                (int)bounds.getWidth() - deadFromCorner * 2,
+                pointerLength + 1
+            );
         }
 
         @Override
@@ -1488,13 +1476,30 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         @Override
-        protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
-            return targetPoint.y - (int)rectangle.getMaxY();
-        }
-
-        @Override
         protected Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength) {
             return new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height - pointerLength);
+        }
+
+        /**
+         * +-------------------+
+         * |                   |
+         * |      bounds       |
+         * |                   |
+         * +-------------------+
+         *   |               |
+         *   | allowed range | <- pointerLength
+         *   |               |
+         *   +---------------+
+         */
+        @Override
+        protected Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
+            int deadFromCorner = arc + (pointerWidth / 2) - 1;
+            return new Rectangle(
+                (int)bounds.getMinX() + deadFromCorner,
+                (int)bounds.getMaxY() - 1,
+                (int)bounds.getWidth() - deadFromCorner * 2,
+                pointerLength + 1
+            );
         }
 
         @Override
@@ -1551,13 +1556,26 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         @Override
-        protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
-            return rectangle.x - targetPoint.x;
-        }
-
-        @Override
         protected Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength) {
             return new Rectangle(bounds.x + pointerLength, bounds.y, bounds.width - pointerLength, bounds.height);
+        }
+
+        /**
+         *                 +--------+
+         * +-pointerLength-|        |
+         * | allowed range | bounds |
+         * +---------------|        |
+         *                 +--------+
+         */
+        @Override
+        protected Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
+            int deadFromCorner = arc + (pointerWidth / 2) - 1;
+            return new Rectangle(
+                (int)bounds.getMinX() - pointerLength,
+                (int)bounds.getMinY() + deadFromCorner,
+                pointerLength + 1,
+                (int)bounds.getHeight() - deadFromCorner * 2
+            );
         }
 
         @Override
@@ -1615,13 +1633,26 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         @Override
-        protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
-            return targetPoint.x - (int)rectangle.getMaxX();
-        }
-
-        @Override
         protected Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength) {
             return new Rectangle(bounds.x, bounds.y, bounds.width - pointerLength, bounds.height);
+        }
+
+        /**
+         * +--------+
+         * |        |-pointerLength-+
+         * | bounds | allowed range |
+         * |        |---------------+
+         * +--------+
+         */
+        @Override
+        protected Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
+            int deadFromCorner = arc + (pointerWidth / 2) - 1;
+            return new Rectangle(
+                (int)bounds.getMaxX() - 1,
+                (int)bounds.getMinY() + deadFromCorner,
+                pointerLength + 1,
+                (int)bounds.getHeight() - deadFromCorner * 2
+            );
         }
 
         @Override
@@ -2117,13 +2148,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         boolean isOkToHavePointer() {
-            return myPosition.isOkToHavePointer(
-                myTargetPoint,
-                myBounds,
-                getPointerLength(myPosition),
-                getPointerWidth(myPosition),
-                getArc()
-            );
+            int pointerLength = getPointerLength(myPosition);
+            int pointerWidth = getPointerWidth(myPosition);
+            return myPosition.getAllowedPointRange(myBounds, pointerLength, pointerWidth, getArc()).contains(myTargetPoint);
         }
     }
 
