@@ -33,24 +33,24 @@ public class ShadowBorderPainter {
 
     public static Shadow createShadow(Image source, int x, int y, boolean paintSource, int shadowSize) {
         source = ImageUtil.toBufferedImage(source);
-        final float w = source.getWidth(null);
-        final float h = source.getHeight(null);
+        float w = source.getWidth(null);
+        float h = source.getHeight(null);
         float ratio = w / h;
         float deltaX = shadowSize;
         float deltaY = shadowSize / ratio;
 
-        final Image scaled = source.getScaledInstance((int) (w + deltaX), (int) (h + deltaY), Image.SCALE_FAST);
+        Image scaled = source.getScaledInstance((int) (w + deltaX), (int) (h + deltaY), Image.SCALE_FAST);
 
-        final BufferedImage s =
+        BufferedImage s =
             GraphicsUtilities.createCompatibleTranslucentImage(scaled.getWidth(null), scaled.getHeight(null));
-        final Graphics2D graphics = (Graphics2D) s.getGraphics();
+        Graphics2D graphics = (Graphics2D) s.getGraphics();
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics.drawImage(scaled, 0, 0, null);
 
-        final BufferedImage shadow = new ShadowRenderer(shadowSize, .2f, Gray.x00).createShadow(s);
+        BufferedImage shadow = new ShadowRenderer(shadowSize, .2f, Gray.x00).createShadow(s);
         if (paintSource) {
-            final Graphics imgG = shadow.getGraphics();
-            final double d = shadowSize * 0.5;
+            Graphics imgG = shadow.getGraphics();
+            double d = shadowSize * 0.5;
             imgG.drawImage(source, (int) (shadowSize + d), (int) (shadowSize + d / ratio), null);
         }
 
