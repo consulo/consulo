@@ -76,6 +76,7 @@ public class ShowBallonTestAction extends DumbAwareAction {
             typeComboBox.setValue(MessageType.INFO);
 
             CheckBox shiftPointer = CheckBox.create(LocalizeValue.of("Shift Pointer"));
+            CheckBox dialogMode = CheckBox.create(LocalizeValue.of("Dialog Mode"));
 
             IntBox borderRadius = IntBox.create().withRange(0, 10);
             borderRadius.setValue((Integer)UIManager.get(BORDER_RADIUS_VAR));
@@ -83,13 +84,14 @@ public class ShowBallonTestAction extends DumbAwareAction {
 
             DockLayout buttonLayout = DockLayout.create();
             for (StaticPosition position : StaticPosition.values()) {
-                buttonLayout.add(create(position, typeComboBox::getValue, shiftPointer::getValue), position);
+                buttonLayout.add(create(position, typeComboBox::getValue, shiftPointer::getValue, dialogMode::getValue), position);
             }
 
             layout
                 .add(buttonLayout)
                 .add(typeComboBox)
                 .add(shiftPointer)
+                .add(dialogMode)
                 .add(DockLayout.create().right(Label.create(LocalizeValue.of("Border Radius"))).center(borderRadius));
 
             return (JComponent)TargetAWT.to(layout);
@@ -98,12 +100,12 @@ public class ShowBallonTestAction extends DumbAwareAction {
         private Button create(
             StaticPosition position,
             Supplier<MessageType> messageTypeSupplier,
-            Supplier<Boolean> shiftPointerSupplier
+            Supplier<Boolean> shiftPointerSupplier,
+            Supplier<Boolean> dialogModeSupplier
         ) {
             Button button = Button.create(LocalizeValue.ofNullable(position.name()));
             button.addClickListener(event -> {
                 MessageType messageType = messageTypeSupplier.get();
-                Boolean shiftPointer = shiftPointerSupplier.get();
 
                 Balloon.Position bPosition = switch (position) {
                     case TOP -> Balloon.Position.above;
@@ -122,7 +124,8 @@ public class ShowBallonTestAction extends DumbAwareAction {
                     .setHideOnKeyOutside(true)
                     .setHideOnAction(true)
                     .setShowCallout(position != StaticPosition.CENTER)
-                    .setPointerShiftedToStart(shiftPointer)
+                    .setPointerShiftedToStart(shiftPointerSupplier.get())
+                    .setDialogMode(dialogModeSupplier.get())
                     .createBalloon();
 
                 JComponent awtComponent = (JComponent)TargetAWT.to(event.getComponent());
