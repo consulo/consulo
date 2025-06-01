@@ -39,6 +39,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <fork>true</fork>
+                    <verbose>true</verbose>
                     <compilerArgs>
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=PACKAGEISNOTEXISTS -Xep:NullAway:ERROR</arg>
