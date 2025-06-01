@@ -25,6 +25,8 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
  * @since 2019-02-19
@@ -49,7 +51,7 @@ public abstract class WebBooleanValueComponentBase<E extends Component & HasValu
             throw new IllegalArgumentException();
         }
 
-        if (getVaadinComponent().getValue() == value) {
+        if (Objects.equals(getVaadinComponent().getValue(), value)) {
             return;
         }
 
