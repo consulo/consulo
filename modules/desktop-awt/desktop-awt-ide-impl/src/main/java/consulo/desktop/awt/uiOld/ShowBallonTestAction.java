@@ -22,10 +22,9 @@ import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.*;
 import consulo.ui.Button;
-import consulo.ui.CheckBox;
-import consulo.ui.ComboBox;
-import consulo.ui.StaticPosition;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.RelativePoint;
@@ -51,7 +50,10 @@ import java.util.function.Supplier;
  */
 @ActionImpl(id = "ShowBallonTestAction", parents = @ActionParentRef(@ActionRef(id = "Internal.UI.Desktop")))
 public class ShowBallonTestAction extends DumbAwareAction {
+    private static final String BORDER_RADIUS_VAR = "TextComponent.arc";
+
     private static class BalloonTestDialog extends DialogWrapper {
+        private IntBox myBorderRadius;
 
         private BalloonTestDialog(@Nullable ComponentManager project) {
             super(project);
@@ -66,51 +68,52 @@ public class ShowBallonTestAction extends DumbAwareAction {
             VerticalLayout layout = VerticalLayout.create();
             layout.addBorders(BorderStyle.EMPTY, null, 150);
 
-            ComboBox.Builder<MessageType> builder = ComboBox.builder();
-            builder.add(MessageType.INFO, LocalizeValue.of("INFO"));
-            builder.add(MessageType.WARNING, LocalizeValue.of("WARNING"));
-            builder.add(MessageType.ERROR, LocalizeValue.of("ERROR"));
-
-            ComboBox<MessageType> typeComboBox = builder.build();
+            ComboBox<MessageType> typeComboBox = ComboBox.<MessageType>builder()
+                .add(MessageType.INFO, LocalizeValue.of("INFO"))
+                .add(MessageType.WARNING, LocalizeValue.of("WARNING"))
+                .add(MessageType.ERROR, LocalizeValue.of("ERROR"))
+                .build();
             typeComboBox.setValue(MessageType.INFO);
 
             CheckBox shiftPointer = CheckBox.create(LocalizeValue.of("Shift Pointer"));
+
+            IntBox borderRadius = IntBox.create().withRange(0, 10);
+            borderRadius.setValue((Integer)UIManager.get(BORDER_RADIUS_VAR));
+            myBorderRadius = borderRadius;
 
             DockLayout buttonLayout = DockLayout.create();
             for (StaticPosition position : StaticPosition.values()) {
                 buttonLayout.add(create(position, typeComboBox::getValue, shiftPointer::getValue), position);
             }
 
-            layout.add(buttonLayout);
+            layout
+                .add(buttonLayout)
+                .add(typeComboBox)
+                .add(shiftPointer)
+                .add(DockLayout.create().right(Label.create(LocalizeValue.of("Border Radius"))).center(borderRadius));
 
-            layout.add(typeComboBox);
-            layout.add(shiftPointer);
-
-            return (JComponent) TargetAWT.to(layout);
+            return (JComponent)TargetAWT.to(layout);
         }
 
-        private Button create(StaticPosition position,
-                              Supplier<MessageType> messageTypeSupplier,
-                              Supplier<Boolean> shiftPointerSupplier) {
+        private Button create(
+            StaticPosition position,
+            Supplier<MessageType> messageTypeSupplier,
+            Supplier<Boolean> shiftPointerSupplier
+        ) {
             Button button = Button.create(LocalizeValue.ofNullable(position.name()));
             button.addClickListener(event -> {
                 MessageType messageType = messageTypeSupplier.get();
                 Boolean shiftPointer = shiftPointerSupplier.get();
 
-                Balloon.Position bPosition = null;
-                if (StaticPosition.TOP == position) {
-                    bPosition = Balloon.Position.above;
-                }
-                else if (StaticPosition.BOTTOM == position) {
-                    bPosition = Balloon.Position.below;
-                }
-                else if (StaticPosition.LEFT == position) {
-                    bPosition = Balloon.Position.atLeft;
-                }
-                else if (StaticPosition.RIGHT == position) {
-                    bPosition = Balloon.Position.atRight;
-                }
+                Balloon.Position bPosition = switch (position) {
+                    case TOP -> Balloon.Position.above;
+                    case BOTTOM -> Balloon.Position.below;
+                    case LEFT -> Balloon.Position.atLeft;
+                    case RIGHT -> Balloon.Position.atRight;
+                    default -> null;
+                };
 
+                UIManager.put(BORDER_RADIUS_VAR, myBorderRadius.getValue());
                 Balloon balloon = JBPopupFactory.getInstance()
                     .createHtmlTextBalloonBuilder("<html>" + position.name() + "</html>", null, messageType.getPopupBackground(), null)
                     .setHideOnClickOutside(true)
@@ -122,28 +125,23 @@ public class ShowBallonTestAction extends DumbAwareAction {
                     .setPointerShiftedToStart(shiftPointer)
                     .createBalloon();
 
-                JComponent awtComponent = (JComponent) TargetAWT.to(event.getComponent());
+                JComponent awtComponent = (JComponent)TargetAWT.to(event.getComponent());
 
                 Rectangle bounds = awtComponent.getBounds();
                 Point target = UIUtil.getCenterPoint(bounds, new Dimension(1, 1));
-                if (StaticPosition.TOP == position) {
-                    target.y = 0;
-                }
-                else if (StaticPosition.BOTTOM == position) {
-                    target.y = bounds.height - 3;
-                }
-                else if (StaticPosition.LEFT == position) {
-                    target.x = 0;
-                }
-                else if (StaticPosition.RIGHT == position) {
-                    target.x = bounds.width;
+                switch (position) {
+                    case TOP -> target.y = 0;
+                    case BOTTOM -> target.y = bounds.height - 3;
+                    case LEFT -> target.x = 0;
+                    case RIGHT -> target.x = bounds.width;
                 }
 
                 RelativePoint point = new RelativePoint(awtComponent, target);
 
                 if (bPosition != null) {
                     balloon.show(point, bPosition);
-                } else {
+                }
+                else {
                     balloon.showInCenterOf(awtComponent);
                 }
             });
@@ -152,11 +150,11 @@ public class ShowBallonTestAction extends DumbAwareAction {
     }
 
     public ShowBallonTestAction() {
-        super(LocalizeValue.localizeTODO("Show Ballon Test"));
+        super(LocalizeValue.localizeTODO("Show Balloon Test"));
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         BalloonTestDialog testDialog = new BalloonTestDialog(e.getData(Project.KEY));
         testDialog.showAsync();
