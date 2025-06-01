@@ -172,6 +172,14 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     }
 
     @Override
+    public String getCurrentSearchText() {
+        if (isShown()) {
+            return mySearchEverywhereUI.getSearchField().getValue();
+        }
+        return null;
+    }
+
+    @Override
     public boolean isShown() {
         return mySearchEverywhereUI != null && myBalloon != null && !myBalloon.isDisposed();
     }

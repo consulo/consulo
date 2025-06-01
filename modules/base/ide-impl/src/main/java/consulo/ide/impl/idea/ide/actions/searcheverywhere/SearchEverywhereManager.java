@@ -38,4 +38,6 @@ public interface SearchEverywhereManager {
 
     // todo remove
     boolean isEverywhere();
+
+    String getCurrentSearchText();
 }
