@@ -19,4 +19,4 @@ jobs:
         distribution: 'temurin'
         java-version: 24
     - name: Build with Maven
-      run: mvn -U -T 1C -Dmaven.javadoc.skip=true -B -V clean package
+      run: mvn -X -U -T 1C -Dmaven.javadoc.skip=true -B -V clean package
