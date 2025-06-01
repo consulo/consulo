@@ -16,10 +16,7 @@
 package consulo.codeEditor;
 
 import consulo.colorScheme.EditorColorKey;
-import consulo.colorScheme.EffectType;
-import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.ui.style.StandardColors;
 
 public interface EditorColors {
     EditorColorKey CARET_ROW_COLOR = EditorColorKey.createColorKey("CARET_ROW_COLOR");
@@ -39,13 +36,7 @@ public interface EditorColors {
     EditorColorKey SELECTION_FOREGROUND_COLOR = EditorColorKey.createColorKey("SELECTION_FOREGROUND");
     EditorColorKey MATCHED_BRACES_INDENT_GUIDE_COLOR = EditorColorKey.createColorKey("MATCHED_BRACES_INDENT_GUIDE_COLOR");
 
-    TextAttributesKey
-        REFERENCE_HYPERLINK_COLOR = TextAttributesKey.createTextAttributesKey("CTRL_CLICKABLE",
-        new TextAttributes(StandardColors.BLUE,
-            null,
-            StandardColors.BLUE,
-            EffectType.LINE_UNDERSCORE,
-            0));
+    TextAttributesKey REFERENCE_HYPERLINK_COLOR = TextAttributesKey.of("CTRL_CLICKABLE");
 
     TextAttributesKey SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.of("SEARCH_RESULT_ATTRIBUTES");
     TextAttributesKey LIVE_TEMPLATE_ATTRIBUTES = TextAttributesKey.of("LIVE_TEMPLATE_ATTRIBUTES");
@@ -58,15 +49,9 @@ public interface EditorColors {
     EditorColorKey FOLDED_TEXT_BORDER_COLOR = EditorColorKey.createColorKey("FOLDED_TEXT_BORDER_COLOR");
     TextAttributesKey DELETED_TEXT_ATTRIBUTES = TextAttributesKey.of("DELETED_TEXT_ATTRIBUTES");
 
-    /**
-     * This key is used in New UI only (instead of GUTTER_BACKGROUND) and it is null by default.
-     */
     EditorColorKey EDITOR_GUTTER_BACKGROUND = EditorColorKey.createColorKey("EDITOR_GUTTER_BACKGROUND");
 
     EditorColorKey GUTTER_BACKGROUND = EditorColorKey.createColorKey("GUTTER_BACKGROUND");
-
-    @Deprecated
-    EditorColorKey LEFT_GUTTER_BACKGROUND = GUTTER_BACKGROUND;
 
     EditorColorKey NOTIFICATION_INFORMATION_BACKGROUND = EditorColorKey.createColorKey("NOTIFICATION_INFORMATION_BACKGROUND");
     EditorColorKey NOTIFICATION_WARNING_BACKGROUND = EditorColorKey.createColorKey("NOTIFICATION_WARNING_BACKGROUND");

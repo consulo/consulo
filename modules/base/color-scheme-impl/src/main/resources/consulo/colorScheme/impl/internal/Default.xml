@@ -143,7 +143,8 @@
         </option>
         <option name="DEFAULT_KEYWORD">
             <value>
-                <option name="FOREGROUND" value="80"/>
+                <option name="FOREGROUND" value="33b3" deuteranopia="428C" protanopia="428C"/>
+                <option name="FONT_TYPE" deuteranopia="bold" protanopia="bold"/>
             </value>
         </option>
         <option name="DEFAULT_MACRO_KEYWORD">
@@ -154,7 +155,8 @@
         </option>
         <option name="DEFAULT_NUMBER">
             <value>
-                <option name="FOREGROUND" value="ff"/>
+                <option name="FOREGROUND" value="1750eb" deuteranopia="3777E6" protanopia="3777E6"/>
+                <option name="FONT_TYPE" deuteranopia="bold" protanopia="bold"/>
             </value>
         </option>
         <option name="DEFAULT_BLOCK_COMMENT">
@@ -594,8 +596,8 @@
         </option>
         <option name="CTRL_CLICKABLE">
             <value>
-                <option name="FOREGROUND" value="0000ff"/>
-                <option name="EFFECT_COLOR" value="0000ff"/>
+                <option name="FOREGROUND" value="6dcc" deuteranopia="3777E6" protanopia="3777E6"/>
+                <option name="EFFECT_COLOR" value="6dcc" deuteranopia="3777E6" protanopia="3777E6"/>
                 <option name="EFFECT_TYPE" value="1"/>
             </value>
         </option>
