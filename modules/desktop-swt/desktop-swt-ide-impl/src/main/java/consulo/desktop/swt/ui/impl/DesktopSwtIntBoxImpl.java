@@ -16,6 +16,7 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.eclipse.swt.SWT;
@@ -27,7 +28,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Spinner> implements IntBox {
     private int myInitValue;
@@ -39,7 +40,7 @@ public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Spinner> implemen
     }
 
     @Override
-    public void setPlaceholder(@Nullable String text) {
+    public void setPlaceholder(@Nullable LocalizeValue text) {
     }
 
     @Override

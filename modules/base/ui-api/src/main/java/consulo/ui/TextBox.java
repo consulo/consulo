@@ -22,7 +22,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 19-Nov-16.
+ * @since 2016-11-19
  */
 public interface TextBox extends ValueComponent<String>, HasValidator<String>, HasFocus, HasSuffixComponent {
     @Nonnull
@@ -47,13 +47,13 @@ public interface TextBox extends ValueComponent<String>, HasValidator<String>, H
 
     @Deprecated
     default void setPlaceholder(@Nullable String text) {
-        setPlaceholder(text == null ? LocalizeValue.of() : LocalizeValue.of(text));
+        setPlaceholder(LocalizeValue.ofNullable(text));
     }
 
     @Nonnull
     @Deprecated
     default TextBox withPlaceholder(@Nullable String text) {
-        setPlaceholder(text == null ? LocalizeValue.of() : LocalizeValue.of(text));
+        setPlaceholder(LocalizeValue.ofNullable(text));
         return this;
     }
 

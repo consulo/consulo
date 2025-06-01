@@ -17,6 +17,7 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.textfield.TextField;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -38,6 +39,7 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
         }
     }
 
+    @RequiredUIAccess
     public WebIntBoxImpl(int value) {
         setValue(value, false);
     }
@@ -61,7 +63,7 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
     }
 
     @Override
-    public void setPlaceholder(@Nullable String text) {
+    public void setPlaceholder(@Nullable LocalizeValue text) {
     }
 
     @Override

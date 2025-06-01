@@ -31,7 +31,7 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
 public interface ComboBox<E> extends ValueComponent<E> {
     @Nonnull
@@ -50,7 +50,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
         return UIInternal.get()._Components_comboBox(model);
     }
 
-    static class Builder<K>   {
+    static class Builder<K> {
         private Map<K, LocalizeValue> myValues = new LinkedHashMap<>();
 
         @Nonnull
@@ -89,7 +89,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
         @Nonnull
         public Builder<K> fillByEnum(Class<? extends K> clazz, Predicate<K> tester, Function<K, String> presentation) {
             if (!clazz.isEnum()) {
-                throw new IllegalArgumentException("Accepted only enum");
+                throw new IllegalArgumentException("Accepts enums only");
             }
             K[] enumConstants = clazz.getEnumConstants();
             for (K enumConstant : enumConstants) {
@@ -105,7 +105,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
         @Nonnull
         public Builder<K> fillByEnumLocalized(Class<? extends K> clazz, Function<K, LocalizeValue> presentation) {
             if (!clazz.isEnum()) {
-                throw new IllegalArgumentException("Accepted only enum");
+                throw new IllegalArgumentException("Accepts enums only");
             }
             K[] enumConstants = clazz.getEnumConstants();
             for (K enumConstant : enumConstants) {

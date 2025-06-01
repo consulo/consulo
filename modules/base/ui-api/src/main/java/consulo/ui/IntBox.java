@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.internal.UIInternal;
 
 import jakarta.annotation.Nonnull;
@@ -35,11 +36,21 @@ public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, 
         return UIInternal.get()._Components_intBox(value);
     }
 
-    void setPlaceholder(@Nullable String text);
+    void setPlaceholder(@Nonnull LocalizeValue text);
+
+    @Nonnull
+    default IntBox withPlaceholder(@Nonnull LocalizeValue text) {
+        setPlaceholder(text);
+        return this;
+    }
+
+    default void setPlaceholder(@Nullable String text) {
+        setPlaceholder(LocalizeValue.ofNullable(text));
+    }
 
     @Nonnull
     default IntBox withPlaceholder(@Nullable String text) {
-        setPlaceholder(text);
+        setPlaceholder(LocalizeValue.ofNullable(text));
         return this;
     }
 

@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -69,7 +70,7 @@ public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopI
     }
 
     @Override
-    public void setPlaceholder(@Nullable String text) {
+    public void setPlaceholder(@Nullable LocalizeValue text) {
     }
 
     @SuppressWarnings("unchecked")
@@ -83,8 +84,8 @@ public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopI
         return getValue(toAWTComponent());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setValue(Integer value, boolean fireListeners) {
         Integer valueNonNull = Objects.requireNonNull(value, "Value must be not null");
         toAWTComponent().setValue(valueNonNull);
