@@ -25,29 +25,29 @@ import jakarta.annotation.Nullable;
  * @since 2020-04-19
  */
 public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, HasFocus {
-  @Nonnull
-  static IntBox create() {
-    return create(0);
-  }
+    @Nonnull
+    static IntBox create() {
+        return create(0);
+    }
 
-  @Nonnull
-  static IntBox create(int value) {
-    return UIInternal.get()._Components_intBox(value);
-  }
+    @Nonnull
+    static IntBox create(int value) {
+        return UIInternal.get()._Components_intBox(value);
+    }
 
-  void setPlaceholder(@Nullable String text);
+    void setPlaceholder(@Nullable String text);
 
-  @Nonnull
-  default IntBox withPlaceholder(@Nullable String text) {
-    setPlaceholder(text);
-    return this;
-  }
+    @Nonnull
+    default IntBox withPlaceholder(@Nullable String text) {
+        setPlaceholder(text);
+        return this;
+    }
 
-  void setRange(int min, int max);
+    void setRange(int min, int max);
 
-  @Nonnull
-  default IntBox withRange(int min, int max) {
-    setRange(min, max);
-    return this;
-  }
+    @Nonnull
+    default IntBox withRange(int min, int max) {
+        setRange(min, max);
+        return this;
+    }
 }
