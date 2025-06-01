@@ -12,10 +12,10 @@ import java.util.function.Consumer;
  * A single Tab character
  */
 final class TabFragment implements LineFragment {
-    private final EditorView myView;
+    private final EditorViewImpl myView;
     private final Editor myEditor;
 
-    TabFragment(EditorView view) {
+    TabFragment(EditorViewImpl view) {
         myView = view;
         myEditor = view.getEditor();
     }

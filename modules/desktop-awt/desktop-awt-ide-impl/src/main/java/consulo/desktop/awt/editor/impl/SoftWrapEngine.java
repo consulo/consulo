@@ -11,7 +11,7 @@ import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
 import consulo.desktop.awt.editor.impl.view.CharacterGrid;
-import consulo.desktop.awt.editor.impl.view.EditorView;
+import consulo.desktop.awt.editor.impl.view.EditorViewImpl;
 import consulo.desktop.awt.editor.impl.view.WrapElementMeasuringIterator;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
@@ -30,7 +30,7 @@ public class SoftWrapEngine {
     private final DesktopEditorImpl myEditor;
     private final Document myDocument;
     private final CharSequence myText;
-    private final EditorView myView;
+    private final EditorViewImpl myView;
     private final SoftWrapsStorage myStorage;
     private final CachingSoftWrapDataMapper myDataMapper;
     private final int myVisibleWidth;

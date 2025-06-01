@@ -13,9 +13,9 @@ import java.util.function.Consumer;
 public abstract class TextFragment implements LineFragment {
     @Nonnull
     final float[] myCharPositions; // i-th value is the x coordinate of right edge of i-th character (counted in visual order)
-    final @Nullable EditorView myView;
+    final @Nullable EditorViewImpl myView;
 
-    TextFragment(int charCount, @Nullable EditorView view) {
+    TextFragment(int charCount, @Nullable EditorViewImpl view) {
         assert charCount > 0;
         this.myView = view;
         myCharPositions = new float[charCount]; // populated by subclasses' constructors

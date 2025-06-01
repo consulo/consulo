@@ -14,7 +14,7 @@ final class TextFragmentFactory {
                                     int end,
                                     boolean isRtl,
                                     FontInfo fontInfo,
-                                    EditorView view) {
+                                    EditorViewImpl view) {
         boolean needsLayout = isRtl || fontInfo.getFont().hasLayoutAttributes();
         boolean nonLatinText = false;
         if (!needsLayout && (containsSurrogatePairs(lineChars, start, end) || Font.textRequiresLayout(lineChars, start, end))) {

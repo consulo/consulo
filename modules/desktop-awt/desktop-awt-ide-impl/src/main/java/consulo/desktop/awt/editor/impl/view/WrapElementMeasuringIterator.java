@@ -13,14 +13,14 @@ import java.util.List;
  * {@link WrapElementIterator} extension that also calculates widths of elements.
  */
 public final class WrapElementMeasuringIterator extends WrapElementIterator {
-    private final EditorView myView;
+    private final EditorViewImpl myView;
     private final List<Inlay<?>> inlineInlays;
     private final List<Inlay<?>> afterLineEndInlays;
 
     private int inlineInlayIndex;
     private int afterLineEndInlayIndex;
 
-    public WrapElementMeasuringIterator(@Nonnull EditorView view, int startOffset, int endOffset,
+    public WrapElementMeasuringIterator(@Nonnull EditorViewImpl view, int startOffset, int endOffset,
                                         List<Inlay<?>> inlineInlays,
                                         List<Inlay<?>> afterLineEndInlays) {
         super(view.getEditor(), startOffset, endOffset);

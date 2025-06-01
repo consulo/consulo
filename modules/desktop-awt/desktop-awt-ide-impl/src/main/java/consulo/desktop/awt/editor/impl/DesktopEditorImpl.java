@@ -17,6 +17,7 @@ import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.*;
+import consulo.codeEditor.impl.internal.RealEditorWithEditorView;
 import consulo.codeEditor.internal.EditorActionPlan;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.localize.CodeEditorLocalize;
@@ -30,7 +31,7 @@ import consulo.desktop.awt.editor.impl.stickyLine.StickyLinesPanel;
 import consulo.desktop.awt.editor.impl.stickyLine.VisualStickyLines;
 import consulo.desktop.awt.editor.impl.view.CharacterGrid;
 import consulo.desktop.awt.editor.impl.view.CharacterGridImpl;
-import consulo.desktop.awt.editor.impl.view.EditorView;
+import consulo.desktop.awt.editor.impl.view.EditorViewImpl;
 import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
 import consulo.desktop.awt.language.editor.StatusComponentContainer;
 import consulo.desktop.awt.ui.ExperimentalUI;
@@ -138,7 +139,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public final class DesktopEditorImpl extends CodeEditorBase
-    implements RealEditor, DesktopAWTEditor, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
+    implements RealEditorWithEditorView, DesktopAWTEditor, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
     public static final int TEXT_ALIGNMENT_LEFT = 0;
     public static final int TEXT_ALIGNMENT_RIGHT = 1;
 
@@ -286,7 +287,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     public final boolean myDisableRtl = Registry.is("editor.disable.rtl");
     public final Object myFractionalMetricsHintValue =
         Registry.is("editor.text.fractional.metrics") ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
-    public final EditorView myView;
+    public final EditorViewImpl myView;
     private @Nullable CharacterGridImpl myCharacterGrid;
 
     private boolean myCharKeyPressed;
@@ -426,7 +427,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         initComponent(stickyInfo == null ? null : stickyInfo.getSecond());
 
-        myView = new EditorView(this);
+        myView = new EditorViewImpl(this);
         myView.reinitSettings();
 
         myInlayModel.addListener(new InlayModel.SimpleAdapter() {
@@ -4011,7 +4012,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return myMouseListener;
     }
 
-    public EditorView getView() {
+    @Override
+    public EditorViewImpl getView() {
         return myView;
     }
 
@@ -4025,8 +4027,17 @@ public final class DesktopEditorImpl extends CodeEditorBase
      * If true, the editor is in special "clean" mode when editor's content is being rendered on sticky lines panel.
      * This allows suppressing visual elements like caret row background, vertical indent lines, right margin line, etc.
      */
+    @Override
     public boolean isStickyLinePainting() {
         return myIsStickyLinePainting;
+    }
+
+    @Override
+    public int getStickyLinesPanelHeight() {
+        if (myStickyLinesManager == null || !getSettings().isStickyLineShown()) {
+            return 0;
+        }
+        return myStickyLinesManager.panelHeight();
     }
 
     public void setStickyLinePainting(boolean stickyLinePainting) {

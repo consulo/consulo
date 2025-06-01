@@ -292,8 +292,8 @@
                     class="consulo.ide.impl.idea.openapi.editor.actions.PageBottomWithSelectionAction"/>
             <action id="EditorEnter" class="consulo.ide.impl.idea.openapi.editor.actions.EnterAction"/>
             <action id="EditorEscape" class="consulo.ide.impl.idea.openapi.editor.actions.EscapeAction"/>
-            <action id="EditorUp" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretUpAction"/>
-            <action id="EditorDown" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretDownAction"/>
+            <reference id="EditorUp" />
+            <reference id="EditorDown" />
             <action id="EditorLeft" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretLeftAction"/>
             <action id="EditorRight" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretRightAction"/>
             <action id="EditorUpWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretUpWithSelectionAction"/>

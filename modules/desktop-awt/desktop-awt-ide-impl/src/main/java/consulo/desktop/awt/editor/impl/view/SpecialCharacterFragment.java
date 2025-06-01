@@ -50,7 +50,7 @@ final class SpecialCharacterFragment implements LineFragment {
     private static final int BRACKETS_SIZE = 2;
     private static final int BRACKETS_THICKNESS = 1;
 
-    static @Nullable SpecialCharacterFragment create(@Nonnull EditorView view, int c, @Nullable char [] text, int pos) {
+    static @Nullable SpecialCharacterFragment create(@Nonnull EditorViewImpl view, int c, @Nullable char [] text, int pos) {
         String code = SPECIAL_CHAR_CODES.get(c);
         if (code == null) return null;
         if (text != null) {
@@ -78,11 +78,11 @@ final class SpecialCharacterFragment implements LineFragment {
         return c >= 128 && Character.getType(c) != Character.FORMAT;
     }
 
-    private final EditorView myView;
+    private final EditorViewImpl myView;
     private final String myCode;
     private final float myWidth;
 
-    SpecialCharacterFragment(@Nonnull EditorView view, @Nonnull String code) {
+    SpecialCharacterFragment(@Nonnull EditorViewImpl view, @Nonnull String code) {
         myView = view;
         myCode = code;
         FontMetrics fontMetrics = FontInfo.getFontMetrics(getFont(), view.getFontRenderContext());

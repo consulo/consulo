@@ -47,7 +47,7 @@ abstract class LineLayout {
     /**
      * Creates a layout for a fragment of text from editor.
      */
-    static @Nonnull LineLayout create(@Nonnull EditorView view, int line, boolean skipBidiLayout) {
+    static @Nonnull LineLayout create(@Nonnull EditorViewImpl view, int line, boolean skipBidiLayout) {
         List<BidiRun> runs = createFragments(view, line, skipBidiLayout);
         return createLayout(view, runs, null, line);
     }
@@ -55,13 +55,13 @@ abstract class LineLayout {
     /**
      * Creates a layout for an arbitrary piece of text (using a common font style).
      */
-    static @Nonnull LineLayout create(@Nonnull EditorView view, @Nonnull CharSequence text, @JdkConstants.FontStyle int fontStyle) {
+    static @Nonnull LineLayout create(@Nonnull EditorViewImpl view, @Nonnull CharSequence text, @JdkConstants.FontStyle int fontStyle) {
         List<BidiRun> runs = createFragments(view, text, fontStyle);
         LineLayout delegate = createLayout(view, runs, text, 0);
         return new WithSize(delegate);
     }
 
-    private static LineLayout createLayout(@Nonnull EditorView view, @Nonnull List<BidiRun> runs, @Nullable CharSequence text, int line) {
+    private static LineLayout createLayout(@Nonnull EditorViewImpl view, @Nonnull List<BidiRun> runs, @Nullable CharSequence text, int line) {
         if (runs.isEmpty()) return new SingleChunk(null);
         if (runs.size() == 1) {
             BidiRun run = runs.get(0);
@@ -100,7 +100,7 @@ abstract class LineLayout {
         return Bidi.requiresBidi(chars, 0, chars.length);
     }
 
-    private static List<BidiRun> createFragments(@Nonnull EditorView view, int line, boolean skipBidiLayout) {
+    private static List<BidiRun> createFragments(@Nonnull EditorViewImpl view, int line, boolean skipBidiLayout) {
         Document document = view.getDocument();
         int lineStartOffset = document.getLineStartOffset(line);
         int lineEndOffset = document.getLineEndOffset(line);
@@ -111,7 +111,7 @@ abstract class LineLayout {
         return createRuns(view, chars, lineStartOffset);
     }
 
-    private static List<BidiRun> createFragments(@Nonnull EditorView view, @Nonnull CharSequence text,
+    private static List<BidiRun> createFragments(@Nonnull EditorViewImpl view, @Nonnull CharSequence text,
                                                  @JdkConstants.FontStyle int fontStyle) {
         if (text.isEmpty()) return Collections.emptyList();
 
@@ -131,7 +131,7 @@ abstract class LineLayout {
         return runs;
     }
 
-    private static List<BidiRun> createRuns(EditorView view, char[] text, int startOffsetInEditor) {
+    private static List<BidiRun> createRuns(EditorViewImpl view, char[] text, int startOffsetInEditor) {
         int textLength = text.length;
         if (view.getEditor().myDisableRtl || !Bidi.requiresBidi(text, 0, textLength)) {
             return Collections.singletonList(new BidiRun(textLength));
@@ -287,7 +287,7 @@ abstract class LineLayout {
         }
     }
 
-    private static void addFragments(EditorView view, BidiRun run, Chunk chunk, char[] text, int start, int end,
+    private static void addFragments(EditorViewImpl view, BidiRun run, Chunk chunk, char[] text, int start, int end,
                                      @Nullable TabFragment tabFragment, boolean showSpecialChars, FontFallbackIterator it) {
         assert start < end;
         int last = start;
@@ -312,7 +312,7 @@ abstract class LineLayout {
         assert !chunk.fragments.isEmpty();
     }
 
-    private static void addFragmentsNoTabs(BidiRun run, Chunk chunk, char[] text, int start, int end, FontFallbackIterator it, EditorView view) {
+    private static void addFragmentsNoTabs(BidiRun run, Chunk chunk, char[] text, int start, int end, FontFallbackIterator it, EditorViewImpl view) {
         if (start < end) {
             it.start(text, start, end);
             while (!it.atEnd()) {
@@ -322,7 +322,7 @@ abstract class LineLayout {
         }
     }
 
-    private static void addTextFragmentIfNeeded(Chunk chunk, char[] chars, int from, int to, FontInfo fontInfo, boolean isRtl, EditorView view) {
+    private static void addTextFragmentIfNeeded(Chunk chunk, char[] chars, int from, int to, FontInfo fontInfo, boolean isRtl, EditorViewImpl view) {
         if (to > from) {
             assert fontInfo != null;
             TextFragmentFactory.createTextFragments(chunk.fragments, chars, from, to, isRtl, fontInfo, view);
@@ -337,7 +337,7 @@ abstract class LineLayout {
      * If {@code quickEvaluationListener} is provided, quick approximate iteration becomes enabled, listener will be invoked
      * if approximation will in fact be used during width calculation.
      */
-    Iterator<VisualFragment> getFragmentsInVisualOrder(final @Nonnull EditorView view,
+    Iterator<VisualFragment> getFragmentsInVisualOrder(final @Nonnull EditorViewImpl view,
                                                        final int line,
                                                        final float startX,
                                                        final int startVisualColumn,
@@ -601,7 +601,7 @@ abstract class LineLayout {
             return (endOffset - startOffset + CHUNK_CHARACTERS - 1) / CHUNK_CHARACTERS;
         }
 
-        private BidiRun subRun(@Nonnull EditorView view, int line, int targetStartOffset, int targetEndOffset,
+        private BidiRun subRun(@Nonnull EditorViewImpl view, int line, int targetStartOffset, int targetEndOffset,
                                @Nullable Runnable quickEvaluationListener) {
             assert targetStartOffset < endOffset;
             assert targetEndOffset > startOffset;
@@ -634,7 +634,7 @@ abstract class LineLayout {
             this.endOffset = endOffset;
         }
 
-        private void ensureLayout(@Nonnull EditorView view, BidiRun run, int line) {
+        private void ensureLayout(@Nonnull EditorViewImpl view, BidiRun run, int line) {
             if (isReal()) {
                 view.getTextLayoutCache().onChunkAccess(this);
             }
@@ -678,7 +678,7 @@ abstract class LineLayout {
             assert !fragments.isEmpty();
         }
 
-        private Chunk subChunk(EditorView view, BidiRun run, int line, int targetStartOffset, int targetEndOffset,
+        private Chunk subChunk(EditorViewImpl view, BidiRun run, int line, int targetStartOffset, int targetEndOffset,
                                @Nullable Runnable quickEvaluationListener) {
             assert isReal();
             assert targetStartOffset < endOffset;
@@ -733,7 +733,7 @@ abstract class LineLayout {
     }
 
     private static final class VisualOrderIterator implements Iterator<VisualFragment> {
-        private final EditorView myView;
+        private final EditorViewImpl myView;
         private final CharSequence myText;
         private final int myLine;
         private final int myLineStartOffset;
@@ -744,7 +744,7 @@ abstract class LineLayout {
         private int myOffsetInsideRun;
         private final VisualFragment myFragment = new VisualFragment();
 
-        private VisualOrderIterator(EditorView view, int line,
+        private VisualOrderIterator(EditorViewImpl view, int line,
                                     float startX, int startVisualColumn, int startOffset, BidiRun[] runsInVisualOrder) {
             myView = view;
             myText = view == null ? null : view.getDocument().getImmutableCharSequence();

@@ -20,6 +20,8 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
+import consulo.codeEditor.impl.internal.RealEditorWithEditorView;
+import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
@@ -27,7 +29,7 @@ import consulo.document.impl.Interval;
 import consulo.document.impl.TextRangeInterval;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
-import consulo.logging.util.LoggerUtil;
+import consulo.logging.attachment.AttachmentFactory;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -46,6 +48,20 @@ import static consulo.codeEditor.util.EditorUtil.getTabSize;
  */
 public class EditorImplUtil {
     private static final Logger LOG = Logger.getInstance(EditorImplUtil.class);
+
+    public static void runWithAnimationDisabled(@Nonnull Editor editor, @Nonnull Runnable taskWithScrolling) {
+        ScrollingModel scrollingModel = editor.getScrollingModel();
+        boolean animationWasEnabled = scrollingModel.isAnimationEnabled();
+        scrollingModel.disableAnimation();
+        try {
+            taskWithScrolling.run();
+        }
+        finally {
+            if (animationWasEnabled) {
+                scrollingModel.enableAnimation();
+            }
+        }
+    }
 
     public static int getNotFoldedLineStartOffset(@Nonnull Document document, @Nonnull FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
         int offset = startOffset;
@@ -144,119 +160,116 @@ public class EditorImplUtil {
     }
 
     public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
-        if (editor instanceof RealEditor) {
-            LogicalPosition lineEndPosition = editor.visualToLogicalPosition(new VisualPosition(line, Integer.MAX_VALUE));
-            int lineEndOffset = editor.logicalPositionToOffset(lineEndPosition);
+        if (editor instanceof RealEditorWithEditorView editorImpl) {
+            int lineEndOffset = line >= editorImpl.getVisibleLineCount()
+                ? editor.getDocument().getTextLength()
+                : new VisualLinesIterator(editorImpl, line).getVisualLineEndOffset();
+
             return editor.offsetToVisualPosition(lineEndOffset, true, true).column;
         }
-        Document document = editor.getDocument();
-        int lastLine = document.getLineCount() - 1;
-        if (lastLine < 0) {
-            return 0;
-        }
 
-        // Filter all lines that are not shown because of collapsed folding region.
-        VisualPosition visStart = new VisualPosition(line, 0);
-        LogicalPosition logStart = editor.visualToLogicalPosition(visStart);
-        int lastLogLine = logStart.line;
-        while (lastLogLine < document.getLineCount() - 1) {
-            logStart = new LogicalPosition(logStart.line + 1, logStart.column);
-            VisualPosition tryVisible = editor.logicalToVisualPosition(logStart);
-            if (tryVisible.line != visStart.line) {
-                break;
-            }
-            lastLogLine = logStart.line;
-        }
-
-        int resultLogLine = Math.min(lastLogLine, lastLine);
-        VisualPosition resVisStart = editor.offsetToVisualPosition(document.getLineStartOffset(resultLogLine));
-        VisualPosition resVisEnd = editor.offsetToVisualPosition(document.getLineEndOffset(resultLogLine));
-
-        // Target logical line is not soft wrap affected.
-        if (resVisStart.line == resVisEnd.line) {
-            return resVisEnd.column;
-        }
-
-        int visualLinesToSkip = line - resVisStart.line;
-        List<? extends SoftWrap> softWraps = editor.getSoftWrapModel().getSoftWrapsForLine(resultLogLine);
-        for (int i = 0; i < softWraps.size(); i++) {
-            SoftWrap softWrap = softWraps.get(i);
-            CharSequence text = document.getCharsSequence();
-            if (visualLinesToSkip <= 0) {
-                VisualPosition visual = editor.offsetToVisualPosition(softWrap.getStart() - 1);
-                int result = visual.column;
-                int x = editor.visualPositionToXY(visual).x;
-                // We need to add width of the next symbol because current result column points to the last symbol before the soft wrap.
-                return result + textWidthInColumns(editor, text, softWrap.getStart() - 1, softWrap.getStart(), x);
+        return ReadAction.compute(() -> {
+            Document document = editor.getDocument();
+            int lastLine = document.getLineCount() - 1;
+            if (lastLine < 0) {
+                return 0;
             }
 
-            int softWrapLineFeeds = StringUtil.countNewLines(softWrap.getText());
-            if (softWrapLineFeeds < visualLinesToSkip) {
-                visualLinesToSkip -= softWrapLineFeeds;
-                continue;
+            // Filter all lines that are not shown because of a collapsed folding region.
+            VisualPosition visStart = new VisualPosition(line, 0);
+            LogicalPosition logStart = editor.visualToLogicalPosition(visStart);
+            int lastLogLine = logStart.line;
+            while (lastLogLine < document.getLineCount() - 1) {
+                logStart = new LogicalPosition(logStart.line + 1, logStart.column);
+                VisualPosition tryVisible = editor.logicalToVisualPosition(logStart);
+                if (tryVisible.line != visStart.line) break;
+                lastLogLine = logStart.line;
             }
 
-            // Target visual column is located on the last visual line of the current soft wrap.
-            if (softWrapLineFeeds == visualLinesToSkip) {
-                if (i >= softWraps.size() - 1) {
-                    return resVisEnd.column;
+            int resultLogLine = Math.min(lastLogLine, lastLine);
+            VisualPosition resVisStart = editor.offsetToVisualPosition(document.getLineStartOffset(resultLogLine));
+            VisualPosition resVisEnd = editor.offsetToVisualPosition(document.getLineEndOffset(resultLogLine));
+
+            // Target logical line is not soft wrap affected.
+            if (resVisStart.line == resVisEnd.line) {
+                return resVisEnd.column;
+            }
+
+            int visualLinesToSkip = line - resVisStart.line;
+            List<? extends SoftWrap> softWraps = editor.getSoftWrapModel().getSoftWrapsForLine(resultLogLine);
+            for (int i = 0; i < softWraps.size(); i++) {
+                SoftWrap softWrap = softWraps.get(i);
+                CharSequence text = document.getCharsSequence();
+                if (visualLinesToSkip <= 0) {
+                    VisualPosition visual = editor.offsetToVisualPosition(softWrap.getStart() - 1);
+                    int result = visual.column;
+                    int x = editor.visualPositionToXY(visual).x;
+                    // We need to add the width of the next symbol because the current result column points to the last symbol before the soft wrap.
+                    return result + textWidthInColumns(editor, text, softWrap.getStart() - 1, softWrap.getStart(), x);
                 }
-                // We need to find visual column for line feed of the next soft wrap.
-                SoftWrap nextSoftWrap = softWraps.get(i + 1);
-                VisualPosition visual = editor.offsetToVisualPosition(nextSoftWrap.getStart() - 1);
-                int result = visual.column;
+
+                int softWrapLineFeeds = StringUtil.countNewLines(softWrap.getText());
+                if (softWrapLineFeeds < visualLinesToSkip) {
+                    visualLinesToSkip -= softWrapLineFeeds;
+                    continue;
+                }
+
+                // Target visual column is located on the last visual line of the current soft wrap.
+                if (softWrapLineFeeds == visualLinesToSkip) {
+                    if (i >= softWraps.size() - 1) {
+                        return resVisEnd.column;
+                    }
+                    // We need to find visual column for line feed of the next soft wrap.
+                    SoftWrap nextSoftWrap = softWraps.get(i + 1);
+                    VisualPosition visual = editor.offsetToVisualPosition(nextSoftWrap.getStart() - 1);
+                    int result = visual.column;
+                    int x = editor.visualPositionToXY(visual).x;
+
+                    /* We need to add symbol width because current column points to the last symbol before the next soft wrap; */
+                    result += textWidthInColumns(editor, text, nextSoftWrap.getStart() - 1, nextSoftWrap.getStart(), x);
+
+                    int lineFeedIndex = StringUtil.indexOf(nextSoftWrap.getText(), '\n');
+                    result += textWidthInColumns(editor, nextSoftWrap.getText(), 0, lineFeedIndex, 0);
+                    return result;
+                }
+
+                // Target visual column is the one before line feed introduced by the current soft wrap.
+                int softWrapStartOffset = 0;
+                int softWrapEndOffset = 0;
+                int softWrapTextLength = softWrap.getText().length();
+                while (visualLinesToSkip-- > 0) {
+                    softWrapStartOffset = softWrapEndOffset + 1;
+                    if (softWrapStartOffset >= softWrapTextLength) {
+                        assert false;
+                        return resVisEnd.column;
+                    }
+                    softWrapEndOffset = StringUtil.indexOf(softWrap.getText(), '\n', softWrapStartOffset, softWrapTextLength);
+                    if (softWrapEndOffset < 0) {
+                        assert false;
+                        return resVisEnd.column;
+                    }
+                }
+                VisualPosition visual = editor.offsetToVisualPosition(softWrap.getStart() - 1);
+                int result = visual.column; // Column of the symbol just before the soft wrap
                 int x = editor.visualPositionToXY(visual).x;
 
-                // We need to add symbol width because current column points to the last symbol before the next soft wrap;
-                result += textWidthInColumns(editor, text, nextSoftWrap.getStart() - 1, nextSoftWrap.getStart(), x);
-
-                int lineFeedIndex = StringUtil.indexOf(nextSoftWrap.getText(), '\n');
-                result += textWidthInColumns(editor, nextSoftWrap.getText(), 0, lineFeedIndex, 0);
+                // Target visual column is located on the last visual line of the current soft wrap.
+                result += textWidthInColumns(editor, text, softWrap.getStart() - 1, softWrap.getStart(), x);
+                result += EditorUtil.calcColumnNumber(editor, softWrap.getText(), softWrapStartOffset, softWrapEndOffset);
                 return result;
             }
 
-            // Target visual column is the one before line feed introduced by the current soft wrap.
-            int softWrapStartOffset = 0;
-            int softWrapEndOffset = 0;
-            int softWrapTextLength = softWrap.getText().length();
-            while (visualLinesToSkip-- > 0) {
-                softWrapStartOffset = softWrapEndOffset + 1;
-                if (softWrapStartOffset >= softWrapTextLength) {
-                    assert false;
-                    return resVisEnd.column;
-                }
-                softWrapEndOffset = StringUtil.indexOf(softWrap.getText(), '\n', softWrapStartOffset, softWrapTextLength);
-                if (softWrapEndOffset < 0) {
-                    assert false;
-                    return resVisEnd.column;
-                }
-            }
-            VisualPosition visual = editor.offsetToVisualPosition(softWrap.getStart() - 1);
-            int result = visual.column; // Column of the symbol just before the soft wrap
-            int x = editor.visualPositionToXY(visual).x;
+            CharSequence editorInfo = "editor's class: " + editor.getClass()
+                + ", all soft wraps: " + editor.getSoftWrapModel().getSoftWrapsForRange(0, document.getTextLength())
+                + ", fold regions: " + Arrays.toString(editor.getFoldingModel().getAllFoldRegions());
+            LOG.error("Can't calculate last visual column", new Throwable(), AttachmentFactory.get().create("context.txt", String.format(
+                "Target visual line: %d, mapped logical line: %d, visual lines range for the mapped logical line: [%s]-[%s], soft wraps for "
+                    + "the target logical line: %s. Editor info: %s",
+                line, resultLogLine, resVisStart, resVisEnd, softWraps, editorInfo
+            )));
 
-            // Target visual column is located on the last visual line of the current soft wrap.
-            result += textWidthInColumns(editor, text, softWrap.getStart() - 1, softWrap.getStart(), x);
-            result += calcColumnNumber(editor, softWrap.getText(), softWrapStartOffset, softWrapEndOffset);
-            return result;
-        }
-
-        CharSequence editorInfo = "editor's class: " +
-            editor.getClass() +
-            ", all soft wraps: " +
-            editor.getSoftWrapModel().getSoftWrapsForRange(0, document.getTextLength()) +
-            ", fold regions: " +
-            Arrays.toString(editor.getFoldingModel().getAllFoldRegions());
-        LoggerUtil.error(LOG, "Can't calculate last visual column", String.format(
-            "Target visual line: %d, mapped logical line: %d, visual lines range for the mapped logical line: [%s]-[%s], soft wraps for " + "the target logical line: %s. Editor info: %s",
-            line,
-            resultLogLine,
-            resVisStart,
-            resVisEnd,
-            softWraps,
-            editorInfo));
-
-        return resVisEnd.column;
+            return resVisEnd.column;
+        });
     }
 
     @Deprecated

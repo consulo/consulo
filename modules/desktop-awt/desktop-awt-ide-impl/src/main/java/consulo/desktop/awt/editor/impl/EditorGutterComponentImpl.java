@@ -21,7 +21,7 @@ import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.desktop.awt.editor.impl.view.VisualLinesIterator;
+import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;

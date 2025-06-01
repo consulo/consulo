@@ -13,6 +13,8 @@ import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.FontLayoutService;
 import consulo.codeEditor.impl.LogicalPositionCache;
+import consulo.codeEditor.impl.internal.RealEditorView;
+import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.desktop.awt.editor.impl.*;
@@ -43,7 +45,7 @@ import java.text.Bidi;
  * <p>
  * Also contains a cache of several font-related quantities (line height, space width, etc).
  */
-public class EditorView implements TextDrawingCallback, Disposable, Dumpable, HierarchyListener, VisibleAreaListener {
+public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disposable, Dumpable, HierarchyListener, VisibleAreaListener {
     private static final Key<LineLayout> FOLD_REGION_TEXT_LAYOUT = Key.create("text.layout");
 
     private final DesktopEditorImpl myEditor;
@@ -74,7 +76,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
 
     private final Object myLock = new Object();
 
-    public EditorView(DesktopEditorImpl editor) {
+    public EditorViewImpl(DesktopEditorImpl editor) {
         myEditor = editor;
         myDocument = editor.getDocument();
 
@@ -150,10 +152,12 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         checkFontRenderContext(null);
     }
 
+    @Override
     public int yToVisualLine(int y) {
         return myMapper.yToVisualLine(y);
     }
 
+    @Override
     public int visualLineToY(int line) {
         return myMapper.visualLineToY(line);
     }
@@ -207,6 +211,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         return myMapper.offsetToVisualLine(offset, beforeSoftWrap);
     }
 
+    @Override
     public int visualLineToOffset(int visualLine) {
         assertIsDispatchThread();
         assertNotInBulkMode();
@@ -439,6 +444,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         }
     }
 
+    @Override
     public int getLineHeight() {
         synchronized (myLock) {
             initMetricsIfNeeded();
@@ -708,6 +714,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         }
     }
 
+    @Override
     public int getVisibleLineCount() {
         return Math.max(1, getVisibleLogicalLinesCount() + getSoftWrapModel().getSoftWrapsIntroducedLinesNumber());
     }
@@ -719,14 +726,17 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         return getDocument().getLineCount() - getFoldingModel().getTotalNumberOfFoldedLines();
     }
 
+    @Override
     public SoftWrapModelImpl getSoftWrapModel() {
         return myEditor.getSoftWrapModel();
     }
 
+    @Override
     public DocumentEx getDocument() {
         return myDocument;
     }
 
+    @Override
     public DesktopFoldingModelImpl getFoldingModel() {
         return myEditor.getFoldingModel();
     }
@@ -744,6 +754,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
         return myEditor.getHighlighter();
     }
 
+    @Override
     public InlayModelImpl getInlayModel() {
         return myEditor.getInlayModel();
     }

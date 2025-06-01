@@ -2,6 +2,7 @@
 package consulo.desktop.awt.editor.impl.view;
 
 import consulo.codeEditor.*;
+import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.internal.FoldingKeys;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
@@ -26,13 +27,13 @@ import java.util.List;
  * @see VisualPosition
  */
 final class EditorCoordinateMapper {
-    private final EditorView myView;
+    private final EditorViewImpl myView;
     private final Document myDocument;
     private final DesktopFoldingModelImpl myFoldingModel;
     private final InlayModelImpl myInlayModel;
     private final SoftWrapModelImpl mySoftWrapModel;
 
-    EditorCoordinateMapper(EditorView view) {
+    EditorCoordinateMapper(EditorViewImpl view) {
         myView = view;
         myDocument = myView.getDocument();
         myFoldingModel = myView.getFoldingModel();

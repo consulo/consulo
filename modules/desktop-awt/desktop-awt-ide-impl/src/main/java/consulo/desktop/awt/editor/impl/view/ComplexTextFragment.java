@@ -29,7 +29,7 @@ public final class ComplexTextFragment extends TextFragment {
     // We expect no more than 1025 chars in a fragment, so 'short' should be enough.
 
     @VisibleForTesting
-    public ComplexTextFragment(@Nonnull char[] lineChars, int start, int end, boolean isRtl, @Nonnull FontInfo fontInfo, @Nullable EditorView view) {
+    public ComplexTextFragment(@Nonnull char[] lineChars, int start, int end, boolean isRtl, @Nonnull FontInfo fontInfo, @Nullable EditorViewImpl view) {
         super(end - start, view);
         assert start >= 0 : assertMessage(lineChars, start, end, isRtl, fontInfo);
         assert end <= lineChars.length : assertMessage(lineChars, start, end, isRtl, fontInfo);

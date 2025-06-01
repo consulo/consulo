@@ -23,7 +23,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.desktop.awt.editor.impl.view.EditorPainter;
-import consulo.desktop.awt.editor.impl.view.VisualLinesIterator;
+import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.document.Document;
 import consulo.document.util.TextRange;

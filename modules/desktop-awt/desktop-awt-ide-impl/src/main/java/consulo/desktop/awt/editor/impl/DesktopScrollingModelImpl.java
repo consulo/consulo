@@ -16,9 +16,7 @@
 package consulo.desktop.awt.editor.impl;
 
 import consulo.application.ui.RemoteDesktopService;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.VisualPosition;
+import consulo.codeEditor.*;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
@@ -140,7 +138,24 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     public void scrollToCaret(@Nonnull ScrollType scrollType) {
         assertIsDispatchThread();
         myEditor.validateSize();
-        AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.getCaretModel().getVisualPosition(), scrollType));
+
+        Editor editor = myEditor;
+        AsyncEditorLoader.performWhenLoaded(myEditor, () -> {
+            VisualPosition visualPosition = editor.getCaretModel().getVisualPosition();
+            scrollTo(visualPosition, scrollType);
+        });
+    }
+
+    @Nonnull
+    private Point stickyPanelAdjust(@Nonnull Point targetLocation, @Nonnull Rectangle viewRect) {
+        if (myEditor instanceof RealEditor editor) {
+            int height = editor.getStickyLinesPanelHeight();
+            if (height > 0) {
+                viewRect.height -= height;
+                return new Point(targetLocation.x, targetLocation.y - height);
+            }
+        }
+        return targetLocation;
     }
 
     @RequiredUIAccess
@@ -153,7 +168,13 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     private void scrollTo(@Nonnull Point targetLocation, @Nonnull ScrollType scrollType) {
         AnimatedScrollingRunnable canceledThread = cancelAnimatedScrolling(false);
         Rectangle viewRect = canceledThread != null ? canceledThread.getTargetVisibleArea() : getVisibleArea();
+
+        // the model knows nothing about the sticky panel rendering on top of the editor
+        // we should adjust target and view rectangle to avoid hidden caret by the sticky panel
+        targetLocation = stickyPanelAdjust(targetLocation, viewRect);
+
         Point p = calcOffsetsToScroll(targetLocation, scrollType, viewRect);
+
         scroll(p.x, p.y);
     }
 
@@ -485,7 +506,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
             myVDist = Math.abs(myEndVOffset - myStartVOffset);
 
             myMaxDistToScroll = myEditor.getLineHeight() * 50;
-            myTotalDist = Math.sqrt((double)myHDist * myHDist + (double)myVDist * myVDist);
+            myTotalDist = Math.sqrt((double) myHDist * myHDist + (double) myVDist * myVDist);
             myScrollDist = Math.min(myTotalDist, myMaxDistToScroll);
             myAnimationDuration = calcAnimationDuration();
             if (myAnimationDuration < SCROLL_INTERVAL * 2) {
@@ -504,11 +525,11 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
                 @Override
                 @RequiredUIAccess
                 public void paintNow(int frame, int totalFrames, int cycle) {
-                    double time = ((double)(frame + 1)) / (double)totalFrames;
+                    double time = ((double) (frame + 1)) / (double) totalFrames;
                     double fraction = timeToFraction(time);
 
-                    final int hOffset = (int)(myStartHOffset + (myEndHOffset - myStartHOffset) * fraction + 0.5);
-                    final int vOffset = (int)(myStartVOffset + (myEndVOffset - myStartVOffset) * fraction + 0.5);
+                    final int hOffset = (int) (myStartHOffset + (myEndHOffset - myStartHOffset) * fraction + 0.5);
+                    final int vOffset = (int) (myStartVOffset + (myEndVOffset - myStartVOffset) * fraction + 0.5);
 
                     _scrollHorizontally(hOffset);
                     _scrollVertically(vOffset);
@@ -571,7 +592,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
             double fraction = Math.pow(time * 2, myPow) / 2;
 
             if (myTotalDist > myMaxDistToScroll) {
-                fraction *= (double)myMaxDistToScroll / myTotalDist;
+                fraction *= (double) myMaxDistToScroll / myTotalDist;
             }
 
             return fraction;
@@ -593,7 +614,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
                 part = 1;
             }
             //System.out.println("duration = " + duration);
-            return (int)(part * SCROLL_DURATION);
+            return (int) (part * SCROLL_DURATION);
         }
     }
 

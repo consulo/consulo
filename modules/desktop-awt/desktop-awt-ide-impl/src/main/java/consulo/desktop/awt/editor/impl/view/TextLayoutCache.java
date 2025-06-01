@@ -43,7 +43,7 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
   private static final int MAX_CHUNKS_IN_ACTIVE_EDITOR = 1000;
   private static final int MAX_CHUNKS_IN_INACTIVE_EDITOR = 10;
 
-  private final EditorView myView;
+  private final EditorViewImpl myView;
   private final Document myDocument;
   private final LineLayout myBidiNotRequiredMarker;
   private ArrayList<LineLayout> myLines = new ArrayList<>();
@@ -63,7 +63,7 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
             }
           };
 
-  TextLayoutCache(EditorView view) {
+  TextLayoutCache(EditorViewImpl view) {
     myView = view;
     myDocument = view.getEditor().getDocument();
     myDocument.addDocumentListener(this, this);

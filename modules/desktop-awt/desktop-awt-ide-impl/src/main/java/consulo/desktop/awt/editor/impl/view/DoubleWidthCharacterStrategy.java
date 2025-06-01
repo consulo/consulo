@@ -4,7 +4,7 @@ package consulo.desktop.awt.editor.impl.view;
 /**
  * A strategy to differentiate between single and double width characters.
  *
- * @see EditorView#setDoubleWidthCharacterStrategy(DoubleWidthCharacterStrategy)
+ * @see EditorViewImpl#setDoubleWidthCharacterStrategy(DoubleWidthCharacterStrategy)
  */
 public interface DoubleWidthCharacterStrategy {
     /**

@@ -2,6 +2,7 @@
 package consulo.desktop.awt.editor.impl.view;
 
 import consulo.codeEditor.*;
+import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.document.Document;
@@ -22,11 +23,11 @@ import java.util.function.Consumer;
  * as fragments.
  */
 final class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterator.Fragment> {
-    static @Nonnull Iterable<Fragment> create(@Nonnull EditorView view, int offset, boolean beforeSoftWrap) {
+    static @Nonnull Iterable<Fragment> create(@Nonnull EditorViewImpl view, int offset, boolean beforeSoftWrap) {
         return create(view, offset, beforeSoftWrap, false);
     }
 
-    static @Nonnull Iterable<Fragment> create(@Nonnull EditorView view, int offset, boolean beforeSoftWrap, boolean align) {
+    static @Nonnull Iterable<Fragment> create(@Nonnull EditorViewImpl view, int offset, boolean beforeSoftWrap, boolean align) {
         return () -> new VisualLineFragmentsIterator(view, offset, beforeSoftWrap, align);
     }
 
@@ -34,14 +35,14 @@ final class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsI
      * If {@code quickEvaluationListener} is provided, quick approximate iteration mode becomes enabled, listener will be invoked
      * if approximation will in fact be used during width calculation.
      */
-    static @Nonnull Iterable<Fragment> create(@Nonnull EditorView view,
+    static @Nonnull Iterable<Fragment> create(@Nonnull EditorViewImpl view,
                                               @Nonnull VisualLinesIterator visualLinesIterator,
                                               @Nullable Runnable quickEvaluationListener,
                                               boolean align) {
         return () -> new VisualLineFragmentsIterator(view, visualLinesIterator, quickEvaluationListener, align);
     }
 
-    private final EditorView myView;
+    private final EditorViewImpl myView;
     private final Document myDocument;
     private final SoftWrapModelEx mySoftWrapModel;
     private final FoldingModelEx myFoldingModel;
@@ -68,7 +69,7 @@ final class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsI
     private int myNextWrapOffset;
     private JBUI.ScaleContext myScaleContext;
 
-    private VisualLineFragmentsIterator(EditorView view, int offset, boolean beforeSoftWrap, boolean align) {
+    private VisualLineFragmentsIterator(EditorViewImpl view, int offset, boolean beforeSoftWrap, boolean align) {
         myView = view;
         myDocument = view.getDocument();
         myFoldingModel = view.getFoldingModel();
@@ -102,7 +103,7 @@ final class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsI
             align);
     }
 
-    private VisualLineFragmentsIterator(@Nonnull EditorView view, @Nonnull VisualLinesIterator visualLinesIterator,
+    private VisualLineFragmentsIterator(@Nonnull EditorViewImpl view, @Nonnull VisualLinesIterator visualLinesIterator,
                                         @Nullable Runnable quickEvaluationListener, boolean align) {
         assert !visualLinesIterator.atEnd();
         myView = view;
@@ -120,7 +121,7 @@ final class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsI
             align);
     }
 
-    private void init(EditorView view, int visualLine, int startOffset, int startLogicalLine, int currentOrPrevWrapIndex, int nextFoldingIndex,
+    private void init(EditorViewImpl view, int visualLine, int startOffset, int startLogicalLine, int currentOrPrevWrapIndex, int nextFoldingIndex,
                       @Nullable Runnable quickEvaluationListener, boolean align) {
         myQuickEvaluationListener = quickEvaluationListener;
         DesktopEditorImpl editor = view.getEditor();

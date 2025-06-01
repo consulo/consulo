@@ -108,6 +108,10 @@ public interface RealEditor extends EditorEx {
         return false;
     }
 
+    default int getStickyLinesPanelHeight() {
+        return 0;
+    }
+
     default boolean isRightAligned() {
         return false;
     }

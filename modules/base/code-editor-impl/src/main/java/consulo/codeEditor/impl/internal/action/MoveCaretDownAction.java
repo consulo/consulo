@@ -22,31 +22,14 @@
  * To change template for new class use 
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.openapi.editor.actions;
+package consulo.codeEditor.impl.internal.action;
 
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.Editor;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
 
-public class MoveCaretDownAction extends EditorAction {
-  public MoveCaretDownAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    public Handler() {
-      super(true);
+@ActionImpl(id = "EditorDown")
+public final class MoveCaretDownAction extends EditorAction {
+    public MoveCaretDownAction() {
+        super(new MoveCaretUpOrDownHandler(MoveCaretUpOrDownHandler.Direction.DOWN));
     }
-
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      editor.getCaretModel().moveCaretRelatively(0, 1, false, false, true);
-    }
-
-    @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
-      return !editor.isOneLineMode();
-    }
-  }
 }

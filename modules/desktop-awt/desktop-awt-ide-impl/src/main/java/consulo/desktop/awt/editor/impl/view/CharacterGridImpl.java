@@ -14,7 +14,7 @@ public class CharacterGridImpl implements CharacterGrid {
         this.editor = editor;
     }
 
-    private EditorView getView() {
+    private EditorViewImpl getView() {
         return editor.getView();
     }
 

@@ -31,6 +31,8 @@ module consulo.code.editor.impl {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl;
 
+    exports consulo.codeEditor.impl.internal to consulo.desktop.awt.ide.impl;
+
     exports consulo.codeEditor.impl.softwrap.mapping to consulo.ide.impl, consulo.desktop.swt.ide.impl, consulo.desktop.awt.ide.impl;
     exports consulo.codeEditor.impl.softwrap to consulo.ide.impl, consulo.desktop.swt.ide.impl, consulo.desktop.awt.ide.impl;
 }

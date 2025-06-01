@@ -12,10 +12,10 @@ class CharWidthCache {
   private static final int CACHE_SIZE_LIMIT = 1024;
   private static final float SHIFT = 1f;
 
-  private final EditorView myView;
+  private final EditorViewImpl myView;
   private final TIntFloatHashMap myCache = new TIntFloatHashMap();
 
-  CharWidthCache(EditorView view) {
+  CharWidthCache(EditorViewImpl view) {
     myView = view;
   }
 

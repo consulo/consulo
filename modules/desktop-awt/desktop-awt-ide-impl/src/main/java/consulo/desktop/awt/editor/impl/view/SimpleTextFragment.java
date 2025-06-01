@@ -20,7 +20,7 @@ final class SimpleTextFragment extends TextFragment {
     @Nullable
     private float[] myCharAlignment = null;
 
-    SimpleTextFragment(@Nonnull char[] lineChars, int start, int end, @Nonnull FontInfo fontInfo, @Nullable EditorView view) {
+    SimpleTextFragment(@Nonnull char[] lineChars, int start, int end, @Nonnull FontInfo fontInfo, @Nullable EditorViewImpl view) {
         super(end - start, view);
         myText = Arrays.copyOfRange(lineChars, start, end);
         myFont = fontInfo.getFont();

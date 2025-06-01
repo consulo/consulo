@@ -4,6 +4,7 @@ package consulo.desktop.awt.editor.impl.view;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.FoldingListener;
+import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
 import consulo.codeEditor.impl.util.EditorImplUtil;
@@ -40,7 +41,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     private static final int UNKNOWN_WIDTH = Integer.MAX_VALUE;
     private static final int SPECIFIC_LINES_RECALC_THRESHOLD = 2;
 
-    private final EditorView myView;
+    private final EditorViewImpl myView;
     private final DesktopEditorImpl myEditor;
     private final DocumentEx myDocument;
     private final InlayModelImpl myInlayModel;
@@ -88,7 +89,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
         }
     };
 
-    EditorSizeManager(EditorView view) {
+    EditorSizeManager(EditorViewImpl view) {
         myView = view;
         myEditor = view.getEditor();
         myDocument = view.getDocument();

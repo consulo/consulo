@@ -1,17 +1,15 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package consulo.desktop.awt.editor.impl.view;
+package consulo.codeEditor.impl.internal;
 
 import consulo.codeEditor.*;
+import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 import consulo.codeEditor.util.EditorUtil;
-import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.document.Document;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static consulo.desktop.awt.editor.impl.InlayModelImpl.showWhenFolded;
 
 /**
  * If one needs to perform some actions for a continuous range of visual lines, using this class would be most surely faster than
@@ -20,7 +18,7 @@ import static consulo.desktop.awt.editor.impl.InlayModelImpl.showWhenFolded;
 public final class VisualLinesIterator {
     private static final int UNSET = -1;
 
-    private final EditorView myView;
+    private final RealEditorView myView;
     private final Document myDocument;
     private final int myLineHeight;
 
@@ -39,11 +37,11 @@ public final class VisualLinesIterator {
     private Location myNextLocation;
     private int y = UNSET; // y coordinate of visual line's top
 
-    public VisualLinesIterator(@Nonnull DesktopEditorImpl editor, int startVisualLine) {
+    public VisualLinesIterator(@Nonnull RealEditorWithEditorView editor, int startVisualLine) {
         this(editor.getView(), startVisualLine);
     }
 
-    public VisualLinesIterator(@Nonnull EditorView view, int startVisualLine) {
+    public VisualLinesIterator(@Nonnull RealEditorView view, int startVisualLine) {
         myView = view;
         myDocument = myView.getDocument();
         myInlayModel = myView.getInlayModel();
@@ -208,7 +206,7 @@ public final class VisualLinesIterator {
             int inlayOffset = inlay.getOffset() - (inlay.isRelatedToPrecedingText() ? 0 : 1);
             int foldIndex = myLocation.foldRegion;
             while (foldIndex < myFoldRegions.length && myFoldRegions[foldIndex].getEndOffset() <= inlayOffset) foldIndex++;
-            if (foldIndex < myFoldRegions.length && myFoldRegions[foldIndex].getStartOffset() <= inlayOffset && !showWhenFolded(inlay))
+            if (foldIndex < myFoldRegions.length && myFoldRegions[foldIndex].getStartOffset() <= inlayOffset && !CodeEditorInlayModelBase.showWhenFolded(inlay))
                 continue;
             (inlay.getPlacement() == Inlay.Placement.ABOVE_LINE ? myInlaysAbove : myInlaysBelow).add(inlay);
         }

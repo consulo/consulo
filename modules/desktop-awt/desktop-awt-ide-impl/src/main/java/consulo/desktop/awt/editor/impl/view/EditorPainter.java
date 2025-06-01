@@ -8,6 +8,7 @@ import consulo.codeEditor.impl.CaretData;
 import consulo.codeEditor.impl.ClipDetector;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.IterationState;
+import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.internal.FoldingKeys;
 import consulo.codeEditor.markup.*;
 import consulo.codeEditor.util.EditorUtil;
@@ -78,9 +79,9 @@ public final class EditorPainter implements TextDrawingCallback {
             (Registry.is("editor.show.right.margin.in.read.only.files") || editor.getDocument().isWritable());
     }
 
-    private final EditorView myView;
+    private final EditorViewImpl myView;
 
-    EditorPainter(EditorView view) {
+    EditorPainter(EditorViewImpl view) {
         myView = view;
     }
 
@@ -120,7 +121,7 @@ public final class EditorPainter implements TextDrawingCallback {
     }
 
     private static final class Session {
-        private final EditorView myView;
+        private final EditorViewImpl myView;
         private final DesktopEditorImpl myEditor;
         private final Document myDocument;
         private final CharSequence myText;
@@ -161,7 +162,7 @@ public final class EditorPainter implements TextDrawingCallback {
         private MarginPositions myMarginPositions;
         private final CaretDataInView myCaretDataInView;
 
-        private Session(EditorView view, Graphics2D g) {
+        private Session(EditorViewImpl view, Graphics2D g) {
             myView = view;
             myEditor = myView.getEditor();
             myDocument = myView.getDocument();
@@ -324,7 +325,7 @@ public final class EditorPainter implements TextDrawingCallback {
             }
         }
 
-        private static float getBaseMarginWidth(EditorView view) {
+        private static float getBaseMarginWidth(EditorViewImpl view) {
             Editor editor = view.getEditor();
             return editor.getSettings().getRightMargin(editor.getProject()) * view.getPlainSpaceWidth();
         }
@@ -1730,15 +1731,15 @@ public final class EditorPainter implements TextDrawingCallback {
 
         List<Integer> softMarginsX();
 
-        static @Nonnull XCorrector create(@Nonnull EditorView view, @Nonnull Insets insets) {
+        static @Nonnull XCorrector create(@Nonnull EditorViewImpl view, @Nonnull Insets insets) {
             return view.getEditor().isRightAligned() ? new RightAligned(view) : new LeftAligned(view, insets);
         }
 
         final class LeftAligned implements XCorrector {
-            private final EditorView myView;
+            private final EditorViewImpl myView;
             private final int myLeftInset;
 
-            private LeftAligned(@Nonnull EditorView view, @Nonnull Insets insets) {
+            private LeftAligned(@Nonnull EditorViewImpl view, @Nonnull Insets insets) {
                 myView = view;
                 myLeftInset = insets.left;
             }
@@ -1805,9 +1806,9 @@ public final class EditorPainter implements TextDrawingCallback {
         }
 
         final class RightAligned implements XCorrector {
-            private final EditorView myView;
+            private final EditorViewImpl myView;
 
-            private RightAligned(@Nonnull EditorView view) {
+            private RightAligned(@Nonnull EditorViewImpl view) {
                 myView = view;
             }
 
