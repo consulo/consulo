@@ -45,7 +45,6 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -2130,12 +2129,12 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
     private abstract class BalloonForm {
         public final AbstractPosition myPosition;
-        public final Rectangle myBounds;
+        public final Rectangle myBodyBounds;
         public final Point myTargetPoint;
 
-        public BalloonForm(AbstractPosition position, Rectangle bounds, Point targetPoint) {
+        public BalloonForm(AbstractPosition position, Rectangle bodyBounds, Point targetPoint) {
             myPosition = position;
-            myBounds = bounds;
+            myBodyBounds = bodyBounds;
             myTargetPoint = targetPoint;
         }
 
@@ -2150,10 +2149,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         @Override
         public Shape getShape() {
             return new RoundRectangle2D.Double(
-                myBounds.x,
-                myBounds.y,
-                myBounds.width - JBUIScale.scale(1),
-                myBounds.height - JBUIScale.scale(1),
+                myBodyBounds.x,
+                myBodyBounds.y,
+                myBodyBounds.width - JBUIScale.scale(1),
+                myBodyBounds.height - JBUIScale.scale(1),
                 getArc(),
                 getArc()
             );
@@ -2176,8 +2175,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         @Override
         public Shape getShape() {
-            Shaper shaper = new Shaper(myBounds, myTargetPoint);
-            shaper.line(getPointerWidth(myPosition) / 2, getPointerLength(myPosition))
+            int halfPointerWidth = getPointerWidth(myPosition) / 2;
+            return new Shaper(myBodyBounds, myTargetPoint)
+                .lineTo(myTargetPoint.x + halfPointerWidth, (int)myBodyBounds.getMinY())
                 .toRightCurve()
                 .roundRightDown()
                 .toBottomCurve()
@@ -2186,11 +2186,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                 .roundLeftUp()
                 .toTopCurve()
                 .roundUpRight()
-                .lineTo(myTargetPoint.x - getPointerWidth(myPosition) / 2, shaper.getY())
+                .horLineTo(myTargetPoint.x - halfPointerWidth)
                 .lineToTargetPoint()
                 .close();
-
-            return shaper.getShape();
         }
     }
 
@@ -2205,11 +2203,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         @Override
         public Shape getShape() {
-            Shaper shaper = new Shaper(myBounds, myTargetPoint);
-            int pointerWidth = getPointerWidth(myPosition);
-            int pointerLength = getPointerLength(myPosition);
-
-            shaper.line(-pointerWidth / 2, -pointerLength + JBUIScale.scale(1))
+            int halfPointerWidth = getPointerWidth(myPosition) / 2;
+            return new Shaper(myBodyBounds, myTargetPoint)
+                .lineTo(myTargetPoint.x - halfPointerWidth, (int)myBodyBounds.getMaxY() - JBUIScale.scale(1))
                 .toLeftCurve()
                 .roundLeftUp()
                 .toTopCurve()
@@ -2217,13 +2213,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                 .toRightCurve()
                 .roundRightDown()
                 .toBottomCurve()
-                .line(0, 2)
                 .roundLeftDown()
-                .lineTo(myTargetPoint.x + pointerWidth / 2, shaper.getY())
+                .horLineTo(myTargetPoint.x + halfPointerWidth)
                 .lineToTargetPoint()
                 .close();
-
-            return shaper.getShape();
         }
     }
 
@@ -2243,8 +2236,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         @Override
         public Shape getShape() {
-            Shaper shaper = new Shaper(myBounds, myTargetPoint);
-            shaper.line(getPointerLength(myPosition), -getPointerWidth(myPosition) / 2)
+            int halfPointerWidth = getPointerWidth(myPosition) / 2;
+            return new Shaper(myBodyBounds, myTargetPoint)
+                .lineTo((int)myBodyBounds.getMinX(), myTargetPoint.y - halfPointerWidth)
                 .toTopCurve()
                 .roundUpRight()
                 .toRightCurve()
@@ -2253,11 +2247,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                 .roundLeftDown()
                 .toLeftCurve()
                 .roundLeftUp()
-                .lineTo(shaper.getX(), myTargetPoint.y + getPointerWidth(myPosition) / 2)
+                .vertLineTo(myTargetPoint.y + halfPointerWidth)
                 .lineToTargetPoint()
                 .close();
-
-            return shaper.getShape();
         }
     }
 
@@ -2272,8 +2264,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         @Override
         public Shape getShape() {
-            Shaper shaper = new Shaper(myBounds, myTargetPoint);
-            shaper.lineTo((int)myBounds.getMaxX() - JBUIScale.scale(1), myTargetPoint.y + getPointerWidth(myPosition) / 2)
+            int halfPointerWidth = getPointerWidth(myPosition) / 2;
+            return new Shaper(myBodyBounds, myTargetPoint)
+                .lineTo((int)myBodyBounds.getMaxX() - JBUIScale.scale(1), myTargetPoint.y + halfPointerWidth)
                 .toBottomCurve()
                 .roundLeftDown()
                 .toLeftCurve()
@@ -2282,10 +2275,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                 .roundUpRight()
                 .toRightCurve()
                 .roundRightDown()
-                .lineTo(shaper.getX(), myTargetPoint.y - getPointerWidth(myPosition) / 2)
+                .vertLineTo(myTargetPoint.y - halfPointerWidth)
                 .lineToTargetPoint()
                 .close();
-            return shaper.getShape();
         }
     }
 
@@ -2341,12 +2333,18 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             return this;
         }
 
-        public Shaper line(int deltaX, int deltaY) {
-            return lineTo(getX() + deltaX, getY() + deltaY);
-        }
-
         public Shaper lineTo(int x, int y) {
             myPath.lineTo(x, y);
+            return this;
+        }
+
+        public Shaper horLineTo(int x) {
+            myPath.lineTo(x, getY());
+            return this;
+        }
+
+        public Shaper vertLineTo(int y) {
+            myPath.lineTo(getX(), y);
             return this;
         }
 
@@ -2356,33 +2354,26 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         @Nonnull
         public Shaper toRightCurve() {
-            myPath.lineTo((int)myBodyBounds.getMaxX() - getArc() - JBUIScale.scale(1), getY());
-            return this;
+            return horLineTo((int)myBodyBounds.getMaxX() - getArc() - JBUIScale.scale(1));
         }
 
         @Nonnull
         public Shaper toBottomCurve() {
-            myPath.lineTo(getX(), (int)myBodyBounds.getMaxY() - getArc() - JBUIScale.scale(1));
-            return this;
+            return vertLineTo((int)myBodyBounds.getMaxY() - getArc() - JBUIScale.scale(1));
         }
 
         @Nonnull
         public Shaper toLeftCurve() {
-            myPath.lineTo((int)myBodyBounds.getMinX() + getArc(), getY());
-            return this;
+            return horLineTo((int)myBodyBounds.getMinX() + getArc());
         }
 
         @Nonnull
         public Shaper toTopCurve() {
-            myPath.lineTo(getX(), (int)myBodyBounds.getY() + getArc());
-            return this;
+            return vertLineTo((int)myBodyBounds.getMinY() + getArc());
         }
 
-        public void close() {
+        public Shape close() {
             myPath.closePath();
-        }
-
-        public Shape getShape() {
             return myPath;
         }
     }
