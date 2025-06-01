@@ -40,6 +40,7 @@ public class ProxyTest extends Assert {
   }
 
   @Test
+  @SuppressWarnings("ReturnValueIgnored")
   @Ignore
   // disable test since it will can provide SOFE due getField will override in impl class
   public void testExtendClass() throws Throwable {
