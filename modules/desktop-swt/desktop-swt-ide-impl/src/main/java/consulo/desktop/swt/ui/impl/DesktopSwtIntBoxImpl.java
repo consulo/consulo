@@ -16,6 +16,7 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.eclipse.swt.SWT;
@@ -27,77 +28,76 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Spinner> implements IntBox {
-  private int myInitValue;
-  private int myInitMin;
-  private int myInitMax = Integer.MAX_VALUE;
+    private int myInitValue;
+    private int myInitMin;
+    private int myInitMax = Integer.MAX_VALUE;
 
-  public DesktopSwtIntBoxImpl(int initValue) {
-    myInitValue = initValue;
-  }
-
-  @Override
-  public void setPlaceholder(@Nullable String text) {
-
-  }
-
-  @Override
-  public void setRange(int min, int max) {
-    Spinner spinner = toSWTComponent();
-    if (spinner != null) {
-      spinner.setMinimum(min);
-      spinner.setMaximum(max);
+    public DesktopSwtIntBoxImpl(int initValue) {
+        myInitValue = initValue;
     }
-    else {
-      myInitMin = min;
-      myInitMax = max;
+
+    @Override
+    public void setPlaceholder(@Nullable LocalizeValue text) {
     }
-  }
 
-  @Nonnull
-  @Override
-  public Disposable addValidator(@Nonnull Validator<Integer> validator) {
-    return null;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean validate() {
-    return true;
-  }
-
-  @Nullable
-  @Override
-  public Integer getValue() {
-    Spinner spinner = toSWTComponent();
-    return spinner.getSelection();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(Integer value, boolean fireListeners) {
-    Spinner spinner = toSWTComponent();
-    if (spinner != null) {
-      spinner.setSelection(value == null ? 0 : value);
+    @Override
+    public void setRange(int min, int max) {
+        Spinner spinner = toSWTComponent();
+        if (spinner != null) {
+            spinner.setMinimum(min);
+            spinner.setMaximum(max);
+        }
+        else {
+            myInitMin = min;
+            myInitMax = max;
+        }
     }
-    else {
-      myInitValue = value;
+
+    @Nonnull
+    @Override
+    public Disposable addValidator(@Nonnull Validator<Integer> validator) {
+        return null;
     }
-  }
 
-  @Override
-  protected Spinner createSWT(Composite parent) {
-    return new Spinner(parent, SWT.BORDER);
-  }
+    @Override
+    @RequiredUIAccess
+    public boolean validate() {
+        return true;
+    }
 
-  @Override
-  protected void initialize(Spinner component) {
-    super.initialize(component);
+    @Nullable
+    @Override
+    public Integer getValue() {
+        Spinner spinner = toSWTComponent();
+        return spinner.getSelection();
+    }
 
-    component.setSelection(myInitValue);
-    component.setMinimum(myInitMin);
-    component.setMaximum(myInitMax);
-  }
+    @Override
+    @RequiredUIAccess
+    public void setValue(Integer value, boolean fireListeners) {
+        Spinner spinner = toSWTComponent();
+        if (spinner != null) {
+            spinner.setSelection(value == null ? 0 : value);
+        }
+        else {
+            myInitValue = value;
+        }
+    }
+
+    @Override
+    protected Spinner createSWT(Composite parent) {
+        return new Spinner(parent, SWT.BORDER);
+    }
+
+    @Override
+    protected void initialize(Spinner component) {
+        super.initialize(component);
+
+        component.setSelection(myInitValue);
+        component.setMinimum(myInitMin);
+        component.setMaximum(myInitMax);
+    }
 }

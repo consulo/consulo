@@ -17,6 +17,7 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.textfield.TextField;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,54 +31,55 @@ import jakarta.annotation.Nullable;
  * @since 2020-05-10
  */
 public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin> implements IntBox {
-  public class Vaadin extends TextField implements FromVaadinComponentWrapper {
-    @Nullable
-    @Override
-    public Component toUIComponent() {
-      return WebIntBoxImpl.this;
+    public class Vaadin extends TextField implements FromVaadinComponentWrapper {
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebIntBoxImpl.this;
+        }
     }
-  }
 
-  public WebIntBoxImpl(int value) {
-    setValue(value, false);
-  }
+    @RequiredUIAccess
+    public WebIntBoxImpl(int value) {
+        setValue(value, false);
+    }
 
-  @Override
-  @Nonnull
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Nonnull
+    @Override
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
 
-  @Nullable
-  @Override
-  public Integer getValue() {
-    return Integer.parseInt(getVaadinComponent().getValue());
-  }
+    @Override
+    @Nullable
+    public Integer getValue() {
+        return Integer.parseInt(getVaadinComponent().getValue());
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setValue(Integer value, boolean fireListeners) {
-    getVaadinComponent().setValue(String.valueOf(value));
-  }
+    @Override
+    @RequiredUIAccess
+    public void setValue(Integer value, boolean fireListeners) {
+        getVaadinComponent().setValue(String.valueOf(value));
+    }
 
-  @Override
-  public void setPlaceholder(@Nullable String text) {
-  }
+    @Override
+    public void setPlaceholder(@Nullable LocalizeValue text) {
+    }
 
-  @Override
-  public void setRange(int min, int max) {
-  }
+    @Override
+    public void setRange(int min, int max) {
+    }
 
-  @Nonnull
-  @Override
-  public Disposable addValidator(@Nonnull Validator<Integer> validator) {
-    return () -> {
-    };
-  }
+    @Nonnull
+    @Override
+    public Disposable addValidator(@Nonnull Validator<Integer> validator) {
+        return () -> {
+        };
+    }
 
-  @RequiredUIAccess
-  @Override
-  public boolean validate() {
-    return true;
-  }
+    @Override
+    @RequiredUIAccess
+    public boolean validate() {
+        return true;
+    }
 }

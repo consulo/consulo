@@ -10,7 +10,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
-import consulo.document.util.UnfairTextRange;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
@@ -52,7 +51,6 @@ import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Area;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -228,7 +226,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     private final Color myBorderColor;
     private final Insets myBorderInsets;
     private Color myFillColor;
-    private Color myPointerColor;
 
     private final Insets myContainerInsets;
 
@@ -259,14 +256,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
     public void setFillColor(Color fillColor) {
         myFillColor = fillColor;
-    }
-
-    public Color getPointerColor() {
-        return myPointerColor;
-    }
-
-    public void setPointerColor(Color pointerColor) {
-        myPointerColor = pointerColor;
     }
 
     private final long myFadeoutTime;
@@ -1310,41 +1299,13 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         protected abstract Insets getTitleInsets(int normalInset, int pointerLength);
 
-        boolean isOkToHavePointer(@Nonnull Point targetPoint, @Nonnull Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
-            if (bounds.x < targetPoint.x
-                && bounds.x + bounds.width > targetPoint.x
-                && bounds.y < targetPoint.y
-                && bounds.y + bounds.height > targetPoint.y) {
-                return false;
-            }
-
-            Rectangle pointless = getPointlessContentRec(bounds, pointerLength);
-
-            int distance = getDistanceToTarget(pointless, targetPoint);
-            if (distance < pointerLength - 1 || distance > 2 * pointerLength) {
-                return false;
-            }
-
-            UnfairTextRange balloonRange;
-            UnfairTextRange pointerRange;
-            if (isTopBottomPointer()) {
-                balloonRange = new UnfairTextRange(bounds.x + arc - 1, bounds.x + bounds.width - arc * 2 + 1);
-                pointerRange = new UnfairTextRange(targetPoint.x - pointerWidth / 2, targetPoint.x + pointerWidth / 2);
-            }
-            else {
-                balloonRange = new UnfairTextRange(bounds.y + arc - 1, bounds.y + bounds.height - arc * 2 + 1);
-                pointerRange = new UnfairTextRange(targetPoint.y - pointerWidth / 2, targetPoint.y + pointerWidth / 2);
-            }
-            return balloonRange.contains(pointerRange);
-        }
-
-        protected abstract int getDistanceToTarget(Rectangle rectangle, Point targetPoint);
-
         boolean isTopBottomPointer() {
             return false;
         }
 
         protected abstract Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength);
+
+        protected abstract Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc);
 
         @Nonnull
         Set<AbstractPosition> getOtherPositions() {
@@ -1419,13 +1380,30 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         @Override
-        protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
-            return rectangle.y - targetPoint.y;
-        }
-
-        @Override
         protected Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength) {
             return new Rectangle(bounds.x, bounds.y + pointerLength, bounds.width, bounds.height - pointerLength);
+        }
+
+        /**
+         *   +---------------+
+         *   |               |
+         *   | allowed range | <- pointerLength
+         *   |               |
+         * +-------------------+
+         * |                   |
+         * |      bounds       |
+         * |                   |
+         * +-------------------+
+         */
+        @Override
+        protected Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
+            int deadFromCorner = arc + (pointerWidth / 2) - 1;
+            return new Rectangle(
+                (int)bounds.getMinX() + deadFromCorner,
+                (int)bounds.getMinY() - pointerLength,
+                (int)bounds.getWidth() - deadFromCorner * 2,
+                pointerLength + 1
+            );
         }
 
         @Override
@@ -1488,13 +1466,30 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         @Override
-        protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
-            return targetPoint.y - (int)rectangle.getMaxY();
-        }
-
-        @Override
         protected Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength) {
             return new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height - pointerLength);
+        }
+
+        /**
+         * +-------------------+
+         * |                   |
+         * |      bounds       |
+         * |                   |
+         * +-------------------+
+         *   |               |
+         *   | allowed range | <- pointerLength
+         *   |               |
+         *   +---------------+
+         */
+        @Override
+        protected Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
+            int deadFromCorner = arc + (pointerWidth / 2) - 1;
+            return new Rectangle(
+                (int)bounds.getMinX() + deadFromCorner,
+                (int)bounds.getMaxY() - 1,
+                (int)bounds.getWidth() - deadFromCorner * 2,
+                pointerLength + 1
+            );
         }
 
         @Override
@@ -1551,13 +1546,26 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         @Override
-        protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
-            return rectangle.x - targetPoint.x;
-        }
-
-        @Override
         protected Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength) {
             return new Rectangle(bounds.x + pointerLength, bounds.y, bounds.width - pointerLength, bounds.height);
+        }
+
+        /**
+         *                 +--------+
+         * +-pointerLength-|        |
+         * | allowed range | bounds |
+         * +---------------|        |
+         *                 +--------+
+         */
+        @Override
+        protected Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
+            int deadFromCorner = arc + (pointerWidth / 2) - 1;
+            return new Rectangle(
+                (int)bounds.getMinX() - pointerLength,
+                (int)bounds.getMinY() + deadFromCorner,
+                pointerLength + 1,
+                (int)bounds.getHeight() - deadFromCorner * 2
+            );
         }
 
         @Override
@@ -1615,13 +1623,26 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         @Override
-        protected int getDistanceToTarget(Rectangle rectangle, Point targetPoint) {
-            return targetPoint.x - (int)rectangle.getMaxX();
-        }
-
-        @Override
         protected Rectangle getPointlessContentRec(Rectangle bounds, int pointerLength) {
             return new Rectangle(bounds.x, bounds.y, bounds.width - pointerLength, bounds.height);
+        }
+
+        /**
+         * +--------+
+         * |        |-pointerLength-+
+         * | bounds | allowed range |
+         * |        |---------------+
+         * +--------+
+         */
+        @Override
+        protected Rectangle getAllowedPointRange(Rectangle bounds, int pointerLength, int pointerWidth, int arc) {
+            int deadFromCorner = arc + (pointerWidth / 2) - 1;
+            return new Rectangle(
+                (int)bounds.getMaxX() - 1,
+                (int)bounds.getMinY() + deadFromCorner,
+                pointerLength + 1,
+                (int)bounds.getHeight() - deadFromCorner * 2
+            );
         }
 
         @Override
@@ -2063,13 +2084,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
             g.setPaint(myFillColor);
             g.fill(shape);
-            if (myShowPointer && myPointerColor != null) {
-                Shape balloonShape = myPosition.getPointlessContentRec(myBounds, this.myPosition.getPointerLength(myDialogMode) + 1);
-                Area area = new Area(shape);
-                area.subtract(new Area(balloonShape));
-                g.setColor(myPointerColor);
-                g.fill(area);
-            }
+
             g.setColor(myBorderColor);
 
             if (myTitleLabel != null) {
@@ -2117,13 +2132,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
 
         boolean isOkToHavePointer() {
-            return myPosition.isOkToHavePointer(
-                myTargetPoint,
-                myBounds,
-                getPointerLength(myPosition),
-                getPointerWidth(myPosition),
-                getArc()
-            );
+            int pointerLength = getPointerLength(myPosition);
+            int pointerWidth = getPointerWidth(myPosition);
+            return myPosition.getAllowedPointRange(myBounds, pointerLength, pointerWidth, getArc()).contains(myTargetPoint);
         }
     }
 
@@ -2176,7 +2187,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         @Override
         public Shape getShape() {
             int halfPointerWidth = getPointerWidth(myPosition) / 2;
-            return new Shaper(myBodyBounds, myTargetPoint)
+            return new BalloonShaper(myBodyBounds, myTargetPoint, getArc())
                 .lineTo(myTargetPoint.x + halfPointerWidth, (int)myBodyBounds.getMinY())
                 .toRightCurve()
                 .roundRightDown()
@@ -2204,7 +2215,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         @Override
         public Shape getShape() {
             int halfPointerWidth = getPointerWidth(myPosition) / 2;
-            return new Shaper(myBodyBounds, myTargetPoint)
+            return new BalloonShaper(myBodyBounds, myTargetPoint, getArc())
                 .lineTo(myTargetPoint.x - halfPointerWidth, (int)myBodyBounds.getMaxY() - JBUIScale.scale(1))
                 .toLeftCurve()
                 .roundLeftUp()
@@ -2237,7 +2248,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         @Override
         public Shape getShape() {
             int halfPointerWidth = getPointerWidth(myPosition) / 2;
-            return new Shaper(myBodyBounds, myTargetPoint)
+            return new BalloonShaper(myBodyBounds, myTargetPoint, getArc())
                 .lineTo((int)myBodyBounds.getMinX(), myTargetPoint.y - halfPointerWidth)
                 .toTopCurve()
                 .roundUpRight()
@@ -2265,7 +2276,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         @Override
         public Shape getShape() {
             int halfPointerWidth = getPointerWidth(myPosition) / 2;
-            return new Shaper(myBodyBounds, myTargetPoint)
+            return new BalloonShaper(myBodyBounds, myTargetPoint, getArc())
                 .lineTo((int)myBodyBounds.getMaxX() - JBUIScale.scale(1), myTargetPoint.y + halfPointerWidth)
                 .toBottomCurve()
                 .roundLeftDown()
@@ -2278,103 +2289,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
                 .vertLineTo(myTargetPoint.y - halfPointerWidth)
                 .lineToTargetPoint()
                 .close();
-        }
-    }
-
-    private class Shaper {
-        private final GeneralPath myPath = new GeneralPath();
-
-        private Rectangle myBodyBounds;
-        private Point myTargetPoint;
-
-        public Shaper(Rectangle bodyBounds, Point targetPoint) {
-            myTargetPoint = targetPoint;
-            myBodyBounds = bodyBounds;
-            start(targetPoint);
-        }
-
-        private void start(Point start) {
-            myPath.moveTo(start.x, start.y);
-        }
-
-        public int getX() {
-            return (int)myPath.getCurrentPoint().getX();
-        }
-
-        public int getY() {
-            return (int)myPath.getCurrentPoint().getY();
-        }
-
-        @Nonnull
-        public Shaper roundUpRight() {
-            int x = getX(), y = getY(), r = getArc();
-            myPath.quadTo(x, y - r, x + r, y - r);
-            return this;
-        }
-
-        @Nonnull
-        public Shaper roundRightDown() {
-            int x = getX(), y = getY(), r = getArc();
-            myPath.quadTo(x + r, y, x + r, y + r);
-            return this;
-        }
-
-        @Nonnull
-        public Shaper roundLeftUp() {
-            int x = getX(), y = getY(), r = getArc();
-            myPath.quadTo(x - r, y, x - r, y - r);
-            return this;
-        }
-
-        @Nonnull
-        public Shaper roundLeftDown() {
-            int x = getX(), y = getY(), r = getArc();
-            myPath.quadTo(x, y + r, x - r, y + r);
-            return this;
-        }
-
-        public Shaper lineTo(int x, int y) {
-            myPath.lineTo(x, y);
-            return this;
-        }
-
-        public Shaper horLineTo(int x) {
-            myPath.lineTo(x, getY());
-            return this;
-        }
-
-        public Shaper vertLineTo(int y) {
-            myPath.lineTo(getX(), y);
-            return this;
-        }
-
-        public Shaper lineToTargetPoint() {
-            return lineTo((int)myTargetPoint.getX(), (int)myTargetPoint.getY());
-        }
-
-        @Nonnull
-        public Shaper toRightCurve() {
-            return horLineTo((int)myBodyBounds.getMaxX() - getArc() - JBUIScale.scale(1));
-        }
-
-        @Nonnull
-        public Shaper toBottomCurve() {
-            return vertLineTo((int)myBodyBounds.getMaxY() - getArc() - JBUIScale.scale(1));
-        }
-
-        @Nonnull
-        public Shaper toLeftCurve() {
-            return horLineTo((int)myBodyBounds.getMinX() + getArc());
-        }
-
-        @Nonnull
-        public Shaper toTopCurve() {
-            return vertLineTo((int)myBodyBounds.getMinY() + getArc());
-        }
-
-        public Shape close() {
-            myPath.closePath();
-            return myPath;
         }
     }
 
