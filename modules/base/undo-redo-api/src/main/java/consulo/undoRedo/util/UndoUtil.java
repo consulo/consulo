@@ -8,6 +8,8 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
+import java.util.Objects;
+
 public final class UndoUtil {
     private UndoUtil() {
     }
@@ -62,6 +64,6 @@ public final class UndoUtil {
     }
 
     public static boolean isForceUndoFlagSet(@Nonnull VirtualFile file) {
-        return file.getUserData(UndoConstants.FORCE_RECORD_UNDO) == Boolean.TRUE;
+        return Objects.equals(file.getUserData(UndoConstants.FORCE_RECORD_UNDO), Boolean.TRUE);
     }
 }

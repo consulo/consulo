@@ -58,6 +58,7 @@ import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -653,8 +654,8 @@ public class InjectedLanguageUtil {
       public void visitElement(PsiElement element) {
         if (element == startElement) myState = Boolean.TRUE;
         if (element == endElement) myState = Boolean.FALSE;
-        if (Boolean.FALSE == myState) return;
-        if (Boolean.TRUE == myState && element.getFirstChild() == null) {
+        if (Objects.equals(myState, Boolean.FALSE)) return;
+        if (Objects.equals(myState, Boolean.TRUE) && element.getFirstChild() == null) {
           sb.append(getUnescapedLeafText(element, false));
         }
         else {

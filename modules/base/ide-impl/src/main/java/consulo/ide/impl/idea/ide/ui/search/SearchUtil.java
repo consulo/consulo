@@ -110,7 +110,7 @@ public class SearchUtil {
 
   public static void processComponent(final JComponent component, final Set<OptionDescription> configurableOptions, @NonNls String path) {
     if (component instanceof SkipSelfSearchComponent) return;
-    if (UIUtil.getClientProperty(component, SkipSelfSearchComponent.KEY) == Boolean.TRUE) return;
+    if (Objects.equals(UIUtil.getClientProperty(component, SkipSelfSearchComponent.KEY), Boolean.TRUE)) return;
 
     final Border border = component.getBorder();
     if (border instanceof TitledBorder) {

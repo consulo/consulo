@@ -68,7 +68,7 @@ class WindowsScrollBarOptionTracker implements AWTEventListener {
       myDynamicScrollBars = calcState();
     }
 
-    return myDynamicScrollBars == Boolean.TRUE;
+    return Objects.equals(myDynamicScrollBars, Boolean.TRUE);
   }
 
   private boolean calcState() {

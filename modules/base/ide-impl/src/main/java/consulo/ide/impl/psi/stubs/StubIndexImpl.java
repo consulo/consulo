@@ -801,7 +801,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
             Iterator<StubIndexExtension> extensionsIterator = IndexInfrastructure.hasIndices()
                 ? StubIndexExtension.EP_NAME.getExtensionList().iterator() : Collections.emptyIterator();
 
-            boolean forceClean = Boolean.TRUE == ourForcedClean.getAndSet(Boolean.FALSE);
+            boolean forceClean = Objects.equals(ourForcedClean.getAndSet(Boolean.FALSE), Boolean.TRUE);
             while (extensionsIterator.hasNext()) {
                 StubIndexExtension extension = extensionsIterator.next();
                 if (extension == null) {

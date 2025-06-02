@@ -26,10 +26,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -140,7 +138,7 @@ public class ConsoleViewUtil {
   }
 
   public static boolean isReplaceActionEnabledForConsoleViewEditor(@Nonnull Editor editor) {
-    return editor.getUserData(REPLACE_ACTION_ENABLED) == Boolean.TRUE;
+    return Objects.equals(editor.getUserData(REPLACE_ACTION_ENABLED), Boolean.TRUE);
   }
 
   public static void enableReplaceActionForConsoleViewEditor(@Nonnull Editor editor) {

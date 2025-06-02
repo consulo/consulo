@@ -63,6 +63,7 @@ import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHandler {
     private Project myProject;
@@ -142,7 +143,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
                 int selectionEnd = myCaret.getSelectionEnd();
                 if (commenter instanceof IndentedCommenter indentedCommenter) {
                     Boolean value = indentedCommenter.forceIndentedLineComment();
-                    if (value != null && value == Boolean.TRUE) {
+                    if (value != null && Objects.equals(value, Boolean.TRUE)) {
                         selectionStart = myDocument.getLineStartOffset(myDocument.getLineNumber(selectionStart));
                         selectionEnd = myDocument.getLineEndOffset(myDocument.getLineNumber(selectionEnd));
                     }
@@ -154,7 +155,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
                 int caretOffset = myCaret.getOffset();
                 if (commenter instanceof IndentedCommenter indentedCommenter) {
                     Boolean value = indentedCommenter.forceIndentedLineComment();
-                    if (value != null && value == Boolean.TRUE) {
+                    if (value != null && Objects.equals(value, Boolean.TRUE)) {
                         int lineNumber = myDocument.getLineNumber(caretOffset);
                         int start = myDocument.getLineStartOffset(lineNumber);
                         int end = myDocument.getLineEndOffset(lineNumber);

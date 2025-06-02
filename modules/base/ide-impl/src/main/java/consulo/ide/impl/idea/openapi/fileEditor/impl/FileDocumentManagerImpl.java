@@ -626,7 +626,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
     @Override
     public boolean isPartialPreviewOfALargeFile(@Nonnull Document document) {
-        return document.getUserData(BIG_FILE_PREVIEW) == Boolean.TRUE;
+        return Objects.equals(document.getUserData(BIG_FILE_PREVIEW), Boolean.TRUE);
     }
 
     @RequiredUIAccess

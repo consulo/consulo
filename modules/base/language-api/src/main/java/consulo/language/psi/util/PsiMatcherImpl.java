@@ -17,6 +17,8 @@ package consulo.language.psi.util;
 
 import consulo.language.psi.PsiElement;
 
+import java.util.Objects;
+
 public class PsiMatcherImpl implements PsiMatcher {
   private PsiElement myElement;
 
@@ -27,7 +29,7 @@ public class PsiMatcherImpl implements PsiMatcher {
   @Override
   public PsiMatcher parent(PsiMatcherExpression e) {
     myElement = myElement.getParent();
-    if (myElement == null || (e != null && e.match(myElement) != Boolean.TRUE)) return NullPsiMatcherImpl.INSTANCE;
+    if (myElement == null || (e != null && !Objects.equals(e.match(myElement), Boolean.TRUE))) return NullPsiMatcherImpl.INSTANCE;
     return this;
   }
 
@@ -36,7 +38,7 @@ public class PsiMatcherImpl implements PsiMatcher {
     final PsiElement[] children = myElement.getChildren();
     for (PsiElement child : children) {
       myElement = child;
-      if (e == null || e.match(myElement) == Boolean.TRUE) {
+      if (e == null || Objects.equals(e.match(myElement), Boolean.TRUE)) {
         return this;
       }
     }
@@ -47,7 +49,7 @@ public class PsiMatcherImpl implements PsiMatcher {
   public PsiMatcher ancestor(PsiMatcherExpression e) {
     while (myElement != null) {
       Boolean res = e == null ? Boolean.TRUE : e.match(myElement);
-      if (res == Boolean.TRUE) break;
+      if (Objects.equals(res, Boolean.TRUE)) break;
       if (res == null) return NullPsiMatcherImpl.INSTANCE;
       myElement = myElement.getParent();
     }
@@ -61,10 +63,10 @@ public class PsiMatcherImpl implements PsiMatcher {
     for (PsiElement child : children) {
       myElement = child;
       final Boolean res = e == null ? Boolean.TRUE : e.match(myElement);
-      if (res == Boolean.TRUE) {
+      if (Objects.equals(res, Boolean.TRUE)) {
         return this;
       }
-      else if (res == Boolean.FALSE) {
+      else if (Objects.equals(res, Boolean.FALSE)) {
         final PsiMatcher grandChild = descendant(e);
         if (grandChild != NullPsiMatcherImpl.INSTANCE) return grandChild;
       }
@@ -74,7 +76,7 @@ public class PsiMatcherImpl implements PsiMatcher {
 
   @Override
   public PsiMatcher dot(PsiMatcherExpression e) {
-    return e == null || e.match(myElement) == Boolean.TRUE ? this : NullPsiMatcherImpl.INSTANCE;
+    return e == null || Objects.equals(e.match(myElement), Boolean.TRUE) ? this : NullPsiMatcherImpl.INSTANCE;
   }
 
 

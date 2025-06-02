@@ -22,6 +22,7 @@ import consulo.virtualFileSystem.event.*;
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class FileUndoProvider implements UndoProvider, BulkFileListener {
   public static final Logger LOG = Logger.getInstance(FileUndoProvider.class);
@@ -153,7 +154,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
   }
 
   private static boolean isUndoable(@Nonnull VFileEvent e, @Nonnull VirtualFile file) {
-    return !e.isFromRefresh() || file.getUserData(UndoConstants.FORCE_RECORD_UNDO) == Boolean.TRUE;
+    return !e.isFromRefresh() || Objects.equals(file.getUserData(UndoConstants.FORCE_RECORD_UNDO), Boolean.TRUE);
   }
 
   private void registerUndoableAction(@Nonnull VirtualFile file) {

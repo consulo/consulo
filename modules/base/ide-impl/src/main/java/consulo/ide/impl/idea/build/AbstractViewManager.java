@@ -33,6 +33,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -267,7 +268,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     public void update(@Nonnull AnActionEvent e) {
       if (!myContent.isValid()) return;
       Boolean isPinnedAndExtracted = myContent.getUserData(PINNED_EXTRACTED_CONTENT);
-      if (isPinnedAndExtracted == Boolean.TRUE) {
+      if (Objects.equals(isPinnedAndExtracted, Boolean.TRUE)) {
         e.getPresentation().setEnabledAndVisible(false);
         return;
       }

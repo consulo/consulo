@@ -40,6 +40,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
+import java.util.Objects;
 
 @Singleton
 @ServiceImpl
@@ -87,9 +88,9 @@ public class ValueLookupManagerImpl implements ValueLookupManager, EditorMouseLi
         }
 
         ValueHintType type = AbstractValueHint.getHintType(e);
-        if (e.getArea() != EditorMouseEventArea.EDITING_AREA ||
-            DISABLE_VALUE_LOOKUP.get(editor) == Boolean.TRUE ||
-            type == null) {
+        if (e.getArea() != EditorMouseEventArea.EDITING_AREA
+            || Objects.equals(DISABLE_VALUE_LOOKUP.get(editor), Boolean.TRUE)
+            || type == null) {
             myAlarm.cancelAllRequests();
             return;
         }

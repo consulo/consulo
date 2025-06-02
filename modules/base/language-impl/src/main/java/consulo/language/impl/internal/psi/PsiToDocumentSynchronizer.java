@@ -41,6 +41,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
@@ -115,7 +116,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   static boolean isInsideAtomicChange(@Nonnull PsiFile file) {
-    return file.getUserData(PSI_DOCUMENT_ATOMIC_ACTION) == Boolean.TRUE;
+    return Objects.equals(file.getUserData(PSI_DOCUMENT_ATOMIC_ACTION), Boolean.TRUE);
   }
 
   public static void performAtomically(@Nonnull PsiFile file, @Nonnull Runnable runnable) {

@@ -56,6 +56,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UnifiedToolWindowContentUI implements ToolWindowContentUI, PropertyChangeListener, DataProvider {
   public static final String POPUP_PLACE = ToolWindowContentUI.POPUP_PLACE;
@@ -311,7 +312,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
       group.addAction(createSplitTabsAction((TabbedContent)content));
     }
 
-    if (Boolean.TRUE == content.getUserData(Content.TABBED_CONTENT_KEY)) {
+    if (Objects.equals(content.getUserData(Content.TABBED_CONTENT_KEY), Boolean.TRUE)) {
       final String groupName = content.getUserData(Content.TAB_GROUP_NAME_KEY);
       if (groupName != null) {
         group.addAction(createMergeTabsAction(myManager, groupName));

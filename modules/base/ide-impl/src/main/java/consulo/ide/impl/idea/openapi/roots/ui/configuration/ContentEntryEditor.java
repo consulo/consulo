@@ -38,6 +38,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.EventListener;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
@@ -137,7 +138,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
     public void showChangeOptionsDialog(ContentEntry contentEntry, ContentFolder contentFolder) {
         ContentFolderPropertiesDialog c = new ContentFolderPropertiesDialog(getModel().getProject(), contentFolder);
         AsyncResult<Boolean> booleanAsyncResult = c.showAndGetOk();
-        if (booleanAsyncResult.getResult() == Boolean.TRUE) {
+        if (Objects.equals(booleanAsyncResult.getResult(), Boolean.TRUE)) {
             update();
         }
     }

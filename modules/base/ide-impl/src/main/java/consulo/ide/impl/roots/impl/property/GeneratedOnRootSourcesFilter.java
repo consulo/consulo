@@ -26,6 +26,8 @@ import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;
 
+import java.util.Objects;
+
 /**
  * TODO module-content-impl module source
  *
@@ -45,6 +47,6 @@ public class GeneratedOnRootSourcesFilter implements GeneratedSourcesFilter {
   @Override
   public boolean isGeneratedSource(@Nonnull VirtualFile file) {
     ContentFolder folder = myProjectFileIndex.getContentFolder(file);
-    return folder != null && folder.getPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED) == Boolean.TRUE;
+    return folder != null && Objects.equals(folder.getPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED), Boolean.TRUE);
   }
 }

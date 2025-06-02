@@ -56,6 +56,8 @@ import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
+
 @ExtensionImpl(id = "editorEnter")
 public class EnterHandler extends BaseEnterHandler implements ExtensionEditorActionHandler {
     private static final Logger LOG = Logger.getInstance(EnterHandler.class);
@@ -540,8 +542,9 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
             // and types until right margin is reached. We want the wrapped text tail to be located inside javadoc and continue typing
             // inside it. So, we have a control flow branch below that does the trick.
             buffer.append(docCommentLinePrefix);
-            if (DataManager.getInstance()
-                .loadFromDataContext(myDataContext, AutoHardWrapHandler.AUTO_WRAP_LINE_IN_PROGRESS_KEY) == Boolean.TRUE) {
+            Boolean autoWrapInProgress = DataManager.getInstance()
+                .loadFromDataContext(myDataContext, AutoHardWrapHandler.AUTO_WRAP_LINE_IN_PROGRESS_KEY);
+            if (Objects.equals(autoWrapInProgress, Boolean.TRUE)) {
                 myDocument.insertString(myOffset, buffer);
 
                 // We create new buffer here because the one referenced by current 'buffer' variable value may be already referenced at another

@@ -964,7 +964,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
                             settings.isFocusToolWindowBeforeRun()
                         )
                         .onSuccess(selected -> {
-                            if (selected != Boolean.TRUE) {
+                            if (!Objects.equals(selected, Boolean.TRUE)) {
                                 selectPreviousContent();
                             }
                         })

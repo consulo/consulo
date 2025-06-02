@@ -43,10 +43,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -214,7 +211,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
         Application app = getApp();
 
         // disable checks in tests, if not asked
-        if (app.isUnitTestMode() && app.getUserData(ENABLE_IN_TESTS) != Boolean.TRUE) {
+        if (app.isUnitTestMode() && !Objects.equals(app.getUserData(ENABLE_IN_TESTS), Boolean.TRUE)) {
             return true;
         }
         return ACCESS_ALLOWED.getValue(app).get() > 0;

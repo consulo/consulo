@@ -19,6 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import jakarta.annotation.Nonnull;
 
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +51,7 @@ class TaskQueue {
       public void run() {
         try {
           Boolean result = update.compute();
-          if (result == Boolean.TRUE) {
+          if (Objects.equals(result, Boolean.TRUE)) {
             myTimestampUpdates.add(successRunnable);
           }
         }

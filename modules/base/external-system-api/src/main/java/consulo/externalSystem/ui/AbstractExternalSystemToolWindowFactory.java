@@ -34,6 +34,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * @author Denis Zhdanov
@@ -79,7 +80,7 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
 
   @Override
   public boolean validate(@Nonnull Project project) {
-    if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) == Boolean.TRUE) {
+    if (Objects.equals(project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT), Boolean.TRUE)) {
       return true;
     }
 

@@ -128,7 +128,7 @@ public final class EnvironmentUtil {
     }
 
     // execution time of handlers of envFuture should be not included into load env activity
-    if (result == Boolean.FALSE) {
+    if (Objects.equals(result, Boolean.FALSE)) {
       envFuture.complete(getSystemEnv());
     }
     return result;

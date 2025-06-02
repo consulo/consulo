@@ -27,6 +27,7 @@ import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Objects;
 
 /**
  * This process handler supports the "soft-kill" feature (see {@link KillableProcessHandlerImpl}).
@@ -44,7 +45,7 @@ public class KillableProcessHandlerImpl extends OSProcessHandler implements Kill
 
   public KillableProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
-    myMediatedProcess = MEDIATOR_KEY.get(commandLine) == Boolean.TRUE;
+    myMediatedProcess = Objects.equals(MEDIATOR_KEY.get(commandLine), Boolean.TRUE);
   }
 
   /**

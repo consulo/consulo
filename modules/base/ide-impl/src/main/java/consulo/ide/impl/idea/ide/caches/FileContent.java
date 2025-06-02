@@ -21,6 +21,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author max
@@ -78,6 +79,6 @@ public class FileContent extends UserDataHolderBase {
     if (myCachedWritable == null) {
       myCachedWritable = myVirtualFile.isWritable();
     }
-    return myCachedWritable == Boolean.TRUE;
+    return Objects.equals(myCachedWritable, Boolean.TRUE);
   }
 }

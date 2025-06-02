@@ -21,6 +21,8 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
+
 public class DiffPsiFileSupport {
   public static final Key<Boolean> KEY = Key.create("Diff.DiffPsiFileSupport");
 
@@ -30,6 +32,6 @@ public class DiffPsiFileSupport {
   }
 
   public static boolean isDiffFile(@Nullable VirtualFile file) {
-    return file != null && file.getUserData(KEY) == Boolean.TRUE;
+    return file != null && Objects.equals(file.getUserData(KEY), Boolean.TRUE);
   }
 }

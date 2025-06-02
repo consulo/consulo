@@ -40,6 +40,7 @@ import org.jetbrains.annotations.Contract;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RainbowHighlighter {
     private static final ColorValue[] RAINBOW_JB_COLORS_DEFAULT = {
@@ -110,7 +111,7 @@ public class RainbowHighlighter {
     ) {
         Map<String, Object> properties = colorsScheme.getMetaProperties();
         String key = getKey(language);
-        if (enabled == null || (language == null && enabled == DEFAULT_RAINBOW_ON)) {
+        if (enabled == null || (language == null && Objects.equals(enabled, DEFAULT_RAINBOW_ON))) {
             properties.remove(key);
         }
         else {

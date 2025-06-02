@@ -22,6 +22,8 @@ import jakarta.inject.Inject;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
+
 @ExtensionImpl
 public final class DocumentUndoProvider implements EditorDocumentListener {
   private static final Key<Boolean> UNDOING_EDITOR_CHANGE = Key.create("DocumentUndoProvider.UNDOING_EDITOR_CHANGE");
@@ -61,7 +63,9 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
   }
 
   private static void handleBeforeDocumentChange(@Nonnull UndoManagerImpl undoManager, @Nonnull Document document) {
-    if (undoManager.isActive() && isUndoable(undoManager, document) && undoManager.isUndoOrRedoInProgress() && document.getUserData(UNDOING_EDITOR_CHANGE) != Boolean.TRUE) {
+    if (undoManager.isActive() && isUndoable(undoManager, document)
+        && undoManager.isUndoOrRedoInProgress()
+        && !Objects.equals(document.getUserData(UNDOING_EDITOR_CHANGE), Boolean.TRUE)) {
       throw new IllegalStateException("Do not change documents during undo as it will break undo sequence.");
     }
   }
@@ -104,11 +108,12 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
   }
 
   private static boolean shouldRecordActions(@Nonnull Document document) {
-    if (document.getUserData(UndoConstants.DONT_RECORD_UNDO) == Boolean.TRUE) return false;
+    if (Objects.equals(document.getUserData(UndoConstants.DONT_RECORD_UNDO), Boolean.TRUE)) return false;
 
     VirtualFile vFile = FileDocumentManager.getInstance().getFile(document);
     if (vFile == null) return true;
-    return vFile.getUserData(AbstractFileViewProvider.FREE_THREADED) != Boolean.TRUE && vFile.getUserData(UndoConstants.DONT_RECORD_UNDO) != Boolean.TRUE;
+    return !Objects.equals(vFile.getUserData(AbstractFileViewProvider.FREE_THREADED), Boolean.TRUE)
+        && !Objects.equals(vFile.getUserData(UndoConstants.DONT_RECORD_UNDO), Boolean.TRUE);
   }
 
   private static void registerUndoableAction(@Nonnull UndoManagerImpl undoManager, @Nonnull DocumentEvent e) {
@@ -125,7 +130,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
     VirtualFile file = ref.getFile();
 
     // Allow undo even from refresh if requested
-    if (file != null && file.getUserData(UndoConstants.FORCE_RECORD_UNDO) == Boolean.TRUE) {
+    if (file != null && Objects.equals(file.getUserData(UndoConstants.FORCE_RECORD_UNDO), Boolean.TRUE)) {
       return true;
     }
     return !UndoManagerImpl.isRefresh() || undoManager.isUndoOrRedoAvailable(ref);

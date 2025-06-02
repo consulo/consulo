@@ -27,6 +27,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CompositeInputFilter implements InputFilter {
   private static final Logger LOG = Logger.getInstance(CompositeInputFilter.class);
@@ -43,7 +44,7 @@ public class CompositeInputFilter implements InputFilter {
   public List<Pair<String, ConsoleViewContentType>> applyFilter(final String text, final ConsoleViewContentType contentType) {
     boolean dumb = myDumbService.isDumb();
     for (Pair<InputFilter, Boolean> pair : myFilters) {
-      if (!dumb || pair.second == Boolean.TRUE) {
+      if (!dumb || Objects.equals(pair.second, Boolean.TRUE)) {
         long t0 = System.currentTimeMillis();
         InputFilter filter = pair.first;
         List<Pair<String, ConsoleViewContentType>> result = filter.applyFilter(text, contentType);

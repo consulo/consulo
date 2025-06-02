@@ -21,10 +21,8 @@ import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 
 import jakarta.annotation.Nonnull;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
+
+import java.util.*;
 
 /**
  * @author peter
@@ -65,7 +63,7 @@ public class IgnoredPatternSet {
   }
 
   public boolean isIgnored(@Nonnull CharSequence fileName) {
-    if (myIgnorePatterns.findAssociatedFileType(fileName) == Boolean.TRUE) {
+    if (Objects.equals(myIgnorePatterns.findAssociatedFileType(fileName), Boolean.TRUE)) {
       return true;
     }
 

@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ContentHashesUtil {
   public static final ThreadLocalCachedValue<MessageDigest> HASHER_CACHE = new ThreadLocalCachedValue<MessageDigest>() {
@@ -73,7 +74,7 @@ public class ContentHashesUtil {
 
     @Override
     public byte[] valueOf(int idx) throws IOException {
-      if (myProcessingKeyAtIndex.get() == Boolean.TRUE) return super.valueOf(idx);
+      if (Objects.equals(myProcessingKeyAtIndex.get(), Boolean.TRUE)) return super.valueOf(idx);
       return super.valueOf(addrToIndex(indexToAddr(idx) * SIGNATURE_LENGTH));
     }
 

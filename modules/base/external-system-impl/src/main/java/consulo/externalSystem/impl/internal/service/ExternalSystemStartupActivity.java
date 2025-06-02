@@ -30,6 +30,8 @@ import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 
+import java.util.Objects;
+
 /**
  * @author Denis Zhdanov
  * @since 2013-05-02
@@ -46,7 +48,7 @@ public class ExternalSystemStartupActivity implements BackgroundStartupActivity 
                         startupActivity.runActivity(project, uiAccess);
                     }
                 });
-                if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) != Boolean.TRUE) {
+                if (!Objects.equals(project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT), Boolean.TRUE)) {
                     app.getExtensionList(ExternalSystemManager.class)
                         .forEach(manager -> ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false));
                 }

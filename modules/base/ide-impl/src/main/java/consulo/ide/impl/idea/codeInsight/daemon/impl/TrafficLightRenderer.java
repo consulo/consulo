@@ -533,7 +533,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
 
     @Nonnull
     protected UIController createUIController(@Nonnull Editor editor) {
-        boolean mergeEditor = editor.getUserData(DiffUserDataKeys.MERGE_EDITOR_FLAG) == Boolean.TRUE;
+        boolean mergeEditor = Objects.equals(editor.getUserData(DiffUserDataKeys.MERGE_EDITOR_FLAG), Boolean.TRUE);
         return editor.getEditorKind() == EditorKind.DIFF && !mergeEditor ? new SimplifiedUIController() : new DefaultUIController();
     }
 

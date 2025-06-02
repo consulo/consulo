@@ -53,6 +53,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -159,7 +160,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   @Override
   public void runTasks(@Nonnull final VirtualFile virtualFile) {
     Boolean processed = virtualFile.getUserData(PROCESSING_BACKGROUND_TASK);
-    if (processed == Boolean.TRUE) {
+    if (Objects.equals(processed, Boolean.TRUE)) {
       return;
     }
 

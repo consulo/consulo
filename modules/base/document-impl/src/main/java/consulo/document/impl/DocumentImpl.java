@@ -65,6 +65,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
@@ -715,7 +716,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
         CharSequence changedPart = s.subSequence(newStartInString, newEndInString);
         CharSequence sToDelete = myText.subtext(startOffset, endOffset);
-        boolean isForceIgnoreGuardsOnFullUpdate = getUserData(IGNORE_RANGE_GUARDS_ON_FULL_UPDATE) == Boolean.TRUE && wholeTextReplaced;
+        boolean isForceIgnoreGuardsOnFullUpdate = Objects.equals(getUserData(IGNORE_RANGE_GUARDS_ON_FULL_UPDATE), Boolean.TRUE) && wholeTextReplaced;
         if (!isForceIgnoreGuardsOnFullUpdate) {
             RangeMarker guard = getRangeGuard(startOffset, endOffset);
             if (guard != null) {

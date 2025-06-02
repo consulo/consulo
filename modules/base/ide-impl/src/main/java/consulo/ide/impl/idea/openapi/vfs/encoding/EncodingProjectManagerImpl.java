@@ -443,7 +443,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
 
     private void tryStartReloadWithProgress(@Nonnull final Runnable reloadAction) {
         Boolean suppress = SUPPRESS_RELOAD.get();
-        if (suppress == Boolean.TRUE) {
+        if (Objects.equals(suppress, Boolean.TRUE)) {
             return;
         }
         FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified

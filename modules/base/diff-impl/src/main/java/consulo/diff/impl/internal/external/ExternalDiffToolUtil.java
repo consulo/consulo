@@ -55,10 +55,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -279,7 +276,7 @@ public class ExternalDiffToolUtil {
           }
         });
 
-        success = resultRef.get() == Boolean.TRUE;
+        success = Objects.equals(resultRef.get(), Boolean.TRUE);
       }
       else {
         ProgressManager.getInstance().run(new Task.Modal(project, "Launching External Tool", false) {

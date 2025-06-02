@@ -34,6 +34,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
+import java.util.Objects;
 
 public abstract class BreakpointItem extends ItemWrapper implements Comparable<BreakpointItem>, Navigatable {
     public static final Key<Object> EDITOR_ONLY = Key.create("EditorOnly");
@@ -70,7 +71,7 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
         final MarkupModel documentModel = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
 
         for (RangeHighlighter highlighter : documentModel.getAllHighlighters()) {
-            if (highlighter.getUserData(DebuggerColors.BREAKPOINT_HIGHLIGHTER_KEY) == Boolean.TRUE) {
+            if (Objects.equals(highlighter.getUserData(DebuggerColors.BREAKPOINT_HIGHLIGHTER_KEY), Boolean.TRUE)) {
                 final int line1 = editor.offsetToLogicalPosition(highlighter.getStartOffset()).line;
                 if (line1 != line) {
                     editorModel.addLineHighlighter(line1, DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);

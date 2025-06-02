@@ -60,6 +60,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author max
@@ -607,7 +608,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
 
     public static boolean managesEditor(@Nonnull Editor editor) {
-        return editor.getUserData(MANAGED_BY_FIELD) == Boolean.TRUE;
+        return Objects.equals(editor.getUserData(MANAGED_BY_FIELD), Boolean.TRUE);
     }
 
     private void setupEditorFont(final EditorEx editor) {

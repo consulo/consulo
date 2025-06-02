@@ -637,7 +637,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
                  marker = ((RangeMarkerImpl)marker).findRangeMarkerBefore()) {
                 ConsoleViewContentType tokenType = getTokenType(marker);
                 if (tokenType != null) {
-                    if (tokenType != ConsoleViewContentType.USER_INPUT || marker.getUserData(USER_INPUT_SENT) == Boolean.TRUE) {
+                    if (tokenType != ConsoleViewContentType.USER_INPUT || Objects.equals(marker.getUserData(USER_INPUT_SENT), Boolean.TRUE)) {
                         break;
                     }
                     marker.putUserData(USER_INPUT_SENT, true);

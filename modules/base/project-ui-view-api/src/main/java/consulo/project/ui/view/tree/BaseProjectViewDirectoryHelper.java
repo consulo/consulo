@@ -214,7 +214,8 @@ public class BaseProjectViewDirectoryHelper {
     DirectoryInfo directoryInfo = directoryIndex.getInfoForFile(dir);
     if (directoryInfo.isInProject(dir)) return true;
 
-    return settings.getViewOption(ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY) == Boolean.TRUE && directoryInfo.isExcluded(dir);
+    return Objects.equals(settings.getViewOption(ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY), Boolean.TRUE)
+        && directoryInfo.isExcluded(dir);
   }
 
   // used only for non-flatten packages mode

@@ -32,6 +32,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static consulo.execution.impl.internal.service.ServiceViewDragHelper.getTheOnlyRootContributor;
 
@@ -142,7 +143,7 @@ public final class ServiceViewActionProvider {
 
   static boolean isActionToolBarRequired(JComponent component) {
     Boolean holder = ClientProperty.get(component, ServiceViewDescriptor.ACTION_HOLDER_KEY);
-    if (Boolean.TRUE == holder) {
+    if (Objects.equals(holder, Boolean.TRUE)) {
       return false;
     }
     while (true) {

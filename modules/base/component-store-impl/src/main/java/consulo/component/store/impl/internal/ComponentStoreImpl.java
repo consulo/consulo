@@ -46,7 +46,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   private static ThreadLocal<Boolean> ourInsideSavingSessionLocal = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
   public static void assertIfInsideSavingSession() {
-    if (ourInsideSavingSessionLocal.get() == Boolean.TRUE) {
+    if (Objects.equals(ourInsideSavingSessionLocal.get(), Boolean.TRUE)) {
       throw new IllegalStateException("Can't call another thread inside saving session. Thread: " + Thread.currentThread());
     }
   }
