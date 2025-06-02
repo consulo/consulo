@@ -158,7 +158,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
         Object inputIdMappingValue = mapping.get(mappingValue);
         // prevent NPEs on file set due to Value class being mutable or having inconsistent equals wrt disk persistence
         // (instance that is serialized and new instance created with deserialization from the same bytes are expected to be equal)
-        myInputIdMappingValue = inputIdMappingValue != null ? inputIdMappingValue : new Integer(0);
+        myInputIdMappingValue = inputIdMappingValue != null ? inputIdMappingValue : 0;
       }
     }
   }

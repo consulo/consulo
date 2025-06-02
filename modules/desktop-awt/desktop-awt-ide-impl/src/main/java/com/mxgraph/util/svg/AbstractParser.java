@@ -111,7 +111,7 @@ public abstract class AbstractParser implements Parser {
    * @param currentChar  what caller found
    */
   protected void reportCharacterExpectedError(char expectedChar, int currentChar) {
-    reportError("character.expected", new Object[]{new Character(expectedChar), new Integer(currentChar)});
+    reportError("character.expected", new Object[]{Character.valueOf(expectedChar), Integer.valueOf(currentChar)});
 
   }
 
@@ -122,7 +122,7 @@ public abstract class AbstractParser implements Parser {
    * @param currentChar what the caller found and didnt expect
    */
   protected void reportUnexpectedCharacterError(int currentChar) {
-    reportError("character.unexpected", new Object[]{new Integer(currentChar)});
+    reportError("character.unexpected", new Object[]{Integer.valueOf(currentChar)});
 
   }
 

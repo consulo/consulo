@@ -66,7 +66,7 @@ public class mxMedianHybridCrossingReduction implements mxHierarchicalLayoutStag
     nestedBestRanks = new mxGraphAbstractHierarchyCell[model.ranks.size()][];
 
     for (int i = 0; i < nestedBestRanks.length; i++) {
-      mxGraphHierarchyRank rank = model.ranks.get(new Integer(i));
+      mxGraphHierarchyRank rank = model.ranks.get(i);
       nestedBestRanks[i] = new mxGraphAbstractHierarchyCell[rank.size()];
       rank.toArray(nestedBestRanks[i]);
     }
@@ -85,7 +85,7 @@ public class mxMedianHybridCrossingReduction implements mxHierarchicalLayoutStag
 
         // Store the current rankings as the best ones
         for (int j = 0; j < nestedBestRanks.length; j++) {
-          mxGraphHierarchyRank rank = model.ranks.get(new Integer(j));
+          mxGraphHierarchyRank rank = model.ranks.get(j);
           Iterator<mxGraphAbstractHierarchyCell> iter = rank.iterator();
 
           for (int k = 0; k < rank.size(); k++) {
@@ -101,7 +101,7 @@ public class mxMedianHybridCrossingReduction implements mxHierarchicalLayoutStag
 
         // Restore the best values to the cells
         for (int j = 0; j < nestedBestRanks.length; j++) {
-          mxGraphHierarchyRank rank = model.ranks.get(new Integer(j));
+          mxGraphHierarchyRank rank = model.ranks.get(j);
           Iterator<mxGraphAbstractHierarchyCell> iter = rank.iterator();
 
           for (int k = 0; k < rank.size(); k++) {
@@ -123,7 +123,7 @@ public class mxMedianHybridCrossingReduction implements mxHierarchicalLayoutStag
 
     for (int i = 0; i < model.maxRank + 1; i++) {
       rankList[i] = new mxGraphHierarchyRank();
-      ranks.put(new Integer(i), rankList[i]);
+      ranks.put(i, rankList[i]);
     }
 
     for (int i = 0; i < nestedBestRanks.length; i++) {
@@ -165,8 +165,8 @@ public class mxMedianHybridCrossingReduction implements mxHierarchicalLayoutStag
    */
   protected int calculateRankCrossing(int i, mxGraphHierarchyModel model) {
     int totalCrossings = 0;
-    mxGraphHierarchyRank rank = model.ranks.get(new Integer(i));
-    mxGraphHierarchyRank previousRank = model.ranks.get(new Integer(i - 1));
+    mxGraphHierarchyRank rank = model.ranks.get(i);
+    mxGraphHierarchyRank previousRank = model.ranks.get(i - 1);
 
     // Create an array of connections between these two levels
     int currentRankSize = rank.size();
@@ -242,7 +242,7 @@ public class mxMedianHybridCrossingReduction implements mxHierarchicalLayoutStag
       improved = false;
 
       for (int i = 0; i < model.ranks.size(); i++) {
-        mxGraphHierarchyRank rank = model.ranks.get(new Integer(i));
+        mxGraphHierarchyRank rank = model.ranks.get(i);
         mxGraphAbstractHierarchyCell[] orderedCells = new mxGraphAbstractHierarchyCell[rank.size()];
         Iterator<mxGraphAbstractHierarchyCell> iter = rank.iterator();
 

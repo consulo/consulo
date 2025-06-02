@@ -368,7 +368,7 @@ public class mxGraphHierarchyModel {
 
     for (int i = 0; i < maxRank + 1; i++) {
       rankList[i] = new mxGraphHierarchyRank();
-      ranks.put(new Integer(i), rankList[i]);
+      ranks.put(i, rankList[i]);
     }
 
     // Perform a DFS to obtain an initial ordering for each rank.

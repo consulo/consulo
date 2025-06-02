@@ -326,7 +326,7 @@ public class mxFastOrganicLayout extends mxGraphLayout {
       cellLocation[i] = new double[2];
 
       // Set up the mapping from array indices to cells
-      indices.put(vertex, new Integer(i));
+      indices.put(vertex, i);
       mxRectangle bounds = getVertexBounds(vertex);
 
       // Set the X,Y value of the internal version of the cell to
@@ -430,17 +430,17 @@ public class mxFastOrganicLayout extends mxGraphLayout {
           setVertexLocation(vertex, x, y);
 
           if (minx == null) {
-            minx = new Double(x);
+            minx = x;
           }
           else {
-            minx = new Double(Math.min(minx.doubleValue(), x));
+            minx = Math.min(minx.doubleValue(), x);
           }
 
           if (miny == null) {
-            miny = new Double(y);
+            miny = y;
           }
           else {
-            miny = new Double(Math.min(miny.doubleValue(), y));
+            miny = Math.min(miny.doubleValue(), y);
           }
         }
       }

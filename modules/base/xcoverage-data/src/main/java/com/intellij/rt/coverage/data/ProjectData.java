@@ -519,7 +519,7 @@ public class ProjectData implements CoverageData, Serializable {
                     }
 
                     if (usedMethodsCount > 0) {
-                        classToUsedMethods.put(e.getKey(), new Integer(usedMethodsCount));
+                        classToUsedMethods.put(e.getKey(), usedMethodsCount);
                     }
                 }
 

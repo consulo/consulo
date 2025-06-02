@@ -38,7 +38,7 @@ public interface Externalizer<T> {
     @Override
     public Integer readValue(Element dataElement) {
       try {
-        return new Integer(dataElement.getAttributeValue(VALUE_ATTRIBUTE));
+        return Integer.parseInt(dataElement.getAttributeValue(VALUE_ATTRIBUTE));
       }
       catch (NumberFormatException e) {
         return null;
@@ -101,11 +101,8 @@ public interface Externalizer<T> {
   }
 
   class StorageExternalizer implements Externalizer<Storage> {
-    @NonNls
     private static final String ITEM_TAG = "item";
-    @NonNls
     private static final String KEY_ATTR = "key";
-    @NonNls
     private static final String VALUE_ATTR = "value";
 
     @Override

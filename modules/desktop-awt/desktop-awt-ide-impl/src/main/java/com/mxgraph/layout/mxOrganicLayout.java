@@ -407,7 +407,7 @@ public class mxOrganicLayout extends mxGraphLayout {
     v = new CellWrapper[vertices.length];
     for (int i = 0; i < vertices.length; i++) {
       v[i] = new CellWrapper(vertices[i]);
-      vertexMap.put(vertices[i], new Integer(i));
+      vertexMap.put(vertices[i], i);
       bounds = getVertexBounds(vertices[i]);
 
       if (totalBounds == null) {
@@ -1074,7 +1074,7 @@ public class mxOrganicLayout extends mxGraphLayout {
     for (int i = 0; i < e.length; i++) {
       if (e[i].source != cellIndex && e[i].target != cellIndex) {
         // Add non-connected edges
-        relevantEdgeList.add(new Integer(i));
+        relevantEdgeList.add(i);
       }
     }
 
@@ -1103,7 +1103,7 @@ public class mxOrganicLayout extends mxGraphLayout {
     for (int i = 0; i < e.length; i++) {
       if (e[i].source == cellIndex || e[i].target == cellIndex) {
         // Add connected edges to list by their index number
-        connectedEdgeList.add(new Integer(i));
+        connectedEdgeList.add(i);
       }
     }
 
