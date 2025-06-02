@@ -1,6 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.inlay.chain;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.inlay.*;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@UsedInPlugin
 public abstract class AbstractDeclarativeCallChainProvider<DotQualifiedExpression extends PsiElement, ExpressionType, TypeComputationContext>
     implements DeclarativeInlayHintsProvider {
 
@@ -118,7 +120,7 @@ public abstract class AbstractDeclarativeCallChainProvider<DotQualifiedExpressio
     }
 
     protected HintFormat getHintFormat() {
-        return HintFormat.DEFAULT;
+        return new HintFormat(HintColorKind.Default, HintFontSize.ABitSmallerThanInEditor, HintMarginPadding.MarginAndSmallerPadding);
     }
 
     protected boolean isAvailable(@Nonnull PsiFile file, @Nonnull Editor editor) {

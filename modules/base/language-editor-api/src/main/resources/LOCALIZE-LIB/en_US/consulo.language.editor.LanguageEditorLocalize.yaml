@@ -1,0 +1,40 @@
+settings.hints:
+    text: Inlay Hints
+settings.hints.group.code.vision:
+    text: Code vision
+settings.hints.new.group.code.vision:
+    text: Code vision
+settings.hints.new.group.code.vision.description:
+    text: 'Provide information derived from project analysis: hierarchy details, problems, and usages.'
+settings.hints.group.types:
+    text: Types
+settings.hints.group.types.description:
+    text: Provide type information where it is not explicit.
+settings.hints.group.values:
+    text: Values
+settings.hints.group.values.description:
+    text: Identify places where special values (for example, null) are used.
+settings.hints.group.parameters:
+    text: Parameter names
+settings.hints.group.parameters.description:
+    text: Help you pass correct arguments by showing parameter names at call sites.
+settings.hints.group.annotations:
+    text: Annotations
+settings.hints.group.annotations.description:
+    text: Show annotations that are not present in the code.
+settings.hints.group.method.chains:
+    text: Method chains
+settings.hints.group.lambdas:
+    text: Lambdas
+settings.hints.group.lambdas.description:
+    text: Show implicit details in scope of a lambda.
+settings.hints.group.code.author:
+    text: Code author
+settings.hints.group.code.author.description:
+    text: Show the author of the code according to the records in the VCS.<br><br>The author is whoever last edited the class, method, or function. If there are multiple commits from different authors, the one who owns the most lines is considered the author.
+settings.hints.group.url.path:
+    text: URL path
+settings.hints.group.url.path.description:
+    text: Allows you to quickly access URL-related actions, for example, test an endpoint.
+settings.hints.group.other:
+    text: Other

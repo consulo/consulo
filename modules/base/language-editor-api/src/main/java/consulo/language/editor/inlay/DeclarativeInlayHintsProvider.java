@@ -31,10 +31,19 @@ public interface DeclarativeInlayHintsProvider extends PossiblyDumbAware {
     Language getLanguage();
 
     @Nonnull
-    String getProviderId();
+    String getId();
 
     @Nonnull
-    LocalizeValue getProviderName();
+    LocalizeValue getName();
+
+    @Nonnull
+    LocalizeValue getDescription();
+
+    @Nonnull
+    LocalizeValue getPreviewFileText();
+
+    @Nonnull
+    InlayGroup getGroup();
 
     @Nonnull
     default Set<InlayOptionInfo> getOptions() {

@@ -24,10 +24,10 @@ public class InlayHintsProviderFactory {
         for (DeclarativeInlayHintsProvider declarativeInlayHintsProvider : Application.get().getExtensionList(DeclarativeInlayHintsProvider.class)) {
             if (language.isKindOf(declarativeInlayHintsProvider.getLanguage())) {
                 result.add(new InlayProviderInfo(declarativeInlayHintsProvider,
-                    declarativeInlayHintsProvider.getProviderId(),
+                    declarativeInlayHintsProvider.getId(),
                     declarativeInlayHintsProvider.getOptions(),
                     declarativeInlayHintsProvider.isEnabledByDefault(),
-                    declarativeInlayHintsProvider.getProviderName()
+                    declarativeInlayHintsProvider.getName()
                 ));
             }
         }

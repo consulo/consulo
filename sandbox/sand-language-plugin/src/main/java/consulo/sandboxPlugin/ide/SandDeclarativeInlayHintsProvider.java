@@ -61,13 +61,31 @@ public class SandDeclarativeInlayHintsProvider implements DeclarativeInlayHintsP
 
     @Nonnull
     @Override
-    public String getProviderId() {
+    public String getId() {
         return "sand.inlay";
     }
 
     @Nonnull
     @Override
-    public LocalizeValue getProviderName() {
+    public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Sand Test");
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("Sand Test ");
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getPreviewFileText() {
+        return LocalizeValue.of();
+    }
+
+    @Nonnull
+    @Override
+    public InlayGroup getGroup() {
+        return InlayGroup.OTHER_GROUP;
     }
 }
