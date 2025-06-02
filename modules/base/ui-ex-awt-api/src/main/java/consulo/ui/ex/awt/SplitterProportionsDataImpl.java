@@ -101,7 +101,7 @@ public class SplitterProportionsDataImpl implements SplitterProportionsData {
                 break;
             }
 
-            proportions.add(new Float(value * 0.001));
+            proportions.add(Float.valueOf(value * 0.001f));
         }
     }
 

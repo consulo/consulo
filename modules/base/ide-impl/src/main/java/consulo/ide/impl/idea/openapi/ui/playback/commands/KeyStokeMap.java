@@ -32,7 +32,7 @@ public class KeyStokeMap {
   private Map<Character, KeyStroke> myMap;
 
   public KeyStroke get(char c) {
-    Character mappedChar = new Character(c);
+    Character mappedChar = c;
 
     if (getMap().containsKey(mappedChar)) {
       return getMap().get(mappedChar);
@@ -139,7 +139,7 @@ public class KeyStokeMap {
     for (int i = 0; i < universalMappings.length; i++) {
       int[] entry = universalMappings[i];
       KeyStroke stroke = KeyStroke.getKeyStroke(entry[1], entry[2]);
-      map.put(new Character((char)entry[0]), stroke);
+      map.put((char) entry[0], stroke);
     }
 
     //// If the locale is not en_US/GB, provide only a very basic map and
@@ -154,15 +154,15 @@ public class KeyStokeMap {
     for (int i = 0; i < mappings.length; i++) {
       int[] entry = mappings[i];
       KeyStroke stroke = KeyStroke.getKeyStroke(entry[1], entry[2]);
-      map.put(new Character((char)entry[0]), stroke);
+      map.put((char) entry[0], stroke);
     }
     // Lowercase
     for (int i = 'a'; i <= 'z'; i++) {
       KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_A + i - 'a', 0);
-      map.put(new Character((char)i), stroke);
+      map.put((char) i, stroke);
       // control characters
       stroke = KeyStroke.getKeyStroke(KeyEvent.VK_A + i - 'a', ctrl);
-      Character key = new Character((char)(i - 'a' + 1));
+      Character key = (char) (i - 'a' + 1);
       // Make sure we don't overwrite something already there
       if (map.get(key) == null) {
         map.put(key, stroke);
@@ -171,12 +171,12 @@ public class KeyStokeMap {
     // Capitals
     for (int i = 'A'; i <= 'Z'; i++) {
       KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_A + i - 'A', shift);
-      map.put(new Character((char)i), stroke);
+      map.put((char) i, stroke);
     }
     // digits
     for (int i = '0'; i <= '9'; i++) {
       KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_0 + i - '0', 0);
-      map.put(new Character((char)i), stroke);
+      map.put((char) i, stroke);
     }
     return map;
   }

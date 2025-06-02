@@ -5,7 +5,7 @@
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
  * https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -102,7 +102,7 @@ class SvgLoader {
 	private static final String paramRegex = "[ ,]+"; //$NON-NLS-1$
 	private static final Matcher urlMatcher = Pattern.compile(" *url\\( *#(\\w+) *\\) *").matcher(""); //$NON-NLS-1$  //$NON-NLS-2$
 
-	
+
 	private static void addArc(String[] sa, int ix, List<Byte> types, List<Float> points, boolean relative) {
 		float x1 = points.get(points.size() - 2);
 		float y1 = points.get(points.size() - 1);
@@ -184,19 +184,19 @@ class SvgLoader {
 			}
 		}
 	}
-	
+
 	private static void addPoint(List<Float> points, String s, boolean relative) {
 		addPoint(points, s, relative, 2);
 	}
-	
+
 	private static void addPoint(List<Float> points, String s, boolean relative, int relativeOffset) {
 		if(relative) {
 			points.add(points.get(points.size() - relativeOffset) + Float.parseFloat(s));
 		} else {
-			points.add(new Float(s));
+			points.add(Float.valueOf(s));
 		}
 	}
-	
+
 	private static double clampAngle(double deg) {
 		if(deg < 0) {
 			deg += 360;
@@ -205,7 +205,7 @@ class SvgLoader {
 		}
 		return deg;
 	}
-	
+
 	private static float clampAngle(float deg) {
 		if(deg < 0) {
 			deg += 360;
@@ -214,7 +214,7 @@ class SvgLoader {
 		}
 		return deg;
 	}
-	
+
 	private static int closer(char[] ca, int start, int end) {
 		if(start >= 0) {
 			char opener = ca[start];
@@ -305,7 +305,7 @@ class SvgLoader {
 					opener[i-start] = ca[i];
 					closer[i-start+1] = ca[i];
 				}
-				
+
 				int count1 = 1;
 				int count2 = 1;
 				for( ; i < ca.length; i++) {
@@ -336,7 +336,7 @@ class SvgLoader {
 		}
 		return -1;
 	}
-	
+
 	private static int findNextTag(char[] ca, int start, int end) {
 		int s1 = findAll(ca, start, end, '<');
 		if(s1 != -1 && s1 < ca.length-1) {
@@ -348,7 +348,7 @@ class SvgLoader {
 		}
 		return -1;
 	}
-	
+
 	private static int forward(char[] ca, int from) {
 		for(int i = from; i >= 0 && i < ca.length; i++) {
 			if(!Character.isWhitespace(ca[i])) {
@@ -357,7 +357,7 @@ class SvgLoader {
 		}
 		return -1;
 	}
-	
+
 	private static double getAngle(double ux, double uy, double vx, double vy) {
 		double dot = ux * vx + uy * vy;
 		double au = hypot(ux, uy);
@@ -480,7 +480,7 @@ class SvgLoader {
 	 * <li>skewX(<skew-angle>)</li>
 	 * <li>skewY(<skew-angle>)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -828,7 +828,7 @@ class SvgLoader {
 		return end;
 	}
 
-	// cm, em, ex, in, mm, pc, pt, px 
+	// cm, em, ex, in, mm, pc, pt, px
 	private static float parseLength(String s, String defaultString) {
 		if(s == null) {
 			s = defaultString;
@@ -1154,9 +1154,9 @@ class SvgLoader {
 			}
 			if(clamp) {
 				if(offset > 1) {
-					offset = new Float(1);
+					offset = 1f;
 				} else if(offset < 0) {
-					offset = new Float(0);
+					offset = 0f;
 				}
 			}
 			return offset;
@@ -1334,9 +1334,9 @@ class SvgLoader {
 	private static Float parseStrokeWidth(String s) {
 		if(s != null) {
 			if(s.endsWith("px")) { //$NON-NLS-1$
-				return new Float(s.substring(0, s.length() - 2));
+				return Float.valueOf(s.substring(0, s.length() - 2));
 			} else {
-				return new Float(s);
+				return Float.valueOf(s);
 			}
 		}
 		return null;
@@ -1395,7 +1395,7 @@ class SvgLoader {
 			element.width = parseLength(getAttrValue(ca, start, endAttrs, ATTR_WIDTH), "10px"); //$NON-NLS-1$
 			element.height = parseLength(getAttrValue(ca, start, endAttrs, ATTR_HEIGHT), "10px"); //$NON-NLS-1$
 			element.viewBox = parseViewBox(getAttrValue(ca, start, endAttrs, ATTR_VIEWBOX));
-			//			TODO element.preserveAspectRatio = 
+			//			TODO element.preserveAspectRatio =
 			parse(element, ca, endAttrs, end);
 		}
 		return end;

@@ -456,7 +456,7 @@ public class Splitter extends JPanel implements Splittable {
     if (proportion > myMaxProp) proportion = myMaxProp;
     float oldProportion = myProportion;
     myProportion = proportion;
-    firePropertyChange(PROP_PROPORTION, new Float(oldProportion), new Float(myProportion));
+    firePropertyChange(PROP_PROPORTION, Float.valueOf(oldProportion), Float.valueOf(myProportion));
     revalidate();
     repaint();
   }

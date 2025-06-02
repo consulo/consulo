@@ -122,7 +122,7 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
     LOG.assertTrue(inplaceEditorComponent != null);
     setInplaceEditorBounds(inplaceEditorComponent, layeredPanePoint.x, layeredPanePoint.y, bounds.width, bounds.height);
 
-    layeredPane.add(inplaceEditorComponent, new Integer(250));
+    layeredPane.add(inplaceEditorComponent, Integer.valueOf(250));
 
     myRemoveActions.add(() -> layeredPane.remove(inplaceEditorComponent));
 

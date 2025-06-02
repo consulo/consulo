@@ -258,7 +258,7 @@ public class TreeTable extends JBTable {
           if (min != -1 && max != -1) {
             for (int counter = min; counter <= max; counter++) {
               if (listSelectionModel.isSelectedIndex(counter)) {
-                selectedRows.add(new Integer(counter));
+                selectedRows.add(counter);
               }
             }
           }

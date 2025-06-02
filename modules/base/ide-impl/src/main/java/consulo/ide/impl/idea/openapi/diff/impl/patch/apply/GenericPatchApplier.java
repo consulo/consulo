@@ -66,7 +66,7 @@ public class GenericPatchApplier {
     myBaseFileEndsWithNewLine = StringUtil.endsWithLineBreak(text);
     myHunks = hunks;
     final Comparator<TextRange> textRangeComparator =
-            (o1, o2) -> new Integer(o1.getStartOffset()).compareTo(new Integer(o2.getStartOffset()));
+            (o1, o2) -> Integer.compareUnsigned(o1.getStartOffset(), o2.getStartOffset());
     myTransformations = new TreeMap<>(textRangeComparator);
     myNotExact = new ArrayList<>();
     myNotBound = new ArrayList<>();

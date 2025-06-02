@@ -273,7 +273,7 @@ public class ProjectData implements CoverageData, Serializable {
             ((ClassData)classData).touchLine(line);
             return;
         }
-        touch(TOUCH_LINE_METHOD, classData, new Object[]{new Integer(line)});
+        touch(TOUCH_LINE_METHOD, classData, new Object[]{Integer.valueOf(line)});
     }
 
     public static void touchSwitch(Object classData, int line, int switchNumber, int key) {
@@ -281,7 +281,7 @@ public class ProjectData implements CoverageData, Serializable {
             ((ClassData)classData).touch(line, switchNumber, key);
             return;
         }
-        touch(TOUCH_SWITCH_METHOD, classData, new Object[]{new Integer(line), new Integer(switchNumber), new Integer(key)});
+        touch(TOUCH_SWITCH_METHOD, classData, new Object[]{Integer.valueOf(line), Integer.valueOf(switchNumber), Integer.valueOf(key)});
     }
 
     public static void touchJump(Object classData, int line, int jump, boolean hit) {
@@ -289,7 +289,7 @@ public class ProjectData implements CoverageData, Serializable {
             ((ClassData)classData).touch(line, jump, hit);
             return;
         }
-        touch(TOUCH_JUMP_METHOD, classData, new Object[]{new Integer(line), new Integer(jump), new Boolean(hit)});
+        touch(TOUCH_JUMP_METHOD, classData, new Object[]{Integer.valueOf(line), Integer.valueOf(jump), Boolean.valueOf(hit)});
     }
 
     public static void trace(Object classData, int line) {
@@ -299,10 +299,10 @@ public class ProjectData implements CoverageData, Serializable {
             return;
         }
 
-        touch(TOUCH_METHOD, classData, new Object[]{new Integer(line)});
+        touch(TOUCH_METHOD, classData, new Object[]{Integer.valueOf(line)});
         try {
             final Object projectData = getProjectDataObject();
-            TRACE_LINE_METHOD.invoke(projectData, new Object[]{classData, new Integer(line)});
+            TRACE_LINE_METHOD.invoke(projectData, new Object[]{classData, Integer.valueOf(line)});
         }
         catch (Exception e) {
             ErrorReporter.reportError("Error tracing class " + classData.toString(), e);

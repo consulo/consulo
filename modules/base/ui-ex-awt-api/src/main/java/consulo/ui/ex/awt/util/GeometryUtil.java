@@ -263,7 +263,7 @@ public class GeometryUtil implements SwingConstants {
     double lenght1 = getLineLength(aSegment.getX1(), aSegment.getY1(), aPoint.getX(), aPoint.getY());
     double lenght2 = getLineLength(aSegment.getX2(), aSegment.getY2(), aPoint.getX(), aPoint.getY());
 
-    return new Double(lenght1 + lenght2);
+    return lenght1 + lenght2;
   }
 
   public static double getLineLength(double aX1, double aY1, double aX2, double aY2) {

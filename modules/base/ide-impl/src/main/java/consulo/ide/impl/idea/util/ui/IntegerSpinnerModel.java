@@ -29,6 +29,7 @@ class IntegerSpinnerModel extends AbstractSpinnerModel {
     this.myMaxValue = myMaxValue;
   }
 
+  @Override
   public Object getNextValue() {
     int result;
     if (myMaxValue >= 0 && myValue == myMaxValue) {
@@ -38,9 +39,10 @@ class IntegerSpinnerModel extends AbstractSpinnerModel {
       result = myValue + 1;
     }
 
-    return new Integer(result);
+    return result;
   }
 
+  @Override
   public Object getPreviousValue() {
     int result;
     if (myMinValue >= 0 && myValue == myMinValue) {
@@ -49,13 +51,15 @@ class IntegerSpinnerModel extends AbstractSpinnerModel {
     } else {
       result = myValue - 1;
     }
-    return new Integer(result);
+    return result;
   }
 
+  @Override
   public Object getValue() {
     return String.valueOf(myValue);
   }
 
+  @Override
   public void setValue(Object value) {
     if (value instanceof String) setStringValue((String) value);
     if (value instanceof Integer) setIntegerValue((Integer) value);
@@ -63,7 +67,7 @@ class IntegerSpinnerModel extends AbstractSpinnerModel {
   }
 
   private void setIntegerValue(Integer integer) {
-    myValue = ((Integer) integer).intValue();
+    myValue = integer;
   }
 
   private void setStringValue(String s) {
