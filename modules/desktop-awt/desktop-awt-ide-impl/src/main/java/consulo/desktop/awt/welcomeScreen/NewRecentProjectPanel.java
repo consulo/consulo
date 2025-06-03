@@ -16,7 +16,7 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.project.ProjectGroup;
-import consulo.ide.impl.idea.ide.ProjectGroupActionGroup;
+import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.ex.action.ActionGroup;
@@ -101,8 +101,8 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
       public void keyPressed(KeyEvent e) {
         Object selected = list.getSelectedValue();
         final ProjectGroup group;
-        if (selected instanceof ProjectGroupActionGroup) {
-          group = ((ProjectGroupActionGroup)selected).getGroup();
+        if (selected instanceof PopupProjectGroupActionGroup) {
+          group = ((PopupProjectGroupActionGroup)selected).getGroup();
         }
         else {
           group = null;
@@ -190,7 +190,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
             setOpaque(isSelected);
             setBackground(back);
 
-            boolean isGroup = value instanceof ProjectGroupActionGroup;
+            boolean isGroup = value instanceof PopupProjectGroupActionGroup;
             boolean isInsideGroup = false;
             if (value instanceof ReopenProjectAction) {
               final String path = ((ReopenProjectAction)value).getProjectPath();
@@ -225,7 +225,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               add(spacer, BorderLayout.WEST);
             }
             if (isGroup) {
-              final ProjectGroup group = ((ProjectGroupActionGroup)value).getGroup();
+              final ProjectGroup group = ((PopupProjectGroupActionGroup)value).getGroup();
               name.setText(" " + group.getName());
               name.setIcon(TargetAWT.to(group.isExpanded() ? PlatformIconGroup.nodesFolderopened() : PlatformIconGroup.nodesFolder()));
               name.setFont(name.getFont().deriveFont(Font.BOLD));

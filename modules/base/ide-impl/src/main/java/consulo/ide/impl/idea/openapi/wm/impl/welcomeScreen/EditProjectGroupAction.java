@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.project.ProjectGroup;
-import consulo.ide.impl.idea.ide.ProjectGroupActionGroup;
+import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,7 +35,7 @@ import java.util.List;
 public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBase {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final ProjectGroup group = ((ProjectGroupActionGroup)getSelectedElements(e).get(0)).getGroup();
+    final ProjectGroup group = ((PopupProjectGroupActionGroup)getSelectedElements(e).get(0)).getGroup();
     JList list = getList(e);
     assert list != null;
     DefaultListModel model = getDataModel(e);
@@ -75,8 +75,8 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
       rebuildRecentProjectDataModel(model);
       for (int i = 0; i < model.getSize(); i++) {
         Object element = model.get(i);
-        if (element instanceof ProjectGroupActionGroup) {
-          if (((ProjectGroupActionGroup)element).getGroup().equals(group)) {
+        if (element instanceof PopupProjectGroupActionGroup) {
+          if (((PopupProjectGroupActionGroup)element).getGroup().equals(group)) {
             ScrollingUtil.selectItem(list, i);
             break;
           }
@@ -88,7 +88,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
   @Override
   public void update(@Nonnull AnActionEvent e) {
     final List<AnAction> selected = getSelectedElements(e);
-    boolean enabled = !selected.isEmpty() && selected.get(0) instanceof ProjectGroupActionGroup && !((ProjectGroupActionGroup)selected.get(0)).getGroup().isTutorials();
+    boolean enabled = !selected.isEmpty() && selected.get(0) instanceof PopupProjectGroupActionGroup && !((PopupProjectGroupActionGroup)selected.get(0)).getGroup().isTutorials();
     e.getPresentation().setEnabledAndVisible(enabled);
   }
 }

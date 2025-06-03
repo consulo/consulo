@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
-import consulo.ide.impl.idea.ide.ProjectGroupActionGroup;
+import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -35,8 +35,8 @@ public class OpenSelectedProjectsAction extends RecentProjectsWelcomeScreenActio
     List<AnAction> elements = getSelectedElements(e);
     e = new AnActionEvent(e.getInputEvent(), e.getDataContext(), e.getPlace(), e.getPresentation(), e.getActionManager(), InputEvent.SHIFT_MASK);
     for (AnAction element : elements) {
-      if (element instanceof ProjectGroupActionGroup) {
-        for (AnAction action : ((ProjectGroupActionGroup)element).getChildren(e)) {
+      if (element instanceof PopupProjectGroupActionGroup) {
+        for (AnAction action : ((PopupProjectGroupActionGroup)element).getChildren(e)) {
           action.actionPerformed(e);
         }
       }
@@ -56,7 +56,7 @@ public class OpenSelectedProjectsAction extends RecentProjectsWelcomeScreenActio
       if (element instanceof ReopenProjectAction) {
         hasProject = true;
       }
-      if (element instanceof ProjectGroupActionGroup) {
+      if (element instanceof PopupProjectGroupActionGroup) {
         hasGroup = true;
       }
 
@@ -67,7 +67,7 @@ public class OpenSelectedProjectsAction extends RecentProjectsWelcomeScreenActio
     }
     if (ActionPlaces.WELCOME_SCREEN.equals(e.getPlace())) {
       presentation.setEnabledAndVisible(true);
-      if (selectedElements.size() == 1 && selectedElements.get(0) instanceof ProjectGroupActionGroup) {
+      if (selectedElements.size() == 1 && selectedElements.get(0) instanceof PopupProjectGroupActionGroup) {
         presentation.setText("Open All");
       }
       else {

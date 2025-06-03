@@ -156,6 +156,7 @@ public abstract class ActionGroup extends AnAction {
         setPopup(popup);
     }
 
+    @Deprecated
     public ActionGroup(@Nls(capitalization = Nls.Capitalization.Title) String text, @Nls(capitalization = Nls.Capitalization.Sentence) String description, Image icon) {
         super(text, description, icon);
     }

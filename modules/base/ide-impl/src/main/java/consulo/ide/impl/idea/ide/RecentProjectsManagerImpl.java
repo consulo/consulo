@@ -50,6 +50,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.collection.SmartList;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -57,6 +58,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.intellij.lang.annotations.MagicConstant;
 
 import java.io.File;
 import java.util.*;
@@ -247,13 +249,9 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         return new HashSet<>();
     }
 
+    @Nonnull
     @Override
-    public AnAction[] getRecentProjectsActions(boolean forMainMenu) {
-        return getRecentProjectsActions(forMainMenu, false);
-    }
-
-    @Override
-    public AnAction[] getRecentProjectsActions(boolean forMainMenu, boolean useGroups) {
+    public AnAction[] getRecentProjectsActions(@MagicConstant(flags = {RECENT_ACTIONS_LIMIT_ACTION_ITEMS, RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU}) int flags) {
         final Set<String> paths;
         synchronized (myStateLock) {
             myState.validateRecentProjects();
@@ -270,7 +268,8 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
 
         List<AnAction> actions = new SmartList<>();
         Set<String> duplicates = getDuplicateProjectNames(openedPaths, paths);
-        if (useGroups) {
+
+        if (BitUtil.isSet(flags, RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU) || BitUtil.isSet(flags, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU)) {
             final List<ProjectGroup> groups = new ArrayList<>(new ArrayList<>(myState.groups));
             final List<String> projectPaths = new ArrayList<>(paths);
             Collections.sort(groups, new Comparator<>() {
@@ -304,15 +303,22 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
                     if (action != null) {
                         children.add(action);
 
-                        if (forMainMenu && children.size() >= MAX_PROJECTS_IN_MAIN_MENU) {
+                        if (BitUtil.isSet(flags, RECENT_ACTIONS_LIMIT_ACTION_ITEMS) && children.size() >= MAX_PROJECTS_IN_MAIN_MENU) {
                             break;
                         }
                     }
                 }
-                actions.add(new ProjectGroupActionGroup(group, children));
-                if (group.isExpanded()) {
-                    for (AnAction child : children) {
-                        actions.add(child);
+
+                if (BitUtil.isSet(flags, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU)) {
+                    actions.add(new SimpleProjectGroupActionGroup(group, children));
+                }
+                else if (BitUtil.isSet(flags, RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU)) {
+                    actions.add(new PopupProjectGroupActionGroup(group, children));
+
+                    if (group.isExpanded()) {
+                        for (AnAction child : children) {
+                            actions.add(child);
+                        }
                     }
                 }
             }

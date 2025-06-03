@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
-import consulo.ide.impl.idea.ide.ProjectGroupActionGroup;
+import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.ex.action.AnAction;
@@ -37,8 +37,8 @@ public class RemoveSelectedProjectsAction extends RecentProjectsWelcomeScreenAct
         String path = ((ReopenProjectAction)action).getProjectPath();
         mgr.removePath(path);
       }
-      else if (action instanceof ProjectGroupActionGroup) {
-        ProjectGroupActionGroup group = (ProjectGroupActionGroup)action;
+      else if (action instanceof PopupProjectGroupActionGroup) {
+        PopupProjectGroupActionGroup group = (PopupProjectGroupActionGroup)action;
         for (String path : group.getGroup().getProjects()) {
           mgr.removePath(path);
         }

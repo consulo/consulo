@@ -16,36 +16,59 @@
 
 package consulo.ide.impl.idea.tools;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class SimpleActionGroup extends ActionGroup {
-  private final ArrayList<AnAction> myChildren = new ArrayList<>();
+    private final ArrayList<AnAction> myChildren = new ArrayList<>();
 
-  public SimpleActionGroup() {
-  }
+    public SimpleActionGroup() {
+    }
 
-  public void add(AnAction action) {
-    myChildren.add(action);
-  }
+    public SimpleActionGroup(@Nonnull LocalizeValue text) {
+        super(text);
+    }
 
-  @Override
-  @Nonnull
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    return myChildren.toArray(new AnAction[myChildren.size()]);
-  }
+    public SimpleActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+        super(text, popup);
+    }
 
-  public int getChildrenCount() {
-    return myChildren.size();
-  }
+    public SimpleActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
-  public void removeAll() {
-    myChildren.clear();
-  }
+    public SimpleActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    public void add(AnAction action) {
+        myChildren.add(action);
+    }
+
+    public void addAll(Collection<? extends AnAction> actions) {
+        myChildren.addAll(actions);
+    }
+
+    @Override
+    @Nonnull
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        return myChildren.toArray(new AnAction[myChildren.size()]);
+    }
+
+    public int getChildrenCount() {
+        return myChildren.size();
+    }
+
+    public void removeAll() {
+        myChildren.clear();
+    }
 }
 

@@ -29,10 +29,10 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public class ProjectGroupActionGroup extends DefaultActionGroup implements DumbAware {
+public class PopupProjectGroupActionGroup extends DefaultActionGroup implements DumbAware {
   private final ProjectGroup myGroup;
 
-  public ProjectGroupActionGroup(ProjectGroup group, List<AnAction> children) {
+  public PopupProjectGroupActionGroup(ProjectGroup group, List<AnAction> children) {
     super(group.getName(), children);
     myGroup = group;
   }

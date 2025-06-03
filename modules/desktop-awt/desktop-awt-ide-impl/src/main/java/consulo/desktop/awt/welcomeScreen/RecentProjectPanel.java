@@ -221,7 +221,7 @@ public class RecentProjectPanel {
         }
         return item.getProjectName() + " " + path;
       }
-      else if (o instanceof ProjectGroupActionGroup actionGroup) {
+      else if (o instanceof PopupProjectGroupActionGroup actionGroup) {
         return actionGroup.getGroup().getName();
       }
       return o.toString();
@@ -252,7 +252,7 @@ public class RecentProjectPanel {
     if (element instanceof ReopenProjectAction reopenProjectAction) {
       manager.removePath(reopenProjectAction.getProjectPath());
     }
-    else if (element instanceof ProjectGroupActionGroup actionGroup) {
+    else if (element instanceof PopupProjectGroupActionGroup actionGroup) {
       final ProjectGroup group = actionGroup.getGroup();
       for (String path : group.getProjects()) {
         manager.removePath(path);
@@ -441,7 +441,7 @@ public class RecentProjectPanel {
         myName.setText(getTitle2Text(item.getTemplatePresentation().getText(), myName, JBUI.scale(55)));
         myPath.setText(getTitle2Text(item.getProjectPath(), myPath, JBUI.scale(55)));
       }
-      else if (value instanceof ProjectGroupActionGroup group) {
+      else if (value instanceof PopupProjectGroupActionGroup group) {
         myName.setText(group.getGroup().getName());
         myPath.setText("");
       }

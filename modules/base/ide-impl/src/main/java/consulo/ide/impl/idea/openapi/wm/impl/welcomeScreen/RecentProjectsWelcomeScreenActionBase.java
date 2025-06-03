@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
-import consulo.ide.impl.idea.ide.ProjectGroupActionGroup;
+import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.action.AnAction;
@@ -63,7 +63,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
 
   public static boolean hasGroupSelected(@Nonnull AnActionEvent e) {
     for (AnAction action : getSelectedElements(e)) {
-      if (action instanceof ProjectGroupActionGroup) {
+      if (action instanceof PopupProjectGroupActionGroup) {
         return true;
       }
     }

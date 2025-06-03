@@ -16,16 +16,25 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.*;
+import consulo.project.internal.RecentProjectsManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 public class RecentProjectsGroup extends ActionGroup implements DumbAware {
-    public RecentProjectsGroup() {
-        super();
+    private final Provider<RecentProjectsManager> myRecentProjectsManager;
+
+    @Inject
+    public RecentProjectsGroup(Provider<RecentProjectsManager> recentProjectsManager) {
+        myRecentProjectsManager = recentProjectsManager;
 
         Presentation templatePresentation = getTemplatePresentation();
         // Let's make title more macish
@@ -37,12 +46,15 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        return RecentProjectsManagerImpl.getInstance().getRecentProjectsActions(true, true);
+        return myRecentProjectsManager.get().getRecentProjectsActions(
+            RecentProjectsManager.RECENT_ACTIONS_LIMIT_ACTION_ITEMS | RecentProjectsManager.RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU
+        );
     }
 
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
-        presentation.setEnabled(RecentProjectsManagerImpl.getInstance().getRecentProjectsActions(true).length > 0);
+        presentation.setEnabled(getChildren(event).length > 0);
     }
 }

@@ -21,52 +21,75 @@ import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ProjectGroup;
 import consulo.ui.ex.action.AnAction;
+import consulo.util.lang.BitUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
 
 import java.util.Collections;
 import java.util.List;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class RecentProjectsManager {
-  @Nonnull
-  public static RecentProjectsManager getInstance() {
-    return Application.get().getInstance(RecentProjectsManager.class);
-  }
+    public static final int RECENT_ACTIONS_LIMIT_ACTION_ITEMS = 1 << 1;
+    public static final int RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU = 1 << 2;
+    public static final int RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU = 1 << 3;
 
-  @Nullable
-  public abstract String getLastProjectCreationLocation();
+    @Nonnull
+    public static RecentProjectsManager getInstance() {
+        return Application.get().getInstance(RecentProjectsManager.class);
+    }
 
-  public abstract void setLastProjectCreationLocation(@Nullable String lastProjectLocation);
+    @Nullable
+    public abstract String getLastProjectCreationLocation();
 
-  public abstract void updateProjectModuleExtensions(@Nonnull Project project);
+    public abstract void setLastProjectCreationLocation(@Nullable String lastProjectLocation);
 
-  public abstract void updateLastProjectPath();
+    public abstract void updateProjectModuleExtensions(@Nonnull Project project);
 
-  public abstract String getLastProjectPath();
+    public abstract void updateLastProjectPath();
 
-  public abstract void removePath(@Nullable String path);
+    public abstract String getLastProjectPath();
 
-  /**
-   * @param addClearListItem whether the "Clear List" action should be added to the end of the list.
-   */
-  public abstract AnAction[] getRecentProjectsActions(boolean addClearListItem);
+    public abstract void removePath(@Nullable String path);
 
-  public AnAction[] getRecentProjectsActions(boolean addClearListItem, boolean useGroups) {
-    return getRecentProjectsActions(addClearListItem);
-  }
+    @Nonnull
+    @Deprecated
+    public final AnAction[] getRecentProjectsActions(boolean forMenu) {
+        int flags = 0;
+        flags = BitUtil.set(flags, RECENT_ACTIONS_LIMIT_ACTION_ITEMS, forMenu);
+        return getRecentProjectsActions(flags);
+    }
 
-  public List<ProjectGroup> getGroups() {
-    return Collections.emptyList();
-  }
+    @Nonnull
+    @Deprecated
+    public final AnAction[] getRecentProjectsActions(boolean forMenu, boolean useGroups) {
+        int flags = 0;
+        flags = BitUtil.set(flags, RECENT_ACTIONS_LIMIT_ACTION_ITEMS, forMenu);
+        flags = BitUtil.set(flags, RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU, useGroups);
+        return getRecentProjectsActions(flags);
+    }
 
-  public void addGroup(ProjectGroup group) {
-  }
+    @Nonnull
+    public AnAction[] getRecentProjectsActions(@MagicConstant(flags = {
+        RECENT_ACTIONS_LIMIT_ACTION_ITEMS,
+        RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU,
+        RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU
+    }) int flags) {
+        return AnAction.EMPTY_ARRAY;
+    }
 
-  public void removeGroup(ProjectGroup group) {
-  }
+    public List<ProjectGroup> getGroups() {
+        return Collections.emptyList();
+    }
 
-  public boolean hasPath(String path) {
-    return false;
-  }
+    public void addGroup(ProjectGroup group) {
+    }
+
+    public void removeGroup(ProjectGroup group) {
+    }
+
+    public boolean hasPath(String path) {
+        return false;
+    }
 }
