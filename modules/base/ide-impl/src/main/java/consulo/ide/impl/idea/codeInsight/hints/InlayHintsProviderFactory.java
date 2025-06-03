@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.language.Language;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import jakarta.annotation.Nonnull;
@@ -21,7 +22,9 @@ public class InlayHintsProviderFactory {
     @Nonnull
     static List<InlayProviderInfo> findProvidersForLanguage(Language language) {
         List<InlayProviderInfo> result = new ArrayList<>();
-        for (DeclarativeInlayHintsProvider declarativeInlayHintsProvider : Application.get().getExtensionList(DeclarativeInlayHintsProvider.class)) {
+        Application application = Application.get();
+        ExtensionPoint<DeclarativeInlayHintsProvider> ex = application.getExtensionPoint(DeclarativeInlayHintsProvider.class);
+        ex.forEach(declarativeInlayHintsProvider -> {
             if (language.isKindOf(declarativeInlayHintsProvider.getLanguage())) {
                 result.add(new InlayProviderInfo(declarativeInlayHintsProvider,
                     declarativeInlayHintsProvider.getId(),
@@ -30,7 +33,7 @@ public class InlayHintsProviderFactory {
                     declarativeInlayHintsProvider.getName()
                 ));
             }
-        }
+        });
         return result;
     }
 

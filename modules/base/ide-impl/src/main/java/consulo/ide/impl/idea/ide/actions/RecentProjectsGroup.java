@@ -37,7 +37,7 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        return RecentProjectsManagerImpl.getInstance().getRecentProjectsActions(true);
+        return RecentProjectsManagerImpl.getInstance().getRecentProjectsActions(true, true);
     }
 
     @Override
