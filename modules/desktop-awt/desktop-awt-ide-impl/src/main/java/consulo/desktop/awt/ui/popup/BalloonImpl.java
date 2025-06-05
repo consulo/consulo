@@ -9,6 +9,7 @@ import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
+import consulo.desktop.awt.ui.popup.form.*;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.IdeTooltip;
@@ -2055,46 +2056,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         }
     }
 
-    private static class BalloonArrowDimensions {
-        private final Point myTarget;
-        private final int myWidth;
-        private final int myLength;
-
-        public BalloonArrowDimensions(Point target, int width, int length) {
-            myTarget = new Point(target);
-            myWidth = width;
-            myLength = length;
-        }
-
-        public BalloonArrowDimensions copyWithNewTargetX(int x) {
-            return new BalloonArrowDimensions(new Point(x, myTarget.y), myWidth, myLength);
-        }
-
-        public BalloonArrowDimensions copyWithNewTargetY(int y) {
-            return new BalloonArrowDimensions(new Point(myTarget.x, y), myWidth, myLength);
-        }
-
-        public int getTargetX() {
-            return myTarget.x;
-        }
-
-        public int getTargetY() {
-            return myTarget.y;
-        }
-
-        public int getWidth() {
-            return myWidth;
-        }
-
-        public int getLength() {
-            return myLength;
-        }
-
-        public Point getTargetPoint() {
-            return new Point(myTarget);
-        }
-    }
-
     private class BalloonDimensions {
         public final BalloonPosition myPosition;
         public final Rectangle myBounds;
@@ -2160,15 +2121,15 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
         public BalloonForm getForm() {
             if (!myShowPointer) {
-                return new BalloonWithoutArrow(myPosition, myBounds, getArc());
+                return new BalloonWithoutArrow(myBounds, getArc());
             }
             BalloonArrowDimensions arrowDimensions =
                 new BalloonArrowDimensions(myTargetPoint, getPointerWidth(myPosition), getPointerLength(myPosition));
             return switch (myPosition.getPosition()) {
-                case below -> new BalloonBelow(myPosition, myBounds, getArc(), arrowDimensions);
-                case above -> new BalloonAbove(myPosition, myBounds, getArc(), arrowDimensions);
-                case atRight -> new BalloonAtRight(myPosition, myBounds, getArc(), arrowDimensions);
-                default -> new BalloonAtLeft(myPosition, myBounds, getArc(), arrowDimensions);
+                case below -> new BalloonBelow(myBounds, getArc(), arrowDimensions);
+                case above -> new BalloonAbove(myBounds, getArc(), arrowDimensions);
+                case atRight -> new BalloonAtRight(myBounds, getArc(), arrowDimensions);
+                default -> new BalloonAtLeft(myBounds, getArc(), arrowDimensions);
             };
         }
 
@@ -2176,173 +2137,6 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             int pointerLength = getPointerLength(myPosition);
             int pointerWidth = getPointerWidth(myPosition);
             return myPosition.getAllowedPointRange(myBounds, pointerLength, pointerWidth, getArc()).contains(myTargetPoint);
-        }
-    }
-
-    private abstract static class BalloonForm {
-        protected final BalloonPosition myPosition;
-        protected final Rectangle myBodyBounds;
-        protected final int myBorderRadius;
-
-        public BalloonForm(BalloonPosition position, Rectangle bodyBounds, int borderRadius) {
-            myPosition = position;
-            myBodyBounds = bodyBounds;
-            myBorderRadius = borderRadius;
-        }
-
-        public abstract Shape getShape();
-    }
-
-    private static class BalloonWithoutArrow extends BalloonForm {
-        private BalloonWithoutArrow(BalloonPosition position, Rectangle bounds, int borderRadius) {
-            super(position, bounds, borderRadius);
-        }
-
-        @Override
-        public Shape getShape() {
-            return new RoundRectangle2D.Double(
-                myBodyBounds.x,
-                myBodyBounds.y,
-                myBodyBounds.width - JBUIScale.scale(1),
-                myBodyBounds.height - JBUIScale.scale(1),
-                myBorderRadius,
-                myBorderRadius
-            );
-        }
-    }
-
-    private abstract static class BalloonWithArrow extends BalloonForm {
-        protected final BalloonArrowDimensions myArrowDimensions;
-
-        private BalloonWithArrow(BalloonPosition position, Rectangle bounds, int borderRadius, BalloonArrowDimensions arrowDimensions) {
-            super(position, bounds, borderRadius);
-            myArrowDimensions = arrowDimensions;
-        }
-    }
-
-    private static class BalloonBelow extends BalloonWithArrow {
-        private BalloonBelow(BalloonPosition position, Rectangle bounds, int borderRadius, BalloonArrowDimensions arrowDimensions) {
-            super(
-                position,
-                new Rectangle(
-                    bounds.x,
-                    bounds.y + arrowDimensions.getLength(),
-                    bounds.width,
-                    bounds.height - arrowDimensions.getLength()
-                ),
-                borderRadius,
-                arrowDimensions.copyWithNewTargetY(Math.min((int)bounds.getMinY(), arrowDimensions.getTargetY()))
-            );
-        }
-
-        @Override
-        public Shape getShape() {
-            int halfPointerWidth = myArrowDimensions.getWidth() / 2;
-            return new BalloonShaper(myBodyBounds, myArrowDimensions.getTargetPoint(), myBorderRadius)
-                .lineTo(myArrowDimensions.getTargetX() + halfPointerWidth, (int)myBodyBounds.getMinY())
-                .toRightCurve()
-                .roundRightDown()
-                .toBottomCurve()
-                .roundLeftDown()
-                .toLeftCurve()
-                .roundLeftUp()
-                .toTopCurve()
-                .roundUpRight()
-                .horLineTo(myArrowDimensions.getTargetX() - halfPointerWidth)
-                .lineToTargetPoint()
-                .close();
-        }
-    }
-
-    private static class BalloonAbove extends BalloonWithArrow {
-        private BalloonAbove(BalloonPosition position, Rectangle bounds, int borderRadius, BalloonArrowDimensions arrowDimensions) {
-            super(
-                position,
-                new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height - arrowDimensions.getLength()),
-                borderRadius,
-                arrowDimensions.copyWithNewTargetY(Math.max((int)bounds.getMaxY(), arrowDimensions.getTargetY()))
-            );
-        }
-
-        @Override
-        public Shape getShape() {
-            int halfPointerWidth = myArrowDimensions.getWidth() / 2;
-            return new BalloonShaper(myBodyBounds, myArrowDimensions.getTargetPoint(), myBorderRadius)
-                .lineTo(myArrowDimensions.getTargetX() - halfPointerWidth, (int)myBodyBounds.getMaxY() - JBUIScale.scale(1))
-                .toLeftCurve()
-                .roundLeftUp()
-                .toTopCurve()
-                .roundUpRight()
-                .toRightCurve()
-                .roundRightDown()
-                .toBottomCurve()
-                .roundLeftDown()
-                .horLineTo(myArrowDimensions.getTargetX() + halfPointerWidth)
-                .lineToTargetPoint()
-                .close();
-        }
-    }
-
-    private static class BalloonAtRight extends BalloonWithArrow {
-        private BalloonAtRight(BalloonPosition position, Rectangle bounds, int borderRadius, BalloonArrowDimensions arrowDimensions) {
-            super(
-                position,
-                new Rectangle(
-                    bounds.x + arrowDimensions.getLength(),
-                    bounds.y,
-                    bounds.width - arrowDimensions.getLength(),
-                    bounds.height
-                ),
-                borderRadius,
-                arrowDimensions.copyWithNewTargetX(Math.min((int)bounds.getMinX(), arrowDimensions.getTargetX()))
-            );
-        }
-
-        @Override
-        public Shape getShape() {
-            int halfPointerWidth = myArrowDimensions.getWidth() / 2;
-            return new BalloonShaper(myBodyBounds, myArrowDimensions.getTargetPoint(), myBorderRadius)
-                .lineTo((int)myBodyBounds.getMinX(), myArrowDimensions.getTargetY() - halfPointerWidth)
-                .toTopCurve()
-                .roundUpRight()
-                .toRightCurve()
-                .roundRightDown()
-                .toBottomCurve()
-                .roundLeftDown()
-                .toLeftCurve()
-                .roundLeftUp()
-                .vertLineTo(myArrowDimensions.getTargetY() + halfPointerWidth)
-                .lineToTargetPoint()
-                .close();
-        }
-    }
-
-    private static class BalloonAtLeft extends BalloonWithArrow {
-        private BalloonAtLeft(BalloonPosition position, Rectangle bounds, int borderRadius, BalloonArrowDimensions arrowDimensions) {
-            super(
-                position,
-                new Rectangle(bounds.x, bounds.y, bounds.width - arrowDimensions.getLength(), bounds.height),
-                borderRadius,
-                arrowDimensions.copyWithNewTargetX(Math.max((int)bounds.getMaxX(), arrowDimensions.getTargetX()))
-            );
-        }
-
-        @Override
-        public Shape getShape() {
-            int halfPointerWidth = myArrowDimensions.getWidth() / 2;
-            return new BalloonShaper(myBodyBounds, myArrowDimensions.getTargetPoint(), myBorderRadius)
-                .lineTo((int)myBodyBounds.getMaxX() - JBUIScale.scale(1), myArrowDimensions.getTargetY() + halfPointerWidth)
-                .toBottomCurve()
-                .roundLeftDown()
-                .toLeftCurve()
-                .roundLeftUp()
-                .toTopCurve()
-                .roundUpRight()
-                .toRightCurve()
-                .roundRightDown()
-                .vertLineTo(myArrowDimensions.getTargetY() - halfPointerWidth)
-                .lineToTargetPoint()
-                .close();
         }
     }
 
