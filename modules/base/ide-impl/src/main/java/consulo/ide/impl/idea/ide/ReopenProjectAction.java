@@ -24,6 +24,7 @@ import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.internal.RecentProjectsManager;
+import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.WindowManager;
@@ -54,25 +55,46 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     private List<String> myExtensions;
     @Nullable
     private final IdeFrameState myFrameState;
+    private final boolean myOpened;
     private boolean myIsRemoved;
+
+    private final LocalizeValue myProjectText;
 
     public ReopenProjectAction(final String projectPath,
                                final String projectName,
                                final String displayName,
                                @Nonnull List<String> extensions,
-                               @Nullable IdeFrameState frameState) {
+                               @Nullable IdeFrameState frameState,
+                               boolean opened) {
         myProjectPath = projectPath;
         myProjectName = projectName;
         myExtensions = extensions;
         myFrameState = frameState;
+        myOpened = opened;
 
         final Presentation presentation = getTemplatePresentation();
         String text = projectPath.equals(displayName) ? UserHomeFileUtil.getLocationRelativeToUserHome(projectPath) : displayName;
 
+        myProjectText = LocalizeValue.of(text);
+
         presentation.setDisabledMnemonic(true);
-        presentation.setTextValue(LocalizeValue.of(text));
+        presentation.setTextValue(myProjectText);
         presentation.setDescriptionValue(LocalizeValue.of(projectPath));
         presentation.setIcon(getExtensionIcon());
+        presentation.setEnabled(!opened);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        if (myOpened) {
+            presentation.setEnabled(false);
+            presentation.setTextValue(ProjectLocalize.recentProject0OpenedActionText(myProjectText));
+        } else {
+            presentation.setEnabled(true);
+            presentation.setTextValue(myProjectText);
+        }
     }
 
     @RequiredUIAccess

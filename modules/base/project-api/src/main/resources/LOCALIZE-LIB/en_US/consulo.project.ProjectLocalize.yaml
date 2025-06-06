@@ -731,3 +731,5 @@ unknown.sdk:
     text: Unknown SDK
 warning.message.some.required.libraries.wasn.t.downloaded:
     text: Some required library wasn't downloaded. Do you want to proceed without it?
+recent.project.0.opened.action.text:
+    text: '{0} (opened)'

@@ -26,6 +26,7 @@ import consulo.ide.impl.fileChooser.FileOperateDialogSettings;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
@@ -53,6 +54,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         private RadioButton myOpenProjectInNewWindow;
         private RadioButton myOpenProjectInSameWindow;
         private RadioButton myConfirmWindowToOpenProject;
+
+        private IntBox myRecentProjectsLimit;
 
         private CheckBox myChkSyncOnFrameActivation;
         private CheckBox myChkSaveOnFrameDeactivation;
@@ -96,6 +99,12 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
                 myConfirmWindowToOpenProject = RadioButton.create(LocalizeValue.localizeTODO("Confirm window to open project in"))
                     .toGroup(projectOpenGroup)
             );
+
+            myRecentProjectsLimit = IntBox.create(RecentProjectsManager.DEFAULT_RECENT_PROJECTS_LIMIT);
+            myRecentProjectsLimit.setRange(0, Integer.MAX_VALUE);
+
+            projectReopeningLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Recent Projects Limit"), myRecentProjectsLimit));
+
             myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Project Opening"), projectReopeningLayout));
 
             VerticalLayout syncLayout = VerticalLayout.create();
@@ -209,6 +218,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     @Override
     protected boolean isModified(@Nonnull MyComponent component) {
         GeneralSettings generalSettings = myGeneralSettings.get();
+        RecentProjectsManager recentProjectsManager = RecentProjectsManager.getInstance();
+
         boolean isModified = false;
         isModified |= generalSettings.isReopenLastProject() != component.myChkReopenLastProject.getValue();
         isModified |= generalSettings.isConfirmExit() != component.myConfirmExit.getValue();
@@ -218,6 +229,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         isModified |= generalSettings.isAutoSaveIfInactive() != component.myChkAutoSaveIfInactive.getValue();
         isModified |= generalSettings.getProcessCloseConfirmation() != getProcessCloseConfirmation(component);
         isModified |= generalSettings.getConfirmOpenNewProject() != getConfirmOpenNewProject(component);
+
+        isModified |= !Objects.equals(recentProjectsManager.getRecentProjectsLimit(), component.myRecentProjectsLimit.getValueOrError());
 
         FileOperateDialogSettings dialogSettings = myFileOperateDialogSettings.get();
         isModified |= isModified(dialogSettings.getFileChooseDialogId(), component.myFileChooseDialogBox);
@@ -262,6 +275,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     @Override
     protected void apply(@Nonnull MyComponent component) throws ConfigurationException {
         GeneralSettings generalSettings = myGeneralSettings.get();
+        RecentProjectsManager recentProjectsManager = RecentProjectsManager.getInstance();
 
         generalSettings.setReopenLastProject(component.myChkReopenLastProject.getValue());
         generalSettings.setSupportScreenReaders(component.myChkSupportScreenReaders.getValue());
@@ -270,6 +284,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         generalSettings.setConfirmExit(component.myConfirmExit.getValue());
         generalSettings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
         generalSettings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
+        recentProjectsManager.setRecentProjectsLimit(component.myRecentProjectsLimit.getValueOrError());
 
         LocalizeManager localizeManager = LocalizeManager.get();
         Locale locale = component.myLocaleBox.getValueOrError();
@@ -307,6 +322,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     @RequiredUIAccess
     @Override
     protected void reset(@Nonnull MyComponent component) {
+        RecentProjectsManager recentProjectsManager = RecentProjectsManager.getInstance();
         GeneralSettings settings = GeneralSettings.getInstance();
         component.myChkSupportScreenReaders.setValue(settings.isSupportScreenReaders());
         component.myChkReopenLastProject.setValue(settings.isReopenLastProject());
@@ -317,6 +333,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         component.myTfInactiveTimeout.setEnabled(settings.isAutoSaveIfInactive());
         component.myChkUseSafeWrite.setValue(settings.isUseSafeWrite());
         component.myConfirmExit.setValue(settings.isConfirmExit());
+        component.myRecentProjectsLimit.setValue(recentProjectsManager.getRecentProjectsLimit());
+
         switch (settings.getProcessCloseConfirmation()) {
             case TERMINATE:
                 component.myTerminateProcessRadioButton.setValue(true);

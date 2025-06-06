@@ -26,14 +26,14 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
-import java.util.Collections;
 import java.util.List;
 
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class RecentProjectsManager {
-    public static final int RECENT_ACTIONS_LIMIT_ACTION_ITEMS = 1 << 1;
+public interface RecentProjectsManager {
     public static final int RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU = 1 << 2;
     public static final int RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU = 1 << 3;
+
+    public static final int DEFAULT_RECENT_PROJECTS_LIMIT = 25;
 
     @Nonnull
     public static RecentProjectsManager getInstance() {
@@ -41,55 +41,50 @@ public abstract class RecentProjectsManager {
     }
 
     @Nullable
-    public abstract String getLastProjectCreationLocation();
+    String getLastProjectCreationLocation();
 
-    public abstract void setLastProjectCreationLocation(@Nullable String lastProjectLocation);
+    void setLastProjectCreationLocation(@Nullable String lastProjectLocation);
 
-    public abstract void updateProjectModuleExtensions(@Nonnull Project project);
+    void updateProjectModuleExtensions(@Nonnull Project project);
 
-    public abstract void updateLastProjectPath();
+    void updateLastProjectPath();
 
-    public abstract String getLastProjectPath();
+    String getLastProjectPath();
 
-    public abstract void removePath(@Nullable String path);
+    void removePath(@Nullable String path);
 
     @Nonnull
     @Deprecated
-    public final AnAction[] getRecentProjectsActions(boolean forMenu) {
-        int flags = 0;
-        flags = BitUtil.set(flags, RECENT_ACTIONS_LIMIT_ACTION_ITEMS, forMenu);
-        return getRecentProjectsActions(flags);
+    default AnAction[] getRecentProjectsActions(boolean forMenu) {
+        return getRecentProjectsActions(0);
     }
 
     @Nonnull
     @Deprecated
-    public final AnAction[] getRecentProjectsActions(boolean forMenu, boolean useGroups) {
+    default AnAction[] getRecentProjectsActions(boolean forMenu, boolean useGroups) {
         int flags = 0;
-        flags = BitUtil.set(flags, RECENT_ACTIONS_LIMIT_ACTION_ITEMS, forMenu);
         flags = BitUtil.set(flags, RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU, useGroups);
         return getRecentProjectsActions(flags);
     }
 
     @Nonnull
-    public AnAction[] getRecentProjectsActions(@MagicConstant(flags = {
-        RECENT_ACTIONS_LIMIT_ACTION_ITEMS,
+    default AnAction[] getRecentProjectsActions(@MagicConstant(flags = {
         RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU,
         RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU
     }) int flags) {
         return AnAction.EMPTY_ARRAY;
     }
 
-    public List<ProjectGroup> getGroups() {
-        return Collections.emptyList();
-    }
+    @Nonnull
+    List<ProjectGroup> getGroups();
 
-    public void addGroup(ProjectGroup group) {
-    }
+    void addGroup(ProjectGroup group) ;
 
-    public void removeGroup(ProjectGroup group) {
-    }
+    void removeGroup(ProjectGroup group);
+    
+    boolean hasRecentPaths();
 
-    public boolean hasPath(String path) {
-        return false;
-    }
+    int getRecentProjectsLimit();
+
+    void setRecentProjectsLimit(int limit);
 }

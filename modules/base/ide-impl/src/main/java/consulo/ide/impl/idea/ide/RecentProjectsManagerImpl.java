@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -70,15 +69,13 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 @State(name = "RecentProjectsManager", storages = {@Storage(value = "recentProjects.xml", roamingType = RoamingType.DISABLED)})
-public class RecentProjectsManagerImpl extends RecentProjectsManager implements PersistentStateComponent<RecentProjectsManagerImpl.State> {
-    private static final int MAX_PROJECTS_IN_MAIN_MENU = 6;
-
+public class RecentProjectsManagerImpl implements RecentProjectsManager, PersistentStateComponent<RecentProjectsManagerImpl.State> {
     public static boolean isFileSystemPath(String path) {
         return path.indexOf('/') != -1 || path.indexOf('\\') != -1;
     }
 
     public static class State {
-        public List<String> recentPaths = new SmartList<>();
+        public ArrayList<String> recentPaths = new ArrayList<>();
         public List<String> openPaths = new SmartList<>();
         public Map<String, String> names = new LinkedHashMap<>();
         public List<ProjectGroup> groups = new SmartList<>();
@@ -89,6 +86,8 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
 
         public String lastProjectLocation;
 
+        public int recentProjectsLimit = DEFAULT_RECENT_PROJECTS_LIMIT;
+
         void validateRecentProjects() {
             //noinspection StatementWithEmptyBody
             while (recentPaths.remove(null)) ;
@@ -96,14 +95,33 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
             //noinspection StatementWithEmptyBody
             while (displayNames.remove("")) ;
 
-            while (recentPaths.size() > Registry.intValue("ide.max.recent.projects")) {
-                int index = recentPaths.size() - 1;
-                names.remove(recentPaths.get(index));
-                recentPaths.remove(index);
+            List<String> groppedProjects = groups.stream().flatMap(g -> g.getProjects().stream()).toList();
+
+            List<String> reviewList = new ArrayList<>(recentPaths);
+            reviewList.removeAll(groppedProjects);
+            Collections.reverse(reviewList);
+
+            Iterator<String> reviewIterator = reviewList.iterator();
+            while (reviewIterator.hasNext()) {
+                String projectPath = reviewIterator.next();
+
+                if (reviewList.size() > recentProjectsLimit) {
+                    reviewIterator.remove();
+
+                    recentPaths.remove(projectPath);
+
+                    frameStates.remove(projectPath);
+
+                    additionalInfo.remove(projectPath);
+                    
+                    names.remove(projectPath);
+                } else {
+                    break;
+                }
             }
         }
     }
-
+    
     private final Object myStateLock = new Object();
     private State myState = new State();
 
@@ -118,6 +136,7 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
     }
 
     @Override
+    @Nonnull
     public State getState() {
         synchronized (myStateLock) {
             myState.validateRecentProjects();
@@ -177,9 +196,32 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
     }
 
     @Override
-    public boolean hasPath(String path) {
-        final State state = getState();
-        return state != null && state.recentPaths.contains(path);
+    public boolean hasRecentPaths() {
+        synchronized (myStateLock) {
+            return !myState.recentPaths.isEmpty();
+        }
+    }
+
+    @Override
+    public int getRecentProjectsLimit() {
+        synchronized (myStateLock) {
+            if (myState.recentProjectsLimit <= 0) {
+                return DEFAULT_RECENT_PROJECTS_LIMIT;
+            }
+            return myState.recentProjectsLimit;
+        }
+    }
+
+    @Override
+    public void setRecentProjectsLimit(int limit) {
+        if (limit <= 0) {
+            limit = DEFAULT_RECENT_PROJECTS_LIMIT;
+        }
+
+        synchronized (myStateLock) {
+            myState.recentProjectsLimit = limit;
+            myState.validateRecentProjects();
+        }
     }
 
     /**
@@ -227,7 +269,7 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         return "";
     }
 
-    private Set<String> getDuplicateProjectNames(final Set<String> openedPaths, final Set<String> recentPaths) {
+    private Set<String> getDuplicateProjectNames(Set<String> recentPaths) {
         if (myDuplicatesCache != null) {
             return myDuplicatesCache;
         }
@@ -237,7 +279,7 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
             Application.get().executeOnPooledThread((Runnable) () -> {
                 Set<String> names = new HashSet<>();
                 final HashSet<String> duplicates = new HashSet<>();
-                for (String path : ContainerUtil.union(openedPaths, recentPaths)) {
+                for (String path : List.copyOf(recentPaths)) {
                     if (!names.add(RecentProjectsManagerImpl.this.getProjectName(path))) {
                         duplicates.add(path);
                     }
@@ -251,8 +293,8 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
 
     @Nonnull
     @Override
-    public AnAction[] getRecentProjectsActions(@MagicConstant(flags = {RECENT_ACTIONS_LIMIT_ACTION_ITEMS, RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU}) int flags) {
-        final Set<String> paths;
+    public AnAction[] getRecentProjectsActions(@MagicConstant(flags = {RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU}) int flags) {
+        Set<String> paths;
         synchronized (myStateLock) {
             myState.validateRecentProjects();
             paths = new LinkedHashSet<>(myState.recentPaths);
@@ -264,10 +306,9 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         }
 
         paths.remove(null);
-        paths.removeAll(openedPaths);
 
         List<AnAction> actions = new SmartList<>();
-        Set<String> duplicates = getDuplicateProjectNames(openedPaths, paths);
+        Set<String> duplicates = getDuplicateProjectNames(paths);
 
         if (BitUtil.isSet(flags, RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU) || BitUtil.isSet(flags, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU)) {
             final List<ProjectGroup> groups = new ArrayList<>(new ArrayList<>(myState.groups));
@@ -297,16 +338,10 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
             }
 
             for (ProjectGroup group : groups) {
-                final List<AnAction> children = new ArrayList<>();
+                List<AnAction> children = new ArrayList<>();
                 for (String path : group.getProjects()) {
-                    final AnAction action = createOpenAction(path, duplicates);
-                    if (action != null) {
-                        children.add(action);
-
-                        if (BitUtil.isSet(flags, RECENT_ACTIONS_LIMIT_ACTION_ITEMS) && children.size() >= MAX_PROJECTS_IN_MAIN_MENU) {
-                            break;
-                        }
-                    }
+                    AnAction action = createOpenAction(path, duplicates, openedPaths);
+                    children.add(action);
                 }
 
                 if (BitUtil.isSet(flags, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU)) {
@@ -325,21 +360,15 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         }
 
         for (final String path : paths) {
-            final AnAction action = createOpenAction(path, duplicates);
-            if (action != null) {
-                actions.add(action);
-            }
+            AnAction action = createOpenAction(path, duplicates, openedPaths);
+            actions.add(action);
         }
 
-        if (actions.isEmpty()) {
-            return AnAction.EMPTY_ARRAY;
-        }
-
-        return actions.toArray(new AnAction[actions.size()]);
+        return consulo.util.collection.ContainerUtil.toArray(actions, AnAction.ARRAY_FACTORY);
     }
 
-    @Nullable
-    private AnAction createOpenAction(String path, Set<String> duplicates) {
+    @Nonnull
+    private AnAction createOpenAction(String path, Set<String> duplicates, Collection<String> openedPaths) {
         String projectName = getProjectName(path);
         String displayName;
         RecentProjectMetaInfo metaInfo;
@@ -360,7 +389,9 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
             extensions = new ArrayList<>(metaInfo.extensions);
         }
 
-        return new ReopenProjectAction(path, projectName, displayName, extensions, state);
+        boolean opened = openedPaths.contains(path);
+
+        return new ReopenProjectAction(path, projectName, displayName, extensions, state, opened);
     }
 
     @RequiredReadAction
@@ -517,6 +548,7 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         }
     }
 
+    @Nonnull
     @Override
     public List<ProjectGroup> getGroups() {
         return Collections.unmodifiableList(myState.groups);

@@ -46,8 +46,7 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        return myRecentProjectsManager.get().getRecentProjectsActions(
-            RecentProjectsManager.RECENT_ACTIONS_LIMIT_ACTION_ITEMS | RecentProjectsManager.RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU
+        return myRecentProjectsManager.get().getRecentProjectsActions(RecentProjectsManager.RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU
         );
     }
 
@@ -55,6 +54,6 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     @Override
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
-        presentation.setEnabled(getChildren(event).length > 0);
+        presentation.setEnabled(myRecentProjectsManager.get().hasRecentPaths());
     }
 }
