@@ -73,4 +73,6 @@ open module consulo.desktop.awt.ide.impl {
     provides org.cobraparser.css.StandardColorProvider with consulo.desktop.awt.ui.impl.htmlView.ConsuloStandardColorProvider;
 
     provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.plaf2.flat.ConsuloFlatDefaultsAddon;
+
+    exports consulo.desktop.awt.ui to consulo.desktop.awt.os.mac;
 }

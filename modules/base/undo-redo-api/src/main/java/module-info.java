@@ -15,7 +15,8 @@ module consulo.undo.redo.api {
     exports consulo.undoRedo.internal to
         consulo.ide.impl,
         consulo.language.editor.refactoring.api,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.os.mac;
 
     exports consulo.undoRedo.internal.builder to
         consulo.desktop.awt.ide.impl,

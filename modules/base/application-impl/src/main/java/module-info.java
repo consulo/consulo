@@ -27,6 +27,7 @@ module consulo.application.impl {
     exports consulo.application.impl.internal to consulo.ide.impl,
         consulo.logging.logback.impl,
         consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.os.mac,
         consulo.desktop.swt.ide.impl,
         consulo.proxy,
         consulo.test.impl,

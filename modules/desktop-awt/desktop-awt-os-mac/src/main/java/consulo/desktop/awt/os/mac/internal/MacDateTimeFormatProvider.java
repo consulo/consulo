@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.application.dateTime;
+package consulo.desktop.awt.os.mac.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.internal.dateTime.DateTimeFormatProvider;

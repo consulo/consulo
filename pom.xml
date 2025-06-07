@@ -34,6 +34,7 @@
     <module>modules/desktop-awt/desktop-awt-ide-impl</module>
     <module>modules/desktop-awt/desktop-awt-bootstrap</module>
     <module>modules/desktop-awt/desktop-awt-eawt-wrapper</module>
+    <module>modules/desktop-awt/desktop-awt-os-mac</module>
 
     <module>modules/desktop/desktop-ide-impl</module>
     <module>modules/desktop/desktop-bootstrap</module>

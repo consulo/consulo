@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.fileChooser.impl.system;
+package consulo.desktop.awt.os.mac.internal.fileChooser;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
-import consulo.desktop.awt.uiOld.mac.MacFileSaverDialog;
-import consulo.fileChooser.FileSaverDescriptor;
-import consulo.fileChooser.FileSaverDialog;
-import consulo.fileChooser.provider.FileSaveDialogProvider;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.PathChooserDialog;
+import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.platform.Platform;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 /**
@@ -33,7 +33,7 @@ import java.awt.*;
  * @since 2018-06-28
  */
 @ExtensionImpl
-public class MacFileSaveDialogProvider implements FileSaveDialogProvider {
+public class MacFileChooseDialogProvider implements FileChooseDialogProvider {
   @Nonnull
   @Override
   public String getId() {
@@ -53,10 +53,13 @@ public class MacFileSaveDialogProvider implements FileSaveDialogProvider {
 
   @Nonnull
   @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    if(parent != null) {
-      return new MacFileSaverDialog(descriptor, parent);
-    }
-    return new MacFileSaverDialog(descriptor, (Project)project);
+  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+    return new MacPathChooserDialog(descriptor, parent, (Project)project);
+  }
+
+  @Nonnull
+  @Override
+  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+    return new MacPathChooserDialog(descriptor, parent, (Project)project);
   }
 }

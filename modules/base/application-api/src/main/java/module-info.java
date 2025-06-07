@@ -88,7 +88,9 @@ module consulo.application.api {
 
     exports consulo.application.util.mac.foundation;
 
-    exports consulo.application.internal.dateTime to consulo.desktop.awt.ide.impl;
+    exports consulo.application.internal.dateTime to
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.os.mac;
 
     exports consulo.application.util;
     exports consulo.application.util.function;

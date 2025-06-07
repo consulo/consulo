@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.uiOld.mac;
+package consulo.desktop.awt.os.mac.internal.fileChooser;
 
-import consulo.ui.ex.localize.UILocalize;
-import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import java.util.function.Consumer;
 import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.localize.UILocalize;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
-
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.io.File;
+import java.util.function.Consumer;
 
 /**
  * @author Denis Fokin

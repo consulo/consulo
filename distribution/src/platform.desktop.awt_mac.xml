@@ -22,6 +22,7 @@
             <includes>
                 <include>consulo:consulo-desktop-ide-impl</include>
                 <include>consulo:consulo-desktop-awt-ide-impl</include>
+                <include>consulo:consulo-desktop-awt-os-mac</include>
                 <include>org.antlr:antlr4-runtime</include>
                 <include>org.unbescape:unbescape</include>
                 <include>consulo.internal.org.cobraparser:cobra-core</include>
