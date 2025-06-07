@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.ide.impl.idea.ide.util.DelegatingProgressIndicator;
+import consulo.application.progress.DelegatingProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.localize.LocalizeValue;

@@ -18,6 +18,7 @@ package consulo.externalService.impl.internal.update;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -137,9 +138,12 @@ public class PluginDownloader {
             LOG.warn("Checksum check failed. Plugin: " + myPluginId + ", expected: " + expectedChecksum + ", actual: " + info.getSecond());
           }
         }
+        catch (ProcessCanceledException e) {
+            throw e;
+        }
         catch (Throwable e) {
           myFile = null;
-          errorMessage = LocalizeValue.of(e.getLocalizedMessage());
+          errorMessage = LocalizeValue.ofNullable(e.getLocalizedMessage());
 
           TimeoutUtil.sleep(5000L);
         }
@@ -149,9 +153,12 @@ public class PluginDownloader {
       try {
         myFile = downloadPlugin(pi, "<disabled>", -1).getFirst();
       }
+      catch (ProcessCanceledException e) {
+          throw e;
+      }
       catch (Throwable e) {
         myFile = null;
-        errorMessage = LocalizeValue.of(e.getLocalizedMessage());
+        errorMessage = LocalizeValue.ofNullable(e.getLocalizedMessage());
       }
     }
 

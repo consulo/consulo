@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util;
+package consulo.application.progress;
 
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
-
+import consulo.ui.ModalityState;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -120,8 +118,8 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
 
   @Override
   @Nonnull
-  public IdeaModalityState getModalityState() {
-    return (IdeaModalityState)myIndicator.getModalityState();
+  public ModalityState getModalityState() {
+    return myIndicator.getModalityState();
   }
 
   @Override

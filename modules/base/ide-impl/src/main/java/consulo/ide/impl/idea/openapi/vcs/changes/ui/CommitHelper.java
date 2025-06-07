@@ -23,7 +23,7 @@ import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
 import consulo.application.util.function.Computable;
 import consulo.document.Document;
-import consulo.ide.impl.idea.ide.util.DelegatingProgressIndicator;
+import consulo.application.progress.DelegatingProgressIndicator;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;

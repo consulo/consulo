@@ -15,6 +15,7 @@
  */
 package consulo.externalService.impl.internal.update;
 
+import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.plugin.PluginActionListener;
@@ -199,6 +200,10 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     public void doOKAction() {
         super.doOKAction();
 
+        if (UpdateBusyLocker.isBusy()) {
+            return;
+        }
+
         PlatformOrPluginNode brokenPlugin = myNodes.stream()
             .filter(c -> c.getFutureDescriptor() == null)
             .findFirst()
@@ -216,7 +221,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
         UIAccess uiAccess = UIAccess.current();
 
-        Consumer<ProgressIndicator> progressIndicatorConsumer = indicator -> {
+        Consumer<ProgressIndicator> processor = indicator -> {
             List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
             int installCount = (int) myNodes
@@ -328,14 +333,22 @@ public class PlatformOrPluginDialog extends DialogWrapper {
             Task.Modal.queue(myProject,
                 ExternalServiceLocalize.progressDownloadPlugins(),
                 true,
-                progressIndicatorConsumer);
-        } else {
+                progressIndicator -> {
+                    try (AccessToken ignored = UpdateBusyLocker.block()) {
+                        processor.accept(progressIndicator);
+                    }
+                });
+        }
+        else {
             Task.Backgroundable.queue(
                 myProject,
                 ExternalServiceLocalize.progressDownloadPlugins(),
                 true,
-                progressIndicatorConsumer
-            );
+                progressIndicator -> {
+                    try (AccessToken ignored = UpdateBusyLocker.block()) {
+                        processor.accept(progressIndicator);
+                    }
+                });
         }
     }
 

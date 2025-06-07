@@ -16,6 +16,7 @@
 package consulo.externalService.impl.internal.update;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.AccessToken;
 import consulo.application.progress.Task;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
@@ -27,48 +28,63 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 @ActionImpl(id = "CheckForUpdate")
 public class CheckForUpdateAction extends DumbAwareAction {
-  private final Provider<UpdateSettings> myUpdateSettingsProvider;
+    private final Provider<UpdateSettings> myUpdateSettingsProvider;
 
-  @Inject
-  public CheckForUpdateAction(Provider<UpdateSettings> updateSettingsProvider) {
-    myUpdateSettingsProvider = updateSettingsProvider;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    String place = e.getPlace();
-    if (ActionPlaces.WELCOME_SCREEN.equals(place) || "SettingsEntryPointGroup".equals(place)) {
-      e.getPresentation().setEnabledAndVisible(true);
+    @Inject
+    public CheckForUpdateAction(Provider<UpdateSettings> updateSettingsProvider) {
+        myUpdateSettingsProvider = updateSettingsProvider;
     }
-    else {
-      e.getPresentation().setVisible(!Platform.current().os().isEnabledTopMenu() || !ActionPlaces.MAIN_MENU.equals(place));
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        String place = e.getPlace();
+
+        Presentation presentation = e.getPresentation();
+        if (ActionPlaces.WELCOME_SCREEN.equals(place) || "SettingsEntryPointGroup".equals(place)) {
+            presentation.setEnabledAndVisible(true);
+        }
+        else {
+            presentation.setVisible(!Platform.current().os().isEnabledTopMenu() || !ActionPlaces.MAIN_MENU.equals(place));
+        }
+
+        if (presentation.isEnabled()) {
+            presentation.setEnabled(!UpdateBusyLocker.isBusy());
+        }
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
 
-    actionPerformed(project, myUpdateSettingsProvider.get(), UIAccess.current());
-  }
+        actionPerformed(project, myUpdateSettingsProvider.get(), UIAccess.current());
+    }
 
-  public static void actionPerformed(Project project, UpdateSettings updateSettings, UIAccess uiAccess) {
-    Task.Backgroundable.queue(project, "Checking for updates", true, indicator -> {
-      indicator.setIndeterminate(true);
+    public static void actionPerformed(Project project, UpdateSettings updateSettings, UIAccess uiAccess) {
+        if (UpdateBusyLocker.isBusy()) {
+            return;
+        }
+        
+        Task.Backgroundable.queue(project, "Checking for updates", true, indicator -> {
+            indicator.setIndeterminate(true);
 
-      AsyncResult<PlatformOrPluginUpdateResultType> result = AsyncResult.undefined();
-      result.doWhenDone(() -> ((UpdateSettingsEx)updateSettings).setLastTimeCheck(System.currentTimeMillis()));
+            try (AccessToken ignored = UpdateBusyLocker.block()) {
+                AsyncResult<PlatformOrPluginUpdateResultType> result = AsyncResult.undefined();
+                result.doWhenDone(() -> ((UpdateSettingsEx) updateSettings).setLastTimeCheck(System.currentTimeMillis()));
 
-      PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator, uiAccess, result);
-    });
-  }
+                PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator, uiAccess, result);
+            }
+        });
+    }
 }

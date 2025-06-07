@@ -15,24 +15,19 @@
  */
 package consulo.externalService.impl.internal.update;
 
-import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.DelegatingProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
-import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 30-Jun-24
  */
-public class CompositePluginInstallIndicator extends EmptyProgressIndicator {
-  @Nonnull
-  private final ProgressIndicator myProgressIndicator;
+public class CompositePluginInstallIndicator extends DelegatingProgressIndicator {
   private final int myCurrentIndex;
   private float myProgressModifier;
 
   public CompositePluginInstallIndicator(ProgressIndicator progressIndicator, int currentIndex, int pluginsCount) {
-    super(progressIndicator.getModalityState());
-    myProgressIndicator = progressIndicator;
+    super(progressIndicator);
     myCurrentIndex = currentIndex;
     myProgressModifier = 1f / pluginsCount;
   }
@@ -41,21 +36,6 @@ public class CompositePluginInstallIndicator extends EmptyProgressIndicator {
   public void setFraction(double fraction) {
     double f = myProgressModifier * myCurrentIndex + myProgressModifier * fraction;
 
-    myProgressIndicator.setFraction(f);
-  }
-
-  @Override
-  public void setText2Value(LocalizeValue text) {
-    myProgressIndicator.setTextValue(text);
-  }
-
-  @Override
-  public void setTextValue(LocalizeValue text) {
-    myProgressIndicator.setTextValue(text);
-  }
-
-  @Override
-  public void setIndeterminate(boolean indeterminate) {
-    myProgressIndicator.setIndeterminate(indeterminate);
+    getOriginalProgressIndicator().setFraction(f);
   }
 }

@@ -22,8 +22,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.ExceptionUtil;
-import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
@@ -279,6 +277,9 @@ public abstract class Task implements TaskInfo, Progressive {
                     try {
                         consumer.accept(indicator);
                     }
+                    catch (ProcessCanceledException e) {
+                        throw e;
+                    }
                     catch (Throwable e) {
                         LOG.error(e);
                     }
@@ -311,6 +312,9 @@ public abstract class Task implements TaskInfo, Progressive {
                 public void run(@Nonnull ProgressIndicator indicator) {
                     try {
                         consumer.accept(indicator);
+                    }
+                    catch (ProcessCanceledException e) {
+                        throw e;
                     }
                     catch (Throwable e) {
                         LOG.error(e);
@@ -461,6 +465,9 @@ public abstract class Task implements TaskInfo, Progressive {
                 public void run(@Nonnull ProgressIndicator indicator) {
                     try {
                         consumer.accept(indicator);
+                    }
+                    catch (ProcessCanceledException e) {
+                        throw e;
                     }
                     catch (Throwable e) {
                         LOG.error(e);
