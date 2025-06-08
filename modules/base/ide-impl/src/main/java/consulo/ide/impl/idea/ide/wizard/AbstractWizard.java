@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.ide.wizard;
 
 import consulo.application.HelpManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -97,23 +96,19 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
       int index = 0;
       JPanel leftPanel = new JPanel();
       leftPanel.add(myHelpButton);
-      TouchbarDataKeys.putDialogButtonDescriptor(myHelpButton, index++);
       JComponent cancelButton = (JComponent)TargetAWT.to(myCancelButton);
       leftPanel.add(cancelButton);
-      TouchbarDataKeys.putDialogButtonDescriptor(cancelButton, index++);
       panel.add(leftPanel, BorderLayout.WEST);
 
       if (mySteps.size() > 1) {
         buttonPanel.add(Box.createHorizontalStrut(5));
         JComponent prevButton = (JComponent)TargetAWT.to(myPreviousButton);
         buttonPanel.add(prevButton);
-        TouchbarDataKeys.putDialogButtonDescriptor(prevButton, index++).setMainGroup(true);
       }
       buttonPanel.add(Box.createHorizontalStrut(5));
 
       JComponent nextButton = (JComponent)TargetAWT.to(myNextButton);
       buttonPanel.add(nextButton);
-      TouchbarDataKeys.putDialogButtonDescriptor(nextButton, index++).setMainGroup(true).setDefault(true);
     }
     else {
       panel.add(buttonPanel, BorderLayout.CENTER);

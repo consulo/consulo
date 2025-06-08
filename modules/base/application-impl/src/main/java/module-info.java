@@ -42,6 +42,7 @@ module consulo.application.impl {
         consulo.ide.impl,
         consulo.language.editor.impl,
         consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.os.mac,
         consulo.test.impl,
         consulo.compiler.impl,
         consulo.desktop.ide.impl,
@@ -52,7 +53,9 @@ module consulo.application.impl {
         consulo.ide.impl,
         consulo.project.impl,
         consulo.proxy,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.os.mac;
+
     exports consulo.application.impl.internal.plugin to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
 
     exports consulo.application.impl.internal.start to consulo.desktop.awt.ide.impl,

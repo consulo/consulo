@@ -16,7 +16,6 @@
 package consulo.ui.image;
 
 import consulo.localize.LocalizeValue;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -25,17 +24,21 @@ import jakarta.annotation.Nullable;
  * @since 2020-10-08
  */
 public interface IconLibraryDescriptor {
-  @Nonnull
-  String getLibraryId();
+    @Nonnull
+    String getLibraryId();
 
-  @Nullable
-  String getBaseLibraryId();
+    @Nullable
+    String getBaseLibraryId();
 
-  @Nonnull
-  LocalizeValue getName();
+    @Nonnull
+    LocalizeValue getName();
 
-  @Nullable
-  default String getInverseLibraryId() {
-    return null;
-  }
+    default boolean isDark() {
+        return false;
+    }
+
+    @Nullable
+    default String getInverseLibraryId() {
+        return null;
+    }
 }

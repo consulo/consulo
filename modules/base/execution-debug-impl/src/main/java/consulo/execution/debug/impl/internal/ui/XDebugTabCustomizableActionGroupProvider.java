@@ -16,17 +16,18 @@
 package consulo.execution.debug.impl.internal.ui;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ui.ex.action.CustomizableActionGroupProvider;
 import consulo.execution.debug.XDebuggerActions;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.CustomizableActionGroupProvider;
 
 /**
  * @author nik
  */
 @ExtensionImpl
 public class XDebugTabCustomizableActionGroupProvider extends CustomizableActionGroupProvider {
-  @Override
-  public void registerGroups(CustomizableActionGroupRegistrar registrar) {
-    registrar.addCustomizableActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP, "Debug Tool Window Top Toolbar");
-    registrar.addCustomizableActionGroup(XDebuggerActions.TOOL_WINDOW_LEFT_TOOLBAR_GROUP, "Debug Tool Window Left Toolbar");
-  }
+    @Override
+    public void registerGroups(CustomizableActionGroupRegistrar registrar) {
+        registrar.addCustomizableActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP, LocalizeValue.localizeTODO("Debug Tool Window Top Toolbar"));
+        registrar.addCustomizableActionGroup(XDebuggerActions.TOOL_WINDOW_LEFT_TOOLBAR_GROUP, LocalizeValue.localizeTODO("Debug Tool Window Left Toolbar"));
+    }
 }

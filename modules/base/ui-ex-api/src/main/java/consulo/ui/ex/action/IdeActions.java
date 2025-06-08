@@ -490,7 +490,6 @@ public interface IdeActions {
 
     String ACTION_RENAME = "RenameElement";
 
-
     String ACTION_ANALYZE_DEPENDENCIES = "ShowPackageDeps";
 
     String ACTION_ANALYZE_BACK_DEPENDENCIES = "ShowBackwardPackageDeps";
@@ -543,4 +542,6 @@ public interface IdeActions {
     String ACTION_METHOD_OVERLOAD_SWITCH_DOWN = "MethodOverloadSwitchDown";
 
     String TOOLS_MENU = "ToolsMenu";
+
+    String GROUP_TOUCHBAR = "TouchBar";
 }

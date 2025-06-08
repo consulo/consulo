@@ -17,11 +17,13 @@ package consulo.ide.impl.idea.ide.ui.customization;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -36,6 +38,7 @@ import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -53,7 +56,7 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 @State(name = "CustomActionsSchema", storages = @Storage("customization.xml"))
-public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExternalizable {
+public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentStateComponent<Element> {
     private static final String ACTIONS_SCHEMA = "custom_actions_schema";
     private static final String ACTIVE = "active";
     private static final String ELEMENT_ACTION = "action";
@@ -67,7 +70,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
     private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<>();
 
-    private final List<Pair> myIdToNameList = new ArrayList<>();
+    private final Map<String, LocalizeValue> myIdToNameList = new HashMap<>();
 
     private static final Logger LOG = Logger.getInstance(CustomActionsSchemaImpl.class);
 
@@ -75,25 +78,24 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
     @Inject
     public CustomActionsSchemaImpl(Application application) {
-        myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_MENU, KeyMapLocalize.mainMenuActionTitle().get()));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_TOOLBAR, KeyMapLocalize.mainToolbarTitle().get()));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_POPUP, KeyMapLocalize.editorPopupMenuTitle().get()));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_GUTTER, "Editor Gutter Popup Menu"));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_TAB_POPUP, KeyMapLocalize.editorTabPopupMenuTitle().get()));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_PROJECT_VIEW_POPUP, KeyMapLocalize.projectViewPopupMenuTitle().get()));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_SCOPE_VIEW_POPUP, "Scope View Popup Menu"));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_FAVORITES_VIEW_POPUP, KeyMapLocalize.favoritesPopupTitle().get()));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_COMMANDER_POPUP, KeyMapLocalize.commenderViewPopupMenuTitle().get()));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_J2EE_VIEW_POPUP, KeyMapLocalize.j2eeViewPopupMenuTitle().get()));
-        myIdToNameList.add(new Pair(IdeActions.GROUP_NAVBAR_POPUP, "Navigation Bar"));
-        myIdToNameList.add(new Pair("NavBarToolBar", "Navigation Bar Toolbar"));
+        myIdToNameList.put(IdeActions.GROUP_MAIN_MENU, KeyMapLocalize.mainMenuActionTitle());
+        myIdToNameList.put(IdeActions.GROUP_MAIN_TOOLBAR, KeyMapLocalize.mainToolbarTitle());
+        myIdToNameList.put(IdeActions.GROUP_EDITOR_POPUP, KeyMapLocalize.editorPopupMenuTitle());
+        myIdToNameList.put(IdeActions.GROUP_EDITOR_GUTTER, LocalizeValue.localizeTODO("Editor Gutter Popup Menu"));
+        myIdToNameList.put(IdeActions.GROUP_EDITOR_TAB_POPUP, KeyMapLocalize.editorTabPopupMenuTitle());
+        myIdToNameList.put(IdeActions.GROUP_PROJECT_VIEW_POPUP, KeyMapLocalize.projectViewPopupMenuTitle());
+        myIdToNameList.put(IdeActions.GROUP_SCOPE_VIEW_POPUP, LocalizeValue.localizeTODO("Scope View Popup Menu"));
+        myIdToNameList.put(IdeActions.GROUP_FAVORITES_VIEW_POPUP, KeyMapLocalize.favoritesPopupTitle());
+        myIdToNameList.put(IdeActions.GROUP_COMMANDER_POPUP, KeyMapLocalize.commenderViewPopupMenuTitle());
+        myIdToNameList.put(IdeActions.GROUP_J2EE_VIEW_POPUP, KeyMapLocalize.j2eeViewPopupMenuTitle());
+        myIdToNameList.put(IdeActions.GROUP_NAVBAR_POPUP, LocalizeValue.localizeTODO("Navigation Bar"));
+        myIdToNameList.put("NavBarToolBar", LocalizeValue.localizeTODO("Navigation Bar Toolbar"));
 
-        CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar =
-            (groupId, groupTitle) -> myIdToNameList.add(new Pair(groupId, groupTitle));
+        CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar = myIdToNameList::put;
 
-        for (CustomizableActionGroupProvider provider : CustomizableActionGroupProvider.EP_NAME.getExtensionList(application)) {
+        application.getExtensionPoint(CustomizableActionGroupProvider.class).forEach(provider -> {
             provider.registerGroups(registrar);
-        }
+        });
     }
 
     public static CustomActionsSchemaImpl getInstance() {
@@ -160,15 +162,14 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
     }
 
     @Override
-    public void readExternal(Element element) throws InvalidDataException {
-        DefaultJDOMExternalizer.readExternal(this, element);
+    public void loadState(Element element) {
         Element schElement = element;
         String activeName = element.getAttributeValue(ACTIVE);
         if (activeName != null) {
             for (Element toolbarElement : element.getChildren(ACTIONS_SCHEMA)) {
                 for (Object o : toolbarElement.getChildren("option")) {
-                    if (Comparing.strEqual(((Element)o).getAttributeValue("name"), "myName")
-                        && Comparing.strEqual(((Element)o).getAttributeValue("value"), activeName)) {
+                    if (Comparing.strEqual(((Element) o).getAttributeValue("name"), "myName")
+                        && Comparing.strEqual(((Element) o).getAttributeValue("value"), activeName)) {
                         schElement = toolbarElement;
                         break;
                     }
@@ -177,18 +178,20 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         }
         for (Object groupElement : schElement.getChildren(GROUP)) {
             ActionUrl url = new ActionUrl();
-            url.readExternal((Element)groupElement);
+            url.readExternal((Element) groupElement);
             myActions.add(url);
         }
 
         readIcons(element);
     }
 
+    @Nullable
     @Override
-    public void writeExternal(Element element) throws WriteExternalException {
-        DefaultJDOMExternalizer.writeExternal(this, element);
+    public Element getState() {
+        Element element = new Element("state");
         writeActions(element);
         writeIcons(element);
+        return element;
     }
 
     private void writeActions(Element element) throws WriteExternalException {
@@ -201,16 +204,17 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
     @Override
     public AnAction getCorrectedAction(String id) {
-        if (!myIdToNameList.contains(new Pair(id, ""))) {
+        if (!myIdToNameList.containsKey(id)) {
             return ActionManager.getInstance().getAction(id);
         }
+
         if (myIdToActionGroup.get(id) == null) {
-            for (Pair pair : myIdToNameList) {
-                if (pair.first.equals(id)) {
-                    ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(id);
-                    if (actionGroup != null) { //J2EE/Commander plugin was disabled
-                        myIdToActionGroup.put(id, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
-                    }
+            LocalizeValue actionText = myIdToNameList.getOrDefault(id, LocalizeValue.of());
+
+            if (actionText != LocalizeValue.of()) {
+                ActionGroup actionGroup = (ActionGroup) ActionManager.getInstance().getAction(id);
+                if (actionGroup != null) {
+                    myIdToActionGroup.put(id, CustomizationUtil.correctActionGroup(actionGroup, this, actionText.get()));
                 }
             }
         }
@@ -218,20 +222,21 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
     }
 
     public void resetMainActionGroups() {
-        for (Pair pair : myIdToNameList) {
-            ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(pair.first);
+        for (Map.Entry<String, LocalizeValue> entry : myIdToNameList.entrySet()) {
+            ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(entry.getKey());
             if (actionGroup != null) {
-                myIdToActionGroup.put(pair.first, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
+                myIdToActionGroup.put(entry.getKey(), CustomizationUtil.correctActionGroup(actionGroup, this, entry.getValue().get()));
             }
         }
     }
 
     public void fillActionGroups(DefaultMutableTreeNode root) {
         ActionManager actionManager = ActionManager.getInstance();
-        for (Pair pair : myIdToNameList) {
-            ActionGroup actionGroup = (ActionGroup)actionManager.getAction(pair.first);
+        for (Map.Entry<String, LocalizeValue> entry : myIdToNameList.entrySet()) {
+            ActionGroup actionGroup = (ActionGroup)actionManager.getAction(entry.getKey());
             if (actionGroup != null) {
-                root.add(ActionsTreeUtil.createNode(ActionsTreeUtil.createGroup(actionGroup, pair.second, null, null, true, null, false)));
+                LocalizeValue actionText = entry.getValue();
+                root.add(ActionsTreeUtil.createNode(ActionsTreeUtil.createGroup(actionGroup, actionText.get(), null, null, true, null, false)));
             }
         }
     }

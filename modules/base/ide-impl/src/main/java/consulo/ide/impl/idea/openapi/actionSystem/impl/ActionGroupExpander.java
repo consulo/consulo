@@ -50,7 +50,7 @@ public class ActionGroupExpander {
 
   public static CancellablePromise<List<AnAction>> expandActionGroupAsync(boolean isInModalContext,
                                                                           @Nonnull ActionGroup group,
-                                                                          BasePresentationFactory presentationFactory,
+                                                                          PresentationFactory presentationFactory,
                                                                           @Nonnull DataContext context,
                                                                           String place) {
     if (!(context instanceof AsyncDataContext)) context = DataManager.getInstance().createAsyncDataContext(context);

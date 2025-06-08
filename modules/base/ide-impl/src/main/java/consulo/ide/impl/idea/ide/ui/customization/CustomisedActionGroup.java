@@ -44,6 +44,10 @@ public class CustomisedActionGroup extends ActionGroup {
     myForceUpdate = true;
   }
 
+  public ActionGroup getDelegate() {
+    return myGroup;
+  }
+
   @Nonnull
   public AnAction[] getChildren(@Nullable final AnActionEvent e) {
     if (myForceUpdate){

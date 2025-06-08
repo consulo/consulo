@@ -22,27 +22,36 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
+import java.util.List;
 
 @TopicAPI(ComponentScope.PROJECT)
 public interface ToolWindowManagerListener extends EventListener {
+    default void toolWindowsRegistered(@Nonnull List<String> ids, @Nonnull ToolWindowManager toolWindowManager) {
+        for (String id : ids) {
+            toolWindowRegistered(id);
+        }
+    }
 
-  /**
-   * Invoked when tool window with specified <code>id</code> is registered in {@link ToolWindowManager}.
-   *
-   * @param id <code>id</code> of registered tool window.
-   */
-  default void toolWindowRegistered(@Nonnull String id) {
-  }
+    default void toolWindowUnregistered(@Nonnull String id, @Nonnull ToolWindow toolWindow) {
+    }
 
-  default void stateChanged(ToolWindowManager toolWindowManager) {
-    stateChanged();
-  }
+    /**
+     * Invoked when tool window with specified <code>id</code> is registered in {@link ToolWindowManager}.
+     *
+     * @param id <code>id</code> of registered tool window.
+     */
+    default void toolWindowRegistered(@Nonnull String id) {
+    }
 
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("Use with ToolWindowManager parameter")
-  default void stateChanged() {
-  }
+    default void stateChanged(ToolWindowManager toolWindowManager) {
+        stateChanged();
+    }
 
-  default void toolWindowShown(@Nonnull ToolWindow toolWindow) {
-  }
+    @Deprecated(forRemoval = true)
+    @DeprecationInfo("Use with ToolWindowManager parameter")
+    default void stateChanged() {
+    }
+
+    default void toolWindowShown(@Nonnull ToolWindow toolWindow) {
+    }
 }

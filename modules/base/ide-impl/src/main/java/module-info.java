@@ -611,7 +611,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ui.debugger.extensions;
   exports consulo.ide.impl.idea.ui.dualView;
   exports consulo.ide.impl.idea.ui.mac;
-  exports consulo.ide.impl.idea.ui.mac.touchbar;
   exports consulo.ide.impl.idea.ui.navigation;
   exports consulo.ide.impl.idea.ui.paint;
   exports consulo.ide.impl.idea.ui.popup;

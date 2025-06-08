@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
@@ -404,7 +403,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     protected void fireToolWindowRegistered(final String id) {
-        myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.class).toolWindowRegistered(id);
+        myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.class).toolWindowsRegistered(List.of(id), this);
     }
 
     protected void fireStateChanged() {
@@ -1228,6 +1227,15 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @Override
     public List<String> getIdsOn(@Nonnull final ToolWindowAnchor anchor) {
         return myLayout.getVisibleIdsOn(anchor, this);
+    }
+
+    @Override
+    public List<ToolWindow> getToolWindows() {
+        List<ToolWindow> toolWindows = new ArrayList<>();
+        for (ToolWindowInternalDecorator decorator : myId2InternalDecorator.values()) {
+            toolWindows.add(decorator.getToolWindow());
+        }
+        return toolWindows;
     }
 
     @Nonnull

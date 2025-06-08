@@ -8,18 +8,18 @@ import consulo.dataContext.DataProvider;
 import consulo.find.FindInProjectSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.SearchReplaceComponent;
-import consulo.ide.impl.idea.find.editorHeaderActions.*;
+import consulo.ide.impl.idea.find.editorHeaderActions.ContextAwareShortcutProvider;
+import consulo.ide.impl.idea.find.editorHeaderActions.EditorHeaderSetSearchContextAction;
+import consulo.ide.impl.idea.find.editorHeaderActions.Embeddable;
+import consulo.ide.impl.idea.find.editorHeaderActions.VariantsCompletionAction;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHeaderComponent;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
-import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
 import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -290,14 +290,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     public Object getData(@Nonnull Key dataId) {
         if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
             return mySearchTextComponent.getText();
-        }
-        if (TouchbarDataKeys.ACTIONS_KEY == dataId) {
-            if (myTouchbarActions == null) {
-                myTouchbarActions = new DefaultActionGroup();
-                myTouchbarActions.add(new PrevOccurrenceAction());
-                myTouchbarActions.add(new NextOccurrenceAction());
-            }
-            return myTouchbarActions;
         }
         return myDataProviderDelegate != null ? myDataProviderDelegate.getData(dataId) : null;
     }

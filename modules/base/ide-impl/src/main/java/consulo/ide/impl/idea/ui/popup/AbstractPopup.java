@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.ModalityHelper;
 import consulo.ide.impl.idea.ui.*;
-import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
@@ -58,6 +57,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
@@ -65,6 +65,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.TouchBarControllerInternal;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
@@ -1162,10 +1163,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
         setMinimumSize(myMinSize);
 
-        final Disposable tb = TouchBarsManager.showPopupBar(this, myContent);
-        if (tb != null) {
-            Disposer.register(this, tb);
-        }
+        TouchBarControllerInternal touchBarController = (TouchBarControllerInternal) TouchBarController.getInstance();
+        touchBarController.showPopupItems(this, myComponent);
 
         myPopup.show();
         Rectangle bounds = window.getBounds();

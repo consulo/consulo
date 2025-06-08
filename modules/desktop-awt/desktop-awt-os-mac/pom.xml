@@ -34,14 +34,17 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-h</arg>
-                        <arg>${project.build.directory}/headers</arg>
-                    </compilerArgs>
-                </configuration>
+                <groupId>consulo.maven</groupId>
+                <artifactId>maven-consulo-plugin</artifactId>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-icon</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -50,6 +53,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-desktop-awt-ide-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-awt-hacking</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

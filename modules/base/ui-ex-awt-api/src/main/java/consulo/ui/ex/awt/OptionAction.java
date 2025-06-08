@@ -20,9 +20,11 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
-* @author Konstantin Bulenkov
-*/
+ * @author Konstantin Bulenkov
+ */
 public interface OptionAction extends Action {
-  @Nonnull
-  Action[] getOptions();
+    String AN_ACTION = "AnAction";
+
+    @Nonnull
+    Action[] getOptions();
 }

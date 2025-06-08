@@ -44,292 +44,293 @@ import java.util.zip.ZipFile;
  * @since 2020-09-26
  */
 public abstract class BaseIconLibraryManager implements IconLibraryManager {
-  private static class JarIcon {
-    public ThreeState svgState = ThreeState.UNSURE;
+    private static class JarIcon {
+        public ThreeState svgState = ThreeState.UNSURE;
 
-    public byte[] _1x;
-    public byte[] _2x;
-  }
-
-  private static final Logger LOG = Logger.getInstance(BaseIconLibraryManager.class);
-
-  public static final String ICON_DIRECTORY = "ICON-LIB/";
-  public static final String ICON_DIRECTORY_LIB_START = ICON_DIRECTORY;
-
-  private final AtomicLong myModificationCount = new AtomicLong();
-  private final AtomicBoolean myInitialized = new AtomicBoolean();
-
-  private Map<String, IconLibrary> myLibraries = new HashMap<>();
-
-  private String myActiveLibraryId;
-  private BaseIconLibraryImpl myActiveLibrary;
-
-  private ErrorBaseIconLibraryImpl myErrorLibrary = new ErrorBaseIconLibraryImpl(this);
-
-  @Nonnull
-  @Override
-  public Map<String, IconLibrary> getLibraries() {
-    return Collections.unmodifiableMap(myLibraries);
-  }
-
-  @Nonnull
-  @Override
-  public String getActiveLibraryId() {
-    return getActiveLibraryId(StyleManager.get().getCurrentStyle());
-  }
-
-  @Nonnull
-  public String getActiveLibraryId(@Nonnull Style currentStyle) {
-    if (myActiveLibraryId == null) {
-      return currentStyle.getIconLibraryId();
-    }
-    return myActiveLibraryId;
-  }
-
-  @Override
-  public boolean isFromStyle() {
-    return myActiveLibraryId == null;
-  }
-
-  @Override
-  public long getModificationCount() {
-    return myModificationCount.get();
-  }
-
-  @Override
-  public void setActiveLibrary(@Nullable String id) {
-    if (id == null) {
-      myActiveLibraryId = null;
-      myActiveLibrary = null;
-      myModificationCount.incrementAndGet();
-      return;
+        public byte[] _1x;
+        public byte[] _2x;
     }
 
-    IconLibrary iconLibrary = myLibraries.get(id);
-    if (iconLibrary != null) {
-      myActiveLibraryId = id;
-      myActiveLibrary = (BaseIconLibraryImpl)iconLibrary;
-      myModificationCount.incrementAndGet();
-    }
-    else {
-      LOG.error("Can't find icon library with id: " + id);
-    }
-  }
+    private static final Logger LOG = Logger.getInstance(BaseIconLibraryManager.class);
 
-  @Override
-  public void setActiveLibraryFromActiveStyle() {
-    myActiveLibraryId = null;
-    myActiveLibrary = null;
-    myModificationCount.incrementAndGet();
-  }
+    public static final String ICON_DIRECTORY = "ICON-LIB/";
+    public static final String ICON_DIRECTORY_LIB_START = ICON_DIRECTORY;
 
-  @Nullable
-  public BaseIconLibraryImpl getLibrary(@Nonnull String id) {
-    return (BaseIconLibraryImpl)myLibraries.get(id);
-  }
+    private final AtomicLong myModificationCount = new AtomicLong();
+    private final AtomicBoolean myInitialized = new AtomicBoolean();
 
-  @Override
-  @Nonnull
-  public BaseIconLibraryImpl getActiveLibrary() {
-    if (myActiveLibrary == null) {
-      String activeLibraryId = getActiveLibraryId();
+    private Map<String, IconLibrary> myLibraries = new HashMap<>();
 
-      myActiveLibrary = (BaseIconLibraryImpl)myLibraries.get(activeLibraryId);
+    private String myActiveLibraryId;
+    private BaseIconLibraryImpl myActiveLibrary;
+
+    private ErrorBaseIconLibraryImpl myErrorLibrary = new ErrorBaseIconLibraryImpl(this);
+
+    @Nonnull
+    @Override
+    public Map<String, IconLibrary> getLibraries() {
+        return Collections.unmodifiableMap(myLibraries);
     }
 
-    if (myActiveLibrary == null) {
-      LOG.error("There no default active library. Distribution broken");
-      return myErrorLibrary;
+    @Nonnull
+    @Override
+    public String getActiveLibraryId() {
+        return getActiveLibraryId(StyleManager.get().getCurrentStyle());
     }
-    return myActiveLibrary;
-  }
 
-  @Nonnull
-  protected abstract BaseIconLibraryImpl createLibrary(@Nonnull String id);
-
-  public void initialize(@Nullable Set<String> files) {
-    if (myInitialized.compareAndSet(false, true)) {
-      if (files == null) {
-        return;
-      }
-
-      Set<String> analyzedGroups = new HashSet<>();
-
-      for (String file : files) {
-        try {
-          analyzeLibraryJar(file, analyzedGroups);
+    @Nonnull
+    public String getActiveLibraryId(@Nonnull Style currentStyle) {
+        if (myActiveLibraryId == null) {
+            return currentStyle.getIconLibraryId();
         }
-        catch (IOException e) {
-          LOG.error("Fail to analyze library from url: " + file, e);
-        }
-      }
-
-      Map<String, IconLibraryDescriptor> descriptors = getAllDescriptors();
-
-      for (Map.Entry<String, IconLibrary> entry : myLibraries.entrySet()) {
-        String libraryId = entry.getKey();
-
-        BaseIconLibraryImpl iconLibrary = (BaseIconLibraryImpl)entry.getValue();
-
-        IconLibraryDescriptor descriptor = descriptors.get(libraryId);
-        if (descriptor != null) {
-          iconLibrary.setBaseId(descriptor.getBaseLibraryId());
-          iconLibrary.setInverseId(descriptor.getInverseLibraryId());
-          iconLibrary.setName(descriptor.getName());
-        }
-      }
-      myModificationCount.incrementAndGet();
-    }
-  }
-
-  @Nonnull
-  private static Map<String, IconLibraryDescriptor> getAllDescriptors() {
-    Map<String, IconLibraryDescriptor> list = new HashMap<>();
-
-    for (IconLibraryDescriptor value : IconLibraryDescriptorLoader.getAll(BaseIconLibraryManager.class.getClassLoader())) {
-      list.putIfAbsent(value.getLibraryId(), value);
+        return myActiveLibraryId;
     }
 
-    PluginManager.forEachEnabledPlugin(descriptor -> {
-      for (IconLibraryDescriptor libraryDescriptor : IconLibraryDescriptorLoader.getAll(descriptor.getPluginClassLoader())) {
-        list.putIfAbsent(libraryDescriptor.getLibraryId(), libraryDescriptor);
-      }
-    });
-
-    return list;
-  }
-
-  private void analyzeLibraryJar(@Nonnull String filePath, @Nonnull Set<String> analyzedGroups) throws IOException {
-    File jarFile = new File(filePath);
-
-    Map<Couple<String>, Map<String, JarIcon>> libraries = new HashMap<>();
-
-    try (ZipFile zipFile = new ZipFile(jarFile)) {
-      Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-      while (entries.hasMoreElements()) {
-        try {
-          ZipEntry zipEntry = entries.nextElement();
-
-          final String name = zipEntry.getName();
-
-          if (name.startsWith(ICON_DIRECTORY_LIB_START) && !zipEntry.isDirectory() && (name.endsWith("svg") || name.endsWith("png"))) {
-            String nameWithoutIcon = name.substring(ICON_DIRECTORY_LIB_START.length(), name.length());
-
-            String libraryId = nameWithoutIcon.substring(0, nameWithoutIcon.indexOf('/'));
-
-            String pathNoLibId = nameWithoutIcon.substring(libraryId.length() + 1, nameWithoutIcon.length());
-
-            String groupId = pathNoLibId.substring(0, pathNoLibId.indexOf('/'));
-
-            String imagePath = pathNoLibId.substring(groupId.length() + 1, pathNoLibId.length());
-
-            Map<String, JarIcon> iconUrls = libraries.computeIfAbsent(Couple.of(libraryId, groupId), it -> new HashMap<>());
-
-            processImage(imagePath, jarFile, zipFile, zipEntry, iconUrls);
-          }
-        }
-        catch (Exception e) {
-          LOG.error(e);
-        }
-      }
+    @Override
+    public boolean isFromStyle() {
+        return myActiveLibraryId == null;
     }
 
-    for (Map.Entry<Couple<String>, Map<String, JarIcon>> entry : libraries.entrySet()) {
-      Couple<String> key = entry.getKey();
-      Map<String, JarIcon> value = entry.getValue();
+    @Override
+    public long getModificationCount() {
+        return myModificationCount.get();
+    }
 
-      String iconLibraryId = key.getFirst();
-      String groupId = key.getSecond();
-
-      if (!analyzedGroups.add(iconLibraryId + ":" + groupId)) {
-        LOG.error("Can't redefine icon group " + groupId + " in library " + iconLibraryId + ". Path: " + filePath);
-        return;
-      }
-
-      BaseIconLibraryImpl lib = (BaseIconLibraryImpl)myLibraries.computeIfAbsent(iconLibraryId, it -> createLibrary(iconLibraryId));
-
-      for (Map.Entry<String, JarIcon> image : value.entrySet()) {
-        String imageId = image.getKey();
-        JarIcon jarIcon = image.getValue();
-
-        if (jarIcon._1x == null) {
-          LOG.error("There no x1 scale icon for imageId: " + imageId);
-          continue;
+    @Override
+    public void setActiveLibrary(@Nullable String id) {
+        if (id == null) {
+            myActiveLibraryId = null;
+            myActiveLibrary = null;
+            myModificationCount.incrementAndGet();
+            return;
         }
 
-        lib.registerIcon(groupId, imageId, jarIcon._1x, jarIcon._2x, jarIcon.svgState.toBoolean());
-      }
-    }
-  }
-
-
-  private void processImage(@Nonnull String imagePath, @Nonnull File jarFile, @Nonnull ZipFile zipFile, @Nonnull ZipEntry zipEntry, @Nonnull Map<String, JarIcon> iconUrls) throws IOException {
-    boolean isSVG = imagePath.endsWith("svg");
-    int dotIndex = imagePath.lastIndexOf('.');
-
-    // cut extension plus dot
-    String imagePathNoExtension = imagePath.substring(0, dotIndex);
-
-    if (imagePathNoExtension.endsWith("_dark")) {
-      LOG.warn("Skipping dark old icon " + jarFile + "/" + imagePath);
-      return;
+        IconLibrary iconLibrary = myLibraries.get(id);
+        if (iconLibrary != null) {
+            myActiveLibraryId = id;
+            myActiveLibrary = (BaseIconLibraryImpl) iconLibrary;
+            myModificationCount.incrementAndGet();
+        }
+        else {
+            LOG.error("Can't find icon library with id: " + id);
+        }
     }
 
-    boolean is2x = imagePathNoExtension.endsWith("@2x");
-    String iconPath = imagePathNoExtension;
-    if (is2x) {
-      // +3 - @2x
-      iconPath = iconPath.substring(0, iconPath.length() - 3);
+    @Override
+    public void setActiveLibraryFromActiveStyle() {
+        myActiveLibraryId = null;
+        myActiveLibrary = null;
+        myModificationCount.incrementAndGet();
     }
 
-    String imageId = iconPath.replace("/", ".").replace("-", "_").toLowerCase(Locale.ROOT);
-
-    JarIcon icon = iconUrls.get(imageId);
-    if (icon != null) {
-      // if we found svg icon and have not-svg, remove it, we prefer svg
-      if (isSVG && icon.svgState == ThreeState.NO) {
-        iconUrls.remove(imageId);
-      }
-
-      // if we already found svg icon - ignore another, we prefer svg
-      if (!isSVG && icon.svgState == ThreeState.YES) {
-        return;
-      }
+    @Nullable
+    public BaseIconLibraryImpl getLibrary(@Nonnull String id) {
+        return (BaseIconLibraryImpl) myLibraries.get(id);
     }
 
-    JarIcon jarIcon = iconUrls.computeIfAbsent(imageId, it -> new JarIcon());
+    @Override
+    @Nonnull
+    public BaseIconLibraryImpl getActiveLibrary() {
+        if (myActiveLibrary == null) {
+            String activeLibraryId = getActiveLibraryId();
 
-    byte[] bytes;
-    try (InputStream inputStream = zipFile.getInputStream(zipEntry)) {
-      bytes = StreamUtil.loadFromStream(inputStream);
+            myActiveLibrary = (BaseIconLibraryImpl) myLibraries.get(activeLibraryId);
+        }
+
+        if (myActiveLibrary == null) {
+            LOG.error("There no default active library. Distribution broken");
+            return myErrorLibrary;
+        }
+        return myActiveLibrary;
     }
 
-    jarIcon.svgState = isSVG ? ThreeState.YES : ThreeState.NO;
+    @Nonnull
+    protected abstract BaseIconLibraryImpl createLibrary(@Nonnull String id);
 
-    if (is2x) {
-      jarIcon._2x = bytes;
+    public void initialize(@Nullable Set<String> files) {
+        if (myInitialized.compareAndSet(false, true)) {
+            if (files == null) {
+                return;
+            }
+
+            Set<String> analyzedGroups = new HashSet<>();
+
+            for (String file : files) {
+                try {
+                    analyzeLibraryJar(file, analyzedGroups);
+                }
+                catch (IOException e) {
+                    LOG.error("Fail to analyze library from url: " + file, e);
+                }
+            }
+
+            Map<String, IconLibraryDescriptor> descriptors = getAllDescriptors();
+
+            for (Map.Entry<String, IconLibrary> entry : myLibraries.entrySet()) {
+                String libraryId = entry.getKey();
+
+                BaseIconLibraryImpl iconLibrary = (BaseIconLibraryImpl) entry.getValue();
+
+                IconLibraryDescriptor descriptor = descriptors.get(libraryId);
+                if (descriptor != null) {
+                    iconLibrary.setBaseId(descriptor.getBaseLibraryId());
+                    iconLibrary.setInverseId(descriptor.getInverseLibraryId());
+                    iconLibrary.setDark(descriptor.isDark());
+                    iconLibrary.setName(descriptor.getName());
+                }
+            }
+            myModificationCount.incrementAndGet();
+        }
     }
-    else {
-      jarIcon._1x = bytes;
+
+    @Nonnull
+    private static Map<String, IconLibraryDescriptor> getAllDescriptors() {
+        Map<String, IconLibraryDescriptor> list = new HashMap<>();
+
+        for (IconLibraryDescriptor value : IconLibraryDescriptorLoader.getAll(BaseIconLibraryManager.class.getClassLoader())) {
+            list.putIfAbsent(value.getLibraryId(), value);
+        }
+
+        PluginManager.forEachEnabledPlugin(descriptor -> {
+            for (IconLibraryDescriptor libraryDescriptor : IconLibraryDescriptorLoader.getAll(descriptor.getPluginClassLoader())) {
+                list.putIfAbsent(libraryDescriptor.getLibraryId(), libraryDescriptor);
+            }
+        });
+
+        return list;
     }
-  }
 
-  @Nullable
-  public ImageReference resolveImage(@Nullable String forceIconLibraryId, ImageKey imageKey) {
-    String groupId = imageKey.getGroupId();
-    String imageId = imageKey.getImageId();
+    private void analyzeLibraryJar(@Nonnull String filePath, @Nonnull Set<String> analyzedGroups) throws IOException {
+        File jarFile = new File(filePath);
 
-    if (forceIconLibraryId != null) {
-      BaseIconLibraryImpl targetIconLibrary = (BaseIconLibraryImpl)myLibraries.get(forceIconLibraryId);
-      if (targetIconLibrary != null) {
-        ImageReference icon = targetIconLibrary.resolveImage(groupId, imageId);
+        Map<Couple<String>, Map<String, JarIcon>> libraries = new HashMap<>();
+
+        try (ZipFile zipFile = new ZipFile(jarFile)) {
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+            while (entries.hasMoreElements()) {
+                try {
+                    ZipEntry zipEntry = entries.nextElement();
+
+                    final String name = zipEntry.getName();
+
+                    if (name.startsWith(ICON_DIRECTORY_LIB_START) && !zipEntry.isDirectory() && (name.endsWith("svg") || name.endsWith("png"))) {
+                        String nameWithoutIcon = name.substring(ICON_DIRECTORY_LIB_START.length(), name.length());
+
+                        String libraryId = nameWithoutIcon.substring(0, nameWithoutIcon.indexOf('/'));
+
+                        String pathNoLibId = nameWithoutIcon.substring(libraryId.length() + 1, nameWithoutIcon.length());
+
+                        String groupId = pathNoLibId.substring(0, pathNoLibId.indexOf('/'));
+
+                        String imagePath = pathNoLibId.substring(groupId.length() + 1, pathNoLibId.length());
+
+                        Map<String, JarIcon> iconUrls = libraries.computeIfAbsent(Couple.of(libraryId, groupId), it -> new HashMap<>());
+
+                        processImage(imagePath, jarFile, zipFile, zipEntry, iconUrls);
+                    }
+                }
+                catch (Exception e) {
+                    LOG.error(e);
+                }
+            }
+        }
+
+        for (Map.Entry<Couple<String>, Map<String, JarIcon>> entry : libraries.entrySet()) {
+            Couple<String> key = entry.getKey();
+            Map<String, JarIcon> value = entry.getValue();
+
+            String iconLibraryId = key.getFirst();
+            String groupId = key.getSecond();
+
+            if (!analyzedGroups.add(iconLibraryId + ":" + groupId)) {
+                LOG.error("Can't redefine icon group " + groupId + " in library " + iconLibraryId + ". Path: " + filePath);
+                return;
+            }
+
+            BaseIconLibraryImpl lib = (BaseIconLibraryImpl) myLibraries.computeIfAbsent(iconLibraryId, it -> createLibrary(iconLibraryId));
+
+            for (Map.Entry<String, JarIcon> image : value.entrySet()) {
+                String imageId = image.getKey();
+                JarIcon jarIcon = image.getValue();
+
+                if (jarIcon._1x == null) {
+                    LOG.error("There no x1 scale icon for imageId: " + imageId);
+                    continue;
+                }
+
+                lib.registerIcon(groupId, imageId, jarIcon._1x, jarIcon._2x, jarIcon.svgState.toBoolean());
+            }
+        }
+    }
+
+
+    private void processImage(@Nonnull String imagePath, @Nonnull File jarFile, @Nonnull ZipFile zipFile, @Nonnull ZipEntry zipEntry, @Nonnull Map<String, JarIcon> iconUrls) throws IOException {
+        boolean isSVG = imagePath.endsWith("svg");
+        int dotIndex = imagePath.lastIndexOf('.');
+
+        // cut extension plus dot
+        String imagePathNoExtension = imagePath.substring(0, dotIndex);
+
+        if (imagePathNoExtension.endsWith("_dark")) {
+            LOG.warn("Skipping dark old icon " + jarFile + "/" + imagePath);
+            return;
+        }
+
+        boolean is2x = imagePathNoExtension.endsWith("@2x");
+        String iconPath = imagePathNoExtension;
+        if (is2x) {
+            // +3 - @2x
+            iconPath = iconPath.substring(0, iconPath.length() - 3);
+        }
+
+        String imageId = iconPath.replace("/", ".").replace("-", "_").toLowerCase(Locale.ROOT);
+
+        JarIcon icon = iconUrls.get(imageId);
         if (icon != null) {
-          return icon;
+            // if we found svg icon and have not-svg, remove it, we prefer svg
+            if (isSVG && icon.svgState == ThreeState.NO) {
+                iconUrls.remove(imageId);
+            }
+
+            // if we already found svg icon - ignore another, we prefer svg
+            if (!isSVG && icon.svgState == ThreeState.YES) {
+                return;
+            }
         }
-      }
+
+        JarIcon jarIcon = iconUrls.computeIfAbsent(imageId, it -> new JarIcon());
+
+        byte[] bytes;
+        try (InputStream inputStream = zipFile.getInputStream(zipEntry)) {
+            bytes = StreamUtil.loadFromStream(inputStream);
+        }
+
+        jarIcon.svgState = isSVG ? ThreeState.YES : ThreeState.NO;
+
+        if (is2x) {
+            jarIcon._2x = bytes;
+        }
+        else {
+            jarIcon._1x = bytes;
+        }
     }
-    BaseIconLibraryImpl iconLibrary = getActiveLibrary();
-    return iconLibrary.resolveImage(groupId, imageId);
-  }
+
+    @Nullable
+    public ImageReference resolveImage(@Nullable String forceIconLibraryId, ImageKey imageKey) {
+        String groupId = imageKey.getGroupId();
+        String imageId = imageKey.getImageId();
+
+        if (forceIconLibraryId != null) {
+            BaseIconLibraryImpl targetIconLibrary = (BaseIconLibraryImpl) myLibraries.get(forceIconLibraryId);
+            if (targetIconLibrary != null) {
+                ImageReference icon = targetIconLibrary.resolveImage(groupId, imageId);
+                if (icon != null) {
+                    return icon;
+                }
+            }
+        }
+        BaseIconLibraryImpl iconLibrary = getActiveLibrary();
+        return iconLibrary.resolveImage(groupId, imageId);
+    }
 }

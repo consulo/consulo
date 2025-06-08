@@ -62,7 +62,6 @@ import consulo.ide.impl.idea.openapi.editor.impl.FoldingPopupManager;
 import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
 import consulo.ide.impl.idea.util.EditorPopupHandler;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
@@ -81,6 +80,7 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.ui.ex.awt.internal.AbstractPainter;
@@ -90,6 +90,7 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.TouchBarControllerInternal;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -1636,7 +1637,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myHeaderPanel.revalidate();
         myHeaderPanel.repaint();
 
-        TouchBarsManager.onUpdateEditorHeader(this, header);
+        TouchBarControllerInternal touchBarController = (TouchBarControllerInternal) TouchBarController.getInstance();
+
+        touchBarController.onUpdateEditorHeader(this, header);
     }
 
     @Override

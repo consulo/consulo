@@ -17,7 +17,7 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,12 +28,9 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CustomizableActionGroupProvider {
-    public static final ExtensionPointName<CustomizableActionGroupProvider> EP_NAME =
-        ExtensionPointName.create(CustomizableActionGroupProvider.class);
-
     public abstract void registerGroups(CustomizableActionGroupRegistrar registrar);
 
     public interface CustomizableActionGroupRegistrar {
-        void addCustomizableActionGroup(@Nonnull String groupId, @Nonnull String groupTitle);
+        void addCustomizableActionGroup(@Nonnull String groupId, @Nonnull LocalizeValue groupTitle);
     }
 }

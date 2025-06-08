@@ -37,7 +37,6 @@ import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
 import consulo.ide.impl.idea.ui.PopupBorder;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.WindowResizeListener;
-import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
 import consulo.ide.impl.idea.usages.impl.UsagePreviewPanel;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.Producer;
@@ -581,8 +580,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         myOKButton.addClickListener(event -> doOK(true));
         myReplaceAllButton.addClickListener(__ -> doOK(false));
         myReplaceSelectedButton.addClickListener(e -> doReplaceSelected());
-
-        TouchbarDataKeys.putDialogButtonDescriptor((JComponent) TargetAWT.to(myOKButton), 0, true);
 
         new MyEnterAction(false).registerCustomShortcutSet(new CustomShortcutSet(ENTER), this);
         DumbAwareAction.create(__ -> processCtrlEnter()).registerCustomShortcutSet(new CustomShortcutSet(ENTER_WITH_MODIFIERS), this);
