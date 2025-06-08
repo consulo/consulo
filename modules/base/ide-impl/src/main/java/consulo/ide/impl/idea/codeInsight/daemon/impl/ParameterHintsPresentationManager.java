@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCustomElementRenderer;
@@ -28,7 +27,9 @@ import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.codeInsight.hints.action.ParameterNameHintsActionGroup;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
+import consulo.ui.ModalityState;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.util.Alarm;
@@ -42,7 +43,6 @@ import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -116,7 +116,7 @@ public class ParameterHintsPresentationManager implements Disposable {
 
   private void scheduleAnimationStep(AnimationStep step) {
     myAlarm.cancelRequest(step);
-    myAlarm.addRequest(step, ANIMATION_STEP_MS, IdeaModalityState.any());
+    myAlarm.addRequest(step, ANIMATION_STEP_MS, ModalityState.any());
   }
 
   private static Font getFont(@Nonnull Editor editor) {
@@ -180,7 +180,7 @@ public class ParameterHintsPresentationManager implements Disposable {
     @Nullable
     @Override
     public String getContextMenuGroupId(@Nonnull Inlay inlay) {
-      return "ParameterNameHints";
+      return ParameterNameHintsActionGroup.ID;
     }
 
     private void updateState(Editor editor, @Nullable InlayParameterHintsProvider parameterHintsProvider, String text) {
