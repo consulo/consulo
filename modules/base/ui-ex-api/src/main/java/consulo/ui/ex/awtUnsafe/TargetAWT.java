@@ -45,13 +45,13 @@ public final class TargetAWT {
     private static final TargetAWTFacade ourFacade = PlatformServiceLoader.findImplementation(TargetAWTFacade.class, ServiceLoader::load);
 
     @Contract("null -> null")
-    public static java.awt.Dimension to(@Nullable Size size) {
-        return size == null ? null : new Dimension(size.getWidth(), size.getHeight());
+    public static java.awt.Dimension to(@Nullable Size2D size) {
+        return size == null ? null : new Dimension(size.width(), size.height());
     }
 
     @Contract("null -> null")
-    public static java.awt.Point to(@Nullable Coordinate2D coordinate2D) {
-        return coordinate2D == null ? null : new Point(coordinate2D.getX(), coordinate2D.getY());
+    public static Point to(@Nullable Point2D point2D) {
+        return point2D == null ? null : new Point(point2D.x(), point2D.y());
     }
 
     @Nonnull
@@ -108,13 +108,13 @@ public final class TargetAWT {
     }
 
     @Contract("null -> null")
-    public static Size from(@Nullable Dimension dimension) {
-        return dimension == null ? null : new Size(dimension.width, dimension.height);
+    public static Size2D from(@Nullable Dimension dimension) {
+        return dimension == null ? null : new Size2D(dimension.width, dimension.height);
     }
 
     @Contract("null -> null")
-    public static Coordinate2D from(@Nullable Point point) {
-        return point == null ? null : new Coordinate2D(point.x, point.y);
+    public static Point2D from(@Nullable Point point) {
+        return point == null ? null : new Point2D(point.x, point.y);
     }
 
     @Contract("null -> null")

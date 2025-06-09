@@ -8,14 +8,14 @@ import consulo.application.ui.impl.internal.UnifiedWindowStateServiceImpl;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.Coordinate2D;
+import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 abstract class DesktopAWTWindowStateServiceImpl extends UnifiedWindowStateServiceImpl<GraphicsConfiguration> {
@@ -42,8 +42,8 @@ abstract class DesktopAWTWindowStateServiceImpl extends UnifiedWindowStateServic
           long newModificationCount = state.getModificationCount();
           if (myModificationCount != newModificationCount) {
             myModificationCount = newModificationCount;
-            Coordinate2D location = state.getLocation();
-            Size size = state.getSize();
+            Point2D location = state.getLocation();
+            Size2D size = state.getSize();
             putFor(project, key, location, location != null, size, size != null, Frame.MAXIMIZED_BOTH == state.getExtendedState(), true, state.isFullScreen(), true);
           }
         }
@@ -107,8 +107,8 @@ abstract class DesktopAWTWindowStateServiceImpl extends UnifiedWindowStateServic
   }
 
   @Override
-  protected Rectangle2D getScreenRectangle(@Nonnull Coordinate2D location) {
-    return TargetAWT.from(ScreenUtil.getScreenRectangle(location.getX(), location.getY()));
+  protected Rectangle2D getScreenRectangle(@Nonnull Point2D location) {
+    return TargetAWT.from(ScreenUtil.getScreenRectangle(location.x(), location.y()));
   }
 
   @Override
@@ -126,17 +126,17 @@ abstract class DesktopAWTWindowStateServiceImpl extends UnifiedWindowStateServic
   }
 
   @Override
-  public boolean isVisible(Coordinate2D location, Size size) {
+  public boolean isVisible(Point2D location, Size2D size) {
     if (location == null) {
       return size != null;
     }
 
-    if (ScreenUtil.isVisible(new Point(location.getX(), location.getY()))) {
+    if (ScreenUtil.isVisible(new Point(location.x(), location.y()))) {
       return true;
     }
     if (size == null) {
       return false;
     }
-    return ScreenUtil.isVisible(new Rectangle(location.getX(), location.getY(), size.getWidth(), size.getHeight()));
+    return ScreenUtil.isVisible(new Rectangle(location.x(), location.y(), size.width(), size.height()));
   }
 }

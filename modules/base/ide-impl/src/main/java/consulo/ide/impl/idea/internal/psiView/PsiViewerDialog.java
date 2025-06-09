@@ -62,7 +62,7 @@ import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -419,9 +419,9 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
 
         registerCustomKeyboardActions();
 
-        Size size = DimensionService.getInstance().getSize(getDimensionServiceKey(), myProject);
+        Size2D size = DimensionService.getInstance().getSize(getDimensionServiceKey(), myProject);
         if (size == null) {
-            DimensionService.getInstance().setSize(getDimensionServiceKey(), new Size(800, 600));
+            DimensionService.getInstance().setSize(getDimensionServiceKey(), new Size2D(800, 600));
         }
         myTextSplit.setDividerLocation(settings.textDividerLocation);
         myTreeSplit.setDividerLocation(settings.treeDividerLocation);

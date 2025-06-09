@@ -20,7 +20,7 @@ import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -150,7 +150,7 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size size) {
+    public void setSize(@Nonnull Size2D size) {
         throw new UnsupportedOperationException();
     }
 

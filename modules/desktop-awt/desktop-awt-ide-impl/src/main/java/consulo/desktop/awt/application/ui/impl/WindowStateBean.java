@@ -4,11 +4,11 @@ package consulo.desktop.awt.application.ui.impl;
 import consulo.application.ui.impl.internal.BaseWindowStateBean;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.Coordinate2D;
-import consulo.ui.Size;
+import consulo.ui.Point2D;
+import consulo.ui.Size2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 
 final class WindowStateBean extends BaseWindowStateBean {
@@ -19,8 +19,8 @@ final class WindowStateBean extends BaseWindowStateBean {
 
   @Override
   public void applyTo(@Nonnull Window window) {
-    Coordinate2D location = getLocation();
-    Size size = getSize();
+    Point2D location = getLocation();
+    Size2D size = getSize();
     int extendedState = getExtendedState();
 
     Frame frame = window instanceof Frame ? (Frame)window : null;

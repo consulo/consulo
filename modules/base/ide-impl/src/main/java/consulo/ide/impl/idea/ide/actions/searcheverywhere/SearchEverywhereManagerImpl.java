@@ -7,7 +7,7 @@ import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.Coordinate2D;
+import consulo.ui.Point2D;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -133,7 +133,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     }
 
     private void calcPositionAndShow(Project project, JBPopup balloon) {
-        Coordinate2D savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
+        Point2D savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
 
         //for first show and short mode popup should be shifted to the top screen half
         if (savedLocation == null && mySearchEverywhereUI.getViewType() == SearchEverywhereUI.ViewType.SHORT) {

@@ -24,7 +24,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -66,7 +66,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
      */
     private final List<Rectangle> myComponentBounds = new ArrayList<>();
 
-    private Size myMinimumButtonSize = Size.ZERO;
+    private Size2D myMinimumButtonSize = Size2D.ZERO;
 
     /**
      * @see ActionToolbar#getLayoutPolicy()
@@ -327,7 +327,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     }
 
     @Override
-    public void setMinimumButtonSize(@Nonnull final Size size) {
+    public void setMinimumButtonSize(@Nonnull final Size2D size) {
         myMinimumButtonSize = size;
         for (int i = getComponentCount() - 1; i >= 0; i--) {
             final Component component = getComponent(i);

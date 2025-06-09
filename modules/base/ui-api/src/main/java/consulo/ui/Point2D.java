@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ui.impl.layout.data;
-
-import consulo.ui.Size2D;
+package consulo.ui;
 
 /**
- * @author VISTALL
- * @since 2021-12-18
+ * @author UNV
+ * @since 2025-06-09
  */
-public interface LayoutDataWithSize {
-  void setSize(Size2D size);
+public record Point2D(int x, int y) {
+    public Point2D() {
+        this(0, 0);
+    }
+
+    public Point2D(Point2D point) {
+        this(point.x(), point.y());
+    }
 }

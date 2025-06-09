@@ -104,7 +104,7 @@ public class UnifiedProgressDialog implements ProgressDialog {
                 Application.get().getName().get(),
                 WindowOptions.builder().disableClose().disableResize().build()
             );
-            myWindow.setSize(new Size(288, 123));
+            myWindow.setSize(new Size2D(288, 123));
             myWindow.setContent(verticalLayout);
             myWindow.show();
         });

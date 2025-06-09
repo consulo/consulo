@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.ui;
 
-import consulo.ui.Coordinate2D;
-import consulo.ui.Size;
-
+import consulo.ui.Point2D;
+import consulo.ui.Size2D;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 public interface WindowState {
@@ -14,14 +14,14 @@ public interface WindowState {
    * @see Window#getLocation()
    */
   @Nullable
-  Coordinate2D getLocation();
+  Point2D getLocation();
 
   /**
    * @return a window size
    * @see Window#getSize()
    */
   @Nullable
-  Size getSize();
+  Size2D getSize();
 
   /**
    * @return a bitwise mask that represents an extended frame state

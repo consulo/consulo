@@ -19,7 +19,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.externalService.impl.internal.plugin.ui.PluginDescriptionPanel;
 import consulo.externalService.impl.internal.plugin.ui.PluginsList;
 import consulo.project.Project;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -84,8 +84,8 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     }
 
     @Override
-    public Size getDefaultSize() {
-        return new Size(600, 900);
+    public Size2D getDefaultSize() {
+        return new Size2D(600, 900);
     }
 
     @Override

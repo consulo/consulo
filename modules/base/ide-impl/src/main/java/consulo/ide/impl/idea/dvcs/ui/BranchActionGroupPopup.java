@@ -16,7 +16,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -85,10 +85,10 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
         DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL == dataId ? getListModel() : null);
         myKey = dimensionKey;
         if (myKey != null) {
-            Size storedSize = ProjectWindowStateService.getInstance(myProject).getSizeFor(myProject, myKey);
+            Size2D storedSize = ProjectWindowStateService.getInstance(myProject).getSizeFor(myProject, myKey);
             if (storedSize != null) {
                 //set forced size before component is shown
-                setSize(new Dimension(storedSize.getWidth(), storedSize.getHeight()));
+                setSize(new Dimension(storedSize.width(), storedSize.height()));
                 myUserSizeChanged = true;
             }
             createTitlePanelToolbar(myKey);
@@ -175,7 +175,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
                 popupWindow.removeComponentListener(windowListener);
                 if (dimensionKey != null && myUserSizeChanged) {
                     ProjectWindowStateService.getInstance(myProject)
-                        .putSizeFor(myProject, dimensionKey, new Size(myPrevSize.width, myPrevSize.height));
+                        .putSizeFor(myProject, dimensionKey, new Size2D(myPrevSize.width, myPrevSize.height));
                 }
             }
         });

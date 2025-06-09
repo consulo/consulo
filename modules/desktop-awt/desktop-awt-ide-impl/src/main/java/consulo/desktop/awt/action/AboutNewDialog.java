@@ -24,7 +24,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.platform.Platform;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.util.lang.Couple;
@@ -72,8 +72,8 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
   }
 
   @Override
-  public Size getDefaultSize() {
-    return new Size(500, 600);
+  public Size2D getDefaultSize() {
+    return new Size2D(500, 600);
   }
 
   @Override

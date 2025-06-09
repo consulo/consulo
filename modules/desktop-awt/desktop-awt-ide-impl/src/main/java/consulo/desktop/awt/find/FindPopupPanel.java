@@ -280,8 +280,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             final Window window = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
             Component parent = UIUtil.findUltimateParent(window);
             RelativePoint showPoint = null;
-            Coordinate2D location = DimensionService.getInstance().getLocation(SERVICE_KEY);
-            Point screenPoint = location == null ? null : new Point(location.getX(), location.getY());
+            Point2D location = DimensionService.getInstance().getLocation(SERVICE_KEY);
+            Point screenPoint = location == null ? null : new Point(location.x(), location.y());
             if (screenPoint != null) {
                 if (parent != null) {
                     SwingUtilities.convertPointFromScreen(screenPoint, parent);
@@ -313,8 +313,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             addMouseListener(windowListener);
             addMouseMotionListener(windowListener);
             Dimension panelSize = getPreferredSize();
-            Size size = DimensionService.getInstance().getSize(SERVICE_KEY);
-            Dimension prev = size == null ? null : new Dimension(size.getWidth(), size.getHeight());
+            Size2D size = DimensionService.getInstance().getSize(SERVICE_KEY);
+            Dimension prev = size == null ? null : new Dimension(size.width(), size.height());
             panelSize.width += JBUIScale.scale(24);//hidden 'loading' icon
             panelSize.height *= 2;
             if (prev != null && prev.height < panelSize.height) {

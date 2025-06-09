@@ -16,7 +16,7 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
@@ -57,7 +57,7 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
 
   @Nonnull
   @Override
-  public Dimension to(@Nonnull Size size) {
+  public Dimension to(@Nonnull Size2D size) {
     throw new UnsupportedOperationException();
   }
 

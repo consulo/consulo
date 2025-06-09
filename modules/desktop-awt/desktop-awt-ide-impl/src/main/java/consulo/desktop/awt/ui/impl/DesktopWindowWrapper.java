@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ui.Component;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -75,7 +75,7 @@ public class DesktopWindowWrapper extends WindowOverAWTWindow {
 
   @RequiredUIAccess
   @Override
-  public void setSize(@Nonnull Size size) {
+  public void setSize(@Nonnull Size2D size) {
     toAWTWindow().setSize(TargetAWT.to(size));
   }
 }

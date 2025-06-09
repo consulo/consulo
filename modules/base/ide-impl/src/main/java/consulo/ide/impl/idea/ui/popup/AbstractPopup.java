@@ -44,10 +44,7 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.Coordinate2D;
-import consulo.ui.Position2D;
-import consulo.ui.Size;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.JBColor;
@@ -80,6 +77,8 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.Component;
+import java.awt.Window;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -875,10 +874,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
 
     @Override
+    @RequiredUIAccess
     public void showBy(@Nonnull consulo.ui.Component component, @Nonnull InputDetails inputDetails) {
         if (inputDetails != null) {
-            Position2D positionOnScreen = inputDetails.getPositionOnScreen();
-            show(TargetAWT.to(component), positionOnScreen.getX(), positionOnScreen.getY(), true);
+            Point2D positionOnScreen = inputDetails.getPositionOnScreen();
+            show(TargetAWT.to(component), positionOnScreen.x(), positionOnScreen.y(), true);
         }
         else {
             show(TargetAWT.to(component), -1, -1, true);
@@ -1646,13 +1646,13 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         if (myDimensionServiceKey != null) {
             Dimension size = myContent.getSize();
             JBInsets.removeFrom(size, myContent.getInsets());
-            getWindowStateService(myProject).putSize(myDimensionServiceKey, new Size(size.width, size.height));
+            getWindowStateService(myProject).putSize(myDimensionServiceKey, new Size2D(size.width, size.height));
         }
     }
 
     private void storeLocation(final Point xy) {
         if (myDimensionServiceKey != null) {
-            getWindowStateService(myProject).putLocation(myDimensionServiceKey, new Coordinate2D(xy.x, xy.y));
+            getWindowStateService(myProject).putLocation(myDimensionServiceKey, new Point2D(xy.x, xy.y));
         }
     }
 
@@ -2210,7 +2210,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         if (myDimensionServiceKey == null) {
             return null;
         }
-        Coordinate2D location = getWindowStateService(myProject).getLocation(myDimensionServiceKey);
+        Point2D location = getWindowStateService(myProject).getLocation(myDimensionServiceKey);
         return TargetAWT.to(location);
     }
 
@@ -2219,7 +2219,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         if (myDimensionServiceKey == null) {
             return null;
         }
-        Size size = getWindowStateService(myProject).getSize(myDimensionServiceKey);
+        Size2D size = getWindowStateService(myProject).getSize(myDimensionServiceKey);
         return TargetAWT.to(size);
     }
 

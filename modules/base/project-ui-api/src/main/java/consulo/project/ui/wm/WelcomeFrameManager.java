@@ -22,7 +22,7 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -45,8 +45,8 @@ public abstract class WelcomeFrameManager {
   public static final String DIMENSION_KEY = "WELCOME_SCREEN";
 
   @Nonnull
-  public static Size getDefaultWindowSize() {
-    return new Size(800, 460);
+  public static Size2D getDefaultWindowSize() {
+    return new Size2D(800, 460);
   }
 
   public static boolean isFromWelcomeFrame(@Nonnull AnActionEvent e) {

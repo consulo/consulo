@@ -20,9 +20,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
-import consulo.ui.Coordinate2D;
-import consulo.ui.Size;
-
+import consulo.ui.Point2D;
+import consulo.ui.Size2D;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,10 +42,10 @@ public interface DimensionService extends ModificationTracker {
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Nullable
-  Size getSize(@Nonnull String key);
+  Size2D getSize(@Nonnull String key);
 
   @Nullable
-  Size getSize(@Nonnull String key, Project project);
+  Size2D getSize(@Nonnull String key, Project project);
 
   /**
    * Store specified {@code size} under the {@code key}. If {@code size} is
@@ -56,9 +55,9 @@ public interface DimensionService extends ModificationTracker {
    * @param size a Size to save.
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
-  void setSize(@Nonnull String key, Size size);
+  void setSize(@Nonnull String key, Size2D size);
 
-  void setSize(@Nonnull String key, Size size, Project project);
+  void setSize(@Nonnull String key, Size2D size, Project project);
 
   /**
    * @param key a String key to perform a query for.
@@ -69,10 +68,10 @@ public interface DimensionService extends ModificationTracker {
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Nullable
-  Coordinate2D getLocation(String key);
+  Point2D getLocation(String key);
 
   @Nullable
-  Coordinate2D getLocation(@Nonnull String key, Project project);
+  Point2D getLocation(@Nonnull String key, Project project);
 
   /**
    * Store specified {@code point} under the {@code key}. If {@code point} is
@@ -82,7 +81,7 @@ public interface DimensionService extends ModificationTracker {
    * @param point location to save.
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
-  void setLocation(String key, Coordinate2D point);
+  void setLocation(String key, Point2D point);
 
-  void setLocation(@Nonnull String key, Coordinate2D point, Project project);
+  void setLocation(@Nonnull String key, Point2D point, Project project);
 }

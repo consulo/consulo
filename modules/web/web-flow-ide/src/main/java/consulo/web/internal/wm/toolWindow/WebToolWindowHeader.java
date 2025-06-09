@@ -17,7 +17,7 @@ package consulo.web.internal.wm.toolWindow;
 
 import consulo.ui.Component;
 import consulo.ui.Label;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -38,7 +38,7 @@ public class WebToolWindowHeader {
   @RequiredUIAccess
   public WebToolWindowHeader(UnifiedToolWindowImpl toolWindow) {
     myDockLayout = DockLayout.create();
-    myDockLayout.setSize(new Size(-1, 24 + 4));
+    myDockLayout.setSize(new Size2D(-1, 24 + 4));
     //myDockLayout.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
     myDockLayout.addBorder(BorderPosition.BOTTOM, BorderStyle.LINE, ComponentColors.BORDER, 1);
 

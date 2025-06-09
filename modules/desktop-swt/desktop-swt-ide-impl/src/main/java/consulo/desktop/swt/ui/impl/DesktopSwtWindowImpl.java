@@ -81,8 +81,8 @@ public class DesktopSwtWindowImpl extends SWTComponentDelegate<Shell> implements
 
   @RequiredUIAccess
   @Override
-  public void setSize(@Nonnull Size size) {
-    myComponent.setSize(size.getWidth(), size.getHeight());
+  public void setSize(@Nonnull Size2D size) {
+    myComponent.setSize(size.width(), size.height());
   }
 
   @RequiredUIAccess

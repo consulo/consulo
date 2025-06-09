@@ -16,7 +16,7 @@
 package consulo.ui.image;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.internal.UIInternal;
 import jakarta.annotation.Nonnull;
 
@@ -108,7 +108,7 @@ public interface Image {
   int getWidth();
 
   @Nonnull
-  default Size getSize() {
-    return new Size(getWidth(), getHeight());
+  default Size2D getSize() {
+    return new Size2D(getWidth(), getHeight());
   }
 }

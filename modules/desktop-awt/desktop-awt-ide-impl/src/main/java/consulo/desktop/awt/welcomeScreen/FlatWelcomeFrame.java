@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.Coordinate2D;
+import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
@@ -107,7 +107,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
     }
 
     public static void saveLocation(Rectangle location) {
-        Coordinate2D middle = new Coordinate2D(location.x + location.width / 2, location.y = location.height / 2);
+        Point2D middle = new Point2D(location.x + location.width / 2, location.y = location.height / 2);
         ApplicationWindowStateService.getInstance().putLocation(WelcomeFrameManager.DIMENSION_KEY, middle);
     }
 

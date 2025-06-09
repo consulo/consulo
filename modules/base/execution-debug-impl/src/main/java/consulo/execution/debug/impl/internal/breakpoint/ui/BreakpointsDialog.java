@@ -35,7 +35,7 @@ import consulo.execution.debug.impl.internal.breakpoint.ui.tree.BreakpointsCheck
 import consulo.language.editor.ui.awt.DetailViewImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -150,8 +150,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
   }
 
   @Override
-  public Size getDefaultSize() {
-    return new Size(910, 400);
+  public Size2D getDefaultSize() {
+    return new Size2D(910, 400);
   }
 
   @Nonnull

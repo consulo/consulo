@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
-import consulo.ui.Coordinate2D;
+import consulo.ui.Point2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBInsets;
@@ -134,7 +134,7 @@ public class RunAnythingManager {
     }
 
     private void calcPositionAndShow(Project project, JBPopup balloon) {
-        Coordinate2D savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
+        Point2D savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
 
         if (project != null) {
             balloon.showCenteredInCurrentWindow(project);

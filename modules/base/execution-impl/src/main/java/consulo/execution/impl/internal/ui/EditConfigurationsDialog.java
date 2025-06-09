@@ -19,7 +19,7 @@ package consulo.execution.impl.internal.ui;
 import consulo.execution.executor.Executor;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.Couple;
@@ -64,8 +64,8 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
   }
 
   @Override
-  public Size getDefaultSize() {
-    return new Size(750, 500);
+  public Size2D getDefaultSize() {
+    return new Size2D(750, 500);
   }
 
   @Nullable

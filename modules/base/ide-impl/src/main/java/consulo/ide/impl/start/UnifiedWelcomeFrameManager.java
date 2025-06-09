@@ -97,7 +97,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
             value.actionPerformed(e);
         });
         listSelect.addBorder(BorderPosition.RIGHT);
-        listSelect.setSize(new Size(300, -1));
+        listSelect.setSize(new Size2D(300, -1));
 
         DockLayout layout = DockLayout.create();
         layout.left(listSelect);

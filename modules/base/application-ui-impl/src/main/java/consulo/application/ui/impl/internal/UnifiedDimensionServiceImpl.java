@@ -28,16 +28,16 @@ import consulo.component.util.SimpleModificationTracker;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.ProjectWindowStateService;
-import consulo.ui.Coordinate2D;
-import consulo.ui.Size;
+import consulo.ui.Point2D;
+import consulo.ui.Size2D;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -49,8 +49,8 @@ import java.util.Map;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @State(name = "DimensionService", storages = @Storage(value = "window.state.xml", roamingType = RoamingType.DISABLED))
 public class UnifiedDimensionServiceImpl extends SimpleModificationTracker implements DimensionService, PersistentStateComponent<Element> {
-  private final Map<String, Coordinate2D> myKey2Location = new LinkedHashMap<>();
-  private final Map<String, Size> myKey2Size = new LinkedHashMap<>();
+  private final Map<String, Point2D> myKey2Location = new LinkedHashMap<>();
+  private final Map<String, Size2D> myKey2Size = new LinkedHashMap<>();
   private final ObjectIntMap<String> myKey2ExtendedState = ObjectMaps.newObjectIntHashMap();
   private static final String EXTENDED_STATE = "extendedState";
   private static final String KEY = "key";
@@ -69,15 +69,15 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
 
   @Override
   @Nullable
-  public synchronized Coordinate2D getLocation(@Nonnull String key, Project project) {
-    Coordinate2D point = project == null ? null : ProjectWindowStateService.getInstance(project).getLocation(key);
+  public synchronized Point2D getLocation(@Nonnull String key, Project project) {
+    Point2D point = project == null ? null : ProjectWindowStateService.getInstance(project).getLocation(key);
     if (point != null) return point;
 
     Pair<String, Float> pair = resolveScale(key, project);
     point = myKey2Location.get(pair.first);
     if (point != null) {
       float scale = pair.second;
-      point = new Coordinate2D(((int)(point.getX() / scale)), ((int)(point.getY() / scale)));
+      point = new Point2D(((int)(point.x() / scale)), ((int)(point.y() / scale)));
     }
     if (point != null && isOutVisibleScreenArea(point)) {
       point = null;
@@ -85,17 +85,17 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
     return point;
   }
 
-  protected boolean isOutVisibleScreenArea(@Nonnull Coordinate2D coordinate2D) {
+  protected boolean isOutVisibleScreenArea(@Nonnull Point2D point2D) {
     return false;
   }
 
   @Override
-  public synchronized void setLocation(@Nonnull String key, Coordinate2D point, Project project) {
+  public synchronized void setLocation(@Nonnull String key, Point2D point, Project project) {
     getWindowStateService(project).putLocation(key, point);
     Pair<String, Float> pair = resolveScale(key, project);
     if (point != null) {
       float scale = pair.second;
-      point = new Coordinate2D(((int)(point.getX() * scale)), ((int)(point.getY() * scale)));
+      point = new Point2D(((int)(point.x() * scale)), ((int)(point.y() * scale)));
       myKey2Location.put(pair.first, point);
     }
     else {
@@ -106,26 +106,26 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
 
   @Override
   @Nullable
-  public synchronized Size getSize(@Nonnull String key, Project project) {
-    Size size = project == null ? null : ProjectWindowStateService.getInstance(project).getSize(key);
+  public synchronized Size2D getSize(@Nonnull String key, Project project) {
+    Size2D size = project == null ? null : ProjectWindowStateService.getInstance(project).getSize(key);
     if (size != null) return size;
 
     Pair<String, Float> pair = resolveScale(key, project);
     size = myKey2Size.get(pair.first);
     if (size != null) {
       float scale = pair.second;
-      size = new Size(((int)(size.getWidth() / scale)), ((int)(size.getHeight() / scale)));
+      size = new Size2D(((int)(size.width() / scale)), ((int)(size.height() / scale)));
     }
     return size;
   }
 
   @Override
-  public synchronized void setSize(@Nonnull String key, Size size, Project project) {
+  public synchronized void setSize(@Nonnull String key, Size2D size, Project project) {
     getWindowStateService(project).putSize(key, size);
     Pair<String, Float> pair = resolveScale(key, project);
     if (size != null) {
       float scale = pair.second;
-      size = new Size((int)(size.getWidth() * scale), (int)(size.getHeight() * scale));
+      size = new Size2D((int)(size.width() * scale), (int)(size.height() * scale));
       myKey2Size.put(pair.first, size);
     }
     else {
@@ -144,7 +144,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    */
   @Override
   @Nullable
-  public synchronized Coordinate2D getLocation(String key) {
+  public synchronized Point2D getLocation(String key) {
     return getLocation(key, guessProject());
   }
 
@@ -166,7 +166,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    */
   @Override
   @Nullable
-  public synchronized Size getSize(@Nonnull String key) {
+  public synchronized Size2D getSize(@Nonnull String key) {
     return getSize(key, guessProject());
   }
 
@@ -179,7 +179,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Override
-  public synchronized void setLocation(String key, Coordinate2D point) {
+  public synchronized void setLocation(String key, Point2D point) {
     setLocation(key, point, guessProject());
   }
 
@@ -192,7 +192,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Override
-  public synchronized void setSize(@Nonnull String key, Size size) {
+  public synchronized void setSize(@Nonnull String key, Size2D size) {
     setSize(key, size, guessProject());
   }
 
@@ -200,26 +200,26 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
   public Element getState() {
     Element element = new Element("state");
     // Save locations
-    for (Map.Entry<String, Coordinate2D> entry : myKey2Location.entrySet()) {
+    for (Map.Entry<String, Point2D> entry : myKey2Location.entrySet()) {
       String key = entry.getKey();
-      Coordinate2D point = entry.getValue();
+      Point2D point = entry.getValue();
 
       Element e = new Element(ELEMENT_LOCATION);
       e.setAttribute(KEY, key);
-      e.setAttribute(ATTRIBUTE_X, String.valueOf(point.getX()));
-      e.setAttribute(ATTRIBUTE_Y, String.valueOf(point.getY()));
+      e.setAttribute(ATTRIBUTE_X, String.valueOf(point.x()));
+      e.setAttribute(ATTRIBUTE_Y, String.valueOf(point.y()));
       element.addContent(e);
     }
 
     // Save sizes
-    for (Map.Entry<String, Size> entry : myKey2Size.entrySet()) {
+    for (Map.Entry<String, Size2D> entry : myKey2Size.entrySet()) {
       String key = entry.getKey();
-      Size size = entry.getValue();
+      Size2D size = entry.getValue();
 
       Element e = new Element(ELEMENT_SIZE);
       e.setAttribute(KEY, key);
-      e.setAttribute(ATTRIBUTE_WIDTH, String.valueOf(size.getWidth()));
-      e.setAttribute(ATTRIBUTE_HEIGHT, String.valueOf(size.getHeight()));
+      e.setAttribute(ATTRIBUTE_WIDTH, String.valueOf(size.width()));
+      e.setAttribute(ATTRIBUTE_HEIGHT, String.valueOf(size.height()));
       element.addContent(e);
     }
 
@@ -242,14 +242,14 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
     for (Element e : element.getChildren()) {
       if (ELEMENT_LOCATION.equals(e.getName())) {
         try {
-          myKey2Location.put(e.getAttributeValue(KEY), new Coordinate2D(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_X)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_Y))));
+          myKey2Location.put(e.getAttributeValue(KEY), new Point2D(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_X)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_Y))));
         }
         catch (NumberFormatException ignored) {
         }
       }
       else if (ELEMENT_SIZE.equals(e.getName())) {
         try {
-          myKey2Size.put(e.getAttributeValue(KEY), new Size(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_WIDTH)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_HEIGHT))));
+          myKey2Size.put(e.getAttributeValue(KEY), new Size2D(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_WIDTH)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_HEIGHT))));
         }
         catch (NumberFormatException ignored) {
         }

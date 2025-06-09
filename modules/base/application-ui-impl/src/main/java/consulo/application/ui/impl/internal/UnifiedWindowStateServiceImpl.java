@@ -21,15 +21,15 @@ import consulo.application.ui.WindowStateService;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
-import consulo.ui.Coordinate2D;
+import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.ex.util.UIXmlSerializeUtil;
 import consulo.util.lang.StringUtil;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
@@ -38,13 +38,13 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 30/12/2022
+ * @since 2022-12-30
  */
 public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateService, ModificationTracker, PersistentStateComponent<Element> {
   protected final class CachedState<G extends GC> {
     private Rectangle2D myScreen;
-    private Coordinate2D myLocation;
-    private Size mySize;
+    private Point2D myLocation;
+    private Size2D mySize;
     private boolean myMaximized;
     private boolean myFullScreen;
     private long myTimeStamp;
@@ -54,18 +54,18 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
 
     @SuppressWarnings("unchecked")
     <T> T get(@Nonnull Class<T> type, @Nullable Rectangle2D screen) {
-      Coordinate2D location = apply(Coordinate2D::new, myLocation);
-      Size size = apply(Size::new, mySize);
+      Point2D location = apply(Point2D::new, myLocation);
+      Size2D size = apply(Size2D::new, mySize);
       // convert location and size according to the given screen
       if (myScreen != null && screen != null && !screen.isEmpty()) {
         double w = myScreen.getWidth() / screen.getWidth();
         double h = myScreen.getHeight() / screen.getHeight();
-        if (location != null) location = new Coordinate2D(((int)(screen.getX() + (location.getX() - myScreen.getX()) / w)), ((int)(screen.getY() + (location.getY() - myScreen.getY()) / h)));
-        if (size != null) size = new Size(((int)(size.getWidth() / w)), ((int)(size.getHeight() / h)));
+        if (location != null) location = new Point2D(((int)(screen.getX() + (location.x() - myScreen.getX()) / w)), ((int)(screen.getY() + (location.y() - myScreen.getY()) / h)));
+        if (size != null) size = new Size2D(((int)(size.width() / w)), ((int)(size.height() / h)));
         if (!isVisible(location, size)) return null; // adjusted state is not visible
       }
-      if (type == Coordinate2D.class) return (T)location;
-      if (type == Size.class) return (T)size;
+      if (type == Point2D.class) return (T)location;
+      if (type == Size2D.class) return (T)size;
       if (type == Rectangle2D.class) return location == null || size == null ? null : (T)new Rectangle2D(location, size);
       if (type != WindowState.class) throw new IllegalArgumentException();
       // copy a current state
@@ -77,12 +77,12 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
       return (T)state;
     }
 
-    private boolean set(Coordinate2D location, boolean locationSet, Size size, boolean sizeSet, boolean maximized, boolean maximizedSet, boolean fullScreen, boolean fullScreenSet) {
+    private boolean set(Point2D location, boolean locationSet, Size2D size, boolean sizeSet, boolean maximized, boolean maximizedSet, boolean fullScreen, boolean fullScreenSet) {
       if (locationSet) {
-        myLocation = apply(Coordinate2D::new, location);
+        myLocation = apply(Point2D::new, location);
       }
       if (sizeSet) {
-        mySize = apply(Size::new, size);
+        mySize = apply(Size2D::new, size);
       }
       if (maximizedSet) {
         myMaximized = maximized;
@@ -99,7 +99,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
     void updateScreenRectangle(@Nullable G configuration) {
       myScreen = myLocation == null
                  ? getScreenRectangle(configuration)
-                 : mySize == null ? getScreenRectangle(myLocation) : getScreenRectangle(new Coordinate2D(myLocation.getX() + mySize.getWidth() / 2, myLocation.getY() + mySize.getHeight() / 2));
+                 : mySize == null ? getScreenRectangle(myLocation) : getScreenRectangle(new Point2D(myLocation.x() + mySize.width() / 2, myLocation.y() + mySize.height() / 2));
     }
   }
 
@@ -136,9 +136,9 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
 
   protected void putFor(Object object,
                         @Nonnull String key,
-                        Coordinate2D location,
+                        Point2D location,
                         boolean locationSet,
-                        Size size,
+                        Size2D size,
                         boolean sizeSet,
                         boolean maximized,
                         boolean maximizedSet,
@@ -166,12 +166,12 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
     return new Rectangle2D(0, 0);
   }
 
-  protected Rectangle2D getScreenRectangle(@Nonnull Coordinate2D location) {
+  protected Rectangle2D getScreenRectangle(@Nonnull Point2D location) {
     // TODO this need to be reworked
-    return new Rectangle2D(location.getX(), location.getY(), 0, 0);
+    return new Rectangle2D(location.x(), location.y(), 0, 0);
   }
 
-  public boolean isVisible(Coordinate2D location, Size size) {
+  public boolean isVisible(Point2D location, Size2D size) {
     return true;
   }
 
@@ -188,22 +188,22 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
   }
 
   @Override
-  public Coordinate2D getLocationFor(Object object, @Nonnull String key) {
-    return getFor(object, key, Coordinate2D.class);
+  public Point2D getLocationFor(Object object, @Nonnull String key) {
+    return getFor(object, key, Point2D.class);
   }
 
   @Override
-  public void putLocationFor(Object object, @Nonnull String key, Coordinate2D location) {
+  public void putLocationFor(Object object, @Nonnull String key, Point2D location) {
     putFor(object, key, location, true, null, false, false, false, false, false);
   }
 
   @Override
-  public Size getSizeFor(Object object, @Nonnull String key) {
-    return getFor(object, key, Size.class);
+  public Size2D getSizeFor(Object object, @Nonnull String key) {
+    return getFor(object, key, Size2D.class);
   }
 
   @Override
-  public void putSizeFor(Object object, @Nonnull String key, Size size) {
+  public void putSizeFor(Object object, @Nonnull String key, Size2D size) {
     putFor(object, key, null, false, size, true, false, false, false, false);
   }
 
@@ -214,8 +214,8 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
 
   @Override
   public void putBoundsFor(Object object, @Nonnull String key, Rectangle2D bounds) {
-    Coordinate2D location = apply(Rectangle2D::getCoordinate, bounds);
-    Size size = apply(Rectangle2D::getSize, bounds);
+    Point2D location = apply(Rectangle2D::coordinate, bounds);
+    Size2D size = apply(Rectangle2D::size, bounds);
     putFor(object, key, location, true, size, true, false, false, false, false);
   }
 
@@ -233,8 +233,8 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
         String key = child.getAttributeValue(KEY);
         if (StringUtil.isEmpty(key)) continue; // unexpected key
 
-        Coordinate2D location = UIXmlSerializeUtil.getLocation(child);
-        Size size = UIXmlSerializeUtil.getSize(child);
+        Point2D location = UIXmlSerializeUtil.getLocation(child);
+        Size2D size = UIXmlSerializeUtil.getSize(child);
         if (location == null && size == null) continue; // unexpected value
 
         CachedState<GC> state = newCachedState();
@@ -284,9 +284,9 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
 
   @Nullable
   private CachedState<GC> put(@Nonnull String key,
-                              @Nullable Coordinate2D location,
+                              @Nullable Point2D location,
                               boolean locationSet,
-                              @Nullable Size size,
+                              @Nullable Size2D size,
                               boolean sizeSet,
                               boolean maximized,
                               boolean maximizedSet,

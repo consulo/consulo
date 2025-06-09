@@ -56,7 +56,7 @@ public abstract class WindowWrapper {
   protected abstract Component createCenterComponent(@Nonnull Disposable uiDisposable);
 
   @Nullable
-  protected Size getDefaultSize() {
+  protected Size2D getDefaultSize() {
     return null;
   }
 
@@ -72,7 +72,7 @@ public abstract class WindowWrapper {
     myResult = AsyncResult.undefined();
 
     myWindow = Window.create(myTitle, WindowOptions.builder().owner(Window.getActiveWindow()).build());
-    Size defaultSize = getDefaultSize();
+    Size2D defaultSize = getDefaultSize();
     if (defaultSize != null) {
       myWindow.setSize(defaultSize);
     }

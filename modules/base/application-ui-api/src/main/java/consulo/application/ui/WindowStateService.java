@@ -16,12 +16,12 @@
 package consulo.application.ui;
 
 import consulo.project.Project;
-import consulo.ui.Coordinate2D;
+import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
-
+import consulo.ui.Size2D;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 /**
@@ -61,7 +61,7 @@ public interface WindowStateService {
    * @param key an unique string key
    * @return a corresponding location
    */
-  default Coordinate2D getLocation(@Nonnull String key) {
+  default Point2D getLocation(@Nonnull String key) {
     return getLocationFor(getProject(), key);
   }
 
@@ -74,7 +74,7 @@ public interface WindowStateService {
    * @param key    an unique string key
    * @return a corresponding location
    */
-  public abstract Coordinate2D getLocationFor(Object object, @Nonnull String key);
+  public abstract Point2D getLocationFor(Object object, @Nonnull String key);
 
   /**
    * Stores the specified location that corresponds to the specified key.
@@ -82,7 +82,7 @@ public interface WindowStateService {
    *
    * @param key an unique string key
    */
-  default void putLocation(@Nonnull String key, Coordinate2D location) {
+  default void putLocation(@Nonnull String key, Point2D location) {
     putLocationFor(getProject(), key, location);
   }
 
@@ -95,7 +95,7 @@ public interface WindowStateService {
    * @param object an object that specifies a screen to which a location belongs
    * @param key    an unique string key
    */
-  public abstract void putLocationFor(Object object, @Nonnull String key, Coordinate2D location);
+  public abstract void putLocationFor(Object object, @Nonnull String key, Point2D location);
 
   /**
    * Returns a size that corresponds to the specified key or {@code null}
@@ -104,7 +104,7 @@ public interface WindowStateService {
    * @param key an unique string key
    * @return a corresponding size
    */
-  default Size getSize(@Nonnull String key) {
+  default Size2D getSize(@Nonnull String key) {
     return getSizeFor(getProject(), key);
   }
 
@@ -117,7 +117,7 @@ public interface WindowStateService {
    * @param key    an unique string key
    * @return a corresponding size
    */
-  public abstract Size getSizeFor(Object object, @Nonnull String key);
+  public abstract Size2D getSizeFor(Object object, @Nonnull String key);
 
   /**
    * Stores the specified size that corresponds to the specified key.
@@ -125,7 +125,7 @@ public interface WindowStateService {
    *
    * @param key an unique string key
    */
-  default void putSize(@Nonnull String key, Size size) {
+  default void putSize(@Nonnull String key, Size2D size) {
     putSizeFor(getProject(), key, size);
   }
 
@@ -138,7 +138,7 @@ public interface WindowStateService {
    * @param object an object that specifies a screen to which a size belongs
    * @param key    an unique string key
    */
-  public abstract void putSizeFor(Object object, @Nonnull String key, Size size);
+  public abstract void putSizeFor(Object object, @Nonnull String key, Size2D size);
 
   /**
    * Returns a bounds that corresponds to the specified key or {@code null}

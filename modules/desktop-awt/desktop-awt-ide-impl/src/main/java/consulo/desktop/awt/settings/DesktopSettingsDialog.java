@@ -28,7 +28,7 @@ import consulo.configurable.Settings;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awt.CustomLineBorder;
@@ -102,8 +102,8 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     @Override
-    public Size getDefaultSize() {
-        return new Size(1028, 500);
+    public Size2D getDefaultSize() {
+        return new Size2D(1028, 500);
     }
 
     @Nullable

@@ -19,7 +19,7 @@ import consulo.desktop.swt.ui.impl.layout.DesktopSwtScrollableLayoutImpl;
 import consulo.desktop.swt.ui.impl.layout.data.LayoutDataWithSize;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -39,12 +39,12 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public abstract class SWTComponentDelegate<SWT extends Widget> implements Component {
     public static final String UI_COMPONENT_KEY = "UI_COMPONENT_KEY";
 
-    protected Size mySize;
+    protected Size2D mySize;
 
     protected UIDataObject myDataObject = new UIDataObject();
 
@@ -160,7 +160,7 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size size) {
+    public void setSize(@Nonnull Size2D size) {
         mySize = size;
 
         SWT swt = toSWTComponent();

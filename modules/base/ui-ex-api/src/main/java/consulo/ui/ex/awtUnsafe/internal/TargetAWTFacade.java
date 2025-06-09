@@ -17,7 +17,7 @@ package consulo.ui.ex.awtUnsafe.internal;
 
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.Window;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -37,7 +37,7 @@ import java.awt.*;
  */
 public interface TargetAWTFacade {
     @Nonnull
-    Dimension to(@Nonnull Size size);
+    Dimension to(@Nonnull Size2D size);
 
     @Nonnull
     Color to(@Nonnull RGBColor color);
