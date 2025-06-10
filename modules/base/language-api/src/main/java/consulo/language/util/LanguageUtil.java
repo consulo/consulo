@@ -48,6 +48,11 @@ public final class LanguageUtil {
     private LanguageUtil() {
     }
 
+    @Nonnull
+    public static JBIterable<Language> getBaseLanguages(@Nonnull Language language) {
+        return JBIterable.generate(language, Language::getBaseLanguage);
+    }
+
     @Nullable
     public static Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file) {
         return getLanguageForPsi(project, file, null);
