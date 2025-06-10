@@ -57,7 +57,7 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.Gray;
@@ -813,8 +813,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
                 JBInsets.removeFrom(hintSize, myHint.getContent().getInsets());
             }
             else {
-                Size size = DimensionService.getInstance().getSize(DocumentationManagerHelper.NEW_JAVADOC_LOCATION_AND_SIZE, myManager.getProject());
-                hintSize = size == null ? null : new Dimension(size.getWidth(), size.getHeight());
+                Size2D size = DimensionService.getInstance().getSize(DocumentationManagerHelper.NEW_JAVADOC_LOCATION_AND_SIZE, myManager.getProject());
+                hintSize = size == null ? null : new Dimension(size.width(), size.height());
             }
             if (hintSize == null) {
                 hintSize = new Dimension(MIN_DEFAULT);

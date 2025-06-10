@@ -20,14 +20,12 @@ import consulo.application.ui.DimensionService;
 import consulo.ide.impl.idea.ide.fileTemplates.impl.AllFileTemplatesConfigurable;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 
-/*
+/**
  * @author: MYakovlev
- * Date: Oct 18, 2002
- * Time: 1:31:37 PM
+ * @since 2002-10-18
  */
-
 public class ConfigureTemplatesDialog extends SingleConfigurableEditor{
   private static final String DIMENSION_KEY = "#consulo.ide.impl.idea.ide.fileTemplates.ui.ConfigureTemplatesDialog";
 
@@ -46,9 +44,9 @@ public class ConfigureTemplatesDialog extends SingleConfigurableEditor{
   }
 
   private void initSize(){
-    Size size = DimensionService.getInstance().getSize(DIMENSION_KEY, getProject());
+    Size2D size = DimensionService.getInstance().getSize(DIMENSION_KEY, getProject());
     if (size == null){
-      DimensionService.getInstance().setSize(DIMENSION_KEY, new Size(700, 500), getProject());
+      DimensionService.getInstance().setSize(DIMENSION_KEY, new Size2D(700, 500), getProject());
     }
   }
 }

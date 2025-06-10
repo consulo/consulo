@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -93,7 +93,7 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size size) {
+    public void setSize(@Nonnull Size2D size) {
         throw new UnsupportedOperationException();
     }
 

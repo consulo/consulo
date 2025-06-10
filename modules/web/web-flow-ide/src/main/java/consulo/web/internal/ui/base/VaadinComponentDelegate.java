@@ -21,7 +21,7 @@ import consulo.application.util.matcher.NameUtilCore;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -146,20 +146,20 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size size) {
+    public void setSize(@Nonnull Size2D size) {
         HasSize vaadinComponent = (HasSize) getVaadinComponent();
-        if (size.getHeight() == -1) {
+        if (size.height() == -1) {
             vaadinComponent.setHeight(null);
         }
         else {
-            vaadinComponent.setHeight(size.getHeight(), Unit.PIXELS);
+            vaadinComponent.setHeight(size.height(), Unit.PIXELS);
         }
 
-        if (size.getWidth() == -1) {
+        if (size.width() == -1) {
             vaadinComponent.setWidth(null);
         }
         else {
-            vaadinComponent.setWidth(size.getWidth(), Unit.PIXELS);
+            vaadinComponent.setWidth(size.width(), Unit.PIXELS);
         }
         // TODO vaadinComponent.markAsDirty();
     }

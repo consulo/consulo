@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.event;
 
-import consulo.ui.Position2D;
+import consulo.ui.Point2D;
 import consulo.ui.event.details.*;
 import consulo.util.lang.BitUtil;
 
@@ -30,7 +30,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 06/11/2022
+ * @since 2022-11-06
  */
 public class DesktopAWTInputDetails {
     public static InputDetails convert(Component awtComponent, AWTEvent event) {
@@ -73,8 +73,6 @@ public class DesktopAWTInputDetails {
             EnumSet<MouseInputDetails.Modifier> enumModifiers = modifiers.isEmpty() ? EnumSet.noneOf(ModifiedInputDetails.Modifier.class) : EnumSet.copyOf(modifiers);
 
             if (event instanceof MouseEvent mouseEvent) {
-                int x = mouseEvent.getX();
-
                 MouseInputDetails.MouseButton button = MouseInputDetails.MouseButton.LEFT;
                 if (mouseEvent.getButton() == MouseEvent.BUTTON2) {
                     button = MouseInputDetails.MouseButton.MIDDLE;
@@ -83,15 +81,15 @@ public class DesktopAWTInputDetails {
                     button = MouseInputDetails.MouseButton.RIGHT;
                 }
 
-                Position2D relative = new Position2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
-                Position2D absolute = new Position2D(((MouseEvent) event).getXOnScreen(), ((MouseEvent) event).getYOnScreen());
+                Point2D relative = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
+                Point2D absolute = new Point2D(((MouseEvent) event).getXOnScreen(), ((MouseEvent) event).getYOnScreen());
 
                 return new MouseInputDetails(relative, absolute, enumModifiers, button);
             }
             else if (event instanceof KeyEvent keyEvent) {
-                Position2D pos = new Position2D(awtComponent.getX(), awtComponent.getY());
+                Point2D pos = new Point2D(awtComponent.getX(), awtComponent.getY());
                 Point locationOnScreen = awtComponent.getLocationOnScreen();
-                Position2D posOnScreen = new Position2D(locationOnScreen.x, locationOnScreen.y);
+                Point2D posOnScreen = new Point2D(locationOnScreen.x, locationOnScreen.y);
                 return new KeyboardInputDetails(pos, posOnScreen, enumModifiers, KeyCode.of(keyEvent.getKeyCode()));
             }
         }

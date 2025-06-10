@@ -29,7 +29,7 @@
 package consulo.desktop.swt.ui.impl.layout;
 
 import consulo.desktop.swt.ui.impl.layout.data.LayoutDataWithSize;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -55,9 +55,9 @@ class BorderLayout extends Layout {
     }
 
     @Override
-    public void setSize(Size size) {
-      width = size.getWidth();
-      height = size.getHeight();
+    public void setSize(Size2D size) {
+      width = size.width();
+      height = size.height();
     }
 
     @Override

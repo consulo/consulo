@@ -74,8 +74,8 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
 
         @Nullable
         @Override
-        protected Size getDefaultSize() {
-            return new Size(400, 400);
+        protected Size2D getDefaultSize() {
+            return new Size2D(400, 400);
         }
 
         @RequiredUIAccess

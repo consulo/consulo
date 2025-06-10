@@ -8,17 +8,17 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.Coordinate2D;
+import consulo.ui.Point2D;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Pair;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -30,8 +30,8 @@ import java.awt.*;
 @ServiceImpl(profiles = ComponentProfiles.AWT)
 public class DesktopAWTDimensionServiceImpl extends UnifiedDimensionServiceImpl {
   @Override
-  protected boolean isOutVisibleScreenArea(Coordinate2D coordinate2D) {
-    Point point = new Point(coordinate2D.getX(), coordinate2D.getY());
+  protected boolean isOutVisibleScreenArea(Point2D point2D) {
+    Point point = new Point(point2D.x(), point2D.y());
     return !ScreenUtil.getScreenRectangle(point).contains(point);
   }
 

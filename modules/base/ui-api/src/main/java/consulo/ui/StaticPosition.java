@@ -19,7 +19,7 @@ import consulo.ui.layout.LayoutConstraint;
 
 /**
  * @author VISTALL
- * @since 25-Sep-17
+ * @since 2017-09-25
  */
 public enum StaticPosition implements LayoutConstraint {
     TOP,

@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.impl.image;
 
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTImageReference;
 import consulo.desktop.awt.uiOld.FakeComponent;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.util.GraphicsUtil;
@@ -38,7 +38,7 @@ import java.util.*;
  * @since 02.06.2024
  */
 public class DesktopAWTScalableImage extends AbstractMultiResolutionImage {
-  private final Map<Size, Image> myCachedImages = new HashMap<>();
+  private final Map<Size2D, Image> myCachedImages = new HashMap<>();
 
   private final List<consulo.ui.image.Image> myImages;
 
@@ -59,7 +59,7 @@ public class DesktopAWTScalableImage extends AbstractMultiResolutionImage {
     myImages.sort((o1, o2) -> Integer.compareUnsigned(o2.getWidth() * o2.getHeight(), o1.getHeight() * o1.getWidth()));
   }
 
-  private Image getOrScale(Size expectedSize) {
+  private Image getOrScale(Size2D expectedSize) {
     Image image = myCachedImages.get(expectedSize);
     if (image != null) {
       return image;
@@ -68,13 +68,13 @@ public class DesktopAWTScalableImage extends AbstractMultiResolutionImage {
     consulo.ui.image.Image closestImage = myImages.get(0);
 
     for (consulo.ui.image.Image uiImage : myImages) {
-      Size uiSize = uiImage.getSize();
+      Size2D uiSize = uiImage.getSize();
 
       if (expectedSize.equals(uiSize)) {
         return toImage(uiImage, expectedSize);
       }
 
-      if (uiImage.getWidth() >= expectedSize.getWidth() && uiImage.getHeight() >= expectedSize.getHeight()) {
+      if (uiImage.getWidth() >= expectedSize.width() && uiImage.getHeight() >= expectedSize.height()) {
         closestImage = uiImage;
       }
     }
@@ -85,9 +85,9 @@ public class DesktopAWTScalableImage extends AbstractMultiResolutionImage {
   }
 
   @SuppressWarnings("UndesirableClassUsage")
-  private Image toImage(consulo.ui.image.Image image, Size expectedSize) {
-    int width = expectedSize.getWidth();
-    int height = expectedSize.getHeight();
+  private Image toImage(consulo.ui.image.Image image, Size2D expectedSize) {
+    int width = expectedSize.width();
+    int height = expectedSize.height();
 
     if (image instanceof ImageKey imageKey) {
       BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
@@ -122,7 +122,7 @@ public class DesktopAWTScalableImage extends AbstractMultiResolutionImage {
 
   @Override
   public Image getResolutionVariant(double destImageWidth, double destImageHeight) {
-    return getOrScale(new Size((int)Math.ceil(destImageWidth), (int)Math.ceil(destImageHeight)));
+    return getOrScale(new Size2D((int)Math.ceil(destImageWidth), (int)Math.ceil(destImageHeight)));
   }
 
   @Override

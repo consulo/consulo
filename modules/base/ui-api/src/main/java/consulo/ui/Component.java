@@ -131,11 +131,11 @@ public interface Component extends UserDataHolder {
     Component getParent();
 
     @RequiredUIAccess
-    void setSize(@Nonnull Size size);
+    void setSize(@Nonnull Size2D size);
 
     @Nonnull
     @RequiredUIAccess
-    default Component withSize(@Nonnull Size size) {
+    default Component withSize(@Nonnull Size2D size) {
         setSize(size);
         return this;
     }

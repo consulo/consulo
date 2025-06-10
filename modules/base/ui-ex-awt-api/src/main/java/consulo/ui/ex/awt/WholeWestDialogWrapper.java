@@ -20,7 +20,7 @@ import consulo.application.ui.WindowStateService;
 import consulo.dataContext.DataManager;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Couple;
 
@@ -91,8 +91,8 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     return 0.3f;
   }
 
-  public Size getDefaultSize() {
-    return new Size(500, 500);
+  public Size2D getDefaultSize() {
+    return new Size2D(500, 500);
   }
 
   @Nonnull
@@ -142,7 +142,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     if (dimensionKey != null) {
       final Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(Project.KEY);
       WindowStateService stateService = projectGuess == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(projectGuess);
-      Size size = stateService.getSize(dimensionKey);
+      Size2D size = stateService.getSize(dimensionKey);
       if (size == null) {
         stateService.putSize(dimensionKey, getDefaultSize());
       }

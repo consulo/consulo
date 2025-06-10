@@ -15,17 +15,16 @@
  */
 package consulo.ui.ex.util;
 
-import consulo.ui.Coordinate2D;
+import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
-import org.jdom.Element;
-
+import consulo.ui.Size2D;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 /**
  * @author VISTALL
- * @since 30/12/2022
+ * @since 2022-12-30
  */
 public final class UIXmlSerializeUtil {
   private static final String X = "x";
@@ -34,18 +33,18 @@ public final class UIXmlSerializeUtil {
   private static final String HEIGHT = "height";
   
   @Nullable
-  public static Coordinate2D getLocation(@Nullable Element element) {
+  public static Point2D getLocation(@Nullable Element element) {
     return element == null ? null : getLocation(element, X, Y);
   }
 
   @Nullable
-  public static Coordinate2D getLocation(@Nonnull Element element, @Nonnull String x, @Nonnull String y) {
+  public static Point2D getLocation(@Nonnull Element element, @Nonnull String x, @Nonnull String y) {
     String sX = element.getAttributeValue(x);
     if (sX == null) return null;
     String sY = element.getAttributeValue(y);
     if (sY == null) return null;
     try {
-      return new Coordinate2D(Integer.parseInt(sX), Integer.parseInt(sY));
+      return new Point2D(Integer.parseInt(sX), Integer.parseInt(sY));
     }
     catch (NumberFormatException ignored) {
       return null;
@@ -53,22 +52,22 @@ public final class UIXmlSerializeUtil {
   }
 
   @Nonnull
-  public static Element setLocation(@Nonnull Element element, @Nonnull Coordinate2D location) {
+  public static Element setLocation(@Nonnull Element element, @Nonnull Point2D location) {
     return setLocation(element, X, Y, location);
   }
 
   @Nonnull
-  public static Element setLocation(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull Coordinate2D location) {
-    return element.setAttribute(x, Integer.toString(location.getX())).setAttribute(y, Integer.toString(location.getY()));
+  public static Element setLocation(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull Point2D location) {
+    return element.setAttribute(x, Integer.toString(location.x())).setAttribute(y, Integer.toString(location.y()));
   }
 
   @Nullable
-  public static Size getSize(@Nullable Element element) {
+  public static Size2D getSize(@Nullable Element element) {
     return element == null ? null : getSize(element, WIDTH, HEIGHT);
   }
 
   @Nullable
-  public static Size getSize(@Nonnull Element element, @Nonnull String width, @Nonnull String height) {
+  public static Size2D getSize(@Nonnull Element element, @Nonnull String width, @Nonnull String height) {
     String sWidth = element.getAttributeValue(width);
     if (sWidth == null) return null;
     String sHeight = element.getAttributeValue(height);
@@ -78,7 +77,7 @@ public final class UIXmlSerializeUtil {
       if (iWidth <= 0) return null;
       int iHeight = Integer.parseInt(sHeight);
       if (iHeight <= 0) return null;
-      return new Size(iWidth, iHeight);
+      return new Size2D(iWidth, iHeight);
     }
     catch (NumberFormatException ignored) {
       return null;
@@ -86,13 +85,13 @@ public final class UIXmlSerializeUtil {
   }
 
   @Nonnull
-  public static Element setSize(@Nonnull Element element, @Nonnull Size size) {
+  public static Element setSize(@Nonnull Element element, @Nonnull Size2D size) {
     return setSize(element, WIDTH, HEIGHT, size);
   }
 
   @Nonnull
-  public static Element setSize(@Nonnull Element element, @Nonnull String width, @Nonnull String height, @Nonnull Size size) {
-    return element.setAttribute(width, Integer.toString(size.getWidth())).setAttribute(height, Integer.toString(size.getHeight()));
+  public static Element setSize(@Nonnull Element element, @Nonnull String width, @Nonnull String height, @Nonnull Size2D size) {
+    return element.setAttribute(width, Integer.toString(size.width())).setAttribute(height, Integer.toString(size.height()));
   }
 
 

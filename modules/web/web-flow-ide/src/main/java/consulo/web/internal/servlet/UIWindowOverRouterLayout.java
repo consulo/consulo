@@ -20,7 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -100,7 +100,7 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size size) {
+    public void setSize(@Nonnull Size2D size) {
 
     }
 

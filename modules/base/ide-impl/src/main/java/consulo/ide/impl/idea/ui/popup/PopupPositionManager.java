@@ -11,7 +11,7 @@ import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -185,9 +185,9 @@ public class PopupPositionManager {
     public void adjust(final JBPopup popup, Position... traversalPolicy) {
       if (traversalPolicy.length == 0) traversalPolicy = DEFAULT_POSITION_ORDER;
 
-      Size popupSize = getPopupSize(popup);
+      Size2D popupSize = getPopupSize(popup);
       assert popupSize != null;
-      final Dimension d = new Dimension(popupSize.getWidth(), popupSize.getHeight());
+      final Dimension d = new Dimension(popupSize.width(), popupSize.height());
 
       Rectangle popupRect = null;
       Rectangle r = null;
@@ -269,8 +269,8 @@ public class PopupPositionManager {
     }
 
     @Nullable
-    public static Size getPopupSize(final JBPopup popup) {
-      Size size = null;
+    public static Size2D getPopupSize(final JBPopup popup) {
+      Size2D size = null;
       if (popup instanceof AbstractPopup) {
         final String dimensionKey = ((AbstractPopup)popup).getDimensionServiceKey();
         if (dimensionKey != null) {
@@ -280,7 +280,7 @@ public class PopupPositionManager {
 
       if (size == null) {
         Dimension preferredSize = popup.getContent().getPreferredSize();
-        size = preferredSize == null ? null : new Size(preferredSize.width, preferredSize.height);
+        size = preferredSize == null ? null : new Size2D(preferredSize.width, preferredSize.height);
       }
 
       return size;

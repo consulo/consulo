@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -45,7 +45,7 @@ public abstract class DialogDescriptor {
     }
 
     @Nullable
-    public Size getInitialSize() {
+    public Size2D getInitialSize() {
         return null;
     }
 

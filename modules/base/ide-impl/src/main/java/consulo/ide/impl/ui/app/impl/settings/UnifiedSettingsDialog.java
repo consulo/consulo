@@ -51,8 +51,8 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
 
     @Nullable
     @Override
-    protected Size getDefaultSize() {
-        return new Size(1028, 500);
+    protected Size2D getDefaultSize() {
+        return new Size2D(1028, 500);
     }
 
     @RequiredUIAccess

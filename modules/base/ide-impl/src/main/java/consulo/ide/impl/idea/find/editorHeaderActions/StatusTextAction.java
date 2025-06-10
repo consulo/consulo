@@ -38,7 +38,7 @@ public class StatusTextAction extends DumbAwareAction implements CustomComponent
     //noinspection HardCodedStringLiteral
     label.setText("9888 results");
     Dimension size = label.getPreferredSize();
-    size.height = Math.max(size.height, JBUIScale.scale(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE.getHeight()));
+    size.height = Math.max(size.height, JBUIScale.scale(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE.height()));
     label.setPreferredSize(size);
     label.setText(null);
     label.setHorizontalAlignment(SwingConstants.CENTER);

@@ -20,7 +20,7 @@ import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ui.Coordinate2D;
+import consulo.ui.Point2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -228,10 +228,10 @@ public class RecentLocationsAction extends DumbAwareAction {
     }
 
     private static void showPopup(@Nonnull Project project, @Nonnull JBPopup popup) {
-        Coordinate2D savedLocation = DimensionService.getInstance().getLocation(LOCATION_SETTINGS_KEY, project);
+        Point2D savedLocation = DimensionService.getInstance().getLocation(LOCATION_SETTINGS_KEY, project);
         Window recentFocusedWindow = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
         if (savedLocation != null && recentFocusedWindow != null) {
-            popup.showInScreenCoordinates(recentFocusedWindow, new Point(savedLocation.getX(), savedLocation.getY()));
+            popup.showInScreenCoordinates(recentFocusedWindow, new Point(savedLocation.x(), savedLocation.y()));
         }
         else {
             popup.showCenteredInCurrentWindow(project);

@@ -21,95 +21,46 @@ import java.io.Serializable;
 
 /**
  * @author VISTALL
- * @since 25-Sep-17
+ * @since 2017-09-25
  */
-public final class Rectangle2D implements Serializable, Cloneable {
-  private static final long serialVersionUID = 4140523038283686399L;
+public record Rectangle2D(@Nonnull Point2D coordinate, @Nonnull Size2D size) implements Serializable, Cloneable {
+    private static final long serialVersionUID = 4140523038283686399L;
 
-  private Coordinate2D myCoordinate;
-  private Size mySize;
+    public Rectangle2D(int width, int height) {
+        this(0, 0, width, height);
+    }
 
-  private Rectangle2D() {
-  }
+    public Rectangle2D(int x, int y, int width, int height) {
+        this(new Point2D(x, y), new Size2D(width, height));
+    }
 
-  public Rectangle2D(int width, int height) {
-    this(0, 0, width, height);
-  }
+    public Rectangle2D(@Nonnull Rectangle2D rectangle2D) {
+        this(rectangle2D.coordinate(), rectangle2D.size());
+    }
 
-  public Rectangle2D(int x, int y, int width, int height) {
-    this(new Coordinate2D(x, y), new Size(width, height));
-  }
+    public boolean isEmpty() {
+        return (getWidth() <= 0) || (getHeight() <= 0);
+    }
 
-  public Rectangle2D(@Nonnull Coordinate2D coordinate, @Nonnull Size size) {
-    myCoordinate = coordinate;
-    mySize = size;
-  }
+    public int getHeight() {
+        return size().height();
+    }
 
-  public Rectangle2D(@Nonnull Rectangle2D rectangle2D) {
-    this(rectangle2D.getX(), rectangle2D.getY(), rectangle2D.getWidth(), rectangle2D.getHeight());
-  }
+    public int getWidth() {
+        return size().width();
+    }
 
-  public boolean isEmpty() {
-    return (getWidth() <= 0) || (getHeight() <= 0);
-  }
+    public int getX() {
+        return coordinate().x();
+    }
 
-  public int getHeight() {
-    return mySize.getHeight();
-  }
+    public int getY() {
+        return coordinate().y();
+    }
 
-  public int getWidth() {
-    return mySize.getWidth();
-  }
-
-  public int getX() {
-    return myCoordinate.getX();
-  }
-
-  public int getY() {
-    return myCoordinate.getY();
-  }
-
-  @Nonnull
-  public Coordinate2D getCoordinate() {
-    return myCoordinate;
-  }
-
-  @Nonnull
-  public Size getSize() {
-    return mySize;
-  }
-
-  @Override
-  public Rectangle2D clone() {
-    return new Rectangle2D(myCoordinate, mySize);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    Rectangle2D that = (Rectangle2D)o;
-
-    if (!myCoordinate.equals(that.myCoordinate)) return false;
-    if (!mySize.equals(that.mySize)) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = myCoordinate.hashCode();
-    result = 31 * result + (mySize.hashCode());
-    return result;
-  }
-
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("Rectangle2D{");
-    sb.append("myCoordinate=").append(myCoordinate);
-    sb.append(", mySize=").append(mySize);
-    sb.append('}');
-    return sb.toString();
-  }
+    @Override
+    @SuppressWarnings("CloneDoesntCallSuperClone")
+    public Rectangle2D clone() {
+        return new Rectangle2D(coordinate(), size());
+    }
 }

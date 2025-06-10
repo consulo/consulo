@@ -15,15 +15,15 @@
  */
 package consulo.ui.event.details;
 
-import consulo.ui.Position2D;
-
+import consulo.ui.Point2D;
 import jakarta.annotation.Nonnull;
+
 import java.util.EnumSet;
 import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 17/08/2021
+ * @since 2021-08-17
  *
  * Always abstract
  */
@@ -38,7 +38,7 @@ public abstract class ModifiedInputDetails extends InputDetails {
 
   private final EnumSet<Modifier> myModifiers;
 
-  public ModifiedInputDetails(@Nonnull Position2D position, @Nonnull Position2D positionOnScreen, @Nonnull EnumSet<Modifier> modifiers) {
+  public ModifiedInputDetails(@Nonnull Point2D position, @Nonnull Point2D positionOnScreen, @Nonnull EnumSet<Modifier> modifiers) {
     super(position, positionOnScreen);
     myModifiers = modifiers;
   }

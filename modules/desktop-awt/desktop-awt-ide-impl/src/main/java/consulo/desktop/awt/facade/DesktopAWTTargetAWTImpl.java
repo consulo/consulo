@@ -97,8 +97,8 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
 
     @Override
     @Nonnull
-    public java.awt.Dimension to(@Nonnull Size size) {
-        return JBUI.size(size.getWidth(), size.getHeight());
+    public java.awt.Dimension to(@Nonnull Size2D size) {
+        return JBUI.size(size.width(), size.height());
     }
 
     @Override
@@ -119,7 +119,12 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
         if (rectangle2D == null) {
             return null;
         }
-        return new java.awt.Rectangle(rectangle2D.getCoordinate().getX(), rectangle2D.getCoordinate().getY(), rectangle2D.getSize().getWidth(), rectangle2D.getSize().getHeight());
+        return new java.awt.Rectangle(
+            rectangle2D.coordinate().x(),
+            rectangle2D.coordinate().y(),
+            rectangle2D.size().width(),
+            rectangle2D.size().height()
+        );
     }
 
     @Override

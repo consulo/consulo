@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -81,7 +81,7 @@ public interface ActionToolbar {
     /**
      * This is default minimum size of the toolbar button, without scaling
      */
-    Size DEFAULT_MINIMUM_BUTTON_SIZE = new Size(25, 25);
+    Size2D DEFAULT_MINIMUM_BUTTON_SIZE = new Size2D(25, 25);
 
     /**
      * Constraint that's passed to <code>Container.add</code> when ActionButton is added to the toolbar.
@@ -187,7 +187,7 @@ public interface ActionToolbar {
      */
     @Deprecated
     default void setMinimumButtonSize(@Nonnull java.awt.Dimension size) {
-        setMinimumButtonSize(new Size(size.width, size.height));
+        setMinimumButtonSize(new Size2D(size.width, size.height));
     }
 
     /**
@@ -198,7 +198,7 @@ public interface ActionToolbar {
      *                                  is <code>null</code>
      */
     @Deprecated
-    default void setMinimumButtonSize(@Nonnull Size size) {
+    default void setMinimumButtonSize(@Nonnull Size2D size) {
     }
 
     @Deprecated

@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import consulo.ide.IdeBundle;
 import consulo.project.Project;
 import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBCardLayout;
@@ -70,8 +70,8 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
     setTitle("Import from " + moduleImportProvider.getName());
     setOKButtonText(IdeBundle.message("button.create"));
 
-    Size size = WelcomeFrameManager.getDefaultWindowSize();
-    setScalableSize(size.getWidth(), size.getHeight());
+    Size2D size = WelcomeFrameManager.getDefaultWindowSize();
+    setScalableSize(size.width(), size.height());
 
     init();
   }

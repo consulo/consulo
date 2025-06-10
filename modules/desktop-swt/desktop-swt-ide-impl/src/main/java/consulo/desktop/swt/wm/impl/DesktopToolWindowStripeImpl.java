@@ -17,7 +17,7 @@ package consulo.desktop.swt.wm.impl;
 
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.desktop.swt.ui.impl.layout.DesktopSwtLayoutComponent;
-import consulo.ui.Size;
+import consulo.ui.Size2D;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
@@ -75,10 +75,10 @@ public class DesktopToolWindowStripeImpl extends DesktopSwtLayoutComponent {
     super.initialize(component);
 
     if (myPosition == Position.LEFT || myPosition == Position.RIGHT) {
-      setSize(new Size(22, -1));
+      setSize(new Size2D(22, -1));
     }
     else if (myPosition == Position.TOP || myPosition == Position.BOTTOM) {
-      setSize(new Size(-1, 22));
+      setSize(new Size2D(-1, 22));
     }
   }
 }

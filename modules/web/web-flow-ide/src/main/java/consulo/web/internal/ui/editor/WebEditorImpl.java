@@ -168,11 +168,11 @@ public class WebEditorImpl extends CodeEditorBase {
 //    boolean forceProcessing = false;
 //    //myMousePressedEvent = e;
 //    MouseInputDetails.MouseButton mouseButton = MouseInputDetails.MouseButton.values()[e.getButton()];
-//    Position2D position = new Position2D(e.getX(), e.getY());
+//    Point2D position = new Point2D(e.getX(), e.getY());
 //    EditorMouseEvent event =
 //      new EditorMouseEvent(this,
 //                           new MouseInputDetails(position,
-//                                                 Position2D.OUT_OF_RANGE,
+//                                                 Point2D.OUT_OF_RANGE,
 //                                                 EnumSet.noneOf(MouseInputDetails.Modifier.class),
 //                                                 mouseButton),
 //                           mouseButton == MouseInputDetails.MouseButton.RIGHT,

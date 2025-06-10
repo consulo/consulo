@@ -18,7 +18,7 @@ package consulo.desktop.awt.execution.ui;
 
 import consulo.application.ui.DimensionService;
 import consulo.dataContext.DataProvider;
-import consulo.execution.impl.internal.ui.layout.*;
+import consulo.execution.impl.internal.ui.layout.ViewContextEx;
 import consulo.execution.impl.internal.ui.layout.action.CloseViewAction;
 import consulo.execution.impl.internal.ui.layout.action.MinimizeViewAction;
 import consulo.execution.internal.layout.GridCell;
@@ -30,8 +30,8 @@ import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
-import consulo.ui.Coordinate2D;
-import consulo.ui.Size;
+import consulo.ui.Point2D;
+import consulo.ui.Size2D;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.awt.NonOpaquePanel;
@@ -437,12 +437,12 @@ public class GridCellImpl implements GridCell {
     }
 
     @Nullable
-    public Coordinate2D getLocation() {
+    public Point2D getLocation() {
         return DimensionService.getInstance().getLocation(getDimensionKey(), myContext.getProject());
     }
 
     @Nullable
-    public Size getSize() {
+    public Size2D getSize() {
         return DimensionService.getInstance().getSize(getDimensionKey(), myContext.getProject());
     }
 

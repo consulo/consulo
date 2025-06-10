@@ -162,7 +162,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     UIAccess.assertIsUIThread();
     PseudoComponent c = wrap(widget);
     HorizontalLayout panel = getTargetPanel(position);
-    //if (position == Position2D.LEFT && panel.getComponentCount() == 0) {
+    //if (position == Position.LEFT && panel.getComponentCount() == 0) {
     //  c.setBorder(SystemInfo.isMac ? JBUI.Borders.empty(2, 0, 2, 4) : JBUI.Borders.empty());
     //}
     panel.add(c/*, getPositionIndex(position, anchor)*/);
@@ -200,8 +200,8 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     return UnifiedStatusBarWidgetWrapper.wrap(widget);
   }
 
-  //private int getPositionIndex(@Nonnull Position2D position, @Nonnull String anchor) {
-  //  if (Position2D.RIGHT == position && myRightPanel.getComponentCount() > 0) {
+  //private int getPositionIndex(@Nonnull Position position, @Nonnull String anchor) {
+  //  if (Position.RIGHT == position && myRightPanel.getComponentCount() > 0) {
   //    WidgetBean widgetAnchor = null;
   //    boolean before = false;
   //    List<String> parts = StringUtil.split(anchor, " ");
