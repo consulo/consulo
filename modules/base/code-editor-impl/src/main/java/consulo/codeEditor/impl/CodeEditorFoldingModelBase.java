@@ -221,7 +221,8 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
         runBatchFoldingOperation(operation, false, moveCaret);
     }
 
-    private void runBatchFoldingOperation(@Nonnull Runnable operation, final boolean dontCollapseCaret, final boolean moveCaret) {
+    @Override
+    public void runBatchFoldingOperation(@Nonnull Runnable operation, final boolean dontCollapseCaret, final boolean moveCaret) {
         assertIsDispatchThreadForEditor();
         boolean oldDontCollapseCaret = myDoNotCollapseCaret;
         myDoNotCollapseCaret |= dontCollapseCaret;
