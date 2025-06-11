@@ -1004,8 +1004,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             myFloatingDecorator = new DesktopFloatingDecorator(myFrame, info.copy(), decorator);
             myId2FloatingDecorator.put(info.getId(), myFloatingDecorator);
             Rectangle2D bounds = info.getFloatingBounds();
-            if (bounds != null && bounds.getWidth() > 0 && bounds.getHeight() > 0 && myWindowManager.get()
-                .isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
+            if (bounds != null && bounds.width() > 0 && bounds.height() > 0 && myWindowManager.get()
+                .isInsideScreenBounds(bounds.minX(), bounds.minY(), bounds.width())) {
                 myFloatingDecorator.setBounds(TargetAWT.to(bounds));
             }
             else { // place new frame at the center of main frame if there are no floating bounds
@@ -1037,8 +1037,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             myWindowedDecorator = new DesktopWindowedDecorator(myProject, info.copy(), decorator);
             Window window = myWindowedDecorator.getFrame();
             Rectangle2D bounds = info.getFloatingBounds();
-            if (bounds != null && bounds.getWidth() > 0 && bounds.getHeight() > 0
-                && myWindowManager.get().isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
+            if (bounds != null && bounds.width() > 0 && bounds.height() > 0
+                && myWindowManager.get().isInsideScreenBounds(bounds.minX(), bounds.minY(), bounds.width())) {
                 window.setBounds(TargetAWT.to(bounds));
             }
             else { // place new frame at the center of main frame if there are no floating bounds
