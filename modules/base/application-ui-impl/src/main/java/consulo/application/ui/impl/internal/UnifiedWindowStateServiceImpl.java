@@ -54,13 +54,16 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
 
     @SuppressWarnings("unchecked")
     <T> T get(@Nonnull Class<T> type, @Nullable Rectangle2D screen) {
-      Point2D location = apply(Point2D::new, myLocation);
-      Size2D size = apply(Size2D::new, mySize);
+      Point2D location = myLocation;
+      Size2D size = mySize;
       // convert location and size according to the given screen
       if (myScreen != null && screen != null && !screen.isEmpty()) {
-        double w = myScreen.getWidth() / screen.getWidth();
-        double h = myScreen.getHeight() / screen.getHeight();
-        if (location != null) location = new Point2D(((int)(screen.getX() + (location.x() - myScreen.getX()) / w)), ((int)(screen.getY() + (location.y() - myScreen.getY()) / h)));
+        double w = myScreen.width() / screen.width();
+        double h = myScreen.height() / screen.height();
+        if (location != null) location = new Point2D(
+          ((int)(screen.minX() + (location.x() - myScreen.minX()) / w)),
+          ((int)(screen.minY() + (location.y() - myScreen.minY()) / h))
+        );
         if (size != null) size = new Size2D(((int)(size.width() / w)), ((int)(size.height() / h)));
         if (!isVisible(location, size)) return null; // adjusted state is not visible
       }
@@ -79,10 +82,10 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
 
     private boolean set(Point2D location, boolean locationSet, Size2D size, boolean sizeSet, boolean maximized, boolean maximizedSet, boolean fullScreen, boolean fullScreenSet) {
       if (locationSet) {
-        myLocation = apply(Point2D::new, location);
+        myLocation = location;
       }
       if (sizeSet) {
-        mySize = apply(Size2D::new, size);
+        mySize = size;
       }
       if (maximizedSet) {
         myMaximized = maximized;
@@ -214,7 +217,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
 
   @Override
   public void putBoundsFor(Object object, @Nonnull String key, Rectangle2D bounds) {
-    Point2D location = apply(Rectangle2D::coordinate, bounds);
+    Point2D location = apply(Rectangle2D::minPoint, bounds);
     Size2D size = apply(Rectangle2D::size, bounds);
     putFor(object, key, location, true, size, true, false, false, false, false);
   }

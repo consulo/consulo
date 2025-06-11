@@ -35,7 +35,7 @@ import java.util.ServiceLoader;
 
 /**
  * @author VISTALL
- * @since 25-Sep-17
+ * @since 2017-09-25
  * <p>
  * This should moved to desktop module, after split desktop and platform code.
  * This class not provide any components just converting data

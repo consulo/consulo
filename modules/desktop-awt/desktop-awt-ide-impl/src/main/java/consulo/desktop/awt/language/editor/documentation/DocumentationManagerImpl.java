@@ -238,7 +238,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
         myToolWindow.setDefaultState(
             ToolWindowAnchor.RIGHT,
             ToolWindowType.DOCKED,
-            new Rectangle2D(rectangle.getWidth() / 4, rectangle.getHeight())
+            new Rectangle2D(rectangle.width() / 4, rectangle.height())
         );
         myToolWindow.setType(ToolWindowType.DOCKED, null);
         myToolWindow.setSplitMode(true, null);

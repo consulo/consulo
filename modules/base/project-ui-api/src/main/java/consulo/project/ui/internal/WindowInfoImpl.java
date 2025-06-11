@@ -110,7 +110,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     try {
       WindowInfoImpl info = (WindowInfoImpl)clone();
       if (myFloatingBounds != null) {
-        info.myFloatingBounds = myFloatingBounds.clone();
+        info.myFloatingBounds = myFloatingBounds;
       }
       return info;
     }
@@ -126,7 +126,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     myActive = info.myActive;
     myAnchor = info.myAnchor;
     myAutoHide = info.myAutoHide;
-    myFloatingBounds = info.myFloatingBounds == null ? null : info.myFloatingBounds.clone();
+    myFloatingBounds = info.myFloatingBounds;
     myId = info.myId;
     myType = info.myType;
     myInternalType = info.myInternalType;
@@ -344,10 +344,10 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     element.setAttribute(SIDE_TOOL_ATTR, Boolean.toString(mySplitMode));
     element.setAttribute(CONTENT_UI_ATTR, myContentUiType.getName());
     if (myFloatingBounds != null) {
-      element.setAttribute(X_ATTR, Integer.toString(myFloatingBounds.getX()));
-      element.setAttribute(Y_ATTR, Integer.toString(myFloatingBounds.getY()));
-      element.setAttribute(WIDTH_ATTR, Integer.toString(myFloatingBounds.getWidth()));
-      element.setAttribute(HEIGHT_ATTR, Integer.toString(myFloatingBounds.getHeight()));
+      element.setAttribute(X_ATTR, Integer.toString(myFloatingBounds.minX()));
+      element.setAttribute(Y_ATTR, Integer.toString(myFloatingBounds.minY()));
+      element.setAttribute(WIDTH_ATTR, Integer.toString(myFloatingBounds.width()));
+      element.setAttribute(HEIGHT_ATTR, Integer.toString(myFloatingBounds.height()));
     }
   }
 

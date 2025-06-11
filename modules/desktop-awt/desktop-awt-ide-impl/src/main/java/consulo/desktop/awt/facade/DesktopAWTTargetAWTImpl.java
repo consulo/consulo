@@ -120,10 +120,10 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
             return null;
         }
         return new java.awt.Rectangle(
-            rectangle2D.coordinate().x(),
-            rectangle2D.coordinate().y(),
-            rectangle2D.size().width(),
-            rectangle2D.size().height()
+            rectangle2D.minX(),
+            rectangle2D.minY(),
+            rectangle2D.width(),
+            rectangle2D.height()
         );
     }
 
