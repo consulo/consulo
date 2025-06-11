@@ -21,9 +21,10 @@ import java.io.Serializable;
 
 /**
  * @author VISTALL
+ * @author UNV
  * @since 2017-09-25
  */
-public record Rectangle2D(@Nonnull Point2D coordinate, @Nonnull Size2D size) implements Serializable, Cloneable {
+public record Rectangle2D(@Nonnull Point2D minPoint, @Nonnull Size2D size) implements Serializable {
     private static final long serialVersionUID = 4140523038283686399L;
 
     public Rectangle2D(int width, int height) {
@@ -34,33 +35,55 @@ public record Rectangle2D(@Nonnull Point2D coordinate, @Nonnull Size2D size) imp
         this(new Point2D(x, y), new Size2D(width, height));
     }
 
-    public Rectangle2D(@Nonnull Rectangle2D rectangle2D) {
-        this(rectangle2D.coordinate(), rectangle2D.size());
+    public Rectangle2D(@Nonnull Size2D size) {
+        this(new Point2D(), size);
+    }
+
+    public int minX() {
+        return minPoint.x();
+    }
+
+    public int minY() {
+        return minPoint.y();
+    }
+
+    public int maxX() {
+        return minPoint.x() + size.width();
+    }
+
+    public int maxY() {
+        return minPoint.y() + size.height();
+    }
+
+    public int width() {
+        return size.width();
+    }
+
+    public int height() {
+        return size.height();
+    }
+
+    public Point2D maxPoint() {
+        return new Point2D(maxX(), maxY());
     }
 
     public boolean isEmpty() {
-        return (getWidth() <= 0) || (getHeight() <= 0);
+        return size.isEmpty();
     }
 
-    public int getHeight() {
-        return size().height();
+    public boolean contains(int x, int y) {
+        return (width() | height()) >= 0 && minX() <= x && minY() <= y && x <= maxX() && y <= maxY();
     }
 
-    public int getWidth() {
-        return size().width();
+    public boolean contains(Point2D point) {
+        return contains(point.x(), point.y());
     }
 
-    public int getX() {
-        return coordinate().x();
+    public boolean contains(int x, int y, int width, int height) {
+        return (width() | height() | width | height) >= 0 && minX() <= x && minY() <= y && x + width <= maxX() && y + height <= maxY();
     }
 
-    public int getY() {
-        return coordinate().y();
-    }
-
-    @Override
-    @SuppressWarnings("CloneDoesntCallSuperClone")
-    public Rectangle2D clone() {
-        return new Rectangle2D(coordinate(), size());
+    public boolean contains(Rectangle2D rectangle) {
+        return contains(rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height());
     }
 }

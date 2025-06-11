@@ -129,9 +129,9 @@ public final class UIXmlSerializeUtil {
 
   @Nonnull
   public static Element setBounds(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull String width, @Nonnull String height, @Nonnull Rectangle2D bounds) {
-    return element.setAttribute(x, Integer.toString(bounds.getX()))
-            .setAttribute(y, Integer.toString(bounds.getY()))
-            .setAttribute(width, Integer.toString(bounds.getWidth()))
-            .setAttribute(height, Integer.toString(bounds.getHeight()));
+    return element.setAttribute(x, Integer.toString(bounds.minX()))
+        .setAttribute(y, Integer.toString(bounds.minY()))
+        .setAttribute(width, Integer.toString(bounds.width()))
+        .setAttribute(height, Integer.toString(bounds.height()));
   }
 }

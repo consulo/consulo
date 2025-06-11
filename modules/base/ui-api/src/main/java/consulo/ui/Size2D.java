@@ -15,31 +15,23 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-
 import java.io.Serializable;
 
 /**
  * @author VISTALL
+ * @author UNV
  * @since 2017-06-16
  */
-public record Size2D(int width, int height) implements Serializable, Cloneable {
-    public static final Size2D UNDEFINED = new Size2D(-1, -1);
+public record Size2D(int width, int height) implements Serializable {
     public static final Size2D ZERO = new Size2D(0, 0);
 
     private static final long serialVersionUID = 3195037735722861866L;
-
-    public Size2D(@Nonnull Size2D size) {
-        this(size.width(), size.height());
-    }
 
     public Size2D(int widthAndHeight) {
         this(widthAndHeight, widthAndHeight);
     }
 
-    @Override
-    @SuppressWarnings("CloneDoesntCallSuperClone")
-    public Size2D clone() {
-        return new Size2D(width(), height());
+    public boolean isEmpty() {
+        return width <= 0 || height <= 0;
     }
 }
