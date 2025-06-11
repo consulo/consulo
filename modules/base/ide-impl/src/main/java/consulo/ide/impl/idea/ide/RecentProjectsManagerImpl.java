@@ -340,7 +340,14 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
             for (ProjectGroup group : groups) {
                 List<AnAction> children = new ArrayList<>();
                 List<String> projects = group.getProjects();
-                projects.sort(Comparator.comparing(projectPaths::indexOf));
+                projects.sort(Comparator.comparing(s -> {
+                    int i = projectPaths.indexOf(s);
+                    // in case project path removed from recent projects
+                    if (i == -1) {
+                        return Integer.MAX_VALUE;
+                    }
+                    return i;
+                }));
 
                 for (String path : projects) {
                     AnAction action = createOpenAction(path, duplicates, openedPaths);
