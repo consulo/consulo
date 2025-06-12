@@ -28,7 +28,7 @@ public record Point2D(int x, int y) implements Serializable {
         this(0, 0);
     }
 
-    public Point2D add(int dx, int dy) {
+    public Point2D translate(int dx, int dy) {
         return new Point2D(x + dx, y + dy);
     }
 

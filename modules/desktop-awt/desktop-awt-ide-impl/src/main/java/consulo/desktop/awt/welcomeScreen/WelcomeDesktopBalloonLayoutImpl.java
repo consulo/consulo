@@ -15,16 +15,16 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import consulo.application.AllIcons;
+import consulo.desktop.awt.internal.notification.NotificationBalloonShadowBorderProvider;
 import consulo.desktop.awt.internal.notification.NotificationsManagerImpl;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.desktop.awt.ui.popup.BalloonImpl;
-import consulo.desktop.awt.internal.notification.NotificationBalloonShadowBorderProvider;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.Rectangle2D;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.JBUI;
@@ -125,12 +125,12 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
         @Nonnull
         @Override
         public List<BalloonImpl.ActionButton> createActions() {
-          myAction = myPopupBalloon.new ActionButton(AllIcons.Ide.Notification.Close, null, null, event -> {});
+          myAction = myPopupBalloon.new ActionButton(PlatformIconGroup.ideNotificationClose(), null, null, event -> {});
           return Collections.singletonList(myAction);
         }
 
         @Override
-        public void layout(@Nonnull Rectangle bounds) {
+        public void layout(@Nonnull Rectangle2D bounds) {
           myAction.setBounds(0, 0, 0, 0);
         }
       });
@@ -138,14 +138,14 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
 
     myBalloonPanel.add(balloon.getContent());
     balloon.getContent().putClientProperty(TYPE_KEY, layoutData.type);
-    Disposer.register(balloon, new Disposable() {
-      @Override
-      public void dispose() {
+    Disposer.register(
+      balloon,
+      () -> {
         myBalloons.remove(balloon);
         myBalloonPanel.remove(balloon.getContent());
         updatePopup();
       }
-    });
+    );
     myBalloons.add(balloon);
 
     updatePopup();

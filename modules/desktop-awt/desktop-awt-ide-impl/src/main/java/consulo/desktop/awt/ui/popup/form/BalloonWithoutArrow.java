@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.popup.form;
 
+import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBUIScale;
 
 import java.awt.*;
@@ -25,17 +26,17 @@ import java.awt.geom.RoundRectangle2D;
  * @since 2025-06-06
  */
 public class BalloonWithoutArrow extends BalloonForm {
-    public BalloonWithoutArrow(Rectangle bounds, int borderRadius) {
+    public BalloonWithoutArrow(Rectangle2D bounds, int borderRadius) {
         super(bounds, borderRadius);
     }
 
     @Override
     public Shape getShape() {
         return new RoundRectangle2D.Double(
-            myBodyBounds.x,
-            myBodyBounds.y,
-            myBodyBounds.width - JBUIScale.scale(1),
-            myBodyBounds.height - JBUIScale.scale(1),
+            myBodyBounds.minX(),
+            myBodyBounds.minY(),
+            myBodyBounds.width() - JBUIScale.scale(1),
+            myBodyBounds.height() - JBUIScale.scale(1),
             myBorderRadius,
             myBorderRadius
         );

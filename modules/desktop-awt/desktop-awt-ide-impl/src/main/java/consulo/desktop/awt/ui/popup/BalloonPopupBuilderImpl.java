@@ -77,7 +77,7 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
     private boolean myRequestFocus = false;
     private boolean myPointerShiftedToStart;
 
-    public BalloonPopupBuilderImpl(@Nullable Map<Disposable, List<Balloon>> storage, @Nonnull final JComponent content) {
+    public BalloonPopupBuilderImpl(@Nullable Map<Disposable, List<Balloon>> storage, @Nonnull JComponent content) {
         myStorage = storage;
         myContent = content;
     }
@@ -98,7 +98,7 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
 
     @Nonnull
     @Override
-    public BalloonBuilder setBorderColor(@Nonnull final Color color) {
+    public BalloonBuilder setBorderColor(@Nonnull Color color) {
         myBorder = color;
         return this;
     }
@@ -112,28 +112,28 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
 
     @Nonnull
     @Override
-    public BalloonBuilder setFillColor(@Nonnull final Color color) {
+    public BalloonBuilder setFillColor(@Nonnull Color color) {
         myFill = color;
         return this;
     }
 
     @Nonnull
     @Override
-    public BalloonBuilder setHideOnClickOutside(final boolean hide) {
+    public BalloonBuilder setHideOnClickOutside(boolean hide) {
         myHideOnMouseOutside = hide;
         return this;
     }
 
     @Nonnull
     @Override
-    public BalloonBuilder setHideOnKeyOutside(final boolean hide) {
+    public BalloonBuilder setHideOnKeyOutside(boolean hide) {
         myHideOnKeyOutside = hide;
         return this;
     }
 
     @Nonnull
     @Override
-    public BalloonBuilder setShowCallout(final boolean show) {
+    public BalloonBuilder setShowCallout(boolean show) {
         myShowCallout = show;
         return this;
     }
@@ -287,11 +287,37 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
     @Nonnull
     @Override
     public Balloon createBalloon() {
-        final BalloonImpl result =
-            new BalloonImpl(myContent, myBorder, myBorderInsets, myFill, myHideOnMouseOutside, myHideOnKeyOutside, myHideOnAction, myHideOnCloseClick,
-                myShowCallout, myCloseButtonEnabled, myFadeoutTime, myHideOnFrameResize, myHideOnLinkClick, myClickHandler, myCloseOnClick,
-                myAnimationCycle, myCalloutShift, myPositionChangeXShift, myPositionChangeYShift, myDialogMode, myTitle, myContentInsets, myShadow,
-                mySmallVariant, myBlockClicks, myLayer, myRequestFocus, myPointerSize, myCornerToPointerDistance);
+        final BalloonImpl result = new BalloonImpl(
+            myContent,
+            myBorder,
+            myBorderInsets,
+            myFill,
+            myHideOnMouseOutside,
+            myHideOnKeyOutside,
+            myHideOnAction,
+            myHideOnCloseClick,
+            myShowCallout,
+            myCloseButtonEnabled,
+            myFadeoutTime,
+            myHideOnFrameResize,
+            myHideOnLinkClick,
+            myClickHandler,
+            myCloseOnClick,
+            myAnimationCycle,
+            myCalloutShift,
+            myPositionChangeXShift,
+            myPositionChangeYShift,
+            myDialogMode,
+            myTitle,
+            myContentInsets,
+            myShadow,
+            mySmallVariant,
+            myBlockClicks,
+            myLayer,
+            myRequestFocus,
+            myPointerSize,
+            myCornerToPointerDistance
+        );
 
         result.setPointerShiftedToStart(myPointerShiftedToStart);
 
@@ -299,9 +325,9 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
             List<Balloon> balloons = myStorage.get(myAnchor);
             if (balloons == null) {
                 myStorage.put(myAnchor, balloons = new ArrayList<>());
-                Disposer.register(myAnchor, new Disposable() {
-                    @Override
-                    public void dispose() {
+                Disposer.register(
+                    myAnchor,
+                    () -> {
                         List<Balloon> toDispose = myStorage.remove(myAnchor);
                         if (toDispose != null) {
                             for (Balloon balloon : toDispose) {
@@ -311,7 +337,7 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
                             }
                         }
                     }
-                });
+                );
             }
             balloons.add(result);
             result.addListener(new JBPopupAdapter() {

@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.popup;
 
+import consulo.ui.Point2D;
+import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBUIScale;
 import jakarta.annotation.Nonnull;
 
@@ -13,19 +15,19 @@ import java.awt.geom.GeneralPath;
  */
 public class BalloonShaper {
     private final GeneralPath myPath = new GeneralPath();
-    private final Rectangle myBodyBounds;
-    private final Point myTargetPoint;
+    private final Rectangle2D myBodyBounds;
+    private final Point2D myPointerTarget;
     private final int myBorderRadius;
 
-    public BalloonShaper(Rectangle bodyBounds, Point targetPoint, int borderRadius) {
-        myTargetPoint = targetPoint;
+    public BalloonShaper(Rectangle2D bodyBounds, Point2D pointerTarget, int borderRadius) {
+        myPointerTarget = pointerTarget;
         myBodyBounds = bodyBounds;
         myBorderRadius = borderRadius;
-        start(targetPoint);
+        start(pointerTarget);
     }
 
-    private void start(Point start) {
-        myPath.moveTo(start.x, start.y);
+    private void start(Point2D start) {
+        myPath.moveTo(start.x(), start.y());
     }
 
     public int getX() {
@@ -80,27 +82,27 @@ public class BalloonShaper {
     }
 
     public BalloonShaper lineToTargetPoint() {
-        return lineTo((int)myTargetPoint.getX(), (int)myTargetPoint.getY());
+        return lineTo(myPointerTarget.x(), myPointerTarget.y());
     }
 
     @Nonnull
     public BalloonShaper toRightCurve() {
-        return horLineTo((int)myBodyBounds.getMaxX() - myBorderRadius - JBUIScale.scale(1));
+        return horLineTo(myBodyBounds.maxX() - myBorderRadius - JBUIScale.scale(1));
     }
 
     @Nonnull
     public BalloonShaper toBottomCurve() {
-        return vertLineTo((int)myBodyBounds.getMaxY() - myBorderRadius - JBUIScale.scale(1));
+        return vertLineTo(myBodyBounds.maxY() - myBorderRadius - JBUIScale.scale(1));
     }
 
     @Nonnull
     public BalloonShaper toLeftCurve() {
-        return horLineTo((int)myBodyBounds.getMinX() + myBorderRadius);
+        return horLineTo(myBodyBounds.minX() + myBorderRadius);
     }
 
     @Nonnull
     public BalloonShaper toTopCurve() {
-        return vertLineTo((int)myBodyBounds.getMinY() + myBorderRadius);
+        return vertLineTo(myBodyBounds.minY() + myBorderRadius);
     }
 
     public Shape close() {

@@ -16,13 +16,14 @@
 package consulo.desktop.awt.internal.notification;
 
 import consulo.desktop.awt.ui.popup.BalloonImpl;
+import consulo.ui.Point2D;
+import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.popup.Balloon;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 /**
@@ -49,47 +50,47 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
     }
 
     @Override
-    public void paintBorder(@Nonnull Rectangle bounds, @Nonnull Graphics2D g) {
+    public void paintBorder(@Nonnull Rectangle2D bounds, @Nonnull Graphics2D g) {
         int arc = UIManager.getInt("Component.arc");
         if (arc > 0) {
             g.setColor(myFillColor);
-            g.fill(new RoundRectangle2D.Double(bounds.x, bounds.y, bounds.width, bounds.height, arc, arc));
+            g.fill(new RoundRectangle2D.Double(bounds.minX(), bounds.minY(), bounds.width(), bounds.height(), arc, arc));
 
             g.setColor(myBorderColor);
-            g.draw(new RoundRectangle2D.Double(bounds.x + 0.5, bounds.y + 0.5, bounds.width - 1, bounds.height - 1, arc, arc));
+            g.draw(new RoundRectangle2D.Double(bounds.minX() + 0.5, bounds.minY() + 0.5, bounds.width() - 1, bounds.height() - 1, arc, arc));
         }
         else {
             g.setColor(myFillColor);
-            g.fill(new Rectangle2D.Double(bounds.x, bounds.y, bounds.width, bounds.height));
+            g.fill(new java.awt.geom.Rectangle2D.Double(bounds.minX(), bounds.minY(), bounds.width(), bounds.height()));
 
             g.setColor(myBorderColor);
-            g.draw(new Rectangle2D.Double(bounds.x + 0.5, bounds.y + 0.5, bounds.width - 1, bounds.height - 1));
+            g.draw(new java.awt.geom.Rectangle2D.Double(bounds.minX() + 0.5, bounds.minY() + 0.5, bounds.width() - 1, bounds.height() - 1));
         }
     }
 
     @Override
-    public void paintPointingShape(@Nonnull Rectangle bounds, @Nonnull Point pointTarget, @Nonnull Balloon.Position position, @Nonnull Graphics2D g) {
+    public void paintPointingShape(@Nonnull Rectangle2D bounds, @Nonnull Point2D pointTarget, @Nonnull Balloon.Position position, @Nonnull Graphics2D g) {
         int x, y, length;
 
         if (position == Balloon.Position.above) {
             length = INSETS.bottom;
-            x = pointTarget.x;
-            y = bounds.y + bounds.height + length;
+            x = pointTarget.x();
+            y = bounds.minY() + bounds.height() + length;
         }
         else if (position == Balloon.Position.below) {
             length = INSETS.top;
-            x = pointTarget.x;
-            y = bounds.y - length;
+            x = pointTarget.x();
+            y = bounds.minY() - length;
         }
         else if (position == Balloon.Position.atRight) {
             length = INSETS.left;
-            x = bounds.x - length;
-            y = pointTarget.y;
+            x = bounds.minX() - length;
+            y = pointTarget.y();
         }
         else {
             length = INSETS.right;
-            x = bounds.x + bounds.width + length;
-            y = pointTarget.y;
+            x = bounds.minX() + bounds.width() + length;
+            y = pointTarget.y();
         }
 
         Polygon p = new Polygon();

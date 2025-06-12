@@ -15,19 +15,21 @@
  */
 package consulo.desktop.awt.ui.popup.form;
 
-import consulo.desktop.awt.ui.popup.BalloonArrowDimensions;
-
-import java.awt.*;
+import consulo.desktop.awt.ui.popup.BalloonPointerSize;
+import consulo.ui.Point2D;
+import consulo.ui.Rectangle2D;
 
 /**
  * @author UNV
  * @since 2025-06-06
  */
 public abstract class BalloonWithArrow extends BalloonForm {
-    protected final BalloonArrowDimensions myArrowDimensions;
+    protected final BalloonPointerSize myPointerSize;
+    protected final Point2D myPointerTarget;
 
-    public BalloonWithArrow(Rectangle bounds, int borderRadius, BalloonArrowDimensions arrowDimensions) {
+    public BalloonWithArrow(Rectangle2D bounds, int borderRadius, BalloonPointerSize pointerSize, Point2D pointerTarget) {
         super(bounds, borderRadius);
-        myArrowDimensions = arrowDimensions;
+        myPointerSize = pointerSize;
+        myPointerTarget = pointerTarget;
     }
 }

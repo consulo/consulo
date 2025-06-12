@@ -55,25 +55,6 @@ public class Rectangle2DTest {
     }
 
     @Test
-    void testContainsCoords() {
-        Rectangle2D rect = new Rectangle2D(1, 2, 10, 20);
-        assertThat(rect.contains(5, 5)).isTrue();
-
-        assertThat(rect.contains(1, 2)).isTrue();
-        assertThat(rect.contains(1, 11)).isTrue();
-        assertThat(rect.contains(11, 2)).isTrue();
-        assertThat(rect.contains(11, 22)).isTrue();
-
-        assertThat(rect.contains(1, 1)).isFalse();
-        assertThat(rect.contains(0, 2)).isFalse();
-        assertThat(rect.contains(12, 2)).isFalse();
-        assertThat(rect.contains(1, 23)).isFalse();
-
-        assertThat(rect.contains(0, 0)).isFalse();
-        assertThat(rect.contains(12, 23)).isFalse();
-    }
-
-    @Test
     void testContainsPoint() {
         Rectangle2D rect = new Rectangle2D(1, 2, 10, 20);
         assertThat(rect.contains(new Point2D(5, 5))).isTrue();
@@ -93,38 +74,9 @@ public class Rectangle2DTest {
     }
 
     @Test
-    void testContainsRectCoords() {
-        assertThat(new Rectangle2D(1, 2, 10, -1).contains(1, 2, 10, -1)).isFalse();
-        assertThat(new Rectangle2D(1, 2, -1, 20).contains(1, 2, -1, 20)).isFalse();
-
-        Rectangle2D rect = new Rectangle2D(1, 2, 10, 20);
-        assertThat(rect.contains(1, 2, 10, 20)).isTrue();
-
-        assertThat(rect.contains(5, 5, 0, 0)).isTrue();
-        assertThat(rect.contains(5, 5, 10, 0)).isFalse();
-        assertThat(rect.contains(5, 5, 0, 20)).isFalse();
-        assertThat(rect.contains(5, 5, 10, 20)).isFalse();
-        assertThat(rect.contains(5, 5, -1, 0)).isFalse();
-        assertThat(rect.contains(5, 5, 0, -1)).isFalse();
-
-        assertThat(rect.contains(1, 2, 0, 0)).isTrue();
-        assertThat(rect.contains(1, 11, 0, 0)).isTrue();
-        assertThat(rect.contains(11, 2, 0, 0)).isTrue();
-        assertThat(rect.contains(11, 22, 0, 0)).isTrue();
-
-        assertThat(rect.contains(1, 1, 0, 0)).isFalse();
-        assertThat(rect.contains(0, 2, 0, 0)).isFalse();
-        assertThat(rect.contains(12, 2, 0, 0)).isFalse();
-        assertThat(rect.contains(1, 23, 0, 0)).isFalse();
-
-        assertThat(rect.contains(0, 0, 0, 0)).isFalse();
-        assertThat(rect.contains(12, 23, 0, 0)).isFalse();
-    }
-
-    @Test
     void testContainsRect() {
-        assertThat(new Rectangle2D(1, 2, 10, -1).contains(1, 2, 10, -1)).isFalse();
-        assertThat(new Rectangle2D(1, 2, -1, 20).contains(1, 2, -1, 20)).isFalse();
+        assertThat(new Rectangle2D(1, 2, 10, -1).contains(new Rectangle2D(1, 2, 10, -1))).isFalse();
+        assertThat(new Rectangle2D(1, 2, -1, 20).contains(new Rectangle2D(1, 2, -1, 20))).isFalse();
 
         Rectangle2D rect = new Rectangle2D(1, 2, 10, 20);
         assertThat(rect.contains(rect)).isTrue();

@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.ui.popup.form;
 
+import consulo.ui.Rectangle2D;
+
 import java.awt.*;
 
 /**
@@ -22,10 +24,10 @@ import java.awt.*;
  * @since 2025-06-06
  */
 public abstract class BalloonForm {
-    protected final Rectangle myBodyBounds;
+    protected final Rectangle2D myBodyBounds;
     protected final int myBorderRadius;
 
-    public BalloonForm(Rectangle bodyBounds, int borderRadius) {
+    public BalloonForm(Rectangle2D bodyBounds, int borderRadius) {
         myBodyBounds = bodyBounds;
         myBorderRadius = borderRadius;
     }
