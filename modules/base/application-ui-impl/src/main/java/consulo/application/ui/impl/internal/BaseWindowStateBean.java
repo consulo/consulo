@@ -27,24 +27,24 @@ public abstract class BaseWindowStateBean implements ModificationTracker, Window
   @Override
   @Nullable
   public Point2D getLocation() {
-    return apply(Point2D::new, myLocation);
+    return myLocation;
   }
 
   public void setLocation(@Nullable Point2D location) {
     if (Objects.equals(myLocation, location)) return;
-    myLocation = apply(Point2D::new, location);
+    myLocation = location;
     myModificationCount.getAndIncrement();
   }
 
   @Override
   @Nullable
   public Size2D getSize() {
-    return apply(Size2D::new, mySize);
+    return mySize;
   }
 
   public void setSize(@Nullable Size2D size) {
     if (Objects.equals(mySize, size)) return;
-    mySize = apply(Size2D::new, size);
+    mySize = size;
     myModificationCount.getAndIncrement();
   }
 

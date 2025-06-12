@@ -15,28 +15,29 @@
  */
 package consulo.ui;
 
-import java.io.Serializable;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author UNV
- * @since 2025-06-09
+ * @since 2025-06-10
  */
-public record Point2D(int x, int y) implements Serializable {
-    private static final long serialVersionUID = 185939695905234997L;
+public class Point2DTest {
+    @Test
+    void testCreation() {
+        Point2D point = new Point2D(1, 2);
+        assertThat(point.x()).isEqualTo(1);
+        assertThat(point.y()).isEqualTo(2);
 
-    public Point2D() {
-        this(0, 0);
+        assertThat(new Point2D()).isEqualTo(new Point2D(0, 0));
+
+        assertThat(point.withX(10)).isEqualTo(new Point2D(10, 2));
+        assertThat(point.withY(20)).isEqualTo(new Point2D(1, 20));
     }
 
-    public Point2D add(int dx, int dy) {
-        return new Point2D(x + dx, y + dy);
-    }
-
-    public Point2D withX(int x) {
-        return new Point2D(x, y());
-    }
-
-    public Point2D withY(int y) {
-        return new Point2D(x(), y);
+    @Test
+    void testAdd() {
+        assertThat(new Point2D(10, 20).add(1, 2)).isEqualTo(new Point2D(11, 22));
     }
 }

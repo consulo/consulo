@@ -311,8 +311,8 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         Set<String> duplicates = getDuplicateProjectNames(paths);
 
         if (BitUtil.isSet(flags, RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU) || BitUtil.isSet(flags, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU)) {
-            final List<ProjectGroup> groups = new ArrayList<>(new ArrayList<>(myState.groups));
-            final List<String> projectPaths = new ArrayList<>(paths);
+            List<ProjectGroup> groups = new ArrayList<>(new ArrayList<>(myState.groups));
+            List<String> projectPaths = new ArrayList<>(paths);
             Collections.sort(groups, new Comparator<>() {
                 @Override
                 public int compare(ProjectGroup o1, ProjectGroup o2) {
@@ -339,7 +339,17 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
             for (ProjectGroup group : groups) {
                 List<AnAction> children = new ArrayList<>();
-                for (String path : group.getProjects()) {
+                List<String> projects = group.getProjects();
+                projects.sort(Comparator.comparing(s -> {
+                    int i = projectPaths.indexOf(s);
+                    // in case project path removed from recent projects
+                    if (i == -1) {
+                        return Integer.MAX_VALUE;
+                    }
+                    return i;
+                }));
+
+                for (String path : projects) {
                     AnAction action = createOpenAction(path, duplicates, openedPaths);
                     children.add(action);
                 }

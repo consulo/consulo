@@ -46,6 +46,7 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorsSplitters;
@@ -279,11 +280,15 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private boolean myMultiSelectionInProgress;
     private boolean myRectangularSelectionInProgress;
     private boolean myLastPressCreatedCaret;
+    private boolean myLastPressWasAtBlockInlay;
+
     // Set when the selection (normal or block one) initiated by mouse drag becomes noticeable (at least one character is selected).
     // Reset on mouse press event.
     private boolean myCurrentDragIsSubstantial;
 
     private DesktopCaretImpl myPrimaryCaret;
+
+    private @Nullable VisualPosition mySuppressedByBreakpointsLastPressPosition;
 
     public final boolean myDisableRtl = Registry.is("editor.disable.rtl");
     public final Object myFractionalMetricsHintValue =
@@ -961,7 +966,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
                     public void dragOver(@Nonnull DropTargetDragEvent e) {
                         Point location = e.getLocation();
 
-                        getCaretModel().moveToVisualPosition(getTargetPosition(location.x, location.y, true));
+                        Caret caret = getCaretModel().getCurrentCaret();
+                        caret.moveToVisualPosition(getTargetPosition(location.x, location.y, true, caret));
                         getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
                         requestFocus();
                     }
@@ -1914,7 +1920,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return lineIndex;
     }
 
-    private VisualPosition getTargetPosition(int x, int y, boolean trimToLineWidth) {
+    @Nonnull
+    private VisualPosition getTargetPosition(int x, int y, boolean trimToLineWidth, @Nullable Caret targetCaret) {
         if (myDocument.getLineCount() == 0) {
             return new VisualPosition(0, 0);
         }
@@ -1929,6 +1936,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
             y = visualLineToY(Math.max(0, visualLineCount - 1));
         }
         VisualPosition visualPosition = xyToVisualPosition(new Point(x, y));
+        Caret caret = targetCaret != null ? targetCaret : getCaretModel().getPrimaryCaret();
+        if (consulo.codeEditor.util.EditorUtil.isBlockLikeCaret(caret) && !visualPosition.leansRight && visualPosition.column > 0) {
+            // Adjustment for block caret when clicking in the second half of the character
+            visualPosition = new VisualPosition(visualPosition.line, visualPosition.column - 1, true);
+        }
         if (trimToLineWidth && !mySettings.isVirtualSpace()) {
             LogicalPosition logicalPosition = visualToLogicalPosition(visualPosition);
             LogicalPosition lineEndPosition = offsetToLogicalPosition(myDocument.getLineEndOffset(logicalPosition.line));
@@ -1993,13 +2005,15 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         // The general idea is to check if the user performed 'caret position change click' (left click most of the time) inside selection
         // and, in the case of the positive answer, clear selection. Please note that there is a possible case that mouse click
-        // is performed inside selection but it triggers context menu. We don't want to drop the selection then.
+        // is performed inside selection, but it triggers the context menu. We don't want to drop the selection then.
         if (myMousePressedEvent != null
-            && myMousePressedEvent.getClickCount() == 1
             && myKeepSelectionOnMousePress
+            && !myLastPressWasAtBlockInlay
             && !myDragStarted
+            && myMousePressedEvent.getClickCount() == 1
             && !myMousePressedEvent.isShiftDown()
             && !myMousePressedEvent.isPopupTrigger()
+            && !e.isPopupTrigger()
             && !isToggleCaretEvent(myMousePressedEvent)
             && !isCreateRectangularSelectionEvent(myMousePressedEvent)) {
             getSelectionModel().removeSelection();
@@ -2030,13 +2044,13 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
     }
 
-    private void validateMousePointer(@Nonnull MouseEvent e) {
+    private void validateMousePointer(@Nonnull MouseEvent e, @Nullable EditorMouseEvent editorMouseEvent) {
         if (e.getSource() == myGutterComponent) {
             myGutterComponent.validateMousePointer(e);
         }
         else {
             myGutterComponent.setActiveFoldRegions(Collections.emptyList());
-            myDefaultCursor = getDefaultCursor(e);
+            myDefaultCursor = getDefaultCursor(e, editorMouseEvent);
             updateEditorCursor();
         }
     }
@@ -2058,14 +2072,22 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myCursorSetExternally = false;
     }
 
-    private Cursor getDefaultCursor(@Nonnull MouseEvent e) {
+    private Cursor getDefaultCursor(@Nonnull MouseEvent e, @Nullable EditorMouseEvent editorMouseEvent) {
+        Cursor result = null;
         if (getSelectionModel().hasSelection() && (e.getModifiersEx() & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK)) == 0) {
-            int offset = logicalPositionToOffset(xyToLogicalPosition(e.getPoint()));
+            int offset = editorMouseEvent == null ? logicalPositionToOffset(xyToLogicalPosition(e.getPoint())) : editorMouseEvent.getOffset();
             if (getSelectionModel().getSelectionStart() <= offset && offset < getSelectionModel().getSelectionEnd()) {
-                return Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+                result = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
             }
         }
-        return UIUtil.getTextCursor(TargetAWT.to(getBackgroundColor()));
+        if (result == null) {
+            FoldRegion foldRegion = editorMouseEvent == null ? myFoldingModel.getFoldingPlaceholderAt(e.getPoint())
+                : editorMouseEvent.getCollapsedFoldRegion();
+            if (foldRegion != null && !(foldRegion instanceof CustomFoldRegion)) {
+                result = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+            }
+        }
+        return result == null ? Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR) : result;
     }
 
     @RequiredUIAccess
@@ -2116,6 +2138,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
             return; // ignoring drag after removing a caret
         }
 
+        if (myLastPressWasAtBlockInlay) {
+            return; // ignoring drag originating over block inlay
+        }
+
         Rectangle visibleArea = getScrollingModel().getVisibleArea();
 
         int x = e.getX();
@@ -2149,7 +2175,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             VisualPosition oldVisLeadSelectionStart = leadCaret.getLeadSelectionPosition();
             int oldCaretOffset = getCaretModel().getOffset();
             boolean multiCaretSelection = columnSelectionDrag || toggleCaretEvent;
-            VisualPosition newVisualCaret = getTargetPosition(x, y, !multiCaretSelection);
+            VisualPosition newVisualCaret = getTargetPosition(x, y, !multiCaretSelection, leadCaret);
             LogicalPosition newLogicalCaret = visualToLogicalPosition(newVisualCaret);
             if (multiCaretSelection) {
                 myMultiSelectionInProgress = true;
@@ -2754,7 +2780,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myMouseSelectionStateAlarm.cancelAllRequests();
         if (myMouseSelectionState != MOUSE_SELECTION_STATE_NONE) {
             if (myMouseSelectionStateResetRunnable == null) {
-                myMouseSelectionStateResetRunnable = () -> resetMouseSelectionState(null);
+                myMouseSelectionStateResetRunnable = () -> resetMouseSelectionState(null, null);
             }
             myMouseSelectionStateAlarm.addRequest(
                 myMouseSelectionStateResetRunnable,
@@ -2764,12 +2790,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
     }
 
-    private void resetMouseSelectionState(@Nullable MouseEvent event) {
+    private void resetMouseSelectionState(@Nullable MouseEvent event, @Nullable EditorMouseEvent editorMouseEvent) {
         setMouseSelectionState(MOUSE_SELECTION_STATE_NONE);
 
         MouseEvent e = event != null ? event : myMouseMovedEvent;
         if (e != null) {
-            validateMousePointer(e);
+            validateMousePointer(e, editorMouseEvent);
         }
     }
 
@@ -3218,6 +3244,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         @RequiredUIAccess
         private void runMousePressedCommand(@Nonnull final MouseEvent e) {
+            myLastPressWasAtBlockInlay = false;
             myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());
             myCaretStateBeforeLastPress = isToggleCaretEvent(e) ? myCaretModel.getCaretsAndSelections() : Collections.emptyList();
             myCurrentDragIsSubstantial = false;
@@ -3352,35 +3379,29 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         @RequiredUIAccess
-        private boolean processMousePressed(@Nonnull final MouseEvent e) {
-            myInitialMouseEvent = e;
-
+        private boolean processMousePressed(@Nonnull MouseEvent e) {
             if (myMouseSelectionState != MOUSE_SELECTION_STATE_NONE
                 && System.currentTimeMillis() - myMouseSelectionChangeTimestamp > Registry.intValue(
                 "editor.mouseSelectionStateResetTimeout")) {
-                resetMouseSelectionState(e);
+                resetMouseSelectionState(e, null);
             }
 
             int x = e.getX();
             int y = e.getY();
 
-            if (x < 0) {
-                x = 0;
-            }
-            if (y < 0) {
-                y = 0;
-            }
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
 
-            final EditorMouseEventArea eventArea = getMouseEventArea(e);
+            EditorMouseEventArea eventArea = getMouseEventArea(e);
             myMousePressArea = eventArea;
             if (eventArea == EditorMouseEventArea.FOLDING_OUTLINE_AREA) {
-                final FoldRegion range = myGutterComponent.findFoldingAnchorAt(x, y);
+                FoldRegion range = myGutterComponent.findFoldingAnchorAt(x, y);
                 if (range != null) {
-                    final boolean expansion = !range.isExpanded();
+                    boolean expansion = !range.isExpanded();
+                    //UIEventLogger.EditorFoldingIconClicked.log(expansion, e.isAltDown());
 
-                    int scrollShift = y - getScrollingModel().getVerticalScrollOffset();
-                    Runnable processor = () -> {
-                        myFoldingModel.disableScrollingPositionAdjustment();
+                    int scrollShift = expansion ? 0 : visualLineToY(yToVisualLine(y)) - getScrollingModel().getVerticalScrollOffset();
+                    getFoldingModel().runBatchFoldingOperation(() -> {
                         range.setExpanded(expansion);
                         if (e.isAltDown()) {
                             for (FoldRegion region : myFoldingModel.getAllFoldRegions()) {
@@ -3389,53 +3410,80 @@ public final class DesktopEditorImpl extends CodeEditorBase
                                 }
                             }
                         }
-                    };
-                    getFoldingModel().runBatchFoldingOperation(processor);
-                    y = myGutterComponent.getHeadCenterY(range);
-                    getScrollingModel().scrollVertically(y - scrollShift);
+                    }, true, false);
+                    if (!expansion) {
+                        int newY = visualLineToY(offsetToVisualLine(range.getStartOffset()));
+                        EditorUtil.runWithAnimationDisabled(DesktopEditorImpl.this, () -> myScrollingModel.scrollVertically(newY - scrollShift));
+                    }
                     myGutterComponent.updateSize();
-                    validateMousePointer(e);
+                    validateMousePointer(e, null);
                     e.consume();
                     return false;
                 }
             }
 
             if (e.getSource() == myGutterComponent) {
-                if (eventArea == EditorMouseEventArea.LINE_MARKERS_AREA || eventArea == EditorMouseEventArea.ANNOTATIONS_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA) {
-                    if (!tweakSelectionIfNecessary(e)) {
-                        myGutterComponent.mousePressed(e);
-                    }
-                    if (e.isConsumed()) {
-                        return false;
-                    }
+                if (!tweakSelectionIfNecessary(e)) {
+                    myGutterComponent.mousePressed(e);
                 }
+                if (e.isConsumed()) return false;
                 x = 0;
             }
 
+            Caret selectionCaret = null;
             int oldSelectionStart = mySelectionModel.getLeadSelectionOffset();
 
-            final int oldStart = mySelectionModel.getSelectionStart();
-            final int oldEnd = mySelectionModel.getSelectionEnd();
+            int oldStart = mySelectionModel.getSelectionStart();
+            int oldEnd = mySelectionModel.getSelectionEnd();
+
+            LogicalPosition oldBlockStart = null;
+
+            if (isColumnMode()) {
+                @Nonnull List<CaretState> caretsAndSelections = getCaretModel().getCaretsAndSelections();
+
+                CaretState originalCaret = caretsAndSelections.get(0);
+                oldBlockStart = Objects.equals(originalCaret.getCaretPosition(), originalCaret.getSelectionEnd())
+                    ? originalCaret.getSelectionStart()
+                    : originalCaret.getSelectionEnd();
+            }
 
             boolean toggleCaret = e.getSource() != myGutterComponent && isToggleCaretEvent(e);
             boolean lastPressCreatedCaret = myLastPressCreatedCaret;
             if (e.getClickCount() == 1) {
                 myLastPressCreatedCaret = false;
             }
-            // Don't move caret on mouse press above gutter line markers area (a place where break points, 'override', 'implements' etc icons
-            // are drawn) and annotations area. E.g. we don't want to change caret position if a user sets new break point (clicks
-            // at 'line markers' area).
-            boolean insideEditorRelatedAreas = eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA
-                || eventArea == EditorMouseEventArea.EDITING_AREA
-                || isInsideGutterWhitespaceArea(e);
-            if (insideEditorRelatedAreas) {
-                VisualPosition visualPosition = getTargetPosition(x, y, true);
+            myLastPressWasAtBlockInlay =
+                eventArea == EditorMouseEventArea.EDITING_AREA && hasBlockInlay(e.getPoint());
+            boolean clickOnBreakpointOverLineNumbers =
+                eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA && ExperimentalUI.isNewUI() && BreakpointEditorUtil.isBreakPointsOnLineNumbers();
+            // Don't move the caret when the mouse is pressed in the gutter line markers area
+            // (a place where breakpoints, 'override'/'implements' and other icons are drawn) or in the "annotations" area.
+            //
+            // For example, we don't want to change the caret position
+            // when the user sets a new breakpoint by clicking at the 'line markers' area.
+            // Also, don't move the caret when the context menu for an inlay is invoked.
+            //
+            // Also, don't move the caret too early if mouse pressed over line numbers area,
+            // the user might just set a new breakpoint and not selecting lines.
+            boolean moveCaret = (eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA && !clickOnBreakpointOverLineNumbers) ||
+                isInsideGutterWhitespaceArea(e) ||
+                eventArea == EditorMouseEventArea.EDITING_AREA && !myLastPressWasAtBlockInlay;
+            assert !(moveCaret && clickOnBreakpointOverLineNumbers);
+            // We don't know which caret we want to work with yet
+            VisualPosition visualPosition = getTargetPosition(x, y, true, null);
+            if (clickOnBreakpointOverLineNumbers) {
+                // However, we should save the information about the first position to correctly initiate drag,
+                // if the user needs it instead of breakpoint setting.
+                mySuppressedByBreakpointsLastPressPosition = visualPosition;
+            }
+            else if (moveCaret) {
+                mySuppressedByBreakpointsLastPressPosition = null;
                 LogicalPosition pos = visualToLogicalPosition(visualPosition);
                 if (toggleCaret) {
                     Caret caret = getCaretModel().getCaretAt(visualPosition);
                     if (e.getClickCount() == 1) {
                         if (caret == null) {
-                            myLastPressCreatedCaret = getCaretModel().addCaret(visualPosition) != null;
+                            myLastPressCreatedCaret = !consulo.codeEditor.util.EditorUtil.checkMaxCarets(DesktopEditorImpl.this) && getCaretModel().addCaret(visualPosition) != null;
                         }
                         else {
                             getCaretModel().removeCaret(caret);
@@ -3447,23 +3495,27 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 }
                 else if (e.getSource() != myGutterComponent && isCreateRectangularSelectionEvent(e)) {
                     CaretState anchorCaretState = myCaretModel.getCaretsAndSelections().get(0);
-                    LogicalPosition anchor = Objects.equals(anchorCaretState.getCaretPosition(), anchorCaretState.getSelectionStart())
-                        ? anchorCaretState.getSelectionEnd()
-                        : anchorCaretState.getSelectionStart();
-                    if (anchor == null) {
-                        anchor = myCaretModel.getLogicalPosition();
-                    }
+                    LogicalPosition anchor = Objects.equals(anchorCaretState.getCaretPosition(), anchorCaretState.getSelectionStart()) ?
+                        anchorCaretState.getSelectionEnd() : anchorCaretState.getSelectionStart();
+                    if (anchor == null) anchor = myCaretModel.getLogicalPosition();
                     mySelectionModel.setBlockSelection(anchor, pos);
                 }
                 else {
-                    getCaretModel().removeSecondaryCarets();
-                    getCaretModel().moveToVisualPosition(visualPosition);
+                    selectionCaret = eventArea == EditorMouseEventArea.EDITING_AREA &&
+                        SwingUtilities.isRightMouseButton(e) &&
+                        getCaretModel().getCaretCount() > 1
+                        ? getSelectionCaret(pos) : null;
+                    if (selectionCaret == null) {
+                        getCaretModel().removeSecondaryCarets();
+                        getCaretModel().moveToVisualPosition(visualPosition);
+                    }
+                    else {
+                        selectionCaret.moveToVisualPosition(visualPosition);
+                    }
                 }
             }
 
-            if (e.isPopupTrigger()) {
-                return false;
-            }
+            if (e.isPopupTrigger()) return false;
 
             requestFocus();
 
@@ -3472,72 +3524,111 @@ public final class DesktopEditorImpl extends CodeEditorBase
             int newStart = mySelectionModel.getSelectionStart();
             int newEnd = mySelectionModel.getSelectionEnd();
 
-            myMouseSelectedRegion = myFoldingModel.getFoldingPlaceholderAt(new Point(x, y));
-            myKeepSelectionOnMousePress = mySelectionModel.hasSelection() &&
-                caretOffset >= mySelectionModel.getSelectionStart() &&
-                caretOffset <= mySelectionModel.getSelectionEnd() &&
-                (SwingUtilities.isLeftMouseButton(e) && mySettings.isDndEnabled() || SwingUtilities.isRightMouseButton(e));
+            Point p = new Point(x, y);
+            myMouseSelectedRegion = myFoldingModel.getFoldingPlaceholderAt(p);
+            myKeepSelectionOnMousePress = selectionCaret != null ||
+                mySelectionModel.hasSelection() &&
+                    caretOffset >= mySelectionModel.getSelectionStart() &&
+                    caretOffset <= mySelectionModel.getSelectionEnd() &&
+                    !isPointAfterSelectionEnd(p) &&
+                    (SwingUtilities.isLeftMouseButton(e) && mySettings.isDndEnabled() ||
+                        SwingUtilities.isRightMouseButton(e));
 
             boolean isNavigation = oldStart == oldEnd && newStart == newEnd && oldStart != newStart;
-            if (getMouseEventArea(e) == EditorMouseEventArea.LINE_NUMBERS_AREA && e.getClickCount() == 1) {
-                mySelectionModel.selectLineAtCaret();
-                setMouseSelectionState(MOUSE_SELECTION_STATE_LINE_SELECTED);
-                mySavedSelectionStart = mySelectionModel.getSelectionStart();
-                mySavedSelectionEnd = mySelectionModel.getSelectionEnd();
+            if (eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA && e.getClickCount() == 1) {
+                if (clickOnBreakpointOverLineNumbers) {
+                    //do nothing here and set/unset a breakpoint if possible in XLineBreakpointManager
+                    return false;
+                }
+                else {
+                    // Move the caret to the end of the selection, that is, the beginning of the next line.
+                    // This is more consistent with the caret placement on "Extend line selection" and on dragging through the line numbers area.
+                    selectLineAtCaret(true);
+                }
                 return isNavigation;
             }
 
-            if (insideEditorRelatedAreas) {
-                if (e.isShiftDown() && !e.isControlDown() && !e.isAltDown()) {
-                    if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
-                        if (caretOffset < mySavedSelectionStart) {
-                            mySelectionModel.setSelection(mySavedSelectionEnd, caretOffset);
-                        }
-                        else {
-                            mySelectionModel.setSelection(mySavedSelectionStart, caretOffset);
-                        }
+            if (moveCaret) {
+                if (e.isShiftDown() && !e.isControlDown() && !e.isAltDown() && !e.isMetaDown()) {
+                    if (oldBlockStart != null) {
+                        mySelectionModel.setBlockSelection(oldBlockStart, getCaretModel().getLogicalPosition());
                     }
                     else {
-                        int startToUse = oldSelectionStart;
-                        if (mySelectionModel.isUnknownDirection() && caretOffset > startToUse) {
-                            startToUse = Math.min(oldStart, oldEnd);
+                        int startToUse;
+                        if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
+                            if (caretOffset < mySavedSelectionStart) {
+                                startToUse = mySavedSelectionEnd;
+                            }
+                            else {
+                                startToUse = mySavedSelectionStart;
+                            }
+                        }
+                        else {
+                            startToUse = oldSelectionStart;
+                            if (mySelectionModel.isUnknownDirection() && caretOffset > startToUse) {
+                                startToUse = Math.min(oldStart, oldEnd);
+                            }
                         }
                         mySelectionModel.setSelection(startToUse, caretOffset);
                     }
                 }
-                else if (!myKeepSelectionOnMousePress && getSelectionModel().hasSelection()
-                    && !isCreateRectangularSelectionEvent(e)
-                    && e.getClickCount() == 1) {
-                    setMouseSelectionState(MOUSE_SELECTION_STATE_NONE);
-                    mySelectionModel.setSelection(caretOffset, caretOffset);
-                }
-                else if (e.getButton() == MouseEvent.BUTTON1
-                    && (eventArea == EditorMouseEventArea.EDITING_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA)
-                    && (!toggleCaret || lastPressCreatedCaret)) {
-                    switch (e.getClickCount()) {
-                        case 2:
-                            selectWordAtCaret(mySettings.isMouseClickSelectionHonorsCamelWords() && mySettings.isCamelWords());
-                            break;
+                else {
+                    if (!myKeepSelectionOnMousePress && getSelectionModel().hasSelection() && !isCreateRectangularSelectionEvent(e) &&
+                        e.getClickCount() == 1) {
+                        if (!toggleCaret) {
+                            setMouseSelectionState(MOUSE_SELECTION_STATE_NONE);
+                            mySelectionModel.setSelection(caretOffset, caretOffset);
+                        }
+                    }
+                    else {
+                        if (e.getButton() == MouseEvent.BUTTON1
+                            && (eventArea == EditorMouseEventArea.EDITING_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA)
+                            && (!toggleCaret || lastPressCreatedCaret)
+                            && !(myMouseSelectedRegion instanceof CustomFoldRegion)) {
+                            switch (e.getClickCount()) {
+                                case 2:
+                                    selectWordAtCaret(mySettings.isMouseClickSelectionHonorsCamelWords() && mySettings.isCamelWords());
+                                    break;
 
-                        case 3:
-                            if (HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK && mySettings.isCamelWords()) {
-                                // We want to differentiate between triple and quadruple clicks when 'select by camel humps' is on. The former
-                                // is assumed to select 'hump' while the later points to the whole word.
-                                selectWordAtCaret(false);
-                                break;
+                                case 3:
+                                    if (eventArea == EditorMouseEventArea.EDITING_AREA &&
+                                        HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK && mySettings.isCamelWords()) {
+                                        // We want to differentiate between triple and quadruple clicks when 'select by camel humps' is on. The former
+                                        // is assumed to select 'hump' while the latter points to the whole word.
+                                        selectWordAtCaret(false);
+                                        break;
+                                    }
+                                    //noinspection fallthrough
+                                case 4:
+                                    // Triple and quadruple clicks on the line number reset the selection to a single line,
+                                    // except that in this case we keep the caret at the beginning of this line, not the next line.
+                                    selectLineAtCaret(false);
+                                    mySelectionModel.setUnknownDirection(true);
+                                    break;
                             }
-                        case 4:
-                            mySelectionModel.selectLineAtCaret();
-                            setMouseSelectionState(MOUSE_SELECTION_STATE_LINE_SELECTED);
-                            mySavedSelectionStart = mySelectionModel.getSelectionStart();
-                            mySavedSelectionEnd = mySelectionModel.getSelectionEnd();
-                            mySelectionModel.setUnknownDirection(true);
-                            break;
+                        }
                     }
                 }
             }
 
             return isNavigation;
+        }
+
+        private boolean isPointAfterSelectionEnd(@Nonnull Point p) {
+            VisualPosition selectionEndPosition = myCaretModel.getCurrentCaret().getSelectionEndPosition();
+            Point selectionEnd = visualPositionToXY(selectionEndPosition);
+            return p.y >= selectionEnd.y + getLineHeight() ||
+                p.y >= selectionEnd.y && p.x > selectionEnd.x && xyToVisualPosition(p).column > selectionEndPosition.column;
+        }
+
+        private Caret getSelectionCaret(@Nonnull LogicalPosition logicalPosition) {
+            int offset = logicalPositionToOffset(logicalPosition);
+            for (Caret caret : getCaretModel().getAllCarets()) {
+                if (offset >= caret.getSelectionStart() && offset <= caret.getSelectionEnd()) {
+                    return caret;
+                }
+            }
+            return null;
         }
     }
 
@@ -3668,6 +3759,20 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return true;
     }
 
+    /**
+     * Enter click-and-drag selection mode: select lines only.
+     */
+    private void selectLineAtCaret(boolean moveToEnd) {
+        Caret caret = getCaretModel().getCurrentCaret();
+        caret.selectLineAtCaret();
+        setMouseSelectionState(MOUSE_SELECTION_STATE_LINE_SELECTED);
+        mySavedSelectionStart = caret.getSelectionStart();
+        mySavedSelectionEnd = caret.getSelectionEnd();
+        if (moveToEnd) {
+            caret.moveToOffset(mySavedSelectionEnd);
+        }
+    }
+
     boolean useEditorAntialiasing() {
         return myUseEditorAntialiasing;
     }
@@ -3684,7 +3789,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             if (myDraggedRange != null || myGutterComponent.myDnDInProgress) {
                 return; // on Mac we receive events even if drag-n-drop is in progress
             }
-            validateMousePointer(e);
+            validateMousePointer(e, null);
             runMouseDraggedCommand(e);
             EditorMouseEvent event = createEditorMouseEvent(e);
             if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
@@ -3702,26 +3807,27 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @Override
         @RequiredUIAccess
         public void mouseMoved(@Nonnull MouseEvent e) {
+            EditorMouseEvent event = createEditorMouseEvent(e);
+
             if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
                 if (myMousePressedEvent != null && myMousePressedEvent.getComponent() == e.getComponent()) {
                     Point lastPoint = myMousePressedEvent.getPoint();
                     Point point = e.getPoint();
                     int deadZone = Registry.intValue("editor.mouseSelectionStateResetDeadZone");
                     if (Math.abs(lastPoint.x - point.x) >= deadZone || Math.abs(lastPoint.y - point.y) >= deadZone) {
-                        resetMouseSelectionState(e);
+                        resetMouseSelectionState(e, event);
                     }
                 }
                 else {
-                    validateMousePointer(e);
+                    validateMousePointer(e, event);
                 }
             }
             else {
-                validateMousePointer(e);
+                validateMousePointer(e, event);
             }
 
             myMouseMovedEvent = e;
 
-            EditorMouseEvent event = createEditorMouseEvent(e);
             if (e.getSource() == myGutterComponent) {
                 myGutterComponent.mouseMoved(e);
             }

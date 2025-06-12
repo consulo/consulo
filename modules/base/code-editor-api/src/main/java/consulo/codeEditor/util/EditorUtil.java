@@ -379,4 +379,41 @@ public class EditorUtil {
         int line = editor instanceof RealEditor ? editor.yToVisualLine(y) : y / editor.getLineHeight();
         return line > 0 ? editor.visualToLogicalPosition(new VisualPosition(line, 0)).line : 0;
     }
+
+    public static boolean isBlockLikeCaret(@Nonnull Caret caret) {
+        return switch (caret.getVisualAttributes().getShape()) {
+            case DEFAULT -> caret.getEditor().isInsertMode() == caret.getEditor().getSettings().isBlockCursor();
+            case BLOCK, BOX, UNDERSCORE -> true;
+            case BAR -> caret.getVisualAttributes().getThickness() > 0.5f;
+        };
+    }
+
+    /**
+     * Tells whether maximum allowed number of carets is reached in editor. If it's the case, notification is shown
+     */
+    public static boolean checkMaxCarets(@Nonnull Editor editor) {
+        return ReadAction.compute(() -> {
+            CaretModel caretModel = editor.getCaretModel();
+            if (caretModel.getCaretCount() >= caretModel.getMaxCaretCount()) {
+                notifyMaxCarets(editor);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Shows notification about maximum number of carets reached in editor.
+     */
+    public static void notifyMaxCarets(@Nonnull Editor editor) {
+//        Long lastTimeStamp = editor.getUserData(EditorNotification.LAST_MAX_CARETS_NOTIFY_TIMESTAMP);
+//        long currentTimeStamp = System.currentTimeMillis();
+//        if (lastTimeStamp != null && (currentTimeStamp - lastTimeStamp) < EditorNotification.MAX_CARETS_NOTIFY_INTERVAL_MS) return;
+//        editor.putUserData(EditorNotification.LAST_MAX_CARETS_NOTIFY_TIMESTAMP, currentTimeStamp);
+//        NotificationGroupManager.getInstance().getNotificationGroup("too.many.carets")
+//            .createNotification(
+//                EditorBundle.message("editor.max.carets.hint", editor.getCaretModel().getMaxCaretCount()),
+//                NotificationType.INFORMATION)
+//            .notify(editor.getProject());
+    }
 }

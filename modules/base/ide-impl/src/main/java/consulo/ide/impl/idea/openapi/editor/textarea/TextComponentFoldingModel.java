@@ -21,9 +21,9 @@ import consulo.codeEditor.FoldingModel;
 import consulo.codeEditor.event.FoldingListener;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.List;
 
@@ -33,123 +33,127 @@ import java.util.List;
  */
 public class TextComponentFoldingModel implements FoldingModel {
 
-  @Override
-  public FoldRegion addFoldRegion(int startOffset, int endOffset, @Nonnull String placeholderText) {
-    return null;
-  }
+    @Override
+    public FoldRegion addFoldRegion(int startOffset, int endOffset, @Nonnull String placeholderText) {
+        return null;
+    }
 
-  @Override
-  public boolean addFoldRegion(@Nonnull FoldRegion region) {
-    return false;
-  }
+    @Override
+    public boolean addFoldRegion(@Nonnull FoldRegion region) {
+        return false;
+    }
 
-  @Override
-  public void removeFoldRegion(@Nonnull FoldRegion region) {
-  }
+    @Override
+    public void removeFoldRegion(@Nonnull FoldRegion region) {
+    }
 
-  @Nonnull
-  @Override
-  public FoldRegion[] getAllFoldRegions() {
-    return FoldRegion.EMPTY_ARRAY;
-  }
+    @Nonnull
+    @Override
+    public FoldRegion[] getAllFoldRegions() {
+        return FoldRegion.EMPTY_ARRAY;
+    }
 
-  @Override
-  public boolean isOffsetCollapsed(int offset) {
-    return false;
-  }
+    @Override
+    public boolean isOffsetCollapsed(int offset) {
+        return false;
+    }
 
-  @Override
-  public FoldRegion getCollapsedRegionAtOffset(int offset) {
-    return null;
-  }
+    @Override
+    public FoldRegion getCollapsedRegionAtOffset(int offset) {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public FoldRegion getFoldRegion(int startOffset, int endOffset) {
-    return null;
-  }
+    @Nullable
+    @Override
+    public FoldRegion getFoldRegion(int startOffset, int endOffset) {
+        return null;
+    }
 
-  @Override
-  public void runBatchFoldingOperation(@Nonnull Runnable operation) {
-  }
+    @Override
+    public void runBatchFoldingOperation(@Nonnull Runnable operation) {
+    }
 
-  @Override
-  public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaretFromCollapsedRegion) {
-  }
+    @Override
+    public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaretFromCollapsedRegion) {
+    }
 
-  @Override
-  public void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation) {
-  }
+    @Override
+    public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean dontCollapseCaret, boolean moveCaret) {
+    }
 
-  @Override
-  public void setFoldingEnabled(boolean isEnabled) {
+    @Override
+    public void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation) {
+    }
 
-  }
+    @Override
+    public void setFoldingEnabled(boolean isEnabled) {
 
-  @Override
-  public boolean isFoldingEnabled() {
-    return false;
-  }
+    }
 
-  @Override
-  public FoldRegion getFoldingPlaceholderAt(@Nonnull Point p) {
-    return null;
-  }
+    @Override
+    public boolean isFoldingEnabled() {
+        return false;
+    }
 
-  @Override
-  public boolean intersectsRegion(int startOffset, int endOffset) {
-    return false;
-  }
+    @Override
+    public FoldRegion getFoldingPlaceholderAt(@Nonnull Point p) {
+        return null;
+    }
 
-  @Override
-  public int getLastCollapsedRegionBefore(int offset) {
-    return 0;
-  }
+    @Override
+    public boolean intersectsRegion(int startOffset, int endOffset) {
+        return false;
+    }
 
-  @Override
-  public TextAttributes getPlaceholderAttributes() {
-    return null;
-  }
+    @Override
+    public int getLastCollapsedRegionBefore(int offset) {
+        return 0;
+    }
 
-  @Override
-  public FoldRegion[] fetchTopLevel() {
-    return new FoldRegion[0];
-  }
+    @Override
+    public TextAttributes getPlaceholderAttributes() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
-    return null;
-  }
+    @Override
+    public FoldRegion[] fetchTopLevel() {
+        return new FoldRegion[0];
+    }
 
-  @Override
-  public void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable) {
+    @Nullable
+    @Override
+    public FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
+        return null;
+    }
 
-  }
+    @Override
+    public void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable) {
 
-  @Override
-  public void clearFoldRegions() {
+    }
 
-  }
+    @Override
+    public void clearFoldRegions() {
 
-  @Override
-  public void rebuild() {
+    }
 
-  }
+    @Override
+    public void rebuild() {
 
-  @Nonnull
-  @Override
-  public List<FoldRegion> getGroupedRegions(FoldingGroup group) {
-    return List.of();
-  }
+    }
 
-  @Override
-  public void clearDocumentRangesModificationStatus() {
+    @Nonnull
+    @Override
+    public List<FoldRegion> getGroupedRegions(FoldingGroup group) {
+        return List.of();
+    }
 
-  }
+    @Override
+    public void clearDocumentRangesModificationStatus() {
 
-  @Override
-  public boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region) {
-    return false;
-  }
+    }
+
+    @Override
+    public boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region) {
+        return false;
+    }
 }

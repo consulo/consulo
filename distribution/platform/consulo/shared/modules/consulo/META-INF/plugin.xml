@@ -1967,7 +1967,7 @@
             <action id="XDebugger.CopyWatch" class="consulo.execution.debug.impl.internal.frame.action.XCopyWatchAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>
             <action id="XDebugger.RemoveWatch" class="consulo.execution.debug.impl.internal.frame.action.XRemoveWatchAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
+                    icon="consulo.platform.base.PlatformIconGroup@actions.cancel" use-shortcut-of="$Delete"/>
             <action id="XDebugger.RemoveAllWatches" class="consulo.execution.debug.impl.internal.frame.action.XRemoveAllWatchesAction"/>
             <action id="XDebugger.MuteBreakpoints" class="consulo.execution.debug.impl.internal.action.MuteBreakpointAction"/>
             <action id="XDebugger.ToggleSortValues" class="consulo.execution.debug.impl.internal.ui.tree.action.SortValuesToggleAction"

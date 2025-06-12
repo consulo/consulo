@@ -123,6 +123,8 @@ public interface FoldingModel {
    */
   void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaretFromCollapsedRegion);
 
+  void runBatchFoldingOperation(@Nonnull Runnable operation, boolean dontCollapseCaret, boolean moveCaret);
+
   void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation);
 
   void setFoldingEnabled(boolean isEnabled);

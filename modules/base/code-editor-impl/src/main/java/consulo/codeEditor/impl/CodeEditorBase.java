@@ -973,6 +973,11 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
     }
 
+    protected boolean hasBlockInlay(@Nonnull Point point) {
+        Inlay<?> inlay = myInlayModel.getElementAt(point);
+        return inlay != null && (inlay.getPlacement() == Inlay.Placement.ABOVE_LINE || inlay.getPlacement() == Inlay.Placement.BELOW_LINE);
+    }
+
     @Override
     public boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter) {
         return myHighlightingFilter == null || myHighlightingFilter.test(highlighter);
