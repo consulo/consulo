@@ -71,19 +71,78 @@ public record Rectangle2D(@Nonnull Point2D minPoint, @Nonnull Size2D size) imple
         return size.isEmpty();
     }
 
-    public boolean contains(int x, int y) {
-        return (width() | height()) >= 0 && minX() <= x && minY() <= y && x <= maxX() && y <= maxY();
-    }
-
+    /**
+     * Checks whether or not this {@code Rectangle2D} contains the specified {@code Point2D}.
+     *
+     * @param point the {@code Point2D} to test.
+     * @return  {@code true} if the specified {@code Point} is inside this {@code Rectangle2D};
+     *          {@code false} otherwise.
+     */
     public boolean contains(Point2D point) {
-        return contains(point.x(), point.y());
+        return (width() | height()) >= 0 && minX() <= point.x() && minY() <= point.y() && point.x() <= maxX() && point.y() <= maxY();
     }
 
-    public boolean contains(int x, int y, int width, int height) {
-        return (width() | height() | width | height) >= 0 && minX() <= x && minY() <= y && x + width <= maxX() && y + height <= maxY();
-    }
-
+    /**
+     * Checks whether or not this {@code Rectangle2D} entirely contains the specified {@code Rectangle2D}.
+     *
+     * @param rectangle the specified {@code Rectangle2D}.
+     * @return {@code true} if the {@code Rectangle2D} is contained entirely inside this {@code Rectangle2D};
+     *         {@code false} otherwise.
+     */
     public boolean contains(Rectangle2D rectangle) {
-        return contains(rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height());
+        return (width() | height() | rectangle.width() | rectangle.height()) >= 0
+            && minX() <= rectangle.minX() && minY() <= rectangle.minY()
+            && rectangle.maxX() <= maxX() && rectangle.maxY() <= maxY();
+    }
+
+    /**
+     * Determines whether or not this {@code Rectangle2D} and the specified {@code Rectangle2D} intersect.
+     * Two rectangles intersect if their intersection is nonempty.
+     *
+     * @param rectangle the specified {@code Rectangle2D}.
+     * @return {@code true} if the specified {@code Rectangle2D} and this {@code Rectangle2D} intersect;
+     *         {@code false} otherwise.
+     */
+    public boolean intersects(Rectangle2D rectangle) {
+        return !isEmpty() && !rectangle.isEmpty()
+            && minX() < rectangle.maxX() && rectangle.minX() < maxX()
+            && minY() < rectangle.maxY() && rectangle.minY() < maxY();
+    }
+
+    /**
+     * Computes the intersection of this {@code Rectangle2D} with the specified {@code Rectangle2D}.
+     * Returns a new {@code Rectangle2D} that represents the intersection of the two rectangles.
+     * If the two rectangles do not intersect, the result will be an empty rectangle.
+     *
+     * @param rectangle the specified {@code Rectangle2D}.
+     * @return the largest {@code Rectangle2D} contained in both the specified {@code Rectangle2D} and in this {@code Rectangle2D};
+     *         or if the rectangles do not intersect, an empty rectangle.
+     */
+    public Rectangle2D intersection(Rectangle2D rectangle) {
+        int x1 = Math.max(minX(), rectangle.minX());
+        int y1 = Math.max(minY(), rectangle.minY());
+        int x2 = Math.min(maxX(), rectangle.maxX());
+        int y2 = Math.min(maxY(), rectangle.maxY());
+        return new Rectangle2D(x1, y1, x2 - x1, y2 - y1);
+    }
+
+    public Rectangle2D translate(int dx, int dy) {
+        return new Rectangle2D(minPoint().translate(dx, dy), size());
+    }
+
+    public Rectangle2D translateToFit(Rectangle2D rectangle) {
+        int x = minX();
+        if (maxX() > rectangle.maxX()) {
+            x = rectangle.maxX() - width();
+        }
+        x = Math.max(x, rectangle.minX());
+
+        int y = minY();
+        if (maxY() > rectangle.maxY()) {
+            y = rectangle.maxY() - height();
+        }
+        y = Math.max(y, rectangle.minY());
+
+        return new Rectangle2D(new Point2D(x, y), size());
     }
 }

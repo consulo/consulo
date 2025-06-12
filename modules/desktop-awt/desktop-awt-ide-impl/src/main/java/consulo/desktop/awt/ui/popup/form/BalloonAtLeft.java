@@ -15,8 +15,11 @@
  */
 package consulo.desktop.awt.ui.popup.form;
 
-import consulo.desktop.awt.ui.popup.BalloonArrowDimensions;
+import consulo.desktop.awt.ui.ImmutableInsets;
+import consulo.desktop.awt.ui.popup.BalloonPointerSize;
 import consulo.desktop.awt.ui.popup.BalloonShaper;
+import consulo.ui.Point2D;
+import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBUIScale;
 
 import java.awt.*;
@@ -26,19 +29,20 @@ import java.awt.*;
  * @since 2025-06-06
  */
 public class BalloonAtLeft extends BalloonWithArrow {
-    public BalloonAtLeft(Rectangle bounds, int borderRadius, BalloonArrowDimensions arrowDimensions) {
+    public BalloonAtLeft(Rectangle2D bounds, int borderRadius, BalloonPointerSize pointerSize, Point2D pointerTarget) {
         super(
-            new Rectangle(bounds.x, bounds.y, bounds.width - arrowDimensions.getLength(), bounds.height),
+            ImmutableInsets.right(pointerSize.getLength()).stepIn(bounds),
             borderRadius,
-            arrowDimensions.copyWithNewTargetX(Math.max((int)bounds.getMaxX(), arrowDimensions.getTargetX()))
+            pointerSize,
+            pointerTarget.withX(Math.max(bounds.maxX(), pointerTarget.x()))
         );
     }
 
     @Override
     public Shape getShape() {
-        int halfPointerWidth = myArrowDimensions.getWidth() / 2;
-        return new BalloonShaper(myBodyBounds, myArrowDimensions.getTargetPoint(), myBorderRadius)
-            .lineTo((int)myBodyBounds.getMaxX() - JBUIScale.scale(1), myArrowDimensions.getTargetY() + halfPointerWidth)
+        int halfPointerWidth = myPointerSize.getWidth() / 2;
+        return new BalloonShaper(myBodyBounds, myPointerTarget, myBorderRadius)
+            .lineTo(myBodyBounds.maxX() - JBUIScale.scale(1), myPointerTarget.y() + halfPointerWidth)
             .toBottomCurve()
             .roundLeftDown()
             .toLeftCurve()
@@ -47,7 +51,7 @@ public class BalloonAtLeft extends BalloonWithArrow {
             .roundUpRight()
             .toRightCurve()
             .roundRightDown()
-            .vertLineTo(myArrowDimensions.getTargetY() - halfPointerWidth)
+            .vertLineTo(myPointerTarget.y() - halfPointerWidth)
             .lineToTargetPoint()
             .close();
     }

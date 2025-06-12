@@ -15,19 +15,20 @@
  */
 package consulo.desktop.awt.internal.notification;
 
-import consulo.application.AllIcons;
-import consulo.ide.impl.idea.notification.impl.NotificationsConfigurable;
-import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
+import consulo.desktop.awt.ui.ImmutableInsets;
 import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
+import consulo.ide.impl.idea.notification.impl.NotificationsConfigurable;
+import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBRectangle;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -64,24 +65,24 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
       mySettingButton = null;
     }
     else {
-      mySettingButton =
-              myBalloon.new ActionButton(AllIcons.Ide.Notification.Gear, AllIcons.Ide.Notification.GearHover, "Configure VcsBranchMappingChangedNotification", event -> myBalloon.runWithSmartFadeoutPause(new Runnable() {
-                @Override
-                @RequiredUIAccess
-                public void run() {
-                  ShowSettingsUtil.getInstance().showAndSelect(myLayoutData.project, NotificationsConfigurable.class, notificationsConfigurable -> {
-                    notificationsConfigurable.enableSearch(myDisplayGroupId).run();
-                  });
-                }
-              })) {
-                @Override
-                public void repaint() {
-                  super.repaint();
-                  if (myRepaintPanel != null) {
-                    myRepaintPanel.repaint();
-                  }
-                }
-              };
+      mySettingButton = myBalloon.new ActionButton(
+          PlatformIconGroup.ideNotificationGear(),
+          PlatformIconGroup.ideNotificationGearhover(),
+          "Configure VcsBranchMappingChangedNotification",
+          event -> myBalloon.runWithSmartFadeoutPause(() -> ShowSettingsUtil.getInstance().showAndSelect(
+              myLayoutData.project,
+              NotificationsConfigurable.class,
+              notificationsConfigurable -> notificationsConfigurable.enableSearch(myDisplayGroupId).run()
+          ))
+      ) {
+        @Override
+        public void repaint() {
+          super.repaint();
+          if (myRepaintPanel != null) {
+            myRepaintPanel.repaint();
+          }
+        }
+      };
       myActions.add(mySettingButton);
 
       if (myRepaintPanel != null) {
@@ -96,21 +97,23 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
       }
     }
 
-    myCloseButton = myBalloon.new ActionButton(AllIcons.Ide.Notification.Close, AllIcons.Ide.Notification.CloseHover, "Close VcsBranchMappingChangedNotification (Alt-Click close all notifications)", event -> {
-      final int modifiers = event.getModifiers();
-      //noinspection SSBasedInspection
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          if ((modifiers & InputEvent.ALT_MASK) != 0) {
-            myLayoutData.closeAll.run();
-          }
-          else {
-            myBalloon.hide();
-          }
+    myCloseButton = myBalloon.new ActionButton(
+        PlatformIconGroup.ideNotificationClose(),
+        PlatformIconGroup.ideNotificationClosehover(),
+        "Close VcsBranchMappingChangedNotification (Alt-Click close all notifications)",
+        event -> {
+          int modifiers = event.getModifiers();
+          //noinspection SSBasedInspection
+          SwingUtilities.invokeLater(() -> {
+            if ((modifiers & InputEvent.ALT_MASK) != 0) {
+              myLayoutData.closeAll.run();
+            }
+            else {
+              myBalloon.hide();
+            }
+          });
         }
-      });
-    }) {
+    ) {
       @Override
       protected void paintIcon(@Nonnull Graphics g, @Nonnull Image icon) {
         TargetAWT.to(icon).paintIcon(this, g, CloseHoverBounds.x, CloseHoverBounds.y);
@@ -122,11 +125,11 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
   }
 
   @Override
-  public void layout(@Nonnull Rectangle bounds) {
+  public void layout(@Nonnull Rectangle2D bounds) {
     Dimension closeSize = myCloseButton.getPreferredSize();
-    Insets borderInsets = myBalloon.getShadowBorderInsets();
-    int x = bounds.x + bounds.width - borderInsets.right - closeSize.width - myLayoutData.configuration.rightActionsOffset.width;
-    int y = bounds.y + borderInsets.top + myLayoutData.configuration.rightActionsOffset.height;
+    ImmutableInsets borderInsets = myBalloon.getShadowBorderImmutableInsets();
+    int x = bounds.maxX() - borderInsets.right() - closeSize.width - myLayoutData.configuration.rightActionsOffset.width;
+    int y = bounds.minY() + borderInsets.top() + myLayoutData.configuration.rightActionsOffset.height;
     myCloseButton.setBounds(x - CloseHoverBounds.x, y - CloseHoverBounds.y, closeSize.width + CloseHoverBounds.width, closeSize.height + CloseHoverBounds.height);
 
     if (mySettingButton != null) {

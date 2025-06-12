@@ -53,26 +53,26 @@ public class ImmutableInsetsTest {
     }
 
     @Test
-    void testAddToSize() {
-        assertThat(new ImmutableInsets(1, 2, 3, 4).addTo(new Size2D(10, 20)))
+    void testStepOutSize() {
+        assertThat(new ImmutableInsets(1, 2, 3, 4).stepOut(new Size2D(10, 20)))
             .isEqualTo(new Size2D(16, 24));
     }
 
     @Test
-    void testRemoveFromSize() {
-        assertThat(new ImmutableInsets(1, 2, 3, 4).removeFrom(new Size2D(10, 20)))
+    void testStepInSize() {
+        assertThat(new ImmutableInsets(1, 2, 3, 4).stepIn(new Size2D(10, 20)))
             .isEqualTo(new Size2D(4, 16));
     }
 
     @Test
-    void testAddToRect() {
-        assertThat(new ImmutableInsets(1, 2, 3, 4).addTo(new Rectangle2D(10, 20, 30, 40)))
+    void testStepOutRect() {
+        assertThat(new ImmutableInsets(1, 2, 3, 4).stepOut(new Rectangle2D(10, 20, 30, 40)))
             .isEqualTo(new Rectangle2D(6, 19, 36, 44));
     }
 
     @Test
-    void testRemoveFromRect() {
-        assertThat(new ImmutableInsets(1, 2, 3, 4).removeFrom(new Rectangle2D(10, 20, 30, 40)))
+    void testStepInRect() {
+        assertThat(new ImmutableInsets(1, 2, 3, 4).stepIn(new Rectangle2D(10, 20, 30, 40)))
             .isEqualTo(new Rectangle2D(14, 21, 24, 36));
     }
 }

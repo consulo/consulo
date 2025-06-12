@@ -37,7 +37,7 @@ public class Point2DTest {
     }
 
     @Test
-    void testAdd() {
-        assertThat(new Point2D(10, 20).add(1, 2)).isEqualTo(new Point2D(11, 22));
+    void testTranslate() {
+        assertThat(new Point2D(10, 20).translate(1, 2)).isEqualTo(new Point2D(11, 22));
     }
 }
