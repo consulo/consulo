@@ -39,6 +39,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.IntPair;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -236,14 +237,14 @@ public final class EditorPainter implements TextDrawingCallback {
         private boolean paintPlaceholderText() {
             CharSequence hintText = myEditor.getPlaceholder();
             EditorComponentImpl editorComponent = myEditor.getContentComponent();
-            if (myDocument.getTextLength() > 0 || hintText == null || hintText.isEmpty() ||
+            if (myDocument.getTextLength() > 0 || StringUtil.isEmpty(hintText) ||
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == editorComponent &&
                     !myEditor.getShowPlaceholderWhenFocused()) {
                 return false;
             }
 
             EditorFontType fontType = EditorFontType.PLAIN;
-            ColorValue color = myEditor.getColorsScheme().getDefaultForeground(); // FIXME
+            Color color = UIManager.getColor("TextField.placeholderForeground");
             TextAttributes attributes = myEditor.getPlaceholderAttributes();
             if (attributes != null) {
                 int type = attributes.getFontType();
@@ -252,9 +253,9 @@ public final class EditorPainter implements TextDrawingCallback {
                 else if (type == (Font.ITALIC | Font.BOLD)) fontType = EditorFontType.BOLD_ITALIC;
 
                 ColorValue attColor = attributes.getForegroundColor();
-                if (attColor != null) color = attColor;
+                if (attColor != null) color = TargetAWT.to(attColor);
             }
-            myGraphics.setColor(TargetAWT.to(color));
+            myGraphics.setColor(color);
             String hintString = hintText.toString();
             myGraphics.setFont(UIUtil.getFontWithFallbackIfNeeded(myEditor.getColorsScheme().getFont(fontType), hintString));
             String toDisplay = SwingUtilities.layoutCompoundLabel(myGraphics.getFontMetrics(), hintString, null, 0, 0, 0, 0,
