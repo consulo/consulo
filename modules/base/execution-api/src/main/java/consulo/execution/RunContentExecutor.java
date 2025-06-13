@@ -1,6 +1,5 @@
 package consulo.execution;
 
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -14,9 +13,11 @@ import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.process.ProcessHandler;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -104,7 +105,7 @@ public class RunContentExecutor implements Disposable {
     private ConsoleView createConsole(@Nonnull Project project) {
         TextConsoleBuilder consoleBuilder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
         consoleBuilder.filters(myFilterList);
-        final ConsoleView console = consoleBuilder.getConsole();
+        ConsoleView console = consoleBuilder.getConsole();
 
         if (myHelpId != null) {
             console.setHelpId(myHelpId);
@@ -112,7 +113,7 @@ public class RunContentExecutor implements Disposable {
         Executor executor = DefaultRunExecutor.getRunExecutorInstance();
         DefaultActionGroup actions = new DefaultActionGroup();
 
-        final JComponent consolePanel = createConsolePanel(console, actions);
+        JComponent consolePanel = createConsolePanel(console, actions);
         RunContentDescriptor descriptor = new RunContentDescriptor(console, myProcess, consolePanel, myTitle, myIcon);
 
         Disposer.register(descriptor, this);
@@ -138,7 +139,7 @@ public class RunContentExecutor implements Disposable {
         ConsoleView view = (myUserProvidedConsole != null ? myUserProvidedConsole : createConsole(myProject));
         view.attachToProcess(myProcess);
         if (myAfterCompletion != null) {
-            myProcess.addProcessListener(new ProcessAdapter() {
+            myProcess.addProcessListener(new ProcessListener() {
                 @Override
                 public void processTerminated(ProcessEvent event) {
                     SwingUtilities.invokeLater(myAfterCompletion);
@@ -149,7 +150,7 @@ public class RunContentExecutor implements Disposable {
     }
 
     public void activateToolWindow() {
-        ApplicationManager.getApplication()
+        myProject.getApplication()
             .invokeLater(() -> ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.RUN).activate(null));
     }
 
@@ -182,13 +183,13 @@ public class RunContentExecutor implements Disposable {
 
     private class RerunAction extends AnAction {
         public RerunAction(JComponent consolePanel) {
-            super("Rerun", "Rerun", PlatformIconGroup.actionsRestart());
+            super(CommonLocalize.actionRerun(), CommonLocalize.actionRerun(), PlatformIconGroup.actionsRestart());
             registerCustomShortcutSet(CommonShortcuts.getRerun(), consolePanel);
         }
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             myRerunAction.run();
         }
 
@@ -207,12 +208,12 @@ public class RunContentExecutor implements Disposable {
 
     private class StopAction extends AnAction implements DumbAware {
         public StopAction() {
-            super("Stop", "Stop", PlatformIconGroup.actionsSuspend());
+            super(ActionLocalize.actionStopText(), ActionLocalize.actionStopText(), PlatformIconGroup.actionsSuspend());
         }
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             myStopAction.run();
         }
 

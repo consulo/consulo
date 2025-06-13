@@ -2498,6 +2498,8 @@ action.XDebugger.ToggleSortValues.text:
     text: Sort Values Alphabetically
 action.XDebugger.UnmuteOnStop.text:
     text: Unmute Breakpoints on Session Finish
+action.XDebugger.UnmuteOnStop.description:
+    text: Undo mute mreakpoints when debug session ends
 action.editRunConfigurations.description:
     text: Open edit Run/Debug configurations dialog
 action.editRunConfigurations.text:
@@ -2859,6 +2861,8 @@ group.WeighingNewGroup.text:
 group.WindowMenu.text:
     text: _Window
 group.XDebugger.settings.text:
+    text: Settings
+group.XDebugger.settings.description:
     text: Settings
 group.XmlGenerateToolsGroup.text:
     text: XML Generate Actions
