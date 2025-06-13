@@ -1250,9 +1250,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             Point2D location = balloon.myShowPointer
                 ? getLocation(balloon.myTargetPoint, contentSize, getDistance(balloon, contentSize))
                 : balloon.myTargetPoint.translate(-contentSize.width() / 2, -contentSize.height() / 2);
-            return shadowInsets.stepOut(new Rectangle2D(location, contentSize))
+            bounds = new Rectangle2D(location, contentSize)
                 .translateToFit(container)
                 .intersection(container);
+            return shadowInsets.stepOut(bounds);
         }
 
         private int getDistance(@Nonnull BalloonImpl balloon, @Nonnull Size2D size) {
