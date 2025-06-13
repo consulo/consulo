@@ -37,60 +37,60 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public class FakeRerunAction extends AnAction implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    ExecutionEnvironment environment = getEnvironment(event);
-    if (environment != null) {
-      presentation.setTextValue(ExecutionLocalize.rerunConfigurationActionName(environment.getRunProfile().getName()));
-      presentation.setIcon(
-        ExecutionManagerImpl.isProcessRunning(getDescriptor(event)) ? AllIcons.Actions.Restart : environment.getExecutor().getIcon()
-      );
-      presentation.setEnabled(isEnabled(event));
-      return;
-    }
-
-    presentation.setEnabled(false);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent event) {
-    ExecutionEnvironment environment = getEnvironment(event);
-    if (environment != null) {
-      ExecutionUtil.restart(environment);
-    }
-  }
-
-  @Nullable
-  protected RunContentDescriptor getDescriptor(AnActionEvent event) {
-    return event.getData(RunContentDescriptor.KEY);
-  }
-
-  @Nullable
-  protected ExecutionEnvironment getEnvironment(@Nonnull AnActionEvent event) {
-    ExecutionEnvironment environment = event.getData(ExecutionEnvironment.KEY);
-    if (environment == null) {
-      Project project = event.getData(Project.KEY);
-      RunContentDescriptor contentDescriptor = project == null ? null
-        : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
-      if (contentDescriptor != null) {
-        JComponent component = contentDescriptor.getComponent();
-        if (component != null) {
-          environment = DataManager.getInstance().getDataContext(component).getData(ExecutionEnvironment.KEY);
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        ExecutionEnvironment environment = getEnvironment(event);
+        if (environment != null) {
+            presentation.setTextValue(ExecutionLocalize.rerunConfigurationActionName(environment.getRunProfile().getName()));
+            presentation.setIcon(
+                ExecutionManagerImpl.isProcessRunning(getDescriptor(event)) ? AllIcons.Actions.Restart : environment.getExecutor().getIcon()
+            );
+            presentation.setEnabled(isEnabled(event));
+            return;
         }
-      }
-    }
-    return environment;
-  }
 
-  protected boolean isEnabled(AnActionEvent event) {
-    RunContentDescriptor descriptor = getDescriptor(event);
-    ProcessHandler processHandler = descriptor == null ? null : descriptor.getProcessHandler();
-    ExecutionEnvironment environment = getEnvironment(event);
-    return environment != null &&
-           !ExecutorRegistry.getInstance().isStarting(environment) &&
-           !(processHandler != null && processHandler.isProcessTerminating());
-  }
+        presentation.setEnabled(false);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent event) {
+        ExecutionEnvironment environment = getEnvironment(event);
+        if (environment != null) {
+            ExecutionUtil.restart(environment);
+        }
+    }
+
+    @Nullable
+    protected RunContentDescriptor getDescriptor(AnActionEvent event) {
+        return event.getData(RunContentDescriptor.KEY);
+    }
+
+    @Nullable
+    protected ExecutionEnvironment getEnvironment(@Nonnull AnActionEvent event) {
+        ExecutionEnvironment environment = event.getData(ExecutionEnvironment.KEY);
+        if (environment == null) {
+            Project project = event.getData(Project.KEY);
+            RunContentDescriptor contentDescriptor = project == null ? null
+                : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
+            if (contentDescriptor != null) {
+                JComponent component = contentDescriptor.getComponent();
+                if (component != null) {
+                    environment = DataManager.getInstance().getDataContext(component).getData(ExecutionEnvironment.KEY);
+                }
+            }
+        }
+        return environment;
+    }
+
+    protected boolean isEnabled(AnActionEvent event) {
+        RunContentDescriptor descriptor = getDescriptor(event);
+        ProcessHandler processHandler = descriptor == null ? null : descriptor.getProcessHandler();
+        ExecutionEnvironment environment = getEnvironment(event);
+        return environment != null
+            && !ExecutorRegistry.getInstance().isStarting(environment)
+            && !(processHandler != null && processHandler.isProcessTerminating());
+    }
 }
