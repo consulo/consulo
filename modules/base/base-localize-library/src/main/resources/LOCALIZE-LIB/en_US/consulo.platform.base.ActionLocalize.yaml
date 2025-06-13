@@ -2480,6 +2480,8 @@ action.XDebugger.JumpToTypeSource.text:
     text: Jump To Type Source
 action.XDebugger.MuteBreakpoints.text:
     text: Mute Breakpoints
+action.XDebugger.MuteBreakpoints.description:
+    text: Ignore all breakpoints
 action.XDebugger.NewWatch.text:
     text: New Watch…
 action.XDebugger.RemoveAllWatches.text:

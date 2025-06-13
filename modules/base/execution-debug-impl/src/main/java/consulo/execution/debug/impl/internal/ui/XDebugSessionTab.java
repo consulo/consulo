@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.ui;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionManager;
@@ -43,6 +43,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.project.ui.util.ProjectUIUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
@@ -83,7 +84,12 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     };
 
     @Nonnull
-    public static XDebugSessionTab create(@Nonnull XDebugSessionImpl session, @Nullable Image icon, @Nullable ExecutionEnvironment environment, @Nullable RunContentDescriptor contentToReuse) {
+    public static XDebugSessionTab create(
+        @Nonnull XDebugSessionImpl session,
+        @Nullable Image icon,
+        @Nullable ExecutionEnvironment environment,
+        @Nullable RunContentDescriptor contentToReuse
+    ) {
         if (contentToReuse != null && SystemProperties.getBooleanProperty("xdebugger.reuse.session.tab", false)) {
             JComponent component = contentToReuse.getComponent();
             if (component != null) {
@@ -119,15 +125,19 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         focus.add(ActionManager.getInstance().getAction(XDebuggerActions.FOCUS_ON_BREAKPOINT));
         myUi.getOptions().setAdditionalFocusActions(focus);
 
-        myUi.addListener(new ContentManagerListener() {
-            @Override
-            public void selectionChanged(ContentManagerEvent event) {
-                Content content = event.getContent();
-                if (mySession != null && content.isSelected() && getWatchesContentId().equals(ViewImpl.ID.get(content))) {
-                    myRebuildWatchesRunnable.run();
+        myUi.addListener(
+            new ContentManagerListener() {
+                @Override
+                @RequiredUIAccess
+                public void selectionChanged(ContentManagerEvent event) {
+                    Content content = event.getContent();
+                    if (mySession != null && content.isSelected() && getWatchesContentId().equals(ViewImpl.ID.get(content))) {
+                        myRebuildWatchesRunnable.run();
+                    }
                 }
-            }
-        }, myRunContentDescriptor);
+            },
+            myRunContentDescriptor
+        );
 
         rebuildViews();
     }
@@ -151,8 +161,15 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
             restartActions = restartActionsList.toArray(new AnAction[restartActionsList.size()]);
         }
 
-        myRunContentDescriptor =
-            new RunContentDescriptor(myConsole, session.getDebugProcess().getProcessHandler(), myUi.getComponent(), session.getSessionName(), icon, myRebuildWatchesRunnable, restartActions);
+        myRunContentDescriptor = new RunContentDescriptor(
+            myConsole,
+            session.getDebugProcess().getProcessHandler(),
+            myUi.getComponent(),
+            session.getSessionName(),
+            icon,
+            myRebuildWatchesRunnable,
+            restartActions
+        );
         Disposer.register(myRunContentDescriptor, this);
         Disposer.register(myProject, myRunContentDescriptor);
     }
@@ -217,13 +234,16 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
 
     public void rebuildViews() {
-        AppUIUtil.invokeLaterIfProjectAlive(myProject, () -> {
-            if (mySession != null) {
-                for (XDebugView view : myViews.values()) {
-                    view.processSessionEvent(XDebugView.SessionEvent.SETTINGS_CHANGED, mySession);
+        AppUIUtil.invokeLaterIfProjectAlive(
+            myProject,
+            () -> {
+                if (mySession != null) {
+                    for (XDebugView view : myViews.values()) {
+                        view.processSessionEvent(XDebugView.SessionEvent.SETTINGS_CHANGED, mySession);
+                    }
                 }
             }
-        });
+        );
     }
 
     public XWatchesView getWatchesView() {
@@ -263,7 +283,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         leftToolbar.addSeparator();
 
         leftToolbar.add(myUi.getOptions().getLayoutActions());
-        final AnAction[] commonSettings = myUi.getOptions().getSettingsActionsList();
+        AnAction[] commonSettings = myUi.getOptions().getSettingsActionsList();
         DefaultActionGroup settings = new DefaultActionGroup(ActionLocalize.groupXdebuggerSettingsText(), true);
         settings.getTemplatePresentation().setIcon(myUi.getOptions().getSettingsActions().getTemplatePresentation().getIcon());
         settings.addAll(commonSettings);
@@ -324,8 +344,8 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     }
 
-    public void toFront(boolean focus, @Nullable final Runnable onShowCallback) {
-        ApplicationManager.getApplication().invokeLater(() -> {
+    public void toFront(boolean focus, @Nullable Runnable onShowCallback) {
+        myProject.getApplication().invokeLater(() -> {
             if (myRunContentDescriptor != null) {
                 RunContentManager manager = ExecutionManager.getInstance(myProject).getContentManager();
                 ToolWindow toolWindow = manager.getToolWindowByDescriptor(myRunContentDescriptor);
@@ -344,7 +364,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         });
 
         if (focus) {
-            ApplicationManager.getApplication().invokeLater(() -> {
+            myProject.getApplication().invokeLater(() -> {
                 boolean focusWnd = XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isMayBringFrameToFrontOnBreakpoint();
                 ProjectUIUtil.focusProjectWindow(myProject, focusWnd);
                 if (!focusWnd) {
