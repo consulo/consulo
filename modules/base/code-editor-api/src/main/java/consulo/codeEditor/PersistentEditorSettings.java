@@ -252,18 +252,6 @@ public interface PersistentEditorSettings {
 
     void setBidiTextDirection(BidiTextDirection direction);
 
-    boolean isShowParameterNameHints();
-
-    void setShowParameterNameHints(boolean value);
-
-    int getMinParamNameLengthToShow();
-
-    void setMinParamNameLengthToShow(int value);
-
-    int getMinArgsToShow();
-
-    void setMinArgsToShow(int minParamsToShow);
-
     boolean isKeepTrailingSpacesOnCaretLine();
 
     void setKeepTrailingSpacesOnCaretLine(boolean keep);

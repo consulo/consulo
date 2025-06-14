@@ -101,10 +101,6 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
 
         public BidiTextDirection BIDI_TEXT_DIRECTION = BidiTextDirection.CONTENT_BASED;
 
-        public boolean SHOW_PARAMETER_NAME_HINTS = true;
-        public int MIN_PARAM_NAME_LENGTH_TO_SHOW = 3;
-        public int MIN_PARAMS_TO_SHOW = 2;
-
         public boolean SHOW_STICKY_LINES = true;
         public int STICKY_LINES_LIMIT = 5;
 
@@ -494,8 +490,8 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @Override
     @StripTrailingSpaces
     public String getStripTrailingSpaces() {
-        return myOptions.STRIP_TRAILING_SPACES;
-    } // TODO: move to CodeEditorManager or something else
+        return myOptions.STRIP_TRAILING_SPACES; // TODO: move to CodeEditorManager or something else
+    }
 
     @Override
     public void setStripTrailingSpaces(@StripTrailingSpaces String stripTrailingSpaces) {
@@ -725,36 +721,6 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @Override
     public void setBidiTextDirection(BidiTextDirection direction) {
         myOptions.BIDI_TEXT_DIRECTION = direction;
-    }
-
-    @Override
-    public boolean isShowParameterNameHints() {
-        return myOptions.SHOW_PARAMETER_NAME_HINTS;
-    }
-
-    @Override
-    public void setShowParameterNameHints(boolean value) {
-        myOptions.SHOW_PARAMETER_NAME_HINTS = value;
-    }
-
-    @Override
-    public int getMinParamNameLengthToShow() {
-        return myOptions.MIN_PARAM_NAME_LENGTH_TO_SHOW;
-    }
-
-    @Override
-    public void setMinParamNameLengthToShow(int value) {
-        myOptions.MIN_PARAM_NAME_LENGTH_TO_SHOW = value;
-    }
-
-    @Override
-    public int getMinArgsToShow() {
-        return myOptions.MIN_PARAMS_TO_SHOW;
-    }
-
-    @Override
-    public void setMinArgsToShow(int minParamsToShow) {
-        myOptions.MIN_PARAMS_TO_SHOW = minParamsToShow;
     }
 
     @Override

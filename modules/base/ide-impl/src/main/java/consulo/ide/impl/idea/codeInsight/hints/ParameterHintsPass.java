@@ -103,6 +103,7 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
         if (provider == null || !provider.canShowHintsWhenDisabled() && !isEnabled(language) || DiffImplUtil.isDiffEditor(myEditor)) {
             return;
         }
+
         if (!HighlightingLevelManager.getInstance(myFile.getProject()).shouldHighlight(myFile)) {
             return;
         }

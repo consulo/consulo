@@ -126,7 +126,6 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
 
     /**
      * Whether provider should be queried for hints ({@link #getParameterHints(PsiElement)}) even if showing hints is disabled globally.
-     * ({@link com.intellij.openapi.editor.ex.EditorSettingsExternalizable#isShowParameterNameHints()}).
      */
     default boolean canShowHintsWhenDisabled() {
         return false;

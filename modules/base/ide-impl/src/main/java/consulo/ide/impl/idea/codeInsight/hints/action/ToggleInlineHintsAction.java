@@ -3,10 +3,14 @@ package consulo.ide.impl.idea.codeInsight.hints.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
+import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.PersistentEditorSettings;
+import consulo.ide.impl.idea.codeInsight.hints.ParameterHintsPassFactory;
+import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.impl.internal.inlay.param.HintUtils;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
+import consulo.language.editor.internal.ParameterNameHintsSettings;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -47,8 +51,10 @@ public class ToggleInlineHintsAction extends DumbAwareAction {
             presentation.setEnabledAndVisible(false);
             return;
         }
-        
-        boolean isHintsShownNow = PersistentEditorSettings.getInstance().isShowParameterNameHints();
+
+        Language language = file.getLanguage();
+
+        boolean isHintsShownNow = HintUtils.isParameterHintsEnabledForLanguage(language);
         presentation.setTextValue(isHintsShownNow ? CodeInsightLocalize.inlayHintsDisableActionText() : CodeInsightLocalize.inlayHintsEnableActionText());
         presentation.setEnabledAndVisible(true);
     }
@@ -61,12 +67,20 @@ public class ToggleInlineHintsAction extends DumbAwareAction {
         if (file == null || project == null) {
             return;
         }
-        PersistentEditorSettings settings = PersistentEditorSettings.getInstance();
-        boolean isHintsShownNow = settings.isShowParameterNameHints();
 
-        settings.setShowParameterNameHints(!isHintsShownNow);
+        Language language = file.getLanguage();
+
+        boolean isHintsShownNow = HintUtils.isParameterHintsEnabledForLanguage(language);
+
+        ParameterNameHintsSettings.getInstance().setEnabledForLanguage(!isHintsShownNow, HintUtils.getLanguageForSettingKey(language));
+
+        Editor editor = e.getData(Editor.KEY);
+        if (editor != null) {
+            ParameterHintsPassFactory.forceHintsUpdateOnNextPass(editor);
+        }
 
         EditorFactory.getInstance().refreshAllEditors();
+
         DaemonCodeAnalyzer.getInstance(project).restart();
     }
 }
