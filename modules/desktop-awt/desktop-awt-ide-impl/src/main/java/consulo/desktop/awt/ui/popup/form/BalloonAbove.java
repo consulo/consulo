@@ -15,8 +15,11 @@
  */
 package consulo.desktop.awt.ui.popup.form;
 
-import consulo.desktop.awt.ui.popup.BalloonArrowDimensions;
+import consulo.desktop.awt.ui.ImmutableInsets;
+import consulo.desktop.awt.ui.popup.BalloonPointerSize;
 import consulo.desktop.awt.ui.popup.BalloonShaper;
+import consulo.ui.Point2D;
+import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBUIScale;
 
 import java.awt.*;
@@ -26,19 +29,20 @@ import java.awt.*;
  * @since 2025-06-06
  */
 public class BalloonAbove extends BalloonWithArrow {
-    public BalloonAbove(Rectangle bounds, int borderRadius, BalloonArrowDimensions arrowDimensions) {
+    public BalloonAbove(Rectangle2D bounds, int borderRadius, BalloonPointerSize pointerSize, Point2D pointerTarget) {
         super(
-            new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height - arrowDimensions.getLength()),
+            ImmutableInsets.bottom(pointerSize.getLength()).stepIn(bounds),
             borderRadius,
-            arrowDimensions.copyWithNewTargetY(Math.max((int)bounds.getMaxY(), arrowDimensions.getTargetY()))
+            pointerSize,
+            pointerTarget.withY(Math.max(bounds.maxY(), pointerTarget.y()))
         );
     }
 
     @Override
     public Shape getShape() {
-        int halfPointerWidth = myArrowDimensions.getWidth() / 2;
-        return new BalloonShaper(myBodyBounds, myArrowDimensions.getTargetPoint(), myBorderRadius)
-            .lineTo(myArrowDimensions.getTargetX() - halfPointerWidth, (int)myBodyBounds.getMaxY() - JBUIScale.scale(1))
+        int halfPointerWidth = myPointerSize.getWidth() / 2;
+        return new BalloonShaper(myBodyBounds, myPointerTarget, myBorderRadius)
+            .lineTo(myPointerTarget.x() - halfPointerWidth, myBodyBounds.maxY() - JBUIScale.scale(1))
             .toLeftCurve()
             .roundLeftUp()
             .toTopCurve()
@@ -47,7 +51,7 @@ public class BalloonAbove extends BalloonWithArrow {
             .roundRightDown()
             .toBottomCurve()
             .roundLeftDown()
-            .horLineTo(myArrowDimensions.getTargetX() + halfPointerWidth)
+            .horLineTo(myPointerTarget.x() + halfPointerWidth)
             .lineToTargetPoint()
             .close();
     }

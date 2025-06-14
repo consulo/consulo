@@ -15,28 +15,29 @@
  */
 package consulo.ui;
 
-import java.io.Serializable;
+import org.assertj.core.api.AbstractAssert;
 
 /**
  * @author UNV
- * @since 2025-06-09
+ * @since 2025-06-13
  */
-public record Point2D(int x, int y) implements Serializable {
-    private static final long serialVersionUID = 185939695905234997L;
-
-    public Point2D() {
-        this(0, 0);
+public class Rectangle2DAssert extends AbstractAssert<Rectangle2DAssert, Rectangle2D> {
+    private Rectangle2DAssert(Rectangle2D rectangle2D) {
+        super(rectangle2D, Rectangle2DAssert.class);
     }
 
-    public Point2D translate(int dx, int dy) {
-        return new Point2D(x + dx, y + dy);
+    public void isEmpty() {
+        isNotNull();
+        if (!actual.isEmpty()) {
+            failWithMessage("Expected %s to be empty", actual);
+        }
     }
 
-    public Point2D withX(int x) {
-        return new Point2D(x, y());
+    public Rectangle2DAssert is(int x, int y, int width, int height) {
+        return isEqualTo(new Rectangle2D(x, y, width, height));
     }
 
-    public Point2D withY(int y) {
-        return new Point2D(x(), y);
+    public static Rectangle2DAssert assertThat(Rectangle2D rect) {
+        return new Rectangle2DAssert(rect);
     }
 }

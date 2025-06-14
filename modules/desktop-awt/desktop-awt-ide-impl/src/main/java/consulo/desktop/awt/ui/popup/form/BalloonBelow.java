@@ -15,8 +15,11 @@
  */
 package consulo.desktop.awt.ui.popup.form;
 
-import consulo.desktop.awt.ui.popup.BalloonArrowDimensions;
+import consulo.desktop.awt.ui.ImmutableInsets;
+import consulo.desktop.awt.ui.popup.BalloonPointerSize;
 import consulo.desktop.awt.ui.popup.BalloonShaper;
+import consulo.ui.Point2D;
+import consulo.ui.Rectangle2D;
 
 import java.awt.*;
 
@@ -25,24 +28,20 @@ import java.awt.*;
  * @since 2025-06-06
  */
 public class BalloonBelow extends BalloonWithArrow {
-    public BalloonBelow(Rectangle bounds, int borderRadius, BalloonArrowDimensions arrowDimensions) {
+    public BalloonBelow(Rectangle2D bounds, int borderRadius, BalloonPointerSize pointerSize, Point2D pointerTarget) {
         super(
-            new Rectangle(
-                bounds.x,
-                bounds.y + arrowDimensions.getLength(),
-                bounds.width,
-                bounds.height - arrowDimensions.getLength()
-            ),
+            ImmutableInsets.top(pointerSize.getLength()).stepIn(bounds),
             borderRadius,
-            arrowDimensions.copyWithNewTargetY(Math.min((int)bounds.getMinY(), arrowDimensions.getTargetY()))
+            pointerSize,
+            pointerTarget.withY(Math.min(bounds.minY(), pointerTarget.y()))
         );
     }
 
     @Override
     public Shape getShape() {
-        int halfPointerWidth = myArrowDimensions.getWidth() / 2;
-        return new BalloonShaper(myBodyBounds, myArrowDimensions.getTargetPoint(), myBorderRadius)
-            .lineTo(myArrowDimensions.getTargetX() + halfPointerWidth, (int)myBodyBounds.getMinY())
+        int halfPointerWidth = myPointerSize.getWidth() / 2;
+        return new BalloonShaper(myBodyBounds, myPointerTarget, myBorderRadius)
+            .lineTo(myPointerTarget.x() + halfPointerWidth, myBodyBounds.minY())
             .toRightCurve()
             .roundRightDown()
             .toBottomCurve()
@@ -51,7 +50,7 @@ public class BalloonBelow extends BalloonWithArrow {
             .roundLeftUp()
             .toTopCurve()
             .roundUpRight()
-            .horLineTo(myArrowDimensions.getTargetX() - halfPointerWidth)
+            .horLineTo(myPointerTarget.x() - halfPointerWidth)
             .lineToTargetPoint()
             .close();
     }
