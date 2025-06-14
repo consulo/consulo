@@ -48,7 +48,7 @@ public class IconInlayPresentationEntry extends InlayPresentationEntry {
             InlayActionData actionData = clickArea.getActionData();
             if (controlDown) {
                 ApplicationManager.getApplication()
-                    .getService(DeclarativeInlayActionService.class)
+                    .getInstance(DeclarativeInlayActionService.class)
                     .invokeActionHandler(actionData, e);
             }
         }

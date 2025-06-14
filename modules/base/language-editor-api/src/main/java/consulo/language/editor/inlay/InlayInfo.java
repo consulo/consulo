@@ -16,50 +16,90 @@
  */
 package consulo.language.editor.inlay;
 
-import jakarta.annotation.Nonnull;
-
-import java.util.Objects;
-
 /**
- * from kotlin
+ * Represents a single inlay hint instance.
  */
 public class InlayInfo {
-  private final String myText;
-  private final int myOffset;
+    private final String text;
+    private final int offset;
+    private final boolean isShowOnlyIfExistedBefore;
+    private final boolean isFilterByExcludeList;
+    private final boolean relatesToPrecedingText;
+    private final HintWidthAdjustment widthAdjustment;
 
-  public InlayInfo(@Nonnull String text, int offset) {
-    myText = text;
-    myOffset = offset;
-  }
+    public InlayInfo(String text,
+                     int offset,
+                     boolean isShowOnlyIfExistedBefore,
+                     boolean isFilterByExcludeList,
+                     boolean relatesToPrecedingText,
+                     HintWidthAdjustment widthAdjustment) {
+        this.text = text;
+        this.offset = offset;
+        this.isShowOnlyIfExistedBefore = isShowOnlyIfExistedBefore;
+        this.isFilterByExcludeList = isFilterByExcludeList;
+        this.relatesToPrecedingText = relatesToPrecedingText;
+        this.widthAdjustment = widthAdjustment;
+    }
 
-  @Nonnull
-  public String getText() {
-    return myText;
-  }
+    public InlayInfo(String text,
+                     int offset,
+                     boolean isShowOnlyIfExistedBefore,
+                     boolean isFilterByExcludeList,
+                     boolean relatesToPrecedingText) {
+        this(text, offset, isShowOnlyIfExistedBefore, isFilterByExcludeList, relatesToPrecedingText, null);
+    }
 
-  public int getOffset() {
-    return myOffset;
-  }
+    public InlayInfo(String text, int offset, boolean isShowOnlyIfExistedBefore) {
+        this(text, offset, isShowOnlyIfExistedBefore, true, false, null);
+    }
 
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("InlayInfo{");
-    sb.append("myText='").append(myText).append('\'');
-    sb.append(", myOffset=").append(myOffset);
-    sb.append('}');
-    return sb.toString();
-  }
+    public InlayInfo(String text, int offset) {
+        this(text, offset, false, true, false, null);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof InlayInfo)) return false;
-    InlayInfo inlayInfo = (InlayInfo)o;
-    return myOffset == inlayInfo.myOffset && Objects.equals(myText, inlayInfo.myText);
-  }
+    public String getText() {
+        return text;
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myText, myOffset);
-  }
+    public int getOffset() {
+        return offset;
+    }
+
+    public boolean isShowOnlyIfExistedBefore() {
+        return isShowOnlyIfExistedBefore;
+    }
+
+    public boolean isFilterByExcludeList() {
+        return isFilterByExcludeList;
+    }
+
+    public boolean isRelatesToPrecedingText() {
+        return relatesToPrecedingText;
+    }
+
+    public HintWidthAdjustment getWidthAdjustment() {
+        return widthAdjustment;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        InlayInfo other = (InlayInfo) obj;
+        if (offset != other.offset) {
+            return false;
+        }
+        return text.equals(other.text);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = text.hashCode();
+        result = 31 * result + offset;
+        return result;
+    }
 }

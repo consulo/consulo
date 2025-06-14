@@ -252,6 +252,34 @@ public interface InlayModel {
     void setConsiderCaretPositionOnDocumentUpdates(boolean enabled);
 
     /**
+     * Allows to perform a group of inlay operations (adding, disposing, updating) in batch mode.
+     * For a large number of operations, this decreases the total time taken by the operations.
+     * <p>
+     * Batch mode introduces additional overhead though (roughly proportional to the file
+     * size), so for a small number of operations in a big file,
+     * using it will result in larger total execution time.
+     * <p>
+     * Using batch mode can also change certain outcomes of the applied changes.
+     * In particular, the resulting caret's visual position might be different in batch
+     * mode (due to simplified update logic) if inlays are added or removed at caret offset.
+     * <p>
+     * The number of changes that justifies using batch mode can be determined empirically,
+     * but usually it's around hundred(s).
+     * <p>
+     * The executed code should not perform document- or editor-related operations
+     * other than those operating on inlays. In particular, modifying the document,
+     * querying or updating the folding, soft-wrap or caret state,
+     * as well as performing editor coordinate transformations
+     * (e.g., visual to logical position conversions)
+     * might lead to incorrect results or throw an exception.
+     *
+     * @param batchMode whether to enable batch mode for executed inlay operations
+     */
+    default void execute(boolean batchMode, @Nonnull Runnable operation) {
+        operation.run();
+    }
+
+    /**
      * Tells whether the current code is executing as part of a batch inlay update operation.
      *
      * @see #execute(boolean, Runnable)

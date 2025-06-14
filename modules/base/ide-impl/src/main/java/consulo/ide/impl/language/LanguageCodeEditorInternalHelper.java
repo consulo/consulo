@@ -16,7 +16,6 @@
 package consulo.ide.impl.language;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.DocumentMarkupModelImpl;
@@ -32,7 +31,6 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
@@ -45,13 +43,11 @@ import consulo.language.editor.action.WordBoundaryFilter;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
-import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -181,18 +177,6 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     @Override
     public boolean isShowMethodSeparators() {
         return myDaemonCodeAnalyzerSettings.get().SHOW_METHOD_SEPARATORS;
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void showParametersHitOptions() {
-        ParameterNameHintsConfigurable configurable = new ParameterNameHintsConfigurable();
-        configurable.showAsync();
-    }
-
-    @Override
-    public boolean hasAnyInlayExtensions() {
-        return Application.get().getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions();
     }
 
     @Nonnull

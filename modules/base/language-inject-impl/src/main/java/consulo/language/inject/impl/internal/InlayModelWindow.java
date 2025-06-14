@@ -127,6 +127,12 @@ class InlayModelWindow implements InlayModel {
         logUnsupported();
     }
 
+    @Override
+    public void execute(boolean batchMode, @Nonnull Runnable operation) {
+        logUnsupported();
+        operation.run();
+    }
+
     private static void logUnsupported() {
         LOG.error("Inlay operations are not supported for injected editors");
     }

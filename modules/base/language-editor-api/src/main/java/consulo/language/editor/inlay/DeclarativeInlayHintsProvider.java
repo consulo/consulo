@@ -46,7 +46,7 @@ public interface DeclarativeInlayHintsProvider extends PossiblyDumbAware {
     InlayGroup getGroup();
 
     @Nonnull
-    default Set<InlayOptionInfo> getOptions() {
+    default Set<DeclarativeInlayOptionInfo> getOptions() {
         return Set.of();
     }
 

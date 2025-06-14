@@ -104,6 +104,10 @@ public interface RealEditor extends EditorEx {
         return 0;
     }
 
+    default int getCharHeight() {
+        return 12;
+    }
+
     default boolean isStickyLinePainting() {
         return false;
     }

@@ -365,10 +365,6 @@ inlay.hints.enable.action.text:
     text: Enable Parameter Name Hints
 inlay.hints.exclude.list.method:
     text: Do not show hints for current method
-inlay.hints.exclude.list.pattern.explanation:
-    text: 'To disable hints for a method use the appropriate pattern: <p> <code><b>java.lang</b></code> - methods from java.lang package<br> <code><b>java.lang.*(*, *)<b></code> - methods from the java.lang package with two parameters<br> <code><b>(*info)<b></code> - single parameter methods where the parameter name ends with info<br> <code><b>(key, value)<b></code> - methods with parameters key and value<br> <code><b>*.put(key, value)<b></code> - put methods with key and value parameters<br> </p>'
-inlay.hints.intention.family.name:
-    text: Parameter name hints
 inlay.hints.show.settings:
     text: Disable Hints for Method ''{0}''
 insert.code.template.command:

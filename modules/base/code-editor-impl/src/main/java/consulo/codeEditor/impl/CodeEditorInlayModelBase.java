@@ -66,6 +66,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
 
     private boolean myConsiderCaretPositionOnDocumentUpdates = true;
     private List<Inlay<?>> myInlaysAtCaret;
+    private boolean myInBatchMode;
 
     public CodeEditorInlayModelBase(@Nonnull CodeEditorBase editor) {
         myEditor = editor;
@@ -537,6 +538,25 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     @Override
+    public void execute(boolean batchMode, @Nonnull Runnable operation) {
+        UIAccess.assertIsUIThread();
+        if (myInBatchMode || !batchMode) {
+            operation.run();
+        }
+        else {
+            try {
+                notifyBatchModeStarting();
+                myInBatchMode = true;
+                operation.run();
+            }
+            finally {
+                myInBatchMode = false;
+                notifyBatchModeFinished();
+            }
+        }
+    }
+
+    @Override
     public void addListener(@Nonnull Listener listener, @Nonnull Disposable disposable) {
         myDispatcher.addListener(listener, disposable);
     }
@@ -551,6 +571,17 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
 
     public void notifyRemoved(InlayImpl inlay) {
         myDispatcher.getMulticaster().onRemoved(inlay);
+    }
+
+    private void notifyBatchModeStarting() {
+        List<Listener> listeners = myDispatcher.getListeners();
+        for (int i = listeners.size() - 1; i >= 0; i--) {
+            listeners.get(i).onBatchModeStart(myEditor);
+        }
+    }
+
+    private void notifyBatchModeFinished() {
+        myDispatcher.getMulticaster().onBatchModeFinish(myEditor);
     }
 
     @TestOnly

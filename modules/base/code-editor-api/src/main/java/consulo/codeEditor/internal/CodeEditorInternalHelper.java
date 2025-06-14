@@ -28,7 +28,6 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.document.Document;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -117,14 +116,6 @@ public interface CodeEditorInternalHelper {
     }
 
     default void setShowMethodSeparators(boolean value) {
-    }
-
-    @RequiredUIAccess
-    default void showParametersHitOptions() {
-    }
-
-    default boolean hasAnyInlayExtensions() {
-        return false;
     }
 
     @Nonnull

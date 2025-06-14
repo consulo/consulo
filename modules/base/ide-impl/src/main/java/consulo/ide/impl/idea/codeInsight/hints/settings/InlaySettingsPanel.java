@@ -3,19 +3,23 @@ package consulo.ide.impl.idea.codeInsight.hints.settings;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.hints.DeclarativeInlayHintsPassFactory;
-import consulo.ide.impl.idea.codeInsight.hints.ParameterHintsPassFactory;
-import consulo.ide.impl.idea.util.ui.SwingHelper;
 import consulo.language.Language;
+import consulo.language.editor.impl.internal.inlay.setting.ImmediateConfigurable;
+import consulo.language.editor.impl.internal.inlay.setting.InlayGroupSettingProvider;
+import consulo.language.editor.impl.internal.inlay.setting.InlayProviderSettingsModel;
+import consulo.language.editor.impl.internal.inlay.setting.InlaySettingsProvider;
 import consulo.language.editor.inlay.InlayGroup;
+import consulo.language.editor.internal.InlayHintsSettings;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.file.LanguageFileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.util.LanguageUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.ModalityState;
+import consulo.ui.HtmlLabel;
 import consulo.ui.ex.awt.JBSplitter;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -23,9 +27,9 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -33,9 +37,12 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class InlaySettingsPanel extends JPanel {
+    public static final Key<Object> PREVIEW_KEY = Key.create("inlay.preview.key");
+
     public static final Key<ImmediateConfigurable.Case> CASE_KEY = Key.create("inlay.case.key");
 
     private final Project project;
@@ -58,8 +65,8 @@ public class InlaySettingsPanel extends JPanel {
             globalSettings.put(group, InlayGroupSettingProvider.findForGroup(group));
         }
 
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-        String lastSelected = InlayHintsSettings.instance().getLastViewedProviderId();
+        CheckedTreeNode root = new CheckedTreeNode("root");
+        String lastSelected = InlayHintsSettings.getInstance().getLastViewedProviderId();
         DefaultMutableTreeNode nodeToSelect = null;
 
         if (Registry.is("editor.codeVision.new")) {
@@ -69,10 +76,9 @@ public class InlaySettingsPanel extends JPanel {
         for (Map.Entry<InlayGroup, List<InlayProviderSettingsModel>> entry : groups.entrySet()) {
             InlayGroup group = entry.getKey();
             List<InlayProviderSettingsModel> list = entry.getValue();
-            DefaultMutableTreeNode groupNode = new CheckedTreeNode(globalSettings.getOrDefault(group, group));
+            DefaultMutableTreeNode groupNode = new CheckedTreeNode(Objects.requireNonNullElse(globalSettings.get(group), group));
             root.add(groupNode);
 
-            List<Language> primary = List.of();
             TreeMap<Language, List<InlayProviderSettingsModel>> sorted = new TreeMap<>(Comparator.comparing(Language::getDisplayName));
             for (InlayProviderSettingsModel model : list) {
                 sorted.computeIfAbsent(model.getLanguage(), k -> new ArrayList<>()).add(model);
@@ -166,8 +172,16 @@ public class InlaySettingsPanel extends JPanel {
                                                 DefaultMutableTreeNode toSelect) {
         model.setOnChangeListener(() -> {
             if (currentEditor != null) {
-                ImmediateConfigurable.Case c = (ImmediateConfigurable.Case) currentEditor.getUserData(PREVIEW_KEY);
-                updateHints(currentEditor, model, c);
+                ImmediateConfigurable.Case targetCase = null;
+                Object data = currentEditor.getUserData(PREVIEW_KEY);
+                if (data instanceof CaseCheckedNode caseCheckedNode) {
+                    Object userObject = caseCheckedNode.getUserObject();
+                    if (userObject instanceof ImmediateConfigurable.Case c) {
+                        targetCase = c;
+                    }
+                }
+
+                updateHints(currentEditor, model, targetCase);
             }
         });
         CheckedTreeNode node = new CheckedTreeNode(model) {
@@ -197,11 +211,11 @@ public class InlaySettingsPanel extends JPanel {
 
     private static class CaseCheckedNode extends CheckedTreeNode {
         private final ImmediateConfigurable.Case caze;
-        private final java.util.function.Supplier<Editor> editorProvider;
+        private final Supplier<Editor> editorProvider;
         private final InlayProviderSettingsModel model;
 
         CaseCheckedNode(ImmediateConfigurable.Case caze,
-                        java.util.function.Supplier<Editor> editorProvider,
+                        Supplier<Editor> editorProvider,
                         InlayProviderSettingsModel model) {
             super(caze);
             this.caze = caze;
@@ -259,7 +273,7 @@ public class InlaySettingsPanel extends JPanel {
             addDescription(m.getCaseDescription(c));
             addPreview(m.getCasePreview(c), m, c, node);
         }
-        InlayHintsSettings.instance().saveLastViewedProviderId(getProviderId(node));
+        InlayHintsSettings.getInstance().saveLastViewedProviderId(getProviderId(node));
         rightPanel.revalidate();
         rightPanel.repaint();
     }
@@ -292,18 +306,20 @@ public class InlaySettingsPanel extends JPanel {
         if (text == null) {
             return;
         }
-        Editor editorField = SettingsLanguageKt.createEditor(model.getCasePreviewLanguage(null) != null
+        EditorTextField editorField = InlaySettingUtil.createEditor(model.getCasePreviewLanguage(null) != null
             ? model.getCasePreviewLanguage(null) : model.getLanguage(), project, editor -> {
             currentEditor = editor;
             PREVIEW_KEY.set(editor, node);
             CASE_KEY.set(editor, caze);
+
+            editor.getSettings().setLineNumbersShown(false);
+            editor.getSettings().setCaretRowShown(false);
+            editor.getSettings().setRightMarginShown(false);
+
             updateHints(editor, model, caze);
         });
-        editorField.getDocument().setText(text);
-        editorField.getSettings().setLineNumbersShown(false);
-        editorField.getSettings().setCaretRowShown(false);
-        editorField.getSettings().setRightMarginShown(false);
-        rightPanel.add(ScrollPaneFactory.createScrollPane(editorField), "growx");
+        editorField.setText(text);
+        rightPanel.add(ScrollPaneFactory.createScrollPane(editorField, true), "growx");
     }
 
     private void updateHints(Editor editor,
@@ -313,16 +329,16 @@ public class InlaySettingsPanel extends JPanel {
                 var file = model.createFile(project, getFileTypeForPreview(model), editor.getDocument(), caze != null ? caze.getId() : null);
                 return model.collectData(editor, file);
             })
-            .finishOnUiThread(ModalityState.stateForComponent(this), continuation ->
-                ApplicationManager.getApplication().runWriteAction(continuation::run))
+            .finishOnUiThread(application -> application.getModalityStateForComponent(this), continuation ->
+                ApplicationManager.getApplication().runWriteAction(continuation))
             .expireWhen(editor::isDisposed)
             .inSmartMode(project)
-            .submit(AppExecutorUtil.getAppExecutorService());
+            .submitDefault();
     }
 
-    private void addDescription(@Nls String s) {
+    private void addDescription(String s) {
         if (s != null) {
-            rightPanel.add(SwingHelper.createHtmlLabel(s), "growy");
+            rightPanel.add(TargetAWT.to(HtmlLabel.create(LocalizeValue.ofNullable(s))), "growy");
         }
     }
 
@@ -341,7 +357,7 @@ public class InlaySettingsPanel extends JPanel {
     }
 
     public void reset() {
-        reset((CheckedTreeNode) tree.getModel().getRoot(), InlayHintsSettings.instance());
+        reset((CheckedTreeNode) tree.getModel().getRoot(), InlayHintsSettings.getInstance());
     }
 
     private void reset(CheckedTreeNode node, InlayHintsSettings settings) {
@@ -382,10 +398,11 @@ public class InlaySettingsPanel extends JPanel {
     }
 
     public void apply() {
-        apply((CheckedTreeNode) tree.getModel().getRoot(), InlayHintsSettings.instance());
-        ParameterHintsPassFactory.forceHintsUpdateOnNextPass();
+        apply((CheckedTreeNode) tree.getModel().getRoot(), InlayHintsSettings.getInstance());
+        //FIXME this impls
+        //FIXME ParameterHintsPassFactory.forceHintsUpdateOnNextPass();
         DeclarativeInlayHintsPassFactory.resetModificationStamp();
-        InlayHintsPassFactoryInternal.restartDaemonUpdatingHints(project, "InlaySettingsPanel.apply()");
+        //FIXME InlayHintsPassFactoryInternal.restartDaemonUpdatingHints(project, "InlaySettingsPanel.apply()");
     }
 
     private void apply(CheckedTreeNode node, InlayHintsSettings settings) {
@@ -433,7 +450,7 @@ public class InlaySettingsPanel extends JPanel {
     }
 
     public boolean isModified() {
-        return isModified((CheckedTreeNode) tree.getModel().getRoot(), InlayHintsSettings.instance());
+        return isModified((CheckedTreeNode) tree.getModel().getRoot(), InlayHintsSettings.getInstance());
     }
 
     private boolean isModified(CheckedTreeNode node, InlayHintsSettings settings) {
@@ -510,7 +527,8 @@ public class InlaySettingsPanel extends JPanel {
                 return;
             }
             String name = getNameImpl(defaultMutableTreeNode, (DefaultMutableTreeNode) ((DefaultMutableTreeNode) value).getParent());
-            getTextRenderer().appendHTML(name, null);
+
+            getTextRenderer().append(name);
         }
     }
 }

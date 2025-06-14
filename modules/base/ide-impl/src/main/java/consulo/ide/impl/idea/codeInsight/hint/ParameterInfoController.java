@@ -20,7 +20,7 @@ import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.ParameterHintsPresentationManager;
+import consulo.ide.impl.idea.codeInsight.hints.ParameterHintsPresentationManager;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
@@ -523,7 +523,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
             hostWhitespaceStart = editorWindow.getDocument().injectedToHost(hostWhitespaceStart);
             hostWhitespaceEnd = editorWindow.getDocument().injectedToHost(hostWhitespaceEnd);
         }
-        List<Inlay> inlays =
+        List<Inlay<?>> inlays =
             ParameterHintsPresentationManager.getInstance().getParameterHintsInRange(hostEditor, hostWhitespaceStart, hostWhitespaceEnd);
         for (Inlay inlay : inlays) {
             int inlayOffset = inlay.getOffset();

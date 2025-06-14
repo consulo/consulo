@@ -164,7 +164,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private final EditorGutterComponentImpl myGutterComponent;
     @Nullable
     private final StickyLinesManager myStickyLinesManager;
-    private final FocusModeModel myFocusModeModel;
+    private final FocusModeModelImpl myFocusModeModel;
     private volatile long myLastTypedActionTimestamp = -1;
     private String myLastTypedAction;
     private final LatencyListener myLatencyPublisher;
@@ -469,7 +469,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         CodeStyleSettingsManager.getInstance(myProject).addListener(this, myDisposable);
 
-        myFocusModeModel = new FocusModeModel(this);
+        myFocusModeModel = new FocusModeModelImpl(this);
         Disposer.register(myDisposable, myFocusModeModel);
 
         myLatencyPublisher = Application.get().getMessageBus().syncPublisher(LatencyListener.class);
@@ -528,7 +528,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return myFocusModeModel.getFocusModeRange();
     }
 
-    public FocusModeModel getFocusModeModel() {
+    @Override
+    public FocusModeModelImpl getFocusModeModel() {
         return myFocusModeModel;
     }
 

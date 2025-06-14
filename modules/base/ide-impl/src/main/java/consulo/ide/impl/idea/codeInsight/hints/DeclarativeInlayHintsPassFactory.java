@@ -6,8 +6,8 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.ide.impl.idea.codeInsight.hints.settings.DeclarativeInlayHintsSettings;
-import consulo.ide.impl.idea.codeInsight.hints.settings.InlayHintsSettings;
+import consulo.language.editor.impl.internal.inlay.setting.DeclarativeInlayHintsSettings;
+import consulo.language.editor.internal.InlayHintsSettings;
 import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
@@ -108,8 +108,8 @@ public class DeclarativeInlayHintsPassFactory
         if (enabledGlobally) {
             passProviders = new ArrayList<>();
             for (InlayProviderInfo info : getSuitableToFileProviders(psiFile)) {
-                boolean providerEnabled = settings.isProviderEnabled(info.getProviderId());
-                if (providerEnabled || (!providerEnabled && info.isEnabledByDefault())) {
+                Boolean providerEnabled = settings.isProviderEnabled(info.getProviderId());
+                if (Objects.equals(providerEnabled, Boolean.TRUE) || (providerEnabled == null && info.isEnabledByDefault())) {
                     Map<String, Boolean> optionsToEnabled = new HashMap<>();
                     for (var optionInfo : info.getOptions()) {
                         Boolean opt = settings.isOptionEnabled(optionInfo.getId(), info.getProviderId());

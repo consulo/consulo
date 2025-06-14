@@ -177,6 +177,12 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
         return myDelegate.addLineHighlighter(line, layer, textAttributes);
     }
 
+    @Override
+    @Nonnull
+    public RangeHighlighter addLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int line, int layer) {
+        return myDelegate.addLineHighlighter(textAttributesKey, line, layer);
+    }
+
     @Nonnull
     @Override
     public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(

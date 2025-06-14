@@ -38,3 +38,11 @@ settings.hints.group.url.path.description:
     text: Allows you to quickly access URL-related actions, for example, test an endpoint.
 settings.hints.group.other:
     text: Other
+settings.inlay.hints.panel.name:
+    text: Inlay Hints
+settings.inlay.parameter.hints.panel.name:
+    text: Parameter hints
+inlay.hints.show.settings:
+    text: Disable Hints for Method ''{0}''
+settings.inlay.java.exclude.list:
+    text: Exclude list…

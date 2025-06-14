@@ -71,6 +71,8 @@ public interface DefaultLanguageHighlighterColors {
     TextAttributesKey MARKUP_ATTRIBUTE = TextAttributesKey.of("DEFAULT_ATTRIBUTE", IDENTIFIER);
     TextAttributesKey MARKUP_ENTITY = TextAttributesKey.of("DEFAULT_ENTITY", IDENTIFIER);
     TextAttributesKey INLINE_PARAMETER_HINT = TextAttributesKey.of("INLINE_PARAMETER_HINT");
+    TextAttributesKey INLINE_PARAMETER_HINT_HIGHLIGHTED = TextAttributesKey.of("INLINE_PARAMETER_HINT_HIGHLIGHTED");
+    TextAttributesKey INLINE_PARAMETER_HINT_CURRENT = TextAttributesKey.of("INLINE_PARAMETER_HINT_CURRENT");
 
     TextAttributesKey INLAY_DEFAULT = TextAttributesKey.of("INLAY_DEFAULT");
     TextAttributesKey INLAY_BUTTON_DEFAULT = TextAttributesKey.of("INLAY_BUTTON_DEFAULT");

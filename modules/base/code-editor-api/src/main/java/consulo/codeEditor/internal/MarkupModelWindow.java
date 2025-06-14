@@ -63,16 +63,10 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
         TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
         return myHostModel.addRangeHighlighter(textAttributesKey, hostRange.getStartOffset(), hostRange.getEndOffset(), layer, targetArea);
     }
+
     @Override
     public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
         myHostModel.changeAttributesInBatch(highlighter, changeAttributesAction);
-    }
-
-    @Override
-    @Nonnull
-    public RangeHighlighter addLineHighlighter(final int line, final int layer, final TextAttributes textAttributes) {
-        int hostLine = myDocument.injectedToHostLine(line);
-        return myHostModel.addLineHighlighter(hostLine, layer, textAttributes);
     }
 
     @Override
@@ -152,6 +146,22 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
     @Override
     public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
         return myHostModel.overlappingIterator(startOffset, endOffset);
+    }
+
+    @Override
+    @Nonnull
+    public RangeHighlighter addLineHighlighter(final @Nullable TextAttributesKey textAttributesKey,
+                                               final int line,
+                                               final int layer) {
+        int hostLine = myDocument.injectedToHostLine(line);
+        return myHostModel.addLineHighlighter(textAttributesKey, hostLine, layer);
+    }
+
+    @Override
+    @Nonnull
+    public RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes) {
+        int hostLine = myDocument.injectedToHostLine(line);
+        return myHostModel.addLineHighlighter(hostLine, layer, textAttributes);
     }
 
     @Nonnull

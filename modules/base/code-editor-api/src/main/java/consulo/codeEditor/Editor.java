@@ -19,6 +19,7 @@ import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
+import consulo.codeEditor.internal.EmptyFocusModeModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
@@ -189,6 +190,11 @@ public interface Editor extends UserDataHolder {
      */
     @Nonnull
     SoftWrapModel getSoftWrapModel();
+
+    @Nonnull
+    default FocusModeModel getFocusModeModel() {
+        return EmptyFocusModeModel.INSTANCE;
+    }
 
     /**
      * Returns the editor settings for this editor instance. Changes to these settings affect

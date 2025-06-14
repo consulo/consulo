@@ -15,7 +15,7 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.*;
 import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.desktop.awt.editor.impl.EditorComponentImpl;
-import consulo.desktop.awt.editor.impl.FocusModeModel;
+import consulo.desktop.awt.editor.impl.FocusModeModelImpl;
 import consulo.desktop.awt.editor.impl.SoftWrapModelImpl;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
@@ -133,7 +133,7 @@ public final class EditorPainter implements TextDrawingCallback {
         private final SelectionModel mySelectionModel;
         private final CaretModel myCaretModel;
         private final SoftWrapModelImpl mySoftWrapModel;
-        private final FocusModeModel myFocusModeModel;
+        private final FocusModeModelImpl myFocusModeModel;
         private final XCorrector myCorrector;
         private final Graphics2D myGraphics;
         private final Rectangle myClip;
@@ -1603,7 +1603,7 @@ public final class EditorPainter implements TextDrawingCallback {
             TextAttributes selectionAttributes = isSelected(foldRegion) ? mySelectionModel.getTextAttributes() : null;
             TextAttributes defaultAttributes = getDefaultAttributes();
             if (myFocusModeModel.isInFocusMode(foldRegion)) {
-                return ObjectUtil.notNull(myEditor.getUserData(FocusModeModel.FOCUS_MODE_ATTRIBUTES), getDefaultAttributes());
+                return ObjectUtil.notNull(myEditor.getUserData(FocusModeModelImpl.FOCUS_MODE_ATTRIBUTES), getDefaultAttributes());
             }
             TextAttributes foldAttributes = myFoldingModel.getPlaceholderAttributes();
             if (foldAttributes != null) {

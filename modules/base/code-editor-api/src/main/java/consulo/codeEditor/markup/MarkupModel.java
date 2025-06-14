@@ -94,6 +94,21 @@ public interface MarkupModel extends UserDataHolder {
     RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes);
 
     /**
+     * Adds a highlighter covering the specified line in the document.
+     *
+     * @param textAttributesKey the key to use for highlighting with the current color scheme,
+     *                          or {@code null} if it doesn't modify the text attributes.
+     * @param line              the line number of the line to highlight.
+     * @param layer             relative priority of the highlighter (highlighters with higher
+     *                          layer number override highlighters with lower layer number;
+     *                          layer number values for standard IDE highlighters are defined in
+     *                          {@link HighlighterLayer})
+     * @return the highlighter instance.
+     */
+    @Nonnull
+    RangeHighlighter addLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int line, int layer);
+
+    /**
      * Removes the specified highlighter instance.
      *
      * @param rangeHighlighter the highlighter to remove.

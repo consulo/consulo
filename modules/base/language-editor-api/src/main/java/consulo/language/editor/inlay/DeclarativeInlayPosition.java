@@ -84,6 +84,14 @@ public sealed interface DeclarativeInlayPosition {
         private final int verticalPriority;
         private final int priority;
 
+        public AboveLineIndentedPosition(int offset) {
+            this(offset, 0, 0);
+        }
+
+        public AboveLineIndentedPosition(int offset, int verticalPriority) {
+            this(offset, verticalPriority, 0);
+        }
+
         public AboveLineIndentedPosition(int offset, int verticalPriority, int priority) {
             this.offset = offset;
             this.verticalPriority = verticalPriority;

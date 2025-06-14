@@ -6,8 +6,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ide.impl.idea.codeInsight.hints.DeclarativeInlayHintsPassFactory;
-import consulo.ide.impl.idea.codeInsight.hints.settings.DeclarativeInlayHintsSettings;
-import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.impl.internal.inlay.setting.DeclarativeInlayHintsSettings;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -46,13 +45,19 @@ public class DisableDeclarativeInlayAction extends AnAction implements DumbAware
     @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        if (project == null) return;
+        if (project == null) {
+            return;
+        }
 
-        Editor editor = e.getData(CommonDataKeys.EDITOR);
-        if (editor == null) return;
+        Editor editor = e.getData(Editor.KEY);
+        if (editor == null) {
+            return;
+        }
 
         String providerId = e.getData(DeclarativeInlayHintsProvider.PROVIDER_ID);
-        if (providerId == null) return;
+        if (providerId == null) {
+            return;
+        }
 
         DeclarativeInlayHintsSettings settings = DeclarativeInlayHintsSettings.getInstance();
         settings.setProviderEnabled(providerId, false);

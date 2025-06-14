@@ -553,6 +553,8 @@ public class JBCurrentTheme {
     }
 
     public static class Popup {
+        public static final float DEFAULT_HINT_OPACITY = 0.55f;
+
         public static Color borderColor(boolean active) {
             return JBColor.border();
         }

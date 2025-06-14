@@ -17,6 +17,7 @@ package consulo.language.editor.colorScheme.setting;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.language.editor.highlight.SyntaxHighlighter;
@@ -30,37 +31,50 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ColorSettingsPage extends ColorAndFontDescriptors {
-  /**
-   * Returns the syntax highlighter which is used to highlight the text shown in the preview
-   * pane of the page.
-   *
-   * @return the syntax highlighter instance.
-   */
-  @Nonnull
-  SyntaxHighlighter getHighlighter();
+    /**
+     * Returns the syntax highlighter which is used to highlight the text shown in the preview
+     * pane of the page.
+     *
+     * @return the syntax highlighter instance.
+     */
+    @Nonnull
+    SyntaxHighlighter getHighlighter();
 
-  /**
-   * Returns the text shown in the preview pane. If some elements need to be highlighted in
-   * the preview text which are not highlighted by the syntax highlighter, they need to be
-   * surrounded by XML-like tags, for example: <code>&lt;class&gt;MyClass&lt;/class&gt;</code>.
-   * The mapping between the names of the tags and the text attribute keys used for highlighting
-   * is defined by the {@link #getAdditionalHighlightingTagToDescriptorMap()} method.
-   *
-   * @return the text to show in the preview pane.
-   */
-  @Nonnull
-  String getDemoText();
+    /**
+     * Returns the text shown in the preview pane. If some elements need to be highlighted in
+     * the preview text which are not highlighted by the syntax highlighter, they need to be
+     * surrounded by XML-like tags, for example: <code>&lt;class&gt;MyClass&lt;/class&gt;</code>.
+     * The mapping between the names of the tags and the text attribute keys used for highlighting
+     * is defined by the {@link #getAdditionalHighlightingTagToDescriptorMap()} method.
+     *
+     * @return the text to show in the preview pane.
+     */
+    @Nonnull
+    String getDemoText();
 
-  /**
-   * Returns the mapping from special tag names surrounding the regions to be highlighted
-   * in the preview text (see {@link #getDemoText()}) to text attribute keys used to
-   * highlight the regions.
-   *
-   * @return the mapping from tag names to text attribute keys, or null if the demo text
-   * does not contain any additional highlighting tags.
-   */
-  @Nullable
-  default Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-    return Map.of();
-  }
+    /**
+     * Returns the mapping from special tag names surrounding the regions to be highlighted
+     * in the preview text (see {@link #getDemoText()}) to text attribute keys used to
+     * highlight the regions.
+     *
+     * @return the mapping from tag names to text attribute keys, or null if the demo text
+     * does not contain any additional highlighting tags.
+     */
+    @Nullable
+    default Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+        return Map.of();
+    }
+
+    @Nullable
+    default Map<String, TextAttributesKey> getAdditionalInlineElementToDescriptorMap() {
+        return null;
+    }
+
+    /**
+     * Specifies tag-to-'color key' mapping for regions with presentation containing additional colors from color map.
+     * It's used to implement navigation between the list of keys and regions in sample editor.
+     */
+    default @Nullable Map<String, EditorColorKey> getAdditionalHighlightingTagToColorKeyMap() {
+        return null;
+    }
 }

@@ -82,6 +82,12 @@ public class EmptyMarkupModel implements MarkupModelEx {
     }
 
     @Override
+    @Nonnull
+    public RangeHighlighter addLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int line, int layer) {
+        throw new ProcessCanceledException();
+    }
+
+    @Override
     public void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter) {
     }
 

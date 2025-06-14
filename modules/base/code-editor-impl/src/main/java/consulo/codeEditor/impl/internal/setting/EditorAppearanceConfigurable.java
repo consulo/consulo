@@ -22,10 +22,12 @@ import consulo.application.ui.setting.AdditionalEditorAppearanceSettingProvider;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.PersistentEditorSettings;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
-import consulo.configurable.*;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.Button;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
@@ -109,16 +111,6 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         CheckBox showVerticalIndents = CheckBox.create(ApplicationLocalize.labelAppearanceShowVerticalIndentGuides());
         propertyBuilder.add(showVerticalIndents, editorSettings::isIndentGuidesShown, editorSettings::setIndentGuidesShown);
         root.add(showVerticalIndents);
-
-        CheckBox showParameterHints = CheckBox.create(ApplicationLocalize.checkboxShowParameterNameHints());
-        boolean hasAnyInlayExtensions = codeEditorInternalHelper.hasAnyInlayExtensions();
-        showParameterHints.setVisible(hasAnyInlayExtensions);
-        propertyBuilder.add(showParameterHints, editorSettings::isShowParameterNameHints, editorSettings::setShowParameterNameHints);
-
-        Button configureButton = Button.create(LocalizeValue.localizeTODO("Configure..."));
-        configureButton.setVisible(hasAnyInlayExtensions);
-        configureButton.addClickListener(event -> myEditorInternalHelper.get().showParametersHitOptions());
-        root.add(DockLayout.create().left(showParameterHints).right(configureButton));
 
         List<AdditionalEditorAppearanceSettingProvider> providers = new ArrayList<>(myApplication.getExtensionList(AdditionalEditorAppearanceSettingProvider.class));
         providers.sort((o1, o2) -> o1.getLabelName().compareIgnoreCase(o2.getLabelName()));

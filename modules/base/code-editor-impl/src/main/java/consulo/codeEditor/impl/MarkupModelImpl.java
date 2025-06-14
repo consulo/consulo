@@ -64,12 +64,29 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
     @Override
     @Nonnull
     public RangeHighlighter addLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
-        if (isNotValidLine(lineNumber)) {
-            throw new IndexOutOfBoundsException("lineNumber:" + lineNumber + ". Must be in [0, " + (getDocument().getLineCount() - 1) + "]");
+        return addLineHighlighter(null, textAttributes, lineNumber, layer);
+    }
+
+    @Override
+    @Nonnull
+    public RangeHighlighter addLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int lineNumber, int layer) {
+        return addLineHighlighter(textAttributesKey, null, lineNumber, layer);
+    }
+
+    @Nonnull
+    private RangeHighlighter addLineHighlighter(@Nullable TextAttributesKey textAttributesKey,
+                                                @Nullable TextAttributes textAttributes,
+                                                int lineNumber,
+                                                int layer) {
+        Document document = getDocument();
+        if (!DocumentUtil.isValidLine(lineNumber, document)) {
+            throw new IndexOutOfBoundsException("lineNumber:" + lineNumber + ". Must be in [0, " + (document.getLineCount() - 1) + "]");
         }
 
-        int offset = DocumentUtil.getFirstNonSpaceCharOffset(getDocument(), lineNumber);
-        return addRangeHighlighter(offset, offset, layer, textAttributes, HighlighterTargetArea.LINES_IN_RANGE);
+        int offset = DocumentUtil.getFirstNonSpaceCharOffset(document, lineNumber);
+        HighlighterTargetArea area = HighlighterTargetArea.LINES_IN_RANGE;
+        Consumer<RangeHighlighterEx> changeAction = textAttributes == null ? null : ex -> ex.setTextAttributes(textAttributes);
+        return addRangeHighlighterAndChangeAttributes(textAttributesKey, offset, offset, layer, area, false, changeAction);
     }
 
     @Nullable
