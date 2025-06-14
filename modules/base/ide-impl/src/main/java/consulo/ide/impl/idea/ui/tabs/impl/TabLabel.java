@@ -372,7 +372,7 @@ public class TabLabel extends JPanel {
     return newValue != -1 ? newValue : currentValue;
   }
 
-  public void setTabActions(ActionGroup group) {
+  public void setTabActions(@Nullable ActionGroup group) {
     removeOldActionPanel();
 
     if (group == null) return;

@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl;
 
-import consulo.application.Application;
 import consulo.ide.impl.idea.execution.ui.layout.impl.JBRunnerTabs;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbarFactory;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.tab.TabInfo;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,8 +36,9 @@ public class ActionPanel extends NonOpaquePanel {
 
     public ActionPanel(JBTabsImpl tabs, TabInfo tabInfo) {
         ActionGroup group = tabInfo.getTabLabelActions() != null ? tabInfo.getTabLabelActions() : new DefaultActionGroup();
+        String actionPlace = StringUtil.defaultIfEmpty(tabInfo.getTabActionPlace(), "ActionPanel");
 
-        myActionToolbar = Application.get().getInstance(ActionToolbarFactory.class).createActionToolbar("ActionPanel", group, ActionToolbar.Style.INPLACE);
+        myActionToolbar = ActionToolbarFactory.getInstance().createActionToolbar(actionPlace, group, ActionToolbar.Style.INPLACE);
         myActionToolbar.setTargetComponent(tabs);
 
         int topPadding = 1;

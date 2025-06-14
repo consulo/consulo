@@ -22,10 +22,8 @@ import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.tab.TabInfo;
-import consulo.ui.ex.awt.tab.UiDecorator;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -46,21 +44,21 @@ public class JBRunnerTabs extends JBEditorTabs {
   }
 
   public boolean shouldAddToGlobal(Point point) {
-    final TabLabel label = getSelectedLabel();
+    TabLabel label = getSelectedLabel();
     if (label == null || point == null) {
       return true;
     }
-    final Rectangle bounds = label.getBounds();
+    Rectangle bounds = label.getBounds();
     return point.y <= bounds.y + bounds.height;
   }
 
   @Override
   public void processDropOver(TabInfo over, RelativePoint relativePoint) {
-    final Point point = relativePoint.getPoint(getComponent());
+    Point point = relativePoint.getPoint(getComponent());
     myShowDropLocation = shouldAddToGlobal(point);
     super.processDropOver(over, relativePoint);
     for (Map.Entry<TabInfo, TabLabel> entry : myInfo2Label.entrySet()) {
-      final TabLabel label = entry.getValue();
+      TabLabel label = entry.getValue();
       if (label.getBounds().contains(point) && myDropInfo != entry.getKey()) {
         select(entry.getKey(), false);
         break;
@@ -74,18 +72,8 @@ public class JBRunnerTabs extends JBEditorTabs {
   }
 
   private static class MyTabLabel extends TabLabel {
-    public MyTabLabel(JBTabsImpl tabs, final TabInfo info) {
+    public MyTabLabel(JBTabsImpl tabs, TabInfo info) {
       super(tabs, info);
-    }
-
-    @Override
-    public void apply(UiDecorator.UiDecoration decoration) {
-      super.apply(decoration);
-    }
-
-    @Override
-    public void setTabActions(ActionGroup group) {
-      super.setTabActions(group);
     }
   }
 }
