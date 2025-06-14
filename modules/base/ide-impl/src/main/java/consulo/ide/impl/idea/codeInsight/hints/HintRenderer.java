@@ -15,6 +15,7 @@ import consulo.ide.impl.idea.ui.paint.EffectPainter;
 import consulo.language.editor.impl.internal.inlay.param.HintUtils;
 import consulo.language.editor.inlay.HintWidthAdjustment;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
@@ -120,11 +121,11 @@ public class HintRenderer implements EditorCustomElementRenderer {
             ColorValue bg = attrs.getBackgroundColor();
             if (bg != null) {
                 float alpha = isInsufficientContrast(attrs, surroundingAttrs) ? 1.0f : BACKGROUND_ALPHA;
-                GraphicsUtil.setupAAPainting(g);
+                GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
                 GraphicsUtil.paintWithAlpha(g, alpha);
                 g.setColor(TargetAWT.to(bg));
                 g.fillRoundRect(r.x + 2, r.y + gap, r.width - 4, r.height - gap * 2, 8, 8);
-                // restore must be handled by GraphicsUtil
+                config.restore();
             }
             ColorValue fg = attrs.getForegroundColor();
             if (fg != null) {
