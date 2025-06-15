@@ -48,172 +48,174 @@ import jakarta.annotation.Nullable;
  * would be able to create properties by read configuration and test navigation, rerun failed tests etc. would work on imported results
  */
 public class SMTRunnerConsoleProperties extends TestConsoleProperties implements SMStacktraceParserEx {
-  private final RunProfile myConfiguration;
-  @Nonnull
-  private final String myTestFrameworkName;
-  private final CompositeFilter myCustomFilter;
-  private boolean myIdBasedTestTree = false;
-  private boolean myPrintTestingStartedTime = true;
+    private final RunProfile myConfiguration;
+    @Nonnull
+    private final String myTestFrameworkName;
+    private final CompositeFilter myCustomFilter;
+    private boolean myIdBasedTestTree = false;
+    private boolean myPrintTestingStartedTime = true;
 
-  /**
-   * @param config
-   * @param testFrameworkName Prefix for storage which keeps runner settings. E.g. "RubyTestUnit"
-   * @param executor
-   */
-  public SMTRunnerConsoleProperties(@Nonnull RunConfiguration config, @Nonnull String testFrameworkName, @Nonnull Executor executor) {
-    this(config.getProject(), config, testFrameworkName, executor);
-  }
-
-  public SMTRunnerConsoleProperties(@Nonnull Project project,
-                                    @Nonnull RunProfile config,
-                                    @Nonnull String testFrameworkName,
-                                    @Nonnull Executor executor) {
-    super(getStorage(testFrameworkName), project, executor);
-    myConfiguration = config;
-    myTestFrameworkName = testFrameworkName;
-    myCustomFilter = new CompositeFilter(project);
-  }
-
-  @Nonnull
-  private static Storage.PropertiesComponentStorage getStorage(String testFrameworkName) {
-    return new Storage.PropertiesComponentStorage(testFrameworkName + "Support.", ApplicationPropertiesComponent.getInstance());
-  }
-
-  @Override
-  public RunProfile getConfiguration() {
-    return myConfiguration;
-  }
-
-  @Nullable
-  @Override
-  public AnAction createImportAction() {
-    return new ImportTestsGroup(this);
-  }
-
-  public boolean isIdBasedTestTree() {
-    return myIdBasedTestTree;
-  }
-
-  public void setIdBasedTestTree(boolean idBasedTestTree) {
-    myIdBasedTestTree = idBasedTestTree;
-  }
-
-  public boolean isPrintTestingStartedTime() {
-    return myPrintTestingStartedTime;
-  }
-
-  public void setPrintTestingStartedTime(boolean printTestingStartedTime) {
-    myPrintTestingStartedTime = printTestingStartedTime;
-  }
-
-  @Nullable
-  @Override
-  public Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace) {
-    return getErrorNavigatable(location.getProject(), stacktrace);
-  }
-
-  @Nullable
-  @Override
-  public Navigatable getErrorNavigatable(@Nonnull final Project project, final @Nonnull String stacktrace) {
-    if (myCustomFilter.isEmpty()) {
-      return null;
+    /**
+     * @param config
+     * @param testFrameworkName Prefix for storage which keeps runner settings. E.g. "RubyTestUnit"
+     * @param executor
+     */
+    public SMTRunnerConsoleProperties(@Nonnull RunConfiguration config, @Nonnull String testFrameworkName, @Nonnull Executor executor) {
+        this(config.getProject(), config, testFrameworkName, executor);
     }
 
-    // iterate stacktrace lines find first navigatable line using
-    // stacktrace filters
-    final int stacktraceLength = stacktrace.length();
-    final String[] lines = StringUtil.splitByLines(stacktrace);
-    for (String line : lines) {
-      Filter.Result result;
-      try {
-        result = myCustomFilter.applyFilter(line, stacktraceLength);
-      }
-      catch (Throwable t) {
-        throw new RuntimeException("Error while applying " + myCustomFilter + " to '" + line + "'", t);
-      }
-      final HyperlinkInfo info = result != null ? result.getFirstHyperlinkInfo() : null;
-      if (info != null) {
+    public SMTRunnerConsoleProperties(
+        @Nonnull Project project,
+        @Nonnull RunProfile config,
+        @Nonnull String testFrameworkName,
+        @Nonnull Executor executor
+    ) {
+        super(getStorage(testFrameworkName), project, executor);
+        myConfiguration = config;
+        myTestFrameworkName = testFrameworkName;
+        myCustomFilter = new CompositeFilter(project);
+    }
 
-        // covers 99% use existing cases
-        if (info instanceof FileHyperlinkInfo) {
-          return ((FileHyperlinkInfo)info).getDescriptor();
+    @Nonnull
+    private static Storage.PropertiesComponentStorage getStorage(String testFrameworkName) {
+        return new Storage.PropertiesComponentStorage(testFrameworkName + "Support.", ApplicationPropertiesComponent.getInstance());
+    }
+
+    @Override
+    public RunProfile getConfiguration() {
+        return myConfiguration;
+    }
+
+    @Nullable
+    @Override
+    public AnAction createImportAction() {
+        return new ImportTestsGroup(this);
+    }
+
+    public boolean isIdBasedTestTree() {
+        return myIdBasedTestTree;
+    }
+
+    public void setIdBasedTestTree(boolean idBasedTestTree) {
+        myIdBasedTestTree = idBasedTestTree;
+    }
+
+    public boolean isPrintTestingStartedTime() {
+        return myPrintTestingStartedTime;
+    }
+
+    public void setPrintTestingStartedTime(boolean printTestingStartedTime) {
+        myPrintTestingStartedTime = printTestingStartedTime;
+    }
+
+    @Nullable
+    @Override
+    public Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace) {
+        return getErrorNavigatable(location.getProject(), stacktrace);
+    }
+
+    @Nullable
+    @Override
+    public Navigatable getErrorNavigatable(@Nonnull final Project project, final @Nonnull String stacktrace) {
+        if (myCustomFilter.isEmpty()) {
+            return null;
         }
 
-        // otherwise
-        return new Navigatable() {
-          @Override
-          public void navigate(boolean requestFocus) {
-            info.navigate(project);
-          }
+        // iterate stacktrace lines find first navigatable line using
+        // stacktrace filters
+        final int stacktraceLength = stacktrace.length();
+        final String[] lines = StringUtil.splitByLines(stacktrace);
+        for (String line : lines) {
+            Filter.Result result;
+            try {
+                result = myCustomFilter.applyFilter(line, stacktraceLength);
+            }
+            catch (Throwable t) {
+                throw new RuntimeException("Error while applying " + myCustomFilter + " to '" + line + "'", t);
+            }
+            final HyperlinkInfo info = result != null ? result.getFirstHyperlinkInfo() : null;
+            if (info != null) {
 
-          @Override
-          public boolean canNavigate() {
-            return true;
-          }
+                // covers 99% use existing cases
+                if (info instanceof FileHyperlinkInfo) {
+                    return ((FileHyperlinkInfo) info).getDescriptor();
+                }
 
-          @Override
-          public boolean canNavigateToSource() {
-            return true;
-          }
-        };
-      }
-    }
-    return null;
-  }
+                // otherwise
+                return new Navigatable() {
+                    @Override
+                    public void navigate(boolean requestFocus) {
+                        info.navigate(project);
+                    }
 
-  public void addStackTraceFilter(final Filter filter) {
-    myCustomFilter.addFilter(filter);
-  }
+                    @Override
+                    public boolean canNavigate() {
+                        return true;
+                    }
 
-  @Nullable
-  @Deprecated
-  protected Navigatable findSuitableNavigatableForLine(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
-    // lets find first non-ws psi element
-
-    final Document doc = FileDocumentManager.getInstance().getDocument(file);
-    final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(doc);
-    if (psi == null) {
-      return null;
-    }
-
-    int offset = doc.getLineStartOffset(line);
-    int endOffset = doc.getLineEndOffset(line);
-    for (int i = offset + 1; i < endOffset; i++) {
-      PsiElement el = psi.findElementAt(i);
-      if (el != null && !(el instanceof PsiWhiteSpace)) {
-        offset = el.getTextOffset();
-        break;
-      }
+                    @Override
+                    public boolean canNavigateToSource() {
+                        return true;
+                    }
+                };
+            }
+        }
+        return null;
     }
 
-    return OpenFileDescriptorFactory.getInstance(project).builder(file).offset(offset).build();
-  }
+    public void addStackTraceFilter(final Filter filter) {
+        myCustomFilter.addFilter(filter);
+    }
 
-  public boolean fixEmptySuite() {
-    return false;
-  }
+    @Nullable
+    @Deprecated
+    protected Navigatable findSuitableNavigatableForLine(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
+        // lets find first non-ws psi element
 
-  @Nullable
-  public SMTestLocator getTestLocator() {
-    return null;
-  }
+        final Document doc = FileDocumentManager.getInstance().getDocument(file);
+        final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(doc);
+        if (psi == null) {
+            return null;
+        }
 
-  @Nullable
-  public TestProxyFilterProvider getFilterProvider() {
-    return null;
-  }
+        int offset = doc.getLineStartOffset(line);
+        int endOffset = doc.getLineEndOffset(line);
+        for (int i = offset + 1; i < endOffset; i++) {
+            PsiElement el = psi.findElementAt(i);
+            if (el != null && !(el instanceof PsiWhiteSpace)) {
+                offset = el.getTextOffset();
+                break;
+            }
+        }
 
-  @Nullable
-  public AbstractRerunFailedTestsAction createRerunFailedTestsAction(ConsoleView consoleView) {
-    return null;
-  }
+        return OpenFileDescriptorFactory.getInstance(project).builder(file).offset(offset).build();
+    }
 
-  @Nonnull
-  public String getTestFrameworkName() {
-    return myTestFrameworkName;
-  }
+    public boolean fixEmptySuite() {
+        return false;
+    }
 
-  public boolean isUndefined() {
-    return false;
-  }
+    @Nullable
+    public SMTestLocator getTestLocator() {
+        return null;
+    }
+
+    @Nullable
+    public TestProxyFilterProvider getFilterProvider() {
+        return null;
+    }
+
+    @Nullable
+    public AbstractRerunFailedTestsAction createRerunFailedTestsAction(ConsoleView consoleView) {
+        return null;
+    }
+
+    @Nonnull
+    public String getTestFrameworkName() {
+        return myTestFrameworkName;
+    }
+
+    public boolean isUndefined() {
+        return false;
+    }
 }

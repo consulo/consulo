@@ -26,6 +26,6 @@ import jakarta.annotation.Nullable;
  */
 @Deprecated
 public interface SMStacktraceParser {
-  @Nullable
-  Navigatable getErrorNavigatable(@Nonnull Project project, @Nonnull String stacktrace);
+    @Nullable
+    Navigatable getErrorNavigatable(@Nonnull Project project, @Nonnull String stacktrace);
 }

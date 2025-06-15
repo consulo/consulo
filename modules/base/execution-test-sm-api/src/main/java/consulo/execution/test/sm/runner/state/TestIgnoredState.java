@@ -28,60 +28,60 @@ import jakarta.annotation.Nullable;
  * @author Roman Chernyatchik
  */
 public class TestIgnoredState extends AbstractState {
-  @NonNls
-  private static final String IGNORED_TEST_TEXT = SMTestsRunnerBundle.message("sm.test.runner.states.test.is.ignored");
-  private final String myText;
-  private final String myStacktrace;
+    @NonNls
+    private static final String IGNORED_TEST_TEXT = SMTestsRunnerBundle.message("sm.test.runner.states.test.is.ignored");
+    private final String myText;
+    private final String myStacktrace;
 
-  public TestIgnoredState(final String ignoredComment, @Nullable final String stackTrace) {
-    final String ignored_msg = StringUtil.isEmpty(ignoredComment) ? IGNORED_TEST_TEXT : ignoredComment;
-    myText = CompositePrintable.NEW_LINE + ignored_msg;
-    myStacktrace = stackTrace == null ? null : stackTrace + CompositePrintable.NEW_LINE;
-  }
-
-  public boolean isInProgress() {
-    return false;
-  }
-
-  public boolean isDefect() {
-    return true;
-  }
-
-  public boolean wasLaunched() {
-    return true;
-  }
-
-  public boolean isFinal() {
-    return true;
-  }
-
-  public boolean wasTerminated() {
-    return false;
-  }
-
-  public Magnitude getMagnitude() {
-    return Magnitude.IGNORED_INDEX;
-  }
-
-  @Override
-  public void printOn(final Printer printer) {
-    super.printOn(printer);
-
-    printer.print(myText, ConsoleViewContentType.SYSTEM_OUTPUT);
-    if (StringUtil.isEmptyOrSpaces(myStacktrace)) {
-      printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.SYSTEM_OUTPUT);
+    public TestIgnoredState(final String ignoredComment, @Nullable final String stackTrace) {
+        final String ignored_msg = StringUtil.isEmpty(ignoredComment) ? IGNORED_TEST_TEXT : ignoredComment;
+        myText = CompositePrintable.NEW_LINE + ignored_msg;
+        myStacktrace = stackTrace == null ? null : stackTrace + CompositePrintable.NEW_LINE;
     }
-    else {
-      printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-      printer.mark();
-      printer.print(myStacktrace, ConsoleViewContentType.ERROR_OUTPUT);
+
+    public boolean isInProgress() {
+        return false;
     }
-  }
+
+    public boolean isDefect() {
+        return true;
+    }
+
+    public boolean wasLaunched() {
+        return true;
+    }
+
+    public boolean isFinal() {
+        return true;
+    }
+
+    public boolean wasTerminated() {
+        return false;
+    }
+
+    public Magnitude getMagnitude() {
+        return Magnitude.IGNORED_INDEX;
+    }
+
+    @Override
+    public void printOn(final Printer printer) {
+        super.printOn(printer);
+
+        printer.print(myText, ConsoleViewContentType.SYSTEM_OUTPUT);
+        if (StringUtil.isEmptyOrSpaces(myStacktrace)) {
+            printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.SYSTEM_OUTPUT);
+        }
+        else {
+            printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+            printer.mark();
+            printer.print(myStacktrace, ConsoleViewContentType.ERROR_OUTPUT);
+        }
+    }
 
 
-  @Override
-  public String toString() {
-    //noinspection HardCodedStringLiteral
-    return "TEST IGNORED";
-  }
+    @Override
+    public String toString() {
+        //noinspection HardCodedStringLiteral
+        return "TEST IGNORED";
+    }
 }

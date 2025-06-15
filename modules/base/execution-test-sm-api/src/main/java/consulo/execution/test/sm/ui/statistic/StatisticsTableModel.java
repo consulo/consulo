@@ -32,115 +32,116 @@ import java.util.List;
  * @author Roman Chernyatchik
  */
 public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
-  private static final Logger LOG = Logger.getInstance(StatisticsTableModel.class);
+    private static final Logger LOG = Logger.getInstance(StatisticsTableModel.class);
 
-  private SMTestProxy myCurrentSuite;
+    private SMTestProxy myCurrentSuite;
 
-  public StatisticsTableModel() {
-    super(new ColumnTest(), new ColumnDuration(), new ColumnResults());
-    setSortable(false); // TODO: fix me
-  }
-
-  public void updateModelOnProxySelected(final SMTestProxy proxy) {
-    final SMTestProxy newCurrentSuite = getCurrentSuiteFor(proxy);
-    // If new suite differs from old suite we should reload table
-    if (myCurrentSuite != newCurrentSuite) {
-      myCurrentSuite = newCurrentSuite;
-    }
-    // update model to show new items in it
-    SMRunnerUtil.addToInvokeLater(new Runnable() {
-      public void run() {
-        updateModel();
-      }
-    });
-  }
-
-  @Nullable
-   public SMTestProxy getTestAt(final int rowIndex) {
-    if (rowIndex < 0 || rowIndex > getItems().size()) {
-      return null;
-    }
-    return getItems().get(rowIndex);
-  }
-
-
-  /**
-   * Searches index of given test or suite. If finds nothing will retun -1
-   * @param test Test or suite
-   * @return Proxy's index or -1
-   */
-  public int getIndexOf(final SMTestProxy test) {
-    for (int i = 0; i < getItems().size(); i++) {
-      final SMTestProxy child = getItems().get(i);
-      if (child == test) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  /**
-   * Update module in EDT
-   */
-  protected void updateModel() {
-    LOG.assertTrue(SwingUtilities.isEventDispatchThread());
-
-    // updates model
-    setItems(getItemsForSuite(myCurrentSuite));
-  }
-
-  @Nonnull
-  private List<SMTestProxy> getItemsForSuite(@Nullable final SMTestProxy suite) {
-    if (suite == null) {
-      return Collections.emptyList();
+    public StatisticsTableModel() {
+        super(new ColumnTest(), new ColumnDuration(), new ColumnResults());
+        setSortable(false); // TODO: fix me
     }
 
-    final List<SMTestProxy> list = new ArrayList<SMTestProxy>();
-    // suite's total statistics
-    list.add(suite);
-    // chiled's statistics
-    list.addAll(suite.getChildren());
-
-    return list;
-  }
-
-  public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
-    // Setting value is prevented!
-    LOG.error("value: " + aValue + " row: " + rowIndex + " column: " + columnIndex);
-  }
-
-  @jakarta.annotation.Nullable
-  private SMTestProxy getCurrentSuiteFor(@jakarta.annotation.Nullable final SMTestProxy proxy) {
-    if (proxy == null) {
-      return null;
+    public void updateModelOnProxySelected(final SMTestProxy proxy) {
+        final SMTestProxy newCurrentSuite = getCurrentSuiteFor(proxy);
+        // If new suite differs from old suite we should reload table
+        if (myCurrentSuite != newCurrentSuite) {
+            myCurrentSuite = newCurrentSuite;
+        }
+        // update model to show new items in it
+        SMRunnerUtil.addToInvokeLater(new Runnable() {
+            public void run() {
+                updateModel();
+            }
+        });
     }
 
-    // If proxy is suite, returns it
-    final SMTestProxy suite;
-    if (proxy.isSuite()) {
-      suite = proxy;
+    @Nullable
+    public SMTestProxy getTestAt(final int rowIndex) {
+        if (rowIndex < 0 || rowIndex > getItems().size()) {
+            return null;
+        }
+        return getItems().get(rowIndex);
     }
-    else {
-      // If proxy is tests returns test's suite
-      suite = proxy.getParent();
+
+
+    /**
+     * Searches index of given test or suite. If finds nothing will retun -1
+     *
+     * @param test Test or suite
+     * @return Proxy's index or -1
+     */
+    public int getIndexOf(final SMTestProxy test) {
+        for (int i = 0; i < getItems().size(); i++) {
+            final SMTestProxy child = getItems().get(i);
+            if (child == test) {
+                return i;
+            }
+        }
+        return -1;
     }
-    return suite;
-  }
+
+    /**
+     * Update module in EDT
+     */
+    protected void updateModel() {
+        LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+
+        // updates model
+        setItems(getItemsForSuite(myCurrentSuite));
+    }
+
+    @Nonnull
+    private List<SMTestProxy> getItemsForSuite(@Nullable final SMTestProxy suite) {
+        if (suite == null) {
+            return Collections.emptyList();
+        }
+
+        final List<SMTestProxy> list = new ArrayList<SMTestProxy>();
+        // suite's total statistics
+        list.add(suite);
+        // chiled's statistics
+        list.addAll(suite.getChildren());
+
+        return list;
+    }
+
+    public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
+        // Setting value is prevented!
+        LOG.error("value: " + aValue + " row: " + rowIndex + " column: " + columnIndex);
+    }
+
+    @jakarta.annotation.Nullable
+    private SMTestProxy getCurrentSuiteFor(@jakarta.annotation.Nullable final SMTestProxy proxy) {
+        if (proxy == null) {
+            return null;
+        }
+
+        // If proxy is suite, returns it
+        final SMTestProxy suite;
+        if (proxy.isSuite()) {
+            suite = proxy;
+        }
+        else {
+            // If proxy is tests returns test's suite
+            suite = proxy.getParent();
+        }
+        return suite;
+    }
 
 
-  protected boolean shouldUpdateModelByTest(final SMTestProxy test) {
-    // if some suite in statistics is selected
-    // and test is child of current suite
-    return isSomeSuiteSelected() && (test.getParent() == myCurrentSuite);
-  }
+    protected boolean shouldUpdateModelByTest(final SMTestProxy test) {
+        // if some suite in statistics is selected
+        // and test is child of current suite
+        return isSomeSuiteSelected() && (test.getParent() == myCurrentSuite);
+    }
 
-  protected boolean shouldUpdateModelBySuite(final SMTestProxy suite) {
-    // If some suite in statistics is selected
-    // and suite is current suite in statistics tab or child of current suite
-    return isSomeSuiteSelected() && (suite == myCurrentSuite || suite.getParent() == myCurrentSuite);
-  }
+    protected boolean shouldUpdateModelBySuite(final SMTestProxy suite) {
+        // If some suite in statistics is selected
+        // and suite is current suite in statistics tab or child of current suite
+        return isSomeSuiteSelected() && (suite == myCurrentSuite || suite.getParent() == myCurrentSuite);
+    }
 
-  private boolean isSomeSuiteSelected() {
-    return myCurrentSuite != null;
-  }
+    private boolean isSomeSuiteSelected() {
+        return myCurrentSuite != null;
+    }
 }

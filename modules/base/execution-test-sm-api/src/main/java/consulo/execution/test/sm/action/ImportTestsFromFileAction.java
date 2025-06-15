@@ -26,15 +26,16 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ImportTestsFromFileAction extends AbstractImportTestsAction {
-  public ImportTestsFromFileAction(SMTRunnerConsoleProperties properties) {
-    super(properties, (properties == null ? "" : "Import ") + "From File ...", "Import tests from file", null);
-  }
+    public ImportTestsFromFileAction(SMTRunnerConsoleProperties properties) {
+        super(properties, (properties == null ? "" : "Import ") + "From File ...", "Import tests from file", null);
+    }
 
-  @Nullable
-  @Override
-  public VirtualFile getFile(@Nonnull Project project) {
-    final FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
-    xmlDescriptor.setTitle("Choose a File with Tests Result");
-    return IdeaFileChooser.chooseFile(xmlDescriptor, project, null);
-  }
+    @Nullable
+    @Override
+    public VirtualFile getFile(@Nonnull Project project) {
+        final FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
+            .withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
+        xmlDescriptor.setTitle("Choose a File with Tests Result");
+        return IdeaFileChooser.chooseFile(xmlDescriptor, project, null);
+    }
 }

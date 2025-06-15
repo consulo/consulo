@@ -21,53 +21,52 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class TestFinishedEvent extends TreeNodeEvent {
+    @Nullable
+    private final Long myDuration;
+    private final String myOutputFile;
 
-  @Nullable
-  private final Long myDuration;
-  private final String myOutputFile;
+    public TestFinishedEvent(@Nonnull TestFinished testFinished, @Nullable Long duration) {
+        this(testFinished, duration, null);
+    }
 
-  public TestFinishedEvent(@Nonnull TestFinished testFinished, @Nullable Long duration) {
-    this(testFinished, duration, null);
-  }
+    public TestFinishedEvent(@Nonnull TestFinished testFinished, @Nullable Long duration, String outputFile) {
+        this(testFinished.getTestName(), TreeNodeEvent.getNodeId(testFinished), duration, outputFile);
+    }
 
-  public TestFinishedEvent(@Nonnull TestFinished testFinished, @Nullable Long  duration, String outputFile) {
-    this(testFinished.getTestName(), TreeNodeEvent.getNodeId(testFinished), duration, outputFile);
-  }
+    public TestFinishedEvent(@Nullable String name, @Nullable String id, @Nullable Long duration) {
+        this(name, id, duration, null);
+    }
 
-  public TestFinishedEvent(@Nullable String name, @Nullable String id, @Nullable Long duration) {
-    this(name, id, duration, null);
-  }
+    public TestFinishedEvent(@Nullable String name, @Nullable String id, @Nullable Long duration, String outputFile) {
+        super(name, id);
+        myDuration = duration;
+        myOutputFile = outputFile;
+    }
 
-  public TestFinishedEvent(@Nullable String name, @Nullable String id, @Nullable Long duration, String outputFile) {
-    super(name, id);
-    myDuration = duration;
-    myOutputFile = outputFile;
-  }
+    public TestFinishedEvent(@Nonnull String name, @Nullable Long duration) {
+        this(name, null, duration);
+    }
 
-  public TestFinishedEvent(@Nonnull String name, @Nullable Long duration) {
-    this(name, null, duration);
-  }
+    /** @deprecated use {@link #TestFinishedEvent(String, long)} (to be removed in IDEA 16) */
+    @SuppressWarnings("unused")
+    public TestFinishedEvent(@Nonnull String name, int duration) {
+        this(name, null, Long.valueOf(duration));
+    }
 
-  /** @deprecated use {@link #TestFinishedEvent(String, long)} (to be removed in IDEA 16) */
-  @SuppressWarnings("unused")
-  public TestFinishedEvent(@Nonnull String name, int duration) {
-    this(name, null, Long.valueOf(duration));
-  }
+    /**
+     * @return duration in ms if reported
+     */
+    @Nullable
+    public Long getDuration() {
+        return myDuration;
+    }
 
-  /**
-   * @return duration in ms if reported
-   */
-  @Nullable
-  public Long getDuration() {
-    return myDuration;
-  }
+    @Override
+    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+        append(buf, "duration", myDuration);
+    }
 
-  @Override
-  protected void appendToStringInfo(@Nonnull StringBuilder buf) {
-    append(buf, "duration", myDuration);
-  }
-
-  public String getOutputFile() {
-    return myOutputFile;
-  }
+    public String getOutputFile() {
+        return myOutputFile;
+    }
 }

@@ -22,8 +22,7 @@ import consulo.ui.ex.awt.ColumnInfo;
  * @author Roman Chernyatchik
  */
 public abstract class BaseColumn extends ColumnInfo<SMTestProxy, String> {
-  public BaseColumn(String name) {
-    super(name);
-  }
-
+    public BaseColumn(String name) {
+        super(name);
+    }
 }

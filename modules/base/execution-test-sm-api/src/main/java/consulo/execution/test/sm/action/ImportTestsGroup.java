@@ -29,44 +29,50 @@ import consulo.util.collection.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.*;
 
 public class ImportTestsGroup extends ActionGroup {
-  private SMTRunnerConsoleProperties myProperties;
-  public ImportTestsGroup() {
-    super("Import Test Results", "Import Test Results", AllIcons.Vcs.History);
-    setPopup(true);
-  }
+    private SMTRunnerConsoleProperties myProperties;
 
-  public ImportTestsGroup(SMTRunnerConsoleProperties properties) {
-    this();
-    myProperties = properties;
-  }
-
-  @Nonnull
-  @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    if (e == null) return EMPTY_ARRAY;
-    final Project project = e.getData(Project.KEY);
-    if (project == null) return EMPTY_ARRAY;
-    final Collection<String> filePaths = TestHistoryConfiguration.getInstance(project).getFiles();
-    final File testHistoryRoot = TestStateStorage.getTestHistoryRoot(project);
-    final List<File> fileNames = new ArrayList<>(ContainerUtil.map(filePaths, fileName -> new File(testHistoryRoot, fileName)));
-    Collections.sort(fileNames, (f1, f2) -> f1.lastModified() > f2.lastModified() ? -1 : 1);
-    final int historySize = fileNames.size();
-    final AnAction[] actions = new AnAction[historySize + 2];
-    for (int i = 0; i < historySize; i++) {
-      actions[i] = new ImportTestsFromHistoryAction(myProperties, project, fileNames.get(i).getName());
+    public ImportTestsGroup() {
+        super("Import Test Results", "Import Test Results", AllIcons.Vcs.History);
+        setPopup(true);
     }
-    actions[historySize] = AnSeparator.getInstance();
-    actions[historySize + 1] = new ImportTestsFromFileAction(myProperties);
-    return actions;
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
-  }
+    public ImportTestsGroup(SMTRunnerConsoleProperties properties) {
+        this();
+        myProperties = properties;
+    }
+
+    @Nonnull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        if (e == null) {
+            return EMPTY_ARRAY;
+        }
+        final Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return EMPTY_ARRAY;
+        }
+        final Collection<String> filePaths = TestHistoryConfiguration.getInstance(project).getFiles();
+        final File testHistoryRoot = TestStateStorage.getTestHistoryRoot(project);
+        final List<File> fileNames = new ArrayList<>(ContainerUtil.map(filePaths, fileName -> new File(testHistoryRoot, fileName)));
+        Collections.sort(fileNames, (f1, f2) -> f1.lastModified() > f2.lastModified() ? -1 : 1);
+        final int historySize = fileNames.size();
+        final AnAction[] actions = new AnAction[historySize + 2];
+        for (int i = 0; i < historySize; i++) {
+            actions[i] = new ImportTestsFromHistoryAction(myProperties, project, fileNames.get(i).getName());
+        }
+        actions[historySize] = AnSeparator.getInstance();
+        actions[historySize + 1] = new ImportTestsFromFileAction(myProperties);
+        return actions;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
+    }
 }

@@ -21,69 +21,71 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class TreeNodeEvent {
-  @NonNls public static final String ROOT_NODE_ID = "0";
+    @NonNls
+    public static final String ROOT_NODE_ID = "0";
 
-  private final String myName;
-  private final String myId;
+    private final String myName;
+    private final String myId;
 
-  public TreeNodeEvent(@Nullable String name, @Nullable String id) {
-    myName = name;
-    myId = id;
-  }
-
-  protected void fail(@Nonnull String message) {
-    throw new IllegalStateException(message + ", " + toString());
-  }
-
-  @Nullable
-  public String getName() {
-    return myName;
-  }
-
-  /**
-   * @return tree node id, or null if undefined
-   */
-  @Nullable
-  public String getId() {
-    return myId;
-  }
-
-  @Override
-  public final String toString() {
-    StringBuilder buf = new StringBuilder(getClass().getSimpleName() + "{");
-    append(buf, "name", myName);
-    append(buf, "id", myId);
-    appendToStringInfo(buf);
-    // drop last 2 chars: ', '
-    buf.setLength(buf.length() - 2);
-    buf.append("}");
-    return buf.toString();
-  }
-
-  protected abstract void appendToStringInfo(@Nonnull StringBuilder buf);
-
-  protected static void append(@Nonnull StringBuilder buffer,
-                               @Nonnull String key, @Nullable Object value) {
-    if (value != null) {
-      buffer.append(key).append("=");
-      if (value instanceof String) {
-        buffer.append("'").append(value).append("'");
-      }
-      else {
-        buffer.append(String.valueOf(value));
-      }
-      buffer.append(", ");
+    public TreeNodeEvent(@Nullable String name, @Nullable String id) {
+        myName = name;
+        myId = id;
     }
-  }
 
-  @Nullable
-  public static String getNodeId(@Nonnull ServiceMessage message) {
-    return getNodeId(message, "nodeId");
-  }
+    protected void fail(@Nonnull String message) {
+        throw new IllegalStateException(message + ", " + toString());
+    }
 
-  @Nullable
-  public static String getNodeId(@Nonnull ServiceMessage message, String key) {
-    return message.getAttributes().get(key);
-  }
+    @Nullable
+    public String getName() {
+        return myName;
+    }
 
+    /**
+     * @return tree node id, or null if undefined
+     */
+    @Nullable
+    public String getId() {
+        return myId;
+    }
+
+    @Override
+    public final String toString() {
+        StringBuilder buf = new StringBuilder(getClass().getSimpleName() + "{");
+        append(buf, "name", myName);
+        append(buf, "id", myId);
+        appendToStringInfo(buf);
+        // drop last 2 chars: ', '
+        buf.setLength(buf.length() - 2);
+        buf.append("}");
+        return buf.toString();
+    }
+
+    protected abstract void appendToStringInfo(@Nonnull StringBuilder buf);
+
+    protected static void append(
+        @Nonnull StringBuilder buffer,
+        @Nonnull String key, @Nullable Object value
+    ) {
+        if (value != null) {
+            buffer.append(key).append("=");
+            if (value instanceof String) {
+                buffer.append("'").append(value).append("'");
+            }
+            else {
+                buffer.append(String.valueOf(value));
+            }
+            buffer.append(", ");
+        }
+    }
+
+    @Nullable
+    public static String getNodeId(@Nonnull ServiceMessage message) {
+        return getNodeId(message, "nodeId");
+    }
+
+    @Nullable
+    public static String getNodeId(@Nonnull ServiceMessage message, String key) {
+        return message.getAttributes().get(key);
+    }
 }

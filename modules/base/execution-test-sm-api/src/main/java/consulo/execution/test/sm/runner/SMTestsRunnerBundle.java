@@ -27,24 +27,27 @@ import java.util.ResourceBundle;
  * @author Roman Chernyatchik
  */
 public class SMTestsRunnerBundle {
-  private static Reference<ResourceBundle> ourBundle;
+    private static Reference<ResourceBundle> ourBundle;
 
-  @NonNls private static final String BUNDLE = "consulo.execution.test.sm.runner.SMTestsRunnerBundle";
+    @NonNls
+    private static final String BUNDLE = "consulo.execution.test.sm.runner.SMTestsRunnerBundle";
 
-  private SMTestsRunnerBundle() {
-  }
-
-  public static String message(@PropertyKey(resourceBundle = BUNDLE)String key, Object... params) {
-    return CommonBundle.message(getBundle(), key, params);
-  }
-
-  private static ResourceBundle getBundle() {
-    ResourceBundle bundle = null;
-    if (ourBundle != null) bundle = ourBundle.get();
-    if (bundle == null) {
-      bundle = ResourceBundle.getBundle(BUNDLE);
-      ourBundle = new SoftReference<ResourceBundle>(bundle);
+    private SMTestsRunnerBundle() {
     }
-    return bundle;
-  }
+
+    public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
+        return CommonBundle.message(getBundle(), key, params);
+    }
+
+    private static ResourceBundle getBundle() {
+        ResourceBundle bundle = null;
+        if (ourBundle != null) {
+            bundle = ourBundle.get();
+        }
+        if (bundle == null) {
+            bundle = ResourceBundle.getBundle(BUNDLE);
+            ourBundle = new SoftReference<ResourceBundle>(bundle);
+        }
+        return bundle;
+    }
 }

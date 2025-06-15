@@ -24,16 +24,16 @@ import org.jetbrains.annotations.PropertyKey;
  * @since 2024-03-02
  */
 public class SmRunnerBundle extends AbstractBundle {
-  private static final String BUNDLE = "consulo.execution.test.sm.SmRunnerBundle";
+    private static final String BUNDLE = "consulo.execution.test.sm.SmRunnerBundle";
 
-  private static final SmRunnerBundle INSTANCE = new SmRunnerBundle();
+    private static final SmRunnerBundle INSTANCE = new SmRunnerBundle();
 
-  private SmRunnerBundle() {
-    super(BUNDLE);
-  }
+    private SmRunnerBundle() {
+        super(BUNDLE);
+    }
 
-  @Nonnull
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String messageKey, Object...params) {
-    return INSTANCE.getMessage(messageKey, params);
-  }
+    @Nonnull
+    public static String message(@PropertyKey(resourceBundle = BUNDLE) String messageKey, Object... params) {
+        return INSTANCE.getMessage(messageKey, params);
+    }
 }

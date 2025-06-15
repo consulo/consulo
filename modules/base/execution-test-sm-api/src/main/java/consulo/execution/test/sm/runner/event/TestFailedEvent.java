@@ -20,182 +20,206 @@ import jetbrains.buildServer.messages.serviceMessages.TestFailed;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
 public class TestFailedEvent extends TreeNodeEvent {
+    private final String myLocalizedFailureMessage;
+    private final String myStacktrace;
+    private final boolean myTestError;
+    private final String myComparisonFailureActualText;
+    private final String myComparisonFailureExpectedText;
+    private final String myExpectedFilePath;
+    private final String myActualFilePath;
+    private final long myDurationMillis;
+    private boolean myExpectedFileTemp;
+    private boolean myActualFileTemp;
 
-  private final String myLocalizedFailureMessage;
-  private final String myStacktrace;
-  private final boolean myTestError;
-  private final String myComparisonFailureActualText;
-  private final String myComparisonFailureExpectedText;
-  private final String myExpectedFilePath;
-  private final String myActualFilePath;
-  private final long myDurationMillis;
-  private boolean myExpectedFileTemp;
-  private boolean myActualFileTemp;
-
-  public TestFailedEvent(@Nonnull TestFailed testFailed, boolean testError) {
-    this(testFailed, testError, null);
-  }
-
-  public TestFailedEvent(@Nonnull TestFailed testFailed, boolean testError, @Nullable String expectedFilePath) {
-    this(testFailed, testError, expectedFilePath, null);
-  }
-
-  public TestFailedEvent(@Nonnull TestFailed testFailed, boolean testError, @Nullable String expectedFilePath, @Nullable String actualFilePath) {
-    super(testFailed.getTestName(), TreeNodeEvent.getNodeId(testFailed));
-    if (testFailed.getFailureMessage() == null) throw new NullPointerException();
-    myLocalizedFailureMessage = testFailed.getFailureMessage();
-    myStacktrace = testFailed.getStacktrace();
-    myTestError = testError;
-
-    myExpectedFilePath = expectedFilePath;
-    String expected = testFailed.getExpected();
-    if (expected == null && expectedFilePath != null) {
-      try {
-        expected = Files.readString(Paths.get(expectedFilePath));
-      }
-      catch (IOException ignore) {
-      }
+    public TestFailedEvent(@Nonnull TestFailed testFailed, boolean testError) {
+        this(testFailed, testError, null);
     }
-    myComparisonFailureExpectedText = expected;
 
-    myActualFilePath = actualFilePath;
-    String actual = testFailed.getActual();
-    if (actual == null && actualFilePath != null) {
-      try {
-        actual = Files.readString(Paths.get(actualFilePath));
-      }
-      catch (IOException ignore) {
-      }
+    public TestFailedEvent(@Nonnull TestFailed testFailed, boolean testError, @Nullable String expectedFilePath) {
+        this(testFailed, testError, expectedFilePath, null);
     }
-    myComparisonFailureActualText = actual;
 
-    Map<String, String> attributes = testFailed.getAttributes();
-    myDurationMillis = parseDuration(attributes.get("duration"));
-    myActualFileTemp = Boolean.parseBoolean(attributes.get("actualIsTempFile"));
-    myExpectedFileTemp = Boolean.parseBoolean(attributes.get("expectedIsTempFile"));
-  }
+    public TestFailedEvent(
+        @Nonnull TestFailed testFailed,
+        boolean testError,
+        @Nullable String expectedFilePath,
+        @Nullable String actualFilePath
+    ) {
+        super(testFailed.getTestName(), TreeNodeEvent.getNodeId(testFailed));
+        if (testFailed.getFailureMessage() == null) {
+            throw new NullPointerException();
+        }
+        myLocalizedFailureMessage = testFailed.getFailureMessage();
+        myStacktrace = testFailed.getStacktrace();
+        myTestError = testError;
 
-  public boolean isExpectedFileTemp() {
-    return myExpectedFileTemp;
-  }
+        myExpectedFilePath = expectedFilePath;
+        String expected = testFailed.getExpected();
+        if (expected == null && expectedFilePath != null) {
+            try {
+                expected = Files.readString(Paths.get(expectedFilePath));
+            }
+            catch (IOException ignore) {
+            }
+        }
+        myComparisonFailureExpectedText = expected;
 
-  public boolean isActualFileTemp() {
-    return myActualFileTemp;
-  }
+        myActualFilePath = actualFilePath;
+        String actual = testFailed.getActual();
+        if (actual == null && actualFilePath != null) {
+            try {
+                actual = Files.readString(Paths.get(actualFilePath));
+            }
+            catch (IOException ignore) {
+            }
+        }
+        myComparisonFailureActualText = actual;
 
-  private static long parseDuration(@Nullable String durationStr) {
-    if (!StringUtil.isEmpty(durationStr)) {
-      try {
-        return Long.parseLong(durationStr);
-      }
-      catch (NumberFormatException ignored) {
-      }
+        Map<String, String> attributes = testFailed.getAttributes();
+        myDurationMillis = parseDuration(attributes.get("duration"));
+        myActualFileTemp = Boolean.parseBoolean(attributes.get("actualIsTempFile"));
+        myExpectedFileTemp = Boolean.parseBoolean(attributes.get("expectedIsTempFile"));
     }
-    return -1;
-  }
 
-  public TestFailedEvent(@Nonnull String testName,
-                         @Nonnull String localizedFailureMessage,
-                         @Nullable String stackTrace,
-                         boolean testError,
-                         @Nullable String comparisonFailureActualText,
-                         @Nullable String comparisonFailureExpectedText) {
-    this(testName, null, localizedFailureMessage, stackTrace, testError, comparisonFailureActualText, comparisonFailureExpectedText, null, null, false, false, -1);
-  }
-
-  public TestFailedEvent(@Nullable String testName,
-                         @Nullable String id,
-                         @Nonnull String localizedFailureMessage,
-                         @Nullable String stackTrace,
-                         boolean testError,
-                         @Nullable String comparisonFailureActualText,
-                         @Nullable String comparisonFailureExpectedText,
-                         @Nullable String expectedFilePath,
-                         @Nullable String actualFilePath,
-                         boolean expectedFileTemp,
-                         boolean actualFileTemp,
-                         long durationMillis) {
-    super(testName, id);
-    myLocalizedFailureMessage = localizedFailureMessage;
-    myStacktrace = stackTrace;
-    myTestError = testError;
-    myExpectedFilePath = expectedFilePath;
-    if (comparisonFailureExpectedText == null && expectedFilePath != null) {
-      try {
-        comparisonFailureExpectedText = Files.readString(Paths.get(expectedFilePath));
-      }
-      catch (IOException ignore) {
-      }
+    public boolean isExpectedFileTemp() {
+        return myExpectedFileTemp;
     }
-    myComparisonFailureActualText = comparisonFailureActualText;
 
-    myActualFilePath = actualFilePath;
-    myComparisonFailureExpectedText = comparisonFailureExpectedText;
-    myDurationMillis = durationMillis;
-    myExpectedFileTemp = expectedFileTemp;
-    myActualFileTemp = actualFileTemp;
-  }
+    public boolean isActualFileTemp() {
+        return myActualFileTemp;
+    }
 
-  @Nonnull
-  public String getLocalizedFailureMessage() {
-    return myLocalizedFailureMessage;
-  }
+    private static long parseDuration(@Nullable String durationStr) {
+        if (!StringUtil.isEmpty(durationStr)) {
+            try {
+                return Long.parseLong(durationStr);
+            }
+            catch (NumberFormatException ignored) {
+            }
+        }
+        return -1;
+    }
 
-  @Nullable
-  public String getStacktrace() {
-    return myStacktrace;
-  }
+    public TestFailedEvent(
+        @Nonnull String testName,
+        @Nonnull String localizedFailureMessage,
+        @Nullable String stackTrace,
+        boolean testError,
+        @Nullable String comparisonFailureActualText,
+        @Nullable String comparisonFailureExpectedText
+    ) {
+        this(
+            testName,
+            null,
+            localizedFailureMessage,
+            stackTrace,
+            testError,
+            comparisonFailureActualText,
+            comparisonFailureExpectedText,
+            null,
+            null,
+            false,
+            false,
+            -1
+        );
+    }
 
-  public boolean isTestError() {
-    return myTestError;
-  }
+    public TestFailedEvent(
+        @Nullable String testName,
+        @Nullable String id,
+        @Nonnull String localizedFailureMessage,
+        @Nullable String stackTrace,
+        boolean testError,
+        @Nullable String comparisonFailureActualText,
+        @Nullable String comparisonFailureExpectedText,
+        @Nullable String expectedFilePath,
+        @Nullable String actualFilePath,
+        boolean expectedFileTemp,
+        boolean actualFileTemp,
+        long durationMillis
+    ) {
+        super(testName, id);
+        myLocalizedFailureMessage = localizedFailureMessage;
+        myStacktrace = stackTrace;
+        myTestError = testError;
+        myExpectedFilePath = expectedFilePath;
+        if (comparisonFailureExpectedText == null && expectedFilePath != null) {
+            try {
+                comparisonFailureExpectedText = Files.readString(Paths.get(expectedFilePath));
+            }
+            catch (IOException ignore) {
+            }
+        }
+        myComparisonFailureActualText = comparisonFailureActualText;
 
-  @Nullable
-  public String getComparisonFailureActualText() {
-    return myComparisonFailureActualText;
-  }
+        myActualFilePath = actualFilePath;
+        myComparisonFailureExpectedText = comparisonFailureExpectedText;
+        myDurationMillis = durationMillis;
+        myExpectedFileTemp = expectedFileTemp;
+        myActualFileTemp = actualFileTemp;
+    }
 
-  @Nullable
-  public String getComparisonFailureExpectedText() {
-    return myComparisonFailureExpectedText;
-  }
+    @Nonnull
+    public String getLocalizedFailureMessage() {
+        return myLocalizedFailureMessage;
+    }
 
-  @Override
-  protected void appendToStringInfo(@Nonnull StringBuilder buf) {
-    TreeNodeEvent.append(buf, "localizedFailureMessage", myLocalizedFailureMessage);
-    TreeNodeEvent.append(buf, "stacktrace", myStacktrace);
-    TreeNodeEvent.append(buf, "isTestError", myTestError);
-    TreeNodeEvent.append(buf, "comparisonFailureActualText", myComparisonFailureActualText);
-    TreeNodeEvent.append(buf, "comparisonFailureExpectedText", myComparisonFailureExpectedText);
-  }
+    @Nullable
+    public String getStacktrace() {
+        return myStacktrace;
+    }
 
-  /**
-   * @deprecated use {@link #getExpectedFilePath()} instead
-   */
-  public String getFilePath() {
-    return myExpectedFilePath;
-  }
+    public boolean isTestError() {
+        return myTestError;
+    }
 
-  @Nullable
-  public String getExpectedFilePath() {
-    return myExpectedFilePath;
-  }
+    @Nullable
+    public String getComparisonFailureActualText() {
+        return myComparisonFailureActualText;
+    }
 
-  @Nullable
-  public String getActualFilePath() {
-    return myActualFilePath;
-  }
+    @Nullable
+    public String getComparisonFailureExpectedText() {
+        return myComparisonFailureExpectedText;
+    }
 
-  /**
-   * @return the test duration in milliseconds, or -1 if undefined
-   */
-  public long getDurationMillis() {
-    return myDurationMillis;
-  }
+    @Override
+    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+        TreeNodeEvent.append(buf, "localizedFailureMessage", myLocalizedFailureMessage);
+        TreeNodeEvent.append(buf, "stacktrace", myStacktrace);
+        TreeNodeEvent.append(buf, "isTestError", myTestError);
+        TreeNodeEvent.append(buf, "comparisonFailureActualText", myComparisonFailureActualText);
+        TreeNodeEvent.append(buf, "comparisonFailureExpectedText", myComparisonFailureExpectedText);
+    }
+
+    /**
+     * @deprecated use {@link #getExpectedFilePath()} instead
+     */
+    public String getFilePath() {
+        return myExpectedFilePath;
+    }
+
+    @Nullable
+    public String getExpectedFilePath() {
+        return myExpectedFilePath;
+    }
+
+    @Nullable
+    public String getActualFilePath() {
+        return myActualFilePath;
+    }
+
+    /**
+     * @return the test duration in milliseconds, or -1 if undefined
+     */
+    public long getDurationMillis() {
+        return myDurationMillis;
+    }
 }

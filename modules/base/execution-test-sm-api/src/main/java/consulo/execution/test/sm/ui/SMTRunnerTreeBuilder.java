@@ -29,42 +29,42 @@ import javax.swing.tree.DefaultTreeModel;
  * @author: Roman Chernyatchik
  */
 public class SMTRunnerTreeBuilder extends AbstractTestTreeBuilder {
-  public SMTRunnerTreeBuilder(final JTree tree, final SMTRunnerTreeStructure structure) {
-    super(tree, new DefaultTreeModel(new DefaultMutableTreeNode(structure.getRootElement())), structure, IndexComparator.INSTANCE);
+    public SMTRunnerTreeBuilder(final JTree tree, final SMTRunnerTreeStructure structure) {
+        super(tree, new DefaultTreeModel(new DefaultMutableTreeNode(structure.getRootElement())), structure, IndexComparator.INSTANCE);
 
-    setCanYieldUpdate(true);
-    initRootNode();
-  }
-
-  public SMTRunnerTreeStructure getSMRunnerTreeStructure() {
-    return ((SMTRunnerTreeStructure)getTreeStructure());
-  }
-
-  public void updateTestsSubtree(final SMTestProxy parentTestProxy) {
-    queueUpdateFrom(parentTestProxy, false, true);
-  }
-
-
-  @Override
-  protected boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
-    final AbstractTreeStructure treeStructure = getTreeStructure();
-    final Object rootElement = treeStructure.getRootElement();
-    final Object nodeElement = nodeDescriptor.getElement();
-
-    if (nodeElement == rootElement) {
-      return true;
+        setCanYieldUpdate(true);
+        initRootNode();
     }
 
-    if (((SMTestProxy)nodeElement).getParent() == rootElement && ((SMTestProxy)rootElement).getChildren().size() == 1) {
-      return true;
+    public SMTRunnerTreeStructure getSMRunnerTreeStructure() {
+        return ((SMTRunnerTreeStructure) getTreeStructure());
     }
-    return false;
-  }
 
-  /**
-   * for java unit tests
-   */
-  public void performUpdate() {
-    getUpdater().performUpdate();
-  }
+    public void updateTestsSubtree(final SMTestProxy parentTestProxy) {
+        queueUpdateFrom(parentTestProxy, false, true);
+    }
+
+
+    @Override
+    protected boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
+        final AbstractTreeStructure treeStructure = getTreeStructure();
+        final Object rootElement = treeStructure.getRootElement();
+        final Object nodeElement = nodeDescriptor.getElement();
+
+        if (nodeElement == rootElement) {
+            return true;
+        }
+
+        if (((SMTestProxy) nodeElement).getParent() == rootElement && ((SMTestProxy) rootElement).getChildren().size() == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * for java unit tests
+     */
+    public void performUpdate() {
+        getUpdater().performUpdate();
+    }
 }

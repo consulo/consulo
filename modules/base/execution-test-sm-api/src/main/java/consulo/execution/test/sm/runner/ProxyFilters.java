@@ -23,25 +23,25 @@ import consulo.execution.test.TestStateInfo;
  * @author Roman Chernyatchik
  */
 public interface ProxyFilters {
-  Filter FILTER_PASSED = new Filter() {
-    @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
-      return ((SMTestProxy)test).getMagnitudeInfo() == TestStateInfo.Magnitude.PASSED_INDEX;
-    }
-  };
-  Filter FILTER_ERRORS = new Filter() {
-    @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
-      return ((SMTestProxy)test).getMagnitudeInfo() == TestStateInfo.Magnitude.ERROR_INDEX;
-    }
-  };
-  Filter FILTER_FAILURES = new Filter() {
-    @Override
-    public boolean shouldAccept(final AbstractTestProxy test) {
-      return ((SMTestProxy)test).getMagnitudeInfo() == TestStateInfo.Magnitude.FAILED_INDEX;
-    }
-  };
+    Filter FILTER_PASSED = new Filter() {
+        @Override
+        public boolean shouldAccept(final AbstractTestProxy test) {
+            return ((SMTestProxy) test).getMagnitudeInfo() == TestStateInfo.Magnitude.PASSED_INDEX;
+        }
+    };
+    Filter FILTER_ERRORS = new Filter() {
+        @Override
+        public boolean shouldAccept(final AbstractTestProxy test) {
+            return ((SMTestProxy) test).getMagnitudeInfo() == TestStateInfo.Magnitude.ERROR_INDEX;
+        }
+    };
+    Filter FILTER_FAILURES = new Filter() {
+        @Override
+        public boolean shouldAccept(final AbstractTestProxy test) {
+            return ((SMTestProxy) test).getMagnitudeInfo() == TestStateInfo.Magnitude.FAILED_INDEX;
+        }
+    };
 
-  Filter ERROR_LEAF = FILTER_ERRORS.and(Filter.LEAF);
-  Filter FAILURE_LEAF = FILTER_FAILURES.and(Filter.LEAF);
+    Filter ERROR_LEAF = FILTER_ERRORS.and(Filter.LEAF);
+    Filter FAILURE_LEAF = FILTER_FAILURES.and(Filter.LEAF);
 }

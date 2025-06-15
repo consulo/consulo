@@ -8,17 +8,17 @@ import consulo.util.dataholder.Key;
  * @author Roman Chernyatchik
  */
 public interface ProcessOutputConsumer extends Disposable {
-  void setProcessor(GeneralTestEventsProcessor processor);
+    void setProcessor(GeneralTestEventsProcessor processor);
 
-  void process(String text, Key outputType);
+    void process(String text, Key outputType);
 
-  /**
-   * @deprecated use {@link #flushBufferOnProcessTermination(int)}
-   */
-  default void flushBufferBeforeTerminating() {
-  }
+    /**
+     * @deprecated use {@link #flushBufferOnProcessTermination(int)}
+     */
+    default void flushBufferBeforeTerminating() {
+    }
 
-  default void flushBufferOnProcessTermination(int exitCode) {
-    flushBufferBeforeTerminating();
-  }
+    default void flushBufferOnProcessTermination(int exitCode) {
+        flushBufferBeforeTerminating();
+    }
 }

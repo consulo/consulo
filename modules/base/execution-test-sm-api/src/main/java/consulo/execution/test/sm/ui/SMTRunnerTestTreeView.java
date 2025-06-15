@@ -22,6 +22,7 @@ import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
@@ -30,48 +31,47 @@ import javax.swing.tree.TreePath;
  * @author: Roman Chernyatchik
  */
 public class SMTRunnerTestTreeView extends TestTreeView {
+    public static final Key<SMTRunnerTestTreeView> SM_TEST_RUNNER_VIEW = Key.create("SM_TEST_RUNNER_VIEW");
 
-  public static final Key<SMTRunnerTestTreeView> SM_TEST_RUNNER_VIEW = Key.create("SM_TEST_RUNNER_VIEW");
+    @Nullable
+    private TestResultsViewer myResultsViewer;
 
-  @Nullable
-  private TestResultsViewer myResultsViewer;
-
-  protected TreeCellRenderer getRenderer(final TestConsoleProperties properties) {
-    return new TestTreeRenderer(properties);
-  }
-
-  @Nullable
-  public SMTestProxy getSelectedTest(@Nonnull final TreePath selectionPath) {
-    final Object lastComponent = selectionPath.getLastPathComponent();
-    assert lastComponent != null;
-
-    return getTestProxyFor(lastComponent);
-  }
-
-  @Nullable
-  public static SMTestProxy getTestProxyFor(final Object treeNode) {
-    final Object userObj = ((DefaultMutableTreeNode)treeNode).getUserObject();
-    if (userObj instanceof SMTRunnerNodeDescriptor) {
-      return ((SMTRunnerNodeDescriptor)userObj).getElement();
+    protected TreeCellRenderer getRenderer(final TestConsoleProperties properties) {
+        return new TestTreeRenderer(properties);
     }
 
-    return null;
-  }
+    @Nullable
+    public SMTestProxy getSelectedTest(@Nonnull final TreePath selectionPath) {
+        final Object lastComponent = selectionPath.getLastPathComponent();
+        assert lastComponent != null;
 
-  public void setTestResultsViewer(final TestResultsViewer resultsViewer) {
-    myResultsViewer = resultsViewer;
-  }
-
-  @Nullable
-  public TestResultsViewer getResultsViewer() {
-    return myResultsViewer;
-  }
-
-  @Override
-  public Object getData(@Nonnull Key<?> dataId) {
-    if (SM_TEST_RUNNER_VIEW == dataId) {
-      return this;
+        return getTestProxyFor(lastComponent);
     }
-    return super.getData(dataId);
-  }
+
+    @Nullable
+    public static SMTestProxy getTestProxyFor(final Object treeNode) {
+        final Object userObj = ((DefaultMutableTreeNode) treeNode).getUserObject();
+        if (userObj instanceof SMTRunnerNodeDescriptor) {
+            return ((SMTRunnerNodeDescriptor) userObj).getElement();
+        }
+
+        return null;
+    }
+
+    public void setTestResultsViewer(final TestResultsViewer resultsViewer) {
+        myResultsViewer = resultsViewer;
+    }
+
+    @Nullable
+    public TestResultsViewer getResultsViewer() {
+        return myResultsViewer;
+    }
+
+    @Override
+    public Object getData(@Nonnull Key<?> dataId) {
+        if (SM_TEST_RUNNER_VIEW == dataId) {
+            return this;
+        }
+        return super.getData(dataId);
+    }
 }

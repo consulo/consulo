@@ -27,7 +27,7 @@ import consulo.execution.test.TestStateInfo;
  * ignored message for ignored state
  */
 public abstract class AbstractState implements Printable, TestStateInfo {
-  public void printOn(final Printer printer) {
-    // Do nothing by default
-  }
+    public void printOn(final Printer printer) {
+        // Do nothing by default
+    }
 }

@@ -7,5 +7,5 @@ import jakarta.annotation.Nonnull;
  * @author Sergey Simonchik
  */
 public interface AttachToProcessListener {
-  void onAttachToProcess(@Nonnull ProcessHandler processHandler);
+    void onAttachToProcess(@Nonnull ProcessHandler processHandler);
 }

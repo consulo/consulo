@@ -25,83 +25,90 @@ import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 /**
  * @author Roman.Chernyatchik
  */
 public class TestComparisionFailedState extends TestFailedState {
-  private final String myErrorMsgPresentation;
-  private final String myStacktracePresentation;
-  private DiffHyperlink myHyperlink;
-  private boolean myToDeleteExpectedFile;
-  private boolean myToDeleteActualFile;
+    private final String myErrorMsgPresentation;
+    private final String myStacktracePresentation;
+    private DiffHyperlink myHyperlink;
+    private boolean myToDeleteExpectedFile;
+    private boolean myToDeleteActualFile;
 
 
-  public TestComparisionFailedState(@Nullable final String localizedMessage,
-                                    @Nullable final String stackTrace,
-                                    @Nonnull final String actualText,
-                                    @Nonnull final String expectedText) {
-    this(localizedMessage, stackTrace, actualText, expectedText, null);
-  }
-
-  public TestComparisionFailedState(@Nullable final String localizedMessage,
-                                    @Nullable final String stackTrace,
-                                    @Nonnull final String actualText,
-                                    @Nonnull final String expectedText,
-                                    @Nullable final String filePath) {
-    this(localizedMessage, stackTrace, actualText, expectedText, filePath, null);
-  }
-
-  public TestComparisionFailedState(@Nullable final String localizedMessage,
-                                    @Nullable final String stackTrace,
-                                    @Nonnull final String actualText,
-                                    @Nonnull final String expectedText,
-                                    @Nullable final String expectedFilePath,
-                                    @Nullable final String actualFilePath) {
-    super(localizedMessage, stackTrace);
-    myHyperlink = new DiffHyperlink(expectedText, actualText, expectedFilePath, actualFilePath, true);
-
-    myErrorMsgPresentation = StringUtil.isEmptyOrSpaces(localizedMessage) ? "" : localizedMessage;
-    myStacktracePresentation = StringUtil.isEmptyOrSpaces(stackTrace) ? "" : stackTrace;
-  }
-
-  @Override
-  public void printOn(Printer printer) {
-    printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-    printer.mark();
-
-    // Error msg
-    printer.printWithAnsiColoring(myErrorMsgPresentation, ProcessOutputTypes.STDERR);
-
-    // Diff link
-    myHyperlink.printOn(printer);
-
-    // Stacktrace
-    printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-    printer.printWithAnsiColoring(myStacktracePresentation, ProcessOutputTypes.STDERR);
-    printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-  }
-
-  @Nullable
-  public DiffHyperlink getHyperlink() {
-    return myHyperlink;
-  }
-
-  public void setToDeleteExpectedFile(boolean expectedTemp) {
-    myToDeleteExpectedFile = expectedTemp;
-  }
-
-  public void setToDeleteActualFile(boolean actualTemp) {
-    myToDeleteActualFile = actualTemp;
-  }
-
-  public void dispose() {
-    if (myToDeleteActualFile) {
-      FileUtil.delete(new File(myHyperlink.getActualFilePath()));
+    public TestComparisionFailedState(
+        @Nullable final String localizedMessage,
+        @Nullable final String stackTrace,
+        @Nonnull final String actualText,
+        @Nonnull final String expectedText
+    ) {
+        this(localizedMessage, stackTrace, actualText, expectedText, null);
     }
-    if (myToDeleteExpectedFile) {
-      FileUtil.delete(new File(myHyperlink.getFilePath()));
+
+    public TestComparisionFailedState(
+        @Nullable final String localizedMessage,
+        @Nullable final String stackTrace,
+        @Nonnull final String actualText,
+        @Nonnull final String expectedText,
+        @Nullable final String filePath
+    ) {
+        this(localizedMessage, stackTrace, actualText, expectedText, filePath, null);
     }
-  }
+
+    public TestComparisionFailedState(
+        @Nullable final String localizedMessage,
+        @Nullable final String stackTrace,
+        @Nonnull final String actualText,
+        @Nonnull final String expectedText,
+        @Nullable final String expectedFilePath,
+        @Nullable final String actualFilePath
+    ) {
+        super(localizedMessage, stackTrace);
+        myHyperlink = new DiffHyperlink(expectedText, actualText, expectedFilePath, actualFilePath, true);
+
+        myErrorMsgPresentation = StringUtil.isEmptyOrSpaces(localizedMessage) ? "" : localizedMessage;
+        myStacktracePresentation = StringUtil.isEmptyOrSpaces(stackTrace) ? "" : stackTrace;
+    }
+
+    @Override
+    public void printOn(Printer printer) {
+        printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+        printer.mark();
+
+        // Error msg
+        printer.printWithAnsiColoring(myErrorMsgPresentation, ProcessOutputTypes.STDERR);
+
+        // Diff link
+        myHyperlink.printOn(printer);
+
+        // Stacktrace
+        printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+        printer.printWithAnsiColoring(myStacktracePresentation, ProcessOutputTypes.STDERR);
+        printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+    }
+
+    @Nullable
+    public DiffHyperlink getHyperlink() {
+        return myHyperlink;
+    }
+
+    public void setToDeleteExpectedFile(boolean expectedTemp) {
+        myToDeleteExpectedFile = expectedTemp;
+    }
+
+    public void setToDeleteActualFile(boolean actualTemp) {
+        myToDeleteActualFile = actualTemp;
+    }
+
+    public void dispose() {
+        if (myToDeleteActualFile) {
+            FileUtil.delete(new File(myHyperlink.getActualFilePath()));
+        }
+        if (myToDeleteExpectedFile) {
+            FileUtil.delete(new File(myHyperlink.getFilePath()));
+        }
+    }
 }

@@ -20,16 +20,15 @@ import jetbrains.buildServer.messages.serviceMessages.TestSuiteFinished;
 import jakarta.annotation.Nonnull;
 
 public class TestSuiteFinishedEvent extends TreeNodeEvent {
+    public TestSuiteFinishedEvent(@Nonnull TestSuiteFinished suiteFinished) {
+        super(suiteFinished.getSuiteName(), TreeNodeEvent.getNodeId(suiteFinished));
+    }
 
-  public TestSuiteFinishedEvent(@Nonnull TestSuiteFinished suiteFinished) {
-    super(suiteFinished.getSuiteName(), TreeNodeEvent.getNodeId(suiteFinished));
-  }
+    public TestSuiteFinishedEvent(@Nonnull String name) {
+        super(name, null);
+    }
 
-  public TestSuiteFinishedEvent(@Nonnull String name) {
-    super(name, null);
-  }
-
-  @Override
-  protected void appendToStringInfo(@Nonnull StringBuilder buf) {
-  }
+    @Override
+    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+    }
 }

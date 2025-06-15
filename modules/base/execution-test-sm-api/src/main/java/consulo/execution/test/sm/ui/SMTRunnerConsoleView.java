@@ -29,123 +29,138 @@ import consulo.util.collection.Lists;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * @author Roman Chernyatchik
  */
 public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
-  private SMTestRunnerResultsForm myResultsViewer;
-  @Nullable private final String mySplitterProperty;
-  private final List<AttachToProcessListener> myAttachToProcessListeners = Lists.newLockFreeCopyOnWriteList();
+    private SMTestRunnerResultsForm myResultsViewer;
+    @Nullable
+    private final String mySplitterProperty;
+    private final List<AttachToProcessListener> myAttachToProcessListeners = Lists.newLockFreeCopyOnWriteList();
 
-  /**
-   * @deprecated
-   */
-  public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties, final ExecutionEnvironment environment) {
-    this(consoleProperties, environment, null);
-  }
-
-  /**
-   * @deprecated
-   * @param splitterProperty               Key to store(project level) latest value of testTree/consoleTab splitter. E.g. "RSpec.Splitter.Proportion"
-   */
-  @SuppressWarnings("UnusedParameters")
-  public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties,
-                              final ExecutionEnvironment environment,
-                              @Nullable final String splitterProperty) {
-    super(consoleProperties, null);
-    mySplitterProperty = splitterProperty;
-  }
-
-  public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties) {
-    this(consoleProperties, (String)null);
-  }
-
-  /**
-   * @param splitterProperty               Key to store(project level) latest value of testTree/consoleTab splitter. E.g. "RSpec.Splitter.Proportion"
-   */
-  public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties,
-                              @Nullable final String splitterProperty) {
-    super(consoleProperties, null);
-    mySplitterProperty = splitterProperty;
-  }
-
-  @Override
-  protected TestResultsPanel createTestResultsPanel() {
-    // Results View
-    myResultsViewer = new SMTestRunnerResultsForm(getConsole().getComponent(),
-                                                  getConsole().createConsoleActions(),
-                                                  myProperties,
-                                                  mySplitterProperty);
-    return myResultsViewer;
-  }
-
-  @Override
-  public void initUI() {
-    super.initUI();
-
-    // Console
-    myResultsViewer.addEventsListener(new TestResultsViewer.SMEventsAdapter() {
-      @Override
-      public void onSelected(@Nullable final SMTestProxy selectedTestProxy,
-                             @Nonnull final TestResultsViewer viewer,
-                             @Nonnull final TestFrameworkRunningModel model) {
-        if (selectedTestProxy == null) {
-          return;
-        }
-
-        // print selected content
-        SMRunnerUtil.runInEventDispatchThread(() -> getPrinter().updateOnTestSelected(selectedTestProxy), Application.get().getNoneModalityState());
-      }
-    });
-  }
-
-  public SMTestRunnerResultsForm getResultsViewer() {
-    return myResultsViewer;
-  }
-
-  /**
-   * Prints a given string of a given type on the root node.
-   * Note: it's a permanent printing, as opposed to calling the same method on {@link #getConsole()} instance.
-   * @param s            given string
-   * @param contentType  given type
-   */
-  @Override
-  public void print(@Nonnull final String s, @Nonnull final ConsoleViewContentType contentType) {
-    myResultsViewer.getRoot().addLast(printer -> printer.print(s, contentType));
-  }
-
-  /**
-   * Prints a given hyperlink on the root node.
-   * Note: it's a permanent printing, as opposed to calling the same method on {@link #getConsole()} instance.
-   * @param hyperlinkText hyperlink text
-   * @param info          HyperlinkInfo
-   */
-  @Override
-  public void printHyperlink(String hyperlinkText, HyperlinkInfo info) {
-    myResultsViewer.getRoot().addLast(new HyperLink(hyperlinkText, info));
-  }
-
-  @Override
-  public void attachToProcess(ProcessHandler processHandler) {
-    super.attachToProcess(processHandler);
-    for (AttachToProcessListener listener : myAttachToProcessListeners) {
-      listener.onAttachToProcess(processHandler);
+    /**
+     * @deprecated
+     */
+    public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties, final ExecutionEnvironment environment) {
+        this(consoleProperties, environment, null);
     }
-  }
 
-  public void addAttachToProcessListener(@Nonnull AttachToProcessListener listener) {
-    myAttachToProcessListeners.add(listener);
-  }
+    /**
+     * @param splitterProperty Key to store(project level) latest value of testTree/consoleTab splitter. E.g. "RSpec.Splitter.Proportion"
+     * @deprecated
+     */
+    @SuppressWarnings("UnusedParameters")
+    public SMTRunnerConsoleView(
+        final TestConsoleProperties consoleProperties,
+        final ExecutionEnvironment environment,
+        @Nullable final String splitterProperty
+    ) {
+        super(consoleProperties, null);
+        mySplitterProperty = splitterProperty;
+    }
 
-  public void remoteAttachToProcessListener(@Nonnull AttachToProcessListener listener) {
-    myAttachToProcessListeners.remove(listener);
-  }
+    public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties) {
+        this(consoleProperties, (String) null);
+    }
 
-  @Override
-  public void dispose() {
-    myAttachToProcessListeners.clear();
-    super.dispose();
-  }
+    /**
+     * @param splitterProperty Key to store(project level) latest value of testTree/consoleTab splitter. E.g. "RSpec.Splitter.Proportion"
+     */
+    public SMTRunnerConsoleView(
+        final TestConsoleProperties consoleProperties,
+        @Nullable final String splitterProperty
+    ) {
+        super(consoleProperties, null);
+        mySplitterProperty = splitterProperty;
+    }
+
+    @Override
+    protected TestResultsPanel createTestResultsPanel() {
+        // Results View
+        myResultsViewer = new SMTestRunnerResultsForm(
+            getConsole().getComponent(),
+            getConsole().createConsoleActions(),
+            myProperties,
+            mySplitterProperty
+        );
+        return myResultsViewer;
+    }
+
+    @Override
+    public void initUI() {
+        super.initUI();
+
+        // Console
+        myResultsViewer.addEventsListener(new TestResultsViewer.SMEventsAdapter() {
+            @Override
+            public void onSelected(
+                @Nullable final SMTestProxy selectedTestProxy,
+                @Nonnull final TestResultsViewer viewer,
+                @Nonnull final TestFrameworkRunningModel model
+            ) {
+                if (selectedTestProxy == null) {
+                    return;
+                }
+
+                // print selected content
+                SMRunnerUtil.runInEventDispatchThread(
+                    () -> getPrinter().updateOnTestSelected(selectedTestProxy),
+                    Application.get().getNoneModalityState()
+                );
+            }
+        });
+    }
+
+    public SMTestRunnerResultsForm getResultsViewer() {
+        return myResultsViewer;
+    }
+
+    /**
+     * Prints a given string of a given type on the root node.
+     * Note: it's a permanent printing, as opposed to calling the same method on {@link #getConsole()} instance.
+     *
+     * @param s           given string
+     * @param contentType given type
+     */
+    @Override
+    public void print(@Nonnull final String s, @Nonnull final ConsoleViewContentType contentType) {
+        myResultsViewer.getRoot().addLast(printer -> printer.print(s, contentType));
+    }
+
+    /**
+     * Prints a given hyperlink on the root node.
+     * Note: it's a permanent printing, as opposed to calling the same method on {@link #getConsole()} instance.
+     *
+     * @param hyperlinkText hyperlink text
+     * @param info          HyperlinkInfo
+     */
+    @Override
+    public void printHyperlink(String hyperlinkText, HyperlinkInfo info) {
+        myResultsViewer.getRoot().addLast(new HyperLink(hyperlinkText, info));
+    }
+
+    @Override
+    public void attachToProcess(ProcessHandler processHandler) {
+        super.attachToProcess(processHandler);
+        for (AttachToProcessListener listener : myAttachToProcessListeners) {
+            listener.onAttachToProcess(processHandler);
+        }
+    }
+
+    public void addAttachToProcessListener(@Nonnull AttachToProcessListener listener) {
+        myAttachToProcessListeners.add(listener);
+    }
+
+    public void remoteAttachToProcessListener(@Nonnull AttachToProcessListener listener) {
+        myAttachToProcessListeners.remove(listener);
+    }
+
+    @Override
+    public void dispose() {
+        myAttachToProcessListeners.clear();
+        super.dispose();
+    }
 }

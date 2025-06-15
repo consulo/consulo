@@ -22,51 +22,52 @@ import consulo.project.Project;
 import consulo.ui.ex.tree.NodeDescriptor;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
  * @author: Roman Chernyatchik
  */
 public class SMTRunnerTreeStructure extends TestTreeViewStructure<SMTestProxy> {
-  private final Object myRootNode;
-  private final Project myProject;
+    private final Object myRootNode;
+    private final Project myProject;
 
-  public SMTRunnerTreeStructure(final Project project, final Object rootNode) {
-    myProject = project;
-    myRootNode = rootNode;
-  }
+    public SMTRunnerTreeStructure(final Project project, final Object rootNode) {
+        myProject = project;
+        myRootNode = rootNode;
+    }
 
-  @Override
-  public void commit() {
-  }
+    @Override
+    public void commit() {
+    }
 
-  @Override
-  public boolean hasSomethingToCommit() {
-    return false;
-  }
+    @Override
+    public boolean hasSomethingToCommit() {
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  public SMTRunnerNodeDescriptor createDescriptor(final Object element, final NodeDescriptor parentDesc) {
-    //noinspection unchecked
-    return new SMTRunnerNodeDescriptor(myProject, (SMTestProxy)element, (NodeDescriptor<SMTestProxy>)parentDesc);
-  }
+    @Nonnull
+    @Override
+    public SMTRunnerNodeDescriptor createDescriptor(final Object element, final NodeDescriptor parentDesc) {
+        //noinspection unchecked
+        return new SMTRunnerNodeDescriptor(myProject, (SMTestProxy) element, (NodeDescriptor<SMTestProxy>) parentDesc);
+    }
 
-  @Override
-  public Object[] getChildElements(final Object element) {
-    final List<? extends SMTestProxy> results = ((SMTestProxy)element).getChildren(getFilter());
+    @Override
+    public Object[] getChildElements(final Object element) {
+        final List<? extends SMTestProxy> results = ((SMTestProxy) element).getChildren(getFilter());
 
-    return results.toArray(new AbstractTestProxy[results.size()]);
-  }
+        return results.toArray(new AbstractTestProxy[results.size()]);
+    }
 
-  @Override
-  public Object getParentElement(final Object element) {
-    return ((AbstractTestProxy)element).getParent();
-  }
+    @Override
+    public Object getParentElement(final Object element) {
+        return ((AbstractTestProxy) element).getParent();
+    }
 
 
-  @Override
-  public Object getRootElement() {
-    return myRootNode;
-  }
+    @Override
+    public Object getRootElement() {
+        return myRootNode;
+    }
 }

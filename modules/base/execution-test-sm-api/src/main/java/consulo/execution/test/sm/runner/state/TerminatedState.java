@@ -19,38 +19,38 @@ package consulo.execution.test.sm.runner.state;
  * @author Roman Chernyatchik
  */
 public class TerminatedState extends AbstractState {
-  public static final TerminatedState INSTANCE = new TerminatedState();
+    public static final TerminatedState INSTANCE = new TerminatedState();
 
-  protected TerminatedState() {
-  }
+    protected TerminatedState() {
+    }
 
-  public boolean isInProgress() {
-    return false;
-  }
+    public boolean isInProgress() {
+        return false;
+    }
 
-  public boolean isDefect() {
-    return true;
-  }
+    public boolean isDefect() {
+        return true;
+    }
 
-  public boolean wasLaunched() {
-    return true;
-  }
+    public boolean wasLaunched() {
+        return true;
+    }
 
-  public boolean isFinal() {
-    return true;
-  }
+    public boolean isFinal() {
+        return true;
+    }
 
-  public boolean wasTerminated() {
-    return true;
-  }
+    public boolean wasTerminated() {
+        return true;
+    }
 
-  public Magnitude getMagnitude() {
-    return Magnitude.TERMINATED_INDEX;
-  }
+    public Magnitude getMagnitude() {
+        return Magnitude.TERMINATED_INDEX;
+    }
 
-  @Override
-  public String toString() {
-    //noinspection HardCodedStringLiteral
-    return "TERMINATED";
-  }
+    @Override
+    public String toString() {
+        //noinspection HardCodedStringLiteral
+        return "TERMINATED";
+    }
 }

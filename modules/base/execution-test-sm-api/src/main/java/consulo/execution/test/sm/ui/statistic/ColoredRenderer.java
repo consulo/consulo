@@ -21,5 +21,5 @@ import javax.swing.*;
  * @author Roman Chernyatchik
  */
 public interface ColoredRenderer {
-  void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column);
+    void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column);
 }

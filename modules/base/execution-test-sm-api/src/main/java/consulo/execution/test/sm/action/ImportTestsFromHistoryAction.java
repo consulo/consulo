@@ -28,42 +28,44 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
-  private String myFileName;
+    private String myFileName;
 
-  public ImportTestsFromHistoryAction(@Nullable SMTRunnerConsoleProperties properties, Project project, String name) {
-    super(properties, getPresentableText(project, name), getPresentableText(project, name), getIcon(project, name));
-    myFileName = name;
-  }
-
-  @Nullable
-  private static Image getIcon(Project project, String name) {
-    return TestHistoryConfiguration.getInstance(project).getIcon(name);
-  }
-
-  private static String getPresentableText(Project project, String name) {
-    String nameWithoutExtension = FileUtil.getNameWithoutExtension(name);
-    final int lastIndexOf = nameWithoutExtension.lastIndexOf(" - ");
-    if (lastIndexOf > 0) {
-      final String date = nameWithoutExtension.substring(lastIndexOf + 3);
-      try {
-        final Date creationDate = new SimpleDateFormat(SMTestRunnerResultsForm.HISTORY_DATE_FORMAT).parse(date);
-        final String configurationName = TestHistoryConfiguration.getInstance(project).getConfigurationName(name);
-        return (configurationName != null ? configurationName : nameWithoutExtension.substring(0, lastIndexOf)) +
-               " (" + DateFormatUtil.formatDateTime(creationDate) + ")";
-      }
-      catch (ParseException ignore) {}
+    public ImportTestsFromHistoryAction(@Nullable SMTRunnerConsoleProperties properties, Project project, String name) {
+        super(properties, getPresentableText(project, name), getPresentableText(project, name), getIcon(project, name));
+        myFileName = name;
     }
-    return nameWithoutExtension;
-  }
 
-  @Nullable
-  @Override
-  public VirtualFile getFile(@Nonnull Project project) {
-    return LocalFileSystem.getInstance().findFileByPath(TestStateStorage.getTestHistoryRoot(project).getPath() + "/" + myFileName);
-  }
+    @Nullable
+    private static Image getIcon(Project project, String name) {
+        return TestHistoryConfiguration.getInstance(project).getIcon(name);
+    }
+
+    private static String getPresentableText(Project project, String name) {
+        String nameWithoutExtension = FileUtil.getNameWithoutExtension(name);
+        final int lastIndexOf = nameWithoutExtension.lastIndexOf(" - ");
+        if (lastIndexOf > 0) {
+            final String date = nameWithoutExtension.substring(lastIndexOf + 3);
+            try {
+                final Date creationDate = new SimpleDateFormat(SMTestRunnerResultsForm.HISTORY_DATE_FORMAT).parse(date);
+                final String configurationName = TestHistoryConfiguration.getInstance(project).getConfigurationName(name);
+                return (configurationName != null ? configurationName : nameWithoutExtension.substring(0, lastIndexOf)) +
+                    " (" + DateFormatUtil.formatDateTime(creationDate) + ")";
+            }
+            catch (ParseException ignore) {
+            }
+        }
+        return nameWithoutExtension;
+    }
+
+    @Nullable
+    @Override
+    public VirtualFile getFile(@Nonnull Project project) {
+        return LocalFileSystem.getInstance().findFileByPath(TestStateStorage.getTestHistoryRoot(project).getPath() + "/" + myFileName);
+    }
 }

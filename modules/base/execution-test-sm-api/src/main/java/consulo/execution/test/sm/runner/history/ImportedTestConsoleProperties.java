@@ -31,90 +31,96 @@ import consulo.ui.ex.action.DefaultActionGroup;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 
 public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties implements SMCustomMessagesParsing {
-  private final
-  @Nullable
-  SMTRunnerConsoleProperties myProperties;
-  private final File myFile;
-  private final ProcessHandler myHandler;
+    private final
+    @Nullable
+    SMTRunnerConsoleProperties myProperties;
+    private final File myFile;
+    private final ProcessHandler myHandler;
 
-  public ImportedTestConsoleProperties(@Nullable SMTRunnerConsoleProperties properties,
-                                       File file,
-                                       ProcessHandler handler,
-                                       Project project,
-                                       RunProfile runConfiguration,
-                                       String frameworkName,
-                                       Executor executor) {
-    super(project, runConfiguration, frameworkName, executor);
-    myProperties = properties;
-    myFile = file;
-    myHandler = handler;
-  }
-
-  @Override
-  public OutputToGeneralTestEventsConverter createTestEventsConverter(@Nonnull String testFrameworkName, @Nonnull TestConsoleProperties consoleProperties) {
-    return new ImportedToGeneralTestEventsConverter(testFrameworkName, consoleProperties, myFile, myHandler);
-  }
-
-  @Override
-  public boolean isIdBasedTestTree() {
-    return false;
-  }
-
-  @Override
-  public boolean isPrintTestingStartedTime() {
-    return false;
-  }
-
-  @jakarta.annotation.Nullable
-  @Override
-  public Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace) {
-    return myProperties == null ? null : myProperties.getErrorNavigatable(location, stacktrace);
-  }
-
-  @Nullable
-  @Override
-  public Navigatable getErrorNavigatable(@Nonnull Project project, @Nonnull String stacktrace) {
-    return myProperties == null ? null : myProperties.getErrorNavigatable(project, stacktrace);
-  }
-
-  @Override
-  public void addStackTraceFilter(Filter filter) {
-    if (myProperties != null) {
-      myProperties.addStackTraceFilter(filter);
+    public ImportedTestConsoleProperties(
+        @Nullable SMTRunnerConsoleProperties properties,
+        File file,
+        ProcessHandler handler,
+        Project project,
+        RunProfile runConfiguration,
+        String frameworkName,
+        Executor executor
+    ) {
+        super(project, runConfiguration, frameworkName, executor);
+        myProperties = properties;
+        myFile = file;
+        myHandler = handler;
     }
-  }
 
-  @Override
-  public boolean fixEmptySuite() {
-    return myProperties != null && myProperties.fixEmptySuite();
-  }
-
-  @Override
-  @Nullable
-  public SMTestLocator getTestLocator() {
-    return myProperties == null ? null : myProperties.getTestLocator();
-  }
-
-  @Override
-  @jakarta.annotation.Nullable
-  public TestProxyFilterProvider getFilterProvider() {
-    return myProperties == null ? null : myProperties.getFilterProvider();
-  }
-
-  @Override
-  @Nullable
-  public AbstractRerunFailedTestsAction createRerunFailedTestsAction(ConsoleView consoleView) {
-    return myProperties == null ? null : myProperties.createRerunFailedTestsAction(consoleView);
-  }
-
-  @Override
-  public void appendAdditionalActions(DefaultActionGroup actionGroup, JComponent parent, TestConsoleProperties target) {
-    if (myProperties != null) {
-      myProperties.appendAdditionalActions(actionGroup, parent, this);
+    @Override
+    public OutputToGeneralTestEventsConverter createTestEventsConverter(
+        @Nonnull String testFrameworkName,
+        @Nonnull TestConsoleProperties consoleProperties
+    ) {
+        return new ImportedToGeneralTestEventsConverter(testFrameworkName, consoleProperties, myFile, myHandler);
     }
-  }
+
+    @Override
+    public boolean isIdBasedTestTree() {
+        return false;
+    }
+
+    @Override
+    public boolean isPrintTestingStartedTime() {
+        return false;
+    }
+
+    @jakarta.annotation.Nullable
+    @Override
+    public Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace) {
+        return myProperties == null ? null : myProperties.getErrorNavigatable(location, stacktrace);
+    }
+
+    @Nullable
+    @Override
+    public Navigatable getErrorNavigatable(@Nonnull Project project, @Nonnull String stacktrace) {
+        return myProperties == null ? null : myProperties.getErrorNavigatable(project, stacktrace);
+    }
+
+    @Override
+    public void addStackTraceFilter(Filter filter) {
+        if (myProperties != null) {
+            myProperties.addStackTraceFilter(filter);
+        }
+    }
+
+    @Override
+    public boolean fixEmptySuite() {
+        return myProperties != null && myProperties.fixEmptySuite();
+    }
+
+    @Override
+    @Nullable
+    public SMTestLocator getTestLocator() {
+        return myProperties == null ? null : myProperties.getTestLocator();
+    }
+
+    @Override
+    @jakarta.annotation.Nullable
+    public TestProxyFilterProvider getFilterProvider() {
+        return myProperties == null ? null : myProperties.getFilterProvider();
+    }
+
+    @Override
+    @Nullable
+    public AbstractRerunFailedTestsAction createRerunFailedTestsAction(ConsoleView consoleView) {
+        return myProperties == null ? null : myProperties.createRerunFailedTestsAction(consoleView);
+    }
+
+    @Override
+    public void appendAdditionalActions(DefaultActionGroup actionGroup, JComponent parent, TestConsoleProperties target) {
+        if (myProperties != null) {
+            myProperties.appendAdditionalActions(actionGroup, parent, this);
+        }
+    }
 }

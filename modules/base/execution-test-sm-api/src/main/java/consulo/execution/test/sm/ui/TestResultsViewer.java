@@ -27,55 +27,57 @@ import jakarta.annotation.Nullable;
  * @author Roman Chernyatchik
  */
 public interface TestResultsViewer extends Disposable {
-  /**
-   * Fake Root for toplevel test suits/tests
-   *
-   * @return root
-   */
-  SMTestProxy getTestsRootNode();
+    /**
+     * Fake Root for toplevel test suits/tests
+     *
+     * @return root
+     */
+    SMTestProxy getTestsRootNode();
 
-  /**
-   * Selects test or suite in Tests tree and notify about selection changed
-   *
-   * @param proxy
-   */
-  void selectAndNotify(@Nullable AbstractTestProxy proxy);
+    /**
+     * Selects test or suite in Tests tree and notify about selection changed
+     *
+     * @param proxy
+     */
+    void selectAndNotify(@Nullable AbstractTestProxy proxy);
 
-  void addEventsListener(EventsListener listener);
+    void addEventsListener(EventsListener listener);
 
-  void setShowStatisticForProxyHandler(PropagateSelectionHandler handler);
+    void setShowStatisticForProxyHandler(PropagateSelectionHandler handler);
 
-  /**
-   * If handler for statistics was set this method will execute it
-   */
-  void showStatisticsForSelectedProxy();
+    /**
+     * If handler for statistics was set this method will execute it
+     */
+    void showStatisticsForSelectedProxy();
 
-  interface EventsListener extends TestProxyTreeSelectionListener {
-    void onTestingStarted(TestResultsViewer sender);
+    interface EventsListener extends TestProxyTreeSelectionListener {
+        void onTestingStarted(TestResultsViewer sender);
 
-    void onTestingFinished(TestResultsViewer sender);
+        void onTestingFinished(TestResultsViewer sender);
 
-    void onTestNodeAdded(TestResultsViewer sender, SMTestProxy test);
-  }
-
-  class SMEventsAdapter implements EventsListener {
-
-    @Override
-    public void onTestingStarted(TestResultsViewer sender) {
+        void onTestNodeAdded(TestResultsViewer sender, SMTestProxy test);
     }
 
-    @Override
-    public void onTestingFinished(TestResultsViewer sender) {
-    }
+    class SMEventsAdapter implements EventsListener {
 
-    @Override
-    public void onTestNodeAdded(TestResultsViewer sender, SMTestProxy test) {
-    }
+        @Override
+        public void onTestingStarted(TestResultsViewer sender) {
+        }
 
-    @Override
-    public void onSelected(@Nullable SMTestProxy selectedTestProxy,
-                           @Nonnull TestResultsViewer viewer,
-                           @Nonnull TestFrameworkRunningModel model) {
+        @Override
+        public void onTestingFinished(TestResultsViewer sender) {
+        }
+
+        @Override
+        public void onTestNodeAdded(TestResultsViewer sender, SMTestProxy test) {
+        }
+
+        @Override
+        public void onSelected(
+            @Nullable SMTestProxy selectedTestProxy,
+            @Nonnull TestResultsViewer viewer,
+            @Nonnull TestFrameworkRunningModel model
+        ) {
+        }
     }
-  }
 }
