@@ -50,8 +50,8 @@ public abstract class CachedValuesManager {
     /**
      * Creates a new CachedValue instance with the given provider.
      */
-    public
-    @Nonnull <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider) {
+    @Nonnull
+    public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider) {
         return createCachedValue(provider, false);
     }
 
