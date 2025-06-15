@@ -46,31 +46,31 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
         myFactory = factory;
     }
 
-    @Override
     @Nonnull
+    @Override
     public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
         return myFactory.createCachedValue(provider, trackValue);
     }
 
+    @Nonnull
     @Override
-    public
-    @Nonnull <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
+    public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
         @Nonnull ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue
     ) {
         return myFactory.createParameterizedCachedValue(provider, trackValue);
     }
 
+    @Nullable
     @Override
-    public
-    @Nullable <T> T getCachedValue(
+    public <T> T getCachedValue(
         @Nonnull UserDataHolder dataHolder,
         @Nonnull Key<CachedValue<T>> key,
         @Nonnull CachedValueProvider<T> provider,
         boolean trackValue
     ) {
         CachedValue<T> value = dataHolder.getUserData(key);
-        if (value instanceof CachedValueBase && ((CachedValueBase<?>)value).isFromMyProject(myProject)) {
+        if (value instanceof ProjectCachedValueEx cachedValueEx && cachedValueEx.isFromMyProject(myProject)) {
             Supplier<T> data = value.getUpToDateOrNull();
             if (data != null) {
                 return data.get();
@@ -126,7 +126,7 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
     ) {
         myFactory.checkProviderForMemoryLeak(provider, key, dh);
         CachedValue<T> value = createCachedValue(provider, trackValue);
-        assert ((CachedValueBase<?>)value).isFromMyProject(myProject);
+        assert ((ProjectCachedValueEx)value).isFromMyProject(myProject);
         return value;
     }
 

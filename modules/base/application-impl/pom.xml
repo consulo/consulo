@@ -88,7 +88,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-disposer-impl</artifactId>
             <version>${project.version}</version>
-            <optional>true</optional>
+            <!--<optional>true</optional>-->
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -105,6 +105,38 @@
             <groupId>args4j</groupId>
             <artifactId>args4j</artifactId>
             <optional>true</optional>
+        </dependency>
+        <!-- Test -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-util-collection-via-trove</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>net.bytebuddy</groupId>-->
+            <!--<artifactId>byte-buddy</artifactId>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

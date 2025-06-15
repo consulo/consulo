@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal.util;
 
-import consulo.application.internal.util.CachedValueEx;
 import consulo.application.internal.util.CachedValueProfiler;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.RecursionGuard;
@@ -9,7 +8,6 @@ import consulo.application.util.RecursionManager;
 import consulo.component.util.ModificationTracker;
 import consulo.document.Document;
 import consulo.logging.Logger;
-import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.NotNullList;
 import consulo.util.lang.ObjectUtil;
@@ -26,7 +24,7 @@ import java.util.function.Supplier;
 /**
  * @author Dmitry Avdeev
  */
-public abstract class CachedValueBase<T> implements CachedValueEx<T> {
+public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
     private static final Logger LOG = Logger.getInstance(CachedValueBase.class);
     private final boolean myTrackValue;
     private volatile SoftReference<Data<T>> myData;
@@ -136,18 +134,17 @@ public abstract class CachedValueBase<T> implements CachedValueEx<T> {
         if (dependency instanceof CachedValueBase cachedValueBase) {
             return !cachedValueBase.hasUpToDateValue();
         }
-        final long timeStamp = getTimeStamp(dependency);
+        long timeStamp = getTimeStamp(dependency);
         return timeStamp < 0 || timeStamp != oldTimeStamp;
     }
 
-    @Nonnull
     private static void collectDependencies(@Nonnull List<Object> resultingDeps, Object[] dependencies) {
         for (Object dependency : dependencies) {
             if (dependency == ObjectUtil.NULL) {
                 continue;
             }
-            if (dependency instanceof Object[]) {
-                collectDependencies(resultingDeps, (Object[])dependency);
+            if (dependency instanceof Object[] dependencyObjects) {
+                collectDependencies(resultingDeps, dependencyObjects);
             }
             else {
                 resultingDeps.add(dependency);
@@ -183,8 +180,6 @@ public abstract class CachedValueBase<T> implements CachedValueEx<T> {
         setData(data);
         return data.getValue();
     }
-
-    public abstract boolean isFromMyProject(@Nonnull Project project);
 
     public abstract Object getValueProvider();
 
