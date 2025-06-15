@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.dataholder.keyFMap;
+package consulo.util.dataholder.internal.keyFMap;
 
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.ints.IntMaps;
@@ -23,7 +23,7 @@ import consulo.util.dataholder.internal.KeyRegistry;
 
 import jakarta.annotation.Nonnull;
 
-import static consulo.util.dataholder.keyFMap.ArrayBackedFMap.getKeysByIndices;
+import static consulo.util.dataholder.internal.keyFMap.ArrayBackedFMap.getKeysByIndices;
 
 class MapBackedFMap implements KeyFMap {
     private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;

@@ -23,7 +23,7 @@ import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import consulo.util.dataholder.keyFMap.KeyFMap;
+import consulo.util.dataholder.internal.keyFMap.KeyFMap;
 import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;

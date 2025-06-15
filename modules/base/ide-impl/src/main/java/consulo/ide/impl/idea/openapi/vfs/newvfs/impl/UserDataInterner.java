@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
-import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.util.collection.impl.map.LinkedHashMap;
-import consulo.util.dataholder.keyFMap.ArrayBackedFMap;
-import consulo.util.dataholder.keyFMap.KeyFMap;
-import consulo.util.dataholder.keyFMap.OneElementFMap;
-import consulo.util.dataholder.keyFMap.PairElementsFMap;
+import consulo.util.dataholder.internal.keyFMap.ArrayBackedFMap;
+import consulo.util.dataholder.internal.keyFMap.KeyFMap;
+import consulo.util.dataholder.internal.keyFMap.OneElementFMap;
+import consulo.util.dataholder.internal.keyFMap.PairElementsFMap;
+import consulo.util.lang.ref.SoftReference;
 import jakarta.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;

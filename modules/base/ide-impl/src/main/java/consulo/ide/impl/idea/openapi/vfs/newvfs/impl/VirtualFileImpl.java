@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.dataholder.keyFMap.KeyFMap;
+import consulo.util.dataholder.internal.keyFMap.KeyFMap;
 import consulo.util.io.FileTooBigException;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.ObjectUtil;

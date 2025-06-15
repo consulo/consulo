@@ -10,5 +10,5 @@ module consulo.util.dataholder {
     requires consulo.util.collection.primitive;
 
     exports consulo.util.dataholder;
-    exports consulo.util.dataholder.keyFMap;
+    exports consulo.util.dataholder.internal.keyFMap to consulo.ide.impl;
 }

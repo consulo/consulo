@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.dataholder.keyFMap;
+package consulo.util.dataholder.internal.keyFMap;
 
 import consulo.util.dataholder.Key;
 import consulo.util.collection.ArrayUtil;

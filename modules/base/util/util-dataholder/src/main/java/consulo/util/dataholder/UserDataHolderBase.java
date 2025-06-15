@@ -15,7 +15,7 @@
  */
 package consulo.util.dataholder;
 
-import consulo.util.dataholder.keyFMap.KeyFMap;
+import consulo.util.dataholder.internal.keyFMap.KeyFMap;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

@@ -18,7 +18,7 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
-import consulo.util.dataholder.keyFMap.KeyFMap;
+import consulo.util.dataholder.internal.keyFMap.KeyFMap;
 import consulo.util.io.FileAttributes;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
