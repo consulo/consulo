@@ -23,5 +23,5 @@ import consulo.execution.executor.Executor;
  * {@link AbstractImportTestsAction} would work from Main Menu.
  */
 public interface SMRunnerConsolePropertiesProvider {
-  SMTRunnerConsoleProperties createTestConsoleProperties(Executor executor);
+    SMTRunnerConsoleProperties createTestConsoleProperties(Executor executor);
 }

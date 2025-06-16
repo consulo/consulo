@@ -15,37 +15,36 @@
  */
 package consulo.execution.test.sm.runner.state;
 
-
 import consulo.execution.test.Printer;
 import consulo.execution.test.stacktrace.DiffHyperlink;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestComparisonFailedStates extends TestFailedState {
+    final List<TestComparisionFailedState> myStates = new ArrayList<>();
 
-  final List<TestComparisionFailedState> myStates = new ArrayList<TestComparisionFailedState>();
-
-  public TestComparisonFailedStates(@jakarta.annotation.Nullable String localizedMessage, @jakarta.annotation.Nullable String stackTrace) {
-    super(localizedMessage, stackTrace);
-  }
-
-  public void addComparisonFailure(TestComparisionFailedState state) {
-    myStates.add(state);
-  }
-
-  @Override
-  public void printOn(Printer printer) {
-
-    for (TestComparisionFailedState state : myStates) {
-      state.printOn(printer);
+    public TestComparisonFailedStates(@Nullable String localizedMessage, @Nullable String stackTrace) {
+        super(localizedMessage, stackTrace);
     }
-  }
 
-  @Nonnull
-  public List<DiffHyperlink> getHyperlinks() {
-    return ContainerUtil.map(myStates, state -> state.getHyperlink());
-  }
+    public void addComparisonFailure(TestComparisionFailedState state) {
+        myStates.add(state);
+    }
+
+    @Override
+    public void printOn(Printer printer) {
+
+        for (TestComparisionFailedState state : myStates) {
+            state.printOn(printer);
+        }
+    }
+
+    @Nonnull
+    public List<DiffHyperlink> getHyperlinks() {
+        return ContainerUtil.map(myStates, TestComparisionFailedState::getHyperlink);
+    }
 }

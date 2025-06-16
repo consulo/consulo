@@ -22,6 +22,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public interface SMStacktraceParserEx extends SMStacktraceParser {
-  @Nullable
-  Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace);
+    @Nullable
+    Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace);
 }

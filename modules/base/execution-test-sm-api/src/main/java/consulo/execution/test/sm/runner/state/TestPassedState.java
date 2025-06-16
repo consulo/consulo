@@ -19,40 +19,46 @@ package consulo.execution.test.sm.runner.state;
  * @author Roman Chernyatchik
  */
 public class TestPassedState extends AbstractState {
-  //This state is common for all instances and doesn't contains
-  //instance-specific information
-  public static final TestPassedState INSTANCE = new TestPassedState();
+    //This state is common for all instances and doesn't contains
+    //instance-specific information
+    public static final TestPassedState INSTANCE = new TestPassedState();
 
-  private TestPassedState() {
-  }
+    private TestPassedState() {
+    }
 
-  public boolean isInProgress() {
-    return false;
-  }
+    @Override
+    public boolean isInProgress() {
+        return false;
+    }
 
-  public boolean isDefect() {
-    return false;
-  }
+    @Override
+    public boolean isDefect() {
+        return false;
+    }
 
-  public boolean wasLaunched() {
-    return true;
-  }
+    @Override
+    public boolean wasLaunched() {
+        return true;
+    }
 
-  public boolean isFinal() {
-    return true;
-  }
+    @Override
+    public boolean isFinal() {
+        return true;
+    }
 
-  public boolean wasTerminated() {
-    return false;
-  }
+    @Override
+    public boolean wasTerminated() {
+        return false;
+    }
 
-  public Magnitude getMagnitude() {
-    return Magnitude.PASSED_INDEX;
-  }
+    @Override
+    public Magnitude getMagnitude() {
+        return Magnitude.PASSED_INDEX;
+    }
 
-  @Override
-  public String toString() {
-    //noinspection HardCodedStringLiteral
-    return "PASSED";
-  }
+    @Override
+    public String toString() {
+        //noinspection HardCodedStringLiteral
+        return "PASSED";
+    }
 }

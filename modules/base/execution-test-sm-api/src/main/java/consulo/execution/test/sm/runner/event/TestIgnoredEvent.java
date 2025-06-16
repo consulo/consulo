@@ -23,37 +23,37 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class TestIgnoredEvent extends TreeNodeEvent {
-  private final String myIgnoreComment;
-  private final String myStacktrace;
+    private final String myIgnoreComment;
+    private final String myStacktrace;
 
-  public TestIgnoredEvent(@Nonnull String testName, @Nonnull String ignoreComment, @Nullable String stacktrace) {
-    super(testName, null);
-    myIgnoreComment = ignoreComment;
-    myStacktrace = stacktrace;
-  }
-
-  public TestIgnoredEvent(@Nonnull TestIgnored testIgnored, @jakarta.annotation.Nullable String stacktrace) {
-    super(testIgnored.getTestName(), TreeNodeEvent.getNodeId(testIgnored));
-    myIgnoreComment = testIgnored.getIgnoreComment();
-    myStacktrace = stacktrace;
-  }
-
-  @Nonnull
-  public String getIgnoreComment() {
-    if (StringUtil.isEmpty(myIgnoreComment)) {
-      return SMTestsRunnerBundle.message("sm.test.runner.states.test.is.ignored");
+    public TestIgnoredEvent(@Nonnull String testName, @Nonnull String ignoreComment, @Nullable String stacktrace) {
+        super(testName, null);
+        myIgnoreComment = ignoreComment;
+        myStacktrace = stacktrace;
     }
-    return myIgnoreComment;
-  }
 
-  @Nullable
-  public String getStacktrace() {
-    return myStacktrace;
-  }
+    public TestIgnoredEvent(@Nonnull TestIgnored testIgnored, @Nullable String stacktrace) {
+        super(testIgnored.getTestName(), TreeNodeEvent.getNodeId(testIgnored));
+        myIgnoreComment = testIgnored.getIgnoreComment();
+        myStacktrace = stacktrace;
+    }
 
-  @Override
-  protected void appendToStringInfo(@Nonnull StringBuilder buf) {
-    append(buf, "ignoreComment", myIgnoreComment);
-    append(buf, "stacktrace", myStacktrace);
-  }
+    @Nonnull
+    public String getIgnoreComment() {
+        if (StringUtil.isEmpty(myIgnoreComment)) {
+            return SMTestsRunnerBundle.message("sm.test.runner.states.test.is.ignored");
+        }
+        return myIgnoreComment;
+    }
+
+    @Nullable
+    public String getStacktrace() {
+        return myStacktrace;
+    }
+
+    @Override
+    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+        append(buf, "ignoreComment", myIgnoreComment);
+        append(buf, "stacktrace", myStacktrace);
+    }
 }

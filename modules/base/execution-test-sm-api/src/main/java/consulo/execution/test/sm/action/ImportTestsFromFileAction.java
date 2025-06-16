@@ -19,6 +19,7 @@ import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -26,15 +27,21 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ImportTestsFromFileAction extends AbstractImportTestsAction {
-  public ImportTestsFromFileAction(SMTRunnerConsoleProperties properties) {
-    super(properties, (properties == null ? "" : "Import ") + "From File ...", "Import tests from file", null);
-  }
+    public ImportTestsFromFileAction(SMTRunnerConsoleProperties properties) {
+        super(
+            properties,
+            LocalizeValue.localizeTODO((properties == null ? "" : "Import ") + "From File ..."),
+            LocalizeValue.localizeTODO("Import tests from file"),
+            null
+        );
+    }
 
-  @Nullable
-  @Override
-  public VirtualFile getFile(@Nonnull Project project) {
-    final FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
-    xmlDescriptor.setTitle("Choose a File with Tests Result");
-    return IdeaFileChooser.chooseFile(xmlDescriptor, project, null);
-  }
+    @Nullable
+    @Override
+    public VirtualFile getFile(@Nonnull Project project) {
+        FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
+            .withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
+        xmlDescriptor.withTitleValue(LocalizeValue.localizeTODO("Choose a File with Tests Result"));
+        return IdeaFileChooser.chooseFile(xmlDescriptor, project, null);
+    }
 }

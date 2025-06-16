@@ -21,14 +21,15 @@ import consulo.execution.test.sm.TestsLocationProviderUtil;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 21-Jul-22
+ * @since 2022-07-21
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface SMTestHelper {
-  @Nonnull
-  List<TestsLocationProviderUtil.FileInfo> collectCandidates(final Project project, final String fileName, final boolean includeNonProjectItems);
+    @Nonnull
+    List<TestsLocationProviderUtil.FileInfo> collectCandidates(Project project, String fileName, boolean includeNonProjectItems);
 }

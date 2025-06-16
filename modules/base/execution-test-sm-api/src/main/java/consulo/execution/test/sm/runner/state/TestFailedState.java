@@ -25,6 +25,7 @@ import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -33,84 +34,95 @@ import java.util.List;
  * @author Roman Chernyatchik
  */
 public class TestFailedState extends AbstractState implements Disposable {
-  private final List<String> myPresentationText;
+    private final List<String> myPresentationText;
 
-  public TestFailedState(@Nullable final String localizedMessage, @Nullable final String stackTrace) {
-    myPresentationText = Lists.newLockFreeCopyOnWriteList(Collections.singleton(buildErrorPresentationText(localizedMessage, stackTrace)));
-  }
-
-  public void addError(@Nullable String localizedMessage, @Nullable String stackTrace, Printer printer) {
-    final String msg = buildErrorPresentationText(localizedMessage, stackTrace);
-    if (msg != null) {
-      myPresentationText.add(msg);
-      if (printer != null) {
-        printError(printer, Arrays.asList(msg), false);
-      }
+    public TestFailedState(@Nullable String localizedMessage, @Nullable String stackTrace) {
+        myPresentationText =
+            Lists.newLockFreeCopyOnWriteList(Collections.singleton(buildErrorPresentationText(localizedMessage, stackTrace)));
     }
-  }
 
-  @Override
-  public void dispose() {
-  }
-
-  @Nullable
-  public static String buildErrorPresentationText(@Nullable final String localizedMessage, @Nullable final String stackTrace) {
-    final String text = (StringUtil.isEmptyOrSpaces(localizedMessage) ? "" : localizedMessage + CompositePrintable.NEW_LINE) +
-                        (StringUtil.isEmptyOrSpaces(stackTrace) ? "" : stackTrace + CompositePrintable.NEW_LINE);
-    return StringUtil.isEmptyOrSpaces(text) ? null : text;
-  }
-
-  public static void printError(@Nonnull final Printer printer, @Nonnull final List<String> errorPresentationText) {
-    printError(printer, errorPresentationText, true);
-  }
-
-  private static void printError(@Nonnull final Printer printer, @Nonnull final List<String> errorPresentationText, final boolean setMark) {
-    boolean addMark = setMark;
-    for (final String errorText : errorPresentationText) {
-      if (errorText != null) {
-        printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-        if (addMark) {
-          printer.mark();
-          addMark = false;
+    public void addError(@Nullable String localizedMessage, @Nullable String stackTrace, Printer printer) {
+        String msg = buildErrorPresentationText(localizedMessage, stackTrace);
+        if (msg != null) {
+            myPresentationText.add(msg);
+            if (printer != null) {
+                printError(printer, Arrays.asList(msg), false);
+            }
         }
-        printer.printWithAnsiColoring(errorText, ProcessOutputTypes.STDERR);
-      }
     }
-  }
 
-  @Override
-  public void printOn(final Printer printer) {
-    super.printOn(printer);
-    printError(printer, myPresentationText);
-  }
+    @Override
+    public void dispose() {
+    }
 
-  public boolean isDefect() {
-    return true;
-  }
+    @Nullable
+    public static String buildErrorPresentationText(@Nullable String localizedMessage, @Nullable String stackTrace) {
+        String text = (StringUtil.isEmptyOrSpaces(localizedMessage) ? "" : localizedMessage + CompositePrintable.NEW_LINE) +
+            (StringUtil.isEmptyOrSpaces(stackTrace) ? "" : stackTrace + CompositePrintable.NEW_LINE);
+        return StringUtil.isEmptyOrSpaces(text) ? null : text;
+    }
 
-  public boolean wasLaunched() {
-    return true;
-  }
+    public static void printError(@Nonnull Printer printer, @Nonnull List<String> errorPresentationText) {
+        printError(printer, errorPresentationText, true);
+    }
 
-  public boolean isFinal() {
-    return true;
-  }
+    private static void printError(
+        @Nonnull Printer printer,
+        @Nonnull List<String> errorPresentationText,
+        boolean setMark
+    ) {
+        boolean addMark = setMark;
+        for (String errorText : errorPresentationText) {
+            if (errorText != null) {
+                printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+                if (addMark) {
+                    printer.mark();
+                    addMark = false;
+                }
+                printer.printWithAnsiColoring(errorText, ProcessOutputTypes.STDERR);
+            }
+        }
+    }
 
-  public boolean isInProgress() {
-    return false;
-  }
+    @Override
+    public void printOn(Printer printer) {
+        super.printOn(printer);
+        printError(printer, myPresentationText);
+    }
 
-  public boolean wasTerminated() {
-    return false;
-  }
+    @Override
+    public boolean isDefect() {
+        return true;
+    }
 
-  public Magnitude getMagnitude() {
-    return Magnitude.FAILED_INDEX;
-  }
+    @Override
+    public boolean wasLaunched() {
+        return true;
+    }
 
-  @Override
-  public String toString() {
-    //noinspection HardCodedStringLiteral
-    return "TEST FAILED";
-  }
+    @Override
+    public boolean isFinal() {
+        return true;
+    }
+
+    @Override
+    public boolean isInProgress() {
+        return false;
+    }
+
+    @Override
+    public boolean wasTerminated() {
+        return false;
+    }
+
+    @Override
+    public Magnitude getMagnitude() {
+        return Magnitude.FAILED_INDEX;
+    }
+
+    @Override
+    public String toString() {
+        //noinspection HardCodedStringLiteral
+        return "TEST FAILED";
+    }
 }

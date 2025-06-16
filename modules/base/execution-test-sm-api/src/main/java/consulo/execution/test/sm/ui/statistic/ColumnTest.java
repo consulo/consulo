@@ -19,6 +19,7 @@ import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
@@ -28,67 +29,75 @@ import java.util.Comparator;
 
 /**
  * @author Roman Chernyatchik
-*/
-public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy>{
-  public ColumnTest() {
-    super(SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.test.title"));
-  }
-
-  @Nonnull
-  public String valueOf(final SMTestProxy testProxy) {
-    return testProxy.getPresentableName();
-  }
-
-  @jakarta.annotation.Nullable
-  public Comparator<SMTestProxy> getComparator(){
-    return this;
-  }
-
-  public int compare(final SMTestProxy proxy1, final SMTestProxy proxy2) {
-    return proxy1.getName().compareTo(proxy2.getName());
-  }
-
-  @Override
-  public TableCellRenderer getRenderer(final SMTestProxy proxy) {
-    return new TestsCellRenderer(proxy);
-  }
-
-  public static class TestsCellRenderer extends ColoredTableCellRenderer implements ColoredRenderer {
-    @NonNls private static final String TOTAL_TITLE = SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.test.total.title");
-    @NonNls private static final String PARENT_TITLE = "..";
-
-    private final SMTestProxy myProxy;
-
-    public TestsCellRenderer(final SMTestProxy proxy) {
-      myProxy = proxy;
+ */
+public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
+    public ColumnTest() {
+        super(SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.test.title"));
     }
 
-    public void customizeCellRenderer(final JTable table,
-                                         final Object value,
-                                         final boolean selected,
-                                         final boolean hasFocus,
-                                         final int row,
-                                         final int column) {
-      assert value != null;
+    @Nonnull
+    @Override
+    public String valueOf(SMTestProxy testProxy) {
+        return testProxy.getPresentableName();
+    }
 
-      final String title = value.toString();
-      //Black bold for with caption "Total" for parent suite of items in statistics
-      if (myProxy.isSuite() && isFirstLine(row)) {
-        if (myProxy.getParent() == null) {
-          append(TOTAL_TITLE, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+    @Nullable
+    @Override
+    public Comparator<SMTestProxy> getComparator() {
+        return this;
+    }
+
+    @Override
+    public int compare(SMTestProxy proxy1, SMTestProxy proxy2) {
+        return proxy1.getName().compareTo(proxy2.getName());
+    }
+
+    @Override
+    public TableCellRenderer getRenderer(SMTestProxy proxy) {
+        return new TestsCellRenderer(proxy);
+    }
+
+    public static class TestsCellRenderer extends ColoredTableCellRenderer implements ColoredRenderer {
+        @NonNls
+        private static final String TOTAL_TITLE = SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.test.total.title");
+        @NonNls
+        private static final String PARENT_TITLE = "..";
+
+        private final SMTestProxy myProxy;
+
+        public TestsCellRenderer(SMTestProxy proxy) {
+            myProxy = proxy;
         }
-        else {
-          append(PARENT_TITLE, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
-          append(" (" + myProxy.getName() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
-        }
-        return;
-      }
-      //Black, regular for other suites and tests
-      append(title, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    }
 
-    public static boolean isFirstLine(final int row) {
-      return row == 0;
+        @Override
+        public void customizeCellRenderer(
+            JTable table,
+            Object value,
+            boolean selected,
+            boolean hasFocus,
+            int row,
+            int column
+        ) {
+            assert value != null;
+
+            String title = value.toString();
+            //Black bold for with caption "Total" for parent suite of items in statistics
+            if (myProxy.isSuite() && isFirstLine(row)) {
+                if (myProxy.getParent() == null) {
+                    append(TOTAL_TITLE, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+                }
+                else {
+                    append(PARENT_TITLE, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+                    append(" (" + myProxy.getName() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
+                }
+                return;
+            }
+            //Black, regular for other suites and tests
+            append(title, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        }
+
+        public static boolean isFirstLine(int row) {
+            return row == 0;
+        }
     }
-  }
 }

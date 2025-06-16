@@ -23,6 +23,6 @@ import jakarta.annotation.Nullable;
  * @author Sergey Simonchik
  */
 public interface TestProxyFilterProvider {
-  @Nullable
-  Filter getFilter(@Nonnull String nodeType, @Nonnull String nodeName, @Nullable String nodeArguments);
+    @Nullable
+    Filter getFilter(@Nonnull String nodeType, @Nonnull String nodeName, @Nullable String nodeArguments);
 }

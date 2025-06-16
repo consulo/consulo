@@ -21,11 +21,11 @@ import consulo.project.Project;
 import consulo.ui.ex.tree.NodeDescriptor;
 
 /**
- * @author: Roman Chernyatchik
+ * @author Roman Chernyatchik
  */
 public class SMTRunnerNodeDescriptor extends BaseTestProxyNodeDescriptor<SMTestProxy> {
-  public SMTRunnerNodeDescriptor(final Project project, final SMTestProxy testProxy, final NodeDescriptor<SMTestProxy> parentDesc) {
-    super(project, testProxy, parentDesc);
-  }
+    public SMTRunnerNodeDescriptor(Project project, SMTestProxy testProxy, NodeDescriptor<SMTestProxy> parentDesc) {
+        super(project, testProxy, parentDesc);
+    }
 }
 

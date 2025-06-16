@@ -28,70 +28,73 @@ import java.util.Comparator;
 
 /**
  * @author Roman Chernyatchik
-*/
+ */
 public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy> {
-  public ColumnDuration() {
-    super(SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.duration.title"));
-  }
-
-  @Override
-  public String valueOf(final SMTestProxy testProxy) {
-    return TestsPresentationUtil.getDurationPresentation(testProxy);
-  }
-
-  @Override
-  @Nullable
-  public Comparator<SMTestProxy> getComparator(){
-    return this;
-  }
-
-  @Override
-  public int compare(final SMTestProxy proxy1, final SMTestProxy proxy2) {
-    final Long duration1 = proxy1.getDuration();
-    final Long duration2 = proxy2.getDuration();
-
-    if (duration1 == null) {
-      return duration2 == null ? 0 : -1;
-    }
-    if (duration2 == null) {
-      return +1;
-    }
-    return duration1.compareTo(duration2);
-  }
-
-
-  @Override
-  public TableCellRenderer getRenderer(final SMTestProxy proxy) {
-    return new DurationCellRenderer(proxy);
-  }
-
-  public static class DurationCellRenderer extends ColoredTableCellRenderer implements ColoredRenderer {
-    private final SMTestProxy myProxy;
-
-    public DurationCellRenderer(final SMTestProxy proxy) {
-      myProxy = proxy;
+    public ColumnDuration() {
+        super(SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.duration.title"));
     }
 
     @Override
-    public void customizeCellRenderer(final JTable table,
-                                      final Object value,
-                                      final boolean selected,
-                                      final boolean hasFocus,
-                                      final int row,
-                                      final int column) {
-      assert value != null;
-
-      final String title = value.toString();
-
-      final SimpleTextAttributes attributes;
-      if (myProxy.isSuite() && ColumnTest.TestsCellRenderer.isFirstLine(row)) {
-        //Black bold for parent suite of items in statistics
-        attributes = SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;
-      } else {
-        //Black, regular for other suites and tests
-        attributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
-      }
-      append(title, attributes);
+    public String valueOf(SMTestProxy testProxy) {
+        return TestsPresentationUtil.getDurationPresentation(testProxy);
     }
-  }
+
+    @Override
+    @Nullable
+    public Comparator<SMTestProxy> getComparator() {
+        return this;
+    }
+
+    @Override
+    public int compare(SMTestProxy proxy1, SMTestProxy proxy2) {
+        Long duration1 = proxy1.getDuration();
+        Long duration2 = proxy2.getDuration();
+
+        if (duration1 == null) {
+            return duration2 == null ? 0 : -1;
+        }
+        if (duration2 == null) {
+            return +1;
+        }
+        return duration1.compareTo(duration2);
+    }
+
+
+    @Override
+    public TableCellRenderer getRenderer(SMTestProxy proxy) {
+        return new DurationCellRenderer(proxy);
+    }
+
+    public static class DurationCellRenderer extends ColoredTableCellRenderer implements ColoredRenderer {
+        private final SMTestProxy myProxy;
+
+        public DurationCellRenderer(SMTestProxy proxy) {
+            myProxy = proxy;
+        }
+
+        @Override
+        public void customizeCellRenderer(
+            JTable table,
+            Object value,
+            boolean selected,
+            boolean hasFocus,
+            int row,
+            int column
+        ) {
+            assert value != null;
+
+            String title = value.toString();
+
+            SimpleTextAttributes attributes;
+            if (myProxy.isSuite() && ColumnTest.TestsCellRenderer.isFirstLine(row)) {
+                //Black bold for parent suite of items in statistics
+                attributes = SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;
+            }
+            else {
+                //Black, regular for other suites and tests
+                attributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
+            }
+            append(title, attributes);
+        }
+    }
 }

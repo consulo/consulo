@@ -22,65 +22,65 @@ import jakarta.annotation.Nullable;
  * @author Roman Chernyatchik
  */
 public class SMTRunnerEventsAdapter implements SMTRunnerEventsListener {
-  @Override
-  public void onTestingStarted(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
-  }
+    @Override
+    public void onTestingStarted(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
+    }
 
-  @Override
-  public void onTestingFinished(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
-  }
+    @Override
+    public void onTestingFinished(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
+    }
 
-  @Override
-  public void onTestsCountInSuite(final int count) {
-  }
+    @Override
+    public void onTestsCountInSuite(int count) {
+    }
 
-  @Override
-  public void onTestStarted(@Nonnull final SMTestProxy test) {
-  }
+    @Override
+    public void onTestStarted(@Nonnull SMTestProxy test) {
+    }
 
-  @Override
-  public void onTestFinished(@Nonnull final SMTestProxy test) {
-  }
+    @Override
+    public void onTestFinished(@Nonnull SMTestProxy test) {
+    }
 
-  @Override
-  public void onTestFailed(@Nonnull final SMTestProxy test) {
-  }
+    @Override
+    public void onTestFailed(@Nonnull SMTestProxy test) {
+    }
 
-  @Override
-  public void onTestIgnored(@Nonnull final SMTestProxy test) {
-  }
+    @Override
+    public void onTestIgnored(@Nonnull SMTestProxy test) {
+    }
 
-  @Override
-  public void onSuiteStarted(@Nonnull final SMTestProxy suite) {
-  }
+    @Override
+    public void onSuiteStarted(@Nonnull SMTestProxy suite) {
+    }
 
-  @Override
-  public void onSuiteFinished(@Nonnull final SMTestProxy suite) {
-  }
+    @Override
+    public void onSuiteFinished(@Nonnull SMTestProxy suite) {
+    }
 
-  // Custom progress status
+    // Custom progress status
 
-  @Override
-  public void onCustomProgressTestsCategory(@Nullable String categoryName, final int testCount) {
-  }
+    @Override
+    public void onCustomProgressTestsCategory(@Nullable String categoryName, int testCount) {
+    }
 
-  @Override
-  public void onCustomProgressTestStarted() {
-  }
+    @Override
+    public void onCustomProgressTestStarted() {
+    }
 
-  @Override
-  public void onCustomProgressTestFailed() {
-  }
+    @Override
+    public void onCustomProgressTestFailed() {
+    }
 
-  @Override
-  public void onCustomProgressTestFinished() {
-  }
+    @Override
+    public void onCustomProgressTestFinished() {
+    }
 
-  @Override
-  public void onSuiteTreeNodeAdded(SMTestProxy testProxy) {
-  }
+    @Override
+    public void onSuiteTreeNodeAdded(SMTestProxy testProxy) {
+    }
 
-  @Override
-  public void onSuiteTreeStarted(SMTestProxy suite) {
-  }
+    @Override
+    public void onSuiteTreeStarted(SMTestProxy suite) {
+    }
 }

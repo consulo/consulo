@@ -27,7 +27,9 @@ import jakarta.annotation.Nullable;
  * other component(with/without capturing focus)
  */
 public interface PropagateSelectionHandler {
-  void handlePropagateSelectionRequest(@Nullable SMTestProxy selectedTestProxy,
-                                       @Nonnull Object sender,
-                                       boolean requestFocus);
+    void handlePropagateSelectionRequest(
+        @Nullable SMTestProxy selectedTestProxy,
+        @Nonnull Object sender,
+        boolean requestFocus
+    );
 }
