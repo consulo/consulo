@@ -16,6 +16,7 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.internal.NonCancelableSection;
+import consulo.application.internal.ProgressCancelHook;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.StandardProgressIndicator;
@@ -44,7 +45,7 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
 
   @Override
   public final void checkCanceled() {
-    CoreProgressManager.runCheckCanceledHooks(this);
+      ProgressCancelHook.runCheckCanceledHooks(this);
   }
 
   @Override

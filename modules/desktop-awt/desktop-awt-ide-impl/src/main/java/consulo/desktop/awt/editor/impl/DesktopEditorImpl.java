@@ -19,6 +19,7 @@ import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.impl.internal.RealEditorWithEditorView;
 import consulo.codeEditor.internal.EditorActionPlan;
+import consulo.codeEditor.internal.EditorInternalUtil;
 import consulo.codeEditor.internal.stickyLine.StickyLinesModel;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
@@ -635,7 +636,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                     () -> {
                         myScrollingToCaret = false;
                         if (!isReleased) {
-                            EditorUtil.runWithAnimationDisabled(this, () -> myScrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE));
+                            EditorInternalUtil.runWithAnimationDisabled(this, () -> myScrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE));
                         }
                     },
                     IdeaModalityState.any()
@@ -3414,7 +3415,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                     }, true, false);
                     if (!expansion) {
                         int newY = visualLineToY(offsetToVisualLine(range.getStartOffset()));
-                        EditorUtil.runWithAnimationDisabled(DesktopEditorImpl.this, () -> myScrollingModel.scrollVertically(newY - scrollShift));
+                        EditorInternalUtil.runWithAnimationDisabled(DesktopEditorImpl.this, () -> myScrollingModel.scrollVertically(newY - scrollShift));
                     }
                     myGutterComponent.updateSize();
                     validateMousePointer(e, null);

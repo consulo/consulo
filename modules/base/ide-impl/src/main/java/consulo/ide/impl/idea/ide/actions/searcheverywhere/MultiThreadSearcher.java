@@ -2,8 +2,8 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.internal.ProgressIndicatorBase;
+import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;

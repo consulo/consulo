@@ -3,7 +3,7 @@ package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;

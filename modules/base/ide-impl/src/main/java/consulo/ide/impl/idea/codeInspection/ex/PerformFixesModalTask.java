@@ -24,8 +24,8 @@ import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.SymbolPresentationUtil;
-import consulo.ide.impl.idea.util.SequentialModalProgressTask;
-import consulo.ide.impl.idea.util.SequentialTask;
+import consulo.application.progress.SequentialModalProgressTask;
+import consulo.application.progress.SequentialTask;
 import jakarta.annotation.Nonnull;
 
 public abstract class PerformFixesModalTask implements SequentialTask {

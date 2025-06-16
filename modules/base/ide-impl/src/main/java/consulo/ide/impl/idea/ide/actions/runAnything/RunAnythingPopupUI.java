@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
 import consulo.component.ProcessCanceledException;

@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal;
 
+import consulo.application.internal.ModalityStateWithProgress;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ModalityState;
 import consulo.util.collection.WeakList;
@@ -11,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class IdeaModalityStateEx extends IdeaModalityState {
+@Deprecated
+public class IdeaModalityStateEx extends IdeaModalityState implements ModalityStateWithProgress {
   private final WeakList<Object> myModalEntities = new WeakList<>();
 
   public IdeaModalityStateEx() {
@@ -26,6 +28,7 @@ public class IdeaModalityStateEx extends IdeaModalityState {
     return myModalEntities.toStrongList();
   }
 
+  @Override
   @Nonnull
   public ModalityState appendProgress(@Nonnull ProgressIndicator progress) {
     return appendEntity(progress);

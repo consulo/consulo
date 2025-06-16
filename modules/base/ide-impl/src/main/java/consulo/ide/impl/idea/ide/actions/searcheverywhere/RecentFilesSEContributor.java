@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import com.google.common.collect.Lists;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;

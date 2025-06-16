@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.ide.impl.idea.application.options.EditorFontsConstants;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.RealEditor;
+import consulo.colorScheme.EditorFontsConstants;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

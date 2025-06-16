@@ -17,7 +17,7 @@ package consulo.ide.impl.language.codeStyle.arrangement;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine;
+import consulo.language.codeStyle.impl.internal.arrangement.ArrangementEngine;
 import consulo.language.Language;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.arrangement.*;

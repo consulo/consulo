@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.application.impl.internal.progress.ProgressWrapper;
+import consulo.application.internal.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClearableLazyValue;

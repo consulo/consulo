@@ -18,7 +18,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.util.SequentialTask;
+import consulo.application.progress.SequentialTask;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiBundle;

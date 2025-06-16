@@ -33,6 +33,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@Deprecated
 public interface CodeStyleFacade {
     public static CodeStyleFacade getInstance() {
         return ServiceManager.getService(ApplicationCodeStyleFacade.class);

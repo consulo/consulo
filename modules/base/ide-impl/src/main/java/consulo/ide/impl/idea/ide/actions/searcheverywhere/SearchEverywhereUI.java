@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressWindowListener;
 import consulo.application.internal.TooManyUsagesStatus;
 import consulo.application.progress.ProgressIndicator;

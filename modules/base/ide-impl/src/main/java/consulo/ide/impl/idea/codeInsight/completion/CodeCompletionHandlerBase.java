@@ -6,7 +6,7 @@ import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

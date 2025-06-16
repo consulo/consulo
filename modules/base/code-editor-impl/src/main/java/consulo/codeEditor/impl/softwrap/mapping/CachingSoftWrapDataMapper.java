@@ -18,7 +18,7 @@ package consulo.codeEditor.impl.softwrap.mapping;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.SoftWrap;
-import consulo.codeEditor.impl.TextChangeImpl;
+import consulo.codeEditor.internal.TextChangeImpl;
 import consulo.codeEditor.impl.softwrap.SoftWrapImpl;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.logging.Logger;

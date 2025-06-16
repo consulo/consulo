@@ -15,6 +15,7 @@
  */
 package consulo.application.impl.internal.progress;
 
+import consulo.application.internal.AbstractProgressIndicatorBase;
 import consulo.application.progress.StandardProgressIndicator;
 
 public class StandardProgressIndicatorBase extends AbstractProgressIndicatorBase implements StandardProgressIndicator {

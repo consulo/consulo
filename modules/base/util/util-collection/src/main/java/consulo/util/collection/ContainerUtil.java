@@ -1680,4 +1680,20 @@ public class ContainerUtil {
         }
         return count;
     }
+
+    @Nonnull
+    public static <T> List<T> dropWhile(@Nonnull Iterable<T> target, @Nonnull Predicate<T> predicate) {
+        boolean yielding = false;
+        List<T> list = new ArrayList<>();
+        for (T item : target) {
+            if (yielding) {
+                list.add(item);
+            }
+            else if (!predicate.test(item)) {
+                list.add(item);
+                yielding = true;
+            }
+        }
+        return list;
+    }
 }

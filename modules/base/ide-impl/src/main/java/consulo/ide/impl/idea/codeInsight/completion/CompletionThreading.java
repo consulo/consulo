@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.progress.ProgressWrapper;
+import consulo.application.internal.ProgressWrapper;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

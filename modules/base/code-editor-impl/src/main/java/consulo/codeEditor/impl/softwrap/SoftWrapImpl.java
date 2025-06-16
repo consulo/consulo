@@ -16,7 +16,7 @@
 package consulo.codeEditor.impl.softwrap;
 
 import consulo.codeEditor.SoftWrap;
-import consulo.codeEditor.impl.TextChangeImpl;
+import consulo.codeEditor.internal.TextChangeImpl;
 
 import jakarta.annotation.Nonnull;
 

@@ -21,7 +21,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.formatting.FormatterEx;
+import consulo.language.codeStyle.internal.FormatterEx;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;

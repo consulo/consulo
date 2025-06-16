@@ -96,6 +96,7 @@
                 <include>consulo:consulo-component-impl</include>
                 <include>consulo:consulo-ide-api</include>
                 <include>consulo:consulo-language-code-style-api</include>
+                <include>consulo:consulo-language-code-style-impl</include>
                 <include>consulo:consulo-language-code-style-ui-api</include>
                 <include>consulo:consulo-component-store-api</include>
                 <include>consulo:consulo-component-store-impl</include>

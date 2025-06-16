@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.progress.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.application.internal.CheckCanceledHook;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorListener;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -47,7 +47,7 @@ public class ProgressSuspender implements AutoCloseable {
     private LocalizeValue myTempReason;
     private final ProgressSuspenderListener myPublisher;
     private volatile boolean mySuspended;
-    private final CoreProgressManager.CheckCanceledHook myHook = this::freezeIfNeeded;
+    private final CheckCanceledHook myHook = this::freezeIfNeeded;
     private final Set<ProgressIndicator> myProgresses = ContainerUtil.newConcurrentSet();
     private boolean myClosed;
 

@@ -5,7 +5,7 @@ import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
-import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
+import consulo.application.internal.AbstractProgressIndicatorExBase;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;

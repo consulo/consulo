@@ -24,5 +24,6 @@ import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
  * @since 2018-08-24
  */
 @ServiceAPI(ComponentScope.APPLICATION)
+@Deprecated
 public interface ApplicationCodeStyleFacade extends CodeStyleFacade {
 }

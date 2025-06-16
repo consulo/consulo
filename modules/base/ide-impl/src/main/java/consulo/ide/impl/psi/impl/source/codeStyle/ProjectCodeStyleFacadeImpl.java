@@ -29,6 +29,7 @@ import jakarta.annotation.Nonnull;
  */
 @Singleton
 @ServiceImpl
+@Deprecated
 public class ProjectCodeStyleFacadeImpl extends CodeStyleFacadeImpl implements ProjectCodeStyleFacade {
   @Inject
   public ProjectCodeStyleFacadeImpl(@Nonnull Project project) {

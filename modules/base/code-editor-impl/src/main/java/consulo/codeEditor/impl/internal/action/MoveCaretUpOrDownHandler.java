@@ -6,7 +6,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.internal.EditorInternalUtil;
 import consulo.dataContext.DataContext;
 import jakarta.annotation.Nonnull;
 
@@ -36,7 +36,7 @@ final class MoveCaretUpOrDownHandler extends EditorActionHandler.ForEachCaret {
             caret.moveCaretRelatively(0, lineShift, false, caret == editor.getCaretModel().getPrimaryCaret());
         };
 
-        EditorImplUtil.runWithAnimationDisabled(editor, runnable);
+        EditorInternalUtil.runWithAnimationDisabled(editor, runnable);
     }
 
     @Override

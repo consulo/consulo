@@ -21,7 +21,7 @@ import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine;
+import consulo.language.codeStyle.impl.internal.arrangement.ArrangementEngine;
 import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;

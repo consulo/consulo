@@ -16,17 +16,14 @@
 package consulo.ide.impl.idea.util.text;
 
 import consulo.annotation.internal.MigratedExtensionsTo;
-import consulo.document.util.TextRange;
 import consulo.util.io.CharSequenceReader;
 import consulo.util.io.UnsyncCharArrayReader;
 import consulo.util.lang.ImmutableCharSequence;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
 
 @SuppressWarnings("MigratedExtensionsTo")
 @MigratedExtensionsTo(consulo.util.lang.CharArrayUtil.class)
@@ -285,38 +282,6 @@ public class CharArrayUtil {
   //  }
   //  return true;
   //}
-
-  @Nonnull
-  public static TextRange[] getIndents(@Nonnull CharSequence charsSequence, int shift) {
-    List<TextRange> result = new ArrayList<TextRange>();
-    int whitespaceEnd = -1;
-    int lastTextFound = 0;
-    for(int i = charsSequence.length() - 1; i >= 0; i--){
-      final char charAt = charsSequence.charAt(i);
-      final boolean isWhitespace = Character.isWhitespace(charAt);
-      if(charAt == '\n'){
-        result.add(new TextRange(i, (whitespaceEnd >= 0 ? whitespaceEnd : i) + 1).shiftRight(shift));
-        whitespaceEnd = -1;
-      }
-      else if(whitespaceEnd >= 0 ){
-        if(isWhitespace){
-          continue;
-        }
-        lastTextFound = result.size();
-        whitespaceEnd = -1;
-      }
-      else if(isWhitespace){
-        whitespaceEnd = i;
-      } else {
-        lastTextFound = result.size();
-      }
-    }
-    if(whitespaceEnd > 0) result.add(new TextRange(0, whitespaceEnd + 1).shiftRight(shift));
-    if (lastTextFound < result.size()) {
-      result = result.subList(0, lastTextFound);
-    }
-    return result.toArray(new TextRange[result.size()]);
-  }
 
   public static boolean containLineBreaks(@Nonnull CharSequence seq) {
     return consulo.util.lang.CharArrayUtil.containLineBreaks(seq);

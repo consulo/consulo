@@ -6,7 +6,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.progress.ProgressWrapper;
+import consulo.application.internal.ProgressWrapper;
 import consulo.application.internal.TooManyUsagesStatus;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

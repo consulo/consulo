@@ -49,20 +49,6 @@ import static consulo.codeEditor.util.EditorUtil.getTabSize;
 public class EditorImplUtil {
     private static final Logger LOG = Logger.getInstance(EditorImplUtil.class);
 
-    public static void runWithAnimationDisabled(@Nonnull Editor editor, @Nonnull Runnable taskWithScrolling) {
-        ScrollingModel scrollingModel = editor.getScrollingModel();
-        boolean animationWasEnabled = scrollingModel.isAnimationEnabled();
-        scrollingModel.disableAnimation();
-        try {
-            taskWithScrolling.run();
-        }
-        finally {
-            if (animationWasEnabled) {
-                scrollingModel.enableAnimation();
-            }
-        }
-    }
-
     public static int getNotFoldedLineStartOffset(@Nonnull Document document, @Nonnull FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
         int offset = startOffset;
         while (true) {

@@ -30,7 +30,8 @@ module consulo.language.code.style.api {
 
     exports consulo.language.codeStyle.internal to
         consulo.ide.impl,
-        consulo.language.editor.impl;
+        consulo.language.editor.impl,
+        consulo.language.code.style.impl;
 
     opens consulo.language.codeStyle to
         consulo.util.xml.serializer;

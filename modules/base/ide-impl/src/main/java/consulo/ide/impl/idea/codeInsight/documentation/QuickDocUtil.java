@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.documentation;
 
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.TimeUnit;
 
-import static consulo.application.impl.internal.progress.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
+import static consulo.application.internal.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
 
 /**
  * @author gregsh

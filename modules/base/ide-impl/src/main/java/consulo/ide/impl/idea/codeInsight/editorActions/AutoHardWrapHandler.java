@@ -17,26 +17,26 @@ package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.codeEditor.impl.TextChangeImpl;
+import consulo.codeEditor.internal.TextChangeImpl;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.ide.impl.idea.formatting.FormatConstants;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.WhiteSpaceFormattingStrategy;
 import consulo.language.codeStyle.WhiteSpaceFormattingStrategyFactory;
+import consulo.language.codeStyle.impl.internal.formatting.FormatConstants;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 import consulo.language.editor.template.TemplateManager;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Map;
 
 /**
@@ -66,7 +66,7 @@ public class AutoHardWrapHandler {
    * Hence, we remember last auto-wrap change per-document and merge it with the new auto-wrap if necessary. Current collection
    * holds that <code>'document -> last auto-wrap change'</code> mappings.
    */
-  private final Map<Document, AutoWrapChange> myAutoWrapChanges = ContainerUtil.createWeakMap();
+  private final Map<Document, AutoWrapChange> myAutoWrapChanges = Maps.newWeakHashMap();
 
   public static AutoHardWrapHandler getInstance() {
     return INSTANCE;

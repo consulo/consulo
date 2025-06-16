@@ -3,10 +3,7 @@ package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
 import consulo.application.impl.internal.BaseApplication;
-import consulo.application.internal.ApplicationEx;
-import consulo.application.internal.JobScheduler;
-import consulo.application.internal.ProgressIndicatorEx;
-import consulo.application.internal.ProgressManagerEx;
+import consulo.application.internal.*;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.*;
 import consulo.application.util.ApplicationUtil;
@@ -54,7 +51,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     private final AtomicInteger myUnsafeProgressCount = new AtomicInteger(0);
 
     public static final boolean ENABLED = !"disabled".equals(System.getProperty("idea.ProcessCanceledException"));
-    private static CheckCanceledHook ourCheckCanceledHook;
     private ScheduledFuture<?> myCheckCancelledFuture; // guarded by threadsUnderIndicator
 
     // indicator -> threads which are running under this indicator.
@@ -143,11 +139,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
     }
 
-    public static boolean runCheckCanceledHooks(@Nullable ProgressIndicator indicator) {
-        CheckCanceledHook hook = ourCheckCanceledHook;
-        return hook != null && hook.runHook(indicator);
-    }
-
     @Override
     protected void doCheckCanceled() throws ProcessCanceledException {
         CheckCanceledBehavior behavior = ourCheckCanceledBehavior;
@@ -155,12 +146,12 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
             return;
         }
 
-        final ProgressIndicator progress = getProgressIndicator();
+        ProgressIndicator progress = getProgressIndicator();
         if (progress != null && behavior == CheckCanceledBehavior.INDICATOR_PLUS_HOOKS) {
             progress.checkCanceled();
         }
         else {
-            runCheckCanceledHooks(progress);
+            ProgressCancelHook.runCheckCanceledHooks(progress);
         }
     }
 
@@ -194,7 +185,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Override
-    public void runProcess(@Nonnull final Runnable process, @Nullable ProgressIndicator progress) {
+    public void runProcess(@Nonnull Runnable process, @Nullable ProgressIndicator progress) {
         executeProcessUnderProgress(() -> {
             try {
                 try {
@@ -222,8 +213,8 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Override
-    public <T> T runProcess(@Nonnull final Supplier<T> process, ProgressIndicator progress) throws ProcessCanceledException {
-        final SimpleReference<T> ref = new SimpleReference<>();
+    public <T> T runProcess(@Nonnull Supplier<T> process, ProgressIndicator progress) throws ProcessCanceledException {
+        SimpleReference<T> ref = new SimpleReference<>();
         runProcess(() -> ref.set(process.get()), progress);
         return ref.get();
     }
@@ -321,7 +312,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                                                      @Nonnull PerformInBackgroundOption option) {
         runProcessWithProgressAsynchronously(new Task.Backgroundable(project, progressTitle, true, option) {
             @Override
-            public void run(@Nonnull final ProgressIndicator indicator) {
+            public void run(@Nonnull ProgressIndicator indicator) {
                 process.run();
             }
 
@@ -345,7 +336,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Override
-    public void run(@Nonnull final Task task) {
+    public void run(@Nonnull Task task) {
         if (task.isHeadless()) {
             if (myApplication.isDispatchThread()) {
                 runProcessWithProgressSynchronously(task);
@@ -358,7 +349,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
             runSynchronously(task.asModal());
         }
         else {
-            final Task.Backgroundable backgroundable = task.asBackgroundable();
+            Task.Backgroundable backgroundable = task.asBackgroundable();
             if (backgroundable.isConditionalModal() && !backgroundable.shouldStartInBackground()) {
                 runSynchronously(task);
             }
@@ -368,7 +359,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
     }
 
-    private void runSynchronously(@Nonnull final Task task) {
+    private void runSynchronously(@Nonnull Task task) {
         if (myApplication.isDispatchThread()) {
             runProcessWithProgressSynchronously(task);
         }
@@ -377,7 +368,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
     }
 
-    private void runAsynchronously(@Nonnull final Task.Backgroundable task) {
+    private void runAsynchronously(@Nonnull Task.Backgroundable task) {
         if (myApplication.isDispatchThread()) {
             runProcessWithProgressAsynchronously(task);
         }
@@ -453,9 +444,9 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Nonnull
-    public Future<?> runProcessWithProgressAsynchronously(@Nonnull final Task.Backgroundable task,
-                                                          @Nonnull final ProgressIndicator progressIndicator,
-                                                          @Nullable final Runnable continuation) {
+    public Future<?> runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task,
+                                                          @Nonnull ProgressIndicator progressIndicator,
+                                                          @Nullable Runnable continuation) {
         return runProcessWithProgressAsynchronously(task, progressIndicator, continuation, progressIndicator.getModalityState());
     }
 
@@ -476,10 +467,10 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
     @Override
     @Nonnull
-    public Future<?> runProcessWithProgressAsynchronously(@Nonnull final Task.Backgroundable task,
-                                                          @Nonnull final ProgressIndicator progressIndicator,
-                                                          @Nullable final Runnable continuation,
-                                                          @Nonnull final ModalityState modalityState) {
+    public Future<?> runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task,
+                                                          @Nonnull ProgressIndicator progressIndicator,
+                                                          @Nullable Runnable continuation,
+                                                          @Nonnull ModalityState modalityState) {
         IndicatorDisposable indicatorDisposable;
         if (progressIndicator instanceof Disposable) {
             // use IndicatorDisposable instead of progressIndicator to
@@ -533,7 +524,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Override
-    public boolean runProcessWithProgressSynchronously(@Nonnull final Task task) {
+    public boolean runProcessWithProgressSynchronously(@Nonnull Task task) {
         SimpleReference<Throwable> exceptionRef = new SimpleReference<>();
         Runnable taskContainer = () -> {
             try {
@@ -586,9 +577,9 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     }
 
     @Override
-    public void runProcessWithProgressInCurrentThread(@Nonnull final Task task,
-                                                      @Nonnull final ProgressIndicator progressIndicator,
-                                                      @Nonnull final ModalityState modalityState) {
+    public void runProcessWithProgressInCurrentThread(@Nonnull Task task,
+                                                      @Nonnull ProgressIndicator progressIndicator,
+                                                      @Nonnull ModalityState modalityState) {
         if (progressIndicator instanceof Disposable) {
             Disposer.register(myApplication, (Disposable) progressIndicator);
         }
@@ -750,7 +741,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         synchronized (threadsUnderIndicator) {
             CheckCanceledHook hook = createCheckCanceledHook();
             boolean hasCanceledIndicator = !threadsUnderCanceledIndicator.isEmpty();
-            ourCheckCanceledHook = hook;
+            ProgressCancelHook.setCheckCanceledHook(hook);
             ourCheckCanceledBehavior =
                 hook == null && !hasCanceledIndicator ? CheckCanceledBehavior.NONE : hasCanceledIndicator && ENABLED ? CheckCanceledBehavior.INDICATOR_PLUS_HOOKS : CheckCanceledBehavior.ONLY_HOOKS;
         }
@@ -991,17 +982,6 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
     private static ProgressIndicator getCurrentIndicator(@Nonnull Thread thread) {
         return currentIndicators.get(thread.threadId());
-    }
-
-    @FunctionalInterface
-    public interface CheckCanceledHook {
-        CheckCanceledHook[] EMPTY_ARRAY = new CheckCanceledHook[0];
-
-        /**
-         * @param indicator the indicator whose {@link ProgressIndicator#checkCanceled()} was called, or null if a non-progressive thread performed {@link ProgressManager#checkCanceled()}
-         * @return true if the hook has done anything that might take some time.
-         */
-        boolean runHook(@Nullable ProgressIndicator indicator);
     }
 
     public static void assertUnderProgress(@Nonnull ProgressIndicator indicator) {

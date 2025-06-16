@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccessScheduler;

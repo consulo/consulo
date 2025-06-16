@@ -4,7 +4,7 @@ package consulo.application.impl.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ApplicationUtil;

@@ -29,6 +29,7 @@ import consulo.component.persist.scheme.SchemeImporter;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
+import consulo.language.codeStyle.impl.internal.CodeStyleSchemesModelImpl;
 import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.RelativePoint;

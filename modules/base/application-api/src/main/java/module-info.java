@@ -57,6 +57,8 @@ module consulo.application.api {
         consulo.ui.ex.api,
         consulo.project.impl,
         consulo.language.editor.refactoring.api,
+        consulo.language.editor.impl,
+        consulo.language.code.style.impl,
         consulo.http.api,
         consulo.builtin.web.server.impl,
         consulo.version.control.system.distributed.api,
@@ -66,7 +68,8 @@ module consulo.application.api {
         consulo.version.control.system.impl,
         consulo.execution.impl,
         consulo.diff.impl,
-        consulo.external.service.impl;
+        consulo.external.service.impl,
+        consulo.desktop.awt.os.mac;
 
     exports consulo.application.internal.plugin to
         consulo.application.impl,

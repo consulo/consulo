@@ -18,7 +18,7 @@ package consulo.language.editor.impl.inspection;
 
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.progress.ProgressWrapper;
+import consulo.application.internal.ProgressWrapper;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
 import consulo.content.scope.NamedScope;

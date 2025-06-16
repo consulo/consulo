@@ -9,21 +9,20 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.fileEditor.util.FileContentUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.fileEditor.util.FileContentUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.file.FileViewProvider;
-import consulo.document.DocumentWindow;
 import consulo.language.impl.internal.pom.PomAspectGuard;
 import consulo.language.impl.internal.psi.BooleanRunnable;
 import consulo.language.impl.internal.psi.DocumentCommitProcessor;
@@ -125,7 +124,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
 
   @Override
   protected void beforeDocumentChangeOnUnlockedDocument(@Nonnull final FileViewProvider viewProvider) {
-    ((PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(myProject)).assertDocumentChangeIsAllowed(viewProvider);
+    PostprocessReformattingAspect.getInstance(myProject).assertDocumentChangeIsAllowed(viewProvider);
     super.beforeDocumentChangeOnUnlockedDocument(viewProvider);
   }
 
@@ -150,7 +149,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
   @Override
   public void doPostponedOperationsAndUnblockDocument(@Nonnull Document doc) {
     if (doc instanceof DocumentWindow) doc = ((DocumentWindow)doc).getDelegate();
-    final PostprocessReformattingAspectImpl component = (PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(myProject);
+    final PostprocessReformattingAspect component = PostprocessReformattingAspect.getInstance(myProject);
     final FileViewProvider viewProvider = getCachedViewProvider(doc);
     if (viewProvider != null && component != null) component.doPostponedFormatting(viewProvider);
   }

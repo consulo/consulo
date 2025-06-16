@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.ide.impl.idea.util.SequentialModalProgressTask;
-import consulo.ide.impl.idea.util.SequentialTask;
+import consulo.application.progress.SequentialModalProgressTask;
+import consulo.application.progress.SequentialTask;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.util.TextRange;

@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ReadActionProcessor;

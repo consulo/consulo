@@ -5,7 +5,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;

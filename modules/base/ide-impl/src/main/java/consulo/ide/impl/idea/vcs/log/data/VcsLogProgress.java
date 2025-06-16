@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
+import consulo.application.internal.AbstractProgressIndicatorBase;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.disposer.Disposable;

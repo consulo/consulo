@@ -21,7 +21,6 @@ import consulo.application.WriteAction;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
-import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.colorScheme.EditorColorsScheme;
@@ -522,25 +521,6 @@ public final class EditorUtil {
         }
         else {
             editor.getFoldingModel().runBatchFoldingOperation(operation);
-        }
-    }
-
-    public static void runWithAnimationDisabled(@Nonnull Editor editor, @Nonnull Runnable taskWithScrolling) {
-        ScrollingModel scrollingModel = editor.getScrollingModel();
-        if (!(scrollingModel instanceof CodeEditorScrollingModelBase)) {
-            taskWithScrolling.run();
-        }
-        else {
-            boolean animationWasEnabled = scrollingModel.isAnimationEnabled();
-            scrollingModel.disableAnimation();
-            try {
-                taskWithScrolling.run();
-            }
-            finally {
-                if (animationWasEnabled) {
-                    scrollingModel.enableAnimation();
-                }
-            }
         }
     }
 

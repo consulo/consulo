@@ -18,6 +18,7 @@ package consulo.language.codeStyle;
 import consulo.component.extension.ExtensionPoint;
 import consulo.language.file.FileViewProvider;
 import consulo.language.pom.PomModelAspect;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -33,6 +34,10 @@ public interface PostprocessReformattingAspect extends PomModelAspect {
         ExtensionPoint<PomModelAspect> point = project.getExtensionPoint(PomModelAspect.class);
         return point.findExtensionOrFail(PostprocessReformattingAspect.class);
     }
+
+    void assertDocumentChangeIsAllowed(@Nonnull PsiFile file);
+
+    void assertDocumentChangeIsAllowed(@Nonnull FileViewProvider viewProvider);
 
     void doPostponedFormatting();
 

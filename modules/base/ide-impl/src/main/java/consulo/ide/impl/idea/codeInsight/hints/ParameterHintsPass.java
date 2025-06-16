@@ -5,7 +5,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.Editor;

@@ -16,7 +16,7 @@
 package consulo.web.internal.progress;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.progress.ProgressActivityFactory;
+import consulo.application.internal.ProgressActivityFactory;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nullable;

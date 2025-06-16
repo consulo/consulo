@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.find.findUsages;
 
 import consulo.application.AccessRule;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;

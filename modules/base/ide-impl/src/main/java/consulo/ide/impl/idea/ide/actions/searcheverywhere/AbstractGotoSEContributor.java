@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.scope.ScopeDescriptor;
 import consulo.dataContext.DataContext;

@@ -16,6 +16,7 @@
 package consulo.codeEditor.impl;
 
 import consulo.codeEditor.TextChange;
+import consulo.codeEditor.internal.TextChangeImpl;
 import consulo.util.lang.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
 

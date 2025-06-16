@@ -27,6 +27,7 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @ServiceImpl
+@Deprecated
 public class ApplicationCodeStyleFacadeImpl extends CodeStyleFacadeImpl implements ApplicationCodeStyleFacade {
   @Inject
   public ApplicationCodeStyleFacadeImpl() {

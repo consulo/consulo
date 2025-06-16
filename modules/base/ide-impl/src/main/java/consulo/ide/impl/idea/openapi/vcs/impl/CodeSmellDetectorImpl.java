@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
+import consulo.application.internal.AbstractProgressIndicatorExBase;
 import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.internal.ProgressIndicatorEx;

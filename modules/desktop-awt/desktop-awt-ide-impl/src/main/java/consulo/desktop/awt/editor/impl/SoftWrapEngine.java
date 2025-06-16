@@ -4,7 +4,7 @@ package consulo.desktop.awt.editor.impl;
 import consulo.codeEditor.LineWrapPositionStrategy;
 import consulo.codeEditor.SoftWrap;
 import consulo.codeEditor.SoftWrapDrawingType;
-import consulo.codeEditor.impl.TextChangeImpl;
+import consulo.codeEditor.internal.TextChangeImpl;
 import consulo.codeEditor.impl.softwrap.SoftWrapImpl;
 import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;

@@ -4,7 +4,7 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.process.io.ProcessIOExecutorService;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.internal.ProgressIndicatorUtils;
 import jakarta.annotation.Nonnull;
 
 import java.util.Map;

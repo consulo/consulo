@@ -21,7 +21,7 @@
  */
 package consulo.compiler.impl.internal;
 
-import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
+import consulo.application.internal.AbstractProgressIndicatorExBase;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;

@@ -21,7 +21,7 @@ import consulo.language.codeStyle.CodeStyleScheme;
 import java.util.EventListener;
 
 public interface CodeStyleSchemesModelListener extends EventListener {
-  void currentSchemeChanged(final Object source);
+  void currentSchemeChanged(Object source);
 
   void schemeListChanged();
 

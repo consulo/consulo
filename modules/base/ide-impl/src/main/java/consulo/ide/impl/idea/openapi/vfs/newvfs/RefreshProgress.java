@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;

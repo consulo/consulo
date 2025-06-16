@@ -20,7 +20,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.application.util.registry.Registry;

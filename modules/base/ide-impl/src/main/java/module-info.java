@@ -113,6 +113,7 @@ open module consulo.ide.impl {
   requires consulo.remote.server.impl;
   requires consulo.compiler.artifact.impl;
   requires consulo.task.impl;
+  requires consulo.language.code.style.impl;
 
   // TODO [VISTALL] remove this dependency
   requires gnu.trove;
@@ -189,7 +190,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.application.options.codeStyle;
   exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
   exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.component;
-  exports consulo.ide.impl.idea.application.options.codeStyle.cache;
   exports consulo.ide.impl.idea.application.options.codeStyle.excludedFiles;
   exports consulo.ide.impl.idea.application.options.colors;
   exports consulo.ide.impl.idea.application.options.colors.highlighting;
@@ -310,10 +310,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.find.impl.livePreview;
   exports consulo.ide.impl.idea.find.ngrams;
   exports consulo.ide.impl.idea.find.replaceInProject;
-  exports consulo.ide.impl.idea.formatting;
-  exports consulo.ide.impl.idea.formatting.alignment;
-  exports consulo.ide.impl.idea.formatting.blocks;
-  exports consulo.ide.impl.idea.formatting.engine;
   exports consulo.ide.impl.idea.framework.detection;
   exports consulo.ide.impl.idea.history.core;
   exports consulo.ide.impl.idea.history.core.changes;
@@ -711,14 +707,8 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.project;
   exports consulo.ide.impl.projectView;
   exports consulo.ide.impl.psi;
-  exports consulo.ide.impl.psi.codeStyle;
-  exports consulo.ide.impl.psi.codeStyle.arrangement.engine;
-  exports consulo.ide.impl.psi.codeStyle.autodetect;
-  exports consulo.ide.impl.psi.codeStyle.modifier;
   exports consulo.ide.impl.psi.codeStyle.statusbar;
   exports consulo.ide.impl.psi.file;
-  exports consulo.ide.impl.psi.formatter;
-  exports consulo.ide.impl.psi.formatter.common;
   exports consulo.ide.impl.psi.impl;
   exports consulo.ide.impl.psi.impl.cache;
   exports consulo.ide.impl.psi.impl.cache.impl;
@@ -728,7 +718,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.impl.search;
   exports consulo.ide.impl.psi.impl.source;
   exports consulo.ide.impl.psi.impl.source.codeStyle;
-  exports consulo.ide.impl.psi.impl.source.codeStyle.lineIndent;
   exports consulo.ide.impl.psi.impl.source.resolve.reference;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;

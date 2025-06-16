@@ -21,10 +21,10 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
-import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.impl.internal.CodeFormatterFacade;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationSession;
 import consulo.language.editor.annotation.Annotator;
@@ -45,10 +45,10 @@ import consulo.ui.ex.awt.SelectionAwareListCellRenderer;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.function.Function;
@@ -68,7 +68,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
                                          int startOffset,
                                          int endOffset,
                                          List<? extends TextRange> enabledRanges) {
-    final CodeFormatterFacade codeFormatter = new CodeFormatterFacade(CodeStyleSettingsManager.getSettings(project), language);
+    CodeFormatterFacade codeFormatter = new CodeFormatterFacade(CodeStyleSettingsManager.getSettings(project), language);
 
     codeFormatter.doWrapLongLinesIfNecessary(editor, project, document, startOffset, endOffset, enabledRanges);
   }
@@ -92,7 +92,7 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     return new SelectionAwareListCellRenderer<>(lineMarkerInfo -> {
       Pair<String, Image> info = function.apply(lineMarkerInfo);
 
-      final JBLabel label = new JBLabel(info.getFirst(), info.getSecond(), SwingConstants.LEFT);
+      JBLabel label = new JBLabel(info.getFirst(), info.getSecond(), SwingConstants.LEFT);
       label.setBorder(JBUI.Borders.empty(2));
       return label;
     });

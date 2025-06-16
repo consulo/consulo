@@ -19,7 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveMode;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.ui.UIAccess;

@@ -25,13 +25,16 @@ import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.impl.internal.SemanticEditorPositionFactoryImpl;
 import consulo.language.codeStyle.lineIndent.LineIndentProvider;
+import consulo.language.codeStyle.lineIndent.SemanticEditorPositionFactory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@Deprecated
 public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
   private final Project myProject;
 
@@ -39,20 +42,20 @@ public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
     this(null);
   }
 
-  public CodeStyleFacadeImpl(final Project project) {
+  public CodeStyleFacadeImpl(Project project) {
     myProject = project;
   }
 
   @Override
   @Deprecated
-  public int getIndentSize(final FileType fileType) {
+  public int getIndentSize(FileType fileType) {
     return CodeStyle.getProjectOrDefaultSettings(myProject).getIndentSize(fileType);
   }
 
   @Override
   @Nullable
   @Deprecated
-  public String getLineIndent(@Nonnull final Document document, int offset) {
+  public String getLineIndent(@Nonnull Document document, int offset) {
     if (myProject == null) return null;
     PsiDocumentManager.getInstance(myProject).commitDocument(document);
     return CodeStyleManager.getInstance(myProject).getLineIndent(document, offset);
@@ -65,7 +68,7 @@ public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
     String indent;
 
     if (lineIndentProvider != null) {
-      var factory = new SemanticEditorPositionFactoryImpl(editor);
+      SemanticEditorPositionFactory factory = new SemanticEditorPositionFactoryImpl(editor);
       Document document = editor.getDocument();
       indent = lineIndentProvider.getLineIndent(myProject, document, factory, language, offset);
     }
@@ -91,12 +94,12 @@ public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
   }
 
   @Override
-  public int getTabSize(final FileType fileType) {
+  public int getTabSize(FileType fileType) {
     return CodeStyle.getProjectOrDefaultSettings(myProject).getTabSize(fileType);
   }
 
   @Override
-  public boolean useTabCharacter(final FileType fileType) {
+  public boolean useTabCharacter(FileType fileType) {
     return CodeStyle.getProjectOrDefaultSettings(myProject).useTabCharacter(fileType);
   }
 }

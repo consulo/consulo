@@ -16,7 +16,7 @@
 
 package consulo.language.editor.impl.internal.daemon;
 
-import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
+import consulo.application.internal.AbstractProgressIndicatorBase;
 import consulo.disposer.Disposable;
 import consulo.application.progress.StandardProgressIndicator;
 import consulo.disposer.Disposer;

@@ -16,16 +16,16 @@
 
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.formatting.FormattingProgressTask;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.FormatterUtil;
+import consulo.language.codeStyle.impl.internal.formatting.FormattingProgressTask;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
@@ -38,10 +38,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.*;
 import java.util.concurrent.FutureTask;
 
 public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
@@ -163,6 +161,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
   }
 
   @Nonnull
+  @RequiredReadAction
   private Collection<TextRange> getRangesToFormat(boolean processChangedTextOnly, PsiFile file) throws FilesTooBigForDiffException {
     if (mySelectionModel != null) {
       return getSelectedRanges(mySelectionModel);
@@ -172,7 +171,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
       return FormatChangedTextUtil.getInstance().getChangedTextRanges(myProject, file);
     }
 
-    return !myRanges.isEmpty() ? myRanges : ContainerUtil.newArrayList(file.getTextRange());
+    return !myRanges.isEmpty() ? myRanges : List.of(file.getTextRange());
   }
 
   private static class CaretVisualPositionKeeper {

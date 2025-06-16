@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.impl.search;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

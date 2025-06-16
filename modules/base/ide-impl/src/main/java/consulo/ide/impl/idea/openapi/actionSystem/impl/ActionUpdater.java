@@ -2,9 +2,9 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.application.impl.internal.progress.ProgressWrapper;
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.internal.ProgressIndicatorUtils;
+import consulo.application.internal.ProgressWrapper;
+import consulo.application.internal.SensitiveProgressWrapper;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

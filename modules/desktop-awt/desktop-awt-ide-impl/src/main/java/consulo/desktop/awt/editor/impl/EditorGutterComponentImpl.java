@@ -4,7 +4,7 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.internal.ProgressIndicatorBase;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
