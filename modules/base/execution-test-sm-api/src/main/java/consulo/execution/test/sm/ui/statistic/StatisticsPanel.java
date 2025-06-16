@@ -37,8 +37,6 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -65,7 +63,7 @@ public class StatisticsPanel implements DataProvider {
     private final Project myProject;
     private final TestFrameworkRunningModel myFrameworkRunningModel;
 
-    public StatisticsPanel(final Project project, final TestFrameworkRunningModel model) {
+    public StatisticsPanel(Project project, TestFrameworkRunningModel model) {
         myProject = project;
         myTableModel = new StatisticsTableModel();
         myStatisticsTableView.setModelAndUpdateColumns(myTableModel);
@@ -81,15 +79,16 @@ public class StatisticsPanel implements DataProvider {
         }.installOn(myStatisticsTableView);
 
         // Fire selection changed and move focus on SHIFT+ENTER
-        final KeyStroke shiftEnterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK);
-        SMRunnerUtil.registerAsAction(shiftEnterKey, "select-test-proxy-in-test-view", new Runnable() {
-            public void run() {
-                showSelectedProxyInTestsTree();
-            }
-        }, myStatisticsTableView);
+        KeyStroke shiftEnterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK);
+        SMRunnerUtil.registerAsAction(
+            shiftEnterKey,
+            "select-test-proxy-in-test-view",
+            this::showSelectedProxyInTestsTree,
+            myStatisticsTableView
+        );
 
         // Expand selected or go to parent on ENTER
-        final KeyStroke enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+        KeyStroke enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
         SMRunnerUtil.registerAsAction(enterKey, "go-to-selected-suite-or-parent", gotoSuiteOrParentAction, myStatisticsTableView);
         // Contex menu in Table
         PopupHandler.installPopupHandler(myStatisticsTableView, IdeActions.GROUP_TESTTREE_POPUP, ActionPlaces.TESTTREE_VIEW_POPUP);
@@ -97,7 +96,7 @@ public class StatisticsPanel implements DataProvider {
         DataManager.registerDataProvider(myStatisticsTableView, this);
     }
 
-    public void addPropagateSelectionListener(final PropagateSelectionHandler handler) {
+    public void addPropagateSelectionListener(PropagateSelectionHandler handler) {
         myPropagateSelectionHandlers.add(handler);
     }
 
@@ -108,49 +107,47 @@ public class StatisticsPanel implements DataProvider {
     public SMTRunnerEventsListener createTestEventsListener() {
         return new SMTRunnerEventsAdapter() {
             @Override
-            public void onSuiteStarted(@Nonnull final SMTestProxy suite) {
+            public void onSuiteStarted(@Nonnull SMTestProxy suite) {
                 if (myTableModel.shouldUpdateModelBySuite(suite)) {
                     updateAndRestoreSelection();
                 }
             }
 
             @Override
-            public void onSuiteFinished(@Nonnull final SMTestProxy suite) {
+            public void onSuiteFinished(@Nonnull SMTestProxy suite) {
                 if (myTableModel.shouldUpdateModelBySuite(suite)) {
                     updateAndRestoreSelection();
                 }
             }
 
             @Override
-            public void onTestStarted(@Nonnull final SMTestProxy test) {
+            public void onTestStarted(@Nonnull SMTestProxy test) {
                 if (myTableModel.shouldUpdateModelByTest(test)) {
                     updateAndRestoreSelection();
                 }
             }
 
             @Override
-            public void onTestFinished(@Nonnull final SMTestProxy test) {
+            public void onTestFinished(@Nonnull SMTestProxy test) {
                 if (myTableModel.shouldUpdateModelByTest(test)) {
                     updateAndRestoreSelection();
                 }
             }
 
             private void updateAndRestoreSelection() {
-                SMRunnerUtil.addToInvokeLater(new Runnable() {
-                    public void run() {
-                        BaseTableView.restore(myStorage, myStatisticsTableView);
-                        // statisticsTableView can be null in JUnit tests
-                        final SMTestProxy oldSelection = myStatisticsTableView.getSelectedObject();
+                SMRunnerUtil.addToInvokeLater(() -> {
+                    BaseTableView.restore(myStorage, myStatisticsTableView);
+                    // statisticsTableView can be null in JUnit tests
+                    SMTestProxy oldSelection = myStatisticsTableView.getSelectedObject();
 
-                        // update module
-                        myTableModel.updateModel();
+                    // update module
+                    myTableModel.updateModel();
 
-                        // restore selection if it is possible
-                        if (oldSelection != null) {
-                            final int newRow = myTableModel.getIndexOf(oldSelection);
-                            if (newRow > -1) {
-                                myStatisticsTableView.setRowSelectionInterval(newRow, newRow);
-                            }
+                    // restore selection if it is possible
+                    if (oldSelection != null) {
+                        int newRow = myTableModel.getIndexOf(oldSelection);
+                        if (newRow > -1) {
+                            myStatisticsTableView.setRowSelectionInterval(newRow, newRow);
                         }
                     }
                 });
@@ -158,7 +155,8 @@ public class StatisticsPanel implements DataProvider {
         };
     }
 
-    public Object getData(@Nonnull @NonNls final Key<?> dataId) {
+    @Override
+    public Object getData(@Nonnull Key<?> dataId) {
         if (SM_TEST_RUNNER_STATISTICS == dataId) {
             return this;
         }
@@ -172,73 +170,61 @@ public class StatisticsPanel implements DataProvider {
      * @return Listener
      */
     public PropagateSelectionHandler createSelectMeListener() {
-        return new PropagateSelectionHandler() {
-            public void handlePropagateSelectionRequest(
-                @jakarta.annotation.Nullable final SMTestProxy selectedTestProxy,
-                @Nonnull final Object sender,
-                final boolean requestFocus
-            ) {
-                selectProxy(selectedTestProxy, sender, requestFocus);
-            }
-        };
+        return this::selectProxy;
     }
 
-    public void selectProxy(@Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
-        SMRunnerUtil.addToInvokeLater(new Runnable() {
-            public void run() {
-                // Select tab if focus was requested
-                if (requestFocus) {
-                    ProjectIdeFocusManager.getInstance(myProject).requestFocus(myStatisticsTableView, true);
-                }
-
-                // Select proxy in table
-                selectProxy(selectedTestProxy);
+    public void selectProxy(@Nullable final SMTestProxy selectedTestProxy, @Nonnull Object sender, final boolean requestFocus) {
+        SMRunnerUtil.addToInvokeLater(() -> {
+            // Select tab if focus was requested
+            if (requestFocus) {
+                ProjectIdeFocusManager.getInstance(myProject).requestFocus(myStatisticsTableView, true);
             }
+
+            // Select proxy in table
+            selectProxy(selectedTestProxy);
         });
     }
 
     public void showSelectedProxyInTestsTree() {
-        final Collection<SMTestProxy> proxies = myStatisticsTableView.getSelection();
+        Collection<SMTestProxy> proxies = myStatisticsTableView.getSelection();
         if (proxies.isEmpty()) {
             return;
         }
-        final SMTestProxy proxy = proxies.iterator().next();
+        SMTestProxy proxy = proxies.iterator().next();
         myStatisticsTableView.clearSelection();
         fireOnPropagateSelection(proxy);
     }
 
     protected Runnable createGotoSuiteOrParentAction() {
         // Expand selected or go to parent
-        return new Runnable() {
-            public void run() {
-                final SMTestProxy selectedProxy = getSelectedItem();
-                if (selectedProxy == null) {
-                    return;
-                }
+        return () -> {
+            SMTestProxy selectedProxy = getSelectedItem();
+            if (selectedProxy == null) {
+                return;
+            }
 
-                final int i = myStatisticsTableView.getSelectedRow();
-                assert i >= 0; //because something is selected
+            int i = myStatisticsTableView.getSelectedRow();
+            assert i >= 0; //because something is selected
 
-                // If first line is selected we should go to parent suite
-                if (ColumnTest.TestsCellRenderer.isFirstLine(i)) {
-                    final SMTestProxy parentSuite = selectedProxy.getParent();
-                    if (parentSuite != null) {
-                        // go to parent and current suit in it
-                        showInTableAndSelectRow(parentSuite, selectedProxy);
-                    }
+            // If first line is selected we should go to parent suite
+            if (ColumnTest.TestsCellRenderer.isFirstLine(i)) {
+                SMTestProxy parentSuite = selectedProxy.getParent();
+                if (parentSuite != null) {
+                    // go to parent and current suit in it
+                    showInTableAndSelectRow(parentSuite, selectedProxy);
                 }
-                else {
-                    // if selected element is suite - we should expand it
-                    if (selectedProxy.isSuite()) {
-                        // expand and select first (Total) row
-                        showInTableAndSelectRow(selectedProxy, selectedProxy);
-                    }
+            }
+            else {
+                // if selected element is suite - we should expand it
+                if (selectedProxy.isSuite()) {
+                    // expand and select first (Total) row
+                    showInTableAndSelectRow(selectedProxy, selectedProxy);
                 }
             }
         };
     }
 
-    protected void selectProxy(@jakarta.annotation.Nullable final SMTestProxy selectedTestProxy) {
+    protected void selectProxy(@Nullable SMTestProxy selectedTestProxy) {
         // Send event to model
         myTableModel.updateModelOnProxySelected(selectedTestProxy);
 
@@ -253,33 +239,29 @@ public class StatisticsPanel implements DataProvider {
      *
      * @param rowIndex Row's index
      */
-    protected void selectRow(final int rowIndex) {
-        SMRunnerUtil.addToInvokeLater(new Runnable() {
-            public void run() {
-                // updates model
-                myStatisticsTableView.setRowSelectionInterval(rowIndex, rowIndex);
+    protected void selectRow(int rowIndex) {
+        SMRunnerUtil.addToInvokeLater(() -> {
+            // updates model
+            myStatisticsTableView.setRowSelectionInterval(rowIndex, rowIndex);
 
-                // Scroll to visible
-                TableUtil.scrollSelectionToVisible(myStatisticsTableView);
-            }
+            // Scroll to visible
+            TableUtil.scrollSelectionToVisible(myStatisticsTableView);
         });
     }
 
     /**
      * Selects row in table
      */
-    protected void selectRowOf(final SMTestProxy proxy) {
-        SMRunnerUtil.addToInvokeLater(new Runnable() {
-            public void run() {
-                final int rowIndex = myTableModel.getIndexOf(proxy);
-                myStatisticsTableView.setRowSelectionInterval(rowIndex, rowIndex >= 0 ? rowIndex : 0);
-                // Scroll to visible
-                TableUtil.scrollSelectionToVisible(myStatisticsTableView);
-            }
+    protected void selectRowOf(SMTestProxy proxy) {
+        SMRunnerUtil.addToInvokeLater(() -> {
+            int rowIndex = myTableModel.getIndexOf(proxy);
+            myStatisticsTableView.setRowSelectionInterval(rowIndex, rowIndex >= 0 ? rowIndex : 0);
+            // Scroll to visible
+            TableUtil.scrollSelectionToVisible(myStatisticsTableView);
         });
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     protected SMTestProxy getSelectedItem() {
         return myStatisticsTableView.getSelectedObject();
     }
@@ -288,28 +270,26 @@ public class StatisticsPanel implements DataProvider {
         return myTableModel.getItems();
     }
 
-    private void findAndSelectInTable(final SMTestProxy proxy) {
-        SMRunnerUtil.addToInvokeLater(new Runnable() {
-            public void run() {
-                final int rowIndex = myTableModel.getIndexOf(proxy);
-                if (rowIndex >= 0) {
-                    myStatisticsTableView.setRowSelectionInterval(rowIndex, rowIndex);
-                }
+    private void findAndSelectInTable(SMTestProxy proxy) {
+        SMRunnerUtil.addToInvokeLater(() -> {
+            int rowIndex = myTableModel.getIndexOf(proxy);
+            if (rowIndex >= 0) {
+                myStatisticsTableView.setRowSelectionInterval(rowIndex, rowIndex);
             }
         });
     }
 
-    private void fireOnPropagateSelection(final SMTestProxy selectedTestProxy) {
+    private void fireOnPropagateSelection(SMTestProxy selectedTestProxy) {
         for (PropagateSelectionHandler handler : myPropagateSelectionHandlers) {
             handler.handlePropagateSelectionRequest(selectedTestProxy, this, true);
         }
     }
 
     private void createUIComponents() {
-        myStatisticsTableView = new TableView<SMTestProxy>();
+        myStatisticsTableView = new TableView<>();
     }
 
-    private void showInTableAndSelectRow(final SMTestProxy suite, final SMTestProxy suiteProxy) {
+    private void showInTableAndSelectRow(SMTestProxy suite, SMTestProxy suiteProxy) {
         selectProxy(suite);
         selectRowOf(suiteProxy);
     }
