@@ -15,13 +15,12 @@
  */
 package consulo.execution.test.sm.ui.statistic;
 
+import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.test.sm.runner.ProxyFilters;
 import consulo.execution.test.sm.runner.SMTestProxy;
-import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
 import consulo.execution.test.sm.ui.TestsPresentationUtil;
 import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.util.lang.ComparatorUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -31,11 +30,8 @@ import java.util.Comparator;
  * @author Roman Chernyatchik
  */
 public class ColumnResults extends BaseColumn implements Comparator<SMTestProxy> {
-    @NonNls
-    public static final String UNDEFINED = SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.results.undefined");
-
     public ColumnResults() {
-        super(SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.results.title"));
+        super(SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsResultsTitle());
     }
 
     @Override
@@ -113,7 +109,7 @@ public class ColumnResults extends BaseColumn implements Comparator<SMTestProxy>
 
     @Override
     public String valueOf(SMTestProxy testProxy) {
-        return UNDEFINED;
+        return SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsResultsUndefined().get();
     }
 
     @Override

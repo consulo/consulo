@@ -15,13 +15,12 @@
  */
 package consulo.execution.test.sm.ui.statistic;
 
-import consulo.ui.ex.awt.ColoredTableCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
+import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.test.sm.runner.SMTestProxy;
-import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -32,7 +31,7 @@ import java.util.Comparator;
  */
 public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
     public ColumnTest() {
-        super(SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.test.title"));
+        super(SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsTestTitle());
     }
 
     @Nonnull
@@ -58,9 +57,6 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
     }
 
     public static class TestsCellRenderer extends ColoredTableCellRenderer implements ColoredRenderer {
-        @NonNls
-        private static final String TOTAL_TITLE = SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.test.total.title");
-        @NonNls
         private static final String PARENT_TITLE = "..";
 
         private final SMTestProxy myProxy;
@@ -84,7 +80,10 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
             //Black bold for with caption "Total" for parent suite of items in statistics
             if (myProxy.isSuite() && isFirstLine(row)) {
                 if (myProxy.getParent() == null) {
-                    append(TOTAL_TITLE, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+                    append(
+                        SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsTestTotalTitle().get(),
+                        SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
+                    );
                 }
                 else {
                     append(PARENT_TITLE, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);

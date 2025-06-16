@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.ColoredTextContainer;
@@ -143,6 +145,52 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
      * @param attributes text attributes
      */
     @Override
+    public final void append(@Nonnull LocalizeValue fragment, @Nonnull SimpleTextAttributes attributes) {
+        append(fragment, attributes, myMainTextLastIndex < 0);
+    }
+
+    /**
+     * Appends text fragment and sets it's end offset and alignment.
+     * See SimpleColoredComponent#appendTextPadding for details
+     *
+     * @param fragment   text fragment
+     * @param attributes text attributes
+     * @param padding    end offset of the text
+     * @param align      alignment between current offset and padding
+     */
+    public final void append(
+        @Nonnull LocalizeValue fragment,
+        @Nonnull SimpleTextAttributes attributes,
+        int padding,
+        @JdkConstants.HorizontalAlignment int align
+    ) {
+        append(fragment, attributes, myMainTextLastIndex < 0);
+        appendTextPadding(padding, align);
+    }
+
+    /**
+     * Appends string fragments to existing ones. Appended string
+     * will have specified <code>attributes</code>.
+     *
+     * @param fragment   text fragment
+     * @param attributes text attributes
+     * @param isMainText main text of not
+     */
+    public void append(@Nonnull LocalizeValue fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
+        _append(fragment.get(), attributes, isMainText);
+        revalidateAndRepaint();
+    }
+
+    /**
+     * Appends string fragments to existing ones. Appended string
+     * will have specified <code>attributes</code>.
+     *
+     * @param fragment   text fragment
+     * @param attributes text attributes
+     */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @Override
     public final void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
         append(fragment, attributes, myMainTextLastIndex < 0);
     }
@@ -156,6 +204,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
      * @param padding    end offset of the text
      * @param align      alignment between current offset and padding
      */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public final void append(
         @Nonnull String fragment,
         @Nonnull SimpleTextAttributes attributes,
@@ -174,6 +224,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
      * @param attributes text attributes
      * @param isMainText main text of not
      */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
         _append(fragment, attributes, isMainText);
         revalidateAndRepaint();

@@ -1,0 +1,172 @@
+checkbox.run.tests.before.commit:
+    text: Run ''{0}''
+checkbox.run.tests.before.commit.no.configuration:
+    text: Run Tests
+dialog.message.target.does.not.exist:
+    text: The target {0} does not exist
+dialog.message.unable.to.parse.test.results:
+    text: Unable to parse test results in ''{0}''. Test results are expected to be stored in xml.
+dialog.message.unable.to.run.configuration.failed.to.detect.test.framework:
+    text: 'Unable to run the configuration: failed to detect test framework'
+dialog.message.unable.to.run.configuration.settings.are.corrupted:
+    text: 'Unable to run the configuration: settings are corrupted'
+link.label.choose.configuration.before.commit:
+    text: Choose configuration
+progress.text.running.tests:
+    text: Running ''{0}''…
+sm.test.runner.abstract.import.test.error.title:
+    text: Import Failed
+sm.test.runner.import.test:
+    text: Import Tests from File...
+sm.test.runner.import.test.choose.test.file.title:
+    text: Choose a File with Tests Result
+sm.test.runner.import.test.description:
+    text: Import the results of a test execution from an XML file
+sm.test.runner.import.test.group.history:
+    text: Test History
+sm.test.runner.import.test.group.open.recent.session:
+    text: Open recent test session
+sm.test.runner.imported.to.general.failed.to.parse.error.title:
+    text: Failed to Parse {0}
+sm.test.runner.magnitude.assertion.failed.title:
+    text: Assertion failed
+sm.test.runner.magnitude.completed.failed.title:
+    text: Completed
+sm.test.runner.magnitude.ignored.failed.title:
+    text: Ignored
+sm.test.runner.magnitude.not.run.failed.title:
+    text: Not run
+sm.test.runner.magnitude.passed.title:
+    text: Passed
+sm.test.runner.magnitude.running.failed.title:
+    text: Running...
+sm.test.runner.magnitude.skipped.failed.title:
+    text: Skipped
+sm.test.runner.magnitude.terminated.failed.title:
+    text: Terminated
+sm.test.runner.magnitude.testerror.title:
+    text: Error
+sm.test.runner.notifications.tests.failed:
+    text: Tests failed
+sm.test.runner.notifications.tests.failed.with.errors:
+    text: Tests failed with errors
+sm.test.runner.notifications.tests.not.run:
+    text: Tests were not started
+sm.test.runner.notifications.tests.not.run.with.errors:
+    text: Tests were not started with errors. Errors occurred
+sm.test.runner.notifications.tests.passed:
+    text: Tests passed
+sm.test.runner.notifications.tests.passed.with.errors:
+    text: Tests passed with errors
+sm.test.runner.notifications.tests.skipped:
+    text: Tests skipped
+sm.test.runner.notifications.tests.skipped.with.errors:
+    text: Tests skipped with errors
+sm.test.runner.results.form.save.test.results.title:
+    text: Save test results
+sm.test.runner.states.suite.is.empty:
+    text: Empty test suite.
+sm.test.runner.states.test.is.ignored:
+    text: Test ignored.
+sm.test.runner.ui.tabs.statistics.columns.duration.no.tests:
+    text: <NO TESTS>
+sm.test.runner.ui.tabs.statistics.columns.duration.not.run:
+    text: <NOT RUN>
+sm.test.runner.ui.tabs.statistics.columns.duration.prefix.running:
+    text: RUNNING
+sm.test.runner.ui.tabs.statistics.columns.duration.prefix.terminated:
+    text: TERMINATED
+sm.test.runner.ui.tabs.statistics.columns.duration.title:
+    text: Time elapsed
+sm.test.runner.ui.tabs.statistics.columns.duration.unknown:
+    text: <UNKNOWN>
+sm.test.runner.ui.tabs.statistics.columns.results.count.msg.errors:
+    text: E:{0}
+sm.test.runner.ui.tabs.statistics.columns.results.count.msg.failed:
+    text: F:{0}
+sm.test.runner.ui.tabs.statistics.columns.results.count.msg.ignored:
+    text: I:{0}
+sm.test.runner.ui.tabs.statistics.columns.results.count.msg.passed:
+    text: P:{0}
+sm.test.runner.ui.tabs.statistics.columns.results.no.tests:
+    text: <NO TESTS>
+sm.test.runner.ui.tabs.statistics.columns.results.title:
+    text: Results
+sm.test.runner.ui.tabs.statistics.columns.results.undefined:
+    text: <undefined>
+sm.test.runner.ui.tabs.statistics.columns.test.title:
+    text: Test
+sm.test.runner.ui.tabs.statistics.columns.test.total.title:
+    text: 'Total:'
+sm.test.runner.ui.tests.tree.presentation.accessible.status.error:
+    text: Error
+sm.test.runner.ui.tests.tree.presentation.accessible.status.failed:
+    text: Failed
+sm.test.runner.ui.tests.tree.presentation.accessible.status.failed.with.errors:
+    text: Failed with errors
+sm.test.runner.ui.tests.tree.presentation.accessible.status.ignored:
+    text: Ignored
+sm.test.runner.ui.tests.tree.presentation.accessible.status.ignored.with.errors:
+    text: Ignored with errors
+sm.test.runner.ui.tests.tree.presentation.accessible.status.not.ran:
+    text: Not ran
+sm.test.runner.ui.tests.tree.presentation.accessible.status.passed:
+    text: Passed
+sm.test.runner.ui.tests.tree.presentation.accessible.status.passed.with.errors:
+    text: Passed with errors
+sm.test.runner.ui.tests.tree.presentation.accessible.status.passed.with.ignored:
+    text: Passed with ignored
+sm.test.runner.ui.tests.tree.presentation.accessible.status.paused:
+    text: Paused
+sm.test.runner.ui.tests.tree.presentation.accessible.status.paused.with.errors:
+    text: Paused with errors
+sm.test.runner.ui.tests.tree.presentation.accessible.status.running:
+    text: Running
+sm.test.runner.ui.tests.tree.presentation.accessible.status.running.with.errors:
+    text: Running with errors
+sm.test.runner.ui.tests.tree.presentation.accessible.status.skipped:
+    text: Skipped
+sm.test.runner.ui.tests.tree.presentation.accessible.status.skipped.with.errors:
+    text: Skipped with errors
+sm.test.runner.ui.tests.tree.presentation.accessible.status.terminated:
+    text: Terminated
+sm.test.runner.ui.tests.tree.presentation.accessible.status.terminated.with.errors:
+    text: Terminated with errors
+sm.test.runner.ui.tests.tree.presentation.labels.all.but.ignored.passed:
+    text: All Tests Passed (except ignored)
+sm.test.runner.ui.tests.tree.presentation.labels.all.tests.passed:
+    text: All Tests Passed
+sm.test.runner.ui.tests.tree.presentation.labels.done:
+    text: 'Done:'
+sm.test.runner.ui.tests.tree.presentation.labels.empty.test.suite:
+    text: Empty test suite
+sm.test.runner.ui.tests.tree.presentation.labels.failed:
+    text: 'Failed:'
+sm.test.runner.ui.tests.tree.presentation.labels.instantiating.tests:
+    text: Instantiating tests...
+sm.test.runner.ui.tests.tree.presentation.labels.milliseconds:
+    text: ms
+sm.test.runner.ui.tests.tree.presentation.labels.no.tests.were.found:
+    text: No tests were found
+sm.test.runner.ui.tests.tree.presentation.labels.no.tests.were.found.with.errors:
+    text: No tests were found. Errors occurred
+sm.test.runner.ui.tests.tree.presentation.labels.not.test.results:
+    text: No Test Results
+sm.test.runner.ui.tests.tree.presentation.labels.of:
+    text: of
+sm.test.runner.ui.tests.tree.presentation.labels.running:
+    text: 'Running:'
+sm.test.runner.ui.tests.tree.presentation.labels.running.tests:
+    text: Running tests...
+sm.test.runner.ui.tests.tree.presentation.labels.seconds:
+    text: s
+sm.test.runner.ui.tests.tree.presentation.labels.test.noname:
+    text: <no name>
+sm.test.runner.ui.tests.tree.presentation.labels.test.reporter.not.attached:
+    text: Test framework quit unexpectedly
+sm.test.runner.ui.tests.tree.presentation.labels.test.results:
+    text: Test Results
+sm.test.runner.ui.tests.tree.presentation.labels.was.terminated:
+    text: Terminated
+suffix.incomplete.index.was.used:
+    text: Some tests might be missing due to incomplete index

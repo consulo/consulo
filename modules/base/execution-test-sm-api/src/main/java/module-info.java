@@ -11,6 +11,7 @@ module consulo.execution.test.sm.api {
 
     exports consulo.execution.test.sm;
     exports consulo.execution.test.sm.action;
+    exports consulo.execution.test.sm.localize;
     exports consulo.execution.test.sm.runner;
     exports consulo.execution.test.sm.runner.event;
     exports consulo.execution.test.sm.runner.history;
