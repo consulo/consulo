@@ -21,7 +21,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -65,6 +64,7 @@ public interface SMTestLocator {
     class Composite implements SMTestLocator, DumbAware {
         private final Map<String, SMTestLocator> myLocators;
 
+        @SafeVarargs
         public Composite(@Nonnull Pair<String, ? extends SMTestLocator> first, @Nonnull Pair<String, ? extends SMTestLocator>... rest) {
             myLocators = new HashMap<>();
             myLocators.put(first.getFirst(), first.getSecond());

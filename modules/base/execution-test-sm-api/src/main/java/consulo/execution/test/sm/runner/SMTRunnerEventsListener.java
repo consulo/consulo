@@ -66,7 +66,7 @@ public interface SMTRunnerEventsListener {
      *                     If name is empty string statistics will be switched to normal mode
      * @param testCount    - 0 will be considered as unknown tests number
      */
-    void onCustomProgressTestsCategory(@Nullable final String categoryName, final int testCount);
+    void onCustomProgressTestsCategory(@Nullable String categoryName, int testCount);
 
     void onCustomProgressTestStarted();
 
@@ -77,5 +77,4 @@ public interface SMTRunnerEventsListener {
     void onSuiteTreeNodeAdded(SMTestProxy testProxy);
 
     void onSuiteTreeStarted(SMTestProxy suite);
-
 }

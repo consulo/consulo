@@ -15,13 +15,11 @@
  */
 package consulo.execution.test.sm.runner.event;
 
-import jetbrains.buildServer.messages.serviceMessages.ServiceMessage;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jetbrains.buildServer.messages.serviceMessages.ServiceMessage;
 
 public abstract class TreeNodeEvent {
-    @NonNls
     public static final String ROOT_NODE_ID = "0";
 
     private final String myName;

@@ -45,23 +45,27 @@ import java.util.Map;
 @ServiceImpl
 public class TestHistoryConfiguration implements PersistentStateComponent<TestHistoryConfiguration.State> {
     public static class State {
-
-        private Map<String, ConfigurationBean> myHistoryElements = new LinkedHashMap<String, ConfigurationBean>();
+        private Map<String, ConfigurationBean> myHistoryElements = new LinkedHashMap<>();
 
         @Property(surroundWithTag = false)
-        @MapAnnotation(surroundKeyWithTag = false, surroundWithTag = false, surroundValueWithTag = false, entryTagName = "history-entry", keyAttributeName = "file")
+        @MapAnnotation(
+            surroundKeyWithTag = false,
+            surroundWithTag = false,
+            surroundValueWithTag = false,
+            entryTagName = "history-entry",
+            keyAttributeName = "file"
+        )
         public Map<String, ConfigurationBean> getHistoryElements() {
             return myHistoryElements;
         }
 
-        public void setHistoryElements(final Map<String, ConfigurationBean> elements) {
+        public void setHistoryElements(Map<String, ConfigurationBean> elements) {
             myHistoryElements = elements;
         }
     }
 
     @Tag("configuration")
     public static class ConfigurationBean {
-
         @Attribute("name")
         public String name;
         @Attribute("configurationId")
@@ -89,13 +93,13 @@ public class TestHistoryConfiguration implements PersistentStateComponent<TestHi
     }
 
     public String getConfigurationName(String file) {
-        final ConfigurationBean bean = myState.getHistoryElements().get(file);
+        ConfigurationBean bean = myState.getHistoryElements().get(file);
         return bean != null ? bean.name : null;
     }
 
     @Nullable
     public Image getIcon(String file) {
-        final ConfigurationBean bean = myState.getHistoryElements().get(file);
+        ConfigurationBean bean = myState.getHistoryElements().get(file);
         if (bean != null) {
             ConfigurationType type = ConfigurationTypeUtil.findConfigurationType(bean.configurationId);
             if (type != null) {
@@ -106,13 +110,13 @@ public class TestHistoryConfiguration implements PersistentStateComponent<TestHi
     }
 
     public void registerHistoryItem(String file, String configName, String configId) {
-        final ConfigurationBean bean = new ConfigurationBean();
+        ConfigurationBean bean = new ConfigurationBean();
         bean.name = configName;
         bean.configurationId = configId;
-        final Map<String, ConfigurationBean> historyElements = myState.getHistoryElements();
+        Map<String, ConfigurationBean> historyElements = myState.getHistoryElements();
         historyElements.put(file, bean);
         if (historyElements.size() > AbstractImportTestsAction.getHistorySize()) {
-            final String first = historyElements.keySet().iterator().next();
+            String first = historyElements.keySet().iterator().next();
             historyElements.remove(first);
         }
     }

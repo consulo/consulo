@@ -33,8 +33,8 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
         @Nullable String name,
         @Nullable String id,
         @Nullable String parentId,
-        @Nullable final String locationUrl,
-        @Nullable final String metainfo,
+        @Nullable String locationUrl,
+        @Nullable String metainfo,
         @Nullable String nodeType,
         @Nullable String nodeArgs,
         boolean running

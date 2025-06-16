@@ -15,13 +15,13 @@
  */
 package consulo.execution.test.sm.ui;
 
-import consulo.application.AllIcons;
 import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.execution.test.*;
 import consulo.execution.test.sm.SmRunnerBundle;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ProcessOutputTypes;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredTableCellRenderer;
@@ -80,15 +80,15 @@ public class TestsPresentationUtil {
     }
 
     public static String getProgressStatus_Text(
-        final long startTime,
-        final long endTime,
-        final int testsTotal,
-        final int testsCount,
-        final int failuresCount,
-        @Nullable final Set<String> allCategories,
-        final boolean isFinished
+        long startTime,
+        long endTime,
+        int testsTotal,
+        int testsCount,
+        int failuresCount,
+        @Nullable Set<String> allCategories,
+        boolean isFinished
     ) {
-        final StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         if (endTime == 0) {
             sb.append(SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.running"));
         }
@@ -115,7 +115,7 @@ public class TestsPresentationUtil {
                     }
 
                     // first symbol - to lower case
-                    final char firstChar = category.charAt(0);
+                    char firstChar = category.charAt(0);
                     sb.append(first ? firstChar : Character.toLowerCase(firstChar));
 
                     sb.append(category.substring(1));
@@ -135,7 +135,7 @@ public class TestsPresentationUtil {
             sb.append(' ').append(failuresCount);
         }
         if (endTime != 0) {
-            final long time = endTime - startTime;
+            long time = endTime - startTime;
             sb.append(DOUBLE_SPACE);
             sb.append('(').append(StringUtil.formatDuration(time)).append(')');
         }
@@ -151,17 +151,14 @@ public class TestsPresentationUtil {
         return allCategories.size() > 1 || (allCategories.size() == 1 && !DEFAULT_TESTS_CATEGORY.equals(allCategories.iterator().next()));
     }
 
-    public static void formatRootNodeWithChildren(
-        final SMTestProxy.SMRootTestProxy testProxy,
-        final TestTreeRenderer renderer
-    ) {
+    public static void formatRootNodeWithChildren(SMTestProxy.SMRootTestProxy testProxy, TestTreeRenderer renderer) {
         IconInfo iconInfo = getIcon(testProxy, renderer.getConsoleProperties());
         renderer.setIcon(iconInfo.icon());
 
-        final TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
+        TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
 
-        final String text;
-        final String presentableName = testProxy.getPresentation();
+        String text;
+        String presentableName = testProxy.getPresentation();
         if (presentableName != null) {
             text = presentableName;
         }
@@ -175,17 +172,14 @@ public class TestsPresentationUtil {
             text = SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.test.results");
         }
         renderer.append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        final String comment = testProxy.getComment();
+        String comment = testProxy.getComment();
         if (comment != null) {
             renderer.append(" (" + comment + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
         }
     }
 
-    public static void formatRootNodeWithoutChildren(
-        final SMTestProxy.SMRootTestProxy testProxy,
-        final TestTreeRenderer renderer
-    ) {
-        final TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
+    public static void formatRootNodeWithoutChildren(SMTestProxy.SMRootTestProxy testProxy, TestTreeRenderer renderer) {
+        TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
         if (magnitude == TestStateInfo.Magnitude.RUNNING_INDEX) {
             if (!testProxy.getChildren().isEmpty()) {
                 formatRootNodeWithChildren(testProxy, renderer);
@@ -240,18 +234,15 @@ public class TestsPresentationUtil {
         }
     }
 
-    public static void formatTestProxy(
-        final SMTestProxy testProxy,
-        final TestTreeRenderer renderer
-    ) {
+    public static void formatTestProxy(SMTestProxy testProxy, TestTreeRenderer renderer) {
         renderer.setIcon(getIcon(testProxy, renderer.getConsoleProperties()).icon());
         renderer.append(testProxy.getPresentableName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
 
     @Nonnull
-    public static String getPresentableName(final SMTestProxy testProxy) {
-        final SMTestProxy parent = testProxy.getParent();
-        final String name = testProxy.getName();
+    public static String getPresentableName(SMTestProxy testProxy) {
+        SMTestProxy parent = testProxy.getParent();
+        String name = testProxy.getName();
 
         if (name == null) {
             return NO_NAME_TEST;
@@ -262,8 +253,8 @@ public class TestsPresentationUtil {
             String parentName = parent.getName();
             if (parentName != null) {
                 boolean parentStartsWith = name.startsWith(parentName);
-                if (!parentStartsWith && parent instanceof SMTestProxy.SMRootTestProxy) {
-                    final String presentation = ((SMTestProxy.SMRootTestProxy) parent).getPresentation();
+                if (!parentStartsWith && parent instanceof SMTestProxy.SMRootTestProxy rootTestProxy) {
+                    String presentation = rootTestProxy.getPresentation();
                     if (presentation != null) {
                         parentName = presentation;
                         parentStartsWith = name.startsWith(parentName);
@@ -304,14 +295,11 @@ public class TestsPresentationUtil {
     }
 
     @Nonnull
-    private static IconInfo getIcon(
-        final SMTestProxy testProxy,
-        final TestConsoleProperties consoleProperties
-    ) {
-        final TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
+    private static IconInfo getIcon(SMTestProxy testProxy, TestConsoleProperties consoleProperties) {
+        TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
 
-        final boolean hasErrors = testProxy.hasErrors();
-        final boolean hasPassedTests = testProxy.hasPassedTests();
+        boolean hasErrors = testProxy.hasErrors();
+        boolean hasPassedTests = testProxy.hasPassedTests();
 
         return switch (magnitude) {
             case ERROR_INDEX -> IconInfo.wrap(
@@ -356,21 +344,20 @@ public class TestsPresentationUtil {
             );
             case RUNNING_INDEX -> {
                 if (consoleProperties.isPaused()) {
-                    yield hasErrors ? IconInfo.wrap(
+                    yield hasErrors
+                        ? IconInfo.wrap(
                         SMPoolOfTestIcons.PAUSED_E_ICON,
-                        SmRunnerBundle.message(
-                            "sm.test.runner.ui.tests.tree.presentation.accessible.status.paused.with.errors")
+                        SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.paused.with.errors")
                     )
                         : IconInfo.wrap(
-                        AllIcons.RunConfigurations.TestPaused,
+                        PlatformIconGroup.runconfigurationsTestpaused(),
                         SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.paused")
                     );
                 }
                 else {
                     yield hasErrors ? IconInfo.wrap(
                         SMPoolOfTestIcons.RUNNING_E_ICON,
-                        SmRunnerBundle.message(
-                            "sm.test.runner.ui.tests.tree.presentation.accessible.status.running.with.errors")
+                        SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.running.with.errors")
                     )
                         : IconInfo.wrap(
                         SMPoolOfTestIcons.RUNNING_ICON,
@@ -400,14 +387,11 @@ public class TestsPresentationUtil {
     }
 
     @Nullable
-    public static String getTestStatusPresentation(final SMTestProxy proxy) {
+    public static String getTestStatusPresentation(SMTestProxy proxy) {
         return proxy.getMagnitudeInfo().getTitle();
     }
 
-    public static void appendSuiteStatusColorPresentation(
-        final SMTestProxy proxy,
-        final ColoredTableCellRenderer renderer
-    ) {
+    public static void appendSuiteStatusColorPresentation(SMTestProxy proxy, ColoredTableCellRenderer renderer) {
         int passedCount = 0;
         int errorsCount = 0;
         int failedCount = 0;
@@ -419,7 +403,7 @@ public class TestsPresentationUtil {
             return;
         }
 
-        final List<SMTestProxy> allTestCases = proxy.getAllTests();
+        List<SMTestProxy> allTestCases = proxy.getAllTests();
         for (SMTestProxy testOrSuite : allTestCases) {
             // we should ignore test suites
             if (testOrSuite.isSuite()) {
@@ -449,14 +433,11 @@ public class TestsPresentationUtil {
             }
         }
 
-        final String separator = " ";
+        String separator = " ";
 
         if (failedCount > 0) {
             renderer.append(
-                SMTestsRunnerBundle.message(
-                    "sm.test.runner.ui.tabs.statistics.columns.results.count.msg.failed",
-                    failedCount
-                ) + separator,
+                SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.results.count.msg.failed", failedCount) + separator,
                 DEFFECT_ATTRIBUTES
             );
         }
@@ -497,7 +478,7 @@ public class TestsPresentationUtil {
      * @return Duration presentation for given proxy
      */
     @Nullable
-    public static String getDurationPresentation(final SMTestProxy proxy) {
+    public static String getDurationPresentation(SMTestProxy proxy) {
         switch (proxy.getMagnitudeInfo()) {
             case COMPLETE_INDEX:
             case PASSED_INDEX:
@@ -521,10 +502,7 @@ public class TestsPresentationUtil {
         }
     }
 
-    private static String getDurationWithPrefixPresentation(
-        final SMTestProxy proxy,
-        final String prefix
-    ) {
+    private static String getDurationWithPrefixPresentation(SMTestProxy proxy, String prefix) {
         // If duration is known
         if (proxy.getDuration() != null) {
             return prefix + COLON + getDurationTimePresentation(proxy);
@@ -533,8 +511,8 @@ public class TestsPresentationUtil {
         return '<' + prefix + '>';
     }
 
-    private static String getDurationTimePresentation(final SMTestProxy proxy) {
-        final Long duration = proxy.getDuration();
+    private static String getDurationTimePresentation(SMTestProxy proxy) {
+        Long duration = proxy.getDuration();
 
         if (duration == null) {
             // if suite without children
@@ -543,17 +521,14 @@ public class TestsPresentationUtil {
                 : DURATION_UNKNOWN;
         }
         else {
-            return StringUtil.formatDuration(duration.longValue());
+            return StringUtil.formatDuration(duration);
         }
     }
 
-    public static void appendTestStatusColorPresentation(
-        final SMTestProxy proxy,
-        final ColoredTableCellRenderer renderer
-    ) {
-        final String title = getTestStatusPresentation(proxy);
+    public static void appendTestStatusColorPresentation(SMTestProxy proxy, ColoredTableCellRenderer renderer) {
+        String title = getTestStatusPresentation(proxy);
 
-        final TestStateInfo.Magnitude info = proxy.getMagnitudeInfo();
+        TestStateInfo.Magnitude info = proxy.getMagnitudeInfo();
         switch (info) {
             case COMPLETE_INDEX:
             case PASSED_INDEX:
@@ -579,18 +554,19 @@ public class TestsPresentationUtil {
         }
     }
 
-    public static void printWithAnsiColoring(@Nonnull final Printer printer, @Nonnull String text, @Nonnull final Key processOutputType) {
+    public static void printWithAnsiColoring(@Nonnull Printer printer, @Nonnull String text, @Nonnull Key processOutputType) {
         AnsiEscapeDecoder decoder = new AnsiEscapeDecoder();
-        decoder.escapeText(text, ProcessOutputTypes.STDOUT, new AnsiEscapeDecoder.ColoredTextAcceptor() {
-            @Override
-            public void coloredTextAvailable(String text, Key attributes) {
+        decoder.escapeText(
+            text,
+            ProcessOutputTypes.STDOUT,
+            (text1, attributes) -> {
                 ConsoleViewContentType contentType = ConsoleViewContentType.getConsoleViewType(attributes);
                 if (contentType == null || contentType == ConsoleViewContentType.NORMAL_OUTPUT) {
                     contentType = ConsoleViewContentType.getConsoleViewType(processOutputType);
                 }
-                printer.print(text, contentType);
+                printer.print(text1, contentType);
             }
-        });
+        );
     }
 
     private static record IconInfo(Image icon, String statusText) {

@@ -15,11 +15,11 @@
  */
 package consulo.execution.test.sm.action;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.execution.DefaultExecutionTarget;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.ExecutionTargetProvider;
-import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.configuration.*;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
@@ -27,13 +27,16 @@ import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
+import consulo.execution.runner.RunnerRegistry;
 import consulo.execution.test.TestStateStorage;
 import consulo.execution.test.sm.runner.SMRunnerConsolePropertiesProvider;
 import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import consulo.execution.test.sm.runner.history.ImportedTestRunnableState;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
@@ -42,11 +45,10 @@ import consulo.util.io.FileUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jdom.Document;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Document;
+import org.jdom.Element;
 
 import java.io.File;
 import java.util.Arrays;
@@ -54,7 +56,8 @@ import java.util.Arrays;
 /**
  * 1. chooses file where test results were saved
  * 2. finds the configuration element saved during export
- * 3. creates corresponding configuration with {@link SMTRunnerConsoleProperties} if configuration implements {@link SMRunnerConsolePropertiesProvider}
+ * 3. creates corresponding configuration with {@link SMTRunnerConsoleProperties}
+ * if configuration implements {@link SMRunnerConsolePropertiesProvider}
  * <p>
  * Without console properties no navigation, no rerun failed is possible.
  */
@@ -63,10 +66,28 @@ public abstract class AbstractImportTestsAction extends AnAction {
     public static final String TEST_HISTORY_SIZE = "test_history_size";
     private SMTRunnerConsoleProperties myProperties;
 
+    public AbstractImportTestsAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public AbstractImportTestsAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
+    public AbstractImportTestsAction(
+        SMTRunnerConsoleProperties properties,
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        this(text, description, icon);
+        myProperties = properties;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public AbstractImportTestsAction(
         SMTRunnerConsoleProperties properties,
         @Nullable String text,
@@ -89,6 +110,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
     }
@@ -97,27 +119,32 @@ public abstract class AbstractImportTestsAction extends AnAction {
     public abstract VirtualFile getFile(@Nonnull Project project);
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         LOG.assertTrue(project != null);
-        final VirtualFile file = getFile(project);
+        VirtualFile file = getFile(project);
         if (file != null) {
             try {
-                final ImportRunProfile profile = new ImportRunProfile(file, project);
+                ImportRunProfile profile = new ImportRunProfile(file, project);
                 SMTRunnerConsoleProperties properties = profile.getProperties();
                 if (properties == null) {
                     properties = myProperties;
-                    LOG.info("Failed to detect test framework in " + file.getPath() + "; use " + (properties != null ? properties.getTestFrameworkName() + " from toolbar" : "no properties"));
+                    LOG.info(
+                        "Failed to detect test framework in " + file.getPath() + "; " +
+                            "use " + (properties != null ? properties.getTestFrameworkName() + " from toolbar" : "no properties")
+                    );
                 }
-                final Executor executor = properties != null ? properties.getExecutor() : ExecutorRegistry.getInstance()
-                    .getExecutorById(DefaultRunExecutor.EXECUTOR_ID);
+                Executor executor = properties != null
+                    ? properties.getExecutor()
+                    : ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID);
                 ExecutionEnvironmentBuilder builder = ExecutionEnvironmentBuilder.create(project, executor, profile);
                 ExecutionTarget target = profile.getTarget();
                 if (target != null) {
                     builder = builder.target(target);
                 }
-                final RunConfiguration initialConfiguration = profile.getInitialConfiguration();
-                final ProgramRunner runner =
+                RunConfiguration initialConfiguration = profile.getInitialConfiguration();
+                ProgramRunner runner =
                     initialConfiguration != null ? RunnerRegistry.getInstance().getRunner(executor.getId(), initialConfiguration) : null;
                 if (runner != null) {
                     builder = builder.runner(runner);
@@ -133,11 +160,11 @@ public abstract class AbstractImportTestsAction extends AnAction {
     public static void adjustHistory(Project project) {
         int historySize = getHistorySize();
 
-        final File[] files = TestStateStorage.getTestHistoryRoot(project).listFiles((dir, name) -> name.endsWith(".xml"));
+        File[] files = TestStateStorage.getTestHistoryRoot(project).listFiles((dir, name) -> name.endsWith(".xml"));
         if (files != null && files.length >= historySize + 1) {
             Arrays.sort(files, (o1, o2) -> {
-                final long l1 = o1.lastModified();
-                final long l2 = o2.lastModified();
+                long l1 = o1.lastModified();
+                long l2 = o2.lastModified();
                 if (l1 == l2) {
                     return FileUtil.compareFiles(o1, o2);
                 }
@@ -159,18 +186,18 @@ public abstract class AbstractImportTestsAction extends AnAction {
             myFile = file;
             myProject = project;
             try {
-                final Document document = JDOMUtil.loadDocument(VirtualFileUtil.virtualToIoFile(myFile));
-                final Element config = document.getRootElement().getChild("config");
+                Document document = JDOMUtil.loadDocument(VirtualFileUtil.virtualToIoFile(myFile));
+                Element config = document.getRootElement().getChild("config");
                 if (config != null) {
                     String configTypeId = config.getAttributeValue("configId");
                     if (configTypeId != null) {
-                        final ConfigurationType configurationType = ConfigurationTypeUtil.findConfigurationType(configTypeId);
+                        ConfigurationType configurationType = ConfigurationTypeUtil.findConfigurationType(configTypeId);
                         if (configurationType != null) {
                             myConfiguration = configurationType.getConfigurationFactories()[0].createTemplateConfiguration(project);
                             myConfiguration.setName(config.getAttributeValue("name"));
                             myConfiguration.readExternal(config);
 
-                            final Executor executor = ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID);
+                            Executor executor = ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID);
                             if (executor != null) {
                                 if (myConfiguration instanceof SMRunnerConsolePropertiesProvider provider) {
                                     myProperties = provider.createTestConsoleProperties(executor);

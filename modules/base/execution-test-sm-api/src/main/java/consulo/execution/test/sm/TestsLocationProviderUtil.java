@@ -15,7 +15,7 @@
  */
 package consulo.execution.test.sm;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.execution.test.sm.internal.SMTestHelper;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -24,8 +24,6 @@ import consulo.util.lang.text.StringTokenizer;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.TempFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,7 +36,6 @@ import java.util.List;
  * @author Roman Chernyatchik
  */
 public class TestsLocationProviderUtil {
-    @NonNls
     private static final String PROTOCOL_SEPARATOR = "://";
     private static final int MIN_PROXIMITY_THRESHOLD = 1;
 
@@ -46,34 +43,34 @@ public class TestsLocationProviderUtil {
     }
 
     @Nullable
-    public static String extractPath(@Nonnull final String locationUrl) {
-        final int index = locationUrl.indexOf(PROTOCOL_SEPARATOR);
+    public static String extractPath(@Nonnull String locationUrl) {
+        int index = locationUrl.indexOf(PROTOCOL_SEPARATOR);
         if (index >= 0) {
             return locationUrl.substring(index + PROTOCOL_SEPARATOR.length());
         }
         return null;
     }
 
-    public static List<VirtualFile> findSuitableFilesFor(final String filePath, final Project project) {
-        final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+    public static List<VirtualFile> findSuitableFilesFor(String filePath, Project project) {
+        ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
 
         // at first let's try to find file as is, by it's real path
         // and check that file belongs to current project
         // this location provider designed for tests thus we will check only project content
         // (we cannot check just sources or tests folders because RM doesn't use it
-        final VirtualFile file = getByFullPath(filePath);
-        final boolean inProjectContent = file != null && (index.isInContent(file));
+        VirtualFile file = getByFullPath(filePath);
+        boolean inProjectContent = file != null && (index.isInContent(file));
 
         if (inProjectContent) {
             return Collections.singletonList(file);
         }
 
         //split file by "/" in parts
-        final LinkedList<String> folders = new LinkedList<String>();
-        final StringTokenizer st = new StringTokenizer(filePath, "/", false);
+        List<String> folders = new LinkedList<>();
+        StringTokenizer st = new StringTokenizer(filePath, "/", false);
         String fileName = null;
         while (st.hasMoreTokens()) {
-            final String pathComponent = st.nextToken();
+            String pathComponent = st.nextToken();
             if (st.hasMoreTokens()) {
                 folders.addFirst(pathComponent);
             }
@@ -97,9 +94,9 @@ public class TestsLocationProviderUtil {
      * @return
      */
     public static List<VirtualFile> findFilesClosestToTarget(
-        @Nonnull final List<String> targetParentFolders,
-        final List<FileInfo> candidates,
-        final int minProximityThreshold
+        @Nonnull List<String> targetParentFolders,
+        List<FileInfo> candidates,
+        int minProximityThreshold
     ) {
         // let's find all files with similar relative path
 
@@ -119,14 +116,14 @@ public class TestsLocationProviderUtil {
         // to remove false positives on some cases
         int maxProximity = 0;
         for (FileInfo fileInfo : candidates) {
-            final int proximity = fileInfo.getProximity();
+            int proximity = fileInfo.getProximity();
             if (proximity > maxProximity) {
                 maxProximity = proximity;
             }
         }
 
         if (maxProximity >= minProximityThreshold) {
-            final List<VirtualFile> files = new ArrayList<VirtualFile>();
+            List<VirtualFile> files = new ArrayList<>();
             for (FileInfo info : candidates) {
                 if (info.getProximity() == maxProximity) {
                     files.add(info.getFile());
@@ -138,18 +135,18 @@ public class TestsLocationProviderUtil {
         return Collections.emptyList();
     }
 
-    public static List<FileInfo> collectCandidates(final Project project, final String fileName, final boolean includeNonProjectItems) {
+    public static List<FileInfo> collectCandidates(Project project, String fileName, boolean includeNonProjectItems) {
         return project.getInstance(SMTestHelper.class).collectCandidates(project, fileName, includeNonProjectItems);
     }
 
     @Nullable
     private static VirtualFile getByFullPath(String filePath) {
-        final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(filePath);
+        VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(filePath);
         if (fileByPath != null) {
             return fileByPath;
         }
         // if we are in UnitTest mode probably TempFileSystem is used instead of LocalFileSystem
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             return TempFileSystem.getInstance().findFileByPath(filePath);
         }
         return null;
@@ -165,7 +162,7 @@ public class TestsLocationProviderUtil {
             myCurrentFolder = myFile.getParent();
         }
 
-        public void processRelativePathComponent(final String folderName) {
+        public void processRelativePathComponent(String folderName) {
             if (myCurrentFolder == null) {
                 return;
             }

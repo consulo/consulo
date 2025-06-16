@@ -15,6 +15,7 @@
  */
 package consulo.execution.test.sm;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.document.Document;
 import consulo.execution.action.Location;
@@ -29,6 +30,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +44,7 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public List<Location> getLocation(
         @Nonnull String protocol,
         @Nonnull String path,
@@ -52,9 +55,9 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
             return Collections.emptyList();
         }
 
-        final String filePath;
-        final int lineNumber;
-        final int columnNumber;
+        String filePath;
+        int lineNumber;
+        int columnNumber;
 
         int lastColonIndex = path.lastIndexOf(':');
         if (lastColonIndex > 3) {   // on Windows, paths start with /C: and that colon is not a line number separator
@@ -79,20 +82,21 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
         }
         // Now we should search file with most suitable path
         // here path may be absolute or relative
-        final String systemIndependentPath = FileUtil.toSystemIndependentName(filePath);
-        final List<VirtualFile> virtualFiles = TestsLocationProviderUtil.findSuitableFilesFor(systemIndependentPath, project);
+        String systemIndependentPath = FileUtil.toSystemIndependentName(filePath);
+        List<VirtualFile> virtualFiles = TestsLocationProviderUtil.findSuitableFilesFor(systemIndependentPath, project);
         if (virtualFiles.isEmpty()) {
             return Collections.emptyList();
         }
 
-        final List<Location> locations = new ArrayList<>(2);
+        List<Location> locations = new ArrayList<>(2);
         for (VirtualFile file : virtualFiles) {
             locations.add(createLocationFor(project, file, lineNumber, columnNumber));
         }
         return locations;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
+    @RequiredReadAction
     public static Location createLocationFor(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int lineNum) {
         return createLocationFor(project, virtualFile, lineNum, -1);
     }
@@ -106,9 +110,10 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
      *                    a non-positive column number doesn't change text caret position inside the file
      * @return Location instance, or null if not found
      */
-    @jakarta.annotation.Nullable
+    @Nullable
+    @RequiredReadAction
     public static Location createLocationFor(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int lineNum, int columnNum) {
-        final PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+        PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
         if (psiFile == null) {
             return null;
         }
@@ -116,7 +121,7 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
             return PsiLocation.fromPsiElement(psiFile);
         }
 
-        final Document doc = PsiDocumentManager.getInstance(project).getDocument(psiFile);
+        Document doc = PsiDocumentManager.getInstance(project).getDocument(psiFile);
         if (doc == null) {
             return null;
         }
@@ -125,8 +130,8 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
             return PsiLocation.fromPsiElement(psiFile);
         }
 
-        final int lineStartOffset = doc.getLineStartOffset(lineNum - 1);
-        final int endOffset = doc.getLineEndOffset(lineNum - 1);
+        int lineStartOffset = doc.getLineStartOffset(lineNum - 1);
+        int endOffset = doc.getLineEndOffset(lineNum - 1);
 
         int offset = Math.min(lineStartOffset + Math.max(columnNum - 1, 0), endOffset);
         PsiElement elementAtLine = null;

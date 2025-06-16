@@ -15,6 +15,7 @@
  */
 package consulo.execution.test.sm.runner;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.component.util.config.Storage;
 import consulo.document.Document;
@@ -35,6 +36,7 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -44,7 +46,8 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
- * Use {@link SMRunnerConsolePropertiesProvider} so importer {@link AbstractImportTestsAction.ImportRunProfile#ImportRunProfile(VirtualFile, Project)}
+ * Use {@link SMRunnerConsolePropertiesProvider} so importer
+ * {@link AbstractImportTestsAction.ImportRunProfile#ImportRunProfile(VirtualFile, Project)}
  * would be able to create properties by read configuration and test navigation, rerun failed tests etc. would work on imported results
  */
 public class SMTRunnerConsoleProperties extends TestConsoleProperties implements SMStacktraceParserEx {
@@ -116,15 +119,15 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
 
     @Nullable
     @Override
-    public Navigatable getErrorNavigatable(@Nonnull final Project project, final @Nonnull String stacktrace) {
+    public Navigatable getErrorNavigatable(@Nonnull final Project project, @Nonnull String stacktrace) {
         if (myCustomFilter.isEmpty()) {
             return null;
         }
 
         // iterate stacktrace lines find first navigatable line using
         // stacktrace filters
-        final int stacktraceLength = stacktrace.length();
-        final String[] lines = StringUtil.splitByLines(stacktrace);
+        int stacktraceLength = stacktrace.length();
+        String[] lines = StringUtil.splitByLines(stacktrace);
         for (String line : lines) {
             Filter.Result result;
             try {
@@ -137,13 +140,14 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
             if (info != null) {
 
                 // covers 99% use existing cases
-                if (info instanceof FileHyperlinkInfo) {
-                    return ((FileHyperlinkInfo) info).getDescriptor();
+                if (info instanceof FileHyperlinkInfo fileHyperlinkInfo) {
+                    return fileHyperlinkInfo.getDescriptor();
                 }
 
                 // otherwise
                 return new Navigatable() {
                     @Override
+                    @RequiredUIAccess
                     public void navigate(boolean requestFocus) {
                         info.navigate(project);
                     }
@@ -163,17 +167,17 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
         return null;
     }
 
-    public void addStackTraceFilter(final Filter filter) {
+    public void addStackTraceFilter(Filter filter) {
         myCustomFilter.addFilter(filter);
     }
 
-    @Nullable
     @Deprecated
+    @Nullable
+    @RequiredReadAction
     protected Navigatable findSuitableNavigatableForLine(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
         // lets find first non-ws psi element
-
-        final Document doc = FileDocumentManager.getInstance().getDocument(file);
-        final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(doc);
+        Document doc = FileDocumentManager.getInstance().getDocument(file);
+        PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(doc);
         if (psi == null) {
             return null;
         }

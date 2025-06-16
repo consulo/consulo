@@ -32,7 +32,7 @@ public class TestIgnoredEvent extends TreeNodeEvent {
         myStacktrace = stacktrace;
     }
 
-    public TestIgnoredEvent(@Nonnull TestIgnored testIgnored, @jakarta.annotation.Nullable String stacktrace) {
+    public TestIgnoredEvent(@Nonnull TestIgnored testIgnored, @Nullable String stacktrace) {
         super(testIgnored.getTestName(), TreeNodeEvent.getNodeId(testIgnored));
         myIgnoreComment = testIgnored.getIgnoreComment();
         myStacktrace = stacktrace;

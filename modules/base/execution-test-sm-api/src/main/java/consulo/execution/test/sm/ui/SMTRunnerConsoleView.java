@@ -17,7 +17,9 @@ package consulo.execution.test.sm.ui;
 
 import consulo.application.Application;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.test.*;
+import consulo.execution.test.HyperLink;
+import consulo.execution.test.TestConsoleProperties;
+import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.sm.SMRunnerUtil;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.ui.BaseTestsOutputConsoleView;
@@ -25,8 +27,8 @@ import consulo.execution.test.ui.TestResultsPanel;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.ProcessHandler;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Lists;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,7 +46,7 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
     /**
      * @deprecated
      */
-    public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties, final ExecutionEnvironment environment) {
+    public SMTRunnerConsoleView(TestConsoleProperties consoleProperties, ExecutionEnvironment environment) {
         this(consoleProperties, environment, null);
     }
 
@@ -54,25 +56,22 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
      */
     @SuppressWarnings("UnusedParameters")
     public SMTRunnerConsoleView(
-        final TestConsoleProperties consoleProperties,
-        final ExecutionEnvironment environment,
-        @Nullable final String splitterProperty
+        TestConsoleProperties consoleProperties,
+        ExecutionEnvironment environment,
+        @Nullable String splitterProperty
     ) {
         super(consoleProperties, null);
         mySplitterProperty = splitterProperty;
     }
 
-    public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties) {
+    public SMTRunnerConsoleView(TestConsoleProperties consoleProperties) {
         this(consoleProperties, (String) null);
     }
 
     /**
      * @param splitterProperty Key to store(project level) latest value of testTree/consoleTab splitter. E.g. "RSpec.Splitter.Proportion"
      */
-    public SMTRunnerConsoleView(
-        final TestConsoleProperties consoleProperties,
-        @Nullable final String splitterProperty
-    ) {
+    public SMTRunnerConsoleView(TestConsoleProperties consoleProperties, @Nullable String splitterProperty) {
         super(consoleProperties, null);
         mySplitterProperty = splitterProperty;
     }
@@ -96,10 +95,11 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
         // Console
         myResultsViewer.addEventsListener(new TestResultsViewer.SMEventsAdapter() {
             @Override
+            @RequiredUIAccess
             public void onSelected(
-                @Nullable final SMTestProxy selectedTestProxy,
-                @Nonnull final TestResultsViewer viewer,
-                @Nonnull final TestFrameworkRunningModel model
+                @Nullable SMTestProxy selectedTestProxy,
+                @Nonnull TestResultsViewer viewer,
+                @Nonnull TestFrameworkRunningModel model
             ) {
                 if (selectedTestProxy == null) {
                     return;
@@ -126,7 +126,7 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
      * @param contentType given type
      */
     @Override
-    public void print(@Nonnull final String s, @Nonnull final ConsoleViewContentType contentType) {
+    public void print(@Nonnull String s, @Nonnull ConsoleViewContentType contentType) {
         myResultsViewer.getRoot().addLast(printer -> printer.print(s, contentType));
     }
 

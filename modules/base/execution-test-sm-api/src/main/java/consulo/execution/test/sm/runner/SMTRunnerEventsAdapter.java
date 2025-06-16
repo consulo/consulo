@@ -31,37 +31,37 @@ public class SMTRunnerEventsAdapter implements SMTRunnerEventsListener {
     }
 
     @Override
-    public void onTestsCountInSuite(final int count) {
+    public void onTestsCountInSuite(int count) {
     }
 
     @Override
-    public void onTestStarted(@Nonnull final SMTestProxy test) {
+    public void onTestStarted(@Nonnull SMTestProxy test) {
     }
 
     @Override
-    public void onTestFinished(@Nonnull final SMTestProxy test) {
+    public void onTestFinished(@Nonnull SMTestProxy test) {
     }
 
     @Override
-    public void onTestFailed(@Nonnull final SMTestProxy test) {
+    public void onTestFailed(@Nonnull SMTestProxy test) {
     }
 
     @Override
-    public void onTestIgnored(@Nonnull final SMTestProxy test) {
+    public void onTestIgnored(@Nonnull SMTestProxy test) {
     }
 
     @Override
-    public void onSuiteStarted(@Nonnull final SMTestProxy suite) {
+    public void onSuiteStarted(@Nonnull SMTestProxy suite) {
     }
 
     @Override
-    public void onSuiteFinished(@Nonnull final SMTestProxy suite) {
+    public void onSuiteFinished(@Nonnull SMTestProxy suite) {
     }
 
     // Custom progress status
 
     @Override
-    public void onCustomProgressTestsCategory(@Nullable String categoryName, final int testCount) {
+    public void onCustomProgressTestsCategory(@Nullable String categoryName, int testCount) {
     }
 
     @Override

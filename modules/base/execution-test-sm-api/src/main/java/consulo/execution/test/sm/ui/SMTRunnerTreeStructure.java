@@ -20,19 +20,18 @@ import consulo.execution.test.TestTreeViewStructure;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.project.Project;
 import consulo.ui.ex.tree.NodeDescriptor;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 /**
- * @author: Roman Chernyatchik
+ * @author Roman Chernyatchik
  */
 public class SMTRunnerTreeStructure extends TestTreeViewStructure<SMTestProxy> {
     private final Object myRootNode;
     private final Project myProject;
 
-    public SMTRunnerTreeStructure(final Project project, final Object rootNode) {
+    public SMTRunnerTreeStructure(Project project, Object rootNode) {
         myProject = project;
         myRootNode = rootNode;
     }
@@ -48,24 +47,25 @@ public class SMTRunnerTreeStructure extends TestTreeViewStructure<SMTestProxy> {
 
     @Nonnull
     @Override
-    public SMTRunnerNodeDescriptor createDescriptor(final Object element, final NodeDescriptor parentDesc) {
+    public SMTRunnerNodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDesc) {
         //noinspection unchecked
         return new SMTRunnerNodeDescriptor(myProject, (SMTestProxy) element, (NodeDescriptor<SMTestProxy>) parentDesc);
     }
 
+    @Nonnull
     @Override
-    public Object[] getChildElements(final Object element) {
-        final List<? extends SMTestProxy> results = ((SMTestProxy) element).getChildren(getFilter());
+    public Object[] getChildElements(@Nonnull Object element) {
+        List<? extends SMTestProxy> results = ((SMTestProxy) element).getChildren(getFilter());
 
         return results.toArray(new AbstractTestProxy[results.size()]);
     }
 
     @Override
-    public Object getParentElement(final Object element) {
+    public Object getParentElement(@Nonnull Object element) {
         return ((AbstractTestProxy) element).getParent();
     }
 
-
+    @Nonnull
     @Override
     public Object getRootElement() {
         return myRootNode;

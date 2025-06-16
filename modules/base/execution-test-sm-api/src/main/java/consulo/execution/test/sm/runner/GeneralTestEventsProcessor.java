@@ -25,6 +25,7 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +36,7 @@ import java.util.List;
  * <p/>
  * Test name should be unique for all suites - e.g. it can consist of a suite name and a name of a test method.
  *
- * @author: Roman Chernyatchik
+ * @author Roman Chernyatchik
  */
 public abstract class GeneralTestEventsProcessor implements Disposable {
     private static final Logger LOG = Logger.getInstance(GeneralTestEventsProcessor.class);
@@ -60,7 +61,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
     }
     // tree construction events
 
-    public void onRootPresentationAdded(final String rootName, final String comment, final String rootLocation) {
+    public void onRootPresentationAdded(String rootName, String comment, String rootLocation) {
         addToInvokeLater(() -> {
             myTestsRootProxy.setPresentation(rootName);
             myTestsRootProxy.setComment(comment);
@@ -81,10 +82,10 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
 
     protected final List<Runnable> myBuildTreeRunnables = new ArrayList<>();
 
-    public void onSuiteTreeNodeAdded(final String testName, final String locationHint, String id, String parentNodeId) {
+    public void onSuiteTreeNodeAdded(String testName, String locationHint, String id, String parentNodeId) {
         myTreeBuildBeforeStart = true;
         myBuildTreeRunnables.add(() -> {
-            final SMTestProxy testProxy = createProxy(testName, locationHint, id, parentNodeId);
+            SMTestProxy testProxy = createProxy(testName, locationHint, id, parentNodeId);
             testProxy.setTreeBuildBeforeStart();
             if (myLocator != null) {
                 testProxy.setLocator(myLocator);
@@ -98,10 +99,10 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         });
     }
 
-    public void onSuiteTreeStarted(final String suiteName, final String locationHint, String id, String parentNodeId) {
+    public void onSuiteTreeStarted(String suiteName, String locationHint, String id, String parentNodeId) {
         myTreeBuildBeforeStart = true;
         myBuildTreeRunnables.add(() -> {
-            final SMTestProxy newSuite = createSuite(suiteName, locationHint, id, parentNodeId);
+            SMTestProxy newSuite = createSuite(suiteName, locationHint, id, parentNodeId);
             if (myLocator != null) {
                 newSuite.setLocator(myLocator);
             }
@@ -113,21 +114,21 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         });
     }
 
-    public void onSuiteTreeEnded(final String suiteName) {
+    public void onSuiteTreeEnded(String suiteName) {
         if (myBuildTreeRunnables.size() > 100) {
-            final ArrayList<Runnable> runnables = new ArrayList<>(myBuildTreeRunnables);
+            List<Runnable> runnables = new ArrayList<>(myBuildTreeRunnables);
             myBuildTreeRunnables.clear();
             processTreeBuildEvents(runnables);
         }
     }
 
     public void onBuildTreeEnded() {
-        final ArrayList<Runnable> runnables = new ArrayList<>(myBuildTreeRunnables);
+        List<Runnable> runnables = new ArrayList<>(myBuildTreeRunnables);
         myBuildTreeRunnables.clear();
         processTreeBuildEvents(runnables);
     }
 
-    private void processTreeBuildEvents(final List<Runnable> runnables) {
+    private void processTreeBuildEvents(List<Runnable> runnables) {
         addToInvokeLater(() -> {
             for (Runnable runnable : runnables) {
                 runnable.run();
@@ -147,7 +148,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         }
     }
 
-    public abstract void onTestsCountInSuite(final int count);
+    public abstract void onTestsCountInSuite(int count);
 
     protected void fireOnTestsCountInSuite(int count) {
         myEventPublisher.onTestsCountInSuite(count);
@@ -214,7 +215,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
 
     public abstract void onUncapturedOutput(@Nonnull String text, Key outputType);
 
-    public abstract void onError(@Nonnull String localizedMessage, @jakarta.annotation.Nullable String stackTrace, boolean isCritical);
+    public abstract void onError(@Nonnull String localizedMessage, @Nullable String stackTrace, boolean isCritical);
 
     protected static void fireOnTestsReporterAttached(SMTestProxy.SMRootTestProxy rootNode) {
         rootNode.setTestsReporterAttached();
@@ -237,7 +238,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
      *                     If name is null statistics will be switched to normal mode
      * @param testCount    0 will be considered as unknown tests number
      */
-    public void onCustomProgressTestsCategory(@jakarta.annotation.Nullable final String categoryName, final int testCount) {
+    public void onCustomProgressTestsCategory(@Nullable String categoryName, int testCount) {
         addToInvokeLater(() -> {
             myEventPublisher.onCustomProgressTestsCategory(categoryName, testCount);
             for (SMTRunnerEventsListener adapter : myListenerAdapters) {
@@ -296,8 +297,8 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
     }
 
     @Deprecated(forRemoval = true)
-    public void addToInvokeLater(final Runnable runnable) {
-        Application.get().invokeLater(runnable);
+    public void addToInvokeLater(Runnable runnable) {
+        myProject.getApplication().invokeLater(runnable);
     }
 
     protected static <T> boolean isTreeComplete(Collection<T> runningTests, SMTestProxy.SMRootTestProxy rootNode) {
@@ -313,7 +314,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         return true;
     }
 
-    protected void logProblem(final String msg) {
+    protected void logProblem(String msg) {
         logProblem(LOG, msg, myTestFrameworkName);
     }
 
@@ -321,16 +322,16 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         logProblem(LOG, msg, throwError, myTestFrameworkName);
     }
 
-    public static String getTFrameworkPrefix(final String testFrameworkName) {
+    public static String getTFrameworkPrefix(String testFrameworkName) {
         return "[" + testFrameworkName + "]: ";
     }
 
-    public static void logProblem(final Logger log, final String msg, final String testFrameworkName) {
+    public static void logProblem(Logger log, String msg, String testFrameworkName) {
         logProblem(log, msg, SMTestRunnerConnectionUtil.isInDebugMode(), testFrameworkName);
     }
 
-    public static void logProblem(final Logger log, final String msg, boolean throwError, final String testFrameworkName) {
-        final String text = getTFrameworkPrefix(testFrameworkName) + msg;
+    public static void logProblem(Logger log, String msg, boolean throwError, String testFrameworkName) {
+        String text = getTFrameworkPrefix(testFrameworkName) + msg;
         if (throwError) {
             log.error(text);
         }

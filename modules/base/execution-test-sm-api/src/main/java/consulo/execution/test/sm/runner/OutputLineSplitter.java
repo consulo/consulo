@@ -17,7 +17,6 @@ package consulo.execution.test.sm.runner;
 
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -30,8 +29,8 @@ public abstract class OutputLineSplitter {
 
     private final boolean myStdinSupportEnabled;
 
-    private final Map<Key, StringBuilder> myBuffers = new HashMap<Key, StringBuilder>();
-    private final List<OutputChunk> myStdOutChunks = new ArrayList<OutputChunk>();
+    private final Map<Key, StringBuilder> myBuffers = new HashMap<>();
+    private final List<OutputChunk> myStdOutChunks = new ArrayList<>();
 
     public OutputLineSplitter(boolean stdinEnabled) {
         myBuffers.put(ProcessOutputTypes.SYSTEM, new StringBuilder());
@@ -40,7 +39,7 @@ public abstract class OutputLineSplitter {
         myStdinSupportEnabled = stdinEnabled;
     }
 
-    public void process(final String text, final Key outputType) {
+    public void process(String text, Key outputType) {
         int from = 0;
         int to = 0;
         for (; to < text.length(); to++) {
@@ -74,8 +73,8 @@ public abstract class OutputLineSplitter {
         }
     }
 
-    private void processStdOutConsistently(final String text, final Key outputType) {
-        final int textLength = text.length();
+    private void processStdOutConsistently(String text, Key outputType) {
+        int textLength = text.length();
         if (textLength == 0) {
             return;
         }
@@ -84,7 +83,7 @@ public abstract class OutputLineSplitter {
             myStdOutChunks.add(new OutputChunk(outputType, text));
         }
 
-        final char lastChar = text.charAt(textLength - 1);
+        char lastChar = text.charAt(textLength - 1);
         if (lastChar == '\n' || lastChar == '\r') {
             // buffer contains consistent string
             flushStdOutBuffer();
@@ -116,7 +115,7 @@ public abstract class OutputLineSplitter {
         // successfully process broken messages across several flushes
         // size of parts may tell us either \n was single in original flushed data or it was
         // separated by process handler
-        List<OutputChunk> chunks = new ArrayList<OutputChunk>();
+        List<OutputChunk> chunks = new ArrayList<>();
         OutputChunk lastChunk = null;
         synchronized (myStdOutChunks) {
             for (OutputChunk chunk : myStdOutChunks) {
@@ -131,7 +130,7 @@ public abstract class OutputLineSplitter {
 
             myStdOutChunks.clear();
         }
-        final boolean isTCLikeFakeOutput = chunks.size() == 1;
+        boolean isTCLikeFakeOutput = chunks.size() == 1;
         for (OutputChunk chunk : chunks) {
             onLineAvailable(chunk.getText(), chunk.getKey(), isTCLikeFakeOutput);
         }
@@ -150,7 +149,7 @@ public abstract class OutputLineSplitter {
         }
     }
 
-    protected boolean isMostLikelyServiceMessagePart(@Nonnull final String text) {
+    protected boolean isMostLikelyServiceMessagePart(@Nonnull String text) {
         return text.startsWith(TEAMCITY_SERVICE_MESSAGE_PREFIX);
     }
 

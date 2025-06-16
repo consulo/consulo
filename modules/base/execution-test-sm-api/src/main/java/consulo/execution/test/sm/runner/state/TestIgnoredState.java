@@ -33,38 +33,44 @@ public class TestIgnoredState extends AbstractState {
     private final String myText;
     private final String myStacktrace;
 
-    public TestIgnoredState(final String ignoredComment, @Nullable final String stackTrace) {
-        final String ignored_msg = StringUtil.isEmpty(ignoredComment) ? IGNORED_TEST_TEXT : ignoredComment;
+    public TestIgnoredState(String ignoredComment, @Nullable String stackTrace) {
+        String ignored_msg = StringUtil.isEmpty(ignoredComment) ? IGNORED_TEST_TEXT : ignoredComment;
         myText = CompositePrintable.NEW_LINE + ignored_msg;
         myStacktrace = stackTrace == null ? null : stackTrace + CompositePrintable.NEW_LINE;
     }
 
+    @Override
     public boolean isInProgress() {
         return false;
     }
 
+    @Override
     public boolean isDefect() {
         return true;
     }
 
+    @Override
     public boolean wasLaunched() {
         return true;
     }
 
+    @Override
     public boolean isFinal() {
         return true;
     }
 
+    @Override
     public boolean wasTerminated() {
         return false;
     }
 
+    @Override
     public Magnitude getMagnitude() {
         return Magnitude.IGNORED_INDEX;
     }
 
     @Override
-    public void printOn(final Printer printer) {
+    public void printOn(Printer printer) {
         super.printOn(printer);
 
         printer.print(myText, ConsoleViewContentType.SYSTEM_OUTPUT);

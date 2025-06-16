@@ -28,26 +28,26 @@ import java.util.List;
 public class SMTRunnerUIActionsHandler extends TestResultsViewer.SMEventsAdapter {
     private final TestConsoleProperties myConsoleProperties;
 
-    public SMTRunnerUIActionsHandler(final TestConsoleProperties consoleProperties) {
+    public SMTRunnerUIActionsHandler(TestConsoleProperties consoleProperties) {
         myConsoleProperties = consoleProperties;
     }
 
     @Override
-    public void onTestingFinished(final TestResultsViewer sender) {
+    public void onTestingFinished(TestResultsViewer sender) {
         // select first defect at the end (my be TRACK_RUNNING_TEST was enabled and affects on the fly selection)
-        final SMTestProxy testsRootNode = sender.getTestsRootNode();
+        SMTestProxy testsRootNode = sender.getTestsRootNode();
         if (TestConsoleProperties.SELECT_FIRST_DEFECT.value(myConsoleProperties)) {
-            final AbstractTestProxy firstDefect;
+            AbstractTestProxy firstDefect;
 
             // defects priority:
             // ERROR -> FAILURE -> GENERAL DEFECTIVE NODE
-            final List<SMTestProxy> allTests = testsRootNode.getAllTests();
-            final AbstractTestProxy firstError = ProxyFilters.ERROR_LEAF.detectIn(allTests);
+            List<SMTestProxy> allTests = testsRootNode.getAllTests();
+            AbstractTestProxy firstError = ProxyFilters.ERROR_LEAF.detectIn(allTests);
             if (firstError != null) {
                 firstDefect = firstError;
             }
             else {
-                final AbstractTestProxy firstFailure = ProxyFilters.FAILURE_LEAF.detectIn(allTests);
+                AbstractTestProxy firstFailure = ProxyFilters.FAILURE_LEAF.detectIn(allTests);
                 if (firstFailure != null) {
                     firstDefect = firstFailure;
                 }

@@ -28,19 +28,19 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
     private int myDurationLeftInset;
     private int myDurationRightInset;
 
-    public TestTreeRenderer(final TestConsoleProperties consoleProperties) {
+    public TestTreeRenderer( TestConsoleProperties consoleProperties) {
         myConsoleProperties = consoleProperties;
     }
 
     @Override
     public void customizeCellRenderer(
-        @Nonnull final JTree tree,
-        final Object value,
-        final boolean selected,
-        final boolean expanded,
-        final boolean leaf,
-        final int row,
-        final boolean hasFocus
+        @Nonnull JTree tree,
+        Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
     ) {
         myDurationText = null;
         myDurationColor = null;
@@ -48,14 +48,12 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
         myDurationLeftInset = 0;
         myDurationRightInset = 0;
 
-        final DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-        final Object userObj = node.getUserObject();
-        if (userObj instanceof SMTRunnerNodeDescriptor) {
-            final SMTRunnerNodeDescriptor desc = (SMTRunnerNodeDescriptor) userObj;
-            final SMTestProxy testProxy = desc.getElement();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+        Object userObj = node.getUserObject();
+        if (userObj instanceof SMTRunnerNodeDescriptor desc) {
+            SMTestProxy testProxy = desc.getElement();
 
-            if (testProxy instanceof SMTestProxy.SMRootTestProxy) {
-                SMTestProxy.SMRootTestProxy rootTestProxy = (SMTestProxy.SMRootTestProxy) testProxy;
+            if (testProxy instanceof SMTestProxy.SMRootTestProxy rootTestProxy) {
                 if (rootTestProxy.isLeaf()) {
                     TestsPresentationUtil.formatRootNodeWithoutChildren(rootTestProxy, this);
                 }
@@ -86,7 +84,7 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
         }
 
         //strange node
-        final String text = node.toString();
+        String text = node.toString();
         //no icon
         append(text != null ? text : SPACE_STRING, SimpleTextAttributes.GRAYED_ATTRIBUTES);
     }

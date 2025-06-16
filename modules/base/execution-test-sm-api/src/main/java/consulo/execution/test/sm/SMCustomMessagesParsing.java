@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 public interface SMCustomMessagesParsing {
     OutputToGeneralTestEventsConverter createTestEventsConverter(
-        @Nonnull final String testFrameworkName,
-        @Nonnull final TestConsoleProperties consoleProperties
+        @Nonnull String testFrameworkName,
+        @Nonnull TestConsoleProperties consoleProperties
     );
 }

@@ -36,9 +36,8 @@ import javax.swing.*;
 import java.io.File;
 
 public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties implements SMCustomMessagesParsing {
-    private final
     @Nullable
-    SMTRunnerConsoleProperties myProperties;
+    private final SMTRunnerConsoleProperties myProperties;
     private final File myFile;
     private final ProcessHandler myHandler;
 
@@ -75,7 +74,7 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
         return false;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace) {
         return myProperties == null ? null : myProperties.getErrorNavigatable(location, stacktrace);
@@ -106,7 +105,7 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
     }
 
     @Override
-    @jakarta.annotation.Nullable
+    @Nullable
     public TestProxyFilterProvider getFilterProvider() {
         return myProperties == null ? null : myProperties.getFilterProvider();
     }

@@ -20,6 +20,7 @@ import consulo.execution.test.TestStateStorage;
 import consulo.execution.test.sm.TestHistoryConfiguration;
 import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import consulo.execution.test.sm.ui.SMTestRunnerResultsForm;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
@@ -46,21 +47,23 @@ public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
         return TestHistoryConfiguration.getInstance(project).getIcon(name);
     }
 
-    private static String getPresentableText(Project project, String name) {
+    private static LocalizeValue getPresentableText(Project project, String name) {
         String nameWithoutExtension = FileUtil.getNameWithoutExtension(name);
-        final int lastIndexOf = nameWithoutExtension.lastIndexOf(" - ");
+        int lastIndexOf = nameWithoutExtension.lastIndexOf(" - ");
         if (lastIndexOf > 0) {
-            final String date = nameWithoutExtension.substring(lastIndexOf + 3);
+            String date = nameWithoutExtension.substring(lastIndexOf + 3);
             try {
-                final Date creationDate = new SimpleDateFormat(SMTestRunnerResultsForm.HISTORY_DATE_FORMAT).parse(date);
-                final String configurationName = TestHistoryConfiguration.getInstance(project).getConfigurationName(name);
-                return (configurationName != null ? configurationName : nameWithoutExtension.substring(0, lastIndexOf)) +
-                    " (" + DateFormatUtil.formatDateTime(creationDate) + ")";
+                Date creationDate = new SimpleDateFormat(SMTestRunnerResultsForm.HISTORY_DATE_FORMAT).parse(date);
+                String configurationName = TestHistoryConfiguration.getInstance(project).getConfigurationName(name);
+                return LocalizeValue.localizeTODO(
+                    (configurationName != null ? configurationName : nameWithoutExtension.substring(0, lastIndexOf)) +
+                        " (" + DateFormatUtil.formatDateTime(creationDate) + ")"
+                );
             }
             catch (ParseException ignore) {
             }
         }
-        return nameWithoutExtension;
+        return LocalizeValue.of(nameWithoutExtension);
     }
 
     @Nullable

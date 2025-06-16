@@ -44,7 +44,7 @@ public class ImportedTestContentHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (TestResultsXmlFormatter.ELEM_SUITE.equals(qName)) {
-            final String suiteName = StringUtil.unescapeXml(attributes.getValue(TestResultsXmlFormatter.ATTR_NAME));
+            String suiteName = StringUtil.unescapeXml(attributes.getValue(TestResultsXmlFormatter.ATTR_NAME));
             myProcessor.onSuiteStarted(new TestSuiteStartedEvent(
                 suiteName,
                 StringUtil.unescapeXml(attributes.getValue(TestResultsXmlFormatter.ATTR_LOCATION)),
@@ -53,15 +53,16 @@ public class ImportedTestContentHandler extends DefaultHandler {
             mySuites.push(suiteName);
         }
         else if (TestResultsXmlFormatter.ELEM_TEST.equals(qName)) {
-            final String name = StringUtil.unescapeXml(attributes.getValue(TestResultsXmlFormatter.ATTR_NAME));
+            String name = StringUtil.unescapeXml(attributes.getValue(TestResultsXmlFormatter.ATTR_NAME));
             myCurrentTest = name;
             myDuration = attributes.getValue(TestResultsXmlFormatter.ATTR_DURATION);
             myStatus = attributes.getValue(TestResultsXmlFormatter.ATTR_STATUS);
-            final String isConfig = attributes.getValue(TestResultsXmlFormatter.ATTR_CONFIG);
-            final TestStartedEvent startedEvent =
-                new TestStartedEvent(name, StringUtil.unescapeXml(attributes.getValue(TestResultsXmlFormatter.ATTR_LOCATION)),
-                    StringUtil.unescapeXml(attributes.getValue(TestResultsXmlFormatter.ATTR_METAINFO))
-                );
+            String isConfig = attributes.getValue(TestResultsXmlFormatter.ATTR_CONFIG);
+            TestStartedEvent startedEvent = new TestStartedEvent(
+                name,
+                StringUtil.unescapeXml(attributes.getValue(TestResultsXmlFormatter.ATTR_LOCATION)),
+                StringUtil.unescapeXml(attributes.getValue(TestResultsXmlFormatter.ATTR_METAINFO))
+            );
             if (isConfig != null && Boolean.valueOf(isConfig)) {
                 startedEvent.setConfig(true);
             }
@@ -89,7 +90,7 @@ public class ImportedTestContentHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         final String currentText = StringUtil.unescapeXml(currentValue.toString());
-        final boolean isTestOutput = myCurrentTest == null || TestResultsXmlFormatter.STATUS_PASSED.equals(myStatus) || myErrorOutput;
+        boolean isTestOutput = myCurrentTest == null || TestResultsXmlFormatter.STATUS_PASSED.equals(myStatus) || myErrorOutput;
         if (isTestOutput) {
             currentValue.setLength(0);
         }
@@ -97,7 +98,7 @@ public class ImportedTestContentHandler extends DefaultHandler {
             myProcessor.onSuiteFinished(new TestSuiteFinishedEvent(mySuites.pop()));
         }
         else if (TestResultsXmlFormatter.ELEM_TEST.equals(qName)) {
-            final boolean isError = TestResultsXmlFormatter.STATUS_ERROR.equals(myStatus);
+            boolean isError = TestResultsXmlFormatter.STATUS_ERROR.equals(myStatus);
             if (TestResultsXmlFormatter.STATUS_FAILED.equals(myStatus) || isError) {
                 myProcessor.onTestFailure(new TestFailedEvent(myCurrentTest, "", currentText, isError, null, null));
             }

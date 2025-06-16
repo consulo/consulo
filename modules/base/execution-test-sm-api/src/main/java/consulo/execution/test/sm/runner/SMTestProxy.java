@@ -35,11 +35,9 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -220,7 +218,7 @@ public class SMTestProxy extends AbstractTestProxy {
         UIAccess.assertIsUIThread();
 
         if (myChildren == null) {
-            myChildren = ContainerUtil.newArrayListWithCapacity(4);
+            myChildren = new ArrayList<>(4);
         }
         myChildren.add(child);
 
@@ -236,7 +234,7 @@ public class SMTestProxy extends AbstractTestProxy {
         //TODO reset children cache
         child.setParent(this);
 
-        boolean printOwnContentOnly = this instanceof SMRootTestProxy && ((SMRootTestProxy) this).shouldPrintOwnContentOnly();
+        boolean printOwnContentOnly = this instanceof SMRootTestProxy rootTestProxy && rootTestProxy.shouldPrintOwnContentOnly();
         if (!printOwnContentOnly) {
             child.setPrinter(myPrinter);
         }
@@ -302,10 +300,10 @@ public class SMTestProxy extends AbstractTestProxy {
         }
 
         String stacktrace = myStacktrace;
-        if (stacktrace != null && properties instanceof SMStacktraceParser && isLeaf()) {
-            Navigatable result = properties instanceof SMStacktraceParserEx ?
-                ((SMStacktraceParserEx) properties).getErrorNavigatable(location, stacktrace) :
-                ((SMStacktraceParser) properties).getErrorNavigatable(location.getProject(), stacktrace);
+        if (stacktrace != null && properties instanceof SMStacktraceParser stacktraceParser && isLeaf()) {
+            Navigatable result = stacktraceParser instanceof SMStacktraceParserEx stacktraceParserEx
+                ? stacktraceParserEx.getErrorNavigatable(location, stacktrace)
+                : stacktraceParser.getErrorNavigatable(location.getProject(), stacktrace);
             if (result != null) {
                 return result;
             }
@@ -330,7 +328,7 @@ public class SMTestProxy extends AbstractTestProxy {
 
     @Override
     public List<SMTestProxy> getAllTests() {
-        final List<SMTestProxy> allTests = new ArrayList<>();
+        List<SMTestProxy> allTests = new ArrayList<>();
 
         allTests.add(this);
 
@@ -401,8 +399,8 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     private String getDurationString() {
-        final Long duration = getDuration();
-        return duration != null ? StringUtil.formatDuration(duration.longValue(), "\u2009") : null;
+        Long duration = getDuration();
+        return duration != null ? StringUtil.formatDuration(duration, "\u2009") : null;
     }
 
     @Override
@@ -415,7 +413,7 @@ public class SMTestProxy extends AbstractTestProxy {
      *
      * @param duration In milliseconds
      */
-    public void setDuration(final long duration) {
+    public void setDuration(long duration) {
         if (!isSuite()) {
             invalidateCachedDurationForContainerSuites(duration - (myDuration != null ? myDuration : 0));
             myDurationIsCached = true;
@@ -454,19 +452,19 @@ public class SMTestProxy extends AbstractTestProxy {
     public void setTestFailed(@Nonnull String localizedMessage, @Nullable String stackTrace, boolean testError) {
         setStacktraceIfNotSet(stackTrace);
         TestFailedState failedState = new TestFailedState(localizedMessage, stackTrace);
-        if (myState instanceof TestComparisionFailedState) {
+        if (myState instanceof TestComparisionFailedState testComparisionFailedState) {
             CompoundTestFailedState states = new CompoundTestFailedState(localizedMessage, stackTrace);
-            states.addFailure((TestFailedState) myState);
+            states.addFailure(testComparisionFailedState);
             states.addFailure(failedState);
             fireOnNewPrintable(failedState);
             myState = states;
         }
-        else if (myState instanceof CompoundTestFailedState) {
-            ((CompoundTestFailedState) myState).addFailure(failedState);
+        else if (myState instanceof CompoundTestFailedState compoundTestFailedState) {
+            compoundTestFailedState.addFailure(failedState);
             fireOnNewPrintable(failedState);
         }
-        else if (myState instanceof TestFailedState) {
-            ((TestFailedState) myState).addError(localizedMessage, stackTrace, myPrinter);
+        else if (myState instanceof TestFailedState testFailedState) {
+            testFailedState.addError(localizedMessage, stackTrace, myPrinter);
         }
         else {
             myState = testError ? new TestErrorState(localizedMessage, stackTrace) : failedState;
@@ -475,20 +473,20 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     public void setTestComparisonFailed(
-        @Nonnull final String localizedMessage,
-        @Nullable final String stackTrace,
-        @Nonnull final String actualText,
-        @Nonnull final String expectedText
+        @Nonnull String localizedMessage,
+        @Nullable String stackTrace,
+        @Nonnull String actualText,
+        @Nonnull String expectedText
     ) {
         setTestComparisonFailed(localizedMessage, stackTrace, actualText, expectedText, null, null);
     }
 
     public void setTestComparisonFailed(
-        @Nonnull final String localizedMessage,
-        @Nullable final String stackTrace,
-        @Nonnull final String actualText,
-        @Nonnull final String expectedText,
-        @Nonnull final TestFailedEvent event
+        @Nonnull String localizedMessage,
+        @Nullable String stackTrace,
+        @Nonnull String actualText,
+        @Nonnull String expectedText,
+        @Nonnull TestFailedEvent event
     ) {
         TestComparisionFailedState comparisionFailedState =
             setTestComparisonFailed(
@@ -504,22 +502,22 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     public TestComparisionFailedState setTestComparisonFailed(
-        @Nonnull final String localizedMessage,
-        @Nullable final String stackTrace,
-        @Nonnull final String actualText,
-        @Nonnull final String expectedText,
-        @Nullable final String expectedFilePath,
-        @Nullable final String actualFilePath
+        @Nonnull String localizedMessage,
+        @Nullable String stackTrace,
+        @Nonnull String actualText,
+        @Nonnull String expectedText,
+        @Nullable String expectedFilePath,
+        @Nullable String actualFilePath
     ) {
         setStacktraceIfNotSet(stackTrace);
-        final TestComparisionFailedState comparisionFailedState =
+        TestComparisionFailedState comparisionFailedState =
             new TestComparisionFailedState(localizedMessage, stackTrace, actualText, expectedText, expectedFilePath, actualFilePath);
-        if (myState instanceof CompoundTestFailedState) {
-            ((CompoundTestFailedState) myState).addFailure(comparisionFailedState);
+        if (myState instanceof CompoundTestFailedState compoundTestFailedState) {
+            compoundTestFailedState.addFailure(comparisionFailedState);
         }
-        else if (myState instanceof TestFailedState) {
-            final CompoundTestFailedState states = new CompoundTestFailedState(localizedMessage, stackTrace);
-            states.addFailure((TestFailedState) myState);
+        else if (myState instanceof TestFailedState testFailedState) {
+            CompoundTestFailedState states = new CompoundTestFailedState(localizedMessage, stackTrace);
+            states.addFailure(testFailedState);
             states.addFailure(comparisionFailedState);
             myState = states;
         }
@@ -532,8 +530,8 @@ public class SMTestProxy extends AbstractTestProxy {
 
     @Override
     public void dispose() {
-        if (myState instanceof TestFailedState) {
-            Disposer.dispose((TestFailedState) myState);
+        if (myState instanceof TestFailedState testFailedState) {
+            Disposer.dispose(testFailedState);
         }
 
         super.dispose();
@@ -545,18 +543,18 @@ public class SMTestProxy extends AbstractTestProxy {
         fireOnNewPrintable(myState);
     }
 
-    public void setParent(@Nullable final SMTestProxy parent) {
+    public void setParent(@Nullable SMTestProxy parent) {
         myParent = parent;
     }
 
-    public List<? extends SMTestProxy> collectChildren(@Nullable final Filter<SMTestProxy> filter) {
+    public List<? extends SMTestProxy> collectChildren(@Nullable Filter<SMTestProxy> filter) {
         return filterChildren(filter, collectChildren());
     }
 
     public List<? extends SMTestProxy> collectChildren() {
-        final List<? extends SMTestProxy> allChildren = getChildren();
+        List<? extends SMTestProxy> allChildren = getChildren();
 
-        final List<SMTestProxy> result = new ArrayList<>();
+        List<SMTestProxy> result = new ArrayList<>();
 
         result.addAll(allChildren);
 
@@ -576,7 +574,7 @@ public class SMTestProxy extends AbstractTestProxy {
             int idx = 0;
             synchronized (myNestedPrintables) {
                 for (Printable proxy : myNestedPrintables) {
-                    if (proxy instanceof SMTestProxy && !((SMTestProxy) proxy).isFinal()) {
+                    if (proxy instanceof SMTestProxy testProxy && !testProxy.isFinal()) {
                         break;
                     }
                     idx++;
@@ -601,7 +599,7 @@ public class SMTestProxy extends AbstractTestProxy {
             return allChildren;
         }
 
-        final List<SMTestProxy> selectedChildren = new ArrayList<>();
+        List<SMTestProxy> selectedChildren = new ArrayList<>();
         for (SMTestProxy child : allChildren) {
             if (filter.shouldAccept(child)) {
                 selectedChildren.add(child);
@@ -625,8 +623,8 @@ public class SMTestProxy extends AbstractTestProxy {
      * @param printer Printer
      */
     @Override
-    public void printOn(final Printer printer) {
-        final Printer rightPrinter = getRightPrinter(printer);
+    public void printOn(Printer printer) {
+        Printer rightPrinter = getRightPrinter(printer);
         super.printOn(rightPrinter);
         printState(myState, rightPrinter);
     }
@@ -642,44 +640,36 @@ public class SMTestProxy extends AbstractTestProxy {
         printState(myState, printer);
     }
 
-    private static void printState(final AbstractState oldState, final Printer rightPrinter) {
+    private static void printState(AbstractState oldState, Printer rightPrinter) {
         invokeInAlarm(() -> {
             //Tests State, that provide and formats additional output
             oldState.printOn(rightPrinter);
         });
     }
 
-    public void addStdOutput(final String output, final Key outputType) {
+    public void addStdOutput(String output, Key outputType) {
         addOutput(output, outputType);
     }
 
-    public void addStdErr(final String output) {
+    public void addStdErr(String output) {
         addOutput(output, ProcessOutputTypes.STDERR);
     }
 
     public void addOutput(@Nonnull String output, @Nonnull Key outputType) {
-        addAfterLastPassed(new Printable() {
-            @Override
-            public void printOn(@Nonnull Printer printer) {
-                printer.print(output, ConsoleViewContentType.getConsoleViewType(outputType));
-            }
-        });
+        addAfterLastPassed(printer -> printer.print(output, ConsoleViewContentType.getConsoleViewType(outputType)));
     }
 
-    public void addError(final String output, @Nullable final String stackTrace, boolean isCritical) {
+    public void addError(String output, @Nullable String stackTrace, boolean isCritical) {
         myHasCriticalErrors = isCritical;
         if (isCritical) {
             invalidateCachedHasErrorMark();
         }
         setStacktraceIfNotSet(stackTrace);
 
-        addAfterLastPassed(new Printable() {
-            @Override
-            public void printOn(final Printer printer) {
-                String errorText = TestFailedState.buildErrorPresentationText(output, stackTrace);
-                if (errorText != null) {
-                    TestFailedState.printError(printer, Collections.singletonList(errorText));
-                }
+        addAfterLastPassed(printer -> {
+            String errorText = TestFailedState.buildErrorPresentationText(output, stackTrace);
+            if (errorText != null) {
+                TestFailedState.printError(printer, Collections.singletonList(errorText));
             }
         });
     }
@@ -687,13 +677,13 @@ public class SMTestProxy extends AbstractTestProxy {
     private void invalidateCachedHasErrorMark() {
         myHasCriticalErrors = true;
         // Invalidates hasError state of container suite
-        final SMTestProxy containerSuite = getParent();
+        SMTestProxy containerSuite = getParent();
         if (containerSuite != null && !containerSuite.hasErrors()) {
             containerSuite.invalidateCachedHasErrorMark();
         }
     }
 
-    public void addSystemOutput(final String output) {
+    public void addSystemOutput(String output) {
         addOutput(output, ProcessOutputTypes.SYSTEM);
     }
 
@@ -713,12 +703,12 @@ public class SMTestProxy extends AbstractTestProxy {
     @Override
     @Nullable
     public DiffHyperlink getDiffViewerProvider() {
-        if (myState instanceof TestComparisionFailedState) {
-            return ((TestComparisionFailedState) myState).getHyperlink();
+        if (myState instanceof TestComparisionFailedState testComparisionFailedState) {
+            return testComparisionFailedState.getHyperlink();
         }
 
-        if (myState instanceof CompoundTestFailedState) {
-            return ((CompoundTestFailedState) myState).getHyperlinks().get(0);
+        if (myState instanceof CompoundTestFailedState compoundTestFailedState) {
+            return compoundTestFailedState.getHyperlinks().get(0);
         }
 
         if (myChildren != null) {
@@ -726,7 +716,7 @@ public class SMTestProxy extends AbstractTestProxy {
                 if (!child.isDefect()) {
                     continue;
                 }
-                final DiffHyperlink provider = child.getDiffViewerProvider();
+                DiffHyperlink provider = child.getDiffViewerProvider();
                 if (provider != null) {
                     return provider;
                 }
@@ -738,8 +728,8 @@ public class SMTestProxy extends AbstractTestProxy {
     @Nonnull
     @Override
     public List<DiffHyperlink> getDiffViewerProviders() {
-        if (myState instanceof CompoundTestFailedState) {
-            return ((CompoundTestFailedState) myState).getHyperlinks();
+        if (myState instanceof CompoundTestFailedState compoundTestFailedState) {
+            return compoundTestFailedState.getHyperlinks();
         }
         return super.getDiffViewerProviders();
     }
@@ -757,7 +747,7 @@ public class SMTestProxy extends AbstractTestProxy {
             return;
         }
         myState = TerminatedState.INSTANCE;
-        final List<? extends SMTestProxy> children = getChildren();
+        List<? extends SMTestProxy> children = getChildren();
         for (SMTestProxy child : children) {
             child.setTerminated();
         }
@@ -786,7 +776,7 @@ public class SMTestProxy extends AbstractTestProxy {
      * @return True if contains
      */
     private boolean containsErrorTests() {
-        final List<? extends SMTestProxy> children = getChildren();
+        List<? extends SMTestProxy> children = getChildren();
         for (SMTestProxy child : children) {
             if (child.getMagnitudeInfo() == TestStateInfo.Magnitude.ERROR_INDEX) {
                 return true;
@@ -796,7 +786,7 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     private boolean containsFailedTests() {
-        final List<? extends SMTestProxy> children = getChildren();
+        List<? extends SMTestProxy> children = getChildren();
         for (SMTestProxy child : children) {
             if (child.getMagnitudeInfo() == TestStateInfo.Magnitude.FAILED_INDEX) {
                 return true;
@@ -811,7 +801,7 @@ public class SMTestProxy extends AbstractTestProxy {
      * @return New state
      */
     protected AbstractState determineSuiteStateOnFinished() {
-        final AbstractState state;
+        AbstractState state;
         if (isLeaf()) {
             state = SuiteFinishedState.EMPTY_LEAF_SUITE;
         }
@@ -852,7 +842,7 @@ public class SMTestProxy extends AbstractTestProxy {
         }
 
         myIsEmpty = true;
-        final List<? extends SMTestProxy> allTestCases = getChildren();
+        List<? extends SMTestProxy> allTestCases = getChildren();
         for (SMTestProxy testOrSuite : allTestCases) {
             if (testOrSuite.isSuite()) {
                 // suite
@@ -884,10 +874,10 @@ public class SMTestProxy extends AbstractTestProxy {
         boolean durationOfChildrenIsUnknown = true;
 
         for (SMTestProxy child : getChildren()) {
-            final Long duration = child.getDuration();
+            Long duration = child.getDuration();
             if (duration != null) {
                 durationOfChildrenIsUnknown = false;
-                partialDuration += duration.longValue();
+                partialDuration += duration;
             }
         }
         // Lets convert partial duration in integer object. Negative partial duration
@@ -916,7 +906,7 @@ public class SMTestProxy extends AbstractTestProxy {
         }
 
         // Invalidates duration of container suite
-        final SMTestProxy containerSuite = getParent();
+        SMTestProxy containerSuite = getParent();
         if (containerSuite != null) {
             containerSuite.invalidateCachedDurationForContainerSuites(duration);
         }

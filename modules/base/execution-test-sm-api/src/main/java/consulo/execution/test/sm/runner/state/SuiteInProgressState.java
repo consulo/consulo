@@ -16,7 +16,6 @@
 package consulo.execution.test.sm.runner.state;
 
 import consulo.execution.test.sm.runner.SMTestProxy;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class SuiteInProgressState extends TestInProgressState {
     private final SMTestProxy mySuiteProxy;
     private Boolean isDefectWasReallyFound = null; // null - is unset
 
-    public SuiteInProgressState(@Nonnull final SMTestProxy suiteProxy) {
+    public SuiteInProgressState(@Nonnull SMTestProxy suiteProxy) {
         mySuiteProxy = suiteProxy;
     }
 
@@ -39,11 +38,11 @@ public class SuiteInProgressState extends TestInProgressState {
     @Override
     public boolean isDefect() {
         if (isDefectWasReallyFound != null) {
-            return isDefectWasReallyFound.booleanValue();
+            return isDefectWasReallyFound;
         }
 
         //Test suit fails if any of its tests fails
-        final List<? extends SMTestProxy> children = mySuiteProxy.getChildren();
+        List<? extends SMTestProxy> children = mySuiteProxy.getChildren();
         for (SMTestProxy child : children) {
             if (child.isDefect()) {
                 isDefectWasReallyFound = true;
@@ -55,10 +54,12 @@ public class SuiteInProgressState extends TestInProgressState {
         return false;
     }
 
+    @Override
     public boolean wasTerminated() {
         return false;
     }
 
+    @Override
     public Magnitude getMagnitude() {
         return Magnitude.RUNNING_INDEX;
     }

@@ -18,8 +18,6 @@ package consulo.execution.test.sm.runner;
 import consulo.execution.test.sm.SMTestRunnerConnectionUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,10 +30,9 @@ import java.util.Stack;
 public class TestSuiteStack {
     private static final Logger LOG = Logger.getInstance(TestSuiteStack.class);
 
-    @NonNls
     private static final String EMPTY = "empty";
 
-    private final Stack<SMTestProxy> myStack = new Stack<SMTestProxy>();
+    private final Stack<SMTestProxy> myStack = new Stack<>();
     private final String myTestFrameworkName;
 
     /**
@@ -49,7 +46,7 @@ public class TestSuiteStack {
         myTestFrameworkName = testFrameworkName;
     }
 
-    public void pushSuite(@Nonnull final SMTestProxy suite) {
+    public void pushSuite(@Nonnull SMTestProxy suite) {
         myStack.push(suite);
     }
 
@@ -70,17 +67,18 @@ public class TestSuiteStack {
      * @param suiteName Predictable name of top suite in stack. May be null if
      */
     @Nullable
-    public SMTestProxy popSuite(final String suiteName) throws EmptyStackException {
+    public SMTestProxy popSuite(String suiteName) throws EmptyStackException {
         if (myStack.isEmpty()) {
             if (SMTestRunnerConnectionUtil.isInDebugMode()) {
                 LOG.error(
                     "Pop error: Tests/suites stack is empty. Test runner tried to close test suite " +
                         "which has been already closed or wasn't started at all. Unexpected suite name [" +
-                        suiteName + "]");
+                        suiteName + "]"
+                );
             }
             return null;
         }
-        final SMTestProxy topSuite = myStack.peek();
+        SMTestProxy topSuite = myStack.peek();
         if (suiteName == null) {
             String msg = "Pop error: undefined suite name. Rest of stack: " + getSuitePathPresentation();
             GeneralTestEventsProcessor.logProblem(LOG, msg, true, myTestFrameworkName);
@@ -134,8 +132,8 @@ public class TestSuiteStack {
     }
 
     protected String[] getSuitePath() {
-        final int stackSize = getStackSize();
-        final String[] names = new String[stackSize];
+        int stackSize = getStackSize();
+        String[] names = new String[stackSize];
         for (int i = 0; i < stackSize; i++) {
             names[i] = myStack.get(i).getName();
         }
@@ -143,7 +141,7 @@ public class TestSuiteStack {
     }
 
     protected String getSuitePathPresentation() {
-        final String[] names = getSuitePath();
+        String[] names = getSuitePath();
         if (names.length == 0) {
             return EMPTY;
         }

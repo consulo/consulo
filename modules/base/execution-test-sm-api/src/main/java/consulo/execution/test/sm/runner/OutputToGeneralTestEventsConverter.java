@@ -3,17 +3,16 @@ package consulo.execution.test.sm.runner;
 
 import consulo.component.util.BuildNumber;
 import consulo.disposer.Disposer;
-import consulo.execution.util.ConsoleBuffer;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.event.*;
+import consulo.execution.util.ConsoleBuffer;
 import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jetbrains.buildServer.messages.serviceMessages.*;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jetbrains.buildServer.messages.serviceMessages.*;
 
 import java.text.ParseException;
 import java.util.Map;
@@ -54,7 +53,8 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         };
     }
 
-    public void setProcessor(@jakarta.annotation.Nullable final GeneralTestEventsProcessor processor) {
+    @Override
+    public void setProcessor(@Nullable GeneralTestEventsProcessor processor) {
         myProcessor = processor;
     }
 
@@ -62,17 +62,20 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         return myProcessor;
     }
 
+    @Override
     public void dispose() {
         setProcessor(null);
     }
 
-    public void process(final String text, final Key outputType) {
+    @Override
+    public void process(String text, Key outputType) {
         mySplitter.process(text, outputType);
     }
 
     /**
      * Flashes the rest of stdout text buffer after output has been stopped
      */
+    @Override
     public void flushBufferOnProcessTermination(int exitCode) {
         mySplitter.flush();
         if (myPendingLineBreakFlag) {
@@ -84,10 +87,10 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         fireOnUncapturedOutput("\n", ProcessOutputTypes.STDOUT);
     }
 
-    protected void processConsistentText(String text, final Key outputType, boolean tcLikeFakeOutput) {
-        final int cycleBufferSize = ConsoleBuffer.getCycleBufferSize();
+    protected void processConsistentText(String text, Key outputType, boolean tcLikeFakeOutput) {
+        int cycleBufferSize = ConsoleBuffer.getCycleBufferSize();
         if (USE_CYCLE_BUFFER && text.length() > cycleBufferSize) {
-            final StringBuilder builder = new StringBuilder(cycleBufferSize);
+            StringBuilder builder = new StringBuilder(cycleBufferSize);
             builder.append(text, 0, cycleBufferSize - 105);
             builder.append("<...>");
             builder.append(text, text.length() - 100, text.length());
@@ -134,13 +137,9 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
     }
 
-    protected boolean processServiceMessages(
-        final String text,
-        final Key outputType,
-        final ServiceMessageVisitor visitor
-    ) throws ParseException {
+    protected boolean processServiceMessages(String text, Key outputType, ServiceMessageVisitor visitor) throws ParseException {
         // service message parser expects line like "##teamcity[ .... ]" without whitespaces in the end.
-        final ServiceMessage message = ServiceMessage.parse(text.trim());
+        ServiceMessage message = ServiceMessage.parse(text.trim());
         if (message != null) {
             message.visit(visitor);
         }
@@ -150,7 +149,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
 
     private void fireOnTestStarted(@Nonnull TestStartedEvent testStartedEvent) {
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onTestStarted(testStartedEvent);
         }
@@ -160,16 +159,15 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         assertNotNull(testFailedEvent.getLocalizedFailureMessage());
 
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onTestFailure(testFailedEvent);
         }
     }
 
     private void fireOnTestIgnored(@Nonnull TestIgnoredEvent testIgnoredEvent) {
-
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onTestIgnored(testIgnoredEvent);
         }
@@ -177,21 +175,18 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
 
     private void fireOnTestFinished(@Nonnull TestFinishedEvent testFinishedEvent) {
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onTestFinished(testFinishedEvent);
         }
     }
 
-    private void fireOnCustomProgressTestsCategory(
-        final String categoryName,
-        int testsCount
-    ) {
+    private void fireOnCustomProgressTestsCategory(String categoryName, int testsCount) {
         assertNotNull(categoryName);
 
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
-            final boolean disableCustomMode = StringUtil.isEmpty(categoryName);
+            boolean disableCustomMode = StringUtil.isEmpty(categoryName);
             processor.onCustomProgressTestsCategory(
                 disableCustomMode ? null : categoryName,
                 disableCustomMode ? 0 : testsCount
@@ -200,65 +195,64 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     }
 
     private void fireOnCustomProgressTestStarted() {
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onCustomProgressTestStarted();
         }
     }
 
     private void fireOnCustomProgressTestFinished() {
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onCustomProgressTestFinished();
         }
     }
 
     private void fireOnCustomProgressTestFailed() {
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onCustomProgressTestFailed();
         }
     }
 
     private void fireOnTestFrameworkAttached() {
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onTestsReporterAttached();
         }
     }
 
     private void fireOnSuiteTreeNodeAdded(String testName, String locationHint, String id, String parentNodeId) {
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onSuiteTreeNodeAdded(testName, locationHint, id, parentNodeId);
         }
     }
 
 
-    private void fireRootPresentationAdded(String rootName, @jakarta.annotation.Nullable String comment, String rootLocation) {
-        final GeneralTestEventsProcessor processor = myProcessor;
+    private void fireRootPresentationAdded(String rootName, @Nullable String comment, String rootLocation) {
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onRootPresentationAdded(rootName, comment, rootLocation);
         }
     }
 
     private void fireOnSuiteTreeStarted(String suiteName, String locationHint, String id, String parentNodeId) {
-
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onSuiteTreeStarted(suiteName, locationHint, id, parentNodeId);
         }
     }
 
     private void fireOnSuiteTreeEnded(String suiteName) {
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onSuiteTreeEnded(suiteName);
         }
     }
 
     private void fireOnBuildTreeEnded() {
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onBuildTreeEnded();
         }
@@ -266,13 +260,13 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
 
     private void fireOnTestOutput(@Nonnull TestOutputEvent testOutputEvent) {
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onTestOutput(testOutputEvent);
         }
     }
 
-    private void fireOnUncapturedOutput(final String text, final Key outputType) {
+    private void fireOnUncapturedOutput(String text, Key outputType) {
         assertNotNull(text);
 
         if (StringUtil.isEmpty(text)) {
@@ -280,15 +274,15 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
 
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onUncapturedOutput(text, outputType);
         }
     }
 
-    private void fireOnTestsCountInSuite(final int count) {
+    private void fireOnTestsCountInSuite(int count) {
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onTestsCountInSuite(count);
         }
@@ -296,7 +290,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
 
     private void fireOnSuiteStarted(@Nonnull TestSuiteStartedEvent suiteStartedEvent) {
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onSuiteStarted(suiteStartedEvent);
         }
@@ -304,27 +298,27 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
 
     private void fireOnSuiteFinished(@Nonnull TestSuiteFinishedEvent suiteFinishedEvent) {
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onSuiteFinished(suiteFinishedEvent);
         }
     }
 
     protected void fireOnErrorMsg(
-        final String localizedMessage,
-        @jakarta.annotation.Nullable final String stackTrace,
+        String localizedMessage,
+        @Nullable String stackTrace,
         boolean isCritical
     ) {
         assertNotNull(localizedMessage);
 
         // local variable is used to prevent concurrent modification
-        final GeneralTestEventsProcessor processor = myProcessor;
+        GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
             processor.onError(localizedMessage, stackTrace, isCritical);
         }
     }
 
-    private void assertNotNull(final String s) {
+    private void assertNotNull(String s) {
         if (s == null) {
             LOG.error(GeneralTestEventsProcessor.getTFrameworkPrefix(myTestFrameworkName) + " @NotNull value is expected.");
         }
@@ -355,91 +349,62 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     }
 
     private class MyServiceMessageVisitor extends DefaultServiceMessageVisitor {
-        @NonNls
         private static final String TESTING_STARTED = "testingStarted";
-        @NonNls
         private static final String TESTING_FINISHED = "testingFinished";
-        @NonNls
         private static final String KEY_TESTS_COUNT = "testCount";
-        @NonNls
         private static final String ATTR_KEY_TEST_ERROR = "error";
-        @NonNls
         private static final String ATTR_KEY_TEST_COUNT = "count";
-        @NonNls
         private static final String ATTR_KEY_TEST_DURATION = "duration";
-        @NonNls
         private static final String ATTR_KEY_TEST_OUTPUT_FILE = "outputFile";
-        @NonNls
         private static final String ATTR_KEY_LOCATION_URL = "locationHint";
-        @NonNls
         private static final String ATTR_KEY_LOCATION_URL_OLD = "location";
-        @NonNls
         private static final String ATTR_KEY_STACKTRACE_DETAILS = "details";
-        @NonNls
         private static final String ATTR_KEY_DIAGNOSTIC = "diagnosticInfo";
-        @NonNls
         private static final String ATTR_KEY_CONFIG = "config";
 
-        @NonNls
         private static final String MESSAGE = "message";
-        @NonNls
         private static final String TEST_REPORTER_ATTACHED = "enteredTheMatrix";
-        @NonNls
         private static final String SUITE_TREE_STARTED = "suiteTreeStarted";
-        @NonNls
         private static final String SUITE_TREE_ENDED = "suiteTreeEnded";
-        @NonNls
         private static final String SUITE_TREE_NODE = "suiteTreeNode";
-        @NonNls
         private static final String BUILD_TREE_ENDED_NODE = "treeEnded";
-        @NonNls
         private static final String ROOT_PRESENTATION = "rootName";
 
-        @NonNls
         private static final String ATTR_KEY_STATUS = "status";
-        @NonNls
         private static final String ATTR_VALUE_STATUS_ERROR = "ERROR";
-        @NonNls
         private static final String ATTR_VALUE_STATUS_WARNING = "WARNING";
-        @NonNls
         private static final String ATTR_KEY_TEXT = "text";
-        @NonNls
         private static final String ATTR_KEY_ERROR_DETAILS = "errorDetails";
-        @NonNls
         private static final String ATTR_KEY_EXPECTED_FILE_PATH = "expectedFile";
-        @NonNls
         private static final String ATTR_KEY_ACTUAL_FILE_PATH = "actualFile";
 
-        @NonNls
         public static final String CUSTOM_STATUS = "customProgressStatus";
-        @NonNls
         private static final String ATTR_KEY_TEST_TYPE = "type";
-        @NonNls
         private static final String ATTR_KEY_TESTS_CATEGORY = "testsCategory";
-        @NonNls
         private static final String ATTR_VAL_TEST_STARTED = "testStarted";
-        @NonNls
         private static final String ATTR_VAL_TEST_FINISHED = "testFinished";
-        @NonNls
         private static final String ATTR_VAL_TEST_FAILED = "testFailed";
 
-        public void visitTestSuiteStarted(@Nonnull final TestSuiteStarted suiteStarted) {
-            final String locationUrl = fetchTestLocation(suiteStarted);
+        @Override
+        public void visitTestSuiteStarted(@Nonnull TestSuiteStarted suiteStarted) {
+            String locationUrl = fetchTestLocation(suiteStarted);
             TestSuiteStartedEvent suiteStartedEvent = new TestSuiteStartedEvent(suiteStarted, locationUrl);
             fireOnSuiteStarted(suiteStartedEvent);
         }
 
-        @jakarta.annotation.Nullable
-        private String fetchTestLocation(final TestSuiteStarted suiteStarted) {
-            final Map<String, String> attrs = suiteStarted.getAttributes();
-            final String location = attrs.get(ATTR_KEY_LOCATION_URL);
+        @Nullable
+        private String fetchTestLocation(TestSuiteStarted suiteStarted) {
+            Map<String, String> attrs = suiteStarted.getAttributes();
+            String location = attrs.get(ATTR_KEY_LOCATION_URL);
             if (location == null) {
                 // try old API
-                final String oldLocation = attrs.get(ATTR_KEY_LOCATION_URL_OLD);
+                String oldLocation = attrs.get(ATTR_KEY_LOCATION_URL_OLD);
                 if (oldLocation != null) {
-                    LOG.error(GeneralTestEventsProcessor.getTFrameworkPrefix(myTestFrameworkName)
-                        +
-                        "Test Runner API was changed for TeamCity 5.0 compatibility. Please use 'locationHint' attribute instead of 'location'.");
+                    LOG.error(
+                        GeneralTestEventsProcessor.getTFrameworkPrefix(myTestFrameworkName) +
+                            "Test Runner API was changed for TeamCity 5.0 compatibility. " +
+                            "Please use 'locationHint' attribute instead of 'location'."
+                    );
                     return oldLocation;
                 }
                 return null;
@@ -447,28 +412,31 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
             return location;
         }
 
-        public void visitTestSuiteFinished(@Nonnull final TestSuiteFinished suiteFinished) {
+        @Override
+        public void visitTestSuiteFinished(@Nonnull TestSuiteFinished suiteFinished) {
             TestSuiteFinishedEvent finishedEvent = new TestSuiteFinishedEvent(suiteFinished);
             fireOnSuiteFinished(finishedEvent);
         }
 
-        public void visitTestStarted(@Nonnull final TestStarted testStarted) {
+        @Override
+        public void visitTestStarted(@Nonnull TestStarted testStarted) {
             // TODO
             // final String locationUrl = testStarted.getLocationHint();
 
-            final Map<String, String> attributes = testStarted.getAttributes();
-            final String locationUrl = attributes.get(ATTR_KEY_LOCATION_URL);
+            Map<String, String> attributes = testStarted.getAttributes();
+            String locationUrl = attributes.get(ATTR_KEY_LOCATION_URL);
             TestStartedEvent testStartedEvent = new TestStartedEvent(testStarted, locationUrl);
             testStartedEvent.setConfig(attributes.get(ATTR_KEY_CONFIG) != null);
             fireOnTestStarted(testStartedEvent);
         }
 
-        public void visitTestFinished(@Nonnull final TestFinished testFinished) {
+        @Override
+        public void visitTestFinished(@Nonnull TestFinished testFinished) {
             //TODO
             //final Integer duration = testFinished.getTestDuration();
             //fireOnTestFinished(testFinished.getTestName(), duration != null ? duration.intValue() : 0);
 
-            final String durationStr = testFinished.getAttributes().get(ATTR_KEY_TEST_DURATION);
+            String durationStr = testFinished.getAttributes().get(ATTR_KEY_TEST_DURATION);
 
             // Test duration in milliseconds or null if not reported
             Long duration = null;
@@ -483,23 +451,27 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
             fireOnTestFinished(testFinishedEvent);
         }
 
-        public void visitTestIgnored(@Nonnull final TestIgnored testIgnored) {
-            final String stacktrace = testIgnored.getAttributes().get(ATTR_KEY_STACKTRACE_DETAILS);
+        @Override
+        public void visitTestIgnored(@Nonnull TestIgnored testIgnored) {
+            String stacktrace = testIgnored.getAttributes().get(ATTR_KEY_STACKTRACE_DETAILS);
             fireOnTestIgnored(new TestIgnoredEvent(testIgnored, stacktrace));
         }
 
-        public void visitTestStdOut(@Nonnull final TestStdOut testStdOut) {
+        @Override
+        public void visitTestStdOut(@Nonnull TestStdOut testStdOut) {
             fireOnTestOutput(new TestOutputEvent(testStdOut, testStdOut.getStdOut(), true));
         }
 
-        public void visitTestStdErr(@Nonnull final TestStdErr testStdErr) {
+        @Override
+        public void visitTestStdErr(@Nonnull TestStdErr testStdErr) {
             fireOnTestOutput(new TestOutputEvent(testStdErr, testStdErr.getStdErr(), false));
         }
 
-        public void visitTestFailed(@Nonnull final TestFailed testFailed) {
-            final Map<String, String> attributes = testFailed.getAttributes();
+        @Override
+        public void visitTestFailed(@Nonnull TestFailed testFailed) {
+            Map<String, String> attributes = testFailed.getAttributes();
             LOG.assertTrue(testFailed.getFailureMessage() != null, "No failure message for: " + myTestFrameworkName);
-            final boolean testError = attributes.get(ATTR_KEY_TEST_ERROR) != null;
+            boolean testError = attributes.get(ATTR_KEY_TEST_ERROR) != null;
             TestFailedEvent testFailedEvent = new TestFailedEvent(testFailed, testError,
                 attributes.get(ATTR_KEY_EXPECTED_FILE_PATH),
                 attributes.get(ATTR_KEY_ACTUAL_FILE_PATH)
@@ -507,53 +479,59 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
             fireOnTestFailure(testFailedEvent);
         }
 
-        public void visitPublishArtifacts(@Nonnull final PublishArtifacts publishArtifacts) {
+        @Override
+        public void visitPublishArtifacts(@Nonnull PublishArtifacts publishArtifacts) {
             //Do nothing
         }
 
-        public void visitProgressMessage(@Nonnull final ProgressMessage progressMessage) {
+        @Override
+        public void visitProgressMessage(@Nonnull ProgressMessage progressMessage) {
             //Do nothing
         }
 
-        public void visitProgressStart(@Nonnull final ProgressStart progressStart) {
+        @Override
+        public void visitProgressStart(@Nonnull ProgressStart progressStart) {
             //Do nothing
         }
 
-        public void visitProgressFinish(@Nonnull final ProgressFinish progressFinish) {
+        @Override
+        public void visitProgressFinish(@Nonnull ProgressFinish progressFinish) {
             //Do nothing
         }
 
-        public void visitBuildStatus(@Nonnull final BuildStatus buildStatus) {
+        @Override
+        public void visitBuildStatus(@Nonnull BuildStatus buildStatus) {
             //Do nothing
         }
 
-        public void visitBuildNumber(@Nonnull final BuildNumber buildNumber) {
+        public void visitBuildNumber(@Nonnull BuildNumber buildNumber) {
             //Do nothing
         }
 
-        public void visitBuildStatisticValue(@Nonnull final BuildStatisticValue buildStatsValue) {
+        @Override
+        public void visitBuildStatisticValue(@Nonnull BuildStatisticValue buildStatsValue) {
             //Do nothing
         }
 
         @Override
         public void visitMessageWithStatus(@Nonnull Message msg) {
-            final Map<String, String> msgAttrs = msg.getAttributes();
+            Map<String, String> msgAttrs = msg.getAttributes();
 
-            final String text = msgAttrs.get(ATTR_KEY_TEXT);
+            String text = msgAttrs.get(ATTR_KEY_TEXT);
             if (!StringUtil.isEmpty(text)) {
                 // msg status
-                final String status = msgAttrs.get(ATTR_KEY_STATUS);
+                String status = msgAttrs.get(ATTR_KEY_STATUS);
                 if (status.equals(ATTR_VALUE_STATUS_ERROR)) {
                     // error msg
 
-                    final String stackTrace = msgAttrs.get(ATTR_KEY_ERROR_DETAILS);
+                    String stackTrace = msgAttrs.get(ATTR_KEY_ERROR_DETAILS);
                     fireOnErrorMsg(text, stackTrace, true);
                 }
                 else if (status.equals(ATTR_VALUE_STATUS_WARNING)) {
                     // warning msg
 
                     // let's show warning via stderr
-                    final String stackTrace = msgAttrs.get(ATTR_KEY_ERROR_DETAILS);
+                    String stackTrace = msgAttrs.get(ATTR_KEY_ERROR_DETAILS);
                     fireOnErrorMsg(text, stackTrace, false);
                 }
                 else {
@@ -566,8 +544,9 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
             }
         }
 
-        public void visitServiceMessage(@Nonnull final ServiceMessage msg) {
-            final String name = msg.getMessageName();
+        @Override
+        public void visitServiceMessage(@Nonnull ServiceMessage msg) {
+            String name = msg.getMessageName();
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug(msg.asString());
@@ -591,9 +570,9 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
                 processCustomStatus(msg);
             }
             else if (MESSAGE.equals(name)) {
-                final Map<String, String> msgAttrs = msg.getAttributes();
+                Map<String, String> msgAttrs = msg.getAttributes();
 
-                final String text = msgAttrs.get(ATTR_KEY_TEXT);
+                String text = msgAttrs.get(ATTR_KEY_TEXT);
                 if (!StringUtil.isEmpty(text)) {
                     // some other text
 
@@ -628,7 +607,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
                 fireOnBuildTreeEnded();
             }
             else if (ROOT_PRESENTATION.equals(name)) {
-                final Map<String, String> attributes = msg.getAttributes();
+                Map<String, String> attributes = msg.getAttributes();
                 fireRootPresentationAdded(attributes.get("name"), attributes.get("comment"), attributes.get("location"));
             }
             else {
@@ -636,59 +615,57 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
             }
         }
 
-        private void processTestCountInSuite(final ServiceMessage msg) {
-            final String countStr = msg.getAttributes().get(ATTR_KEY_TEST_COUNT);
+        private void processTestCountInSuite(ServiceMessage msg) {
+            String countStr = msg.getAttributes().get(ATTR_KEY_TEST_COUNT);
             fireOnTestsCountInSuite(convertToInt(countStr, msg));
         }
 
-        private int convertToInt(String countStr, final ServiceMessage msg) {
+        private int convertToInt(String countStr, ServiceMessage msg) {
             int count = 0;
             try {
                 count = Integer.parseInt(countStr);
             }
             catch (NumberFormatException ex) {
-                final String diagnosticInfo = msg.getAttributes().get(ATTR_KEY_DIAGNOSTIC);
+                String diagnosticInfo = msg.getAttributes().get(ATTR_KEY_DIAGNOSTIC);
                 LOG.error(
-                    GeneralTestEventsProcessor.getTFrameworkPrefix(myTestFrameworkName) + "Parse integer error." + (diagnosticInfo == null ? "" : " " + diagnosticInfo),
+                    GeneralTestEventsProcessor.getTFrameworkPrefix(myTestFrameworkName) +
+                        "Parse integer error." + (diagnosticInfo == null ? "" : " " + diagnosticInfo),
                     ex
                 );
             }
             return count;
         }
 
-        private long convertToLong(final String countStr, @Nonnull final ServiceMessage msg) {
+        private long convertToLong(String countStr, @Nonnull ServiceMessage msg) {
             long count = 0;
             try {
                 count = Long.parseLong(countStr);
             }
             catch (NumberFormatException ex) {
-                final String diagnosticInfo = msg.getAttributes().get(ATTR_KEY_DIAGNOSTIC);
+                String diagnosticInfo = msg.getAttributes().get(ATTR_KEY_DIAGNOSTIC);
                 LOG.error(
-                    GeneralTestEventsProcessor.getTFrameworkPrefix(myTestFrameworkName) + "Parse long error." + (diagnosticInfo == null ? "" : " " + diagnosticInfo),
+                    GeneralTestEventsProcessor.getTFrameworkPrefix(myTestFrameworkName) +
+                        "Parse long error." + (diagnosticInfo == null ? "" : " " + diagnosticInfo),
                     ex
                 );
             }
             return count;
         }
 
-        private void processCustomStatus(final ServiceMessage msg) {
-            final Map<String, String> attrs = msg.getAttributes();
-            final String msgType = attrs.get(ATTR_KEY_TEST_TYPE);
+        private void processCustomStatus(ServiceMessage msg) {
+            Map<String, String> attrs = msg.getAttributes();
+            String msgType = attrs.get(ATTR_KEY_TEST_TYPE);
             if (msgType != null) {
-                if (msgType.equals(ATTR_VAL_TEST_STARTED)) {
-                    fireOnCustomProgressTestStarted();
-                }
-                else if (msgType.equals(ATTR_VAL_TEST_FINISHED)) {
-                    fireOnCustomProgressTestFinished();
-                }
-                else if (msgType.equals(ATTR_VAL_TEST_FAILED)) {
-                    fireOnCustomProgressTestFailed();
+                switch (msgType) {
+                    case ATTR_VAL_TEST_STARTED -> fireOnCustomProgressTestStarted();
+                    case ATTR_VAL_TEST_FINISHED -> fireOnCustomProgressTestFinished();
+                    case ATTR_VAL_TEST_FAILED -> fireOnCustomProgressTestFailed();
                 }
                 return;
             }
-            final String testsCategory = attrs.get(ATTR_KEY_TESTS_CATEGORY);
+            String testsCategory = attrs.get(ATTR_KEY_TESTS_CATEGORY);
             if (testsCategory != null) {
-                final String countStr = msg.getAttributes().get(ATTR_KEY_TEST_COUNT);
+                String countStr = msg.getAttributes().get(ATTR_KEY_TEST_COUNT);
                 fireOnCustomProgressTestsCategory(testsCategory, convertToInt(countStr, msg));
 
                 //noinspection UnnecessaryReturnStatement

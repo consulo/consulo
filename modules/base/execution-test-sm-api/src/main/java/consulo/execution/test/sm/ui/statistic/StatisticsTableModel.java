@@ -41,22 +41,18 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
         setSortable(false); // TODO: fix me
     }
 
-    public void updateModelOnProxySelected(final SMTestProxy proxy) {
-        final SMTestProxy newCurrentSuite = getCurrentSuiteFor(proxy);
+    public void updateModelOnProxySelected(SMTestProxy proxy) {
+        SMTestProxy newCurrentSuite = getCurrentSuiteFor(proxy);
         // If new suite differs from old suite we should reload table
         if (myCurrentSuite != newCurrentSuite) {
             myCurrentSuite = newCurrentSuite;
         }
         // update model to show new items in it
-        SMRunnerUtil.addToInvokeLater(new Runnable() {
-            public void run() {
-                updateModel();
-            }
-        });
+        SMRunnerUtil.addToInvokeLater(this::updateModel);
     }
 
     @Nullable
-    public SMTestProxy getTestAt(final int rowIndex) {
+    public SMTestProxy getTestAt(int rowIndex) {
         if (rowIndex < 0 || rowIndex > getItems().size()) {
             return null;
         }
@@ -70,9 +66,9 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
      * @param test Test or suite
      * @return Proxy's index or -1
      */
-    public int getIndexOf(final SMTestProxy test) {
+    public int getIndexOf(SMTestProxy test) {
         for (int i = 0; i < getItems().size(); i++) {
-            final SMTestProxy child = getItems().get(i);
+            SMTestProxy child = getItems().get(i);
             if (child == test) {
                 return i;
             }
@@ -91,12 +87,12 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
     }
 
     @Nonnull
-    private List<SMTestProxy> getItemsForSuite(@Nullable final SMTestProxy suite) {
+    private List<SMTestProxy> getItemsForSuite(@Nullable SMTestProxy suite) {
         if (suite == null) {
             return Collections.emptyList();
         }
 
-        final List<SMTestProxy> list = new ArrayList<SMTestProxy>();
+        List<SMTestProxy> list = new ArrayList<>();
         // suite's total statistics
         list.add(suite);
         // chiled's statistics
@@ -105,19 +101,20 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
         return list;
     }
 
-    public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         // Setting value is prevented!
         LOG.error("value: " + aValue + " row: " + rowIndex + " column: " + columnIndex);
     }
 
-    @jakarta.annotation.Nullable
-    private SMTestProxy getCurrentSuiteFor(@jakarta.annotation.Nullable final SMTestProxy proxy) {
+    @Nullable
+    private SMTestProxy getCurrentSuiteFor(@Nullable SMTestProxy proxy) {
         if (proxy == null) {
             return null;
         }
 
         // If proxy is suite, returns it
-        final SMTestProxy suite;
+        SMTestProxy suite;
         if (proxy.isSuite()) {
             suite = proxy;
         }
@@ -128,14 +125,13 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
         return suite;
     }
 
-
-    protected boolean shouldUpdateModelByTest(final SMTestProxy test) {
+    protected boolean shouldUpdateModelByTest(SMTestProxy test) {
         // if some suite in statistics is selected
         // and test is child of current suite
         return isSomeSuiteSelected() && (test.getParent() == myCurrentSuite);
     }
 
-    protected boolean shouldUpdateModelBySuite(final SMTestProxy suite) {
+    protected boolean shouldUpdateModelBySuite(SMTestProxy suite) {
         // If some suite in statistics is selected
         // and suite is current suite in statistics tab or child of current suite
         return isSomeSuiteSelected() && (suite == myCurrentSuite || suite.getParent() == myCurrentSuite);

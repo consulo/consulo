@@ -28,7 +28,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 /**
- * @author: Roman Chernyatchik
+ * @author Roman Chernyatchik
  */
 public class SMTRunnerTestTreeView extends TestTreeView {
     public static final Key<SMTRunnerTestTreeView> SM_TEST_RUNNER_VIEW = Key.create("SM_TEST_RUNNER_VIEW");
@@ -36,29 +36,31 @@ public class SMTRunnerTestTreeView extends TestTreeView {
     @Nullable
     private TestResultsViewer myResultsViewer;
 
-    protected TreeCellRenderer getRenderer(final TestConsoleProperties properties) {
+    @Override
+    protected TreeCellRenderer getRenderer(TestConsoleProperties properties) {
         return new TestTreeRenderer(properties);
     }
 
     @Nullable
-    public SMTestProxy getSelectedTest(@Nonnull final TreePath selectionPath) {
-        final Object lastComponent = selectionPath.getLastPathComponent();
+    @Override
+    public SMTestProxy getSelectedTest(@Nonnull TreePath selectionPath) {
+        Object lastComponent = selectionPath.getLastPathComponent();
         assert lastComponent != null;
 
         return getTestProxyFor(lastComponent);
     }
 
     @Nullable
-    public static SMTestProxy getTestProxyFor(final Object treeNode) {
-        final Object userObj = ((DefaultMutableTreeNode) treeNode).getUserObject();
-        if (userObj instanceof SMTRunnerNodeDescriptor) {
-            return ((SMTRunnerNodeDescriptor) userObj).getElement();
+    public static SMTestProxy getTestProxyFor(Object treeNode) {
+        Object userObj = ((DefaultMutableTreeNode) treeNode).getUserObject();
+        if (userObj instanceof SMTRunnerNodeDescriptor runnerNodeDescriptor) {
+            return runnerNodeDescriptor.getElement();
         }
 
         return null;
     }
 
-    public void setTestResultsViewer(final TestResultsViewer resultsViewer) {
+    public void setTestResultsViewer(TestResultsViewer resultsViewer) {
         myResultsViewer = resultsViewer;
     }
 

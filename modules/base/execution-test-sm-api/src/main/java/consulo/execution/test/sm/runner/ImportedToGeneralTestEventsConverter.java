@@ -62,17 +62,20 @@ public class ImportedToGeneralTestEventsConverter extends OutputToGeneralTestEve
 
     private void parseTestResults() {
         try {
-            parseTestResults(() -> {
-                try {
-                    return new InputStreamReader(new FileInputStream(myFile), StandardCharsets.UTF_8);
-                }
-                catch (FileNotFoundException e) {
-                    return null;
-                }
-            }, getProcessor());
+            parseTestResults(
+                () -> {
+                    try {
+                        return new InputStreamReader(new FileInputStream(myFile), StandardCharsets.UTF_8);
+                    }
+                    catch (FileNotFoundException e) {
+                        return null;
+                    }
+                },
+                getProcessor()
+            );
         }
         catch (IOException e) {
-            final String message = e.getMessage();
+            String message = e.getMessage();
             Application.get().invokeLater(
                 () -> Messages.showErrorDialog(myConsoleProperties.getProject(), message, "Failed to Parse " + myFile.getName())
             );
@@ -83,7 +86,7 @@ public class ImportedToGeneralTestEventsConverter extends OutputToGeneralTestEve
         parseTestResults(readerSupplier.get(), ImportTestOutputExtension.findHandler(readerSupplier, processor));
     }
 
-    public static void parseTestResults(Reader reader, final DefaultHandler contentHandler) throws IOException {
+    public static void parseTestResults(Reader reader, DefaultHandler contentHandler) throws IOException {
         try {
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
             parser.parse(new InputSource(reader), contentHandler);

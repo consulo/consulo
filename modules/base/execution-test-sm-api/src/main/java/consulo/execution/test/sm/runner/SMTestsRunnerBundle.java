@@ -29,7 +29,6 @@ import java.util.ResourceBundle;
 public class SMTestsRunnerBundle {
     private static Reference<ResourceBundle> ourBundle;
 
-    @NonNls
     private static final String BUNDLE = "consulo.execution.test.sm.runner.SMTestsRunnerBundle";
 
     private SMTestsRunnerBundle() {
@@ -46,7 +45,7 @@ public class SMTestsRunnerBundle {
         }
         if (bundle == null) {
             bundle = ResourceBundle.getBundle(BUNDLE);
-            ourBundle = new SoftReference<ResourceBundle>(bundle);
+            ourBundle = new SoftReference<>(bundle);
         }
         return bundle;
     }

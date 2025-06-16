@@ -25,7 +25,7 @@ import javax.swing.*;
  * @author Roman Chernyatchik
  */
 public class SMTRunnerToolbarPanel extends ToolbarPanel {
-    public SMTRunnerToolbarPanel(final TestConsoleProperties properties, final TestFrameworkRunningModel model, JComponent contentPane) {
+    public SMTRunnerToolbarPanel(TestConsoleProperties properties, TestFrameworkRunningModel model, JComponent contentPane) {
         super(properties, contentPane);
         //TODO rerun failed test
         //TODO coverage
@@ -33,7 +33,7 @@ public class SMTRunnerToolbarPanel extends ToolbarPanel {
     }
 
     @Override
-    public void setModel(final TestFrameworkRunningModel model) {
+    public void setModel(TestFrameworkRunningModel model) {
         //TODO: RunningTestTracker - for tracking current test
         super.setModel(model);
     }

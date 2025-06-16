@@ -16,9 +16,9 @@
 package consulo.execution.test.sm;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
@@ -39,8 +39,8 @@ public class SMRunnerUtil {
      *
      * @param runnable Runnable
      */
-    public static void addToInvokeLater(final Runnable runnable) {
-        final Application application = ApplicationManager.getApplication();
+    public static void addToInvokeLater(Runnable runnable) {
+        Application application = Application.get();
         if (application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
             runnable.run();
         }
@@ -50,32 +50,34 @@ public class SMRunnerUtil {
     }
 
     public static void registerAsAction(
-        final KeyStroke keyStroke,
-        final String actionKey,
-        final Runnable action, final JComponent component
+        KeyStroke keyStroke,
+        String actionKey,
+        final Runnable action,
+        JComponent component
     ) {
-        final InputMap inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        InputMap inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         inputMap.put(keyStroke, actionKey);
         component.getActionMap().put(inputMap.get(keyStroke), new AbstractAction() {
-            public void actionPerformed(final ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 action.run();
             }
         });
     }
 
-    public static void runInEventDispatchThread(final Runnable runnable, final ModalityState state) {
+    @RequiredUIAccess
+    public static void runInEventDispatchThread(Runnable runnable, ModalityState state) {
         try {
             if (SwingUtilities.isEventDispatchThread()) {
                 runnable.run();
             }
             else {
-                ApplicationManager.getApplication().invokeAndWait(() -> runnable.run(), state);
+                Application.get().invokeAndWait(runnable::run, state);
             }
         }
         catch (Exception e) {
             LOG.warn(e);
         }
     }
-
 }

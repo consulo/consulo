@@ -19,6 +19,7 @@ import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
@@ -35,21 +36,24 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
     }
 
     @Nonnull
-    public String valueOf(final SMTestProxy testProxy) {
+    @Override
+    public String valueOf(SMTestProxy testProxy) {
         return testProxy.getPresentableName();
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
+    @Override
     public Comparator<SMTestProxy> getComparator() {
         return this;
     }
 
-    public int compare(final SMTestProxy proxy1, final SMTestProxy proxy2) {
+    @Override
+    public int compare(SMTestProxy proxy1, SMTestProxy proxy2) {
         return proxy1.getName().compareTo(proxy2.getName());
     }
 
     @Override
-    public TableCellRenderer getRenderer(final SMTestProxy proxy) {
+    public TableCellRenderer getRenderer(SMTestProxy proxy) {
         return new TestsCellRenderer(proxy);
     }
 
@@ -61,21 +65,22 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
 
         private final SMTestProxy myProxy;
 
-        public TestsCellRenderer(final SMTestProxy proxy) {
+        public TestsCellRenderer(SMTestProxy proxy) {
             myProxy = proxy;
         }
 
+        @Override
         public void customizeCellRenderer(
-            final JTable table,
-            final Object value,
-            final boolean selected,
-            final boolean hasFocus,
-            final int row,
-            final int column
+            JTable table,
+            Object value,
+            boolean selected,
+            boolean hasFocus,
+            int row,
+            int column
         ) {
             assert value != null;
 
-            final String title = value.toString();
+            String title = value.toString();
             //Black bold for with caption "Total" for parent suite of items in statistics
             if (myProxy.isSuite() && isFirstLine(row)) {
                 if (myProxy.getParent() == null) {
@@ -91,7 +96,7 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy> {
             append(title, SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
 
-        public static boolean isFirstLine(final int row) {
+        public static boolean isFirstLine(int row) {
             return row == 0;
         }
     }

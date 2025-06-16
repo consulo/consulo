@@ -22,7 +22,6 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.process.ProcessOutputTypes;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,33 +37,32 @@ public class TestComparisionFailedState extends TestFailedState {
     private boolean myToDeleteExpectedFile;
     private boolean myToDeleteActualFile;
 
-
     public TestComparisionFailedState(
-        @Nullable final String localizedMessage,
-        @Nullable final String stackTrace,
-        @Nonnull final String actualText,
-        @Nonnull final String expectedText
+        @Nullable String localizedMessage,
+        @Nullable String stackTrace,
+        @Nonnull String actualText,
+        @Nonnull String expectedText
     ) {
         this(localizedMessage, stackTrace, actualText, expectedText, null);
     }
 
     public TestComparisionFailedState(
-        @Nullable final String localizedMessage,
-        @Nullable final String stackTrace,
-        @Nonnull final String actualText,
-        @Nonnull final String expectedText,
-        @Nullable final String filePath
+        @Nullable String localizedMessage,
+        @Nullable String stackTrace,
+        @Nonnull String actualText,
+        @Nonnull String expectedText,
+        @Nullable String filePath
     ) {
         this(localizedMessage, stackTrace, actualText, expectedText, filePath, null);
     }
 
     public TestComparisionFailedState(
-        @Nullable final String localizedMessage,
-        @Nullable final String stackTrace,
-        @Nonnull final String actualText,
-        @Nonnull final String expectedText,
-        @Nullable final String expectedFilePath,
-        @Nullable final String actualFilePath
+        @Nullable String localizedMessage,
+        @Nullable String stackTrace,
+        @Nonnull String actualText,
+        @Nonnull String expectedText,
+        @Nullable String expectedFilePath,
+        @Nullable String actualFilePath
     ) {
         super(localizedMessage, stackTrace);
         myHyperlink = new DiffHyperlink(expectedText, actualText, expectedFilePath, actualFilePath, true);
@@ -103,6 +101,7 @@ public class TestComparisionFailedState extends TestFailedState {
         myToDeleteActualFile = actualTemp;
     }
 
+    @Override
     public void dispose() {
         if (myToDeleteActualFile) {
             FileUtil.delete(new File(myHyperlink.getActualFilePath()));

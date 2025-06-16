@@ -15,10 +15,11 @@
  */
 package consulo.execution.test.sm.action;
 
-import consulo.application.AllIcons;
 import consulo.execution.test.TestStateStorage;
 import consulo.execution.test.sm.TestHistoryConfiguration;
 import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -37,7 +38,11 @@ public class ImportTestsGroup extends ActionGroup {
     private SMTRunnerConsoleProperties myProperties;
 
     public ImportTestsGroup() {
-        super("Import Test Results", "Import Test Results", AllIcons.Vcs.History);
+        super(
+            LocalizeValue.localizeTODO("Import Test Results"),
+            LocalizeValue.localizeTODO("Import Test Results"),
+            PlatformIconGroup.vcsHistory()
+        );
         setPopup(true);
     }
 
@@ -52,16 +57,16 @@ public class ImportTestsGroup extends ActionGroup {
         if (e == null) {
             return EMPTY_ARRAY;
         }
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return EMPTY_ARRAY;
         }
-        final Collection<String> filePaths = TestHistoryConfiguration.getInstance(project).getFiles();
-        final File testHistoryRoot = TestStateStorage.getTestHistoryRoot(project);
-        final List<File> fileNames = new ArrayList<>(ContainerUtil.map(filePaths, fileName -> new File(testHistoryRoot, fileName)));
+        Collection<String> filePaths = TestHistoryConfiguration.getInstance(project).getFiles();
+        File testHistoryRoot = TestStateStorage.getTestHistoryRoot(project);
+        List<File> fileNames = new ArrayList<>(ContainerUtil.map(filePaths, fileName -> new File(testHistoryRoot, fileName)));
         Collections.sort(fileNames, (f1, f2) -> f1.lastModified() > f2.lastModified() ? -1 : 1);
-        final int historySize = fileNames.size();
-        final AnAction[] actions = new AnAction[historySize + 2];
+        int historySize = fileNames.size();
+        AnAction[] actions = new AnAction[historySize + 2];
         for (int i = 0; i < historySize; i++) {
             actions[i] = new ImportTestsFromHistoryAction(myProperties, project, fileNames.get(i).getName());
         }

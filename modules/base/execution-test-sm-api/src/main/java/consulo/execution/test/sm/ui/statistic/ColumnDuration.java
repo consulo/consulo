@@ -35,7 +35,7 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
     }
 
     @Override
-    public String valueOf(final SMTestProxy testProxy) {
+    public String valueOf(SMTestProxy testProxy) {
         return TestsPresentationUtil.getDurationPresentation(testProxy);
     }
 
@@ -46,9 +46,9 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
     }
 
     @Override
-    public int compare(final SMTestProxy proxy1, final SMTestProxy proxy2) {
-        final Long duration1 = proxy1.getDuration();
-        final Long duration2 = proxy2.getDuration();
+    public int compare(SMTestProxy proxy1, SMTestProxy proxy2) {
+        Long duration1 = proxy1.getDuration();
+        Long duration2 = proxy2.getDuration();
 
         if (duration1 == null) {
             return duration2 == null ? 0 : -1;
@@ -61,31 +61,31 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
 
 
     @Override
-    public TableCellRenderer getRenderer(final SMTestProxy proxy) {
+    public TableCellRenderer getRenderer(SMTestProxy proxy) {
         return new DurationCellRenderer(proxy);
     }
 
     public static class DurationCellRenderer extends ColoredTableCellRenderer implements ColoredRenderer {
         private final SMTestProxy myProxy;
 
-        public DurationCellRenderer(final SMTestProxy proxy) {
+        public DurationCellRenderer(SMTestProxy proxy) {
             myProxy = proxy;
         }
 
         @Override
         public void customizeCellRenderer(
-            final JTable table,
-            final Object value,
-            final boolean selected,
-            final boolean hasFocus,
-            final int row,
-            final int column
+            JTable table,
+            Object value,
+            boolean selected,
+            boolean hasFocus,
+            int row,
+            int column
         ) {
             assert value != null;
 
-            final String title = value.toString();
+            String title = value.toString();
 
-            final SimpleTextAttributes attributes;
+            SimpleTextAttributes attributes;
             if (myProxy.isSuite() && ColumnTest.TestsCellRenderer.isFirstLine(row)) {
                 //Black bold for parent suite of items in statistics
                 attributes = SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;

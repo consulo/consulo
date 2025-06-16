@@ -26,10 +26,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
- * @author: Roman Chernyatchik
+ * @author Roman Chernyatchik
  */
 public class SMTRunnerTreeBuilder extends AbstractTestTreeBuilder {
-    public SMTRunnerTreeBuilder(final JTree tree, final SMTRunnerTreeStructure structure) {
+    public SMTRunnerTreeBuilder(JTree tree, SMTRunnerTreeStructure structure) {
         super(tree, new DefaultTreeModel(new DefaultMutableTreeNode(structure.getRootElement())), structure, IndexComparator.INSTANCE);
 
         setCanYieldUpdate(true);
@@ -40,16 +40,15 @@ public class SMTRunnerTreeBuilder extends AbstractTestTreeBuilder {
         return ((SMTRunnerTreeStructure) getTreeStructure());
     }
 
-    public void updateTestsSubtree(final SMTestProxy parentTestProxy) {
+    public void updateTestsSubtree(SMTestProxy parentTestProxy) {
         queueUpdateFrom(parentTestProxy, false, true);
     }
 
-
     @Override
-    protected boolean isAutoExpandNode(final NodeDescriptor nodeDescriptor) {
-        final AbstractTreeStructure treeStructure = getTreeStructure();
-        final Object rootElement = treeStructure.getRootElement();
-        final Object nodeElement = nodeDescriptor.getElement();
+    protected boolean isAutoExpandNode(NodeDescriptor nodeDescriptor) {
+        AbstractTreeStructure treeStructure = getTreeStructure();
+        Object rootElement = treeStructure.getRootElement();
+        Object nodeElement = nodeDescriptor.getElement();
 
         if (nodeElement == rootElement) {
             return true;

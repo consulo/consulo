@@ -48,10 +48,10 @@ public class ImportedTestRunnableState implements RunProfileState {
     @Nullable
     @Override
     public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
-        final MyEmptyProcessHandler handler = new MyEmptyProcessHandler();
-        final SMTRunnerConsoleProperties properties = myRunProfile.getProperties();
+        MyEmptyProcessHandler handler = new MyEmptyProcessHandler();
+        SMTRunnerConsoleProperties properties = myRunProfile.getProperties();
         RunProfile configuration;
-        final String frameworkName;
+        String frameworkName;
         if (properties != null) {
             configuration = properties.getConfiguration();
             frameworkName = properties.getTestFrameworkName();
@@ -60,25 +60,29 @@ public class ImportedTestRunnableState implements RunProfileState {
             configuration = myRunProfile;
             frameworkName = "Import Test Results";
         }
-        final ImportedTestConsoleProperties consoleProperties =
-            new ImportedTestConsoleProperties(properties, myFile, handler, myRunProfile.getProject(),
-                configuration, frameworkName, executor
-            );
-        final BaseTestsOutputConsoleView console = SMTestRunnerConnectionUtil.createConsole(
+        ImportedTestConsoleProperties consoleProperties = new ImportedTestConsoleProperties(
+            properties,
+            myFile,
+            handler,
+            myRunProfile.getProject(),
+            configuration,
+            frameworkName,
+            executor
+        );
+        BaseTestsOutputConsoleView console = SMTestRunnerConnectionUtil.createConsole(
             consoleProperties.getTestFrameworkName(),
             consoleProperties
         );
-        final JComponent component = console.getComponent();
         AbstractRerunFailedTestsAction rerunFailedTestsAction = null;
-        if (component instanceof TestFrameworkRunningModel) {
+        if (console.getComponent() instanceof TestFrameworkRunningModel testFrameworkRunningModel) {
             rerunFailedTestsAction = consoleProperties.createRerunFailedTestsAction(console);
             if (rerunFailedTestsAction != null) {
-                rerunFailedTestsAction.setModelProvider(() -> (TestFrameworkRunningModel) component);
+                rerunFailedTestsAction.setModelProvider(() -> testFrameworkRunningModel);
             }
         }
 
         console.attachToProcess(handler);
-        final DefaultExecutionResult result = new DefaultExecutionResult(console, handler);
+        DefaultExecutionResult result = new DefaultExecutionResult(console, handler);
         if (rerunFailedTestsAction != null) {
             result.setRestartActions(rerunFailedTestsAction);
         }
