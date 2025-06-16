@@ -64,15 +64,19 @@ final class CachedValueStabilityChecker {
     private static final Logger LOG = Logger.getInstance(CachedValueStabilityChecker.class);
     private static final Set<String> ourReportedKeys = ContainerUtil.newConcurrentSet();
     private static final ConcurrentMap<Class<?>, List<Field>> ourFieldCache = ConcurrentFactoryMap.createMap(ReflectionUtil::collectFields);
-    private static final boolean DO_CHECKS = shouldDoChecks();
+    private static Boolean doChecks = null;
 
     private static boolean shouldDoChecks() {
+        if (doChecks != null) {
+            return doChecks;
+        }
         Application app = Application.get();
-        return app.isUnitTestMode() || app.isInternal();
+        doChecks = app.isUnitTestMode() || app.isInternal();
+        return doChecks;
     }
 
     static void checkProvidersEquivalent(CachedValueProvider<?> p1, CachedValueProvider<?> p2, Key<?> key) throws Exception {
-        if (p1 == p2 || !DO_CHECKS) {
+        if (p1 == p2 || !shouldDoChecks()) {
             return;
         }
 
@@ -124,11 +128,9 @@ final class CachedValueStabilityChecker {
         }
 
         for (Field field : ourFieldCache.get(o1.getClass())) {
-            Object v1;
-            Object v2;
             field.setAccessible(true);
-            v1 = field.get(o1);
-            v2 = field.get(o2);
+            Object v1 = field.get(o1);
+            Object v2 = field.get(o2);
 
             if (areEqual(v1, v2)) {
                 continue;

@@ -37,68 +37,77 @@ import java.io.File;
 import java.io.OutputStream;
 
 public class ImportedTestRunnableState implements RunProfileState {
-  private AbstractImportTestsAction.ImportRunProfile myRunProfile;
-  private File myFile;
+    private AbstractImportTestsAction.ImportRunProfile myRunProfile;
+    private File myFile;
 
-  public ImportedTestRunnableState(AbstractImportTestsAction.ImportRunProfile profile, File file) {
-    myRunProfile = profile;
-    myFile = file;
-  }
-
-  @Nullable
-  @Override
-  public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
-    final MyEmptyProcessHandler handler = new MyEmptyProcessHandler();
-    final SMTRunnerConsoleProperties properties = myRunProfile.getProperties();
-    RunProfile configuration;
-    final String frameworkName;
-    if (properties != null) {
-      configuration = properties.getConfiguration();
-      frameworkName = properties.getTestFrameworkName();
-    }
-    else {
-      configuration = myRunProfile;
-      frameworkName = "Import Test Results";
-    }
-    final ImportedTestConsoleProperties consoleProperties = new ImportedTestConsoleProperties(properties, myFile, handler, myRunProfile.getProject(),
-                                                                                              configuration, frameworkName, executor);
-    final BaseTestsOutputConsoleView console = SMTestRunnerConnectionUtil.createConsole(consoleProperties.getTestFrameworkName(),
-                                                                                        consoleProperties);
-    final JComponent component = console.getComponent();
-    AbstractRerunFailedTestsAction rerunFailedTestsAction = null;
-    if (component instanceof TestFrameworkRunningModel) {
-      rerunFailedTestsAction = consoleProperties.createRerunFailedTestsAction(console);
-      if (rerunFailedTestsAction != null) {
-        rerunFailedTestsAction.setModelProvider(() -> (TestFrameworkRunningModel)component);
-      }
-    }
-
-    console.attachToProcess(handler);
-    final DefaultExecutionResult result = new DefaultExecutionResult(console, handler);
-    if (rerunFailedTestsAction != null) {
-      result.setRestartActions(rerunFailedTestsAction);
-    }
-    return result;
-  }
-
-  private static class MyEmptyProcessHandler extends NopProcessHandler {
-    @Override
-    protected void destroyProcessImpl() {}
-
-    @Override
-    protected void detachProcessImpl() {
-      notifyProcessTerminated(0);
-    }
-
-    @Override
-    public boolean detachIsDefault() {
-      return false;
+    public ImportedTestRunnableState(AbstractImportTestsAction.ImportRunProfile profile, File file) {
+        myRunProfile = profile;
+        myFile = file;
     }
 
     @Nullable
     @Override
-    public OutputStream getProcessInput() {
-      return null;
+    public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
+        MyEmptyProcessHandler handler = new MyEmptyProcessHandler();
+        SMTRunnerConsoleProperties properties = myRunProfile.getProperties();
+        RunProfile configuration;
+        String frameworkName;
+        if (properties != null) {
+            configuration = properties.getConfiguration();
+            frameworkName = properties.getTestFrameworkName();
+        }
+        else {
+            configuration = myRunProfile;
+            frameworkName = "Import Test Results";
+        }
+        ImportedTestConsoleProperties consoleProperties = new ImportedTestConsoleProperties(
+            properties,
+            myFile,
+            handler,
+            myRunProfile.getProject(),
+            configuration,
+            frameworkName,
+            executor
+        );
+        BaseTestsOutputConsoleView console = SMTestRunnerConnectionUtil.createConsole(
+            consoleProperties.getTestFrameworkName(),
+            consoleProperties
+        );
+        AbstractRerunFailedTestsAction rerunFailedTestsAction = null;
+        if (console.getComponent() instanceof TestFrameworkRunningModel testFrameworkRunningModel) {
+            rerunFailedTestsAction = consoleProperties.createRerunFailedTestsAction(console);
+            if (rerunFailedTestsAction != null) {
+                rerunFailedTestsAction.setModelProvider(() -> testFrameworkRunningModel);
+            }
+        }
+
+        console.attachToProcess(handler);
+        DefaultExecutionResult result = new DefaultExecutionResult(console, handler);
+        if (rerunFailedTestsAction != null) {
+            result.setRestartActions(rerunFailedTestsAction);
+        }
+        return result;
     }
-  }
+
+    private static class MyEmptyProcessHandler extends NopProcessHandler {
+        @Override
+        protected void destroyProcessImpl() {
+        }
+
+        @Override
+        protected void detachProcessImpl() {
+            notifyProcessTerminated(0);
+        }
+
+        @Override
+        public boolean detachIsDefault() {
+            return false;
+        }
+
+        @Nullable
+        @Override
+        public OutputStream getProcessInput() {
+            return null;
+        }
+    }
 }

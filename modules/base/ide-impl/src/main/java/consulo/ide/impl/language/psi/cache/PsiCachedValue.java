@@ -50,6 +50,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
         return dependencies;
     }
 
+    @SuppressWarnings("deprecation")
     private boolean anyChangeImpliesPsiCounterChange(@Nonnull Object dependency) {
         return dependency instanceof PsiElement element && isVeryPhysical(element)
             || dependency instanceof ProjectRootModificationTracker
@@ -74,12 +75,13 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
     }
 
     @Override
-    protected boolean isUpToDate(@Nonnull Data data) {
+    protected boolean isUpToDate(@Nonnull Data<T> data) {
         if (myManager.isDisposed()) {
             return false;
         }
 
         Object[] dependencies = data.getDependencies();
+        //noinspection SimplifiableIfStatement
         if (dependencies.length > 0
             && dependencies[0] == PSI_MOD_COUNT_OPTIMIZATION
             && data.getTimeStamps()[0] == myManager.getModificationTracker().getModificationCount()) {
@@ -91,6 +93,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
 
     @Override
     protected boolean isDependencyOutOfDate(@Nonnull Object dependency, long oldTimeStamp) {
+        //noinspection SimplifiableIfStatement
         if (dependency == PSI_MOD_COUNT_OPTIMIZATION) {
             return false;
         }
@@ -98,6 +101,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected long getTimeStamp(@Nonnull Object dependency) {
         if (dependency instanceof PsiDirectory) {
             return myManager.getModificationTracker().getOutOfCodeBlockModificationCount();

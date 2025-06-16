@@ -21,42 +21,51 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class TestStartedEvent extends BaseStartedNodeEvent {
+    private boolean myConfig;
 
-  private boolean myConfig;
+    public TestStartedEvent(@Nonnull TestStarted testStarted, @Nullable String locationUrl) {
+        this(testStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(testStarted));
+    }
 
-  public TestStartedEvent(@Nonnull TestStarted testStarted, @Nullable String locationUrl) {
-    this(testStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(testStarted));
-  }
+    public TestStartedEvent(@Nonnull TestStarted testStarted, @Nullable String locationUrl, @Nullable String metainfo) {
+        super(
+            testStarted.getTestName(),
+            TreeNodeEvent.getNodeId(testStarted),
+            BaseStartedNodeEvent.getParentNodeId(testStarted),
+            locationUrl,
+            metainfo,
+            BaseStartedNodeEvent.getNodeType(testStarted),
+            BaseStartedNodeEvent.getNodeArgs(testStarted),
+            BaseStartedNodeEvent.isRunning(testStarted)
+        );
+    }
 
-  public TestStartedEvent(@Nonnull TestStarted testStarted, @Nullable String locationUrl, @Nullable String metainfo) {
-    super(testStarted.getTestName(), TreeNodeEvent.getNodeId(testStarted), BaseStartedNodeEvent.getParentNodeId(testStarted), locationUrl, metainfo, BaseStartedNodeEvent.getNodeType(testStarted),
-          BaseStartedNodeEvent.getNodeArgs(testStarted), BaseStartedNodeEvent.isRunning(testStarted));
-  }
+    public TestStartedEvent(
+        @Nullable String name,
+        @Nullable String id,
+        @Nullable String parentId,
+        @Nullable String locationUrl,
+        @Nullable String metainfo,
+        @Nullable String nodeType,
+        @Nullable String nodeArgs,
+        boolean running
+    ) {
+        super(name, id, parentId, locationUrl, metainfo, nodeType, nodeArgs, running);
+    }
 
-  public TestStartedEvent(@Nullable String name,
-                          @Nullable String id,
-                          @Nullable String parentId,
-                          @Nullable String locationUrl,
-                          @Nullable String metainfo,
-                          @Nullable String nodeType,
-                          @Nullable String nodeArgs,
-                          boolean running) {
-    super(name, id, parentId, locationUrl, metainfo, nodeType, nodeArgs, running);
-  }
+    public TestStartedEvent(@Nonnull String name, @Nullable String locationUrl) {
+        this(name, locationUrl, null);
+    }
 
-  public TestStartedEvent(@Nonnull String name, @Nullable String locationUrl) {
-    this(name, locationUrl, null);
-  }
+    public TestStartedEvent(@Nonnull String name, @Nullable String locationUrl, @Nullable String metainfo) {
+        super(name, null, null, locationUrl, metainfo, null, null, true);
+    }
 
-  public TestStartedEvent(@Nonnull String name, @Nullable String locationUrl, @Nullable String metainfo) {
-    super(name, null, null, locationUrl, metainfo, null, null, true);
-  }
+    public void setConfig(boolean config) {
+        myConfig = config;
+    }
 
-  public void setConfig(boolean config) {
-    myConfig = config;
-  }
-
-  public boolean isConfig() {
-    return myConfig;
-  }
+    public boolean isConfig() {
+        return myConfig;
+    }
 }

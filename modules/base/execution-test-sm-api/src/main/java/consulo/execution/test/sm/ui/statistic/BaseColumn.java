@@ -15,15 +15,23 @@
  */
 package consulo.execution.test.sm.ui.statistic;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.execution.test.sm.runner.SMTestProxy;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.ColumnInfo;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman Chernyatchik
  */
 public abstract class BaseColumn extends ColumnInfo<SMTestProxy, String> {
-  public BaseColumn(String name) {
-    super(name);
-  }
+    public BaseColumn(@Nonnull LocalizeValue name) {
+        super(name.get());
+    }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public BaseColumn(String name) {
+        super(name);
+    }
 }

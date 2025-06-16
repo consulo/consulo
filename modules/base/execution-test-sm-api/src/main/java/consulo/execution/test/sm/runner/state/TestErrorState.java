@@ -15,22 +15,24 @@
  */
 package consulo.execution.test.sm.runner.state;
 
+import jakarta.annotation.Nullable;
+
 /**
  * @author Roman Chernyatchik
  */
 public class TestErrorState extends TestFailedState {
-  public TestErrorState(@jakarta.annotation.Nullable final String localizedMessage,
-                        @jakarta.annotation.Nullable final String stackTrace) {
-    super(localizedMessage, stackTrace);
-  }
+    public TestErrorState(@Nullable String localizedMessage, @Nullable String stackTrace) {
+        super(localizedMessage, stackTrace);
+    }
 
-  public Magnitude getMagnitude() {
-    return Magnitude.ERROR_INDEX;
-  }
+    @Override
+    public Magnitude getMagnitude() {
+        return Magnitude.ERROR_INDEX;
+    }
 
-  @Override
-  public String toString() {
-    //noinspection HardCodedStringLiteral
-    return "TEST ERROR";
-  }
+    @Override
+    public String toString() {
+        //noinspection HardCodedStringLiteral
+        return "TEST ERROR";
+    }
 }

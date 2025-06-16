@@ -16,7 +16,7 @@
 package consulo.execution.test.sm.ui;
 
 import consulo.execution.test.PoolOfTestIcons;
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.AnimatedIcon;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -27,22 +27,22 @@ import jakarta.annotation.Nonnull;
  * @author Roman.Chernyatchik
  */
 public class SMPoolOfTestIcons implements PoolOfTestIcons {
-  // Error flag icon
+    // Error flag icon
 
-  public static final Image SKIPPED_E_ICON = addErrorMarkTo(SKIPPED_ICON);
-  public static final Image PASSED_E_ICON = addErrorMarkTo(PASSED_ICON);
-  public static final Image FAILED_E_ICON = addErrorMarkTo(FAILED_ICON);
-  public static final Image TERMINATED_E_ICON = addErrorMarkTo(TERMINATED_ICON);
-  public static final Image IGNORED_E_ICON = addErrorMarkTo(IGNORED_ICON);
+    public static final Image SKIPPED_E_ICON = addErrorMarkTo(SKIPPED_ICON);
+    public static final Image PASSED_E_ICON = addErrorMarkTo(PASSED_ICON);
+    public static final Image FAILED_E_ICON = addErrorMarkTo(FAILED_ICON);
+    public static final Image TERMINATED_E_ICON = addErrorMarkTo(TERMINATED_ICON);
+    public static final Image IGNORED_E_ICON = addErrorMarkTo(IGNORED_ICON);
 
-  public static final Image RUNNING_ICON = new AnimatedIcon.Default();
-  public static final Image RUNNING_E_ICON = addErrorMarkTo(new AnimatedIcon.Default());
+    public static final Image RUNNING_ICON = new AnimatedIcon.Default();
+    public static final Image RUNNING_E_ICON = addErrorMarkTo(new AnimatedIcon.Default());
 
-  // Test Progress
-  public static final Image PAUSED_E_ICON = addErrorMarkTo(AllIcons.RunConfigurations.TestPaused);
+    // Test Progress
+    public static final Image PAUSED_E_ICON = addErrorMarkTo(PlatformIconGroup.runconfigurationsTestpaused());
 
-  @Nonnull
-  public static Image addErrorMarkTo(@Nonnull Image baseIcon) {
-    return ImageEffects.layered(baseIcon, ERROR_ICON_MARK);
-  }
+    @Nonnull
+    public static Image addErrorMarkTo(@Nonnull Image baseIcon) {
+        return ImageEffects.layered(baseIcon, ERROR_ICON_MARK);
+    }
 }

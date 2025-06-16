@@ -17,163 +17,163 @@ package consulo.execution.test.sm.runner;
 
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class OutputLineSplitter {
-  private static final String TEAMCITY_SERVICE_MESSAGE_PREFIX = "##teamcity[";
+    private static final String TEAMCITY_SERVICE_MESSAGE_PREFIX = "##teamcity[";
 
-  private final boolean myStdinSupportEnabled;
+    private final boolean myStdinSupportEnabled;
 
-  private final Map<Key, StringBuilder> myBuffers = new HashMap<Key, StringBuilder>();
-  private final List<OutputChunk> myStdOutChunks = new ArrayList<OutputChunk>();
+    private final Map<Key, StringBuilder> myBuffers = new HashMap<>();
+    private final List<OutputChunk> myStdOutChunks = new ArrayList<>();
 
-  public OutputLineSplitter(boolean stdinEnabled) {
-    myBuffers.put(ProcessOutputTypes.SYSTEM, new StringBuilder());
-    myBuffers.put(ProcessOutputTypes.STDERR, new StringBuilder());
+    public OutputLineSplitter(boolean stdinEnabled) {
+        myBuffers.put(ProcessOutputTypes.SYSTEM, new StringBuilder());
+        myBuffers.put(ProcessOutputTypes.STDERR, new StringBuilder());
 
-    myStdinSupportEnabled = stdinEnabled;
-  }
-
-  public void process(final String text, final Key outputType) {
-    int from = 0;
-    int to = 0;
-    for (; to < text.length(); to++) {
-      if (text.charAt(to) == '\n') {
-        processLine(text.substring(from, to + 1), outputType);
-        from = to + 1;
-      }
-    }
-    if (from < text.length()) {
-      processLine(text.substring(from), outputType);
-    }
-  }
-
-  private void processLine(String text, Key outputType) {
-    if (!myBuffers.keySet().contains(outputType)) {
-      processStdOutConsistently(text, outputType);
-    }
-    else {
-      StringBuilder buffer = myBuffers.get(outputType);
-      if (!text.endsWith("\n")) {
-        buffer.append(text);
-        return;
-      }
-      if (buffer.length() > 0) {
-        buffer.append(text);
-        text = buffer.toString();
-        buffer.setLength(0);
-      }
-
-      onLineAvailable(text, outputType, false);
-    }
-  }
-
-  private void processStdOutConsistently(final String text, final Key outputType) {
-    final int textLength = text.length();
-    if (textLength == 0) {
-      return;
+        myStdinSupportEnabled = stdinEnabled;
     }
 
-    synchronized (myStdOutChunks) {
-      myStdOutChunks.add(new OutputChunk(outputType, text));
+    public void process(String text, Key outputType) {
+        int from = 0;
+        int to = 0;
+        for (; to < text.length(); to++) {
+            if (text.charAt(to) == '\n') {
+                processLine(text.substring(from, to + 1), outputType);
+                from = to + 1;
+            }
+        }
+        if (from < text.length()) {
+            processLine(text.substring(from), outputType);
+        }
     }
 
-    final char lastChar = text.charAt(textLength - 1);
-    if (lastChar == '\n' || lastChar == '\r') {
-      // buffer contains consistent string
-      flushStdOutBuffer();
-    }
-    else {
-      // test framework may show some promt and ask user for smth. Question may not
-      // finish with \n or \r thus buffer wont be flushed and user will have to input smth
-      // before question. And question will became visible with next portion of text.
-      // Such behaviour is confusing. So
-      // 1. Let's assume that sevice messages starts with \n if console is editable
-      // 2. Then we can suggest that each service message will start from new line and buffer should
-      //    be flushed before every service message. Thus if chunks list is empty and output doesn't end
-      //    with \n or \r but starts with ##teamcity then it is a service message and should be buffered otherwise
-      //    we can safely flush buffer.
-
-      // TODO if editable:
-      if (myStdinSupportEnabled && !isMostLikelyServiceMessagePart(text)) {
-        flushStdOutBuffer();
-      }
-    }
-  }
-
-  private void flushStdOutBuffer() {
-    // if osColoredProcessHandler was attached it can split string with several colors
-    // in several  parts. Thus '\n' symbol may be send as one part with some color
-    // such situation should differ from single '\n' from process that is used by TC reporters
-    // to separate TC commands from other stuff + optimize flushing
-    // TODO: probably in IDEA mode such runners shouldn't add explicit \n because we can
-    // successfully process broken messages across several flushes
-    // size of parts may tell us either \n was single in original flushed data or it was
-    // separated by process handler
-    List<OutputChunk> chunks = new ArrayList<OutputChunk>();
-    OutputChunk lastChunk = null;
-    synchronized (myStdOutChunks) {
-      for (OutputChunk chunk : myStdOutChunks) {
-        if (lastChunk != null && chunk.getKey() == lastChunk.getKey()) {
-          lastChunk.append(chunk.getText());
+    private void processLine(String text, Key outputType) {
+        if (!myBuffers.keySet().contains(outputType)) {
+            processStdOutConsistently(text, outputType);
         }
         else {
-          lastChunk = chunk;
-          chunks.add(chunk);
+            StringBuilder buffer = myBuffers.get(outputType);
+            if (!text.endsWith("\n")) {
+                buffer.append(text);
+                return;
+            }
+            if (buffer.length() > 0) {
+                buffer.append(text);
+                text = buffer.toString();
+                buffer.setLength(0);
+            }
+
+            onLineAvailable(text, outputType, false);
         }
-      }
-
-      myStdOutChunks.clear();
-    }
-    final boolean isTCLikeFakeOutput = chunks.size() == 1;
-    for (OutputChunk chunk : chunks) {
-      onLineAvailable(chunk.getText(), chunk.getKey(), isTCLikeFakeOutput);
-    }
-  }
-
-
-  public void flush() {
-    flushStdOutBuffer();
-
-    for (Map.Entry<Key, StringBuilder> each : myBuffers.entrySet()) {
-      StringBuilder buffer = each.getValue();
-      if (buffer.length() > 0) {
-        onLineAvailable(buffer.toString(), each.getKey(), false);
-        buffer.setLength(0);
-      }
-    }
-  }
-
-  protected boolean isMostLikelyServiceMessagePart(@Nonnull final String text) {
-    return text.startsWith(TEAMCITY_SERVICE_MESSAGE_PREFIX);
-  }
-
-  protected abstract void onLineAvailable(@Nonnull String text, @Nonnull Key outputType, boolean tcLikeFakeOutput);
-
-  private static class OutputChunk {
-    private final Key myKey;
-    private String myText;
-
-    private OutputChunk(Key key, String text) {
-      myKey = key;
-      myText = text;
     }
 
-    public Key getKey() {
-      return myKey;
+    private void processStdOutConsistently(String text, Key outputType) {
+        int textLength = text.length();
+        if (textLength == 0) {
+            return;
+        }
+
+        synchronized (myStdOutChunks) {
+            myStdOutChunks.add(new OutputChunk(outputType, text));
+        }
+
+        char lastChar = text.charAt(textLength - 1);
+        if (lastChar == '\n' || lastChar == '\r') {
+            // buffer contains consistent string
+            flushStdOutBuffer();
+        }
+        else {
+            // test framework may show some promt and ask user for smth. Question may not
+            // finish with \n or \r thus buffer wont be flushed and user will have to input smth
+            // before question. And question will became visible with next portion of text.
+            // Such behaviour is confusing. So
+            // 1. Let's assume that sevice messages starts with \n if console is editable
+            // 2. Then we can suggest that each service message will start from new line and buffer should
+            //    be flushed before every service message. Thus if chunks list is empty and output doesn't end
+            //    with \n or \r but starts with ##teamcity then it is a service message and should be buffered otherwise
+            //    we can safely flush buffer.
+
+            // TODO if editable:
+            if (myStdinSupportEnabled && !isMostLikelyServiceMessagePart(text)) {
+                flushStdOutBuffer();
+            }
+        }
     }
 
-    public String getText() {
-      return myText;
+    private void flushStdOutBuffer() {
+        // if osColoredProcessHandler was attached it can split string with several colors
+        // in several  parts. Thus '\n' symbol may be send as one part with some color
+        // such situation should differ from single '\n' from process that is used by TC reporters
+        // to separate TC commands from other stuff + optimize flushing
+        // TODO: probably in IDEA mode such runners shouldn't add explicit \n because we can
+        // successfully process broken messages across several flushes
+        // size of parts may tell us either \n was single in original flushed data or it was
+        // separated by process handler
+        List<OutputChunk> chunks = new ArrayList<>();
+        OutputChunk lastChunk = null;
+        synchronized (myStdOutChunks) {
+            for (OutputChunk chunk : myStdOutChunks) {
+                if (lastChunk != null && chunk.getKey() == lastChunk.getKey()) {
+                    lastChunk.append(chunk.getText());
+                }
+                else {
+                    lastChunk = chunk;
+                    chunks.add(chunk);
+                }
+            }
+
+            myStdOutChunks.clear();
+        }
+        boolean isTCLikeFakeOutput = chunks.size() == 1;
+        for (OutputChunk chunk : chunks) {
+            onLineAvailable(chunk.getText(), chunk.getKey(), isTCLikeFakeOutput);
+        }
     }
 
-    public void append(String text) {
-      myText += text;
+
+    public void flush() {
+        flushStdOutBuffer();
+
+        for (Map.Entry<Key, StringBuilder> each : myBuffers.entrySet()) {
+            StringBuilder buffer = each.getValue();
+            if (buffer.length() > 0) {
+                onLineAvailable(buffer.toString(), each.getKey(), false);
+                buffer.setLength(0);
+            }
+        }
     }
-  }
+
+    protected boolean isMostLikelyServiceMessagePart(@Nonnull String text) {
+        return text.startsWith(TEAMCITY_SERVICE_MESSAGE_PREFIX);
+    }
+
+    protected abstract void onLineAvailable(@Nonnull String text, @Nonnull Key outputType, boolean tcLikeFakeOutput);
+
+    private static class OutputChunk {
+        private final Key myKey;
+        private String myText;
+
+        private OutputChunk(Key key, String text) {
+            myKey = key;
+            myText = text;
+        }
+
+        public Key getKey() {
+            return myKey;
+        }
+
+        public String getText() {
+            return myText;
+        }
+
+        public void append(String text) {
+            myText += text;
+        }
+    }
 }

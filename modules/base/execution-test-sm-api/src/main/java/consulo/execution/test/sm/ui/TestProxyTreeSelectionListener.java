@@ -23,15 +23,18 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
-*/
+ */
 public interface TestProxyTreeSelectionListener {
-  /**
-   * When element in tree was selected
-   * @param selectedTestProxy Selected Element
-   * @param viewer
-   * @param model
-   */
-  void onSelected(@Nullable SMTestProxy selectedTestProxy,
-                  @Nonnull TestResultsViewer viewer,
-                  @Nonnull TestFrameworkRunningModel model);
+    /**
+     * When element in tree was selected
+     *
+     * @param selectedTestProxy Selected Element
+     * @param viewer
+     * @param model
+     */
+    void onSelected(
+        @Nullable SMTestProxy selectedTestProxy,
+        @Nonnull TestResultsViewer viewer,
+        @Nonnull TestFrameworkRunningModel model
+    );
 }

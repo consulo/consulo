@@ -17,71 +17,76 @@ package consulo.execution.test.sm.runner.state;
 
 import consulo.execution.test.CompositePrintable;
 import consulo.execution.test.Printer;
-import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
+import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
  */
 public class TestIgnoredState extends AbstractState {
-  @NonNls
-  private static final String IGNORED_TEST_TEXT = SMTestsRunnerBundle.message("sm.test.runner.states.test.is.ignored");
-  private final String myText;
-  private final String myStacktrace;
+    private final LocalizeValue myText;
+    private final String myStacktrace;
 
-  public TestIgnoredState(final String ignoredComment, @Nullable final String stackTrace) {
-    final String ignored_msg = StringUtil.isEmpty(ignoredComment) ? IGNORED_TEST_TEXT : ignoredComment;
-    myText = CompositePrintable.NEW_LINE + ignored_msg;
-    myStacktrace = stackTrace == null ? null : stackTrace + CompositePrintable.NEW_LINE;
-  }
-
-  public boolean isInProgress() {
-    return false;
-  }
-
-  public boolean isDefect() {
-    return true;
-  }
-
-  public boolean wasLaunched() {
-    return true;
-  }
-
-  public boolean isFinal() {
-    return true;
-  }
-
-  public boolean wasTerminated() {
-    return false;
-  }
-
-  public Magnitude getMagnitude() {
-    return Magnitude.IGNORED_INDEX;
-  }
-
-  @Override
-  public void printOn(final Printer printer) {
-    super.printOn(printer);
-
-    printer.print(myText, ConsoleViewContentType.SYSTEM_OUTPUT);
-    if (StringUtil.isEmptyOrSpaces(myStacktrace)) {
-      printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.SYSTEM_OUTPUT);
+    public TestIgnoredState(String ignoredComment, @Nullable String stackTrace) {
+        LocalizeValue ignoredMsg = StringUtil.isEmpty(ignoredComment)
+            ? SMTestLocalize.smTestRunnerStatesTestIsIgnored()
+            : LocalizeValue.of(ignoredComment);
+        myText = ignoredMsg.map((localizeManager, value) -> CompositePrintable.NEW_LINE + value);
+        myStacktrace = stackTrace == null ? null : stackTrace + CompositePrintable.NEW_LINE;
     }
-    else {
-      printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-      printer.mark();
-      printer.print(myStacktrace, ConsoleViewContentType.ERROR_OUTPUT);
+
+    @Override
+    public boolean isInProgress() {
+        return false;
     }
-  }
+
+    @Override
+    public boolean isDefect() {
+        return true;
+    }
+
+    @Override
+    public boolean wasLaunched() {
+        return true;
+    }
+
+    @Override
+    public boolean isFinal() {
+        return true;
+    }
+
+    @Override
+    public boolean wasTerminated() {
+        return false;
+    }
+
+    @Override
+    public Magnitude getMagnitude() {
+        return Magnitude.IGNORED_INDEX;
+    }
+
+    @Override
+    public void printOn(Printer printer) {
+        super.printOn(printer);
+
+        printer.print(myText.get(), ConsoleViewContentType.SYSTEM_OUTPUT);
+        if (StringUtil.isEmptyOrSpaces(myStacktrace)) {
+            printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.SYSTEM_OUTPUT);
+        }
+        else {
+            printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
+            printer.mark();
+            printer.print(myStacktrace, ConsoleViewContentType.ERROR_OUTPUT);
+        }
+    }
 
 
-  @Override
-  public String toString() {
-    //noinspection HardCodedStringLiteral
-    return "TEST IGNORED";
-  }
+    @Override
+    public String toString() {
+        //noinspection HardCodedStringLiteral
+        return "TEST IGNORED";
+    }
 }

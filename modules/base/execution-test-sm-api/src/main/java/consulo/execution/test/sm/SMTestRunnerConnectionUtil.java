@@ -15,6 +15,7 @@
  */
 package consulo.execution.test.sm;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.disposer.Disposer;
 import consulo.execution.action.Location;
@@ -64,6 +65,7 @@ public class SMTestRunnerConnectionUtil {
 
         @Nonnull
         @Override
+        @RequiredReadAction
         public List<Location> getLocation(
             @Nonnull String protocol,
             @Nonnull String path,
@@ -306,6 +308,7 @@ public class SMTestRunnerConnectionUtil {
 
         @Nonnull
         @Override
+        @RequiredReadAction
         public List<Location> getLocation(
             @Nonnull String protocol,
             @Nonnull String path,

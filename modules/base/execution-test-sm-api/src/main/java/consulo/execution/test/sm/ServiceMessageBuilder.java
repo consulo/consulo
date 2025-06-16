@@ -23,55 +23,55 @@ import jakarta.annotation.Nonnull;
  * @author gregsh
  */
 public class ServiceMessageBuilder {
-  private final StringBuilder myText = new StringBuilder("##teamcity[");
+    private final StringBuilder myText = new StringBuilder("##teamcity[");
 
-  public ServiceMessageBuilder(String command) {
-    myText.append(command);
-  }
+    public ServiceMessageBuilder(String command) {
+        myText.append(command);
+    }
 
-  public ServiceMessageBuilder addAttribute(String name, String value) {
-    myText.append(' ').append(name).append("='").append(replaceEscapeSymbols(value)).append('\'');
-    return this;
-  }
+    public ServiceMessageBuilder addAttribute(String name, String value) {
+        myText.append(' ').append(name).append("='").append(replaceEscapeSymbols(value)).append('\'');
+        return this;
+    }
 
-  @Override
-  public String toString() {
-    return myText.toString() + ']';
-  }
+    @Override
+    public String toString() {
+        return myText.toString() + ']';
+    }
 
-  private static String replaceEscapeSymbols(String text) {
-    return MapSerializerUtil.escapeStr(text, MapSerializerUtil.STD_ESCAPER);
-  }
+    private static String replaceEscapeSymbols(String text) {
+        return MapSerializerUtil.escapeStr(text, MapSerializerUtil.STD_ESCAPER);
+    }
 
-  public static ServiceMessageBuilder testSuiteStarted(@Nonnull String name) {
-    return new ServiceMessageBuilder(ServiceMessageTypes.TEST_SUITE_STARTED).addAttribute("name", name);
-  }
+    public static ServiceMessageBuilder testSuiteStarted(@Nonnull String name) {
+        return new ServiceMessageBuilder(ServiceMessageTypes.TEST_SUITE_STARTED).addAttribute("name", name);
+    }
 
-  public static ServiceMessageBuilder testSuiteFinished(@Nonnull String name) {
-    return new ServiceMessageBuilder(ServiceMessageTypes.TEST_SUITE_FINISHED).addAttribute("name", name);
-  }
+    public static ServiceMessageBuilder testSuiteFinished(@Nonnull String name) {
+        return new ServiceMessageBuilder(ServiceMessageTypes.TEST_SUITE_FINISHED).addAttribute("name", name);
+    }
 
-  public static ServiceMessageBuilder testStarted(@Nonnull String name) {
-    return new ServiceMessageBuilder(ServiceMessageTypes.TEST_STARTED).addAttribute("name", name);
-  }
+    public static ServiceMessageBuilder testStarted(@Nonnull String name) {
+        return new ServiceMessageBuilder(ServiceMessageTypes.TEST_STARTED).addAttribute("name", name);
+    }
 
-  public static ServiceMessageBuilder testFinished(@Nonnull String name) {
-    return new ServiceMessageBuilder(ServiceMessageTypes.TEST_FINISHED).addAttribute("name", name);
-  }
+    public static ServiceMessageBuilder testFinished(@Nonnull String name) {
+        return new ServiceMessageBuilder(ServiceMessageTypes.TEST_FINISHED).addAttribute("name", name);
+    }
 
-  public static ServiceMessageBuilder testStdOut(@Nonnull String name) {
-    return new ServiceMessageBuilder(ServiceMessageTypes.TEST_STD_OUT).addAttribute("name", name);
-  }
+    public static ServiceMessageBuilder testStdOut(@Nonnull String name) {
+        return new ServiceMessageBuilder(ServiceMessageTypes.TEST_STD_OUT).addAttribute("name", name);
+    }
 
-  public static ServiceMessageBuilder testStdErr(@Nonnull String name) {
-    return new ServiceMessageBuilder(ServiceMessageTypes.TEST_STD_ERR).addAttribute("name", name);
-  }
+    public static ServiceMessageBuilder testStdErr(@Nonnull String name) {
+        return new ServiceMessageBuilder(ServiceMessageTypes.TEST_STD_ERR).addAttribute("name", name);
+    }
 
-  public static ServiceMessageBuilder testFailed(@Nonnull String name) {
-    return new ServiceMessageBuilder(ServiceMessageTypes.TEST_FAILED).addAttribute("name", name);
-  }
+    public static ServiceMessageBuilder testFailed(@Nonnull String name) {
+        return new ServiceMessageBuilder(ServiceMessageTypes.TEST_FAILED).addAttribute("name", name);
+    }
 
-  public static ServiceMessageBuilder testIgnored(@Nonnull String name) {
-    return new ServiceMessageBuilder(ServiceMessageTypes.TEST_IGNORED).addAttribute("name", name);
-  }
+    public static ServiceMessageBuilder testIgnored(@Nonnull String name) {
+        return new ServiceMessageBuilder(ServiceMessageTypes.TEST_IGNORED).addAttribute("name", name);
+    }
 }

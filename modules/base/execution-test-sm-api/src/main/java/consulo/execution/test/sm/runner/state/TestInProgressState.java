@@ -21,40 +21,46 @@ package consulo.execution.test.sm.runner.state;
  * Indicates that test is running.
  */
 public class TestInProgressState extends AbstractState {
-  //This state is common for all instances and doesn't contains
-  //instance-specific information
-  public static final TestInProgressState TEST = new TestInProgressState();
+    //This state is common for all instances and doesn't contains
+    //instance-specific information
+    public static final TestInProgressState TEST = new TestInProgressState();
 
-  protected TestInProgressState() {
-  }
+    protected TestInProgressState() {
+    }
 
-  public boolean isInProgress() {
-    return true;
-  }
+    @Override
+    public boolean isInProgress() {
+        return true;
+    }
 
-  public boolean isDefect() {
-    return false;
-  }
+    @Override
+    public boolean isDefect() {
+        return false;
+    }
 
-  public boolean wasLaunched() {
-    return true;
-  }
+    @Override
+    public boolean wasLaunched() {
+        return true;
+    }
 
-  public boolean isFinal() {
-    return false;
-  }
+    @Override
+    public boolean isFinal() {
+        return false;
+    }
 
-  public boolean wasTerminated() {
-    return false;
-  }
+    @Override
+    public boolean wasTerminated() {
+        return false;
+    }
 
-  public Magnitude getMagnitude() {
-    return Magnitude.RUNNING_INDEX;
-  }
+    @Override
+    public Magnitude getMagnitude() {
+        return Magnitude.RUNNING_INDEX;
+    }
 
-  @Override
-  public String toString() {
-    //noinspection HardCodedStringLiteral
-    return "TEST PROGRESS";
-  }
+    @Override
+    public String toString() {
+        //noinspection HardCodedStringLiteral
+        return "TEST PROGRESS";
+    }
 }

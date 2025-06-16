@@ -34,6 +34,7 @@ import consulo.util.xml.serializer.annotation.Tag;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,75 +44,80 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class TestHistoryConfiguration implements PersistentStateComponent<TestHistoryConfiguration.State> {
+    public static class State {
+        private Map<String, ConfigurationBean> myHistoryElements = new LinkedHashMap<>();
 
-  public static class State {
+        @Property(surroundWithTag = false)
+        @MapAnnotation(
+            surroundKeyWithTag = false,
+            surroundWithTag = false,
+            surroundValueWithTag = false,
+            entryTagName = "history-entry",
+            keyAttributeName = "file"
+        )
+        public Map<String, ConfigurationBean> getHistoryElements() {
+            return myHistoryElements;
+        }
 
-    private Map<String, ConfigurationBean> myHistoryElements = new LinkedHashMap<String, ConfigurationBean>();
-
-    @Property(surroundWithTag = false)
-    @MapAnnotation(surroundKeyWithTag = false, surroundWithTag = false, surroundValueWithTag = false, entryTagName = "history-entry", keyAttributeName = "file")
-    public Map<String, ConfigurationBean> getHistoryElements() {
-      return myHistoryElements;
+        public void setHistoryElements(Map<String, ConfigurationBean> elements) {
+            myHistoryElements = elements;
+        }
     }
 
-    public void setHistoryElements(final Map<String, ConfigurationBean> elements) {
-      myHistoryElements = elements;
+    @Tag("configuration")
+    public static class ConfigurationBean {
+        @Attribute("name")
+        public String name;
+        @Attribute("configurationId")
+        public String configurationId;
     }
-  }
 
-  @Tag("configuration")
-  public static class ConfigurationBean {
+    private State myState = new State();
 
-    @Attribute("name")
-    public String name;
-    @Attribute("configurationId")
-    public String configurationId;
-  }
-
-  private State myState = new State();
-
-  public static TestHistoryConfiguration getInstance(Project project) {
-    return project.getInstance(TestHistoryConfiguration.class);
-  }
-
-  @Override
-  public State getState() {
-    return myState;
-  }
-
-  @Override
-  public void loadState(State state) {
-    myState = state;
-  }
-
-  public Collection<String> getFiles() {
-    return myState.getHistoryElements().keySet();
-  }
-
-  public String getConfigurationName(String file) {
-    final ConfigurationBean bean = myState.getHistoryElements().get(file);
-    return bean != null ? bean.name : null;
-  }
-
-  @Nullable
-  public Image getIcon(String file) {
-    final ConfigurationBean bean = myState.getHistoryElements().get(file);
-    if (bean != null) {
-      ConfigurationType type = ConfigurationTypeUtil.findConfigurationType(bean.configurationId);
-      if (type != null) return type.getIcon();
+    public static TestHistoryConfiguration getInstance(Project project) {
+        return project.getInstance(TestHistoryConfiguration.class);
     }
-    return null;
-  }
 
-  public void registerHistoryItem(String file, String configName, String configId) {
-    final ConfigurationBean bean = new ConfigurationBean();
-    bean.name = configName;
-    bean.configurationId = configId;
-    final Map<String, ConfigurationBean> historyElements = myState.getHistoryElements();
-    historyElements.put(file, bean);
-    if (historyElements.size() > AbstractImportTestsAction.getHistorySize()) {
-      final String first = historyElements.keySet().iterator().next();
-      historyElements.remove(first);
+    @Override
+    public State getState() {
+        return myState;
     }
-  }
+
+    @Override
+    public void loadState(State state) {
+        myState = state;
+    }
+
+    public Collection<String> getFiles() {
+        return myState.getHistoryElements().keySet();
+    }
+
+    public String getConfigurationName(String file) {
+        ConfigurationBean bean = myState.getHistoryElements().get(file);
+        return bean != null ? bean.name : null;
+    }
+
+    @Nullable
+    public Image getIcon(String file) {
+        ConfigurationBean bean = myState.getHistoryElements().get(file);
+        if (bean != null) {
+            ConfigurationType type = ConfigurationTypeUtil.findConfigurationType(bean.configurationId);
+            if (type != null) {
+                return type.getIcon();
+            }
+        }
+        return null;
+    }
+
+    public void registerHistoryItem(String file, String configName, String configId) {
+        ConfigurationBean bean = new ConfigurationBean();
+        bean.name = configName;
+        bean.configurationId = configId;
+        Map<String, ConfigurationBean> historyElements = myState.getHistoryElements();
+        historyElements.put(file, bean);
+        if (historyElements.size() > AbstractImportTestsAction.getHistorySize()) {
+            String first = historyElements.keySet().iterator().next();
+            historyElements.remove(first);
+        }
+    }
 }

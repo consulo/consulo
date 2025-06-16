@@ -10,7 +10,6 @@ import consulo.util.lang.StackOverflowPreventedException;
 import consulo.util.lang.ref.SoftReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -59,303 +58,297 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
 public class RecursionManager {
-  private static final Logger LOG = Logger.getInstance(RecursionManager.class);
-  private static final ThreadLocal<CalculationStack> ourStack = ThreadLocal.withInitial(CalculationStack::new);
-  private static boolean ourAssertOnPrevention;
+    private static final Logger LOG = Logger.getInstance(RecursionManager.class);
+    private static final ThreadLocal<CalculationStack> ourStack = ThreadLocal.withInitial(CalculationStack::new);
+    private static boolean ourAssertOnPrevention;
 
-  /**
-   * Run the given computation, unless it's already running in this thread.
-   * This is same as {@link RecursionGuard#doPreventingRecursion(Object, boolean, Supplier)},
-   * without a need to bother to create {@link RecursionGuard}.
-   */
-  @Nullable
-  public static <T> T doPreventingRecursion(@Nonnull Object key, boolean memoize, Supplier<T> computation) {
-    return createGuard(computation.getClass().getName()).doPreventingRecursion(key, memoize, computation);
-  }
-
-  /**
-   * @param id just some string to separate different recursion prevention policies from each other
-   * @return a helper object which allow you to perform reentrancy-safe computations and check whether caching will be safe.
-   * Don't use it unless you need to call it from several places in the code, inspect the computation stack and/or prohibit result caching.
-   */
-  @Nonnull
-  public static <Key> RecursionGuard<Key> createGuard(@NonNls final String id) {
-    return new RecursionGuard<Key>() {
-      @Override
-      public <T> T doPreventingRecursion(@Nonnull Key key, boolean memoize, @Nonnull Supplier<T> computation) {
-        MyKey realKey = new MyKey(id, key, true);
-        final CalculationStack stack = ourStack.get();
-
-        if (stack.checkReentrancy(realKey)) {
-          if (ourAssertOnPrevention) {
-            throw new StackOverflowPreventedException("Endless recursion prevention occurred");
-          }
-          return null;
-        }
-
-        if (memoize) {
-          MemoizedValue memoized = stack.getMemoizedValue(realKey);
-          if (memoized != null) {
-            for (MyKey noCacheUntil : memoized.dependencies) {
-              stack.prohibitResultCaching(noCacheUntil);
-            }
-            //noinspection unchecked
-            return (T)memoized.value;
-          }
-        }
-
-        realKey = new MyKey(id, key, false);
-
-        final int sizeBefore = stack.progressMap.size();
-        stack.beforeComputation(realKey);
-        final int sizeAfter = stack.progressMap.size();
-        Set<MyKey> preventionsBefore = memoize ? new HashSet<>(stack.preventions) : Collections.emptySet();
-
-        try {
-          T result = computation.get();
-
-          if (memoize) {
-            stack.maybeMemoize(realKey, result, preventionsBefore);
-          }
-
-          return result;
-        }
-        finally {
-          try {
-            stack.afterComputation(realKey, sizeBefore, sizeAfter);
-          }
-          catch (Throwable e) {
-            //noinspection ThrowFromFinallyBlock
-            throw new RuntimeException("Throwable in afterComputation", e);
-          }
-
-          stack.checkDepth("4");
-        }
-      }
-
-      @Nonnull
-      @Override
-      public List<Key> currentStack() {
-        ArrayList<Key> result = new ArrayList<>();
-        LinkedHashMap<MyKey, Integer> map = ourStack.get().progressMap;
-        for (MyKey pair : map.keySet()) {
-          if (pair.guardId.equals(id)) {
-            //noinspection unchecked
-            result.add((Key)pair.userObject);
-          }
-        }
-        return Collections.unmodifiableList(result);
-      }
-
-      @Override
-      public void prohibitResultCaching(@Nonnull Object since) {
-        MyKey realKey = new MyKey(id, since, false);
-        final CalculationStack stack = ourStack.get();
-        stack.prohibitResultCaching(realKey);
-      }
-
-    };
-  }
-
-  /**
-   * Used in pair with {@link RecursionGuard.StackStamp#mayCacheNow()} to ensure that cached are only the reliable values,
-   * not depending on anything incomplete due to recursive prevention policies.
-   * A typical usage is this:
-   * {@code
-   * RecursionGuard.StackStamp stamp = RecursionManager.createGuard("id").markStack();
-   * <p>
-   * Result result = doComputation();
-   * <p>
-   * if (stamp.mayCacheNow()) {
-   * cache(result);
-   * }
-   * return result;
-   * }
-   *
-   * @return an object representing the current stack state, managed by {@link RecursionManager}
-   */
-  @Nonnull
-  public static RecursionGuard.StackStamp markStack() {
-    int stamp = ourStack.get().reentrancyCount;
-    return new RecursionGuard.StackStamp() {
-      @Override
-      public boolean mayCacheNow() {
-        return stamp == ourStack.get().reentrancyCount;
-      }
-    };
-  }
-
-
-  private static class MyKey {
-    final String guardId;
-    final Object userObject;
-    private final int myHashCode;
-    private final boolean myCallEquals;
-
-    MyKey(String guardId, @Nonnull Object userObject, boolean mayCallEquals) {
-      this.guardId = guardId;
-      this.userObject = userObject;
-      // remember user object hashCode to ensure our internal maps consistency
-      myHashCode = guardId.hashCode() * 31 + userObject.hashCode();
-      myCallEquals = mayCallEquals;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (!(obj instanceof MyKey && guardId.equals(((MyKey)obj).guardId))) return false;
-      if (userObject == ((MyKey)obj).userObject) {
-        return true;
-      }
-      if (myCallEquals || ((MyKey)obj).myCallEquals) {
-        return userObject.equals(((MyKey)obj).userObject);
-      }
-      return false;
-    }
-
-    @Override
-    public int hashCode() {
-      return myHashCode;
-    }
-  }
-
-  private static class CalculationStack {
-    private int reentrancyCount;
-    private int depth;
-    private final LinkedHashMap<MyKey, Integer> progressMap = new LinkedHashMap<>();
-    private final Set<MyKey> preventions = ContainerUtil.newIdentityTroveSet();
-    private final Map<MyKey, List<SoftReference<MemoizedValue>>> intermediateCache = ContainerUtil.createSoftMap();
-    private int enters;
-    private int exits;
-
-    boolean checkReentrancy(MyKey realKey) {
-      if (progressMap.containsKey(realKey)) {
-        prohibitResultCaching(realKey);
-        return true;
-      }
-      return false;
-    }
-
+    /**
+     * Run the given computation, unless it's already running in this thread.
+     * This is same as {@link RecursionGuard#doPreventingRecursion(Object, boolean, Supplier)},
+     * without a need to bother to create {@link RecursionGuard}.
+     */
     @Nullable
-    MemoizedValue getMemoizedValue(MyKey realKey) {
-      List<SoftReference<MemoizedValue>> refs = intermediateCache.get(realKey);
-      if (refs != null) {
-        for (SoftReference<MemoizedValue> ref : refs) {
-          MemoizedValue value = SoftReference.dereference(ref);
-          if (value != null && value.isActual(this)) {
-            return value;
-          }
+    public static <T> T doPreventingRecursion(@Nonnull Object key, boolean memoize, Supplier<T> computation) {
+        return createGuard(computation.getClass().getName()).doPreventingRecursion(key, memoize, computation);
+    }
+
+    /**
+     * @param id just some string to separate different recursion prevention policies from each other
+     * @return a helper object which allow you to perform reentrancy-safe computations and check whether caching will be safe.
+     * Don't use it unless you need to call it from several places in the code, inspect the computation stack and/or prohibit result caching.
+     */
+    @Nonnull
+    public static <Key> RecursionGuard<Key> createGuard(final String id) {
+        return new RecursionGuard<>() {
+            @Override
+            public <T> T doPreventingRecursion(@Nonnull Key key, boolean memoize, @Nonnull Supplier<T> computation) {
+                MyKey realKey = new MyKey(id, key, true);
+                CalculationStack stack = ourStack.get();
+
+                if (stack.checkReentrancy(realKey)) {
+                    if (ourAssertOnPrevention) {
+                        throw new StackOverflowPreventedException("Endless recursion prevention occurred");
+                    }
+                    return null;
+                }
+
+                if (memoize) {
+                    MemoizedValue memoized = stack.getMemoizedValue(realKey);
+                    if (memoized != null) {
+                        for (MyKey noCacheUntil : memoized.dependencies) {
+                            stack.prohibitResultCaching(noCacheUntil);
+                        }
+                        //noinspection unchecked
+                        return (T) memoized.value;
+                    }
+                }
+
+                realKey = new MyKey(id, key, false);
+
+                int sizeBefore = stack.progressMap.size();
+                stack.beforeComputation(realKey);
+                int sizeAfter = stack.progressMap.size();
+                Set<MyKey> preventionsBefore = memoize ? new HashSet<>(stack.preventions) : Collections.emptySet();
+
+                try {
+                    T result = computation.get();
+
+                    if (memoize) {
+                        stack.maybeMemoize(realKey, result, preventionsBefore);
+                    }
+
+                    return result;
+                }
+                finally {
+                    try {
+                        stack.afterComputation(realKey, sizeBefore, sizeAfter);
+                    }
+                    catch (Throwable e) {
+                        //noinspection ThrowFromFinallyBlock
+                        throw new RuntimeException("Throwable in afterComputation", e);
+                    }
+
+                    stack.checkDepth("4");
+                }
+            }
+
+            @Nonnull
+            @Override
+            public List<Key> currentStack() {
+                ArrayList<Key> result = new ArrayList<>();
+                LinkedHashMap<MyKey, Integer> map = ourStack.get().progressMap;
+                for (MyKey pair : map.keySet()) {
+                    if (pair.guardId.equals(id)) {
+                        //noinspection unchecked
+                        result.add((Key) pair.userObject);
+                    }
+                }
+                return Collections.unmodifiableList(result);
+            }
+
+            @Override
+            public void prohibitResultCaching(@Nonnull Object since) {
+                MyKey realKey = new MyKey(id, since, false);
+                CalculationStack stack = ourStack.get();
+                stack.prohibitResultCaching(realKey);
+            }
+        };
+    }
+
+    /**
+     * Used in pair with {@link RecursionGuard.StackStamp#mayCacheNow()} to ensure that cached are only the reliable values,
+     * not depending on anything incomplete due to recursive prevention policies.
+     * A typical usage is this:
+     * {@code
+     * RecursionGuard.StackStamp stamp = RecursionManager.createGuard("id").markStack();
+     * <p>
+     * Result result = doComputation();
+     * <p>
+     * if (stamp.mayCacheNow()) {
+     * cache(result);
+     * }
+     * return result;
+     * }
+     *
+     * @return an object representing the current stack state, managed by {@link RecursionManager}
+     */
+    @Nonnull
+    public static RecursionGuard.StackStamp markStack() {
+        int stamp = ourStack.get().reentrancyCount;
+        return () -> stamp == ourStack.get().reentrancyCount;
+    }
+
+    private static class MyKey {
+        final String guardId;
+        final Object userObject;
+        private final int myHashCode;
+        private final boolean myCallEquals;
+
+        MyKey(String guardId, @Nonnull Object userObject, boolean mayCallEquals) {
+            this.guardId = guardId;
+            this.userObject = userObject;
+            // remember user object hashCode to ensure our internal maps consistency
+            myHashCode = guardId.hashCode() * 31 + userObject.hashCode();
+            myCallEquals = mayCallEquals;
         }
-      }
-      return null;
-    }
 
-    final void beforeComputation(MyKey realKey) {
-      enters++;
-
-      if (progressMap.isEmpty()) {
-        assert reentrancyCount == 0 : "Non-zero stamp with empty stack: " + reentrancyCount;
-      }
-
-      checkDepth("1");
-
-      int sizeBefore = progressMap.size();
-      progressMap.put(realKey, reentrancyCount);
-      depth++;
-
-      checkDepth("2");
-
-      int sizeAfter = progressMap.size();
-      if (sizeAfter != sizeBefore + 1) {
-        LOG.error("Key doesn't lead to the map size increase: " + sizeBefore + " " + sizeAfter + " " + realKey.userObject);
-      }
-    }
-
-    void maybeMemoize(MyKey realKey, @Nullable Object result, Set<MyKey> preventionsBefore) {
-      if (preventions.size() > preventionsBefore.size()) {
-        List<MyKey> added = ContainerUtil.findAll(preventions, key -> key != realKey && !preventionsBefore.contains(key));
-        intermediateCache.computeIfAbsent(realKey, __ -> new SmartList<>()).add(new SoftReference<>(new MemoizedValue(result, added.toArray(new MyKey[0]))));
-      }
-    }
-
-    final void afterComputation(MyKey realKey, int sizeBefore, int sizeAfter) {
-      exits++;
-      if (sizeAfter != progressMap.size()) {
-        LOG.error("Map size changed: " + progressMap.size() + " " + sizeAfter + " " + realKey.userObject);
-      }
-
-      if (depth != progressMap.size()) {
-        LOG.error("Inconsistent depth after computation; depth=" + depth + "; map=" + progressMap);
-      }
-
-      Integer value = progressMap.remove(realKey);
-      depth--;
-      if (!preventions.isEmpty()) {
-        preventions.remove(realKey);
-      }
-
-      if (depth == 0) {
-        intermediateCache.clear();
-      }
-
-      if (sizeBefore != progressMap.size()) {
-        LOG.error("Map size doesn't decrease: " + progressMap.size() + " " + sizeBefore + " " + realKey.userObject);
-      }
-
-      reentrancyCount = value;
-    }
-
-    private void prohibitResultCaching(MyKey realKey) {
-      reentrancyCount++;
-
-      boolean inLoop = false;
-      for (Map.Entry<MyKey, Integer> entry : new ArrayList<>(progressMap.entrySet())) {
-        if (inLoop) {
-          entry.setValue(reentrancyCount);
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof MyKey that && guardId.equals(that.guardId))) {
+                return false;
+            }
+            if (userObject == that.userObject) {
+                return true;
+            }
+            return (myCallEquals || that.myCallEquals)
+                && userObject.equals(that.userObject);
         }
-        else if (entry.getKey().equals(realKey)) {
-          preventions.add(entry.getKey());
-          inLoop = true;
+
+        @Override
+        public int hashCode() {
+            return myHashCode;
         }
-      }
     }
 
-    private void checkDepth(String s) {
-      int oldDepth = depth;
-      if (oldDepth != progressMap.size()) {
-        depth = progressMap.size();
-        throw new AssertionError("_Inconsistent depth " + s + "; depth=" + oldDepth + "; enters=" + enters + "; exits=" + exits + "; map=" + progressMap);
-      }
+    private static class CalculationStack {
+        private int reentrancyCount;
+        private int depth;
+        private final LinkedHashMap<MyKey, Integer> progressMap = new LinkedHashMap<>();
+        private final Set<MyKey> preventions = ContainerUtil.newIdentityTroveSet();
+        private final Map<MyKey, List<SoftReference<MemoizedValue>>> intermediateCache = ContainerUtil.createSoftMap();
+        private int enters;
+        private int exits;
+
+        boolean checkReentrancy(MyKey realKey) {
+            if (progressMap.containsKey(realKey)) {
+                prohibitResultCaching(realKey);
+                return true;
+            }
+            return false;
+        }
+
+        @Nullable
+        MemoizedValue getMemoizedValue(MyKey realKey) {
+            List<SoftReference<MemoizedValue>> refs = intermediateCache.get(realKey);
+            if (refs != null) {
+                for (SoftReference<MemoizedValue> ref : refs) {
+                    MemoizedValue value = SoftReference.dereference(ref);
+                    if (value != null && value.isActual(this)) {
+                        return value;
+                    }
+                }
+            }
+            return null;
+        }
+
+        final void beforeComputation(MyKey realKey) {
+            enters++;
+
+            if (progressMap.isEmpty()) {
+                assert reentrancyCount == 0 : "Non-zero stamp with empty stack: " + reentrancyCount;
+            }
+
+            checkDepth("1");
+
+            int sizeBefore = progressMap.size();
+            progressMap.put(realKey, reentrancyCount);
+            depth++;
+
+            checkDepth("2");
+
+            int sizeAfter = progressMap.size();
+            if (sizeAfter != sizeBefore + 1) {
+                LOG.error("Key doesn't lead to the map size increase: " + sizeBefore + " " + sizeAfter + " " + realKey.userObject);
+            }
+        }
+
+        void maybeMemoize(MyKey realKey, @Nullable Object result, Set<MyKey> preventionsBefore) {
+            if (preventions.size() > preventionsBefore.size()) {
+                List<MyKey> added = ContainerUtil.findAll(preventions, key -> key != realKey && !preventionsBefore.contains(key));
+                intermediateCache.computeIfAbsent(realKey, __ -> new SmartList<>())
+                    .add(new SoftReference<>(new MemoizedValue(result, added.toArray(new MyKey[0]))));
+            }
+        }
+
+        final void afterComputation(MyKey realKey, int sizeBefore, int sizeAfter) {
+            exits++;
+            if (sizeAfter != progressMap.size()) {
+                LOG.error("Map size changed: " + progressMap.size() + " " + sizeAfter + " " + realKey.userObject);
+            }
+
+            if (depth != progressMap.size()) {
+                LOG.error("Inconsistent depth after computation; depth=" + depth + "; map=" + progressMap);
+            }
+
+            Integer value = progressMap.remove(realKey);
+            depth--;
+            if (!preventions.isEmpty()) {
+                preventions.remove(realKey);
+            }
+
+            if (depth == 0) {
+                intermediateCache.clear();
+            }
+
+            if (sizeBefore != progressMap.size()) {
+                LOG.error("Map size doesn't decrease: " + progressMap.size() + " " + sizeBefore + " " + realKey.userObject);
+            }
+
+            reentrancyCount = value;
+        }
+
+        private void prohibitResultCaching(MyKey realKey) {
+            reentrancyCount++;
+
+            boolean inLoop = false;
+            for (Map.Entry<MyKey, Integer> entry : new ArrayList<>(progressMap.entrySet())) {
+                if (inLoop) {
+                    entry.setValue(reentrancyCount);
+                }
+                else if (entry.getKey().equals(realKey)) {
+                    preventions.add(entry.getKey());
+                    inLoop = true;
+                }
+            }
+        }
+
+        private void checkDepth(String s) {
+            int oldDepth = depth;
+            if (oldDepth != progressMap.size()) {
+                depth = progressMap.size();
+                throw new AssertionError("_Inconsistent depth " + s + "; depth=" + oldDepth + "; enters=" + enters + "; exits=" + exits + "; map=" + progressMap);
+            }
+        }
     }
-  }
 
-  private static class MemoizedValue {
-    final Object value;
-    final MyKey[] dependencies;
+    private static class MemoizedValue {
+        final Object value;
+        final MyKey[] dependencies;
 
-    MemoizedValue(Object value, MyKey[] dependencies) {
-      this.value = value;
-      this.dependencies = dependencies;
+        MemoizedValue(Object value, MyKey[] dependencies) {
+            this.value = value;
+            this.dependencies = dependencies;
+        }
+
+        boolean isActual(CalculationStack stack) {
+            return Stream.of(dependencies).allMatch(stack.progressMap::containsKey);
+        }
     }
 
-    boolean isActual(CalculationStack stack) {
-      return Stream.of(dependencies).allMatch(stack.progressMap::containsKey);
+    @TestOnly
+    public static void assertOnRecursionPrevention(@Nonnull Disposable parentDisposable) {
+        ourAssertOnPrevention = true;
+        Disposer.register(
+            parentDisposable,
+            () -> {
+                //noinspection AssignmentToStaticFieldFromInstanceMethod
+                ourAssertOnPrevention = false;
+            }
+        );
     }
-  }
 
-  @TestOnly
-  public static void assertOnRecursionPrevention(@Nonnull Disposable parentDisposable) {
-    ourAssertOnPrevention = true;
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        //noinspection AssignmentToStaticFieldFromInstanceMethod
+    @TestOnly
+    public static void disableAssertOnRecursionPrevention() {
         ourAssertOnPrevention = false;
-      }
-    });
-  }
-
-  @TestOnly
-  public static void disableAssertOnRecursionPrevention() {
-    ourAssertOnPrevention = false;
-  }
+    }
 }
