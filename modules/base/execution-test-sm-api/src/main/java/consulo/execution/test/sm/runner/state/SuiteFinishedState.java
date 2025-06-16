@@ -17,17 +17,13 @@ package consulo.execution.test.sm.runner.state;
 
 import consulo.execution.test.CompositePrintable;
 import consulo.execution.test.Printer;
-import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
+import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.ui.console.ConsoleViewContentType;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Roman Chernyatchik
  */
 public abstract class SuiteFinishedState extends AbstractState {
-    @NonNls
-    private static final String EMPTY_SUITE_TEXT = SMTestsRunnerBundle.message("sm.test.runner.states.suite.is.empty");
-
     //This states are common for all instances and doesn't contains
     //instance-specific information
 
@@ -105,7 +101,7 @@ public abstract class SuiteFinishedState extends AbstractState {
         public void printOn(Printer printer) {
             super.printOn(printer);
 
-            String msg = EMPTY_SUITE_TEXT + CompositePrintable.NEW_LINE;
+            String msg = SMTestLocalize.smTestRunnerStatesSuiteIsEmpty() + CompositePrintable.NEW_LINE;
             printer.print(msg, ConsoleViewContentType.SYSTEM_OUTPUT);
         }
     };

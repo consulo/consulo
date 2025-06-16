@@ -1,5 +1,6 @@
 package consulo.ui.ex;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -13,6 +14,18 @@ import java.util.Iterator;
  * If you want just get string from container - use {@link ColoredStringBuilder}
  */
 public interface ColoredTextContainer {
+    default void append(@Nonnull LocalizeValue fragment) {
+        append(fragment, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+    }
+
+    default void append(@Nonnull LocalizeValue fragment, @Nonnull SimpleTextAttributes attributes) {
+        append(fragment.get(), attributes);
+    }
+
+    default void append(@Nonnull LocalizeValue fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
+        append(fragment.get(), attributes, tag);
+    }
+
     default void append(@Nonnull String fragment) {
         append(fragment, SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }

@@ -17,25 +17,24 @@ package consulo.execution.test.sm.runner.state;
 
 import consulo.execution.test.CompositePrintable;
 import consulo.execution.test.Printer;
-import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
+import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
  */
 public class TestIgnoredState extends AbstractState {
-    @NonNls
-    private static final String IGNORED_TEST_TEXT = SMTestsRunnerBundle.message("sm.test.runner.states.test.is.ignored");
-    private final String myText;
+    private final LocalizeValue myText;
     private final String myStacktrace;
 
     public TestIgnoredState(String ignoredComment, @Nullable String stackTrace) {
-        String ignored_msg = StringUtil.isEmpty(ignoredComment) ? IGNORED_TEST_TEXT : ignoredComment;
-        myText = CompositePrintable.NEW_LINE + ignored_msg;
+        LocalizeValue ignoredMsg = StringUtil.isEmpty(ignoredComment)
+            ? SMTestLocalize.smTestRunnerStatesTestIsIgnored()
+            : LocalizeValue.of(ignoredComment);
+        myText = ignoredMsg.map((localizeManager, value) -> CompositePrintable.NEW_LINE + value);
         myStacktrace = stackTrace == null ? null : stackTrace + CompositePrintable.NEW_LINE;
     }
 
@@ -73,7 +72,7 @@ public class TestIgnoredState extends AbstractState {
     public void printOn(Printer printer) {
         super.printOn(printer);
 
-        printer.print(myText, ConsoleViewContentType.SYSTEM_OUTPUT);
+        printer.print(myText.get(), ConsoleViewContentType.SYSTEM_OUTPUT);
         if (StringUtil.isEmptyOrSpaces(myStacktrace)) {
             printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.SYSTEM_OUTPUT);
         }

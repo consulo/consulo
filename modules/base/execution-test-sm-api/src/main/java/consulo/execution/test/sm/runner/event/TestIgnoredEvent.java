@@ -15,12 +15,11 @@
  */
 package consulo.execution.test.sm.runner.event;
 
-import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
+import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.util.lang.StringUtil;
-import jetbrains.buildServer.messages.serviceMessages.TestIgnored;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jetbrains.buildServer.messages.serviceMessages.TestIgnored;
 
 public class TestIgnoredEvent extends TreeNodeEvent {
     private final String myIgnoreComment;
@@ -41,7 +40,7 @@ public class TestIgnoredEvent extends TreeNodeEvent {
     @Nonnull
     public String getIgnoreComment() {
         if (StringUtil.isEmpty(myIgnoreComment)) {
-            return SMTestsRunnerBundle.message("sm.test.runner.states.test.is.ignored");
+            return SMTestLocalize.smTestRunnerStatesTestIsIgnored().get();
         }
         return myIgnoreComment;
     }

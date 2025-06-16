@@ -15,8 +15,8 @@
  */
 package consulo.execution.test.sm.ui.statistic;
 
+import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.test.sm.runner.SMTestProxy;
-import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
 import consulo.execution.test.sm.ui.TestsPresentationUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredTableCellRenderer;
@@ -31,7 +31,7 @@ import java.util.Comparator;
  */
 public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy> {
     public ColumnDuration() {
-        super(SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.duration.title"));
+        super(SMTestLocalize.smTestRunnerUiTabsStatisticsColumnsDurationTitle());
     }
 
     @Override
