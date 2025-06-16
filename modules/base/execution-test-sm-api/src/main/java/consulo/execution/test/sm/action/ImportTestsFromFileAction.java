@@ -15,11 +15,13 @@
  */
 package consulo.execution.test.sm.action;
 
+import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -30,9 +32,9 @@ public class ImportTestsFromFileAction extends AbstractImportTestsAction {
     public ImportTestsFromFileAction(SMTRunnerConsoleProperties properties) {
         super(
             properties,
-            LocalizeValue.localizeTODO((properties == null ? "" : "Import ") + "From File ..."),
-            LocalizeValue.localizeTODO("Import tests from file"),
-            null
+            SMTestLocalize.smTestRunnerImportTest(),
+            SMTestLocalize.smTestRunnerImportTestDescription(),
+            PlatformIconGroup.actionsImport()
         );
     }
 

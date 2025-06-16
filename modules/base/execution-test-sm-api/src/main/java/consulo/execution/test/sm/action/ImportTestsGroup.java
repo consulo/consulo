@@ -17,8 +17,8 @@ package consulo.execution.test.sm.action;
 
 import consulo.execution.test.TestStateStorage;
 import consulo.execution.test.sm.TestHistoryConfiguration;
+import consulo.execution.test.sm.localize.SMTestLocalize;
 import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
-import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -39,8 +39,8 @@ public class ImportTestsGroup extends ActionGroup {
 
     public ImportTestsGroup() {
         super(
-            LocalizeValue.localizeTODO("Import Test Results"),
-            LocalizeValue.localizeTODO("Import Test Results"),
+            SMTestLocalize.smTestRunnerImportTestGroupHistory(),
+            SMTestLocalize.smTestRunnerImportTestGroupOpenRecentSession(),
             PlatformIconGroup.vcsHistory()
         );
         setPopup(true);
