@@ -204,10 +204,6 @@ public abstract class CoverageEngine {
     /**
      * Qualified name same as in coverage raw project data
      * E.g. java class qualified name by *.class file of some Java class in corresponding source file
-     *
-     * @param outputFile
-     * @param sourceFile
-     * @return
      */
     @Nullable
     public String getQualifiedName(@Nonnull File outputFile, @Nonnull PsiFile sourceFile) {
@@ -230,12 +226,6 @@ public abstract class CoverageEngine {
     /**
      * Decide include a file or not in coverage report if coverage data isn't available for the file. E.g file wasn't touched by coverage
      * util
-     *
-     * @param qualifiedName
-     * @param outputFile
-     * @param sourceFile
-     * @param suite
-     * @return
      */
     public boolean includeUntouchedFileInCoverage(
         @Nonnull String qualifiedName,
@@ -277,14 +267,6 @@ public abstract class CoverageEngine {
 
     /**
      * Content of brief report which will be shown by click on coverage icon
-     *
-     * @param editor
-     * @param psiFile
-     * @param lineNumber
-     * @param startOffset
-     * @param endOffset
-     * @param lineData
-     * @return
      */
     public String generateBriefReport(
         @Nonnull Editor editor,

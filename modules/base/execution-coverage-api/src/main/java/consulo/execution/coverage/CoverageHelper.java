@@ -13,39 +13,41 @@ import jakarta.annotation.Nonnull;
  * @author traff
  */
 public class CoverageHelper {
-  private CoverageHelper() {
-  }
+    private CoverageHelper() {
+    }
 
-  public static void attachToProcess(@Nonnull RunConfigurationBase configuration,
-                                     @Nonnull ProcessHandler handler,
-                                     RunnerSettings runnerSettings) {
-    resetCoverageSuit(configuration);
+    public static void attachToProcess(
+        @Nonnull RunConfigurationBase configuration,
+        @Nonnull ProcessHandler handler,
+        RunnerSettings runnerSettings
+    ) {
+        resetCoverageSuit(configuration);
 
-    // attach to process termination listener
-    CoverageDataManager.getInstance(configuration.getProject()).attachToProcess(handler, configuration, runnerSettings);
-  }
+        // attach to process termination listener
+        CoverageDataManager.getInstance(configuration.getProject()).attachToProcess(handler, configuration, runnerSettings);
+    }
 
-  public static void resetCoverageSuit(RunConfigurationBase configuration) {
-    final CoverageEnabledConfiguration covConfig = CoverageEnabledConfiguration.getOrCreate(configuration);
+    public static void resetCoverageSuit(RunConfigurationBase configuration) {
+        CoverageEnabledConfiguration covConfig = CoverageEnabledConfiguration.getOrCreate(configuration);
 
-    // reset coverage suite
-    covConfig.setCurrentCoverageSuite(null);
+        // reset coverage suite
+        covConfig.setCurrentCoverageSuite(null);
 
-    // register new coverage suite
-    final CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(configuration.getProject());
+        // register new coverage suite
+        CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(configuration.getProject());
 
-    covConfig.setCurrentCoverageSuite(coverageDataManager.addCoverageSuite(covConfig));
-  }
+        covConfig.setCurrentCoverageSuite(coverageDataManager.addCoverageSuite(covConfig));
+    }
 
-  public static void doReadExternal(RunConfigurationBase runConfiguration, Element element) throws InvalidDataException {
-    final CoverageEnabledConfiguration covConf = CoverageEnabledConfiguration.getOrCreate(runConfiguration);
+    public static void doReadExternal(RunConfigurationBase runConfiguration, Element element) throws InvalidDataException {
+        CoverageEnabledConfiguration covConf = CoverageEnabledConfiguration.getOrCreate(runConfiguration);
 
-    covConf.readExternal(element);
-  }
+        covConf.readExternal(element);
+    }
 
-  public static void doWriteExternal(RunConfigurationBase runConfiguration, Element element) throws WriteExternalException {
-    final CoverageEnabledConfiguration covConf = CoverageEnabledConfiguration.getOrCreate(runConfiguration);
+    public static void doWriteExternal(RunConfigurationBase runConfiguration, Element element) throws WriteExternalException {
+        CoverageEnabledConfiguration covConf = CoverageEnabledConfiguration.getOrCreate(runConfiguration);
 
-    covConf.writeExternal(element);
-  }
+        covConf.writeExternal(element);
+    }
 }

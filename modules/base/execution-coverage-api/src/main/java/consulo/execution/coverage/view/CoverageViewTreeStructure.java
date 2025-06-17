@@ -1,5 +1,6 @@
 package consulo.execution.coverage.view;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
 import consulo.language.psi.PsiElement;
@@ -9,78 +10,85 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 1/2/12
+ * @author anna
+ * @since 2012-01-02
  */
 public class CoverageViewTreeStructure extends AbstractTreeStructure {
-  private final Project myProject;
-  final CoverageSuitesBundle myData;
-  final CoverageViewManager.StateBean myStateBean;
-  private final CoverageListRootNode myRootNode;
-  private final CoverageViewExtension myCoverageViewExtension;
+    private final Project myProject;
+    final CoverageSuitesBundle myData;
+    final CoverageViewManager.StateBean myStateBean;
+    private final CoverageListRootNode myRootNode;
+    private final CoverageViewExtension myCoverageViewExtension;
 
-  public CoverageViewTreeStructure(Project project, CoverageSuitesBundle bundle, CoverageViewManager.StateBean stateBean) {
-    myProject = project;
-    myData = bundle;
-    myStateBean = stateBean;
-    myCoverageViewExtension = myData.getCoverageEngine().createCoverageViewExtension(project, bundle, stateBean);
-    myRootNode = (CoverageListRootNode)myCoverageViewExtension.createRootNode();
-  }
-
-  @Override
-  public Object getRootElement() {
-    return myRootNode;
-  }
-
-  @Override
-  public Object[] getChildElements(final Object element) {
-    return getChildren(element, myData, myStateBean);
-  }
-
-  static Object[] getChildren(Object element,
-                              final CoverageSuitesBundle bundle,
-                              CoverageViewManager.StateBean stateBean) {
-    if (element instanceof CoverageListRootNode && stateBean.myFlattenPackages) {
-      final Collection<? extends AbstractTreeNode> children = ((CoverageListRootNode)element).getChildren();
-      return children.toArray(new Object[children.size()]);
+    public CoverageViewTreeStructure(Project project, CoverageSuitesBundle bundle, CoverageViewManager.StateBean stateBean) {
+        myProject = project;
+        myData = bundle;
+        myStateBean = stateBean;
+        myCoverageViewExtension = myData.getCoverageEngine().createCoverageViewExtension(project, bundle, stateBean);
+        myRootNode = (CoverageListRootNode) myCoverageViewExtension.createRootNode();
     }
-    if (element instanceof CoverageListNode) {
-      List<AbstractTreeNode> children = bundle.getCoverageEngine().createCoverageViewExtension(((CoverageListNode)element).getProject(),
-                                                                                               bundle, stateBean)
-        .getChildrenNodes((CoverageListNode)element);
-      return children.toArray(new CoverageListNode[children.size()]);
+
+    @Nonnull
+    @Override
+    public Object getRootElement() {
+        return myRootNode;
     }
-    return null;
-  }
 
- 
-  @Override
-  public Object getParentElement(final Object element) {
-    final PsiElement psiElement = (PsiElement)element;
-    return myCoverageViewExtension.getParentElement(psiElement);
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public Object[] getChildElements(@Nonnull Object element) {
+        return getChildren(element, myData, myStateBean);
+    }
 
-  @Override
-  @Nonnull
-  public CoverageViewDescriptor createDescriptor(final Object element, final NodeDescriptor parentDescriptor) {
-    return new CoverageViewDescriptor(myProject, parentDescriptor, element);
-  }
+    @RequiredReadAction
+    static Object[] getChildren(
+        Object element,
+        CoverageSuitesBundle bundle,
+        CoverageViewManager.StateBean stateBean
+    ) {
+        if (element instanceof CoverageListRootNode coverageListRootNode && stateBean.myFlattenPackages) {
+            Collection<? extends AbstractTreeNode> children = coverageListRootNode.getChildren();
+            return children.toArray(new Object[children.size()]);
+        }
+        if (element instanceof CoverageListNode coverageListNode) {
+            List<AbstractTreeNode> children =
+                bundle.getCoverageEngine().createCoverageViewExtension(coverageListNode.getProject(), bundle, stateBean)
+                    .getChildrenNodes(coverageListNode);
+            return children.toArray(new CoverageListNode[children.size()]);
+        }
+        return null;
+    }
 
-  @Override
-  public void commit() {
-  }
+    @Override
+    public Object getParentElement(@Nonnull Object element) {
+        PsiElement psiElement = (PsiElement) element;
+        return myCoverageViewExtension.getParentElement(psiElement);
+    }
 
-  @Override
-  public boolean hasSomethingToCommit() {
-    return false;
-  }
-  
-  public boolean supportFlattenPackages() {
-    return myCoverageViewExtension.supportFlattenPackages();
-  }
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public CoverageViewDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+        return new CoverageViewDescriptor(myProject, parentDescriptor, element);
+    }
+
+    @Override
+    public void commit() {
+    }
+
+    @Override
+    public boolean hasSomethingToCommit() {
+        return false;
+    }
+
+    public boolean supportFlattenPackages() {
+        return myCoverageViewExtension.supportFlattenPackages();
+    }
 }
 

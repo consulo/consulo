@@ -13,14 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 06-May-2009
- */
 package consulo.execution.coverage;
 
+/**
+ * @author anna
+ * @since 2009-05-06
+ */
 public interface CoverageSuiteListener {
-  void beforeSuiteChosen();
-  void afterSuiteChosen();
+    void beforeSuiteChosen();
+
+    void afterSuiteChosen();
 }

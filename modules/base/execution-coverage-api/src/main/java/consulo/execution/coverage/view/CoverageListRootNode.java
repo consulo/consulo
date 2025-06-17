@@ -8,39 +8,49 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 1/5/12
+ * @author anna
+ * @since 2012-01-05
  */
 public class CoverageListRootNode extends CoverageListNode {
-  private List<AbstractTreeNode> myTopLevelPackages;
-  private final Project myProject;
+    private List<AbstractTreeNode> myTopLevelPackages;
+    private final Project myProject;
 
-  public CoverageListRootNode(Project project, PsiNamedElement classOrPackage, CoverageSuitesBundle bundle, CoverageViewManager.StateBean stateBean) {
-    super(project, classOrPackage, bundle, stateBean);
-    myProject = classOrPackage.getProject();
-  }
-
-  private List<AbstractTreeNode> getTopLevelPackages(CoverageSuitesBundle bundle, CoverageViewManager.StateBean stateBean, Project project) {
-    if (myTopLevelPackages == null) {
-      myTopLevelPackages = bundle.getCoverageEngine().createCoverageViewExtension(project, bundle, stateBean).createTopLevelNodes();
-      for (AbstractTreeNode abstractTreeNode : myTopLevelPackages) {
-        abstractTreeNode.setParent(this);
-      }
+    public CoverageListRootNode(
+        Project project,
+        PsiNamedElement classOrPackage,
+        CoverageSuitesBundle bundle,
+        CoverageViewManager.StateBean stateBean
+    ) {
+        super(project, classOrPackage, bundle, stateBean);
+        myProject = classOrPackage.getProject();
     }
-    return myTopLevelPackages;
-  }
 
-  @RequiredReadAction
-  @Nonnull
-  @Override
-  public Collection<? extends AbstractTreeNode> getChildren() {
-    if (myStateBean.myFlattenPackages) {
-      return getTopLevelPackages(myBundle, myStateBean, myProject);
+    private List<AbstractTreeNode> getTopLevelPackages(
+        CoverageSuitesBundle bundle,
+        CoverageViewManager.StateBean stateBean,
+        Project project
+    ) {
+        if (myTopLevelPackages == null) {
+            myTopLevelPackages = bundle.getCoverageEngine().createCoverageViewExtension(project, bundle, stateBean).createTopLevelNodes();
+            for (AbstractTreeNode abstractTreeNode : myTopLevelPackages) {
+                abstractTreeNode.setParent(this);
+            }
+        }
+        return myTopLevelPackages;
     }
-    return super.getChildren();
-  }
+
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public Collection<? extends AbstractTreeNode> getChildren() {
+        if (myStateBean.myFlattenPackages) {
+            return getTopLevelPackages(myBundle, myStateBean, myProject);
+        }
+        return super.getChildren();
+    }
 }

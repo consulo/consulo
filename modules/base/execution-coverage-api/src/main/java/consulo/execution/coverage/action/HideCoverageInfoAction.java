@@ -1,8 +1,9 @@
 package consulo.execution.coverage.action;
 
-import consulo.application.AllIcons;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -10,31 +11,35 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 /**
- * User: anna
- * Date: 2/14/12
+ * @author anna
+ * @since 2012-02-14
  */
 public class HideCoverageInfoAction extends AnAction {
-  public HideCoverageInfoAction() {
-    super("&Hide Coverage Data", "Hide coverage data", AllIcons.Actions.Cancel);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
-    CoverageDataManager.getInstance(e.getData(Project.KEY)).chooseSuitesBundle(null);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    presentation.setEnabled(false);
-    presentation.setVisible(e.isFromActionToolbar());
-    final Project project = e.getData(Project.KEY);
-    if (project != null) {
-      final CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
-      presentation.setEnabled(suitesBundle != null);
-      presentation.setVisible(suitesBundle != null);
+    public HideCoverageInfoAction() {
+        super(
+            LocalizeValue.localizeTODO("&Hide Coverage Data"),
+            LocalizeValue.localizeTODO("Hide coverage data"),
+            PlatformIconGroup.actionsCancel()
+        );
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        CoverageDataManager.getInstance(e.getRequiredData(Project.KEY)).chooseSuitesBundle(null);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        presentation.setEnabled(false);
+        presentation.setVisible(e.isFromActionToolbar());
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
+            presentation.setEnabled(suitesBundle != null);
+            presentation.setVisible(suitesBundle != null);
+        }
+    }
 }
