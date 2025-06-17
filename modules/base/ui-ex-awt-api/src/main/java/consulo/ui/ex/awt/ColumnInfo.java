@@ -22,120 +22,125 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.util.Comparator;
 
-public abstract class ColumnInfo <Item, Aspect> {
+public abstract class ColumnInfo<Item, Aspect> {
+    public static class StringColumn extends ColumnInfo<String, String> {
+        public StringColumn(final String name) {
+            super(name);
+        }
 
-  public static class StringColumn extends ColumnInfo<String, String> {
-      public StringColumn(final String name) {
-          super(name);
-      }
+        @Override
+        public String valueOf(final String item) {
+            return item;
+        }
+    }
 
-      @Override
-      public String valueOf(final String item) {
-          return item;
-      }
-  }
+    private String myName;
+    public static final ColumnInfo[] EMPTY_ARRAY = new ColumnInfo[0];
 
-  private String myName;
-  public static final ColumnInfo[] EMPTY_ARRAY = new ColumnInfo[0];
+    public ColumnInfo(String name) {
+        myName = name;
+    }
 
-  public ColumnInfo(String name) {
-    myName = name;
-  }
+    @Nullable
+    public Icon getIcon() {
+        return null;
+    }
 
-  @Nullable
-  public Icon getIcon() {
-    return null;
-  }
+    public String toString() {
+        return getName();
+    }
 
-  public String toString() {
-    return getName();
-  }
+    @Nullable
+    public abstract Aspect valueOf(Item item);
 
-  @Nullable
-  public abstract Aspect valueOf(Item item);
+    public final boolean isSortable() {
+        return getComparator() != null;
+    }
 
-  public final boolean isSortable() {
-    return getComparator() != null;
-  }
+    @Nullable
+    public Comparator<Item> getComparator() {
+        return null;
+    }
 
-  @Nullable
-  public Comparator<Item> getComparator(){
-    return null;
-  }
+    public String getName() {
+        return myName;
+    }
 
-  public String getName() {
-    return myName;
-  }
+    public Class getColumnClass() {
+        return String.class;
+    }
 
-  public Class getColumnClass() {
-    return String.class;
-  }
+    public boolean isCellEditable(Item item) {
+        return false;
+    }
 
-  public boolean isCellEditable(Item item) {
-    return false;
-  }
+    public void setValue(Item item, Aspect value) {
 
-  public void setValue(Item item, Aspect value) {
+    }
 
-  }
+    @Nullable
+    public TableCellRenderer getRenderer(Item item) {
+        return null;
+    }
 
-  @Nullable
-  public TableCellRenderer getRenderer(Item item) {
-    return null;
-  }
+    public TableCellRenderer getCustomizedRenderer(final Item o, TableCellRenderer renderer) {
+        return renderer;
+    }
 
-  public TableCellRenderer getCustomizedRenderer(final Item o, TableCellRenderer renderer) {
-    return renderer;
-  }
+    @Nullable
+    public TableCellEditor getEditor(Item o) {
+        return null;
+    }
 
-  @Nullable
-  public TableCellEditor getEditor(Item o) {
-    return null;
-  }
+    @Nullable
+    public String getMaxStringValue() {
+        return null;
+    }
 
-  @Nullable
-  public String getMaxStringValue() {
-    return null;
-  }
+    @Nullable
+    public String getPreferredStringValue() {
+        return null;
+    }
 
-  @Nullable
-  public String getPreferredStringValue() {
-    return null;
-  }
+    public int getAdditionalWidth() {
+        return 0;
+    }
 
-  public int getAdditionalWidth() {
-    return 0;
-  }
+    public int getWidth(JTable table) {
+        return -1;
+    }
 
-  public int getWidth(JTable table) {
-    return -1;
-  }
+    public void setName(String s) {
+        myName = s;
+    }
 
-  public void setName(String s) {
-    myName = s;
-  }
+    @Nullable
+    public String getTooltipText() {
+        return null;
+    }
 
-  @Nullable
-  public String getTooltipText() {
-    return null;
-  }
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-  public boolean equals(final Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+        final ColumnInfo that = (ColumnInfo) o;
 
-    final ColumnInfo that = (ColumnInfo)o;
+        if (myName != null ? !myName.equals(that.myName) : that.myName != null) {
+            return false;
+        }
 
-    if (myName != null ? !myName.equals(that.myName) : that.myName != null) return false;
+        return true;
+    }
 
-    return true;
-  }
+    public int hashCode() {
+        return myName != null ? myName.hashCode() : 0;
+    }
 
-  public int hashCode() {
-    return myName != null ? myName.hashCode() : 0;
-  }
-
-  public boolean hasError() {
-    return false;
-  }
+    public boolean hasError() {
+        return false;
+    }
 }
