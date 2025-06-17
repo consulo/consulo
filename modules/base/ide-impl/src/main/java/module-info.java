@@ -694,7 +694,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.xml.util;
   exports consulo.ide.impl.language;
   exports consulo.ide.impl.language.codeStyle;
-  exports consulo.ide.impl.language.codeStyle.arrangement;
   exports consulo.ide.impl.language.editor;
   exports consulo.ide.impl.language.editor.refactoring;
   exports consulo.ide.impl.language.psi;
