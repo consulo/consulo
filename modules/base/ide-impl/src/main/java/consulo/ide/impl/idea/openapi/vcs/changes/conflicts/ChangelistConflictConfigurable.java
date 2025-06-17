@@ -21,11 +21,11 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.ide.impl.idea.openapi.options.binding.BindControl;
 import consulo.ide.impl.idea.openapi.options.binding.BindableConfigurable;
 import consulo.ide.impl.idea.openapi.options.binding.ControlBinder;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
 
@@ -78,7 +78,7 @@ public class ChangelistConflictConfigurable extends BindableConfigurable impleme
       }
     });
 
-    myIgnoredFiles.getEmptyText().setText(VcsBundle.message("no.ignored.files"));
+    myIgnoredFiles.getEmptyText().setText(VcsLocalize.noIgnoredFiles());
   }
 
   public JComponent createComponent() {

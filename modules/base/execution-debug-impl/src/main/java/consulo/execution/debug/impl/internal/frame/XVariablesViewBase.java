@@ -75,7 +75,7 @@ public abstract class XVariablesViewBase extends XDebugView {
       this instanceof XWatchesView ? XDebuggerActions.WATCHES_TREE_POPUP_GROUP : XDebuggerActions.VARIABLES_TREE_POPUP_GROUP,
       markers
     );
-    getTree().getEmptyText().setText(XDebuggerLocalize.debuggerVariablesNotAvailable().get());
+    getTree().getEmptyText().setText(XDebuggerLocalize.debuggerVariablesNotAvailable());
     DnDManager.getInstance().registerSource(myTreePanel, getTree());
   }
 

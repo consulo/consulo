@@ -66,7 +66,7 @@ class BeforeRunStepsPanel {
         myModel = new CollectionListModel<>();
         myPanel = new JPanel(new BorderLayout());
         myList = new JBList<>(myModel);
-        myList.getEmptyText().setText(ExecutionLocalize.beforeLaunchPanelEmpty().get());
+        myList.getEmptyText().setText(ExecutionLocalize.beforeLaunchPanelEmpty());
         myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         myList.setCellRenderer(new MyListCellRenderer());
 

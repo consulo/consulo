@@ -32,7 +32,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 05-Apr-22
+ * @since 2022-04-05
  */
 @Singleton
 @ServiceImpl
@@ -48,12 +48,10 @@ public class RunConfigurationEditorImpl implements RunConfigurationEditor {
     @Override
     public void editAll() {
         if (EarlyAccessProgramManager.is(RunConfigurationFileEditorEarlyAccessDescriptor.class)) {
-            UIAccess.current().give(() -> {
-                myProject
-                    .getApplication()
-                    .getInstance(ConfigurationFileEditorManager.class)
-                    .open(myProject, RunConfigurationEditorProvider.class, Map.of());
-            });
+            UIAccess.current().give(
+                () -> myProject.getApplication().getInstance(ConfigurationFileEditorManager.class)
+                    .open(myProject, RunConfigurationEditorProvider.class, Map.of())
+            );
         }
         else {
             new EditConfigurationsDialog(myProject).showAsync();
@@ -61,7 +59,12 @@ public class RunConfigurationEditorImpl implements RunConfigurationEditor {
     }
 
     @Override
-    public boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title, @Nullable Executor executor) {
+    public boolean editConfiguration(
+        Project project,
+        RunnerAndConfigurationSettings configuration,
+        String title,
+        @Nullable Executor executor
+    ) {
         return RunDialog.editConfiguration(project, configuration, title, executor);
     }
 }

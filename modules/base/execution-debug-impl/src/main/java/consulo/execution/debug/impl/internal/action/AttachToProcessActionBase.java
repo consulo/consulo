@@ -685,7 +685,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
     @Override
     public void setEmptyText(@Nonnull StatusText emptyText) {
-      emptyText.setText(XDebuggerLocalize.xdebuggerAttachPopupEmptytext().get());
+      emptyText.setText(XDebuggerLocalize.xdebuggerAttachPopupEmptytext());
     }
 
     @Override

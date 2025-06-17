@@ -76,7 +76,7 @@ public final class CopyConfigurationAction extends AnAction {
         factory.onConfigurationCopied(configuration);
 
         boolean edited = RunConfigurationEditor.getInstance(project)
-            .editConfiguration(project, copiedSettings, ExecutionLocalize.runDashboardEditConfigurationDialogTitle().get());
+            .editConfiguration(project, copiedSettings, ExecutionLocalize.runDashboardEditConfigurationDialogTitle());
 
         if (edited) {
             runManager.addConfiguration(copiedSettings);

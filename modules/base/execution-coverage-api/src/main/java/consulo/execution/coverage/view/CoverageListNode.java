@@ -11,7 +11,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
@@ -102,7 +101,7 @@ public class CoverageListNode extends AbstractTreeNode<PsiNamedElement> {
     @RequiredUIAccess
     public void navigate(boolean requestFocus) {
         if (canNavigate()) {
-            PsiNamedElement value = (PsiNamedElement) getValue();
+            PsiNamedElement value = getValue();
             if (requestFocus) {
                 LanguageEditorNavigationUtil.activateFileWithPsiElement(value, true);
             }

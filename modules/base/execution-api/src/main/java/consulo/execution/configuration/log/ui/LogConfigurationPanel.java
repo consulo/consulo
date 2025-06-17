@@ -65,7 +65,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
   public LogConfigurationPanel() {
     myModel = new ListTableModel<>(IS_SHOW, FILE, IS_SKIP_CONTENT);
     myFilesTable = new TableView<>(myModel);
-    myFilesTable.getEmptyText().setText(ExecutionLocalize.logMonitorNoFiles().get());
+    myFilesTable.getEmptyText().setText(ExecutionLocalize.logMonitorNoFiles());
 
     final JTableHeader tableHeader = myFilesTable.getTableHeader();
     final FontMetrics fontMetrics = tableHeader.getFontMetrics(tableHeader.getFont());

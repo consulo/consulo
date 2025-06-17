@@ -53,8 +53,12 @@ public final class DeploymentConfigurationManagerImpl extends DeploymentConfigur
             runConfiguration.setServerName(remoteServer.getName());
         }
 
-        boolean result = RunConfigurationEditor.getInstance(myProject).editConfiguration(myProject, settings, RemoteServerLocalize.dialogTitleCreateDeploymentConfiguration().get(),
-            DefaultRunExecutor.getRunExecutorInstance());
+        boolean result = RunConfigurationEditor.getInstance(myProject).editConfiguration(
+            myProject,
+            settings,
+            RemoteServerLocalize.dialogTitleCreateDeploymentConfiguration(),
+            DefaultRunExecutor.getRunExecutorInstance()
+        );
 
         if (result) {
             runManager.addConfiguration(settings);

@@ -22,6 +22,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import consulo.versionControlSystem.change.commited.CommittedChangesListener;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
@@ -31,7 +32,6 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.RepositoryLocation;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
@@ -58,7 +58,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
     myListConsumer = lists -> UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
       public void run() {
-        myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
+        myBrowser.getEmptyText().setText(VcsLocalize.incomingChangesEmptyMessage());
         myBrowser.setItems(lists, CommittedChangesBrowserUseCase.INCOMING);
       }
     });
@@ -66,7 +66,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
 
   public JComponent initContent() {
     myBrowser = new CommittedChangesTreeBrowser(myProject, Collections.<CommittedChangeList>emptyList());
-    myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.not.loaded.message"));
+    myBrowser.getEmptyText().setText(VcsLocalize.incomingChangesNotLoadedMessage());
     ActionGroup group = (ActionGroup) ActionManager.getInstance().getAction("IncomingChangesToolbar");
     final ActionToolbar toolbar = myBrowser.createGroupFilterToolbar(myProject, group, null, Collections.<AnAction>emptyList());
     myBrowser.setToolBar(toolbar.getComponent());
@@ -103,12 +103,12 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
       if (Boolean.TRUE.equals(notEmpty)) {
         final List<CommittedChangeList> list = cache.getCachedIncomingChanges();
         if (list != null) {
-          myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
+          myBrowser.getEmptyText().setText(VcsLocalize.incomingChangesEmptyMessage());
           myBrowser.setItems(list, CommittedChangesBrowserUseCase.INCOMING);
         } else if (refresh) {
           cache.loadIncomingChangesAsync(myListConsumer, inBackground);
         } else {
-          myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
+          myBrowser.getEmptyText().setText(VcsLocalize.incomingChangesEmptyMessage());
           myBrowser.setItems(Collections.<CommittedChangeList>emptyList(), CommittedChangesBrowserUseCase.INCOMING);
         }
       }
@@ -131,7 +131,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
 
     @Override
     public void changesCleared() {
-      myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
+      myBrowser.getEmptyText().setText(VcsLocalize.incomingChangesEmptyMessage());
       myBrowser.setItems(Collections.<CommittedChangeList>emptyList(), CommittedChangesBrowserUseCase.INCOMING);
     }
 
