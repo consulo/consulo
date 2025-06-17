@@ -1,4 +1,4 @@
-package consulo.ide.impl.task;
+package consulo.task.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.versionControlSystem.change.ChangeListDecorator;

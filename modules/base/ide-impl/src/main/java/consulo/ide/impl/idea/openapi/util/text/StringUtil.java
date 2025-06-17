@@ -914,7 +914,7 @@ public class StringUtil extends StringUtilRt {
 
   @Contract(pure = true)
   public static int stringHashCode(@Nonnull CharSequence chars) {
-    if (chars instanceof String || chars instanceof CharSequenceWithStringHash) {
+    if (chars instanceof String || chars instanceof consulo.util.lang.CharSequenceWithStringHash) {
       // we know for sure these classes have conformant (and maybe faster) hashCode()
       return chars.hashCode();
     }

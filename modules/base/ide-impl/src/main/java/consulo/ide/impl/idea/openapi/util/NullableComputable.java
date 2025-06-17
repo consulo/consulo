@@ -23,6 +23,7 @@ import consulo.application.util.function.Computable;
 
 import jakarta.annotation.Nullable;
 
+@Deprecated
 public interface NullableComputable<T> extends Computable<T> {
   @Nullable
   T compute();
