@@ -492,8 +492,8 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     @Override
     public void updateEmptyText(Supplier<String> textSupplier) {
-        if (getSearchTextComponent() instanceof ComponentWithEmptyText) {
-            ((ComponentWithEmptyText)getSearchTextComponent()).getEmptyText().setText(textSupplier.get());
+        if (getSearchTextComponent() instanceof ComponentWithEmptyText componentWithEmptyText) {
+            componentWithEmptyText.getEmptyText().setText(textSupplier.get());
         }
     }
 

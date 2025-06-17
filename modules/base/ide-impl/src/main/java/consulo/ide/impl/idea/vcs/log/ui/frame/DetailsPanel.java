@@ -24,6 +24,7 @@ import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.components.ScrollablePanel;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryUtil;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
@@ -165,7 +166,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
   }
 
   private void rebuildCommitPanels(int[] selection) {
-    myEmptyText.setText("");
+    myEmptyText.setText(LocalizeValue.empty());
 
     int selectionLength = selection.length;
 

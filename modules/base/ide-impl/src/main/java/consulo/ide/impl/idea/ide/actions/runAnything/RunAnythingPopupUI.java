@@ -672,7 +672,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             finally {
                 if (!isCanceled()) {
                     Application.get().invokeLater(
-                        () -> myResultsList.getEmptyText().setText(IdeLocalize.runAnythingCommandEmptyListTitle().get())
+                        () -> myResultsList.getEmptyText().setText(IdeLocalize.runAnythingCommandEmptyListTitle())
                     );
                 }
                 if (!myDone.isProcessed()) {

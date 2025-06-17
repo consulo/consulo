@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.frame;
 
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.awt.JBList;
 import consulo.execution.debug.XDebuggerBundle;
@@ -43,7 +44,7 @@ public abstract class DebuggerFramesList extends JBList implements OccurenceNavi
       }
     });
 
-    getEmptyText().setText(XDebuggerBundle.message("debugger.frames.not.available"));
+    getEmptyText().setText(XDebuggerLocalize.debuggerFramesNotAvailable());
   }
 
   @Override

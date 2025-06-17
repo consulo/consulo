@@ -180,6 +180,8 @@ down.the.stack.trace:
     text: Down the stack trace
 edit.configuration.action:
     text: '&Edit Configurations'
+edit.run.configuration.for.item.dialog.title:
+    text: 'Edit Run Configuration: ''''{0}'''''
 edit.run.configuration.run.configuration.name.label:
     text: '&Name:'
 empty.run.configuration.panel.text.label1:

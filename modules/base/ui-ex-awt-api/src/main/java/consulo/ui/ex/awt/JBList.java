@@ -4,6 +4,7 @@ package consulo.ui.ex.awt;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.ComponentWithExpandableItems;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
@@ -274,7 +275,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
   }
 
   public void disableEmptyText() {
-    getEmptyText().setText("");
+    getEmptyText().setText(LocalizeValue.empty());
   }
 
   public static class StripedListCellRenderer extends DefaultListCellRenderer {

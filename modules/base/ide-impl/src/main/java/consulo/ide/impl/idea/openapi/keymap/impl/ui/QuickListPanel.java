@@ -30,6 +30,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
@@ -52,7 +53,7 @@ public class QuickListPanel {
 
     myActionsList = new JBList(new DefaultListModel());
     myActionsList.setCellRenderer(new MyListCellRenderer());
-    myActionsList.getEmptyText().setText(KeyMapBundle.message("no.actions"));
+    myActionsList.getEmptyText().setText(KeyMapLocalize.noActions());
     myActionsList.setEnabled(true);
 
     new DoubleClickListener() {

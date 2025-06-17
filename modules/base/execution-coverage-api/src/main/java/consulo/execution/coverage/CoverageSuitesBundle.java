@@ -61,7 +61,6 @@ public class CoverageSuitesBundle {
         return true;
     }
 
-
     public long getLastCoverageTimeStamp() {
         long max = 0;
         for (CoverageSuite suite : mySuites) {

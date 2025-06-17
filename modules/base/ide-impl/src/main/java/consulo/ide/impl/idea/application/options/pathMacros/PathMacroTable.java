@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.application.options.pathMacros;
 
 import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.macro.PathMacros;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
@@ -73,7 +74,7 @@ public class PathMacroTable extends JBTable {
     setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     //obtainData();
 
-    getEmptyText().setText(ApplicationBundle.message("text.no.path.variables"));
+    getEmptyText().setText(ApplicationLocalize.textNoPathVariables());
   }
 
   public String getMacroValueAt(int row) {

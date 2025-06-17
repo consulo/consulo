@@ -1,17 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ui.speedSearch;
 
 import consulo.ui.ex.awt.util.PopupUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -28,6 +24,9 @@ import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.util.function.Function;
 
+/**
+ * @author max
+ */
 public class ListWithFilter<T> extends JPanel implements DataProvider {
   private final JList<T> myList;
   private final SearchTextField mySearchField = new SearchTextField(false);
@@ -57,8 +56,8 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
   private ListWithFilter(@Nonnull JList<T> list, @Nonnull JScrollPane scrollPane, @Nullable Function<? super T, String> namer, boolean highlightAllOccurrences) {
     super(new BorderLayout());
 
-    if (list instanceof ComponentWithEmptyText) {
-      ((ComponentWithEmptyText)list).getEmptyText().setText(UIBundle.message("message.noMatchesFound"));
+    if (list instanceof ComponentWithEmptyText componentWithEmptyText) {
+      componentWithEmptyText.getEmptyText().setText(UILocalize.messageNomatchesfound());
     }
 
     myList = list;

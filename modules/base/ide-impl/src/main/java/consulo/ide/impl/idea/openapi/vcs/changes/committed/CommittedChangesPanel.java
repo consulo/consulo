@@ -231,7 +231,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     cache.hasCachesForAnyRoot(notEmpty -> {
       if (!notEmpty) {
         if (cacheOnly) {
-          myBrowser.getEmptyText().setText(VcsLocalize.committedChangesNotLoadedMessage().get());
+          myBrowser.getEmptyText().setText(VcsLocalize.committedChangesNotLoadedMessage());
           return;
         }
         if (!CacheSettingsDialog.showSettingsDialog(myProject)) return;
@@ -279,7 +279,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
       return;
     }
     final LocalizeValue emptyText = reset ? VcsLocalize.committedChangesNotLoadedMessage() : VcsLocalize.committedChangesEmptyMessage();
-    myBrowser.getEmptyText().setText(emptyText.get());
+    myBrowser.getEmptyText().setText(emptyText);
     myBrowser.setItems(committedChangeLists, CommittedChangesBrowserUseCase.COMMITTED);
   }
 

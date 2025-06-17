@@ -11,6 +11,8 @@ import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
+import consulo.execution.coverage.localize.CoverageLocalize;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
@@ -75,9 +77,13 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         emptyText.setText("No coverage results.");
         RunConfigurationBase configuration = suitesBundle.getRunConfiguration();
         if (configuration != null) {
-            emptyText.appendText(" Click ");
+            emptyText.appendText(LocalizeValue.join(
+                LocalizeValue.space(),
+                CoverageLocalize.coverageViewEditRunConfiguration0(),
+                LocalizeValue.space()
+            ));
             emptyText.appendText(
-                "Edit",
+                CoverageLocalize.coverageViewEditRunConfiguration1(),
                 SimpleTextAttributes.LINK_ATTRIBUTES,
                 e -> {
                     String configurationName = configuration.getName();
@@ -85,18 +91,18 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
                         RunManager.getInstance(project).findConfigurationByName(configurationName);
                     if (configurationSettings != null) {
                         RunConfigurationEditor.getInstance(project)
-                            .editConfiguration(project, configurationSettings, "Edit Run Configuration");
+                            .editConfiguration(project, configurationSettings, ExecutionLocalize.editRunConfigurationForItemDialogTitle(configurationName));
                     }
                     else {
                         Messages.showErrorDialog(
                             project,
-                            "Configuration \'" + configurationName + "\' was not found",
+                            CoverageLocalize.coverageViewConfigurationWasNotFound(configurationName).get(),
                             CommonLocalize.titleError().get()
                         );
                     }
                 }
             );
-            emptyText.appendText(" to fix configuration settings.");
+            emptyText.appendText(LocalizeValue.join(LocalizeValue.space(), CoverageLocalize.coverageViewEditRunConfiguration2()));
         }
         myTable.getColumnModel().getColumn(0).setCellRenderer(new NodeDescriptorTableCellRenderer());
         myTable.getTableHeader().setReorderingAllowed(false);
