@@ -13,6 +13,7 @@ import consulo.execution.debug.memory.InstancesTracker;
 import consulo.execution.debug.memory.TrackerForNewInstancesBase;
 import consulo.execution.debug.memory.TrackingType;
 import consulo.execution.debug.memory.TypeInfo;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.JBColor;
@@ -244,8 +245,8 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
                 setBackground(mouseOnTable ? CLICKABLE_COLOR : JBColor.background());
                 SimpleTextAttributes linkAttributes = mouseOnTable ? UNDERLINE_LINK_ATTRIBUTES : LINK_ATTRIBUTES;
                 getEmptyText().clear()
-                    .appendText(XDebuggerBundle.message("memory.view.no.classes.loaded")).appendText(" ")
-                    .appendText(XDebuggerBundle.message("memory.view.load.classes"), linkAttributes).appendText(" ");
+                    .appendText(XDebuggerBundle.message("memory.view.no.classes.loaded")).appendText(LocalizeValue.space())
+                    .appendText(XDebuggerBundle.message("memory.view.load.classes"), linkAttributes).appendText(LocalizeValue.space());
             }
         };
 

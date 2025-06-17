@@ -22,6 +22,7 @@ import consulo.configurable.*;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.ide.todo.TodoFilter;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.language.editor.impl.internal.highlight.TodoAttributesUtil;
@@ -146,7 +147,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
       protected JComponent createMainComponent() {
         // JTable with TodoPaterns
         myPatternsTable = new JBTable(myPatternsModel);
-        myPatternsTable.getEmptyText().setText(IdeBundle.message("text.todo.no.patterns"));
+        myPatternsTable.getEmptyText().setText(IdeLocalize.textTodoNoPatterns());
         myPatternsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Column "Icon"
@@ -254,7 +255,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
       @Override
       protected JComponent createMainComponent() {
         myFiltersTable = new Table(myFiltersModel);
-        myFiltersTable.getEmptyText().setText(IdeBundle.message("text.todo.no.filters"));
+        myFiltersTable.getEmptyText().setText(IdeLocalize.textTodoNoFilters());
         myFiltersTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Column "Name"

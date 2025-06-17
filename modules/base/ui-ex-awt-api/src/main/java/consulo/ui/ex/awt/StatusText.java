@@ -2,6 +2,7 @@
 
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.UIBundle;
@@ -18,6 +19,9 @@ import java.util.List;
 
 public abstract class StatusText {
     public static final SimpleTextAttributes DEFAULT_ATTRIBUTES = SimpleTextAttributes.GRAYED_ATTRIBUTES;
+    public static final LocalizeValue DEFAULT_EMPTY_LOC_TEXT = UILocalize.messageNothingtoshow();
+    @Deprecated
+    @DeprecationInfo("Use #DEFAULT_EMPTY_LOC_TEXT")
     public static final String DEFAULT_EMPTY_TEXT = UIBundle.message("message.nothingToShow");
 
     public static final LocalizeValue DEFAULT_EMPTY_TEXT_VALUE = UILocalize.messageNothingtoshow();
@@ -74,7 +78,7 @@ public abstract class StatusText {
             private Cursor myOriginalCursor;
 
             @Override
-            public void mouseMoved(final MouseEvent e) {
+            public void mouseMoved(MouseEvent e) {
                 if (isStatusVisible()) {
                     if (findActionListenerAt(e.getPoint()) != null) {
                         if (myOriginalCursor == null) {
@@ -92,7 +96,7 @@ public abstract class StatusText {
 
         myComponent.setOpaque(false);
         myComponent.setFont(UIUtil.getLabelFont());
-        setText(DEFAULT_EMPTY_TEXT, DEFAULT_ATTRIBUTES);
+        setText(DEFAULT_EMPTY_LOC_TEXT, DEFAULT_ATTRIBUTES);
         myIsDefaultText = true;
 
         mySecondaryComponent.setOpaque(false);
@@ -187,10 +191,24 @@ public abstract class StatusText {
         return myText;
     }
 
+    public StatusText setText(@Nonnull LocalizeValue text) {
+        return setText(text, DEFAULT_ATTRIBUTES);
+    }
+
+    public StatusText setText(@Nonnull LocalizeValue text, SimpleTextAttributes attrs) {
+        return clear().appendText(text, attrs);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
     public StatusText setText(String text) {
         return setText(text, DEFAULT_ATTRIBUTES);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
     public StatusText setText(String text, SimpleTextAttributes attrs) {
         return clear().appendText(text, attrs);
     }
@@ -212,15 +230,15 @@ public abstract class StatusText {
         }
     }
 
-    public StatusText appendText(String text) {
+    public StatusText appendText(@Nonnull LocalizeValue text) {
         return appendText(text, DEFAULT_ATTRIBUTES);
     }
 
-    public StatusText appendText(String text, SimpleTextAttributes attrs) {
+    public StatusText appendText(@Nonnull LocalizeValue text, SimpleTextAttributes attrs) {
         return appendText(text, attrs, null);
     }
 
-    public StatusText appendText(String text, SimpleTextAttributes attrs, ActionListener listener) {
+    public StatusText appendText(@Nonnull LocalizeValue text, SimpleTextAttributes attrs, ActionListener listener) {
         if (myIsDefaultText) {
             clear();
             myIsDefaultText = false;
@@ -236,12 +254,32 @@ public abstract class StatusText {
         return this;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
+    public StatusText appendText(String text) {
+        return appendText(text, DEFAULT_ATTRIBUTES);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
+    public StatusText appendText(String text, SimpleTextAttributes attrs) {
+        return appendText(text, attrs, null);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public StatusText appendText(String text, SimpleTextAttributes attrs, ActionListener listener) {
+        return appendText(LocalizeValue.ofNullable(text), attrs, listener);
+    }
+
     public void setIsVerticalFlow(boolean isVerticalFlow) {
         myVerticalFlow = isVerticalFlow;
     }
 
     @Nonnull
-    public StatusText appendSecondaryText(@Nonnull String text, @Nonnull SimpleTextAttributes attrs, @Nullable ActionListener listener) {
+    public StatusText appendSecondaryText(@Nonnull LocalizeValue text, @Nonnull SimpleTextAttributes attrs, @Nullable ActionListener listener) {
         mySecondaryComponent.append(text, attrs);
         mySecondaryListeners.add(listener);
         if (listener != null) {
@@ -249,6 +287,13 @@ public abstract class StatusText {
         }
         repaintOwner();
         return this;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @Nonnull
+    public StatusText appendSecondaryText(@Nonnull String text, @Nonnull SimpleTextAttributes attrs, @Nullable ActionListener listener) {
+        return appendSecondaryText(LocalizeValue.of(text), attrs, listener);
     }
 
     public void paint(Component owner, Graphics g) {
@@ -308,12 +353,9 @@ public abstract class StatusText {
             return new Rectangle(bounds.x + (bounds.width - size.width) / 2, bounds.y, size.width, size.height);
         }
         else {
-            return component == myComponent ? new Rectangle(
-                bounds.x,
-                bounds.y,
-                size.width,
-                size.height
-            ) : new Rectangle(bounds.x + bounds.width - size.width, bounds.y, size.width, size.height);
+            return component == myComponent
+                ? new Rectangle(bounds.x, bounds.y, size.width, size.height)
+                : new Rectangle(bounds.x + bounds.width - size.width, bounds.y, size.width, size.height);
         }
     }
 

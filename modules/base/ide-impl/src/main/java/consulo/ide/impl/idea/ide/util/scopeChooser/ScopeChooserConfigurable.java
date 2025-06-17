@@ -261,7 +261,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     myTree.setShowsRootHandles(false);
     new TreeSpeedSearch(myTree, treePath -> ((MyNode)treePath.getLastPathComponent()).getDisplayName(), true);
 
-    myTree.getEmptyText().setText(IdeLocalize.scopesNoScoped().get());
+    myTree.getEmptyText().setText(IdeLocalize.scopesNoScoped());
   }
 
   @Override

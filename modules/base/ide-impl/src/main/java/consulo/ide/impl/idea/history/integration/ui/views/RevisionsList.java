@@ -61,7 +61,7 @@ public class RevisionsList {
 
     table.setDefaultRenderer(Object.class, new MyCellRenderer(table));
 
-    table.getEmptyText().setText(VcsLocalize.historyEmpty().get());
+    table.getEmptyText().setText(VcsLocalize.historyEmpty());
 
     addSelectionListener(l);
   }

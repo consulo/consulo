@@ -123,7 +123,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
     private JPanel createPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         myLinkTable = new JBTable();
-        myLinkTable.getEmptyText().setText(VcsLocalize.issueLinkNoPatterns().get());
+        myLinkTable.getEmptyText().setText(VcsLocalize.issueLinkNoPatterns());
         panel.add(
             new JLabel(
                 XmlStringUtil.wrapInHtml(

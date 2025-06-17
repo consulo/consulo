@@ -43,6 +43,7 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.inject.Inject;
@@ -209,7 +210,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       myPatternsList = new JBList<>(new DefaultListModel());
       myPatternsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       myPatternsList.setCellRenderer(new ExtensionRenderer());
-      myPatternsList.getEmptyText().setText(FileTypesBundle.message("filetype.settings.no.patterns"));
+      myPatternsList.getEmptyText().setText(FileTypeLocalize.filetypeSettingsNoPatterns());
 
       add(ToolbarDecorator.createDecorator(myPatternsList).setToolbarPosition(ActionToolbarPosition.TOP).
               setAddAction(button -> myController.addPattern()).setEditAction(button -> myController.editPattern()).setRemoveAction(button -> myController.removePattern()).disableUpDownActions()

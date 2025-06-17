@@ -1453,12 +1453,12 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         emptyText.clear();
         emptyText.setText(
             message != LocalizeValue.empty()
-                ? UILocalize.messageNothingtoshowWithProblem(message).get()
-                : UILocalize.messageNothingtoshow().get()
+                ? UILocalize.messageNothingtoshowWithProblem(message)
+                : UILocalize.messageNothingtoshow()
         );
         if (mySelectedScope == FindPopupScopeUIImpl.DIRECTORY && !myHelper.getModel().isWithSubdirectories()) {
             emptyText.appendSecondaryText(
-                FindLocalize.findRecursivelyHint().get(),
+                FindLocalize.findRecursivelyHint(),
                 SimpleTextAttributes.LINK_ATTRIBUTES,
                 e -> {
                     myHelper.getModel().setWithSubdirectories(true);
@@ -1472,7 +1472,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         myNeedReset.set(true);
         myLoadingHash = hash;
         myLoadingDecorator.startLoading(false);
-        myResultsPreviewTable.getEmptyText().setText(FindLocalize.emptyTextSearching().get());
+        myResultsPreviewTable.getEmptyText().setText(FindLocalize.emptyTextSearching());
     }
 
     private void onStop(int hash) {

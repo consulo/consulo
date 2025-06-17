@@ -56,7 +56,7 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
   public IgnoredSettingsPanel(Project project) {
     myList = new JBList();
     myList.setCellRenderer(new MyCellRenderer());
-    myList.getEmptyText().setText(VcsLocalize.noIgnoredFiles().get());
+    myList.getEmptyText().setText(VcsLocalize.noIgnoredFiles());
 
     myProject = project;
     myChangeListManager = ChangeListManagerImpl.getInstanceImpl(myProject);

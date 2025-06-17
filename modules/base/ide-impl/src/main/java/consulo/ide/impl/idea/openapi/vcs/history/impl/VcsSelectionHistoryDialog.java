@@ -165,7 +165,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         myList = new TableView<>(myListModel);
         new TableLinkMouseListener().installOn(myList);
 
-        myList.getEmptyText().setText(VcsLocalize.historyEmpty().get());
+        myList.getEmptyText().setText(VcsLocalize.historyEmpty());
 
         myDiffPanel = DiffManager.getInstance().createRequestPanel(myProject, this, getFrame());
         myUpdateQueue = new MergingUpdateQueue("VcsSelectionHistoryDialog", 300, true, myList, this);

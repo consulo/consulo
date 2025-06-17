@@ -17,6 +17,7 @@
 package consulo.ide.impl.compiler.setting;
 
 import consulo.compiler.CompilerBundle;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.setting.ExcludeEntryDescription;
 import consulo.compiler.setting.ExcludedEntriesConfiguration;
 import consulo.ui.ex.JBColor;
@@ -259,7 +260,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
       myExcludedTable = new JBTable(dataModel);
       myExcludedTable.setEnableAntialiasing(true);
 
-      myExcludedTable.getEmptyText().setText(CompilerBundle.message("no.excludes"));
+      myExcludedTable.getEmptyText().setText(CompilerLocalize.noExcludes());
       myExcludedTable.setPreferredScrollableViewportSize(new Dimension(300, myExcludedTable.getRowHeight() * 6));
       myExcludedTable.setDefaultRenderer(Boolean.class, new BooleanRenderer());
       myExcludedTable.setDefaultRenderer(Object.class, new MyObjectRenderer());
