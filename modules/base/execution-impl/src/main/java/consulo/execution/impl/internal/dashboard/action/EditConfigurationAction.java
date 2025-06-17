@@ -49,6 +49,6 @@ public final class EditConfigurationAction extends AnAction {
     if (node == null) return;
 
     RunConfigurationEditor.getInstance(project)
-      .editConfiguration(project, node.getConfigurationSettings(), ExecutionLocalize.runDashboardEditConfigurationDialogTitle().get());
+      .editConfiguration(project, node.getConfigurationSettings(), ExecutionLocalize.runDashboardEditConfigurationDialogTitle());
   }
 }

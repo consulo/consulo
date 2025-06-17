@@ -15,10 +15,12 @@
  */
 package consulo.execution;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
@@ -26,7 +28,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 05-Apr-22
+ * @since 2022-04-05
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface RunConfigurationEditor {
@@ -37,13 +39,46 @@ public interface RunConfigurationEditor {
     @RequiredUIAccess
     void editAll();
 
+    default boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, LocalizeValue title) {
+        return editConfiguration(project, configuration, title, null);
+    }
+
+    default boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull LocalizeValue title) {
+        return editConfiguration(
+            environment.getProject(),
+            environment.getRunnerAndConfigurationSettings(),
+            title,
+            environment.getExecutor()
+        );
+    }
+
+    default boolean editConfiguration(
+        Project project,
+        RunnerAndConfigurationSettings configuration,
+        @Nonnull LocalizeValue title,
+        @Nullable Executor executor
+    ) {
+        return editConfiguration(project, configuration, title.get(), executor);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     default boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title) {
         return editConfiguration(project, configuration, title, null);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     default boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull String title) {
-        return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
+        return editConfiguration(
+            environment.getProject(),
+            environment.getRunnerAndConfigurationSettings(),
+            title,
+            environment.getExecutor()
+        );
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title, @Nullable Executor executor);
 }

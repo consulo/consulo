@@ -306,7 +306,8 @@ public final class ServersTreeStructure {
             if (task != null) {
                 RunnerAndConfigurationSettings settings = task.getExecutionEnvironment().getRunnerAndConfigurationSettings();
                 if (settings != null) {
-                    RunConfigurationEditor.getInstance(myProject).editConfiguration(myProject, settings, RemoteServerLocalize.dialogTitleEditDeploymentConfiguration().get());
+                    RunConfigurationEditor.getInstance(myProject)
+                        .editConfiguration(myProject, settings, RemoteServerLocalize.dialogTitleEditDeploymentConfiguration());
                 }
             }
         }
