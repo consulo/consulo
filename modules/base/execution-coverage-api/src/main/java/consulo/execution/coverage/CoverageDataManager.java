@@ -58,8 +58,10 @@ public abstract class CoverageDataManager {
         CoverageFileProvider fileProvider,
         String[] filters,
         long lastCoverageTimeStamp,
-        @Nullable String suiteToMergeWith, final CoverageRunner coverageRunner,
-        final boolean collectLineInfo, final boolean tracingEnabled
+        @Nullable String suiteToMergeWith,
+        CoverageRunner coverageRunner,
+        boolean collectLineInfo,
+        boolean tracingEnabled
     );
 
     public abstract CoverageSuite addExternalCoverageSuite(
@@ -100,7 +102,7 @@ public abstract class CoverageDataManager {
     @Deprecated
     @Nullable
     public CoverageSuite getCurrentSuite() {
-        final CoverageSuitesBundle bundle = getCurrentSuitesBundle();
+        CoverageSuitesBundle bundle = getCurrentSuitesBundle();
         return bundle != null ? bundle.getSuites()[0] : null;
     }
 
@@ -138,9 +140,9 @@ public abstract class CoverageDataManager {
 
     public abstract boolean isSubCoverageActive();
 
-    public abstract void selectSubCoverage(@Nonnull final CoverageSuitesBundle suite, final List<String> methodNames);
+    public abstract void selectSubCoverage(@Nonnull CoverageSuitesBundle suite, List<String> methodNames);
 
-    public abstract void restoreMergedCoverage(@Nonnull final CoverageSuitesBundle suite);
+    public abstract void restoreMergedCoverage(@Nonnull CoverageSuitesBundle suite);
 
     public abstract void addSuiteListener(CoverageSuiteListener listener, Disposable parentDisposable);
 
@@ -148,14 +150,11 @@ public abstract class CoverageDataManager {
 
     /**
      * This method attach process listener to process handler. Listener will load coverage information after process termination
-     *
-     * @param handler
-     * @param configuration
-     * @param runnerSettings
      */
     public abstract void attachToProcess(
-        @Nonnull final ProcessHandler handler,
-        @Nonnull final RunConfigurationBase configuration, RunnerSettings runnerSettings
+        @Nonnull ProcessHandler handler,
+        @Nonnull RunConfigurationBase configuration,
+        RunnerSettings runnerSettings
     );
 
     public abstract void processGatheredCoverage(@Nonnull RunConfigurationBase configuration, RunnerSettings runnerSettings);

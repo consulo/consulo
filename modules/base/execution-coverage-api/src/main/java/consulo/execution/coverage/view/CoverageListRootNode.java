@@ -13,8 +13,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 1/5/12
+ * @author anna
+ * @since 2012-01-05
  */
 public class CoverageListRootNode extends CoverageListNode {
     private List<AbstractTreeNode> myTopLevelPackages;

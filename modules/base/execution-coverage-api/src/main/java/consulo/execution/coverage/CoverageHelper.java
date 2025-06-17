@@ -28,25 +28,25 @@ public class CoverageHelper {
     }
 
     public static void resetCoverageSuit(RunConfigurationBase configuration) {
-        final CoverageEnabledConfiguration covConfig = CoverageEnabledConfiguration.getOrCreate(configuration);
+        CoverageEnabledConfiguration covConfig = CoverageEnabledConfiguration.getOrCreate(configuration);
 
         // reset coverage suite
         covConfig.setCurrentCoverageSuite(null);
 
         // register new coverage suite
-        final CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(configuration.getProject());
+        CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(configuration.getProject());
 
         covConfig.setCurrentCoverageSuite(coverageDataManager.addCoverageSuite(covConfig));
     }
 
     public static void doReadExternal(RunConfigurationBase runConfiguration, Element element) throws InvalidDataException {
-        final CoverageEnabledConfiguration covConf = CoverageEnabledConfiguration.getOrCreate(runConfiguration);
+        CoverageEnabledConfiguration covConf = CoverageEnabledConfiguration.getOrCreate(runConfiguration);
 
         covConf.readExternal(element);
     }
 
     public static void doWriteExternal(RunConfigurationBase runConfiguration, Element element) throws WriteExternalException {
-        final CoverageEnabledConfiguration covConf = CoverageEnabledConfiguration.getOrCreate(runConfiguration);
+        CoverageEnabledConfiguration covConf = CoverageEnabledConfiguration.getOrCreate(runConfiguration);
 
         covConf.writeExternal(element);
     }

@@ -17,7 +17,7 @@ package consulo.execution.coverage;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jul 7, 2006
+ * @since 2006-07-07
  */
 public interface CoverageFileProvider {
     String getCoverageDataFilePath();

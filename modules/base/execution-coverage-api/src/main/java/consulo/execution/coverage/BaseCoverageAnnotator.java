@@ -17,19 +17,18 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
     private final Project myProject;
 
     @Nullable
-    protected abstract Runnable createRenewRequest(
-        @Nonnull final CoverageSuitesBundle suite,
-        @Nonnull final CoverageDataManager dataManager
-    );
+    protected abstract Runnable createRenewRequest(@Nonnull CoverageSuitesBundle suite, @Nonnull CoverageDataManager dataManager);
 
-    public BaseCoverageAnnotator(final Project project) {
+    public BaseCoverageAnnotator(Project project) {
         myProject = project;
     }
 
+    @Override
     public void onSuiteChosen(CoverageSuitesBundle newSuite) {
     }
 
-    public void renewCoverageData(@Nonnull final CoverageSuitesBundle suite, @Nonnull final CoverageDataManager dataManager) {
+    @Override
+    public void renewCoverageData(@Nonnull final CoverageSuitesBundle suite, @Nonnull CoverageDataManager dataManager) {
         final Runnable request = createRenewRequest(suite, dataManager);
         if (request != null) {
             if (myProject.isDisposed()) {
@@ -41,10 +40,10 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
                     request.run();
                 }
 
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void onSuccess() {
-                    final CoverageView coverageView = CoverageViewManager.getInstance((Project) myProject).getToolwindow(suite);
+                    CoverageView coverageView = CoverageViewManager.getInstance((Project) myProject).getToolwindow(suite);
                     if (coverageView != null) {
                         coverageView.updateParentTitle();
                     }

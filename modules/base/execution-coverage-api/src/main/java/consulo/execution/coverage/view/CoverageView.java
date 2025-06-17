@@ -1,7 +1,6 @@
 package consulo.execution.coverage.view;
 
-import consulo.application.AllIcons;
-import consulo.application.CommonBundle;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -19,11 +18,15 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -35,23 +38,22 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 /**
- * User: anna
- * Date: 1/2/12
+ * @author anna
+ * @since 2012-01-02
  */
 public class CoverageView extends JPanel implements DataProvider, Disposable {
-    @NonNls
     private static final String ACTION_DRILL_DOWN = "DrillDown";
-    @NonNls
     private static final String ACTION_GO_UP = "GoUp";
-    @NonNls
     private static final String HELP_ID = "reference.toolWindows.Coverage";
 
     private CoverageTableModel myModel;
@@ -60,25 +62,26 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     private final Project myProject;
     private final CoverageViewManager.StateBean myStateBean;
 
-
-    public CoverageView(final Project project, final CoverageDataManager dataManager, CoverageViewManager.StateBean stateBean) {
+    public CoverageView(Project project, CoverageDataManager dataManager, CoverageViewManager.StateBean stateBean) {
         super(new BorderLayout());
         myProject = project;
         myStateBean = stateBean;
-        final JLabel titleLabel = new JLabel();
-        final CoverageSuitesBundle suitesBundle = dataManager.getCurrentSuitesBundle();
+        JLabel titleLabel = new JLabel();
+        CoverageSuitesBundle suitesBundle = dataManager.getCurrentSuitesBundle();
         myModel = new CoverageTableModel(suitesBundle, stateBean, project);
 
         myTable = new JBTable(myModel);
-        final StatusText emptyText = myTable.getEmptyText();
+        StatusText emptyText = myTable.getEmptyText();
         emptyText.setText("No coverage results.");
-        final RunConfigurationBase configuration = suitesBundle.getRunConfiguration();
+        RunConfigurationBase configuration = suitesBundle.getRunConfiguration();
         if (configuration != null) {
             emptyText.appendText(" Click ");
-            emptyText.appendText("Edit", SimpleTextAttributes.LINK_ATTRIBUTES, new ActionListener() {
-                public void actionPerformed(final ActionEvent e) {
-                    final String configurationName = configuration.getName();
-                    final RunnerAndConfigurationSettings configurationSettings =
+            emptyText.appendText(
+                "Edit",
+                SimpleTextAttributes.LINK_ATTRIBUTES,
+                e -> {
+                    String configurationName = configuration.getName();
+                    RunnerAndConfigurationSettings configurationSettings =
                         RunManager.getInstance(project).findConfigurationByName(configurationName);
                     if (configurationSettings != null) {
                         RunConfigurationEditor.getInstance(project)
@@ -88,11 +91,11 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
                         Messages.showErrorDialog(
                             project,
                             "Configuration \'" + configurationName + "\' was not found",
-                            CommonBundle.getErrorTitle()
+                            CommonLocalize.titleError().get()
                         );
                     }
                 }
-            });
+            );
             emptyText.appendText(" to fix configuration settings.");
         }
         myTable.getColumnModel().getColumn(0).setCellRenderer(new NodeDescriptorTableCellRenderer());
@@ -111,19 +114,17 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
                 return true;
             }
         }.installOn(myTable);
-        final TableSpeedSearch speedSearch = new TableSpeedSearch(myTable);
+        TableSpeedSearch speedSearch = new TableSpeedSearch(myTable);
         speedSearch.setClearSearchOnNavigateNoMatch(true);
         PopupHandler.installUnknownPopupHandler(myTable, createPopupGroup(), ActionManager.getInstance());
         ScrollingUtil.installActions(myTable);
 
         myTable.registerKeyboardAction(
-            new ActionListener() {
-                public void actionPerformed(final ActionEvent e) {
-                    if (myBuilder == null) {
-                        return;
-                    }
-                    myBuilder.buildRoot();
+            e -> {
+                if (myBuilder == null) {
+                    return;
                 }
+                myBuilder.buildRoot();
             },
             KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SLASH, Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK),
             JComponent.WHEN_FOCUSED
@@ -134,18 +135,24 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
             KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK),
             ACTION_DRILL_DOWN
         );
-        myTable.getActionMap().put(ACTION_DRILL_DOWN, new AbstractAction() {
-            public void actionPerformed(final ActionEvent e) {
-                drillDown(structure);
+        myTable.getActionMap().put(
+            ACTION_DRILL_DOWN,
+            new AbstractAction() {
+                @Override
+                @RequiredReadAction
+                public void actionPerformed(ActionEvent e) {
+                    drillDown(structure);
+                }
             }
-        });
+        );
         myTable.getInputMap(WHEN_FOCUSED).put(
             KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK),
             ACTION_GO_UP
         );
         myTable.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), ACTION_GO_UP);
         myTable.getActionMap().put(ACTION_GO_UP, new AbstractAction() {
-            public void actionPerformed(final ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 goUp();
             }
         });
@@ -153,7 +160,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         ActionToolbar actionToolbar =
             ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, createToolbarActions(structure), false);
         actionToolbar.setTargetComponent(this);
-        final JComponent component = actionToolbar.getComponent();
+        JComponent component = actionToolbar.getComponent();
         add(component, BorderLayout.WEST);
     }
 
@@ -162,13 +169,13 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     }
 
     private static ActionGroup createPopupGroup() {
-        final DefaultActionGroup actionGroup = new DefaultActionGroup();
+        DefaultActionGroup actionGroup = new DefaultActionGroup();
         actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE));
         return actionGroup;
     }
 
-    private ActionGroup createToolbarActions(final CoverageViewTreeStructure treeStructure) {
-        final DefaultActionGroup actionGroup = new DefaultActionGroup();
+    private ActionGroup createToolbarActions(CoverageViewTreeStructure treeStructure) {
+        DefaultActionGroup actionGroup = new DefaultActionGroup();
         actionGroup.add(new GoUpAction(treeStructure));
         if (treeStructure.supportFlattenPackages()) {
             actionGroup.add(new FlattenPackagesAction());
@@ -180,7 +187,8 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         actionGroup.add(ActionManager.getInstance().getAction("GenerateCoverageReport"));
         actionGroup.add(new CloseTabToolbarAction() {
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 CoverageDataManager.getInstance(myProject).chooseSuitesBundle(null);
             }
         });
@@ -189,7 +197,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     }
 
     private void installAutoScrollFromSource(DefaultActionGroup actionGroup) {
-        final MyAutoScrollFromSourceHandler handler = new MyAutoScrollFromSourceHandler();
+        MyAutoScrollFromSourceHandler handler = new MyAutoScrollFromSourceHandler();
         handler.install();
         actionGroup.add(handler.createToggleAction());
     }
@@ -217,8 +225,9 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         myBuilder.goUp();
     }
 
+    @RequiredReadAction
     private void drillDown(CoverageViewTreeStructure treeStructure) {
-        final AbstractTreeNode element = getSelectedValue();
+        AbstractTreeNode element = getSelectedValue();
         if (element == null) {
             return;
         }
@@ -239,13 +248,13 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         return (AbstractTreeNode) myBuilder.getSelectedValue();
     }
 
-    private boolean topElementIsSelected(final CoverageViewTreeStructure treeStructure) {
+    private boolean topElementIsSelected(CoverageViewTreeStructure treeStructure) {
         if (myTable == null) {
             return false;
         }
         if (myModel.getSize() >= 1) {
-            final AbstractTreeNode rootElement = (AbstractTreeNode) treeStructure.getRootElement();
-            final AbstractTreeNode node = (AbstractTreeNode) myModel.getElementAt(0);
+            AbstractTreeNode rootElement = (AbstractTreeNode) treeStructure.getRootElement();
+            AbstractTreeNode node = (AbstractTreeNode) myModel.getElementAt(0);
             if (node.getParent() == rootElement) {
                 return true;
             }
@@ -253,15 +262,18 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         return false;
     }
 
+    @RequiredReadAction
     public boolean canSelect(VirtualFile file) {
         return myBuilder.canSelect(file);
     }
 
+    @RequiredUIAccess
     public void select(VirtualFile file) {
         myBuilder.select(file);
     }
 
-    public Object getData(@Nonnull @NonNls Key dataId) {
+    @Override
+    public Object getData(@Nonnull Key dataId) {
         if (Navigatable.KEY == dataId) {
             return getSelectedValue();
         }
@@ -281,9 +293,8 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
             int row,
             int column
         ) {
-            final Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (value instanceof NodeDescriptor) {
-                NodeDescriptor descriptor = (NodeDescriptor) value;
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (value instanceof NodeDescriptor descriptor) {
                 setIcon(TargetAWT.to(descriptor.getIcon()));
                 setText(descriptor.toString());
                 if (!isSelected) {
@@ -295,20 +306,24 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     }
 
     private class FlattenPackagesAction extends ToggleAction {
-
         private FlattenPackagesAction() {
-            super("Flatten Packages", "Flatten Packages", AllIcons.ObjectBrowser.FlattenPackages);
+            super(
+                LocalizeValue.localizeTODO("Flatten Packages"),
+                LocalizeValue.localizeTODO("Flatten Packages"),
+                PlatformIconGroup.objectbrowserFlattenpackages()
+            );
         }
 
         @Override
-        public boolean isSelected(AnActionEvent e) {
+        public boolean isSelected(@Nonnull AnActionEvent e) {
             return myStateBean.myFlattenPackages;
         }
 
         @Override
-        public void setSelected(AnActionEvent e, boolean state) {
+        @RequiredUIAccess
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             myStateBean.myFlattenPackages = state;
-            final Object selectedValue = myBuilder.getSelectedValue();
+            Object selectedValue = myBuilder.getSelectedValue();
             myBuilder.buildRoot();
 
             if (selectedValue != null) {
@@ -324,17 +339,19 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         private final CoverageViewTreeStructure myTreeStructure;
 
         public GoUpAction(CoverageViewTreeStructure treeStructure) {
-            super("Go Up", "Go to Upper Level", AllIcons.Nodes.UpLevel);
+            super(LocalizeValue.localizeTODO("Go Up"), LocalizeValue.localizeTODO("Go to Upper Level"), PlatformIconGroup.nodesUplevel());
             myTreeStructure = treeStructure;
             registerCustomShortcutSet(KeyEvent.VK_BACK_SPACE, 0, myTable);
         }
 
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             goUp();
         }
 
         @Override
+        @RequiredUIAccess
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(!topElementIsSelected(myTreeStructure));
         }
@@ -356,25 +373,24 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         protected void selectElementFromEditor(@Nonnull FileEditor editor) {
             if (myProject.isDisposed() || !CoverageView.this.isShowing()) {
                 return;
             }
             if (myStateBean.myAutoScrollFromSource) {
-                final VirtualFile file = FileEditorManager.getInstance(myProject).getFile(editor);
-                if (file != null) {
-                    if (canSelect(file)) {
-                        PsiElement e = null;
-                        if (editor instanceof TextEditor) {
-                            final int offset = ((TextEditor) editor).getEditor().getCaretModel().getOffset();
-                            PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-                            final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
-                            if (psiFile != null) {
-                                e = psiFile.findElementAt(offset);
-                            }
+                VirtualFile file = FileEditorManager.getInstance(myProject).getFile(editor);
+                if (file != null && canSelect(file)) {
+                    PsiElement e = null;
+                    if (editor instanceof TextEditor textEditor) {
+                        int offset = textEditor.getEditor().getCaretModel().getOffset();
+                        PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+                        PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
+                        if (psiFile != null) {
+                            e = psiFile.findElementAt(offset);
                         }
-                        myBuilder.select(e != null ? e : file);
                     }
+                    myBuilder.select(e != null ? e : file);
                 }
             }
         }

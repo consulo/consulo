@@ -1,7 +1,6 @@
 package consulo.execution.coverage.view;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
 import consulo.language.editor.util.LanguageEditorNavigationUtil;
@@ -10,7 +9,9 @@ import consulo.language.psi.*;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
+import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
@@ -21,68 +22,65 @@ import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * User: anna
- * Date: 1/2/12
+ * @author anna
+ * @since 2012-01-02
  */
-public class CoverageListNode extends AbstractTreeNode {
+public class CoverageListNode extends AbstractTreeNode<PsiNamedElement> {
     protected CoverageSuitesBundle myBundle;
     protected CoverageViewManager.StateBean myStateBean;
     private final FileStatusManager myFileStatusManager;
 
     public CoverageListNode(
         Project project,
-        final PsiNamedElement classOrPackage,
+        PsiNamedElement classOrPackage,
         CoverageSuitesBundle bundle,
         CoverageViewManager.StateBean stateBean
     ) {
         super(project, classOrPackage);
-        myName = ApplicationManager.getApplication().runReadAction((Supplier<String>) () -> classOrPackage.getName());
+        myName = myProject.getApplication().runReadAction((Supplier<String>) () -> classOrPackage.getName());
         myBundle = bundle;
         myStateBean = stateBean;
         myFileStatusManager = FileStatusManager.getInstance(myProject);
     }
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public Collection<? extends AbstractTreeNode> getChildren() {
-        final Object[] children = CoverageViewTreeStructure.getChildren(this, myBundle, myStateBean);
+        Object[] children = CoverageViewTreeStructure.getChildren(this, myBundle, myStateBean);
         return Arrays.asList((CoverageListNode[]) children);
     }
 
     @Override
-    protected void update(final PresentationData presentation) {
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            public void run() {
-                final Object value = getValue();
-                if (value instanceof PsiNamedElement) {
-
-                    if (value instanceof PsiQualifiedNamedElement
-                        && (myStateBean.myFlattenPackages && ((PsiNamedElement) value).getContainingFile() == null
-                        || getParent() instanceof CoverageListRootNode)) {
-                        presentation.setPresentableText(((PsiQualifiedNamedElement) value).getQualifiedName());
-                    }
-                    else {
-                        presentation.setPresentableText(((PsiNamedElement) value).getName());
-                    }
-                    presentation.setIcon(IconDescriptorUpdaters.getIcon(((PsiElement) value), 0));
+    protected void update(PresentationData presentation) {
+        myProject.getApplication().runReadAction(() -> {
+            if (getValue() instanceof PsiNamedElement namedElement) {
+                if (namedElement instanceof PsiQualifiedNamedElement qualifiedNamedElement
+                    && (myStateBean.myFlattenPackages && namedElement.getContainingFile() == null
+                    || getParent() instanceof CoverageListRootNode)) {
+                    presentation.setPresentableText(qualifiedNamedElement.getQualifiedName());
                 }
+                else {
+                    presentation.setPresentableText(namedElement.getName());
+                }
+                presentation.setIcon(IconDescriptorUpdaters.getIcon(namedElement, 0));
             }
         });
     }
 
+    @Nonnull
     @Override
     public FileStatus getFileStatus() {
-        final PsiFile containingFile = ApplicationManager.getApplication().runReadAction(new Supplier<PsiFile>() {
+        PsiFile containingFile = myProject.getApplication().runReadAction(new Supplier<PsiFile>() {
             @Nullable
             @Override
             public PsiFile get() {
-                Object value = getValue();
-                if (value instanceof PsiElement && ((PsiElement) value).isValid()) {
-                    return ((PsiElement) value).getContainingFile();
+                if (getValue() instanceof PsiElement element && element.isValid()) {
+                    return element.getContainingFile();
                 }
                 return null;
             }
@@ -92,8 +90,7 @@ public class CoverageListNode extends AbstractTreeNode {
 
     @Override
     public boolean canNavigate() {
-        final Object value = getValue();
-        return value instanceof PsiElement && ((PsiElement) value).isValid() && ((PsiElement) value).getContainingFile() != null;
+        return getValue() instanceof PsiElement element && element.isValid() && element.getContainingFile() != null;
     }
 
     @Override
@@ -102,24 +99,24 @@ public class CoverageListNode extends AbstractTreeNode {
     }
 
     @Override
+    @RequiredUIAccess
     public void navigate(boolean requestFocus) {
         if (canNavigate()) {
-            final PsiNamedElement value = (PsiNamedElement) getValue();
+            PsiNamedElement value = (PsiNamedElement) getValue();
             if (requestFocus) {
                 LanguageEditorNavigationUtil.activateFileWithPsiElement(value, true);
             }
-            else if (value instanceof NavigationItem) {
-                ((NavigationItem) value).navigate(requestFocus);
+            else if (value instanceof NavigationItem navItem) {
+                navItem.navigate(requestFocus);
             }
         }
     }
 
     @Override
     public int getWeight() {
-        return ApplicationManager.getApplication().runReadAction((Supplier<Integer>) () -> {
+        return myProject.getApplication().runReadAction((Supplier<Integer>) () -> {
             //todo weighted
-            final Object value = getValue();
-            if (value instanceof PsiElement && ((PsiElement) value).getContainingFile() != null) {
+            if (getValue() instanceof PsiElement element && element.getContainingFile() != null) {
                 return 40;
             }
             return 30;
@@ -127,25 +124,24 @@ public class CoverageListNode extends AbstractTreeNode {
     }
 
     public boolean contains(VirtualFile file) {
-        final Object value = getValue();
-        if (value instanceof PsiElement) {
-            final boolean equalContainingFile = Comparing.equal(PsiUtilCore.getVirtualFile((PsiElement) value), file);
-            if (equalContainingFile) {
-                return true;
-            }
+        PsiNamedElement namedElement = getValue();
+        //noinspection SimplifiableIfStatement
+        if (Objects.equals(PsiUtilCore.getVirtualFile(namedElement), file)) {
+            return true;
         }
-        if (value instanceof PsiDirectory) {
-            return contains(file, (PsiDirectory) value);
-        }
-        else if (value instanceof PsiDirectoryContainer) {
-            final PsiDirectory[] directories = ((PsiDirectoryContainer) value).getDirectories();
-            for (PsiDirectory directory : directories) {
-                if (contains(file, directory)) {
-                    return true;
+
+        return switch (namedElement) {
+            case PsiDirectory directory -> contains(file, directory);
+            case PsiDirectoryContainer directoryContainer -> {
+                for (PsiDirectory directory : directoryContainer.getDirectories()) {
+                    if (contains(file, directory)) {
+                        yield true;
+                    }
                 }
+                yield false;
             }
-        }
-        return false;
+            default -> false;
+        };
     }
 
     private boolean contains(VirtualFile file, PsiDirectory value) {
@@ -153,6 +149,7 @@ public class CoverageListNode extends AbstractTreeNode {
             return Comparing.equal(value.getVirtualFile(), file.getParent());
         }
 
+        //noinspection RedundantIfStatement
         if (VirtualFileUtil.isAncestor(value.getVirtualFile(), file, false)) {
             return true;
         }

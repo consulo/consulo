@@ -6,8 +6,8 @@ import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
 /**
- * User: anna
- * Date: 9/30/11
+ * @author anna
+ * @since 2011-09-30
  */
 public class CoverageRunnerData implements RunnerSettings {
     @Override

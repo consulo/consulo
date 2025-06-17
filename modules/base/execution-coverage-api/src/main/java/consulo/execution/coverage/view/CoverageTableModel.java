@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 1/3/12
+ * @author anna
+ * @since 2012-01-03
  */
 class CoverageTableModel extends AbstractTableModel implements AbstractListBuilder.Model, SortableColumnModel {
     private final ColumnInfo[] COLUMN_INFOS;
@@ -26,7 +26,7 @@ class CoverageTableModel extends AbstractTableModel implements AbstractListBuild
     final List myElements = new ArrayList();
 
     public CoverageTableModel(@Nonnull CoverageSuitesBundle suitesBundle, CoverageViewManager.StateBean stateBean, Project project) {
-        final CoverageEngine coverageEngine = suitesBundle.getCoverageEngine();
+        CoverageEngine coverageEngine = suitesBundle.getCoverageEngine();
         COLUMN_INFOS = coverageEngine.createCoverageViewExtension(project, suitesBundle, stateBean).createColumnInfos();
     }
 
@@ -37,13 +37,13 @@ class CoverageTableModel extends AbstractTableModel implements AbstractListBuild
     }
 
     @Override
-    public void addElement(final Object obj) {
+    public void addElement(Object obj) {
         myElements.add(obj);
         fireTableDataChanged();
     }
 
     @Override
-    public void replaceElements(final List newElements) {
+    public void replaceElements(List newElements) {
         removeAllElements();
         myElements.addAll(newElements);
         fireTableDataChanged();
@@ -55,7 +55,7 @@ class CoverageTableModel extends AbstractTableModel implements AbstractListBuild
     }
 
     @Override
-    public int indexOf(final Object o) {
+    public int indexOf(Object o) {
         return myElements.indexOf(o);
     }
 
@@ -65,7 +65,7 @@ class CoverageTableModel extends AbstractTableModel implements AbstractListBuild
     }
 
     @Override
-    public Object getElementAt(final int index) {
+    public Object getElementAt(int index) {
         return myElements.get(index);
     }
 
@@ -86,7 +86,7 @@ class CoverageTableModel extends AbstractTableModel implements AbstractListBuild
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        final Object element = getElementAt(rowIndex);
+        Object element = getElementAt(rowIndex);
         if (columnIndex == 0) {
             return element;
         }

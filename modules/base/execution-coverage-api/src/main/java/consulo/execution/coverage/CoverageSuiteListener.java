@@ -15,9 +15,9 @@
  */
 package consulo.execution.coverage;
 
-/*
- * User: anna
- * Date: 06-May-2009
+/**
+ * @author anna
+ * @since 2009-05-06
  */
 public interface CoverageSuiteListener {
     void beforeSuiteChosen();

@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 02-Apr-22
+ * @since 2022-04-02
  */
 module consulo.execution.coverage.api {
     // TODO remove in future

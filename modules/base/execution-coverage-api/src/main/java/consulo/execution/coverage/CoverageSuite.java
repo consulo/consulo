@@ -29,7 +29,7 @@ public interface CoverageSuite extends JDOMExternalizable {
     @Nullable
     ProjectData getCoverageData(CoverageDataManager coverageDataManager);
 
-    void setCoverageData(final ProjectData projectData);
+    void setCoverageData(ProjectData projectData);
 
     void restoreCoverageData();
 

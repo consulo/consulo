@@ -1,9 +1,9 @@
 package consulo.execution.coverage;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.execution.executor.Executor;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -32,13 +32,13 @@ public class CoverageExecutor extends Executor {
 
     @Override
     public Image getToolWindowIcon() {
-        return AllIcons.General.RunWithCoverage;
+        return PlatformIconGroup.generalRunwithcoverage();
     }
 
     @Override
     @Nonnull
     public Image getIcon() {
-        return AllIcons.General.RunWithCoverage;
+        return PlatformIconGroup.generalRunwithcoverage();
     }
 
     @Nonnull

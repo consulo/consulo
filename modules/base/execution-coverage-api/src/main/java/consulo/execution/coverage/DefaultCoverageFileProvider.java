@@ -19,7 +19,7 @@ import java.io.File;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jul 8, 2006
+ * @since 2006-07-08
  */
 public final class DefaultCoverageFileProvider implements CoverageFileProvider {
     private final File myFile;
@@ -38,10 +38,12 @@ public final class DefaultCoverageFileProvider implements CoverageFileProvider {
         mySourceProvider = sourceProvider;
     }
 
+    @Override
     public String getCoverageDataFilePath() {
         return myFile.getPath();
     }
 
+    @Override
     public boolean ensureFileExists() {
         return myFile.exists();
     }
@@ -50,6 +52,7 @@ public final class DefaultCoverageFileProvider implements CoverageFileProvider {
         return mySourceProvider;
     }
 
+    @Override
     public boolean isValid() {
         return ensureFileExists();
     }

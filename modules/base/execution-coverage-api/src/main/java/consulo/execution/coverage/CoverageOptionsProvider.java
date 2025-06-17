@@ -11,8 +11,8 @@ import consulo.project.Project;
 import jakarta.inject.Singleton;
 
 /**
- * User: anna
- * Date: 4/28/11
+ * @author anna
+ * @since 2011-04-28
  */
 @Singleton
 @State(name = "CoverageOptionsProvider", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))

@@ -7,8 +7,8 @@ import consulo.ui.ex.awt.ColumnInfo;
 import java.util.Comparator;
 
 /**
- * User: anna
- * Date: 1/9/12
+ * @author anna
+ * @since 2012-01-09
  */
 public class ElementColumnInfo extends ColumnInfo<NodeDescriptor, String> {
     public ElementColumnInfo() {

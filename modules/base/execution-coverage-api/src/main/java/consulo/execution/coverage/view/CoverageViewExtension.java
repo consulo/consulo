@@ -1,5 +1,6 @@
 package consulo.execution.coverage.view;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
@@ -18,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class CoverageViewExtension {
-    private final Project myProject;
+    protected final Project myProject;
     private final CoverageSuitesBundle mySuitesBundle;
     private final CoverageViewManager.StateBean myStateBean;
     private final CoverageDataManager myCoverageDataManager;
@@ -70,31 +71,31 @@ public abstract class CoverageViewExtension {
 
     public abstract AbstractTreeNode createRootNode();
 
+    @RequiredReadAction
     public boolean canSelectInCoverageView(Object object) {
-        return object instanceof VirtualFile && PsiManager.getInstance(myProject).findFile((VirtualFile) object) != null;
+        return object instanceof VirtualFile virtualFile && PsiManager.getInstance(myProject).findFile(virtualFile) != null;
     }
 
     @Nullable
+    @RequiredReadAction
     public PsiElement getElementToSelect(Object object) {
-        if (object instanceof PsiElement) {
-            return (PsiElement) object;
+        if (object instanceof PsiElement element) {
+            return element;
         }
-        return object instanceof VirtualFile ? PsiManager.getInstance(myProject).findFile((VirtualFile) object) : null;
+        return object instanceof VirtualFile virtualFile ? PsiManager.getInstance(myProject).findFile(virtualFile) : null;
     }
 
     @Nullable
     public VirtualFile getVirtualFile(Object object) {
-        if (object instanceof PsiElement) {
-            if (object instanceof PsiDirectory) {
-                return ((PsiDirectory) object).getVirtualFile();
+        return switch (object) {
+            case PsiDirectory directory -> directory.getVirtualFile();
+            case PsiElement element -> {
+                PsiFile containingFile = element.getContainingFile();
+                yield containingFile != null ? containingFile.getVirtualFile() : null;
             }
-            final PsiFile containingFile = ((PsiElement) object).getContainingFile();
-            if (containingFile != null) {
-                return containingFile.getVirtualFile();
-            }
-            return null;
-        }
-        return object instanceof VirtualFile ? (VirtualFile) object : null;
+            case VirtualFile virtualFile -> virtualFile;
+            default -> null;
+        };
     }
 
     public List<AbstractTreeNode> createTopLevelNodes() {

@@ -1,5 +1,6 @@
 package consulo.execution.coverage.view;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -23,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 1/2/12
+ * @author anna
+ * @since 2012-01-02
  */
 public class CoverageViewBuilder extends AbstractListBuilder {
     private final JBTable myTable;
@@ -33,9 +34,10 @@ public class CoverageViewBuilder extends AbstractListBuilder {
 
     CoverageViewBuilder(
         final Project project,
-        final JList list,
-        final Model model,
-        final AbstractTreeStructure treeStructure, final JBTable table
+        JList list,
+        Model model,
+        AbstractTreeStructure treeStructure,
+        final JBTable table
     ) {
         super(project, list, model, treeStructure, AlphaComparator.INSTANCE, false);
         myTable = table;
@@ -93,7 +95,7 @@ public class CoverageViewBuilder extends AbstractListBuilder {
 
     @Override
     protected List<AbstractTreeNode> getAllAcceptableNodes(Object[] childElements, VirtualFile file) {
-        ArrayList<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
+        List<AbstractTreeNode> result = new ArrayList<>();
 
         for (Object childElement1 : childElements) {
             CoverageListNode childElement = (CoverageListNode) childElement1;
@@ -111,7 +113,7 @@ public class CoverageViewBuilder extends AbstractListBuilder {
             return;
         }
 
-        final Object rootElement = myTreeStructure.getRootElement();
+        Object rootElement = myTreeStructure.getRootElement();
         AbstractTreeNode node = getParentNode();
         if (node == null) {
             node = (AbstractTreeNode) rootElement;
@@ -127,7 +129,7 @@ public class CoverageViewBuilder extends AbstractListBuilder {
 
     @Override
     public Object getSelectedValue() {
-        final int row = myTable.getSelectedRow();
+        int row = myTable.getSelectedRow();
         if (row == -1) {
             return null;
         }
@@ -145,10 +147,12 @@ public class CoverageViewBuilder extends AbstractListBuilder {
         TableUtil.scrollSelectionToVisible(myTable);
     }
 
+    @RequiredReadAction
     public boolean canSelect(VirtualFile file) {
         return myCoverageViewExtension.canSelectInCoverageView(file);
     }
 
+    @RequiredUIAccess
     public void select(Object object) {
         selectElement(myCoverageViewExtension.getElementToSelect(object), myCoverageViewExtension.getVirtualFile(object));
     }

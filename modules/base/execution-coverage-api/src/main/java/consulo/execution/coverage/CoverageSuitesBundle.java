@@ -1,13 +1,13 @@
 package consulo.execution.coverage;
 
 import com.intellij.rt.coverage.data.ProjectData;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
 import consulo.execution.configuration.ModuleBasedConfiguration;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScopesCore;
-import consulo.application.util.CachedValue;
-import consulo.application.util.CachedValueProvider;
-import consulo.application.util.CachedValuesManager;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -16,17 +16,15 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SoftReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
- * User: anna
- * Date: 12/14/10
+ * @author anna
+ * @since 2010-12-14
  */
 public class CoverageSuitesBundle {
     private CoverageSuite[] mySuites;
@@ -36,7 +34,7 @@ public class CoverageSuitesBundle {
 
     private CachedValue<GlobalSearchScope> myCachedValue;
 
-    private SoftReference<ProjectData> myData = new SoftReference<ProjectData>(null);
+    private SoftReference<ProjectData> myData = new SoftReference<>(null);
     private static final Logger LOG = Logger.getInstance(CoverageSuitesBundle.class);
 
     public CoverageSuitesBundle(CoverageSuite suite) {
@@ -48,7 +46,7 @@ public class CoverageSuitesBundle {
         LOG.assertTrue(mySuites.length > 0);
         myEngine = mySuites[0].getCoverageEngine();
         for (CoverageSuite suite : suites) {
-            final CoverageEngine engine = suite.getCoverageEngine();
+            CoverageEngine engine = suite.getCoverageEngine();
             LOG.assertTrue(Comparing.equal(engine, myEngine));
         }
     }
@@ -92,18 +90,18 @@ public class CoverageSuitesBundle {
 
     @Nullable
     public ProjectData getCoverageData() {
-        final ProjectData projectData = myData.get();
+        ProjectData projectData = myData.get();
         if (projectData != null) {
             return projectData;
         }
         ProjectData data = new ProjectData();
         for (CoverageSuite suite : mySuites) {
-            final ProjectData coverageData = suite.getCoverageData(null);
+            ProjectData coverageData = suite.getCoverageData(null);
             if (coverageData != null) {
                 data.merge(coverageData);
             }
         }
-        myData = new SoftReference<ProjectData>(data);
+        myData = new SoftReference<>(data);
         return data;
     }
 
@@ -143,29 +141,24 @@ public class CoverageSuitesBundle {
     }
 
     public void setCoverageData(ProjectData projectData) {
-        myData = new SoftReference<ProjectData>(projectData);
+        myData = new SoftReference<>(projectData);
     }
 
     public void restoreCoverageData() {
-        myData = new SoftReference<ProjectData>(null);
+        myData = new SoftReference<>(null);
     }
 
     public String getPresentableName() {
-        return StringUtil.join(mySuites, new Function<CoverageSuite, String>() {
-            @Override
-            public String apply(CoverageSuite coverageSuite) {
-                return coverageSuite.getPresentableName();
-            }
-        }, ", ");
+        return StringUtil.join(mySuites, CoverageSuite::getPresentableName, ", ");
     }
 
-    public boolean isModuleChecked(final Module module) {
+    public boolean isModuleChecked(Module module) {
         return myProcessedModules != null && myProcessedModules.contains(module);
     }
 
-    public void checkModule(final Module module) {
+    public void checkModule(Module module) {
         if (myProcessedModules == null) {
-            myProcessedModules = new HashSet<Module>();
+            myProcessedModules = new HashSet<>();
         }
         myProcessedModules.add(module);
     }
@@ -173,8 +166,8 @@ public class CoverageSuitesBundle {
     @Nullable
     public RunConfigurationBase getRunConfiguration() {
         for (CoverageSuite suite : mySuites) {
-            if (suite instanceof BaseCoverageSuite) {
-                final RunConfigurationBase configuration = ((BaseCoverageSuite) suite).getConfiguration();
+            if (suite instanceof BaseCoverageSuite baseCoverageSuite) {
+                RunConfigurationBase configuration = baseCoverageSuite.getConfiguration();
                 if (configuration != null) {
                     return configuration;
                 }
@@ -185,22 +178,25 @@ public class CoverageSuitesBundle {
 
     public GlobalSearchScope getSearchScope(final Project project) {
         if (myCachedValue == null) {
-            myCachedValue = CachedValuesManager.getManager(project).createCachedValue(new CachedValueProvider<GlobalSearchScope>() {
-                @Nullable
-                @Override
-                public Result<GlobalSearchScope> compute() {
-                    return new Result<GlobalSearchScope>(getSearchScopeInner(project), ProjectRootModificationTracker.getInstance(project));
-                }
-            }, false);
+            myCachedValue = CachedValuesManager.getManager(project).createCachedValue(
+                new CachedValueProvider<GlobalSearchScope>() {
+                    @Nullable
+                    @Override
+                    public Result<GlobalSearchScope> compute() {
+                        return new Result<>(getSearchScopeInner(project), ProjectRootModificationTracker.getInstance(project));
+                    }
+                },
+                false
+            );
         }
         return myCachedValue.getValue();
 
     }
 
     private GlobalSearchScope getSearchScopeInner(Project project) {
-        final RunConfigurationBase configuration = getRunConfiguration();
-        if (configuration instanceof ModuleBasedConfiguration) {
-            final Module module = ((ModuleBasedConfiguration) configuration).getConfigurationModule().getModule();
+        RunConfigurationBase configuration = getRunConfiguration();
+        if (configuration instanceof ModuleBasedConfiguration moduleBasedConfiguration) {
+            Module module = moduleBasedConfiguration.getConfigurationModule().getModule();
             if (module != null) {
                 return GlobalSearchScope.moduleRuntimeScope(module, isTrackTestFolders());
             }

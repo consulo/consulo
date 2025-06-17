@@ -1,6 +1,6 @@
 package consulo.execution.coverage.view;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.execution.coverage.CoverageAnnotator;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * User: anna
- * Date: 1/9/12
+ * @author anna
+ * @since 2012-01-09
  */
 public class DirectoryCoverageViewExtension extends CoverageViewExtension {
     private final CoverageAnnotator myAnnotator;
@@ -55,31 +55,28 @@ public class DirectoryCoverageViewExtension extends CoverageViewExtension {
 
     @Override
     public String getSummaryForRootNode(AbstractTreeNode childNode) {
-        final Object value = childNode.getValue();
-        String coverageInformationString = myAnnotator.getDirCoverageInformationString(((PsiDirectory) value), getSuitesBundle(),
-            getCoverageDataManager()
-        );
+        Object value = childNode.getValue();
+        String coverageInformationString =
+            myAnnotator.getDirCoverageInformationString(((PsiDirectory) value), getSuitesBundle(), getCoverageDataManager());
 
         return "Coverage Summary: " + coverageInformationString;
     }
 
     @Override
     public String getPercentage(int columnIdx, AbstractTreeNode node) {
-        final Object value = node.getValue();
-        if (value instanceof PsiFile) {
-            return myAnnotator.getFileCoverageInformationString((PsiFile) value, getSuitesBundle(), getCoverageDataManager());
+        Object value = node.getValue();
+        if (value instanceof PsiFile file) {
+            return myAnnotator.getFileCoverageInformationString(file, getSuitesBundle(), getCoverageDataManager());
         }
-        return value != null ? myAnnotator.getDirCoverageInformationString(
-            (PsiDirectory) value,
-            getSuitesBundle(),
-            getCoverageDataManager()
-        ) : null;
+        return value != null
+            ? myAnnotator.getDirCoverageInformationString((PsiDirectory) value, getSuitesBundle(), getCoverageDataManager())
+            : null;
     }
 
 
     @Override
     public PsiElement getParentElement(PsiElement element) {
-        final PsiFile containingFile = element.getContainingFile();
+        PsiFile containingFile = element.getContainingFile();
         if (containingFile != null) {
             return containingFile.getContainingDirectory();
         }
@@ -87,8 +84,9 @@ public class DirectoryCoverageViewExtension extends CoverageViewExtension {
     }
 
     @Override
+    @RequiredReadAction
     public AbstractTreeNode createRootNode() {
-        final VirtualFile baseDir = getProject().getBaseDir();
+        VirtualFile baseDir = getProject().getBaseDir();
         return new CoverageListRootNode(
             getProject(),
             PsiManager.getInstance(getProject()).findDirectory(baseDir),
@@ -99,22 +97,22 @@ public class DirectoryCoverageViewExtension extends CoverageViewExtension {
 
     @Override
     public List<AbstractTreeNode> getChildrenNodes(AbstractTreeNode node) {
-        List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
+        List<AbstractTreeNode> children = new ArrayList<>();
         if (node instanceof CoverageListNode) {
-            final Object val = node.getValue();
+            Object val = node.getValue();
             if (val instanceof PsiFile) {
                 return Collections.emptyList();
             }
-            final PsiDirectory psiDirectory = (PsiDirectory) val;
-            final PsiDirectory[] subdirectories =
-                ApplicationManager.getApplication().runReadAction((Supplier<PsiDirectory[]>) () -> psiDirectory.getSubdirectories());
+            PsiDirectory psiDirectory = (PsiDirectory) val;
+            PsiDirectory[] subdirectories =
+                myProject.getApplication().runReadAction((Supplier<PsiDirectory[]>) () -> psiDirectory.getSubdirectories());
             for (PsiDirectory subdirectory : subdirectories) {
                 children.add(new CoverageListNode(getProject(), subdirectory, getSuitesBundle(), getStateBean()));
             }
-            final PsiFile[] psiFiles =
-                ApplicationManager.getApplication().runReadAction((Supplier<PsiFile[]>) () -> psiDirectory.getFiles());
-            for (PsiFile psiFile : psiFiles) {
-                children.add(new CoverageListNode(getProject(), psiFile, getSuitesBundle(), getStateBean()));
+            PsiFile[] files =
+                myProject.getApplication().runReadAction((Supplier<PsiFile[]>) () -> psiDirectory.getFiles());
+            for (PsiFile file : files) {
+                children.add(new CoverageListNode(getProject(), file, getSuitesBundle(), getStateBean()));
             }
 
             for (AbstractTreeNode childNode : children) {

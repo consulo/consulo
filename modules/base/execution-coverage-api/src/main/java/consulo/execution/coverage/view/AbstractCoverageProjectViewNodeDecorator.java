@@ -11,7 +11,7 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 public abstract class AbstractCoverageProjectViewNodeDecorator implements ProjectViewNodeDecorator {
     private final CoverageDataManager myCoverageDataManager;
 
-    public AbstractCoverageProjectViewNodeDecorator(final CoverageDataManager coverageDataManager) {
+    public AbstractCoverageProjectViewNodeDecorator(CoverageDataManager coverageDataManager) {
         myCoverageDataManager = coverageDataManager;
     }
 
