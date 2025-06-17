@@ -10,7 +10,6 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "coverage", order = "after debug")
 public class CoverageExecutor extends Executor {
-
     public static final String EXECUTOR_ID = "Coverage";
 
     @Nonnull

@@ -10,37 +10,37 @@ import jakarta.annotation.Nullable;
  * @author Roman.Chernyatchik
  */
 public interface CoverageSuite extends JDOMExternalizable {
-  boolean isValid();
+    boolean isValid();
 
-  @Nonnull
-  String getCoverageDataFileName();
+    @Nonnull
+    String getCoverageDataFileName();
 
-  String getPresentableName();
+    String getPresentableName();
 
-  long getLastCoverageTimeStamp();
+    long getLastCoverageTimeStamp();
 
-  @Nonnull
-  CoverageFileProvider getCoverageDataFileProvider();
+    @Nonnull
+    CoverageFileProvider getCoverageDataFileProvider();
 
-  boolean isCoverageByTestApplicable();
+    boolean isCoverageByTestApplicable();
 
-  boolean isCoverageByTestEnabled();
+    boolean isCoverageByTestEnabled();
 
-  @Nullable
-  ProjectData getCoverageData(CoverageDataManager coverageDataManager);
+    @Nullable
+    ProjectData getCoverageData(CoverageDataManager coverageDataManager);
 
-  void setCoverageData(final ProjectData projectData);
+    void setCoverageData(final ProjectData projectData);
 
-  void restoreCoverageData();
+    void restoreCoverageData();
 
-  boolean isTrackTestFolders();
+    boolean isTrackTestFolders();
 
-  boolean isTracingEnabled();
+    boolean isTracingEnabled();
 
-  CoverageRunner getRunner();
+    CoverageRunner getRunner();
 
-  @Nonnull
-  CoverageEngine getCoverageEngine();
+    @Nonnull
+    CoverageEngine getCoverageEngine();
 
-  Project getProject();
+    Project getProject();
 }

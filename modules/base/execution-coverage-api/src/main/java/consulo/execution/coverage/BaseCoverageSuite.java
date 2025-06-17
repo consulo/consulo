@@ -239,7 +239,7 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
         }
 
         String thisName = myCoverageDataFileProvider.getCoverageDataFilePath();
-        String thatName = ((BaseCoverageSuite)o).myCoverageDataFileProvider.getCoverageDataFilePath();
+        String thatName = ((BaseCoverageSuite) o).myCoverageDataFileProvider.getCoverageDataFilePath();
         return thisName.equals(thatName);
     }
 

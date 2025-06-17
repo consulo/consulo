@@ -14,27 +14,27 @@ import consulo.ui.ex.action.Presentation;
  * Date: 2/14/12
  */
 public class HideCoverageInfoAction extends AnAction {
-  public HideCoverageInfoAction() {
-    super("&Hide Coverage Data", "Hide coverage data", AllIcons.Actions.Cancel);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
-    CoverageDataManager.getInstance(e.getData(Project.KEY)).chooseSuitesBundle(null);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    presentation.setEnabled(false);
-    presentation.setVisible(e.isFromActionToolbar());
-    final Project project = e.getData(Project.KEY);
-    if (project != null) {
-      final CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
-      presentation.setEnabled(suitesBundle != null);
-      presentation.setVisible(suitesBundle != null);
+    public HideCoverageInfoAction() {
+        super("&Hide Coverage Data", "Hide coverage data", AllIcons.Actions.Cancel);
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(final AnActionEvent e) {
+        CoverageDataManager.getInstance(e.getData(Project.KEY)).chooseSuitesBundle(null);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        final Presentation presentation = e.getPresentation();
+        presentation.setEnabled(false);
+        presentation.setVisible(e.isFromActionToolbar());
+        final Project project = e.getData(Project.KEY);
+        if (project != null) {
+            final CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
+            presentation.setEnabled(suitesBundle != null);
+            presentation.setVisible(suitesBundle != null);
+        }
+    }
 }

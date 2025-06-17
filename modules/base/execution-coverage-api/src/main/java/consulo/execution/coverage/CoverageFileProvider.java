@@ -17,16 +17,15 @@ package consulo.execution.coverage;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jul 7, 2006
+ * Date: Jul 7, 2006
  */
 public interface CoverageFileProvider {
-  
-  String getCoverageDataFilePath();
+    String getCoverageDataFilePath();
 
-  /**
-   * @return true if the coverage file exists, false otherwise
-   */
-  boolean ensureFileExists();
+    /**
+     * @return true if the coverage file exists, false otherwise
+     */
+    boolean ensureFileExists();
 
-  boolean isValid();
+    boolean isValid();
 }
