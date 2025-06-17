@@ -1,30 +1,34 @@
 package consulo.execution.coverage.view;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**
- * User: anna
- * Date: 1/2/12
+ * @author anna
+ * @since 2012-01-02
  */
 public class CoverageViewDescriptor extends NodeDescriptor {
-  private final Object myClassOrPackage;
- 
-  public CoverageViewDescriptor(final Project project, final NodeDescriptor parentDescriptor, final Object classOrPackage) {
-    super(parentDescriptor);
-    myClassOrPackage = classOrPackage;
-    myName = classOrPackage instanceof PsiNamedElement ? ((PsiNamedElement)classOrPackage).getName() : classOrPackage.toString();
-  }
+    private final Object myClassOrPackage;
 
-  @RequiredUIAccess
-  public boolean update() {
-    return false;
-  }
+    @RequiredReadAction
+    public CoverageViewDescriptor(Project project, NodeDescriptor parentDescriptor, Object classOrPackage) {
+        super(parentDescriptor);
+        myClassOrPackage = classOrPackage;
+        myName = classOrPackage instanceof PsiNamedElement namedElem ? namedElem.getName() : classOrPackage.toString();
+    }
 
-  public Object getElement() {
-    return myClassOrPackage;
-  }
+    @Override
+    @RequiredUIAccess
+    public boolean update() {
+        return false;
+    }
+
+    @Override
+    public Object getElement() {
+        return myClassOrPackage;
+    }
 }
   

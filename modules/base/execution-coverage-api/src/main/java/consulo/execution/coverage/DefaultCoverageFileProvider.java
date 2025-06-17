@@ -19,38 +19,41 @@ import java.io.File;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jul 8, 2006
+ * @since 2006-07-08
  */
 public final class DefaultCoverageFileProvider implements CoverageFileProvider {
-  private final File myFile;
-  private final String mySourceProvider;
+    private final File myFile;
+    private final String mySourceProvider;
 
-  public DefaultCoverageFileProvider(String path) {
-    this(new File(path), DefaultCoverageFileProvider.class.getName());
-  }
+    public DefaultCoverageFileProvider(String path) {
+        this(new File(path), DefaultCoverageFileProvider.class.getName());
+    }
 
-  public DefaultCoverageFileProvider(File file) {
-    this(file, DefaultCoverageFileProvider.class.getName());
-  }
+    public DefaultCoverageFileProvider(File file) {
+        this(file, DefaultCoverageFileProvider.class.getName());
+    }
 
-  public DefaultCoverageFileProvider(File file, String sourceProvider) {
-    myFile = file;
-    mySourceProvider = sourceProvider;
-  }
+    public DefaultCoverageFileProvider(File file, String sourceProvider) {
+        myFile = file;
+        mySourceProvider = sourceProvider;
+    }
 
-  public String getCoverageDataFilePath() {
-    return myFile.getPath();
-  }
+    @Override
+    public String getCoverageDataFilePath() {
+        return myFile.getPath();
+    }
 
-  public boolean ensureFileExists() {
-    return myFile.exists();
-  }
+    @Override
+    public boolean ensureFileExists() {
+        return myFile.exists();
+    }
 
-  public String getSourceProvider() {
-    return mySourceProvider;
-  }
+    public String getSourceProvider() {
+        return mySourceProvider;
+    }
 
-  public boolean isValid() {
-    return ensureFileExists();
-  }
+    @Override
+    public boolean isValid() {
+        return ensureFileExists();
+    }
 }
