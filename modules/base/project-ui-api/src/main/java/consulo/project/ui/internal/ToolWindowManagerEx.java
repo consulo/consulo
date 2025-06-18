@@ -35,8 +35,8 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
     @RequiredUIAccess
     public abstract void initToolWindow(@Nonnull ToolWindowFactory toolWindowFactory);
 
-    public static ToolWindowManagerEx getInstanceEx(final Project project) {
-        return (ToolWindowManagerEx)getInstance(project);
+    public static ToolWindowManagerEx getInstanceEx(Project project) {
+        return (ToolWindowManagerEx) getInstance(project);
     }
 
     @Deprecated
@@ -83,7 +83,7 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
     public abstract void hideToolWindow(@Nonnull String id, boolean hideSide);
 
     @RequiredUIAccess
-    public void hideToolWindow(final String id, final boolean hideSide, final boolean moveFocus) {
+    public void hideToolWindow(String id, boolean hideSide, boolean moveFocus) {
         hideToolWindow(id, hideSide);
     }
 

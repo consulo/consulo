@@ -125,7 +125,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
          */
         @Override
         public void resized(@Nonnull ToolWindowInternalDecorator s) {
-            DesktopInternalDecorator source = (DesktopInternalDecorator)s;
+            DesktopInternalDecorator source = (DesktopInternalDecorator) s;
 
             if (!source.isShowing()) {
                 return; // do not recalculate the tool window size if it is not yet shown (and, therefore, has 0,0,0,0 bounds)
@@ -144,7 +144,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                 if (frame == null || !frame.isShowing()) {
                     return;
                 }
-                info.setFloatingBounds(getRootBounds((JFrame)frame));
+                info.setFloatingBounds(getRootBounds((JFrame) frame));
             }
             else { // docked and sliding windows
                 ToolWindowAnchor anchor = info.getAnchor();
@@ -153,27 +153,27 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                     float sizeInSplit = ToolWindowAnchorUtil.isSplitVertically(anchor) ? source.getHeight() : source.getWidth();
                     if (splitter.getSecondComponent() == source) {
                         sizeInSplit += splitter.getDividerWidth();
-                        another = (DesktopInternalDecorator)splitter.getFirstComponent();
+                        another = (DesktopInternalDecorator) splitter.getFirstComponent();
                     }
                     else {
-                        another = (DesktopInternalDecorator)splitter.getSecondComponent();
+                        another = (DesktopInternalDecorator) splitter.getSecondComponent();
                     }
                     if (ToolWindowAnchorUtil.isSplitVertically(anchor)) {
-                        info.setSideWeight(sizeInSplit / (float)splitter.getHeight());
+                        info.setSideWeight(sizeInSplit / (float) splitter.getHeight());
                     }
                     else {
-                        info.setSideWeight(sizeInSplit / (float)splitter.getWidth());
+                        info.setSideWeight(sizeInSplit / (float) splitter.getWidth());
                     }
                 }
 
                 float paneWeight = anchor.isHorizontal()
-                    ? (float)source.getHeight() / (float)getToolWindowPanel().getMyLayeredPane().getHeight()
-                    : (float)source.getWidth() / (float)getToolWindowPanel().getMyLayeredPane().getWidth();
+                    ? (float) source.getHeight() / (float) getToolWindowPanel().getMyLayeredPane().getHeight()
+                    : (float) source.getWidth() / (float) getToolWindowPanel().getMyLayeredPane().getWidth();
                 info.setWeight(paneWeight);
                 if (another != null && ToolWindowAnchorUtil.isSplitVertically(anchor)) {
                     paneWeight = anchor.isHorizontal()
-                        ? (float)another.getHeight() / (float)getToolWindowPanel().getMyLayeredPane().getHeight()
-                        : (float)another.getWidth() / (float)getToolWindowPanel().getMyLayeredPane().getWidth();
+                        ? (float) another.getHeight() / (float) getToolWindowPanel().getMyLayeredPane().getHeight()
+                        : (float) another.getWidth() / (float) getToolWindowPanel().getMyLayeredPane().getWidth();
                     another.getWindowInfo().setWeight(paneWeight);
                 }
             }
@@ -231,7 +231,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             }
         });
 
-        myLayout.copyFrom(((WindowManagerEx)windowManager.get()).getLayout());
+        myLayout.copyFrom(((WindowManagerEx) windowManager.get()).getLayout());
 
         busConnection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
@@ -264,7 +264,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     @Nonnull
     @Override
     protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
-        return new DesktopStripeButton((DesktopInternalDecorator)internalDecorator, (DesktopToolWindowPanelImpl)myToolWindowPanel);
+        return new DesktopStripeButton((DesktopInternalDecorator) internalDecorator, (DesktopToolWindowPanelImpl) myToolWindowPanel);
     }
 
     @Nonnull
@@ -276,7 +276,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         @Nullable Object component,
         boolean shouldBeAvailable
     ) {
-        return new DesktopToolWindowImpl(this, id, displayName, canCloseContent, (JComponent)component, shouldBeAvailable);
+        return new DesktopToolWindowImpl(this, id, displayName, canCloseContent, (JComponent) component, shouldBeAvailable);
     }
 
     @Nonnull
@@ -287,7 +287,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         ToolWindowEx toolWindow,
         boolean dumbAware
     ) {
-        return new DesktopInternalDecorator(project, info, (DesktopToolWindowImpl)toolWindow, dumbAware);
+        return new DesktopInternalDecorator(project, info, (DesktopToolWindowImpl) toolWindow, dumbAware);
     }
 
     private void updateToolWindowHeaders() {
@@ -298,7 +298,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                 WindowInfoImpl[] infos = myLayout.getInfos();
                 for (WindowInfoImpl each : infos) {
                     if (each.isVisible() && getToolWindow(each.getId()) instanceof DesktopToolWindowImpl tw) {
-                        DesktopInternalDecorator decorator = (DesktopInternalDecorator)tw.getDecorator();
+                        DesktopInternalDecorator decorator = (DesktopInternalDecorator) tw.getDecorator();
                         if (decorator != null) {
                             decorator.repaint();
                             decorator.updateActiveAndHoverState();
@@ -437,14 +437,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                 processHoldState();
             }
         }
+        else if (myCurrentState == KeyState.pressed) {
+            myCurrentState = KeyState.released;
+            restartWaitingForSecondPressAlarm();
+        }
         else {
-            if (myCurrentState == KeyState.pressed) {
-                myCurrentState = KeyState.released;
-                restartWaitingForSecondPressAlarm();
-            }
-            else {
-                resetHoldState();
-            }
+            resetHoldState();
         }
     }
 
@@ -464,7 +462,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Nonnull
     public DesktopToolWindowPanelImpl getToolWindowPanel() {
-        return (DesktopToolWindowPanelImpl)myToolWindowPanel;
+        return (DesktopToolWindowPanelImpl) myToolWindowPanel;
     }
 
     private static IdeFocusManager getFocusManagerImpl(Project project) {
@@ -482,29 +480,32 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
         Disposer.register(this, () -> UIManager.removePropertyChangeListener(uiManagerPropertyListener));
 
-        WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+        WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
 
-        myFrame = (DesktopIdeFrameImpl)windowManager.getIdeFrame(myProject);
+        myFrame = (DesktopIdeFrameImpl) windowManager.getIdeFrame(myProject);
 
         myToolWindowPanel = new DesktopToolWindowPanelImpl(myFrame, this);
         Disposer.register(myProject, getToolWindowPanel());
-        JFrame jFrame = (JFrame)TargetAWT.to(myFrame.getWindow());
-        ((IdeRootPane)jFrame.getRootPane()).setToolWindowsPane(myToolWindowPanel);
-        IdeStatusBarImpl statusBar = (IdeStatusBarImpl)myFrame.getStatusBar();
-        statusBar.addToLeft(((DesktopToolWindowPanelImpl)myToolWindowPanel).getBottomStripe());
+        JFrame jFrame = (JFrame) TargetAWT.to(myFrame.getWindow());
+        ((IdeRootPane) jFrame.getRootPane()).setToolWindowsPane(myToolWindowPanel);
+        IdeStatusBarImpl statusBar = (IdeStatusBarImpl) myFrame.getStatusBar();
+        statusBar.addToLeft(((DesktopToolWindowPanelImpl) myToolWindowPanel).getBottomStripe());
 
         jFrame.setTitle(FrameTitleBuilder.getInstance().getProjectTitle(myProject));
-        ((IdeRootPane)jFrame.getRootPane()).updateToolbar();
+        ((IdeRootPane) jFrame.getRootPane()).updateToolbar();
 
-        IdeEventQueue.getInstance().addDispatcher(e -> {
-            if (e instanceof KeyEvent ke) {
-                dispatchKeyEvent(ke);
-            }
-            if (e instanceof WindowEvent && e.getID() == WindowEvent.WINDOW_LOST_FOCUS && e.getSource() == myFrame) {
-                resetHoldState();
-            }
-            return false;
-        }, myProject);
+        IdeEventQueue.getInstance().addDispatcher(
+            e -> {
+                if (e instanceof KeyEvent ke) {
+                    dispatchKeyEvent(ke);
+                }
+                if (e instanceof WindowEvent && e.getID() == WindowEvent.WINDOW_LOST_FOCUS && e.getSource() == myFrame) {
+                    resetHoldState();
+                }
+                return false;
+            },
+            myProject
+        );
     }
 
     @RequiredUIAccess
@@ -518,12 +519,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     protected void installFocusWatcher(String id, ToolWindow toolWindow) {
-        myId2FocusWatcher.put(id, new ToolWindowFocusWatcher((DesktopToolWindowImpl)toolWindow));
+        myId2FocusWatcher.put(id, new ToolWindowFocusWatcher((DesktopToolWindowImpl) toolWindow));
     }
 
     @Override
     protected void uninstallFocusWatcher(String id) {
-        ToolWindowFocusWatcher watcher = (ToolWindowFocusWatcher)myId2FocusWatcher.remove(id);
+        ToolWindowFocusWatcher watcher = (ToolWindowFocusWatcher) myId2FocusWatcher.remove(id);
         watcher.deinstall();
     }
 
@@ -546,7 +547,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     @RequiredUIAccess
     @Override
     protected void doWhenFirstShown(Object component, Runnable runnable) {
-        UiNotifyConnector.doWhenFirstShown((JComponent)component, () -> myProject.getUIAccess().give(runnable));
+        UiNotifyConnector.doWhenFirstShown((JComponent) component, () -> myProject.getUIAccess().give(runnable));
     }
 
     @RequiredUIAccess
@@ -556,11 +557,11 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         }
         String[] ids = getToolWindowIds();
 
-        WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+        WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
 
         // Remove ToolWindowsPane
-        JFrame window = (JFrame)TargetAWT.to(myFrame.getWindow());
-        ((IdeRootPane)window.getRootPane()).setToolWindowsPane(null);
+        JFrame window = (JFrame) TargetAWT.to(myFrame.getWindow());
+        ((IdeRootPane) window.getRootPane()).setToolWindowsPane(null);
         windowManager.releaseFrame(myFrame);
         updateToolWindowsPane();
 
@@ -602,7 +603,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
      */
     @Override
     protected DesktopFloatingDecorator getFloatingDecorator(String id) {
-        return (DesktopFloatingDecorator)super.getFloatingDecorator(id);
+        return (DesktopFloatingDecorator) super.getFloatingDecorator(id);
     }
 
     /**
@@ -610,7 +611,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
      */
     @Override
     protected DesktopWindowedDecorator getWindowedDecorator(String id) {
-        return (DesktopWindowedDecorator)super.myId2WindowedDecorator.get(id);
+        return (DesktopWindowedDecorator) super.myId2WindowedDecorator.get(id);
     }
 
     /**
@@ -619,7 +620,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     @Override
     @Nullable
     protected DesktopInternalDecorator getInternalDecorator(String id) {
-        return (DesktopInternalDecorator)super.getInternalDecorator(id);
+        return (DesktopInternalDecorator) super.getInternalDecorator(id);
     }
 
     /**
@@ -628,7 +629,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     @Override
     @Nullable
     protected DesktopStripeButton getStripeButton(String id) {
-        return (DesktopStripeButton)super.getStripeButton(id);
+        return (DesktopStripeButton) super.getStripeButton(id);
     }
 
     @Override
@@ -716,7 +717,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         FrameStateManager.getInstance().getApplicationActive().doWhenDone(() -> {
             Alarm alarm = new Alarm();
             alarm.addRequest(() -> {
-                ((BalloonImpl)balloon).setHideOnClickOutside(true);
+                ((BalloonImpl) balloon).setHideOnClickOutside(true);
                 Disposer.dispose(alarm);
             }, 100);
         });
@@ -823,19 +824,19 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     @RequiredUIAccess
     @Override
     protected void addFloatingDecorator(ToolWindowInternalDecorator decorator, WindowInfoImpl toBeShownInfo) {
-        new AddFloatingDecoratorCmd((DesktopInternalDecorator)decorator, toBeShownInfo).run();
+        new AddFloatingDecoratorCmd((DesktopInternalDecorator) decorator, toBeShownInfo).run();
     }
 
     @RequiredUIAccess
     @Override
     protected void addWindowedDecorator(ToolWindowInternalDecorator decorator, WindowInfoImpl toBeShownInfo) {
-        new AddWindowedDecoratorCmd((DesktopInternalDecorator)decorator, toBeShownInfo).run();
+        new AddWindowedDecoratorCmd((DesktopInternalDecorator) decorator, toBeShownInfo).run();
     }
 
     @RequiredUIAccess
     @Override
     public void requestFocusInToolWindow(String id, boolean forced) {
-        DesktopToolWindowImpl toolWindow = (DesktopToolWindowImpl)getToolWindow(id);
+        DesktopToolWindowImpl toolWindow = (DesktopToolWindowImpl) getToolWindow(id);
         FocusWatcher focusWatcher = myId2FocusWatcher.get(id);
 
         new DesktopRequestFocusInToolWindowCmd(getFocusManager(), toolWindow, focusWatcher, myProject).requestFocus();
@@ -849,7 +850,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             return;
         }
 
-        JRootPane rootPane = ((JFrame)TargetAWT.to(myFrame.getWindow())).getRootPane();
+        JRootPane rootPane = ((JFrame) TargetAWT.to(myFrame.getWindow())).getRootPane();
         if (rootPane != null) {
             rootPane.revalidate();
             rootPane.repaint();
@@ -857,7 +858,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     private FileEditorsSplitters getSplittersToFocus() {
-        WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+        WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
 
         Window activeWindow = TargetAWT.to(windowManager.getMostRecentFocusedWindow());
 
@@ -884,11 +885,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             String id = myActiveStack.peekPersistent(i);
             ToolWindow toolWindow = getToolWindow(id);
             LOG.assertTrue(toolWindow != null);
-            if (toolWindow.isAvailable()) {
-                if (condition == null || condition.test(toolWindow.getComponent())) {
-                    lastActiveToolWindowId = id;
-                    break;
-                }
+            if (toolWindow.isAvailable() && (condition == null || condition.test(toolWindow.getComponent()))) {
+                lastActiveToolWindowId = id;
+                break;
             }
         }
         return lastActiveToolWindowId;
@@ -915,7 +914,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         Element element = new Element("state");
 
         // Save frame's bounds
-        JFrame jFrame = (JFrame)TargetAWT.to(myFrame.getWindow());
+        JFrame jFrame = (JFrame) TargetAWT.to(myFrame.getWindow());
         Rectangle frameBounds = jFrame.getBounds();
         Element frameElement = new Element(FRAME_ELEMENT);
         element.addContent(frameElement);
@@ -1061,7 +1060,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         public void run() {
             myWindowedDecorator.show(false);
             Window window = myWindowedDecorator.getFrame();
-            JRootPane rootPane = ((RootPaneContainer)window).getRootPane();
+            JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
             Rectangle rootPaneBounds = rootPane.getBounds();
             Point point = rootPane.getLocationOnScreen();
             Rectangle windowBounds = window.getBounds();
@@ -1087,7 +1086,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             if (!frame.isShowing()) {
                 return;
             }
-            Rectangle2D bounds = getRootBounds((JFrame)frame);
+            Rectangle2D bounds = getRootBounds((JFrame) frame);
             info.setFloatingBounds(bounds);
         }
 
