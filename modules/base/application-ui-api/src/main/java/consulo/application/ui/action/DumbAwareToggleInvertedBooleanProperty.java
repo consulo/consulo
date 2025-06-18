@@ -21,11 +21,13 @@ import consulo.component.util.config.BooleanProperty;
 import consulo.ui.image.Image;
 
 public class DumbAwareToggleInvertedBooleanProperty extends ToggleInvertedBooleanProperty implements DumbAware {
-  public DumbAwareToggleInvertedBooleanProperty(String text,
-                                                String description,
-                                                Image icon,
-                                                AbstractProperty.AbstractPropertyContainer properties,
-                                                BooleanProperty property) {
-    super(text, description, icon, properties, property);
-  }
+    public DumbAwareToggleInvertedBooleanProperty(
+        String text,
+        String description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties,
+        BooleanProperty property
+    ) {
+        super(text, description, icon, properties, property);
+    }
 }

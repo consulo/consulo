@@ -21,21 +21,23 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 
 public class ToggleInvertedBooleanProperty extends ToggleBooleanProperty {
-  public ToggleInvertedBooleanProperty(String text,
-                                       String description,
-                                       Image icon,
-                                       AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
-    super(text, description, icon, properties, property);
-  }
+    public ToggleInvertedBooleanProperty(
+        String text,
+        String description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property
+    ) {
+        super(text, description, icon, properties, property);
+    }
 
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return !getProperty().get(getProperties()).booleanValue();
-  }
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        return !getProperty().get(getProperties()).booleanValue();
+    }
 
-  @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    getProperty().set(getProperties(), Boolean.valueOf(!state));
-  }
+    @Override
+    public void setSelected(AnActionEvent e, boolean state) {
+        getProperty().set(getProperties(), Boolean.valueOf(!state));
+    }
 
 }

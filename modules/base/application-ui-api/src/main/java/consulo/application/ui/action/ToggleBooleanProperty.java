@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.ui.action;
 
 import consulo.component.util.config.AbstractProperty;
@@ -24,55 +23,80 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 public class ToggleBooleanProperty extends ToggleAction {
-  private final AbstractProperty.AbstractPropertyContainer myProperties;
-  private final AbstractProperty<Boolean> myProperty;
+    private final AbstractProperty.AbstractPropertyContainer myProperties;
+    private final AbstractProperty<Boolean> myProperty;
 
-  public ToggleBooleanProperty(String text, String description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
-    super(text, description, icon);
-    myProperties = properties;
-    myProperty = property;
-  }
-
-  public ToggleBooleanProperty(LocalizeValue text, LocalizeValue description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
-    super(text, description, icon);
-    myProperties = properties;
-    myProperty = property;
-  }
-
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return myProperty.get(myProperties).booleanValue();
-  }
-
-  @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    myProperty.set(myProperties, Boolean.valueOf(state));
-  }
-
-  protected AbstractProperty.AbstractPropertyContainer getProperties() {
-    return myProperties;
-  }
-
-  protected AbstractProperty<Boolean> getProperty() {
-    return myProperty;
-  }
-
-  public static abstract class Disablable extends ToggleBooleanProperty {
-    public Disablable(String text, String description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
-      super(text, description, icon, properties, property);
+    public ToggleBooleanProperty(
+        String text,
+        String description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties,
+        BooleanProperty property
+    ) {
+        super(text, description, icon);
+        myProperties = properties;
+        myProperty = property;
     }
 
-    public Disablable(LocalizeValue text, LocalizeValue description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
-      super(text, description, icon, properties, property);
+    public ToggleBooleanProperty(
+        LocalizeValue text,
+        LocalizeValue description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties,
+        BooleanProperty property
+    ) {
+        super(text, description, icon);
+        myProperties = properties;
+        myProperty = property;
     }
 
-    protected abstract boolean isEnabled();
-    protected abstract boolean isVisible();
-
-    public void update(AnActionEvent e) {
-      super.update(e);
-      e.getPresentation().setEnabled(isEnabled());
-      e.getPresentation().setVisible(isVisible());
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        return myProperty.get(myProperties).booleanValue();
     }
-  }
+
+    @Override
+    public void setSelected(AnActionEvent e, boolean state) {
+        myProperty.set(myProperties, Boolean.valueOf(state));
+    }
+
+    protected AbstractProperty.AbstractPropertyContainer getProperties() {
+        return myProperties;
+    }
+
+    protected AbstractProperty<Boolean> getProperty() {
+        return myProperty;
+    }
+
+    public static abstract class Disablable extends ToggleBooleanProperty {
+        public Disablable(
+            String text,
+            String description,
+            Image icon,
+            AbstractProperty.AbstractPropertyContainer properties,
+            BooleanProperty property
+        ) {
+            super(text, description, icon, properties, property);
+        }
+
+        public Disablable(
+            LocalizeValue text,
+            LocalizeValue description,
+            Image icon,
+            AbstractProperty.AbstractPropertyContainer properties,
+            BooleanProperty property
+        ) {
+            super(text, description, icon, properties, property);
+        }
+
+        protected abstract boolean isEnabled();
+
+        protected abstract boolean isVisible();
+
+        public void update(AnActionEvent e) {
+            super.update(e);
+            e.getPresentation().setEnabled(isEnabled());
+            e.getPresentation().setVisible(isVisible());
+        }
+    }
 }

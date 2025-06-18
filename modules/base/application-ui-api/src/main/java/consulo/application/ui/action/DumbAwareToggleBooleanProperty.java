@@ -16,16 +16,18 @@
 package consulo.application.ui.action;
 
 import consulo.application.dumb.DumbAware;
-import consulo.application.ui.action.ToggleBooleanProperty;
 import consulo.component.util.config.AbstractProperty;
 import consulo.component.util.config.BooleanProperty;
 import consulo.ui.image.Image;
 
 public class DumbAwareToggleBooleanProperty extends ToggleBooleanProperty implements DumbAware {
-  public DumbAwareToggleBooleanProperty(String text,
-                                        String description,
-                                        Image icon,
-                                        AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
-    super(text, description, icon, properties, property);
-  }
+    public DumbAwareToggleBooleanProperty(
+        String text,
+        String description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties,
+        BooleanProperty property
+    ) {
+        super(text, description, icon, properties, property);
+    }
 }
