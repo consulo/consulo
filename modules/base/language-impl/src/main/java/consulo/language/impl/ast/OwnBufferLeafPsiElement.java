@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.source.tree;
+package consulo.language.impl.ast;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
-import consulo.language.impl.ast.ChangeUtil;
-import consulo.language.impl.ast.LeafElement;
-import consulo.language.impl.ast.SharedImplUtil;
-import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.version.LanguageVersion;
@@ -47,17 +45,20 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     super(type, text);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getFirstChild() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getLastChild() {
     return null;
@@ -72,11 +73,13 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     return SharedImplUtil.getParent(this);
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getNextSibling() {
     return SharedImplUtil.getNextSibling(this);
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getPrevSibling() {
     return SharedImplUtil.getPrevSibling(this);
@@ -89,11 +92,13 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     return file;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement findElementAt(int offset) {
     return this;
   }
 
+  @RequiredReadAction
   @Override
   public PsiReference findReferenceAt(int offset) {
     return SharedPsiElementImplUtil.findReferenceAt(this, offset);
@@ -131,11 +136,13 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
@@ -146,23 +153,27 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
     throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
     throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public void delete() throws IncorrectOperationException {
     LOG.assertTrue(getTreeParent() != null);
@@ -176,11 +187,13 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     CheckUtil.checkWritable(this);
   }
 
+  @RequiredWriteAction
   @Override
   public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     LOG.assertTrue(getTreeParent() != null);
@@ -188,12 +201,13 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
     TreeElement elementCopy = ChangeUtil.copyToElement(newElement);
     getTreeParent().replaceChildInternal(this, elementCopy);
     elementCopy = ChangeUtil.decodeInformation(elementCopy);
-    final PsiElement result = SourceTreeToPsiMap.treeElementToPsi(elementCopy);
+    PsiElement result = SourceTreeToPsiMap.treeElementToPsi(elementCopy);
 
     this.invalidate();
     return result;
   }
 
+  @Override
   public String toString() {
     return "PsiElement" + "(" + getElementType().toString() + ")";
   }
@@ -247,12 +261,13 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
   @Override
   @Nonnull
   public Project getProject() {
-    final PsiManager manager = getManager();
+    PsiManager manager = getManager();
     if (manager == null) throw new PsiInvalidElementAccessException(this);
 
     return manager.getProject();
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Language getLanguage() {
@@ -270,10 +285,11 @@ public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
   }
 
   @Override
-  public boolean isEquivalentTo(final PsiElement another) {
+  public boolean isEquivalentTo(PsiElement another) {
     return this == another;
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public LanguageVersion getLanguageVersion() {

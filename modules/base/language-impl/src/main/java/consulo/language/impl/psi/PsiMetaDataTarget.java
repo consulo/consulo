@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.meta;
+package consulo.language.impl.psi;
 
 import consulo.language.pom.PomRenameableTarget;
-import consulo.language.impl.psi.DelegatePsiTarget;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiWritableMetaData;
 

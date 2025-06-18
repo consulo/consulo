@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
+package consulo.language.editor.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
@@ -21,8 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.psi.file.FileLookupInfoProvider;
+import consulo.language.editor.FileLookupInfoProvider;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
@@ -46,7 +45,7 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class FileInfoManager implements Disposable {
-    private final Map<FileType, FileLookupInfoProvider> myFileType2InfoProvider = new HashMap<FileType, FileLookupInfoProvider>();
+    private final Map<FileType, FileLookupInfoProvider> myFileType2InfoProvider = new HashMap<>();
 
     @Inject
     public FileInfoManager(@Nonnull Application application) {
@@ -59,7 +58,7 @@ public class FileInfoManager implements Disposable {
     }
 
     public static FileInfoManager getFileInfoManager() {
-        return ServiceManager.getService(FileInfoManager.class);
+        return Application.get().getService(FileInfoManager.class);
     }
 
     @RequiredReadAction

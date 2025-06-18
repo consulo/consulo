@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager;
+import consulo.language.editor.impl.internal.FileInfoManager;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.Language;

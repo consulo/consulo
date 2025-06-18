@@ -704,9 +704,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.packaging.impl.run;
   exports consulo.ide.impl.project;
   exports consulo.ide.impl.projectView;
-  exports consulo.ide.impl.psi;
   exports consulo.ide.impl.psi.codeStyle.statusbar;
-  exports consulo.ide.impl.psi.file;
   exports consulo.ide.impl.psi.impl;
   exports consulo.ide.impl.psi.impl.cache;
   exports consulo.ide.impl.psi.impl.cache.impl;
@@ -717,10 +715,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.impl.source;
   exports consulo.ide.impl.psi.impl.source.codeStyle;
   exports consulo.ide.impl.psi.impl.source.resolve.reference;
-  exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
-  exports consulo.ide.impl.psi.impl.source.tree;
-  exports consulo.ide.impl.psi.meta;
   exports consulo.ide.impl.psi.search;
   exports consulo.ide.impl.psi.search.scope;
   exports consulo.ide.impl.psi.search.scope.impl;
@@ -730,7 +725,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.stubs;
   exports consulo.ide.impl.psi.stubs.provided;
   exports consulo.ide.impl.psi.templateLanguages;
-  exports consulo.ide.impl.psi.util;
   exports consulo.ide.impl.roots.impl.property;
   exports consulo.ide.impl.roots.orderEntry;
   exports consulo.ide.impl.roots.ui.configuration;

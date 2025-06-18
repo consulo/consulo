@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi;
+package consulo.language.impl.psi;
 
 import consulo.util.lang.StringUtil;
 import consulo.language.pom.PomRenameableTarget;
-import consulo.language.impl.psi.DelegatePsiTarget;
 import consulo.language.psi.PsiNamedElement;
 
 import jakarta.annotation.Nonnull;

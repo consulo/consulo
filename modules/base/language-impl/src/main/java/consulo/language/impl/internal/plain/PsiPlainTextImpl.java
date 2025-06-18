@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-/*
- * @author max
- */
-package consulo.ide.impl.psi.impl.source.tree;
+package consulo.language.impl.internal.plain;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.impl.ast.LeafElement;
-import consulo.language.impl.ast.ASTLeafFactory;
-import consulo.language.version.LanguageVersion;
+import consulo.language.impl.ast.OwnBufferLeafPsiElement;
 import consulo.language.plain.ast.PlainTextTokenTypes;
-import consulo.language.ast.IElementType;
+import consulo.language.plain.psi.PsiPlainText;
+import consulo.language.psi.PsiElementVisitor;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
-@ExtensionImpl
-public class PlainTextASTLeafFactory implements ASTLeafFactory {
-  @Nonnull
-  @Override
-  public LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text) {
-    return new PsiPlainTextImpl(text);
+public class PsiPlainTextImpl extends OwnBufferLeafPsiElement implements PsiPlainText {
+  protected PsiPlainTextImpl(CharSequence text) {
+    super(PlainTextTokenTypes.PLAIN_TEXT, text);
   }
 
   @Override
-  public boolean test(@Nullable IElementType input) {
-    return input == PlainTextTokenTypes.PLAIN_TEXT;
+  public void accept(@Nonnull PsiElementVisitor visitor){
+    visitor.visitPlainText(this);
+  }
+
+  @Override
+  public String toString(){
+    return "PsiPlainText";
   }
 }

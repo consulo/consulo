@@ -13,38 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.internal;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.component.extension.ExtensionPoint;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.module.content.DirectoryIndex;
-import consulo.util.lang.ObjectUtil;
-import consulo.application.util.query.Query;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.LowMemoryWatcher;
+import consulo.application.util.query.Query;
+import consulo.component.extension.ExtensionPoint;
 import consulo.disposer.Disposable;
 import consulo.language.psi.*;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
+import consulo.module.content.DirectoryIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.util.ModuleContentUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -70,14 +69,15 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         Project project,
         ProjectFileIndex projectFileIndex,
         PsiManager psiManager,
-        Provider<DirectoryIndex> directoryIndex
+        Provider<DirectoryIndex> directoryIndex,
+        VirtualFileManager virtualFileManager
     ) {
         myProject = project;
         myProjectFileIndex = projectFileIndex;
         myPsiManager = psiManager;
         myDirectoryIndex = directoryIndex;
 
-        VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
+        virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
             @Override
             public void fileCreated(@Nonnull VirtualFileEvent event) {
                 myPackageCache.clear();
@@ -161,7 +161,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         @Nonnull Class<? extends ModuleExtension> extensionClass,
         @Nonnull String qualifiedName
     ) {
-        Module moduleForFile = ModuleUtil.findModuleForFile(virtualFile, myProject);
+        Module moduleForFile = ModuleContentUtil.findModuleForFile(virtualFile, myProject);
         if (moduleForFile == null) {
             return null;
         }
@@ -191,7 +191,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
                 myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
             for (OrderEntry orderEntry : orderEntriesForFile) {
                 Module ownerModule = orderEntry.getOwnerModule();
-                ModuleExtension extension = ModuleUtilCore.getExtension(ownerModule, extensionClass);
+                ModuleExtension extension = ownerModule.getExtension(extensionClass);
                 if (extension == null) {
                     continue;
                 }

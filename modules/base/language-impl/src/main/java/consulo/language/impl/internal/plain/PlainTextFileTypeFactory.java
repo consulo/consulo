@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.impl.internal.plain;
 
-package consulo.ide.impl.psi.impl.source.tree;
-
-import consulo.language.plain.ast.PlainTextTokenTypes;
-import consulo.language.psi.PsiElementVisitor;
-import consulo.language.plain.psi.PsiPlainText;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.plain.PlainTextFileType;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import jakarta.annotation.Nonnull;
 
-public class PsiPlainTextImpl extends OwnBufferLeafPsiElement implements PsiPlainText {
-  protected PsiPlainTextImpl(CharSequence text) {
-    super(PlainTextTokenTypes.PLAIN_TEXT, text);
-  }
-
+/**
+ * @author VISTALL
+ * @since 06/07/24
+ */
+@ExtensionImpl
+public class PlainTextFileTypeFactory extends FileTypeFactory {
   @Override
-  public void accept(@Nonnull PsiElementVisitor visitor){
-    visitor.visitPlainText(this);
-  }
-
-  public String toString(){
-    return "PsiPlainText";
+  public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+    consumer.consume(PlainTextFileType.INSTANCE, "txt;sh;bat;cmd;policy;log;cgi;MF;jad;jam;htaccess");
   }
 }

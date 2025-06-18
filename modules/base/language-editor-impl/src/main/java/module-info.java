@@ -25,6 +25,7 @@ module consulo.language.editor.impl {
   exports consulo.language.editor.impl.inspection.reference;
   exports consulo.language.editor.impl.inspection.scheme;
 
+  exports consulo.language.editor.impl.internal to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.daemon to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.completion to consulo.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.language.editor.impl.internal.intention to consulo.ide.impl;

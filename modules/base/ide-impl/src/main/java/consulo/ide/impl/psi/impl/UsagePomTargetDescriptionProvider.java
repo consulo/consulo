@@ -33,7 +33,7 @@ import jakarta.annotation.Nonnull;
  * @author peter
  */
 @ExtensionImpl(id = "pomDefault", order = "last")
-public class DefaultPomTargetDescriptionProvider extends PomDescriptionProvider {
+public class UsagePomTargetDescriptionProvider extends PomDescriptionProvider {
   @Override
   public String getElementDescription(@Nonnull PomTarget element, @Nonnull ElementDescriptionLocation location) {
     if (element instanceof PsiElement) return null;
