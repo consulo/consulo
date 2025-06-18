@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.extapi.psi;
+package consulo.ide.impl.psi.impl.source;
 
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElementVisitor;
-import consulo.ide.impl.psi.impl.source.LightPsiFileImpl;
 import jakarta.annotation.Nonnull;
 
 public abstract class LightPsiFileBase extends LightPsiFileImpl {

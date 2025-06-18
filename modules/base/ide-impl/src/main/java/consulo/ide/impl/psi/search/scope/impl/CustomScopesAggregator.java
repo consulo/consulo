@@ -4,18 +4,15 @@ package consulo.ide.impl.psi.search.scope.impl;
 import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.content.internal.scope.CustomScopesProviders;
 import consulo.content.scope.NamedScope;
-import consulo.logging.Logger;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public class CustomScopesAggregator {
-  private static final Logger LOG = Logger.getInstance(CustomScopesAggregator.class);
-
   @Nonnull
   public static List<NamedScope> getAllCustomScopes(@Nonnull Project project) {
     Set<NamedScope> allScopes = new LinkedHashSet<>();

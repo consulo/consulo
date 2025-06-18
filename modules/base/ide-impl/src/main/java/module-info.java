@@ -300,7 +300,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.execution.ui.layout.impl;
   exports consulo.ide.impl.idea.execution.util;
   exports consulo.ide.impl.idea.execution.wsl;
-  exports consulo.ide.impl.idea.extapi.psi;
   exports consulo.ide.impl.idea.find;
   exports consulo.ide.impl.idea.find.actions;
   exports consulo.ide.impl.idea.find.editorHeaderActions;
