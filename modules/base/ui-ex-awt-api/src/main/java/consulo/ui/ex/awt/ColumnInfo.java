@@ -15,21 +15,25 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.util.Comparator;
+import java.util.Objects;
 
 public abstract class ColumnInfo<Item, Aspect> {
     public static class StringColumn extends ColumnInfo<String, String> {
-        public StringColumn(final String name) {
+        public StringColumn(String name) {
             super(name);
         }
 
         @Override
-        public String valueOf(final String item) {
+        public String valueOf(String item) {
             return item;
         }
     }
@@ -37,6 +41,12 @@ public abstract class ColumnInfo<Item, Aspect> {
     private String myName;
     public static final ColumnInfo[] EMPTY_ARRAY = new ColumnInfo[0];
 
+    public ColumnInfo(@Nonnull LocalizeValue name) {
+        myName = name.get();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public ColumnInfo(String name) {
         myName = name;
     }
@@ -46,6 +56,7 @@ public abstract class ColumnInfo<Item, Aspect> {
         return null;
     }
 
+    @Override
     public String toString() {
         return getName();
     }
@@ -75,7 +86,6 @@ public abstract class ColumnInfo<Item, Aspect> {
     }
 
     public void setValue(Item item, Aspect value) {
-
     }
 
     @Nullable
@@ -83,7 +93,7 @@ public abstract class ColumnInfo<Item, Aspect> {
         return null;
     }
 
-    public TableCellRenderer getCustomizedRenderer(final Item o, TableCellRenderer renderer) {
+    public TableCellRenderer getCustomizedRenderer(Item o, TableCellRenderer renderer) {
         return renderer;
     }
 
@@ -110,6 +120,12 @@ public abstract class ColumnInfo<Item, Aspect> {
         return -1;
     }
 
+    public void setName(@Nonnull LocalizeValue name) {
+        myName = name.get();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void setName(String s) {
         myName = s;
     }
@@ -119,7 +135,8 @@ public abstract class ColumnInfo<Item, Aspect> {
         return null;
     }
 
-    public boolean equals(final Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -127,15 +144,12 @@ public abstract class ColumnInfo<Item, Aspect> {
             return false;
         }
 
-        final ColumnInfo that = (ColumnInfo) o;
+        ColumnInfo that = (ColumnInfo) o;
 
-        if (myName != null ? !myName.equals(that.myName) : that.myName != null) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(myName, that.myName);
     }
 
+    @Override
     public int hashCode() {
         return myName != null ? myName.hashCode() : 0;
     }

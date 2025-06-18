@@ -4,6 +4,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.execution.coverage.localize.CoverageLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.commander.AbstractListBuilder;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -41,7 +42,7 @@ public class CoverageViewBuilder extends AbstractListBuilder {
     ) {
         super(project, list, model, treeStructure, AlphaComparator.INSTANCE, false);
         myTable = table;
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "Building coverage report...") {
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, CoverageLocalize.coverageViewBuildingCoverageReport()) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 buildRoot();

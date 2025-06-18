@@ -412,7 +412,7 @@ final class ServiceTreeView extends ServiceView {
   private static void setEmptyText(JComponent component, StatusText emptyText) {
     emptyText.setText(ExecutionLocalize.serviceViewEmptyTreeText());
     emptyText.appendSecondaryText(
-      ExecutionLocalize.serviceViewAddServiceActionName().get(),
+      ExecutionLocalize.serviceViewAddServiceActionName(),
       SimpleTextAttributes.LINK_PLAIN_ATTRIBUTES,
       e -> {
         ActionGroup addActionGroup = ObjectUtil.tryCast(

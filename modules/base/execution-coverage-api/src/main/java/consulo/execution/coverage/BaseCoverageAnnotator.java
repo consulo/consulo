@@ -3,6 +3,7 @@ package consulo.execution.coverage;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.execution.coverage.localize.CoverageLocalize;
 import consulo.execution.coverage.view.CoverageView;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,7 +35,7 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
             if (myProject.isDisposed()) {
                 return;
             }
-            ProgressManager.getInstance().run(new Task.Backgroundable(myProject, "Loading coverage data...", false) {
+            ProgressManager.getInstance().run(new Task.Backgroundable(myProject, CoverageLocalize.coverageViewLoadingData(), false) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     request.run();

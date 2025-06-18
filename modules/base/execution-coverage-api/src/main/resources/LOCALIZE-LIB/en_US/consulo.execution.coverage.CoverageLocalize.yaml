@@ -59,7 +59,7 @@ coverage.view.edit.run.configuration.2:
 coverage.view.element:
     text: Element
 coverage.view.loading.data:
-    text: Loading coverage data
+    text: Loading coverage data...
 coverage.view.no.coverage.results:
     text: No coverage results.
 coverage.view.text.covered:
@@ -68,6 +68,8 @@ coverage.view.text.files.covered:
     text: '{0}% files'
 coverage.view.text.lines.covered:
     text: '{0}% lines covered'
+coverage.view.building.coverage.report:
+    text: Building coverage report...
 coverage.view.title:
     text: Coverage
 delete.file:
@@ -97,7 +99,7 @@ no.coverage.suites.configured:
 run.selected.configuration.with.coverage.enabled:
     text: Run selected configuration with coverage enabled
 run.with.coverage.mnemonic:
-    text: Run '%s' with Co_verage
+    text: "Run ''{0}'' with Co_verage"
 run.with.coverage:
     text: Run with Co_verage
 settings.coverage.activate.coverage.view:

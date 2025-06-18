@@ -74,7 +74,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
 
         myTable = new JBTable(myModel);
         StatusText emptyText = myTable.getEmptyText();
-        emptyText.setText("No coverage results.");
+        emptyText.setText(CoverageLocalize.coverageViewNoCoverageResults());
         RunConfigurationBase configuration = suitesBundle.getRunConfiguration();
         if (configuration != null) {
             emptyText.appendText(LocalizeValue.join(
@@ -91,7 +91,11 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
                         RunManager.getInstance(project).findConfigurationByName(configurationName);
                     if (configurationSettings != null) {
                         RunConfigurationEditor.getInstance(project)
-                            .editConfiguration(project, configurationSettings, ExecutionLocalize.editRunConfigurationForItemDialogTitle(configurationName));
+                            .editConfiguration(
+                                project,
+                                configurationSettings,
+                                ExecutionLocalize.editRunConfigurationForItemDialogTitle(configurationName)
+                            );
                     }
                     else {
                         Messages.showErrorDialog(
@@ -115,6 +119,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         myBuilder.setParentTitle(titleLabel);
         new DoubleClickListener() {
             @Override
+            @RequiredReadAction
             protected boolean onDoubleClick(MouseEvent e) {
                 drillDown(structure);
                 return true;
@@ -314,8 +319,8 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     private class FlattenPackagesAction extends ToggleAction {
         private FlattenPackagesAction() {
             super(
-                LocalizeValue.localizeTODO("Flatten Packages"),
-                LocalizeValue.localizeTODO("Flatten Packages"),
+                CoverageLocalize.coverageFlattenPackages(),
+                CoverageLocalize.coverageFlattenPackages(),
                 PlatformIconGroup.objectbrowserFlattenpackages()
             );
         }
@@ -341,7 +346,6 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     }
 
     private class GoUpAction extends AnAction {
-
         private final CoverageViewTreeStructure myTreeStructure;
 
         public GoUpAction(CoverageViewTreeStructure treeStructure) {
