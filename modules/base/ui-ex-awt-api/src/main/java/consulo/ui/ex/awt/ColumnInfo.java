@@ -28,6 +28,12 @@ import java.util.Objects;
 
 public abstract class ColumnInfo<Item, Aspect> {
     public static class StringColumn extends ColumnInfo<String, String> {
+        public StringColumn(@Nonnull LocalizeValue name) {
+            super(name);
+        }
+
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
         public StringColumn(String name) {
             super(name);
         }

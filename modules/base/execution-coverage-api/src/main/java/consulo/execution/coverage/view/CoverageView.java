@@ -11,7 +11,7 @@ import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
-import consulo.execution.coverage.localize.CoverageLocalize;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
@@ -74,16 +74,16 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
 
         myTable = new JBTable(myModel);
         StatusText emptyText = myTable.getEmptyText();
-        emptyText.setText(CoverageLocalize.coverageViewNoCoverageResults());
+        emptyText.setText(ExecutionCoverageLocalize.coverageViewNoCoverageResults());
         RunConfigurationBase configuration = suitesBundle.getRunConfiguration();
         if (configuration != null) {
             emptyText.appendText(LocalizeValue.join(
                 LocalizeValue.space(),
-                CoverageLocalize.coverageViewEditRunConfiguration0(),
+                ExecutionCoverageLocalize.coverageViewEditRunConfiguration0(),
                 LocalizeValue.space()
             ));
             emptyText.appendText(
-                CoverageLocalize.coverageViewEditRunConfiguration1(),
+                ExecutionCoverageLocalize.coverageViewEditRunConfiguration1(),
                 SimpleTextAttributes.LINK_ATTRIBUTES,
                 e -> {
                     String configurationName = configuration.getName();
@@ -100,13 +100,13 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
                     else {
                         Messages.showErrorDialog(
                             project,
-                            CoverageLocalize.coverageViewConfigurationWasNotFound(configurationName).get(),
+                            ExecutionCoverageLocalize.coverageViewConfigurationWasNotFound(configurationName).get(),
                             CommonLocalize.titleError().get()
                         );
                     }
                 }
             );
-            emptyText.appendText(LocalizeValue.join(LocalizeValue.space(), CoverageLocalize.coverageViewEditRunConfiguration2()));
+            emptyText.appendText(LocalizeValue.join(LocalizeValue.space(), ExecutionCoverageLocalize.coverageViewEditRunConfiguration2()));
         }
         myTable.getColumnModel().getColumn(0).setCellRenderer(new NodeDescriptorTableCellRenderer());
         myTable.getTableHeader().setReorderingAllowed(false);
@@ -319,8 +319,8 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     private class FlattenPackagesAction extends ToggleAction {
         private FlattenPackagesAction() {
             super(
-                CoverageLocalize.coverageFlattenPackages(),
-                CoverageLocalize.coverageFlattenPackages(),
+                ExecutionCoverageLocalize.coverageFlattenPackages(),
+                ExecutionCoverageLocalize.coverageFlattenPackages(),
                 PlatformIconGroup.objectbrowserFlattenpackages()
             );
         }
