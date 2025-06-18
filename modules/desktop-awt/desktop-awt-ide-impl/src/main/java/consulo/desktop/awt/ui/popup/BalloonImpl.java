@@ -411,7 +411,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         int cornerToPointerDistance
     ) {
         myBorderColor = borderColor;
-        myBorderInsets = borderInsets != null ? borderInsets : JBInsets.create(5, 8);
+        myBorderInsets = borderInsets != null ? borderInsets : JBInsets.create(8, 8);
         myFillColor = fillColor;
         myContent = content;
         myHideOnMouse = hideOnMouse;
