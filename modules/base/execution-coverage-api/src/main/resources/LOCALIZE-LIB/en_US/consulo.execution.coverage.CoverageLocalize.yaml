@@ -1,9 +1,29 @@
+action.GenerateCoverageReport.description:
+    text: Export coverage report to HTML
+action.GenerateCoverageReport.text:
+    text: _Generate Coverage Report…
+action.HideCoverage.description:
+    text: Close all opened coverage reports
+action.HideCoverage.text:
+    text: Hide Coverage
+action.ImportCoverage.description:
+    text: Import a report collected in CI from disk
+action.ImportCoverage.text:
+    text: Import External Coverage Report…
+action.SwitchCoverage.description:
+    text: Inspect previously opened coverage reports
+action.SwitchCoverage.text:
+    text: Manage Coverage Reports…
 action.description.show.tests.covering.line:
     text: Show tests covering line
 action.name.cover:
     text: Cover
 action.text.show.tests.covering.line:
     text: Show Tests Covering Line
+branch.coverage.message:
+    text: |-
+        Hits: {0}
+        Covered {1}/{2} branches
 cannot.show.coverage.reports.from.different.engines:
     text: Cannot show coverage reports from different engines.
 choose.coverage.suite.to.display:
@@ -12,8 +32,12 @@ code.coverage:
     text: Code Coverage
 configurable.CoverageOptionsConfigurable.display.name:
     text: Coverage
+configurable.name.editor.colors.page:
+    text: Editor | {0} | {1}
 coverage.add.to.active.suites:
     text: '&Add to Active Suites'
+coverage.collecting.data:
+    text: Collecting coverage data
 coverage.data.no.coverage.button:
     text: '&No Coverage'
 coverage.data.not.found:
@@ -30,6 +54,36 @@ coverage.edit.colors.action.name:
     text: Edit Coverage Colors
 coverage.edit.colors.description:
     text: Edit coverage colors
+coverage.error.collecting.data:
+    text: Error Collecting Coverage Data
+coverage.error.collecting.data.text:
+    text: Error collecting coverage data
+coverage.error.loading.report:
+    text: Error loading coverage report
+coverage.files:
+    text: files
+coverage.files.capitalised:
+    text: Files
+coverage.filter.branch.gotit:
+    text: Only {0} changed in the current branch are shown. You can configure filtering here.
+coverage.filter.gotit:
+    text: Only {0} with uncommitted changes are shown. You can configure filtering here.
+coverage.flatten.packages:
+    text: Flatten packages
+coverage.hide.coverage.link.name:
+    text: Hide coverage
+coverage.hide.fully.covered.elements:
+    text: Hide Fully Covered {0}
+coverage.import.report.toolwindow.empty.text:
+    text: Import a report collected in CI from disk
+coverage.info.string.file:
+    text: '{0,choice,1#files|2#files}'
+coverage.is.not.importable:
+    text: Coverage cannot be imported to this environment. {0} coverage.py or {1} ''{2}'' in Settings | Build, Execution, Deployment | Coverage.
+coverage.is.not.importable.option.enable:
+    text: enable
+coverage.is.not.importable.option.install:
+    text: Install
 coverage.next.change.fully.covered:
     text: Fully Covered
 coverage.next.change.partial.covered:
@@ -46,8 +100,20 @@ coverage.previous.place:
     text: Previous {0}
 coverage.replace.active.suites:
     text: '&Replace Active Suites'
+coverage.results.suite.name:
+    text: '{0} Coverage Results'
+coverage.show.fully.covered.elements:
+    text: Show fully covered {0}
+coverage.show.only.elements.in.feature.branch:
+    text: Show Only Modified {0} (Relative to {1} Branch)
+coverage.show.only.modified.elements:
+    text: Show Only {0} with Uncommitted Changes
+coverage.show.unmodified.elements:
+    text: Show {0} without uncommitted changes
 coverage.tab.title:
     text: Code Coverage
+coverage.view.building.coverage.report:
+    text: Building coverage report...
 coverage.view.configuration.was.not.found:
     text: Configuration ''{0}'' was not found.
 coverage.view.edit.run.configuration.0:
@@ -58,30 +124,42 @@ coverage.view.edit.run.configuration.2:
     text: to fix configuration settings.
 coverage.view.element:
     text: Element
+coverage.view.filters.group:
+    text: Filters
 coverage.view.loading.data:
     text: Loading coverage data...
 coverage.view.no.coverage.results:
     text: No coverage results.
+coverage.view.packages.root:
+    text: all
 coverage.view.text.covered:
     text: covered
 coverage.view.text.files.covered:
     text: '{0}% files'
 coverage.view.text.lines.covered:
     text: '{0}% lines covered'
-coverage.view.building.coverage.report:
-    text: Building coverage report...
 coverage.view.title:
     text: Coverage
 delete.file:
     text: Delete File
+dialog.message.would.you.like.to.delete.file.on.disk:
+    text: Would you like to delete file ''{0}'' on disk?
+dialog.title.find.tests.by.names:
+    text: Find Tests by Names
 display.coverage.prompt:
     text: Do you want to display coverage data for ''{0}''?
 extract.information.about.tests:
     text: Extract Information About Tests
-dialog.title.find.tests.by.names:
-    text: Find Tests by Names
+following.test.could.not.be.found.1:
+    text: 'Following {0, choice, 1#test|2#tests} could not be found: {1}'
 generate.coverage.report.for:
     text: 'Generate Coverage Report for: ''''{0}'''''
+hint.text.failed.to.load.covered.tests:
+    text: Failed to load covered tests
+hits.message:
+    text: 'hits: {0}'
+hits.title:
+    text: 'Hits: {0}'
 lines.covered.info.less.than.one.percent:
     text: <1% lines covered
 lines.covered.info.no.lines.covered:
@@ -90,18 +168,28 @@ lines.covered.info.not.covered:
     text: not covered
 lines.covered.info.percent.lines.covered:
     text: '% lines covered'
+link.label.close:
+    text: Close
 marker.code.coverage:
     text: 'marker: code coverage'
 no.coverage.runner.available.for:
     text: No coverage runner available for {0}
 no.coverage.suites.configured:
     text: No coverage suites configured.
+node.summary.coverage.statistic:
+    text: '{0} in ''''{1}'''''
+node.summary.no.coverage:
+    text: No coverage in ''{0}''
+popup.title.tests.covering.line:
+    text: Tests Covering Line {0}:{1}
+remote.suites.node:
+    text: Remote
 run.selected.configuration.with.coverage.enabled:
     text: Run selected configuration with coverage enabled
-run.with.coverage.mnemonic:
-    text: "Run ''{0}'' with Co_verage"
 run.with.coverage:
     text: Run with Co_verage
+run.with.coverage.mnemonic:
+    text: Run ''{0}'' with Co_verage
 settings.coverage.activate.coverage.view:
     text: Activate Coverage &View
 settings.coverage.add.to.the.active.suites:
@@ -110,103 +198,15 @@ settings.coverage.do.not.apply.collected.coverage:
     text: Do &not apply collected coverage
 settings.coverage.replace.active.suites.with.the.new.one:
     text: '&Replace active suites with the new one'
+settings.coverage.show.in.project.view:
+    text: Show coverage in the project view
 settings.coverage.show.options.before.applying.coverage.to.the.editor:
     text: '&Show options before applying coverage to the editor'
 settings.coverage.when.new.coverage.is.gathered:
     text: When new coverage is gathered
-settings.coverage.show.in.project.view:
-    text: Show coverage in the project view
-table.column.name.statistics:
-    text: Statistics, %
-node.summary.no.coverage:
-    text: No coverage in ''{0}''
-node.summary.coverage.statistic:
-    text: '{0} in ''''{1}'''''
-configurable.name.editor.colors.page:
-    text: Editor | {0} | {1}
-dialog.message.would.you.like.to.delete.file.on.disk:
-    text: Would you like to delete file ''{0}'' on disk?
-link.label.close:
-    text: Close
-hint.text.failed.to.load.covered.tests:
-    text: Failed to load covered tests
-popup.title.tests.covering.line:
-    text: Tests Covering Line {0}:{1}
-coverage.info.string.file:
-    text: '{0,choice,1#files|2#files}'
-remote.suites.node:
-    text: Remote
-coverage.results.suite.name:
-    text: '{0} Coverage Results'
-hits.title:
-    text: 'Hits: {0}'
-branch.coverage.message:
-    text: |-
-        Hits: {0}
-        Covered {1}/{2} branches
-hits.message:
-    text: 'hits: {0}'
-following.test.could.not.be.found.1:
-    text: 'Following {0, choice, 1#test|2#tests} could not be found: {1}'
-show.coverage.per.test.action.text:
-    text: Show Coverage per Test
 show.coverage.per.test.action.description:
     text: Show coverage per test
-coverage.view.packages.root:
-    text: all
-coverage.is.not.importable:
-    text: Coverage cannot be imported to this environment. {0} coverage.py or {1} ''{2}'' in Settings | Build, Execution, Deployment | Coverage.
-coverage.is.not.importable.option.install:
-    text: Install
-coverage.is.not.importable.option.enable:
-    text: enable
-coverage.collecting.data:
-    text: Collecting coverage data
-coverage.error.collecting.data:
-    text: Error Collecting Coverage Data
-coverage.error.collecting.data.text:
-    text: Error collecting coverage data
-coverage.error.loading.report:
-    text: Error loading coverage report
-coverage.flatten.packages:
-    text: Flatten packages
-coverage.hide.fully.covered.elements:
-    text: Hide Fully Covered {0}
-coverage.show.only.modified.elements:
-    text: Show Only {0} with Uncommitted Changes
-coverage.show.only.elements.in.feature.branch:
-    text: Show Only Modified {0} (Relative to {1} Branch)
-coverage.show.fully.covered.elements:
-    text: Show fully covered {0}
-coverage.show.unmodified.elements:
-    text: Show {0} without uncommitted changes
-coverage.view.filters.group:
-    text: Filters
-coverage.files:
-    text: files
-coverage.files.capitalised:
-    text: Files
-coverage.filter.gotit:
-    text: Only {0} with uncommitted changes are shown. You can configure filtering here.
-coverage.filter.branch.gotit:
-    text: Only {0} changed in the current branch are shown. You can configure filtering here.
-coverage.import.report.toolwindow.empty.text:
-    text: Import a report collected in CI from disk
-action.ImportCoverage.text:
-    text: Import External Coverage Report…
-action.ImportCoverage.description:
-    text: Import a report collected in CI from disk
-action.GenerateCoverageReport.text:
-    text: _Generate Coverage Report…
-action.GenerateCoverageReport.description:
-    text: Export coverage report to HTML
-action.SwitchCoverage.text:
-    text: Manage Coverage Reports…
-action.SwitchCoverage.description:
-    text: Inspect previously opened coverage reports
-action.HideCoverage.text:
-    text: Hide Coverage
-action.HideCoverage.description:
-    text: Close all opened coverage reports
-coverage.hide.coverage.link.name:
-    text: Hide coverage
+show.coverage.per.test.action.text:
+    text: Show Coverage per Test
+table.column.name.statistics:
+    text: Statistics, %
