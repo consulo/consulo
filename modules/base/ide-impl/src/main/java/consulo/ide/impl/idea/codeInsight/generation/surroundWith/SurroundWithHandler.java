@@ -69,7 +69,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
             return;
         }
         if (file instanceof PsiCompiledElement) {
-            HintManager.getInstance().showErrorHint(editor, LanguageLocalize.hintTextCanTModifyDecompiledCode().get());
+            HintManager.getInstance().showErrorHint(editor, LanguageLocalize.hintTextCanTModifyDecompiledCode());
             return;
         }
 
@@ -78,7 +78,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
             showPopup(editor, applicable);
         }
         else if (!project.getApplication().isUnitTestMode()) {
-            HintManager.getInstance().showErrorHint(editor, LanguageLocalize.hintTextCouldnTFindSurround().get());
+            HintManager.getInstance().showErrorHint(editor, LanguageLocalize.hintTextCouldnTFindSurround());
         }
     }
 

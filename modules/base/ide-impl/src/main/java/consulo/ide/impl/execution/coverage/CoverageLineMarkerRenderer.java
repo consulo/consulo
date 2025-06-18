@@ -29,6 +29,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.document.Document;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.action.HideCoverageInfoAction;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontPanelFactory;
 import consulo.ide.impl.idea.application.options.colors.NewColorAndFontPanel;
@@ -326,7 +327,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         public GotoPreviousCoveredLineAction(Editor editor, int lineNumber) {
             super(editor, lineNumber);
             copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_PREVIOUS_OCCURENCE));
-            getTemplatePresentation().setText("Previous Coverage Mark");
+            getTemplatePresentation().setTextValue(ExecutionCoverageLocalize.coveragePreviousMark());
         }
 
         @Override
@@ -345,7 +346,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             super.update(e);
             String nextChange = getNextChange();
             if (nextChange != null) {
-                e.getPresentation().setText("Previous " + nextChange);
+                e.getPresentation().setTextValue(ExecutionCoverageLocalize.coveragePreviousPlace(nextChange));
             }
         }
     }
@@ -354,7 +355,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         public GotoNextCoveredLineAction(Editor editor, int lineNumber) {
             super(editor, lineNumber);
             copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_NEXT_OCCURENCE));
-            getTemplatePresentation().setText("Next Coverage Mark");
+            getTemplatePresentation().setTextValue(ExecutionCoverageLocalize.coverageNextMark());
         }
 
         @Override
@@ -373,7 +374,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             super.update(e);
             String nextChange = getNextChange();
             if (nextChange != null) {
-                e.getPresentation().setText("Next " + nextChange);
+                e.getPresentation().setTextValue(ExecutionCoverageLocalize.coverageNextPlace(nextChange));
             }
         }
     }
@@ -435,11 +436,11 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
                 if (lineData != null) {
                     switch (lineData.getStatus()) {
                         case LineCoverage.NONE:
-                            return "Uncovered";
+                            return ExecutionCoverageLocalize.coverageNextChangeUncovered().get();
                         case LineCoverage.PARTIAL:
-                            return "Partial Covered";
+                            return ExecutionCoverageLocalize.coverageNextChangePartialCovered().get();
                         case LineCoverage.FULL:
-                            return "Fully Covered";
+                            return ExecutionCoverageLocalize.coverageNextChangeFullyCovered().get();
                     }
                 }
             }
@@ -458,7 +459,11 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         private final int myLineNumber;
 
         private EditCoverageColorsAction(Editor editor, int lineNumber) {
-            super("Edit coverage colors", "Edit coverage colors", PlatformIconGroup.generalGearplain());
+            super(
+                ExecutionCoverageLocalize.coverageEditColorsActionName(),
+                ExecutionCoverageLocalize.coverageEditColorsDescription(),
+                PlatformIconGroup.generalGearplain()
+            );
             myEditor = editor;
             myLineNumber = lineNumber;
         }
@@ -481,14 +486,17 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
                         @Override
                         @RequiredUIAccess
                         public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
-                            final SimpleEditorPreview preview = new SimpleEditorPreview(options, colorsPage);
+                            SimpleEditorPreview preview = new SimpleEditorPreview(options, colorsPage);
                             return NewColorAndFontPanel.create(preview, colorsPage.getDisplayName(), options, null, colorsPage);
                         }
 
                         @Nonnull
                         @Override
                         public String getPanelDisplayName() {
-                            return "Editor | " + getDisplayName() + " | " + colorsPage.getDisplayName();
+                            return ExecutionCoverageLocalize.configurableNameEditorColorsPage(
+                                getDisplayName(),
+                                colorsPage.getDisplayName()
+                            ).get();
                         }
                     };
                     return Collections.singletonList(panelFactory);

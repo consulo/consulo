@@ -6,8 +6,20 @@ action.name.save.as.configuration:
     text: Save As
 action.name.save.configuration:
     text: Save Configuration
+action.show.ignored.description:
+    text: Show ignored
+action.show.ignored.text:
+    text: Show Ignored
+action.show.inline.statistics.description:
+    text: Show/hide the test duration in the tree
+action.show.inline.statistics.text:
+    text: Show Inline Statistics
 action.terminating.process.progress.kill.description:
     text: Kill process
+action.toggle.auto.test.description:
+    text: Toggle automatic rerun of tests on code changes
+action.toggle.auto.test.text:
+    text: Toggle Auto-Test
 add.new.run.configuration.action.name:
     text: Add New ''{0}'' Configuration
 add.new.run.configuration.action2.name:

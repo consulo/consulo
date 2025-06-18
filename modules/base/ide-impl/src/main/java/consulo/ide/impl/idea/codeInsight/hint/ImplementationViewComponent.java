@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeEditor.*;
@@ -85,6 +86,13 @@ public class ImplementationViewComponent extends JPanel {
     private final ActionToolbar myToolbar;
     private JLabel myLabel;
 
+    public void setHint(JBPopup hint, @Nonnull LocalizeValue title) {
+        myHint = hint;
+        myTitle = title.get();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void setHint(JBPopup hint, String title) {
         myHint = hint;
         myTitle = title;

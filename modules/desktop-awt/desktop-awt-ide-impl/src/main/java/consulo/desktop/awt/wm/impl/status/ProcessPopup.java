@@ -19,6 +19,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
 import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.StatusBarEx;
@@ -133,7 +134,7 @@ public class ProcessPopup  {
     });
     builder.setMovable(true);
     builder.setResizable(true);
-    builder.setTitle(IdeBundle.message("progress.window.title"));
+    builder.setTitle(IdeLocalize.progressWindowTitle());
     builder.setDimensionServiceKey(null, "ProcessPopupWindow", true);
     builder.setMinSize(getMinSize());
     builder.setCancelOnClickOutside(false);

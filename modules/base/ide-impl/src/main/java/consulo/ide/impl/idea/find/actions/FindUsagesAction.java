@@ -107,7 +107,7 @@ public class FindUsagesAction extends AnAction {
                         if (editor.isDisposed() || !editor.getComponent().isShowing()) {
                             return;
                         }
-                        HintManager.getInstance().showErrorHint(editor, FindLocalize.findNoUsagesAtCursorError().get());
+                        HintManager.getInstance().showErrorHint(editor, FindLocalize.findNoUsagesAtCursorError());
                     },
                     project.getDisposed()
                 );

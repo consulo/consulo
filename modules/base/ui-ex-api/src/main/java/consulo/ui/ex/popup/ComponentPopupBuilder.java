@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.popup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
@@ -23,6 +24,14 @@ import java.util.function.Supplier;
  * @author max
  */
 public interface ComponentPopupBuilder {
+    @Nonnull
+    default ComponentPopupBuilder setTitle(@Nonnull LocalizeValue title) {
+        setTitle(title.get());
+        return this;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     @Nonnull
     ComponentPopupBuilder setTitle(String title);
 

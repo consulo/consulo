@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
 import consulo.project.Project;
@@ -254,7 +255,7 @@ public class ConfigurationErrorsComponent extends JPanel {
       myFixGroup.add(Box.createHorizontalStrut(3));
       buttons.add(myFixGroup);
 
-      buttons.add(new ToolbarAlikeButton(AllIcons.General.AutoscrollToSource, NAVIGATE_ACTION_NAME) {
+      buttons.add(new ToolbarAlikeButton(PlatformIconGroup.generalAutoscrolltosource(), NAVIGATE_ACTION_NAME) {
       });
       buttons.add(Box.createHorizontalStrut(3));
 

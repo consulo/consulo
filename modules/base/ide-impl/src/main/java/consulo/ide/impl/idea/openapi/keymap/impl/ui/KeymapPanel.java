@@ -442,7 +442,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
                     myPopup = JBPopupFactory.getInstance()
                         .createComponentPopupBuilder(createFilteringPanel(), null)
                         .setRequestFocus(true)
-                        .setTitle(KeyMapLocalize.filterSettingsPopupTitle().get())
+                        .setTitle(KeyMapLocalize.filterSettingsPopupTitle())
                         .setCancelKeyEnabled(false)
                         .setMovable(true)
                         .createPopup();

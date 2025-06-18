@@ -20,7 +20,6 @@ import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -43,7 +42,7 @@ public class ImportTestsFromFileAction extends AbstractImportTestsAction {
     public VirtualFile getFile(@Nonnull Project project) {
         FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
             .withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
-        xmlDescriptor.withTitleValue(LocalizeValue.localizeTODO("Choose a File with Tests Result"));
+        xmlDescriptor.withTitleValue(SMTestLocalize.smTestRunnerImportTestChooseTestFileTitle());
         return IdeaFileChooser.chooseFile(xmlDescriptor, project, null);
     }
 }

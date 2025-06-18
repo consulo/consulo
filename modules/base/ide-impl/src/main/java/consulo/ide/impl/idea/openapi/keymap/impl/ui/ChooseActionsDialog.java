@@ -36,6 +36,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 
@@ -179,7 +180,7 @@ public class ChooseActionsDialog extends DialogWrapper {
         if (myPopup == null || myPopup.getContent() == null) {
           myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(createFilteringPanel(), null)
             .setRequestFocus(true)
-            .setTitle(KeyMapBundle.message("filter.settings.popup.title"))
+            .setTitle(KeyMapLocalize.filterSettingsPopupTitle())
             .setMovable(true)
             .createPopup();
         }

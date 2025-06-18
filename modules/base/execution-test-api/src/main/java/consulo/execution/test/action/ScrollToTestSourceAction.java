@@ -15,12 +15,12 @@
  */
 package consulo.execution.test.action;
 
-import consulo.application.AllIcons;
 import consulo.application.ui.action.ToggleBooleanProperty;
 import consulo.component.util.config.AbstractProperty;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 public class ScrollToTestSourceAction extends ToggleBooleanProperty.Disablable {
   private TestFrameworkRunningModel myModel;
@@ -29,7 +29,7 @@ public class ScrollToTestSourceAction extends ToggleBooleanProperty.Disablable {
     super(
       ExecutionLocalize.junitAutoScrollToSourceActionName(),
       ExecutionLocalize.junitOpenTextInEditorActionName(),
-      AllIcons.General.AutoscrollToSource,
+      PlatformIconGroup.generalAutoscrolltosource(),
       properties,
       TestConsoleProperties.SCROLL_TO_SOURCE
     );
