@@ -15,12 +15,28 @@
  */
 package consulo.application.ui.action;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.dumb.DumbAware;
 import consulo.component.util.config.AbstractProperty;
 import consulo.component.util.config.BooleanProperty;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 public class DumbAwareToggleInvertedBooleanProperty extends ToggleInvertedBooleanProperty implements DumbAware {
+    public DumbAwareToggleInvertedBooleanProperty(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties,
+        BooleanProperty property
+    ) {
+        super(text, description, icon, properties, property);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
     public DumbAwareToggleInvertedBooleanProperty(
         String text,
         String description,

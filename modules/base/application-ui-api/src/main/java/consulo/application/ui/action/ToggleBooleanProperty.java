@@ -15,17 +15,35 @@
  */
 package consulo.application.ui.action;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.util.config.AbstractProperty;
 import consulo.component.util.config.BooleanProperty;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 public class ToggleBooleanProperty extends ToggleAction {
     private final AbstractProperty.AbstractPropertyContainer myProperties;
     private final AbstractProperty<Boolean> myProperty;
 
+    public ToggleBooleanProperty(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties,
+        BooleanProperty property
+    ) {
+        super(text, description, icon);
+        myProperties = properties;
+        myProperty = property;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
     public ToggleBooleanProperty(
         String text,
         String description,
@@ -38,26 +56,14 @@ public class ToggleBooleanProperty extends ToggleAction {
         myProperty = property;
     }
 
-    public ToggleBooleanProperty(
-        LocalizeValue text,
-        LocalizeValue description,
-        Image icon,
-        AbstractProperty.AbstractPropertyContainer properties,
-        BooleanProperty property
-    ) {
-        super(text, description, icon);
-        myProperties = properties;
-        myProperty = property;
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        return myProperty.get(myProperties);
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
-        return myProperty.get(myProperties).booleanValue();
-    }
-
-    @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-        myProperty.set(myProperties, Boolean.valueOf(state));
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        myProperty.set(myProperties, state);
     }
 
     protected AbstractProperty.AbstractPropertyContainer getProperties() {
@@ -70,8 +76,8 @@ public class ToggleBooleanProperty extends ToggleAction {
 
     public static abstract class Disablable extends ToggleBooleanProperty {
         public Disablable(
-            String text,
-            String description,
+            @Nonnull LocalizeValue text,
+            @Nonnull LocalizeValue description,
             Image icon,
             AbstractProperty.AbstractPropertyContainer properties,
             BooleanProperty property
@@ -79,9 +85,12 @@ public class ToggleBooleanProperty extends ToggleAction {
             super(text, description, icon, properties, property);
         }
 
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
+        @SuppressWarnings("deprecation")
         public Disablable(
-            LocalizeValue text,
-            LocalizeValue description,
+            String text,
+            String description,
             Image icon,
             AbstractProperty.AbstractPropertyContainer properties,
             BooleanProperty property
@@ -93,7 +102,9 @@ public class ToggleBooleanProperty extends ToggleAction {
 
         protected abstract boolean isVisible();
 
-        public void update(AnActionEvent e) {
+        @Override
+        @RequiredUIAccess
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(isEnabled());
             e.getPresentation().setVisible(isVisible());

@@ -15,12 +15,27 @@
  */
 package consulo.application.ui.action;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.util.config.AbstractProperty;
 import consulo.component.util.config.BooleanProperty;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 public class ToggleInvertedBooleanProperty extends ToggleBooleanProperty {
+    public ToggleInvertedBooleanProperty(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property
+    ) {
+        super(text, description, icon, properties, property);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
     public ToggleInvertedBooleanProperty(
         String text,
         String description,
@@ -31,13 +46,12 @@ public class ToggleInvertedBooleanProperty extends ToggleBooleanProperty {
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
-        return !getProperty().get(getProperties()).booleanValue();
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        return !getProperty().get(getProperties());
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-        getProperty().set(getProperties(), Boolean.valueOf(!state));
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        getProperty().set(getProperties(), !state);
     }
-
 }
