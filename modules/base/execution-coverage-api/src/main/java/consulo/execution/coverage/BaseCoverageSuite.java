@@ -157,7 +157,6 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
         String collectedLineInfo = element.getAttributeValue(COVERAGE_BY_TEST_ENABLED_ATTRIBUTE_NAME);
         myCoverageByTestEnabled = collectedLineInfo != null && Boolean.valueOf(collectedLineInfo);
 
-
         // tracing
         String tracingEnabled = element.getAttributeValue(TRACING_ENABLED_ATTRIBUTE_NAME);
         myTracingEnabled = tracingEnabled != null && Boolean.valueOf(tracingEnabled);

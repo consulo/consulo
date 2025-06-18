@@ -11,7 +11,7 @@ import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
-import consulo.execution.coverage.localize.CoverageLocalize;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
@@ -74,16 +74,16 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
 
         myTable = new JBTable(myModel);
         StatusText emptyText = myTable.getEmptyText();
-        emptyText.setText("No coverage results.");
+        emptyText.setText(ExecutionCoverageLocalize.coverageViewNoCoverageResults());
         RunConfigurationBase configuration = suitesBundle.getRunConfiguration();
         if (configuration != null) {
             emptyText.appendText(LocalizeValue.join(
                 LocalizeValue.space(),
-                CoverageLocalize.coverageViewEditRunConfiguration0(),
+                ExecutionCoverageLocalize.coverageViewEditRunConfiguration0(),
                 LocalizeValue.space()
             ));
             emptyText.appendText(
-                CoverageLocalize.coverageViewEditRunConfiguration1(),
+                ExecutionCoverageLocalize.coverageViewEditRunConfiguration1(),
                 SimpleTextAttributes.LINK_ATTRIBUTES,
                 e -> {
                     String configurationName = configuration.getName();
@@ -91,18 +91,22 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
                         RunManager.getInstance(project).findConfigurationByName(configurationName);
                     if (configurationSettings != null) {
                         RunConfigurationEditor.getInstance(project)
-                            .editConfiguration(project, configurationSettings, ExecutionLocalize.editRunConfigurationForItemDialogTitle(configurationName));
+                            .editConfiguration(
+                                project,
+                                configurationSettings,
+                                ExecutionLocalize.editRunConfigurationForItemDialogTitle(configurationName)
+                            );
                     }
                     else {
                         Messages.showErrorDialog(
                             project,
-                            CoverageLocalize.coverageViewConfigurationWasNotFound(configurationName).get(),
+                            ExecutionCoverageLocalize.coverageViewConfigurationWasNotFound(configurationName).get(),
                             CommonLocalize.titleError().get()
                         );
                     }
                 }
             );
-            emptyText.appendText(LocalizeValue.join(LocalizeValue.space(), CoverageLocalize.coverageViewEditRunConfiguration2()));
+            emptyText.appendText(LocalizeValue.join(LocalizeValue.space(), ExecutionCoverageLocalize.coverageViewEditRunConfiguration2()));
         }
         myTable.getColumnModel().getColumn(0).setCellRenderer(new NodeDescriptorTableCellRenderer());
         myTable.getTableHeader().setReorderingAllowed(false);
@@ -115,6 +119,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         myBuilder.setParentTitle(titleLabel);
         new DoubleClickListener() {
             @Override
+            @RequiredReadAction
             protected boolean onDoubleClick(MouseEvent e) {
                 drillDown(structure);
                 return true;
@@ -314,8 +319,8 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     private class FlattenPackagesAction extends ToggleAction {
         private FlattenPackagesAction() {
             super(
-                LocalizeValue.localizeTODO("Flatten Packages"),
-                LocalizeValue.localizeTODO("Flatten Packages"),
+                ExecutionCoverageLocalize.coverageFlattenPackages(),
+                ExecutionCoverageLocalize.coverageFlattenPackages(),
                 PlatformIconGroup.objectbrowserFlattenpackages()
             );
         }
@@ -341,7 +346,6 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     }
 
     private class GoUpAction extends AnAction {
-
         private final CoverageViewTreeStructure myTreeStructure;
 
         public GoUpAction(CoverageViewTreeStructure treeStructure) {

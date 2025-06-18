@@ -1,6 +1,7 @@
 package consulo.execution.coverage;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.execution.executor.Executor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -15,13 +16,13 @@ public class CoverageExecutor extends Executor {
     @Nonnull
     @Override
     public LocalizeValue getStartActionText() {
-        return LocalizeValue.localizeTODO("Run with Co_verage");
+        return ExecutionCoverageLocalize.runWithCoverage();
     }
 
     @Nonnull
     @Override
     public LocalizeValue getStartActiveText(@Nonnull String configurationName) {
-        return LocalizeValue.localizeTODO("Run " + configurationName + " with Co_verage");
+        return ExecutionCoverageLocalize.runWithCoverageMnemonic(configurationName);
     }
 
     @Nonnull
@@ -44,13 +45,13 @@ public class CoverageExecutor extends Executor {
     @Nonnull
     @Override
     public LocalizeValue getDescription() {
-        return LocalizeValue.localizeTODO("Run selected configuration with coverage enabled");
+        return ExecutionCoverageLocalize.runSelectedConfigurationWithCoverageEnabled();
     }
 
     @Override
     @Nonnull
     public LocalizeValue getActionName() {
-        return LocalizeValue.localizeTODO("Cover");
+        return ExecutionCoverageLocalize.actionNameCover();
     }
 
     @Override
