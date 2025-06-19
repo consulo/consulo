@@ -74,10 +74,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     private final class MyToolWindowPropertyChangeListener implements PropertyChangeListener {
         @Override
         @RequiredUIAccess
-        public void propertyChange(final PropertyChangeEvent e) {
-            ToolWindow toolWindow = (ToolWindow)e.getSource();
+        public void propertyChange(PropertyChangeEvent e) {
+            ToolWindow toolWindow = (ToolWindow) e.getSource();
             if (ToolWindowEx.PROP_AVAILABLE.equals(e.getPropertyName())) {
-                final WindowInfoImpl info = getInfo(toolWindow.getId());
+                WindowInfoImpl info = getInfo(toolWindow.getId());
                 if (!toolWindow.isAvailable() && info.isVisible()) {
                     hideToolWindow(toolWindow.getId(), false);
                 }
@@ -96,25 +96,25 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     protected abstract class MyInternalDecoratorListenerBase implements InternalDecoratorListener {
         @Override
         @RequiredUIAccess
-        public void anchorChanged(@Nonnull final ToolWindowInternalDecorator source, @Nonnull final ToolWindowAnchor anchor) {
+        public void anchorChanged(@Nonnull ToolWindowInternalDecorator source, @Nonnull ToolWindowAnchor anchor) {
             setToolWindowAnchor(source.getToolWindow().getId(), anchor);
         }
 
         @Override
         @RequiredUIAccess
-        public void autoHideChanged(@Nonnull final ToolWindowInternalDecorator source, final boolean autoHide) {
+        public void autoHideChanged(@Nonnull ToolWindowInternalDecorator source, boolean autoHide) {
             setToolWindowAutoHide(source.getToolWindow().getId(), autoHide);
         }
 
         @Override
         @RequiredUIAccess
-        public void hidden(@Nonnull final ToolWindowInternalDecorator source) {
+        public void hidden(@Nonnull ToolWindowInternalDecorator source) {
             hideToolWindow(source.getToolWindow().getId(), false);
         }
 
         @Override
         @RequiredUIAccess
-        public void hiddenSide(@Nonnull final ToolWindowInternalDecorator source) {
+        public void hiddenSide(@Nonnull ToolWindowInternalDecorator source) {
             hideToolWindow(source.getToolWindow().getId(), true);
         }
 
@@ -125,19 +125,19 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
         @Override
         @RequiredUIAccess
-        public void activated(@Nonnull final ToolWindowInternalDecorator source) {
+        public void activated(@Nonnull ToolWindowInternalDecorator source) {
             activateToolWindow(source.getToolWindow().getId(), true, true);
         }
 
         @Override
         @RequiredUIAccess
-        public void typeChanged(@Nonnull final ToolWindowInternalDecorator source, @Nonnull final ToolWindowType type) {
+        public void typeChanged(@Nonnull ToolWindowInternalDecorator source, @Nonnull ToolWindowType type) {
             setToolWindowType(source.getToolWindow().getId(), type);
         }
 
         @Override
         @RequiredUIAccess
-        public void sideStatusChanged(@Nonnull final ToolWindowInternalDecorator source, final boolean isSideTool) {
+        public void sideStatusChanged(@Nonnull ToolWindowInternalDecorator source, boolean isSideTool) {
             setSideTool(source.getToolWindow().getId(), isSideTool);
         }
 
@@ -237,10 +237,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     // region Abstract Platform Dependent Staff
     @RequiredUIAccess
-    protected abstract void requestFocusInToolWindow(final String id, boolean forced);
+    protected abstract void requestFocusInToolWindow(String id, boolean forced);
 
     @RequiredUIAccess
-    protected abstract void removeWindowedDecorator(final WindowInfoImpl info);
+    protected abstract void removeWindowedDecorator(WindowInfoImpl info);
 
     @RequiredUIAccess
     protected abstract void addFloatingDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo);
@@ -353,7 +353,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
      *
      * @throws IllegalStateException if tool window isn't installed.
      */
-    protected void checkId(final String id) {
+    protected void checkId(String id) {
         if (!myLayout.isToolWindowRegistered(id)) {
             throw new IllegalStateException("window with id=\"" + id + "\" isn't registered");
         }
@@ -361,8 +361,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     @Nonnull
     protected ToolWindow registerDisposable(
-        @Nonnull final String id,
-        @Nonnull final Disposable parentDisposable,
+        @Nonnull String id,
+        @Nonnull Disposable parentDisposable,
         @Nonnull ToolWindow window
     ) {
         Disposer.register(parentDisposable, () -> unregisterToolWindow(id));
@@ -373,7 +373,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
      * @return internal decorator for the tool window with specified <code>ID</code>.
      */
     @Nullable
-    protected ToolWindowInternalDecorator getInternalDecorator(final String id) {
+    protected ToolWindowInternalDecorator getInternalDecorator(String id) {
         return myId2InternalDecorator.get(id);
     }
 
@@ -381,7 +381,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
      * @return floating decorator for the tool window with specified <code>ID</code>.
      */
     @Nullable
-    protected ToolWindowFloatingDecorator getFloatingDecorator(final String id) {
+    protected ToolWindowFloatingDecorator getFloatingDecorator(String id) {
         return myId2FloatingDecorator.get(id);
     }
 
@@ -398,11 +398,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
      * @return tool button for the window with specified <code>ID</code>.
      */
     @Nullable
-    protected ToolWindowStripeButton getStripeButton(final String id) {
+    protected ToolWindowStripeButton getStripeButton(String id) {
         return myId2StripeButton.get(id);
     }
 
-    protected void fireToolWindowRegistered(final String id) {
+    protected void fireToolWindowRegistered(String id) {
         myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.class).toolWindowsRegistered(List.of(id), this);
     }
 
@@ -410,38 +410,38 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.class).stateChanged(this);
     }
 
-    public ToolWindowAnchor getToolWindowAnchor(final String id) {
+    public ToolWindowAnchor getToolWindowAnchor(String id) {
         checkId(id);
         return getInfo(id).getAnchor();
     }
 
     @RequiredUIAccess
-    public ToolWindowType getToolWindowInternalType(final String id) {
+    public ToolWindowType getToolWindowInternalType(String id) {
         UIAccess.assertIsUIThread();
         checkId(id);
         return getInfo(id).getInternalType();
     }
 
-    public ToolWindowType getToolWindowType(final String id) {
+    public ToolWindowType getToolWindowType(String id) {
         checkId(id);
         return getInfo(id).getType();
     }
 
     @RequiredUIAccess
-    public boolean isToolWindowActive(final String id) {
+    public boolean isToolWindowActive(String id) {
         UIAccess.assertIsUIThread();
         checkId(id);
         return getInfo(id).isActive();
     }
 
     @RequiredUIAccess
-    public boolean isToolWindowAutoHide(final String id) {
+    public boolean isToolWindowAutoHide(String id) {
         UIAccess.assertIsUIThread();
         checkId(id);
         return getInfo(id).isAutoHide();
     }
 
-    public boolean isToolWindowVisible(final String id) {
+    public boolean isToolWindowVisible(String id) {
         checkId(id);
         return getInfo(id).isVisible();
     }
@@ -449,13 +449,13 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     /**
      * @return info for the tool window with specified <code>ID</code>.
      */
-    protected WindowInfoImpl getInfo(final String id) {
+    protected WindowInfoImpl getInfo(String id) {
         return myLayout.getInfo(id, true);
     }
 
     @RequiredUIAccess
     public void setDefaultContentUiType(ToolWindow toolWindow, ToolWindowContentUiType type) {
-        final WindowInfoImpl info = getInfo(toolWindow.getId());
+        WindowInfoImpl info = getInfo(toolWindow.getId());
         if (info.wasRead()) {
             return;
         }
@@ -469,7 +469,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
      * @param shouldHide if <code>true</code> then also hides specified tool window.
      */
     @RequiredUIAccess
-    protected void deactivateToolWindowImpl(@Nonnull String id, final boolean shouldHide) {
+    protected void deactivateToolWindowImpl(@Nonnull String id, boolean shouldHide) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("enter: deactivateToolWindowImpl(" + id + "," + shouldHide + ")");
         }
@@ -497,7 +497,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    protected void activateToolWindowImpl(final String id, boolean forced, boolean autoFocusContents) {
+    protected void activateToolWindowImpl(String id, boolean forced, boolean autoFocusContents) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("enter: activateToolWindowImpl(" + id + ")");
         }
@@ -505,7 +505,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             // Tool window can be "logically" active but not focused. For example,
             // when the user switched to another application. So we just need to bring
             // tool window's window to front.
-            final ToolWindowInternalDecorator decorator = getInternalDecorator(id);
+            ToolWindowInternalDecorator decorator = getInternalDecorator(id);
             if (!decorator.hasFocus() && autoFocusContents) {
                 requestFocusInToolWindow(id, forced);
             }
@@ -525,12 +525,12 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
      * @see #prepareForActivation
      */
     @RequiredUIAccess
-    protected void showAndActivate(final String id, final boolean dirtyMode, boolean autoFocusContents, boolean forcedFocusRequest) {
+    protected void showAndActivate(String id, boolean dirtyMode, boolean autoFocusContents, boolean forcedFocusRequest) {
         if (!getToolWindow(id).isAvailable()) {
             return;
         }
         // show activated
-        final WindowInfoImpl info = getInfo(id);
+        WindowInfoImpl info = getInfo(id);
         boolean toApplyInfo = false;
         if (!info.isActive()) {
             info.setActive(true);
@@ -554,15 +554,15 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
      * @param dirtyMode if <code>true</code> then all UI operations are performed in dirty mode.
      */
     @RequiredUIAccess
-    protected void showToolWindowImpl(final String id, final boolean dirtyMode) {
-        final WindowInfoImpl toBeShownInfo = getInfo(id);
+    protected void showToolWindowImpl(String id, boolean dirtyMode) {
+        WindowInfoImpl toBeShownInfo = getInfo(id);
         ToolWindow toolWindow = getToolWindow(id);
         if (toBeShownInfo.isVisible() || !toolWindow.isAvailable()) {
             return;
         }
 
         toBeShownInfo.setVisible(true);
-        final ToolWindowInternalDecorator decorator = getInternalDecorator(id);
+        ToolWindowInternalDecorator decorator = getInternalDecorator(id);
 
         if (toBeShownInfo.isFloating()) {
             addFloatingDecorator(decorator, toBeShownInfo);
@@ -579,12 +579,15 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             // is docked and not auto-hide one). Therefore it's possible to restore the
             // hidden tool window when showing tool window will be closed.
 
-            final WindowInfoImpl[] infos = myLayout.getInfos();
-            for (final WindowInfoImpl info : infos) {
+            WindowInfoImpl[] infos = myLayout.getInfos();
+            for (WindowInfoImpl info : infos) {
                 if (id.equals(info.getId())) {
                     continue;
                 }
-                if (info.isVisible() && info.getType() == toBeShownInfo.getType() && info.getAnchor() == toBeShownInfo.getAnchor() && info.isSplit() == toBeShownInfo.isSplit()) {
+                if (info.isVisible()
+                    && info.getType() == toBeShownInfo.getType()
+                    && info.getAnchor() == toBeShownInfo.getAnchor()
+                    && info.isSplit() == toBeShownInfo.isSplit()) {
                     // hide and deactivate tool window
                     info.setVisible(false);
                     removeDecorator(info.getId(), false);
@@ -610,9 +613,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.class).toolWindowShown(toolWindow);
     }
 
-    protected void applyWindowInfo(final WindowInfoImpl info) {
-        final ToolWindowStripeButton button = getStripeButton(info.getId());
-        final ToolWindowInternalDecorator decorator = getInternalDecorator(info.getId());
+    protected void applyWindowInfo(WindowInfoImpl info) {
+        ToolWindowStripeButton button = getStripeButton(info.getId());
+        ToolWindowInternalDecorator decorator = getInternalDecorator(info.getId());
 
         assert button != null;
         assert decorator != null;
@@ -622,23 +625,23 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    protected void addButton(final ToolWindowStripeButton button, final WindowInfoImpl info) {
-        final Comparator<ToolWindowStripeButton> comparator = myLayout.comparator(info.getAnchor());
+    protected void addButton(ToolWindowStripeButton button, WindowInfoImpl info) {
+        Comparator<ToolWindowStripeButton> comparator = myLayout.comparator(info.getAnchor());
 
         myToolWindowPanel.addButton(button, info, comparator);
     }
 
     @RequiredUIAccess
-    protected void addDecorator(final ToolWindowInternalDecorator decorator, final WindowInfoImpl info, final boolean dirtyMode) {
+    protected void addDecorator(ToolWindowInternalDecorator decorator, WindowInfoImpl info, boolean dirtyMode) {
         myToolWindowPanel.addDecorator(decorator, info, dirtyMode);
     }
 
     @RequiredUIAccess
-    protected void removeButton(final String id) {
+    protected void removeButton(String id) {
         myToolWindowPanel.removeButton(id);
     }
 
-    protected void removeFloatingDecorator(final WindowInfoImpl info) {
+    protected void removeFloatingDecorator(WindowInfoImpl info) {
         ToolWindowFloatingDecorator decorator = getFloatingDecorator(info.getId());
         assert decorator != null;
         myId2FloatingDecorator.remove(info.getId());
@@ -648,7 +651,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    protected void removeDecorator(final String id, final boolean dirtyMode) {
+    protected void removeDecorator(String id, boolean dirtyMode) {
         myToolWindowPanel.removeDecorator(id, dirtyMode);
     }
 
@@ -669,7 +672,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    public void setToolWindowAnchor(final String id, final ToolWindowAnchor anchor) {
+    public void setToolWindowAnchor(String id, ToolWindowAnchor anchor) {
         UIAccess.assertIsUIThread();
         setToolWindowAnchor(id, anchor, -1);
 
@@ -677,16 +680,16 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    public void setToolWindowAnchor(final String id, final ToolWindowAnchor anchor, final int order) {
+    public void setToolWindowAnchor(String id, ToolWindowAnchor anchor, int order) {
         UIAccess.assertIsUIThread();
 
         setToolWindowAnchorImpl(id, anchor, order);
     }
 
     @RequiredUIAccess
-    private void setToolWindowAnchorImpl(final String id, final ToolWindowAnchor anchor, final int order) {
+    private void setToolWindowAnchorImpl(String id, ToolWindowAnchor anchor, int order) {
         checkId(id);
-        final WindowInfoImpl info = getInfo(id);
+        WindowInfoImpl info = getInfo(id);
         if (anchor == info.getAnchor() && order == info.getOrder()) {
             return;
         }
@@ -696,7 +699,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             myLayout.setAnchor(id, anchor, order);
             // update infos for all window. Actually we have to update only infos affected by
             // setAnchor method
-            final WindowInfoImpl[] infos = myLayout.getInfos();
+            WindowInfoImpl[] infos = myLayout.getInfos();
             for (WindowInfoImpl info1 : infos) {
                 applyWindowInfo(info1);
             }
@@ -709,7 +712,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             myLayout.setAnchor(id, anchor, order);
             // update infos for all window. Actually we have to update only infos affected by
             // setAnchor method
-            final WindowInfoImpl[] infos = myLayout.getInfos();
+            WindowInfoImpl[] infos = myLayout.getInfos();
             for (WindowInfoImpl info1 : infos) {
                 applyWindowInfo(info1);
             }
@@ -733,9 +736,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    private void setSplitModeImpl(final String id, final boolean isSplit) {
+    private void setSplitModeImpl(String id, boolean isSplit) {
         checkId(id);
-        final WindowInfoImpl info = getInfo(id);
+        WindowInfoImpl info = getInfo(id);
         if (isSplit == info.isSplit()) {
             return;
         }
@@ -746,7 +749,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         if (wasActive) {
             deactivateToolWindowImpl(id, true);
         }
-        final WindowInfoImpl[] infos = myLayout.getInfos();
+        WindowInfoImpl[] infos = myLayout.getInfos();
         for (WindowInfoImpl info1 : infos) {
             applyWindowInfo(info1);
         }
@@ -758,7 +761,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    public void setToolWindowAutoHide(final String id, final boolean autoHide) {
+    public void setToolWindowAutoHide(String id, boolean autoHide) {
         UIAccess.assertIsUIThread();
 
         setToolWindowAutoHideImpl(id, autoHide);
@@ -767,9 +770,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    protected void setToolWindowAutoHideImpl(final String id, final boolean autoHide) {
+    protected void setToolWindowAutoHideImpl(String id, boolean autoHide) {
         checkId(id);
-        final WindowInfoImpl info = getInfo(id);
+        WindowInfoImpl info = getInfo(id);
         if (info.isAutoHide() == autoHide) {
             return;
         }
@@ -782,7 +785,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    public void setToolWindowType(final String id, final ToolWindowType type) {
+    public void setToolWindowType(String id, ToolWindowType type) {
         UIAccess.assertIsUIThread();
 
         setToolWindowTypeImpl(id, type);
@@ -791,14 +794,14 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    protected void setToolWindowTypeImpl(final String id, final ToolWindowType type) {
+    protected void setToolWindowTypeImpl(String id, ToolWindowType type) {
         checkId(id);
-        final WindowInfoImpl info = getInfo(id);
+        WindowInfoImpl info = getInfo(id);
         if (info.getType() == type) {
             return;
         }
         if (info.isVisible()) {
-            final boolean dirtyMode = info.isDocked() || info.isSliding();
+            boolean dirtyMode = info.isDocked() || info.isSliding();
             info.setVisible(false);
             if (info.isFloating()) {
                 removeFloatingDecorator(info);
@@ -822,7 +825,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    public void activateToolWindow(final String id, boolean forced, boolean autoFocusContents) {
+    public void activateToolWindow(String id, boolean forced, boolean autoFocusContents) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("enter: activateToolWindow(" + id + ")");
         }
@@ -843,12 +846,12 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         }
     }
 
-    private static boolean isToHideOnDeactivation(@Nonnull final WindowInfoImpl info) {
+    private static boolean isToHideOnDeactivation(@Nonnull WindowInfoImpl info) {
         return !info.isFloating() && !info.isWindowed() && (info.isAutoHide() || info.isSliding());
     }
 
     @RequiredUIAccess
-    public void showToolWindow(final String id) {
+    public void showToolWindow(String id) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("enter: showToolWindow(" + id + ")");
         }
@@ -859,15 +862,15 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         fireStateChanged();
     }
 
-    @RequiredUIAccess
     @Override
-    public void hideToolWindow(@Nonnull final String id, final boolean hideSide) {
+    @RequiredUIAccess
+    public void hideToolWindow(@Nonnull String id, boolean hideSide) {
         hideToolWindow(id, hideSide, true);
     }
 
-    @RequiredUIAccess
     @Override
-    public void hideToolWindow(final String id, final boolean hideSide, final boolean moveFocus) {
+    @RequiredUIAccess
+    public void hideToolWindow(String id, boolean hideSide, boolean moveFocus) {
         UIAccess.assertIsUIThread();
 
         hideToolWindowImpl(id, hideSide, moveFocus);
@@ -876,9 +879,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    private void hideToolWindowImpl(final String id, final boolean hideSide, final boolean moveFocus) {
+    private void hideToolWindowImpl(String id, boolean hideSide, boolean moveFocus) {
         checkId(id);
-        final WindowInfoImpl info = getInfo(id);
+        WindowInfoImpl info = getInfo(id);
         if (!info.isVisible()) {
             return;
         }
@@ -887,7 +890,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         deactivateToolWindowImpl(id, true);
 
         if (hideSide && !info.isFloating()) {
-            final List<String> ids = myLayout.getVisibleIdsOn(info.getAnchor(), this);
+            List<String> ids = myLayout.getVisibleIdsOn(info.getAnchor(), this);
             for (String each : ids) {
                 myActiveStack.remove(each, true);
             }
@@ -896,9 +899,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
                 mySideStack.pop(info.getAnchor());
             }
 
-            final String[] all = getToolWindowIds();
+            String[] all = getToolWindowIds();
             for (String eachId : all) {
-                final WindowInfoImpl eachInfo = getInfo(eachId);
+                WindowInfoImpl eachInfo = getInfo(eachId);
                 if (eachInfo.isVisible() && eachInfo.getAnchor() == info.getAnchor()) {
                     deactivateToolWindowImpl(eachId, true);
                 }
@@ -947,14 +950,15 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         return FileEditorManager.getInstance(myProject).getOpenFiles().length > 0;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void initToolWindow(@Nonnull ToolWindowFactory factory) {
         WindowInfoImpl before = myLayout.getInfo(factory.getId(), false);
         boolean visible = before != null && before.isVisible();
         Object label = createInitializingLabel();
         ToolWindowAnchor toolWindowAnchor = factory.getAnchor();
-        ToolWindow window = registerToolWindow(factory.getId(),
+        ToolWindow window = registerToolWindow(
+            factory.getId(),
             factory.getDisplayName(),
             label,
             toolWindowAnchor,
@@ -963,7 +967,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             DumbService.isDumbAware(factory),
             factory.shouldBeAvailable(myProject)
         );
-        ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(factory.getId(), myProject, window);
+        ToolWindowBase toolWindow = (ToolWindowBase) registerDisposable(factory.getId(), myProject, window);
 
         toolWindow.setContentFactory(factory);
 
@@ -978,7 +982,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             toolWindow.setSplitMode(true, null);
         }
 
-        final DumbAwareRunnable runnable = () -> {
+        DumbAwareRunnable runnable = () -> {
             if (toolWindow.isDisposed()) {
                 return;
             }
@@ -1006,12 +1010,12 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @Nonnull
     @RequiredUIAccess
     protected ToolWindow registerToolWindow(
-        @Nonnull final String id,
-        @Nullable final Object component,
-        @Nonnull final ToolWindowAnchor anchor,
+        @Nonnull String id,
+        @Nullable Object component,
+        @Nonnull ToolWindowAnchor anchor,
         boolean sideTool,
         boolean canCloseContent,
-        final boolean canWorkInDumbMode,
+        boolean canWorkInDumbMode,
         boolean shouldBeAvailable
     ) {
         return registerToolWindow(id, null, component, anchor, sideTool, canCloseContent, canWorkInDumbMode, shouldBeAvailable);
@@ -1020,13 +1024,13 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @Nonnull
     @RequiredUIAccess
     protected ToolWindow registerToolWindow(
-        @Nonnull final String id,
+        @Nonnull String id,
         @Nullable LocalizeValue displayName,
-        @Nullable final Object component,
-        @Nonnull final ToolWindowAnchor anchor,
+        @Nullable Object component,
+        @Nonnull ToolWindowAnchor anchor,
         boolean sideTool,
         boolean canCloseContent,
-        final boolean canWorkInDumbMode,
+        boolean canWorkInDumbMode,
         boolean shouldBeAvailable
     ) {
         if (LOG.isDebugEnabled()) {
@@ -1037,9 +1041,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             throw new IllegalArgumentException("window with id=\"" + id + "\" is already registered");
         }
 
-        final WindowInfoImpl info = myLayout.register(id, anchor, sideTool);
-        final boolean wasActive = info.isActive();
-        final boolean wasVisible = info.isVisible();
+        WindowInfoImpl info = myLayout.register(id, anchor, sideTool);
+        boolean wasActive = info.isActive();
+        boolean wasVisible = info.isVisible();
         info.setActive(false);
         info.setVisible(false);
 
@@ -1058,7 +1062,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
         // Create and show tool button
 
-        final ToolWindowStripeButton button = createStripeButton(decorator);
+        ToolWindowStripeButton button = createStripeButton(decorator);
         myId2StripeButton.put(id, button);
         addButton(button, info);
 
@@ -1083,7 +1087,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     @RequiredUIAccess
     @Override
-    public void unregisterToolWindow(@Nonnull final String id) {
+    public void unregisterToolWindow(@Nonnull String id) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("enter: unregisterToolWindow(" + id + ")");
         }
@@ -1092,8 +1096,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             return;
         }
 
-        final WindowInfoImpl info = getInfo(id);
-        final ToolWindowEx toolWindow = (ToolWindowEx)getToolWindow(id);
+        WindowInfoImpl info = getInfo(id);
+        ToolWindowEx toolWindow = (ToolWindowEx) getToolWindow(id);
         // Save recent appearance of tool window
         myLayout.unregister(id);
         // Remove decorator and tool button from the screen
@@ -1111,14 +1115,14 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         myActiveStack.remove(id, true);
         mySideStack.remove(id);
         // Destroy stripe button
-        final ToolWindowStripeButton button = getStripeButton(id);
+        ToolWindowStripeButton button = getStripeButton(id);
         Disposer.dispose(button);
         myId2StripeButton.remove(id);
 
         uninstallFocusWatcher(id);
 
         // Destroy decorator
-        final ToolWindowInternalDecorator decorator = getInternalDecorator(id);
+        ToolWindowInternalDecorator decorator = getInternalDecorator(id);
         decorator.dispose();
         decorator.removeInternalDecoratorListener(myInternalDecoratorListener);
         myId2InternalDecorator.remove(id);
@@ -1127,7 +1131,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @Override
-    public ToolWindow getToolWindow(final String id) {
+    public ToolWindow getToolWindow(String id) {
         if (!myLayout.isToolWindowRegistered(id)) {
             return null;
         }
@@ -1136,46 +1140,46 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @Override
-    public void invokeLater(@Nonnull final Runnable runnable) {
+    public void invokeLater(@Nonnull Runnable runnable) {
         myProject.getApplication().invokeLater(runnable, myProject.getDisposed());
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
-    public ToolWindow registerToolWindow(@Nonnull final String id, final boolean canCloseContent, @Nonnull final ToolWindowAnchor anchor) {
+    @RequiredUIAccess
+    public ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor) {
         return registerToolWindow(id, null, anchor, false, canCloseContent, false, true);
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public ToolWindow registerToolWindow(
-        @Nonnull final String id,
-        final boolean canCloseContent,
-        @Nonnull final ToolWindowAnchor anchor,
-        final boolean secondary
+        @Nonnull String id,
+        boolean canCloseContent,
+        @Nonnull ToolWindowAnchor anchor,
+        boolean secondary
     ) {
         return registerToolWindow(id, null, anchor, secondary, canCloseContent, false, true);
     }
 
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public ToolWindow registerToolWindow(
-        @Nonnull final String id,
-        final boolean canCloseContent,
-        @Nonnull final ToolWindowAnchor anchor,
-        @Nonnull final Disposable parentDisposable,
-        final boolean canWorkInDumbMode
+        @Nonnull String id,
+        boolean canCloseContent,
+        @Nonnull ToolWindowAnchor anchor,
+        @Nonnull Disposable parentDisposable,
+        boolean canWorkInDumbMode
     ) {
         return registerToolWindow(id, canCloseContent, anchor, parentDisposable, canWorkInDumbMode, false);
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public ToolWindow registerToolWindow(
         @Nonnull String id,
         boolean canCloseContent,
@@ -1225,7 +1229,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @Override
-    public List<String> getIdsOn(@Nonnull final ToolWindowAnchor anchor) {
+    public List<String> getIdsOn(@Nonnull ToolWindowAnchor anchor) {
         return myLayout.getVisibleIdsOn(anchor, this);
     }
 
@@ -1241,8 +1245,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @Nonnull
     @Override
     public String[] getToolWindowIds() {
-        final WindowInfoImpl[] infos = myLayout.getInfos();
-        final String[] ids = ArrayUtil.newStringArray(infos.length);
+        WindowInfoImpl[] infos = myLayout.getInfos();
+        String[] ids = ArrayUtil.newStringArray(infos.length);
         for (int i = 0; i < infos.length; i++) {
             ids[i] = infos[i].getId();
         }
@@ -1339,12 +1343,12 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     @RequiredUIAccess
     @Override
-    public void setLayout(@Nonnull final ToolWindowLayout layout) {
+    public void setLayout(@Nonnull ToolWindowLayout layout) {
         UIAccess.assertIsUIThread();
         // hide tool window that are invisible in new layout
-        final WindowInfoImpl[] currentInfos = myLayout.getInfos();
-        for (final WindowInfoImpl currentInfo : currentInfos) {
-            final WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
+        WindowInfoImpl[] currentInfos = myLayout.getInfos();
+        for (WindowInfoImpl currentInfo : currentInfos) {
+            WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
             if (info == null) {
                 continue;
             }
@@ -1353,8 +1357,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             }
         }
         // change anchor of tool windows
-        for (final WindowInfoImpl currentInfo : currentInfos) {
-            final WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
+        for (WindowInfoImpl currentInfo : currentInfos) {
+            WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
             if (info == null) {
                 continue;
             }
@@ -1363,8 +1367,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             }
         }
         // change types of tool windows
-        for (final WindowInfoImpl currentInfo : currentInfos) {
-            final WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
+        for (WindowInfoImpl currentInfo : currentInfos) {
+            WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
             if (info == null) {
                 continue;
             }
@@ -1373,8 +1377,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             }
         }
         // change auto-hide state
-        for (final WindowInfoImpl currentInfo : currentInfos) {
-            final WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
+        for (WindowInfoImpl currentInfo : currentInfos) {
+            WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
             if (info == null) {
                 continue;
             }
@@ -1383,8 +1387,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             }
         }
         // restore visibility
-        for (final WindowInfoImpl currentInfo : currentInfos) {
-            final WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
+        for (WindowInfoImpl currentInfo : currentInfos) {
+            WindowInfoImpl info = layout.getInfo(currentInfo.getId(), false);
             if (info == null) {
                 continue;
             }
@@ -1397,12 +1401,12 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     @RequiredUIAccess
     public void setDefaultState(
-        @Nonnull final ToolWindow toolWindow,
-        @Nullable final ToolWindowAnchor anchor,
-        @Nullable final ToolWindowType type,
-        @Nullable final Rectangle2D floatingBounds
+        @Nonnull ToolWindow toolWindow,
+        @Nullable ToolWindowAnchor anchor,
+        @Nullable ToolWindowType type,
+        @Nullable Rectangle2D floatingBounds
     ) {
-        final WindowInfoImpl info = getInfo(toolWindow.getId());
+        WindowInfoImpl info = getInfo(toolWindow.getId());
         if (info.wasRead()) {
             return;
         }
@@ -1452,19 +1456,15 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @Nonnull
     @Override
     @RequiredUIAccess
-    public ToolWindow registerToolWindow(
-        @Nonnull final String id,
-        @Nonnull final JComponent component,
-        @Nonnull final ToolWindowAnchor anchor
-    ) {
+    public ToolWindow registerToolWindow(@Nonnull String id, @Nonnull JComponent component, @Nonnull ToolWindowAnchor anchor) {
         return registerToolWindow(id, component, anchor, false);
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     public ToolWindow registerToolWindow(
-        @Nonnull final String id,
+        @Nonnull String id,
         @Nonnull JComponent component,
         @Nonnull ToolWindowAnchor anchor,
         @Nonnull Disposable parentDisposable,
@@ -1481,9 +1481,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @Nonnull
     @RequiredUIAccess
     private ToolWindow registerToolWindow(
-        @Nonnull final String id,
-        @Nonnull final JComponent component,
-        @Nonnull final ToolWindowAnchor anchor,
+        @Nonnull String id,
+        @Nonnull JComponent component,
+        @Nonnull ToolWindowAnchor anchor,
         boolean canWorkInDumbMode
     ) {
         return registerToolWindow(id, component, anchor, false, false, canWorkInDumbMode, true);

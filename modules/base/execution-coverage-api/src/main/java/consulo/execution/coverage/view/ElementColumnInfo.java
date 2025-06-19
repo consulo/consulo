@@ -1,5 +1,6 @@
 package consulo.execution.coverage.view;
 
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.ui.ex.tree.AlphaComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.ColumnInfo;
@@ -12,7 +13,7 @@ import java.util.Comparator;
  */
 public class ElementColumnInfo extends ColumnInfo<NodeDescriptor, String> {
     public ElementColumnInfo() {
-        super("Element");
+        super(ExecutionCoverageLocalize.coverageViewElement());
     }
 
     @Override

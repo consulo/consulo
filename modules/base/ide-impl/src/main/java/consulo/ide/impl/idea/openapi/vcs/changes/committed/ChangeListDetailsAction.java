@@ -116,7 +116,7 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
         .setResizable(true)
         .setMovable(true)
         .setRequestFocus(true)
-        .setTitle(VcsLocalize.changelistDetailsTitle().get())
+        .setTitle(VcsLocalize.changelistDetailsTitle())
         .createPopup();
     hint.showInBestPositionFor(DataManager.getInstance().getDataContext());
   }

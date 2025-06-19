@@ -2,6 +2,7 @@ package consulo.execution.coverage.action;
 
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -17,8 +18,8 @@ import consulo.ui.ex.action.Presentation;
 public class HideCoverageInfoAction extends AnAction {
     public HideCoverageInfoAction() {
         super(
-            LocalizeValue.localizeTODO("&Hide Coverage Data"),
-            LocalizeValue.localizeTODO("Hide coverage data"),
+            ExecutionCoverageLocalize.actionHidecoverageText(),
+            ExecutionCoverageLocalize.actionHidecoverageDescription(),
             PlatformIconGroup.actionsCancel()
         );
     }

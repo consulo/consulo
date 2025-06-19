@@ -18,7 +18,6 @@ package consulo.ide.impl.execution.coverage;
 
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.ActiveGutterRenderer;
@@ -30,6 +29,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.document.Document;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.action.HideCoverageInfoAction;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontPanelFactory;
 import consulo.ide.impl.idea.application.options.colors.NewColorAndFontPanel;
@@ -42,6 +42,7 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -61,7 +62,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
 import java.util.function.Function;
 
 /**
@@ -71,7 +72,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
     private static final int THICKNESS = 8;
     private final TextAttributesKey myKey;
     private final String myClassName;
-    private final TreeMap<Integer, LineData> myLines;
+    private final SortedMap<Integer, LineData> myLines;
     private final boolean myCoverageByTestApplicable;
     private final Function<Integer, Integer> myNewToOldConverter;
     private final Function<Integer, Integer> myOldToNewConverter;
@@ -79,13 +80,13 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
     private final boolean mySubCoverageActive;
 
     protected CoverageLineMarkerRenderer(
-        final TextAttributesKey textAttributesKey,
-        @Nullable final String className,
-        final TreeMap<Integer, LineData> lines,
-        final boolean coverageByTestApplicable,
-        final Function<Integer, Integer> newToOldConverter,
-        final Function<Integer, Integer> oldToNewConverter,
-        final CoverageSuitesBundle coverageSuite,
+        TextAttributesKey textAttributesKey,
+        @Nullable String className,
+        SortedMap<Integer, LineData> lines,
+        boolean coverageByTestApplicable,
+        Function<Integer, Integer> newToOldConverter,
+        Function<Integer, Integer> oldToNewConverter,
+        CoverageSuitesBundle coverageSuite,
         boolean subCoverageActive
     ) {
         myKey = textAttributesKey;
@@ -100,7 +101,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
 
     @Override
     public void paint(Editor editor, Graphics g, Rectangle r) {
-        final TextAttributes color = editor.getColorsScheme().getAttributes(myKey);
+        TextAttributes color = editor.getColorsScheme().getAttributes(myKey);
         ColorValue bgColor = color.getBackgroundColor();
         if (bgColor == null) {
             bgColor = color.getForegroundColor();
@@ -114,20 +115,21 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             g.setColor(TargetAWT.to(bgColor));
         }
         g.fillRect(r.x, r.y, r.width, r.height);
-        final LineData lineData = getLineData(editor.xyToLogicalPosition(new Point(0, r.y)).line);
+        LineData lineData = getLineData(editor.xyToLogicalPosition(new Point(0, r.y)).line);
         if (lineData != null && lineData.isCoveredByOneTest()) {
-            TargetAWT.to(AllIcons.Gutter.Unique).paintIcon(editor.getComponent(), g, r.x, r.y);
+            TargetAWT.to(PlatformIconGroup.gutterUnique()).paintIcon(editor.getComponent(), g, r.x, r.y);
         }
     }
 
     public static CoverageLineMarkerRenderer getRenderer(
         int lineNumber,
-        @Nullable final String className,
-        final TreeMap<Integer, LineData> lines,
-        final boolean coverageByTestApplicable,
-        @Nonnull final CoverageSuitesBundle coverageSuite,
-        final Function<Integer, Integer> newToOldConverter,
-        final Function<Integer, Integer> oldToNewConverter, boolean subCoverageActive
+        @Nullable String className,
+        SortedMap<Integer, LineData> lines,
+        boolean coverageByTestApplicable,
+        @Nonnull CoverageSuitesBundle coverageSuite,
+        Function<Integer, Integer> newToOldConverter,
+        Function<Integer, Integer> oldToNewConverter,
+        boolean subCoverageActive
     ) {
         return new CoverageLineMarkerRenderer(
             getAttributesKey(lineNumber, lines),
@@ -141,11 +143,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         );
     }
 
-    public static TextAttributesKey getAttributesKey(
-        final int lineNumber,
-        final TreeMap<Integer, LineData> lines
-    ) {
-
+    public static TextAttributesKey getAttributesKey(int lineNumber, SortedMap<Integer, LineData> lines) {
         return getAttributesKey(lines.get(lineNumber));
     }
 
@@ -180,23 +178,23 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
     @RequiredUIAccess
     public void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
         e.consume();
-        final JComponent comp = (JComponent)e.getComponent();
-        final JRootPane rootPane = comp.getRootPane();
-        final JLayeredPane layeredPane = rootPane.getLayeredPane();
-        final Point point = SwingUtilities.convertPoint(comp, THICKNESS, e.getY(), layeredPane);
+        JComponent comp = (JComponent) e.getComponent();
+        JRootPane rootPane = comp.getRootPane();
+        JLayeredPane layeredPane = rootPane.getLayeredPane();
+        Point point = SwingUtilities.convertPoint(comp, THICKNESS, e.getY(), layeredPane);
         showHint(editor, point, editor.xyToLogicalPosition(e.getPoint()).line);
     }
 
     @RequiredUIAccess
-    private void showHint(final Editor editor, final Point point, final int lineNumber) {
+    private void showHint(Editor editor, Point point, int lineNumber) {
         final JPanel panel = new JPanel(new BorderLayout());
         panel.add(createActionsToolbar(editor, lineNumber), BorderLayout.NORTH);
 
-        final LineData lineData = getLineData(lineNumber);
+        LineData lineData = getLineData(lineNumber);
         final Editor uEditor;
         if (lineData != null && lineData.getStatus() != LineCoverage.NONE && !mySubCoverageActive) {
-            final EditorFactory factory = EditorFactory.getInstance();
-            final Document doc = factory.createDocument(getReport(editor, lineNumber));
+            EditorFactory factory = EditorFactory.getInstance();
+            Document doc = factory.createDocument(getReport(editor, lineNumber));
             doc.setReadOnly(true);
             uEditor = factory.createEditor(doc, editor.getProject());
             panel.add(
@@ -208,7 +206,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             uEditor = null;
         }
 
-        final LightweightHintImpl hint = new LightweightHintImpl(panel) {
+        LightweightHintImpl hint = new LightweightHintImpl(panel) {
             @Override
             public void hide() {
                 if (uEditor != null) {
@@ -229,66 +227,59 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         );
     }
 
-    private String getReport(final Editor editor, final int lineNumber) {
-        final LineData lineData = getLineData(lineNumber);
+    private String getReport(Editor editor, int lineNumber) {
+        LineData lineData = getLineData(lineNumber);
 
-        final Document document = editor.getDocument();
-        final Project project = editor.getProject();
+        Document document = editor.getDocument();
+        Project project = editor.getProject();
         assert project != null;
 
-        final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
         assert psiFile != null;
 
-        final int lineStartOffset = document.getLineStartOffset(lineNumber);
-        final int lineEndOffset = document.getLineEndOffset(lineNumber);
+        int lineStartOffset = document.getLineStartOffset(lineNumber);
+        int lineEndOffset = document.getLineEndOffset(lineNumber);
 
         return myCoverageSuite.getCoverageEngine()
             .generateBriefReport(editor, psiFile, lineNumber, lineStartOffset, lineEndOffset, lineData);
     }
 
     @RequiredUIAccess
-    protected JComponent createActionsToolbar(final Editor editor, final int lineNumber) {
-        final JComponent editorComponent = editor.getComponent();
+    protected JComponent createActionsToolbar(Editor editor, int lineNumber) {
+        JComponent editorComponent = editor.getComponent();
 
-        final ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
-        final GotoPreviousCoveredLineAction prevAction = new GotoPreviousCoveredLineAction(editor, lineNumber);
-        final GotoNextCoveredLineAction nextAction = new GotoNextCoveredLineAction(editor, lineNumber);
+        ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
+        GotoPreviousCoveredLineAction prevAction = new GotoPreviousCoveredLineAction(editor, lineNumber);
+        GotoNextCoveredLineAction nextAction = new GotoNextCoveredLineAction(editor, lineNumber);
 
         group.add(prevAction);
         group.add(nextAction);
 
         prevAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(
-                KeyEvent.VK_UP,
-                InputEvent.ALT_MASK | InputEvent.SHIFT_MASK
-            )),
+            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.ALT_MASK | InputEvent.SHIFT_MASK)),
             editorComponent
         );
         nextAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(
-                KeyEvent.VK_DOWN,
-                InputEvent.ALT_MASK | InputEvent.SHIFT_MASK
-            )),
+            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.ALT_MASK | InputEvent.SHIFT_MASK)),
             editorComponent
         );
 
-        final LineData lineData = getLineData(lineNumber);
+        LineData lineData = getLineData(lineNumber);
         if (myCoverageByTestApplicable) {
             group.add(new ShowCoveringTestsAction(myClassName, lineData));
         }
-        final AnAction byteCodeViewAction = ActionManager.getInstance().getAction("ByteCodeViewer");
+        AnAction byteCodeViewAction = ActionManager.getInstance().getAction("ByteCodeViewer");
         if (byteCodeViewAction != null) {
             group.add(byteCodeViewAction);
         }
         group.add(new EditCoverageColorsAction(editor, lineNumber));
         group.add(new HideCoverageInfoAction());
 
-        final ActionToolbar toolbar =
-            ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group.build(), true);
-        final JComponent toolbarComponent = toolbar.getComponent();
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group.build(), true);
+        JComponent toolbarComponent = toolbar.getComponent();
 
-        final ColorValue background = ((EditorEx)editor).getBackgroundColor();
-        final ColorValue foreground = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
+        ColorValue background = ((EditorEx) editor).getBackgroundColor();
+        ColorValue foreground = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
         toolbarComponent.setBackground(TargetAWT.to(background));
         Color awtForeground = TargetAWT.to(foreground);
         toolbarComponent.setBorder(new ColoredSideBorder(
@@ -302,14 +293,14 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         return toolbarComponent;
     }
 
-    public void moveToLine(final int lineNumber, final Editor editor) {
-        final int firstOffset = editor.getDocument().getLineStartOffset(lineNumber);
+    public void moveToLine(int lineNumber, Editor editor) {
+        int firstOffset = editor.getDocument().getLineStartOffset(lineNumber);
         editor.getCaretModel().moveToOffset(firstOffset);
         editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
 
         editor.getScrollingModel().runActionOnScrollingFinished(() -> {
             Point p = editor.visualPositionToXY(editor.offsetToVisualPosition(firstOffset));
-            EditorGutterComponentEx editorComponent = (EditorGutterComponentEx)editor.getGutter();
+            EditorGutterComponentEx editorComponent = (EditorGutterComponentEx) editor.getGutter();
             JLayeredPane layeredPane = editorComponent.getComponent().getRootPane().getLayeredPane();
             p = SwingUtilities.convertPoint(editorComponent.getComponent(), THICKNESS, p.y, layeredPane);
             showHint(editor, p, lineNumber);
@@ -323,7 +314,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             : null;
     }
 
-    public ColorValue getErrorStripeColor(final Editor editor) {
+    public ColorValue getErrorStripeColor(Editor editor) {
         return editor.getColorsScheme().getAttributes(myKey).getErrorStripeColor();
     }
 
@@ -334,19 +325,19 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
     }
 
     private class GotoPreviousCoveredLineAction extends BaseGotoCoveredLineAction {
-        public GotoPreviousCoveredLineAction(final Editor editor, final int lineNumber) {
+        public GotoPreviousCoveredLineAction(Editor editor, int lineNumber) {
             super(editor, lineNumber);
             copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_PREVIOUS_OCCURENCE));
-            getTemplatePresentation().setText("Previous Coverage Mark");
+            getTemplatePresentation().setTextValue(ExecutionCoverageLocalize.coveragePreviousMark());
         }
 
         @Override
-        protected boolean hasNext(final int idx, final List<Integer> list) {
+        protected boolean hasNext(int idx, List<Integer> list) {
             return idx > 0;
         }
 
         @Override
-        protected int next(final int idx) {
+        protected int next(int idx) {
             return idx - 1;
         }
 
@@ -354,27 +345,27 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         @RequiredUIAccess
         public void update(AnActionEvent e) {
             super.update(e);
-            final String nextChange = getNextChange();
-            if (nextChange != null) {
-                e.getPresentation().setText("Previous " + nextChange);
+            LocalizeValue nextChange = getNextChange();
+            if (nextChange != LocalizeValue.empty()) {
+                e.getPresentation().setTextValue(ExecutionCoverageLocalize.coveragePreviousPlace(nextChange));
             }
         }
     }
 
     private class GotoNextCoveredLineAction extends BaseGotoCoveredLineAction {
-        public GotoNextCoveredLineAction(final Editor editor, final int lineNumber) {
+        public GotoNextCoveredLineAction(Editor editor, int lineNumber) {
             super(editor, lineNumber);
             copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_NEXT_OCCURENCE));
-            getTemplatePresentation().setText("Next Coverage Mark");
+            getTemplatePresentation().setTextValue(ExecutionCoverageLocalize.coverageNextMark());
         }
 
         @Override
-        protected boolean hasNext(final int idx, final List<Integer> list) {
+        protected boolean hasNext(int idx, List<Integer> list) {
             return idx < list.size() - 1;
         }
 
         @Override
-        protected int next(final int idx) {
+        protected int next(int idx) {
             return idx + 1;
         }
 
@@ -382,9 +373,9 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         @RequiredUIAccess
         public void update(AnActionEvent e) {
             super.update(e);
-            final String nextChange = getNextChange();
-            if (nextChange != null) {
-                e.getPresentation().setText("Next " + nextChange);
+            LocalizeValue nextChange = getNextChange();
+            if (nextChange != LocalizeValue.empty()) {
+                e.getPresentation().setTextValue(ExecutionCoverageLocalize.coverageNextPlace(nextChange));
             }
         }
     }
@@ -393,7 +384,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         private final Editor myEditor;
         private final int myLineNumber;
 
-        public BaseGotoCoveredLineAction(final Editor editor, final int lineNumber) {
+        public BaseGotoCoveredLineAction(Editor editor, int lineNumber) {
             myEditor = editor;
             myLineNumber = lineNumber;
         }
@@ -401,7 +392,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final Integer lineNumber = getLineEntry();
+            Integer lineNumber = getLineEntry();
             if (lineNumber != null) {
                 moveToLine(lineNumber, myEditor);
             }
@@ -413,19 +404,19 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
 
         @Nullable
         private Integer getLineEntry() {
-            final ArrayList<Integer> list = new ArrayList<>(myLines.keySet());
+            ArrayList<Integer> list = new ArrayList<>(myLines.keySet());
             Collections.sort(list);
-            final LineData data = getLineData(myLineNumber);
-            final int currentStatus = data != null ? data.getStatus() : LineCoverage.NONE;
+            LineData data = getLineData(myLineNumber);
+            int currentStatus = data != null ? data.getStatus() : LineCoverage.NONE;
             int idx = list.indexOf(myNewToOldConverter != null ? myNewToOldConverter.apply(myLineNumber) : myLineNumber);
             while (hasNext(idx, list)) {
-                final int index = next(idx);
-                final LineData lineData = myLines.get(list.get(index));
+                int index = next(idx);
+                LineData lineData = myLines.get(list.get(index));
                 idx = index;
                 if (lineData != null && lineData.getStatus() != currentStatus) {
-                    final Integer line = list.get(idx);
+                    Integer line = list.get(idx);
                     if (myOldToNewConverter != null) {
-                        final int newLine = myOldToNewConverter.apply(line);
+                        int newLine = myOldToNewConverter.apply(line);
                         if (newLine != 0) {
                             return newLine;
                         }
@@ -438,28 +429,28 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             return null;
         }
 
-        @Nullable
-        protected String getNextChange() {
+        @Nonnull
+        protected LocalizeValue getNextChange() {
             Integer entry = getLineEntry();
             if (entry != null) {
-                final LineData lineData = getLineData(entry);
+                LineData lineData = getLineData(entry);
                 if (lineData != null) {
                     switch (lineData.getStatus()) {
                         case LineCoverage.NONE:
-                            return "Uncovered";
+                            return ExecutionCoverageLocalize.coverageNextChangeUncovered();
                         case LineCoverage.PARTIAL:
-                            return "Partial Covered";
+                            return ExecutionCoverageLocalize.coverageNextChangePartialCovered();
                         case LineCoverage.FULL:
-                            return "Fully Covered";
+                            return ExecutionCoverageLocalize.coverageNextChangeFullyCovered();
                     }
                 }
             }
-            return null;
+            return LocalizeValue.empty();
         }
 
         @Override
         @RequiredUIAccess
-        public void update(final AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(getLineEntry() != null);
         }
     }
@@ -469,7 +460,11 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         private final int myLineNumber;
 
         private EditCoverageColorsAction(Editor editor, int lineNumber) {
-            super("Edit coverage colors", "Edit coverage colors", PlatformIconGroup.generalGearplain());
+            super(
+                ExecutionCoverageLocalize.coverageEditColorsActionName(),
+                ExecutionCoverageLocalize.coverageEditColorsDescription(),
+                PlatformIconGroup.generalGearplain()
+            );
             myEditor = editor;
             myLineNumber = lineNumber;
         }
@@ -483,33 +478,36 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final ColorAndFontOptions colorAndFontOptions = new ColorAndFontOptions() {
+            ColorAndFontOptions colorAndFontOptions = new ColorAndFontOptions() {
                 @Override
                 protected List<ColorAndFontPanelFactory> createPanelFactories() {
                     final GeneralColorsPage colorsPage = new GeneralColorsPage(Application.get());
-                    final ColorAndFontPanelFactory panelFactory = new ColorAndFontPanelFactory() {
+                    ColorAndFontPanelFactory panelFactory = new ColorAndFontPanelFactory() {
                         @Nonnull
                         @Override
                         @RequiredUIAccess
                         public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
-                            final SimpleEditorPreview preview = new SimpleEditorPreview(options, colorsPage);
+                            SimpleEditorPreview preview = new SimpleEditorPreview(options, colorsPage);
                             return NewColorAndFontPanel.create(preview, colorsPage.getDisplayName(), options, null, colorsPage);
                         }
 
                         @Nonnull
                         @Override
                         public String getPanelDisplayName() {
-                            return "Editor | " + getDisplayName() + " | " + colorsPage.getDisplayName();
+                            return ExecutionCoverageLocalize.configurableNameEditorColorsPage(
+                                getDisplayName(),
+                                colorsPage.getDisplayName()
+                            ).get();
                         }
                     };
                     return Collections.singletonList(panelFactory);
                 }
             };
-            final Configurable[] configurables = colorAndFontOptions.buildConfigurables();
+            Configurable[] configurables = colorAndFontOptions.buildConfigurables();
             try {
-                final SearchableConfigurable general = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
+                SearchableConfigurable general = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
                 if (general != null) {
-                    final LineData lineData = getLineData(myLineNumber);
+                    LineData lineData = getLineData(myLineNumber);
                     ShowSettingsUtil.getInstance().editConfigurable(
                         myEditor.getProject(),
                         general,

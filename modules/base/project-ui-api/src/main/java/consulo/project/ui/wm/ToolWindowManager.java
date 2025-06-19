@@ -45,16 +45,16 @@ public abstract class ToolWindowManager {
         return project.getInstance(ToolWindowManager.class);
     }
 
-    @Nonnull
-    @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
+    @Nonnull
+    @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor);
 
-    @Nonnull
-    @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
+    @Nonnull
+    @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
         @Nonnull String id,
         boolean canCloseContent,
@@ -62,10 +62,10 @@ public abstract class ToolWindowManager {
         boolean secondary
     );
 
-    @Nonnull
-    @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
+    @Nonnull
+    @RequiredUIAccess
     public abstract ToolWindow registerToolWindow(
         @Nonnull String id,
         boolean canCloseContent,
@@ -87,15 +87,15 @@ public abstract class ToolWindowManager {
         boolean secondary
     );
 
-    @Nonnull
-    @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use extension ToolWindowFactory")
+    @Nonnull
+    @RequiredUIAccess
     public ToolWindow registerToolWindow(
-        @Nonnull final String id,
-        final boolean canCloseContent,
-        @Nonnull final ToolWindowAnchor anchor,
-        final Disposable parentDisposable
+        @Nonnull String id,
+        boolean canCloseContent,
+        @Nonnull ToolWindowAnchor anchor,
+        Disposable parentDisposable
     ) {
         return registerToolWindow(id, canCloseContent, anchor, parentDisposable, false);
     }
@@ -106,9 +106,6 @@ public abstract class ToolWindowManager {
     @RequiredUIAccess
     public abstract void unregisterToolWindow(@Nonnull String id);
 
-    /**
-     *
-     */
     public abstract void activateEditorComponent();
 
     /**
@@ -148,11 +145,7 @@ public abstract class ToolWindowManager {
     @Nonnull
     public abstract IdeFocusManager getFocusManager();
 
-    public abstract void notifyByBalloon(
-        @Nonnull final String toolWindowId,
-        @Nonnull final NotificationType type,
-        @Nonnull final String htmlBody
-    );
+    public abstract void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody);
 
     @Nullable
     public abstract Balloon getToolWindowBalloon(String id);
@@ -239,10 +232,10 @@ public abstract class ToolWindowManager {
 
     @Deprecated
     public void notifyByBalloon(
-        @Nonnull final String toolWindowId,
-        @Nonnull final NotificationType type,
-        @Nonnull final String htmlBody,
-        @Nullable final Image icon,
+        @Nonnull String toolWindowId,
+        @Nonnull NotificationType type,
+        @Nonnull String htmlBody,
+        @Nullable Image icon,
         @Nullable HyperlinkListener listener
     ) {
         throw new AbstractMethodError("AWT & Swing dependency");

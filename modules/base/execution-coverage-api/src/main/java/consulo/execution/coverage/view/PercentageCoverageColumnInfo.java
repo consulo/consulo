@@ -3,11 +3,13 @@ package consulo.execution.coverage.view;
 import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.lang.Comparing;
+import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -23,7 +25,7 @@ public class PercentageCoverageColumnInfo extends ColumnInfo<NodeDescriptor, Str
 
     public PercentageCoverageColumnInfo(
         int columnIdx,
-        String name,
+        @Nonnull LocalizeValue name,
         CoverageSuitesBundle suitesBundle,
         CoverageViewManager.StateBean stateBean
     ) {

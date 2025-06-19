@@ -4,6 +4,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.execution.coverage.CoverageAnnotator;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -37,12 +38,15 @@ public class DirectoryCoverageViewExtension extends CoverageViewExtension {
 
     @Override
     public ColumnInfo[] createColumnInfos() {
-        return new ColumnInfo[]{new ElementColumnInfo(), new PercentageCoverageColumnInfo(
-            1,
-            "Statistics, %",
-            getSuitesBundle(),
-            getStateBean()
-        )};
+        return new ColumnInfo[]{
+            new ElementColumnInfo(),
+            new PercentageCoverageColumnInfo(
+                1,
+                ExecutionCoverageLocalize.tableColumnNameStatistics(),
+                getSuitesBundle(),
+                getStateBean()
+            )
+        };
     }
 
     @Override

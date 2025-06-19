@@ -1,11 +1,6 @@
-/*
- * User: anna
- * Date: 19-Nov-2007
- */
 package consulo.ide.impl.idea.coverage.actions;
 
 import consulo.execution.coverage.CoverageExecutor;
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -15,12 +10,14 @@ import consulo.execution.configuration.RunProfile;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageEnabledConfiguration;
 import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.execution.executor.Executor;
 import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.action.ToggleModelAction;
 import consulo.language.psi.PsiElement;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.Alarm;
@@ -31,16 +28,24 @@ import javax.swing.event.TreeSelectionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2007-11-19
+ */
 public class TrackCoverageAction extends ToggleModelAction {
   private final TestConsoleProperties myProperties;
   private TestFrameworkRunningModel myModel;
   private TreeSelectionListener myTreeSelectionListener;
 
   public TrackCoverageAction(TestConsoleProperties properties) {
-    super("Show coverage per test", "Show coverage per test", AllIcons.RunConfigurations.TrackCoverage, properties,
-          TestConsoleProperties.TRACK_CODE_COVERAGE);
+    super(
+        ExecutionCoverageLocalize.showCoveragePerTestActionText(),
+        ExecutionCoverageLocalize.showCoveragePerTestActionDescription(),
+        PlatformIconGroup.runconfigurationsTrackcoverage(),
+        properties,
+        TestConsoleProperties.TRACK_CODE_COVERAGE
+    );
     myProperties = properties;
-
   }
 
   public void setSelected(final AnActionEvent e, final boolean state) {

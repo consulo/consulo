@@ -23,19 +23,19 @@ import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.CodeInsightUtilCore;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -58,7 +58,7 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
       public void run() {
         final Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, file), true);
         if (editor != null && editor.getComponent().isDisplayable()) {
-          HintManager.getInstance().showErrorHint(editor, CodeInsightBundle.message("error.hint.file.is.readonly", file.getPresentableUrl()));
+          HintManager.getInstance().showErrorHint(editor, CodeInsightLocalize.errorHintFileIsReadonly(file.getPresentableUrl()));
         }
       }
     }, project.getDisposed());

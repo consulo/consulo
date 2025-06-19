@@ -209,14 +209,14 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
   @Nonnull
   protected ToggleBooleanProperty createIncludeNonStartedInRerun(TestConsoleProperties target) {
     LocalizeValue text = ExecutionLocalize.junitRuningInfoIncludeNonStartedInRerunFailedActionName();
-    return new DumbAwareToggleBooleanProperty(text.get(), null, null, target, INCLUDE_NON_STARTED_IN_RERUN_FAILED);
+    return new DumbAwareToggleBooleanProperty(text, LocalizeValue.empty(), null, target, INCLUDE_NON_STARTED_IN_RERUN_FAILED);
   }
 
   @Nonnull
   protected ToggleBooleanProperty createHideSuccessfulConfig(TestConsoleProperties target) {
     LocalizeValue text = ExecutionLocalize.junitRuningInfoHideSuccessfulConfigActionName();
     setIfUndefined(HIDE_SUCCESSFUL_CONFIG, true);
-    return new DumbAwareToggleBooleanProperty(text.get(), null, null, target, HIDE_SUCCESSFUL_CONFIG);
+    return new DumbAwareToggleBooleanProperty(text, LocalizeValue.empty(), null, target, HIDE_SUCCESSFUL_CONFIG);
   }
 
   @JdkConstants.TreeSelectionMode

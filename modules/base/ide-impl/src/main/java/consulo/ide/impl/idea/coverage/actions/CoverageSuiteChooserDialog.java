@@ -3,10 +3,12 @@ package consulo.ide.impl.idea.coverage.actions;
 import consulo.application.Application;
 import consulo.application.util.DateFormatUtil;
 import consulo.execution.coverage.*;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -69,16 +71,16 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
                 );
             }
         };
-        mySuitesTree.getEmptyText().appendText("No coverage suites configured.");
+        mySuitesTree.getEmptyText().appendText(ExecutionCoverageLocalize.noCoverageSuitesConfigured());
         mySuitesTree.setRootVisible(false);
         mySuitesTree.setShowsRootHandles(false);
         TreeUtil.installActions(mySuitesTree);
         TreeUtil.expandAll(mySuitesTree);
         TreeUtil.selectFirstNode(mySuitesTree);
         mySuitesTree.setMinimumSize(new Dimension(25, -1));
-        setOKButtonText("Show selected");
+        setOKButtonText(ExecutionCoverageLocalize.coverageDataShowSelectedButton());
         init();
-        setTitle("Choose Coverage Suite to Display");
+        setTitle(ExecutionCoverageLocalize.chooseCoverageSuiteToDisplay());
     }
 
     @Override
@@ -125,7 +127,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
     }
 
     private static String getCoverageRunnerTitle(CoverageRunner coverageRunner) {
-        return coverageRunner.getPresentableName() + " Coverage";
+        return ExecutionCoverageLocalize.coverageDataRunnerName(coverageRunner.getPresentableName()).get();
     }
 
     @Nullable
@@ -161,7 +163,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         for (CoverageRunner runner : runners) {
             DefaultMutableTreeNode runnerNode = new DefaultMutableTreeNode(getCoverageRunnerTitle(runner));
             Map<String, List<CoverageSuite>> providers = grouped.get(runner);
-            DefaultMutableTreeNode remoteNode = new DefaultMutableTreeNode("Remote");
+            DefaultMutableTreeNode remoteNode = new DefaultMutableTreeNode(ExecutionCoverageLocalize.remoteSuitesNode().get());
             if (providers.size() == 1) {
                 String providersKey = providers.keySet().iterator().next();
                 DefaultMutableTreeNode suitesNode = runnerNode;
@@ -260,7 +262,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
     private class NoCoverageAction extends DialogWrapperAction {
         public NoCoverageAction() {
-            super("&No Coverage");
+            super(ExecutionCoverageLocalize.coverageDataNoCoverageButton());
         }
 
         @Override
@@ -272,7 +274,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
     private class AddExternalSuiteAction extends AnAction {
         public AddExternalSuiteAction() {
-            super("Add", "Add", PlatformIconGroup.generalAdd());
+            super(CommonLocalize.buttonAdd(), CommonLocalize.buttonAdd(), PlatformIconGroup.generalAdd());
             registerCustomShortcutSet(CommonShortcuts.getInsert(), mySuitesTree);
         }
 
@@ -344,7 +346,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
     private class DeleteSuiteAction extends AnAction {
         public DeleteSuiteAction() {
-            super("Delete", "Delete", PlatformIconGroup.generalRemove());
+            super(CommonLocalize.buttonDelete(), CommonLocalize.buttonDelete(), PlatformIconGroup.generalRemove());
             registerCustomShortcutSet(CommonShortcuts.getDelete(), mySuitesTree);
         }
 
