@@ -26,20 +26,20 @@ import jakarta.annotation.Nonnull;
  * @since 19.05.2024
  */
 public abstract class BaseServiceToolWindowFactory implements ToolWindowFactory {
-  @Override
-  public boolean shouldBeAvailable(@Nonnull Project project) {
-    return false;
-  }
+    @Override
+    public boolean shouldBeAvailable(@Nonnull Project project) {
+        return false;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void init(Project project, ToolWindow toolWindow) {
-    project.getInstance(ServiceViewToolWindowManager.class).initToolWindow(toolWindow);
-  }
+    @RequiredUIAccess
+    @Override
+    public void init(Project project, ToolWindow toolWindow) {
+        project.getInstance(ServiceViewToolWindowManager.class).initToolWindow(toolWindow);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
-    project.getInstance(ServiceViewToolWindowManager.class).createToolWindowContent(toolWindow);
-  }
+    @RequiredUIAccess
+    @Override
+    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+        project.getInstance(ServiceViewToolWindowManager.class).createToolWindowContent(toolWindow);
+    }
 }

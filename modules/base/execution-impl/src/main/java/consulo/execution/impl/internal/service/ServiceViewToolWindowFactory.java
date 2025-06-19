@@ -30,27 +30,27 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ServiceViewToolWindowFactory extends BaseServiceToolWindowFactory {
-  @Nonnull
-  @Override
-  public String getId() {
-    return ToolWindowId.SERVICES;
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return ToolWindowId.SERVICES;
+    }
 
-  @Nonnull
-  @Override
-  public ToolWindowAnchor getAnchor() {
-    return ToolWindowAnchor.BOTTOM;
-  }
+    @Nonnull
+    @Override
+    public ToolWindowAnchor getAnchor() {
+        return ToolWindowAnchor.BOTTOM;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.toolwindowsToolwindowservices();
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.toolwindowsToolwindowservices();
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO(ToolWindowId.SERVICES);
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO(ToolWindowId.SERVICES);
+    }
 }

@@ -41,55 +41,56 @@ import java.util.Objects;
  * @since 5/13/13 4:15 PM
  */
 public abstract class AbstractExternalSystemToolWindowFactory implements ToolWindowFactory, DumbAware {
+    @Nonnull
+    private final ProjectSystemId myExternalSystemId;
+    @Nonnull
+    private final NotificationGroup myNotificationGroup;
 
-  @Nonnull
-  private final ProjectSystemId myExternalSystemId;
-  @Nonnull
-  private final NotificationGroup myNotificationGroup;
-
-  protected AbstractExternalSystemToolWindowFactory(@Nonnull ProjectSystemId id) {
-    myExternalSystemId = id;
-    myNotificationGroup = NotificationGroup.toolWindowGroup("notification.group.id." + id.toString().toLowerCase(Locale.ROOT),
-                                                            myExternalSystemId.getDisplayName(),
-                                                            myExternalSystemId.getToolWindowId(),
-                                                            true);
-  }
-
-  @Nonnull
-  @Override
-  public final String getId() {
-    return myExternalSystemId.getToolWindowId();
-  }
-
-  @Nonnull
-  @Override
-  public final LocalizeValue getDisplayName() {
-    return myExternalSystemId.getDisplayName();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(@Nonnull final Project project, final ToolWindow toolWindow) {
-    ContentManager contentManager = toolWindow.getContentManager();
-    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
-    assert manager != null;
-    ExternalSystemTasksPanel panel = new ExternalSystemTasksPanel(project, myExternalSystemId, myNotificationGroup);
-    Content tasksContent = ContentFactory.getInstance().createContent(panel, "", true);
-    contentManager.addContent(tasksContent);
-  }
-
-  @Override
-  public boolean validate(@Nonnull Project project) {
-    if (Objects.equals(project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT), Boolean.TRUE)) {
-      return true;
+    protected AbstractExternalSystemToolWindowFactory(@Nonnull ProjectSystemId id) {
+        myExternalSystemId = id;
+        myNotificationGroup = NotificationGroup.toolWindowGroup(
+            "notification.group.id." + id.toString().toLowerCase(Locale.ROOT),
+            myExternalSystemId.getDisplayName(),
+            myExternalSystemId.getToolWindowId(),
+            true
+        );
     }
 
-    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
-    if (manager == null) {
-      return false;
+    @Nonnull
+    @Override
+    public final String getId() {
+        return myExternalSystemId.getToolWindowId();
     }
 
-    AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(project);
-    return settings != null && !settings.getLinkedProjectsSettings().isEmpty();
-  }
+    @Nonnull
+    @Override
+    public final LocalizeValue getDisplayName() {
+        return myExternalSystemId.getDisplayName();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void createToolWindowContent(@Nonnull final Project project, final ToolWindow toolWindow) {
+        ContentManager contentManager = toolWindow.getContentManager();
+        ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
+        assert manager != null;
+        ExternalSystemTasksPanel panel = new ExternalSystemTasksPanel(project, myExternalSystemId, myNotificationGroup);
+        Content tasksContent = ContentFactory.getInstance().createContent(panel, "", true);
+        contentManager.addContent(tasksContent);
+    }
+
+    @Override
+    public boolean validate(@Nonnull Project project) {
+        if (Objects.equals(project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT), Boolean.TRUE)) {
+            return true;
+        }
+
+        ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
+        if (manager == null) {
+            return false;
+        }
+
+        AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(project);
+        return settings != null && !settings.getLinkedProjectsSettings().isEmpty();
+    }
 }
