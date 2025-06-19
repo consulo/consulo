@@ -18,40 +18,40 @@ import jakarta.inject.Inject;
  */
 @ExtensionImpl
 public class CoverageProjectViewDirectoryNodeDecorator extends AbstractCoverageProjectViewNodeDecorator {
-  @Inject
-  public CoverageProjectViewDirectoryNodeDecorator(final CoverageDataManager coverageDataManager) {
-    super(coverageDataManager);
-  }
-
-  public void decorate(ProjectViewNode node, PresentationData data) {
-    final CoverageDataManager manager = getCoverageDataManager();
-    final CoverageSuitesBundle currentSuite = manager.getCurrentSuitesBundle();
-    final CoverageAnnotator coverageAnnotator = currentSuite != null ? currentSuite.getAnnotator(node.getProject())
-                                                                     : null;
-    if (coverageAnnotator == null) {
-      // N/A
-      return;
+    @Inject
+    public CoverageProjectViewDirectoryNodeDecorator(final CoverageDataManager coverageDataManager) {
+        super(coverageDataManager);
     }
 
-    final Object value = node.getValue();
-    PsiElement element = null;
-    if (value instanceof PsiElement) {
-      element = (PsiElement)value;
-    }
-    else if (value instanceof SmartPsiElementPointer) {
-      element = ((SmartPsiElementPointer)value).getElement();
-    }
+    public void decorate(ProjectViewNode node, PresentationData data) {
+        final CoverageDataManager manager = getCoverageDataManager();
+        final CoverageSuitesBundle currentSuite = manager.getCurrentSuitesBundle();
+        final CoverageAnnotator coverageAnnotator = currentSuite != null ? currentSuite.getAnnotator(node.getProject())
+            : null;
+        if (coverageAnnotator == null) {
+            // N/A
+            return;
+        }
 
-    String informationString = null;
-    if (element instanceof PsiDirectory) {
-      informationString = coverageAnnotator.getDirCoverageInformationString((PsiDirectory)element, currentSuite, manager);
-    } else if (element instanceof PsiFile) {
-      informationString = coverageAnnotator.getFileCoverageInformationString((PsiFile)element, currentSuite, manager);
-    }
+        final Object value = node.getValue();
+        PsiElement element = null;
+        if (value instanceof PsiElement) {
+            element = (PsiElement) value;
+        }
+        else if (value instanceof SmartPsiElementPointer) {
+            element = ((SmartPsiElementPointer) value).getElement();
+        }
 
-    if (informationString != null) {
-      data.setLocationString(informationString);
-    }
-  }
+        String informationString = null;
+        if (element instanceof PsiDirectory) {
+            informationString = coverageAnnotator.getDirCoverageInformationString((PsiDirectory) element, currentSuite, manager);
+        }
+        else if (element instanceof PsiFile) {
+            informationString = coverageAnnotator.getFileCoverageInformationString((PsiFile) element, currentSuite, manager);
+        }
 
+        if (informationString != null) {
+            data.setLocationString(informationString);
+        }
+    }
 }
