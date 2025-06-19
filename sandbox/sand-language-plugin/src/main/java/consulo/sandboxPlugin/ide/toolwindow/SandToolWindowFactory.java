@@ -16,7 +16,6 @@
 package consulo.sandboxPlugin.ide.toolwindow;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.ToolWindowTabRenameActionBase;
 import consulo.localize.LocalizeValue;
@@ -37,7 +36,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19.03.14
+ * @since 2014-03-19
  */
 @ExtensionImpl
 public class SandToolWindowFactory implements ToolWindowFactory {
@@ -55,7 +54,11 @@ public class SandToolWindowFactory implements ToolWindowFactory {
         Content content = contentFactory.createUIContent(Label.create(LocalizeValue.localizeTODO("test")), "Test", false);
         toolWindow.getContentManager().addContent(content);
 
-        toolWindow.setTitleActions(new AnAction("Expand All", null, AllIcons.Actions.Expandall) {
+        toolWindow.setTitleActions(new AnAction(
+            LocalizeValue.localizeTODO("Expand All"),
+            LocalizeValue.empty(),
+            PlatformIconGroup.actionsExpandall()
+        ) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -65,7 +68,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
 
         toolWindow.setTabDoubleClickActions(new ToolWindowTabRenameActionBase("Sand", "Enter new session name"));
 
-        toolWindow.setTabActions(new AnAction("Add Tab", null, AllIcons.General.Add) {
+        toolWindow.setTabActions(new AnAction(LocalizeValue.localizeTODO("Add Tab"), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {

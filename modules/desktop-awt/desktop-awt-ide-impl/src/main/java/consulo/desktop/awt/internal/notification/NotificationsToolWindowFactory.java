@@ -16,7 +16,6 @@
 package consulo.desktop.awt.internal.notification;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
@@ -60,7 +59,7 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull final Project project, @Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
         NotificationProjectTracker tracker = NotificationProjectTracker.getInstance(project);
         createContent(project, toolWindow, tracker.getEventLogConsole(), "");
         tracker.initDefaultContent();
@@ -91,7 +90,7 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
 
     private static void createContent(Project project, ToolWindow toolWindow, EventLogConsole console, String title) {
         ContentManager contentManager = toolWindow.getContentManager();
-        final Editor editor = console.getConsoleEditor();
+        Editor editor = console.getConsoleEditor();
 
         SimpleToolWindowPanel panel = new SimpleToolWindowPanel(false, true) {
             @Override
@@ -119,7 +118,11 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
 
     private static class DisplayBalloons extends ToggleAction implements DumbAware {
         public DisplayBalloons() {
-            super("Show balloons", "Enable or suppress notification balloons", AllIcons.General.Balloon);
+            super(
+                LocalizeValue.localizeTODO("Show balloons"),
+                LocalizeValue.localizeTODO("Enable or suppress notification balloons"),
+                PlatformIconGroup.generalBalloon()
+            );
         }
 
         @Override
@@ -137,7 +140,11 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
         private final Project myProject;
 
         public EditNotificationSettings(Project project) {
-            super("Settings", "Edit notification settings", AllIcons.General.Settings);
+            super(
+                LocalizeValue.localizeTODO("Settings"),
+                LocalizeValue.localizeTODO("Edit notification settings"),
+                PlatformIconGroup.generalSettings()
+            );
             myProject = project;
         }
 

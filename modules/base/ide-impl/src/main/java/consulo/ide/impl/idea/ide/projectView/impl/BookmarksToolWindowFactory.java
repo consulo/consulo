@@ -46,8 +46,8 @@ public class BookmarksToolWindowFactory implements ToolWindowFactory, DumbAware 
     @RequiredUIAccess
     @Override
     public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
-        final ContentManager contentManager = toolWindow.getContentManager();
-        final FavoritesTreeViewPanel panel = new FavoritesPanel(project).getPanel();
+        ContentManager contentManager = toolWindow.getContentManager();
+        FavoritesTreeViewPanel panel = new FavoritesPanel(project).getPanel();
         panel.setupToolWindow(toolWindow);
 
         Content content = contentManager.getFactory().createContent(panel, null, false);

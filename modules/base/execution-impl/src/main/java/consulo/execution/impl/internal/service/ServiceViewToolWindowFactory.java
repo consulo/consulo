@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 12.05.2024
+ * @since 2024-05-12
  */
 @ExtensionImpl
 public class ServiceViewToolWindowFactory extends BaseServiceToolWindowFactory {

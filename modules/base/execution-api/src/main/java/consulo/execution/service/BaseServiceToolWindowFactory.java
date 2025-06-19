@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19.05.2024
+ * @since 2024-05-19
  */
 public abstract class BaseServiceToolWindowFactory implements ToolWindowFactory {
     @Override

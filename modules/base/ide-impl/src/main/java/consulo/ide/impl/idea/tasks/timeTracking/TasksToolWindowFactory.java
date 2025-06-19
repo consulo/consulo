@@ -17,8 +17,8 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: evgeny.zakrevsky
- * Date: 11/8/12
+ * @author evgeny.zakrevsky
+ * @since 2012-11-08
  */
 @ExtensionImpl
 public class TasksToolWindowFactory implements ToolWindowFactory, DumbAware {
@@ -30,13 +30,16 @@ public class TasksToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(final Project project, final ToolWindow toolWindow) {
-        final ContentManager contentManager = toolWindow.getContentManager();
-        final Content content = ContentFactory.getInstance().
-            createContent(new TasksToolWindowPanel(
+    public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
+        ContentManager contentManager = toolWindow.getContentManager();
+        Content content = ContentFactory.getInstance().createContent(
+            new TasksToolWindowPanel(
                 project,
                 toolWindow.getAnchor() == ToolWindowAnchor.LEFT || toolWindow.getAnchor() == ToolWindowAnchor.RIGHT
-            ), null, false);
+            ),
+            null,
+            false
+        );
         contentManager.addContent(content);
     }
 

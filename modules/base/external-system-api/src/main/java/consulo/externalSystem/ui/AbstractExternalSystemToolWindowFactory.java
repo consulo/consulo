@@ -38,7 +38,7 @@ import java.util.Objects;
 
 /**
  * @author Denis Zhdanov
- * @since 5/13/13 4:15 PM
+ * @since 2013-05-13
  */
 public abstract class AbstractExternalSystemToolWindowFactory implements ToolWindowFactory, DumbAware {
     @Nonnull
@@ -70,7 +70,7 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull final Project project, final ToolWindow toolWindow) {
+    public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
         ContentManager contentManager = toolWindow.getContentManager();
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
         assert manager != null;

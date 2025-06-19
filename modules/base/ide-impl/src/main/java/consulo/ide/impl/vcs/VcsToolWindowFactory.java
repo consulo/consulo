@@ -51,7 +51,7 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
     @RequiredUIAccess
     @Override
     public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
-        final ContentManager contentManager = toolWindow.getContentManager();
+        ContentManager contentManager = toolWindow.getContentManager();
 
         ChangesViewContentManager manager = (ChangesViewContentManager) ChangesViewContentManager.getInstance(project);
 
@@ -61,7 +61,7 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
         manager.setAlreadyLoadedState(null);
         List<Content> contents = manager.setContentManager(toolWindow, contentManager);
 
-        final List<Content> ordered = ChangesViewContentManager.doPresetOrdering(contents);
+        List<Content> ordered = ChangesViewContentManager.doPresetOrdering(contents);
         for (Content content : ordered) {
             contentManager.addContent(content);
         }

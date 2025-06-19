@@ -44,7 +44,7 @@ public class StructureViewToolWindowFactory implements ToolWindowFactory, DumbAw
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
+    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
         StructureViewFactoryImpl factory = (StructureViewFactoryImpl) StructureViewFactory.getInstance(project);
         factory.initToolWindow((ToolWindowEx) toolWindow);
     }
