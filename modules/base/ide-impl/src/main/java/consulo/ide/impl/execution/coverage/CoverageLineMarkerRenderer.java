@@ -42,6 +42,7 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -61,7 +62,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
 import java.util.function.Function;
 
 /**
@@ -71,7 +72,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
     private static final int THICKNESS = 8;
     private final TextAttributesKey myKey;
     private final String myClassName;
-    private final TreeMap<Integer, LineData> myLines;
+    private final SortedMap<Integer, LineData> myLines;
     private final boolean myCoverageByTestApplicable;
     private final Function<Integer, Integer> myNewToOldConverter;
     private final Function<Integer, Integer> myOldToNewConverter;
@@ -81,7 +82,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
     protected CoverageLineMarkerRenderer(
         TextAttributesKey textAttributesKey,
         @Nullable String className,
-        TreeMap<Integer, LineData> lines,
+        SortedMap<Integer, LineData> lines,
         boolean coverageByTestApplicable,
         Function<Integer, Integer> newToOldConverter,
         Function<Integer, Integer> oldToNewConverter,
@@ -123,7 +124,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
     public static CoverageLineMarkerRenderer getRenderer(
         int lineNumber,
         @Nullable String className,
-        TreeMap<Integer, LineData> lines,
+        SortedMap<Integer, LineData> lines,
         boolean coverageByTestApplicable,
         @Nonnull CoverageSuitesBundle coverageSuite,
         Function<Integer, Integer> newToOldConverter,
@@ -142,7 +143,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         );
     }
 
-    public static TextAttributesKey getAttributesKey(int lineNumber, TreeMap<Integer, LineData> lines) {
+    public static TextAttributesKey getAttributesKey(int lineNumber, SortedMap<Integer, LineData> lines) {
         return getAttributesKey(lines.get(lineNumber));
     }
 
@@ -344,8 +345,8 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         @RequiredUIAccess
         public void update(AnActionEvent e) {
             super.update(e);
-            String nextChange = getNextChange();
-            if (nextChange != null) {
+            LocalizeValue nextChange = getNextChange();
+            if (nextChange != LocalizeValue.empty()) {
                 e.getPresentation().setTextValue(ExecutionCoverageLocalize.coveragePreviousPlace(nextChange));
             }
         }
@@ -372,8 +373,8 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         @RequiredUIAccess
         public void update(AnActionEvent e) {
             super.update(e);
-            String nextChange = getNextChange();
-            if (nextChange != null) {
+            LocalizeValue nextChange = getNextChange();
+            if (nextChange != LocalizeValue.empty()) {
                 e.getPresentation().setTextValue(ExecutionCoverageLocalize.coverageNextPlace(nextChange));
             }
         }
@@ -428,23 +429,23 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             return null;
         }
 
-        @Nullable
-        protected String getNextChange() {
+        @Nonnull
+        protected LocalizeValue getNextChange() {
             Integer entry = getLineEntry();
             if (entry != null) {
                 LineData lineData = getLineData(entry);
                 if (lineData != null) {
                     switch (lineData.getStatus()) {
                         case LineCoverage.NONE:
-                            return ExecutionCoverageLocalize.coverageNextChangeUncovered().get();
+                            return ExecutionCoverageLocalize.coverageNextChangeUncovered();
                         case LineCoverage.PARTIAL:
-                            return ExecutionCoverageLocalize.coverageNextChangePartialCovered().get();
+                            return ExecutionCoverageLocalize.coverageNextChangePartialCovered();
                         case LineCoverage.FULL:
-                            return ExecutionCoverageLocalize.coverageNextChangeFullyCovered().get();
+                            return ExecutionCoverageLocalize.coverageNextChangeFullyCovered();
                     }
                 }
             }
-            return null;
+            return LocalizeValue.empty();
         }
 
         @Override

@@ -1,9 +1,9 @@
 package consulo.execution.test.action;
 
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.test.autotest.AbstractAutoTestManager;
 import consulo.execution.test.autotest.AutoTestManager;
+import consulo.execution.test.localize.ExecutionTestLocalize;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -16,8 +16,8 @@ import consulo.ui.ex.action.ToggleAction;
 public class ToggleAutoTestAction extends ToggleAction {
     public ToggleAutoTestAction() {
         super(
-            ExecutionLocalize.actionToggleAutoTestText(),
-            ExecutionLocalize.actionToggleAutoTestDescription(),
+            ExecutionTestLocalize.actionToggleAutoTestText(),
+            ExecutionTestLocalize.actionToggleAutoTestDescription(),
             PlatformIconGroup.actionsSwappanels()
         );
     }

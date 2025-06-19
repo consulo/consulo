@@ -6,20 +6,8 @@ action.name.save.as.configuration:
     text: Save As
 action.name.save.configuration:
     text: Save Configuration
-action.show.ignored.description:
-    text: Show ignored
-action.show.ignored.text:
-    text: Show Ignored
-action.show.inline.statistics.description:
-    text: Show/hide the test duration in the tree
-action.show.inline.statistics.text:
-    text: Show Inline Statistics
 action.terminating.process.progress.kill.description:
     text: Kill process
-action.toggle.auto.test.description:
-    text: Toggle automatic rerun of tests on code changes
-action.toggle.auto.test.text:
-    text: Toggle Auto-Test
 add.new.run.configuration.action.name:
     text: Add New ''{0}'' Configuration
 add.new.run.configuration.action2.name:
@@ -338,20 +326,12 @@ junit.open.text.in.editor.action.name:
     text: Open selected test in editor
 junit.run.hide.ignored.action.name:
     text: Hide Ignored
-junit.run.hide.passed.action.description:
-    text: Hide passed tests
-junit.run.hide.passed.action.name:
-    text: Hide Passed
 junit.runing.info.assertion.tree.node:
     text: Assertion
-junit.runing.info.collapse.test.action.name:
-    text: Collapse all test suites
 junit.runing.info.error.tree.node:
     text: Error
 junit.runing.info.errors.count.message:
     text: E:{0}
-junit.runing.info.expand.test.action.name:
-    text: Expand all test suites
 junit.runing.info.failed.count.message:
     text: F:{0}
 junit.runing.info.failed.to.start.error.message:
@@ -378,10 +358,6 @@ junit.runing.info.memory.available.kb.message:
     text: '{0} kb.'
 junit.runing.info.memory.available.mb.message:
     text: '{0} Mb.'
-junit.runing.info.open.source.at.exception.action.description:
-    text: Go to line which caused exception when opening test source
-junit.runing.info.open.source.at.exception.action.name:
-    text: Open Source at Exception
 junit.runing.info.passed.count.message:
     text: P:{0}
 junit.runing.info.passed.label:
@@ -390,20 +366,6 @@ junit.runing.info.results.column.name:
     text: Results
 junit.runing.info.running.label:
     text: Running
-junit.runing.info.scroll.to.stacktrace.action.description:
-    text: Scroll console to beginning of assertion or exception stacktrace
-junit.runing.info.scroll.to.stacktrace.action.name:
-    text: Scroll to Stacktrace
-junit.runing.info.select.first.failed.action.name:
-    text: Select First Failed Test When Finished
-junit.runing.info.sort.alphabetically.action.description:
-    text: Sort tests or suites alphabetically
-junit.runing.info.sort.alphabetically.action.name:
-    text: Sort Alphabetically
-junit.runing.info.sort.by.statistics.action.description:
-    text: Sort tests or suites by duration
-junit.runing.info.sort.by.statistics.action.name:
-    text: Sort By Duration
 junit.runing.info.sort.group.name:
     text: Sorting Options
 junit.runing.info.starting.label:
@@ -438,10 +400,6 @@ junit.runing.info.time.sec.message:
     text: '{0} s'
 junit.runing.info.total.label:
     text: 'Total:'
-junit.runing.info.track.test.action.description:
-    text: Select currently running test in tree
-junit.runing.info.track.test.action.name:
-    text: Track Running Test
 junit.runing.info.usage.after.column.name:
     text: Usage After
 junit.runing.info.usage.before.column.name:

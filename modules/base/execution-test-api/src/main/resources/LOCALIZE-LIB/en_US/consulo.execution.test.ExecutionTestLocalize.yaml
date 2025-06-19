@@ -1,0 +1,42 @@
+action.collapse.test.text:
+    text: Collapse all test suites
+action.expand.test.text:
+    text: Expand all test suites
+action.hide.passed.description:
+    text: Hide passed tests
+action.hide.passed.text:
+    text: Hide Passed
+action.open.source.at.exception.description:
+    text: Go to line which caused exception when opening test source
+action.open.source.at.exception.text:
+    text: Open Source at Exception
+action.scroll.to.stacktrace.description:
+    text: Scroll console to beginning of assertion or exception stacktrace
+action.scroll.to.stacktrace.text:
+    text: Scroll to Stacktrace
+action.select.first.failed.text:
+    text: Select First Failed Test When Finished
+action.show.ignored.description:
+    text: Show ignored
+action.show.ignored.text:
+    text: Show Ignored
+action.show.inline.statistics.description:
+    text: Show/hide the test duration in the tree
+action.show.inline.statistics.text:
+    text: Show Inline Statistics
+action.sort.alphabetically.description:
+    text: Sort tests or suites alphabetically
+action.sort.alphabetically.text:
+    text: Sort Alphabetically
+action.sort.by.statistics.description:
+    text: Sort tests or suites by duration
+action.sort.by.statistics.text:
+    text: Sort By Duration
+action.toggle.auto.test.description:
+    text: Toggle automatic rerun of tests on code changes
+action.toggle.auto.test.text:
+    text: Toggle Auto-Test
+action.track.test.description:
+    text: Select currently running test in tree
+action.track.test.text:
+    text: Track Running Test
