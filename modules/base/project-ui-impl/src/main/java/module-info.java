@@ -17,6 +17,9 @@ module consulo.project.ui.impl {
         consulo.util.xml.serializer,
         consulo.component.impl;
 
+    exports consulo.project.ui.impl.internal.action to
+        consulo.ide.impl;
+
     // TODO remove in future
     requires java.desktop;
     requires consulo.ui.ex.awt.api;

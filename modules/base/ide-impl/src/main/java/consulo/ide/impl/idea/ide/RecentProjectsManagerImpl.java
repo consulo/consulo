@@ -41,6 +41,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.project.internal.RecentProjectsManager;
+import consulo.project.ui.impl.internal.action.SimpleProjectGroupActionGroup;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.WindowManager;

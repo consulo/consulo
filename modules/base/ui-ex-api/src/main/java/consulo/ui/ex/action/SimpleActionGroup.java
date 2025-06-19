@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.tools;
+package consulo.ui.ex.action;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

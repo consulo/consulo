@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.project.ui.impl.internal.action;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.tools.SimpleActionGroup;
+import consulo.ui.ex.action.SimpleActionGroup;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectGroup;
