@@ -359,36 +359,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
       }
     };
-    JBHtmlEditorKit kit = new JBHtmlEditorKit() {
-      final HTMLFactory factory = new HTMLFactory() {
-        @Override
-        public View create(Element e) {
-          View view = super.create(e);
-          if (view instanceof ParagraphView) {
-            // wrap too long words, for example: ATEST_TABLE_SIGNLE_ROW_UPDATE_AUTOCOMMIT_A_FIK
-            return new ParagraphView(e) {
-              @Override
-              protected SizeRequirements calculateMinorAxisRequirements(int axis, SizeRequirements r) {
-                if (r == null) {
-                  r = new SizeRequirements();
-                }
-                r.minimum = (int)layoutPool.getMinimumSpan(axis);
-                r.preferred = Math.max(r.minimum, (int)layoutPool.getPreferredSpan(axis));
-                r.maximum = Integer.MAX_VALUE;
-                r.alignment = 0.5f;
-                return r;
-              }
-            };
-          }
-          return view;
-        }
-      };
-
-      @Override
-      public ViewFactory getViewFactory() {
-        return factory;
-      }
-    };
+    JBHtmlEditorKit kit = new JBHtmlEditorKit();
     kit.getStyleSheet().addRule("a {color: " + ColorUtil.toHtmlColor(JBCurrentTheme.Link.linkColor()) + "}");
     text.setEditorKit(kit);
     text.setForeground(layoutData.textColor);

@@ -17,6 +17,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
+import javax.swing.text.html.ParagraphView;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -256,10 +257,32 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
                     }
                 }
             }
-            return super.create(elem);
+
+            View view = super.create(elem);
+            if (view instanceof ParagraphView) {
+                return new WrappingParagraphView(elem);
+            }
+            return view;
         }
     }
 
+    private static class WrappingParagraphView extends ParagraphView {
+        public WrappingParagraphView(Element elem) {
+            super(elem);
+        }
+
+        @Override
+        protected SizeRequirements calculateMinorAxisRequirements(int axis, SizeRequirements r) {
+            if (r == null) {
+                r = new SizeRequirements();
+            }
+            r.minimum = (int) layoutPool.getMinimumSpan(axis);
+            r.preferred = Math.max(r.minimum, (int) layoutPool.getPreferredSpan(axis));
+            r.maximum = Integer.MAX_VALUE;
+            r.alignment = 0.5f;
+            return r;
+        }
+    }
 
     private static class MyIconView extends View {
         private final Image myViewIcon;
