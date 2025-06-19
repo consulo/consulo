@@ -1,43 +1,42 @@
-select.in.packages:
-  text: Packages
-select.in.project:
-  text: Project
-select.in.nav.bar:
-  text: Navigation Bar
-select.in.aspects:
-  text: Aspects
-select.in.commander:
-  text: Commander
-select.in.favorites:
-  text: Favorites
-select.in.scope:
-  text: Scope
 action.NewElement.ProjectView.text:
-  text: New File or Directory…
-file.nesting.dialog.title:
-  text: File Nesting
-file.nesting.feature.enabled.checkbox:
-  text: '&Show files with the same names as nested'
-file.nesting.table.title:
-  text: 'Nesting rules:'
-file.nesting.reset.to.default.button:
-  text: '&Reset to Default'
-parent.file.suffix.column.name:
-  text: Parent File Suffix
-child.file.suffix.column.name:
-  text: Child File Suffix
-dialog.message.parent.file.suffix.must.be.empty.see.row:
-  text: Parent file suffix must not be empty (see row {0})
-dialog.message.child.file.suffix.must.be.empty.see.row:
-  text: Child file suffix must not be empty (see row {0})
-dialog.message.parent.child.file.suffixes.must.be.equal.see.row:
-  text: Parent and child file suffixes must not be equal (''{0}'', see row {1})
-action.ProjectView.FileNesting.text:
-  text: File Nesting…
+    text: New File or Directory…
 action.ProjectView.FileNesting.description:
-  text: Configure file nesting
+    text: Configure file nesting
+action.ProjectView.FileNesting.text:
+    text: File Nesting…
 action.show.excluded.files:
-  text: Show Excluded Files
+    text: Show Excluded Files
 action.show.hide.excluded.files:
-  text: Show/Hide Excluded Files
-
+    text: Show/Hide Excluded Files
+child.file.suffix.column.name:
+    text: Child File Suffix
+dialog.message.child.file.suffix.must.be.empty.see.row:
+    text: Child file suffix must not be empty (see row {0})
+dialog.message.parent.child.file.suffixes.must.be.equal.see.row:
+    text: Parent and child file suffixes must not be equal (''{0}'', see row {1})
+dialog.message.parent.file.suffix.must.be.empty.see.row:
+    text: Parent file suffix must not be empty (see row {0})
+file.nesting.dialog.title:
+    text: File Nesting
+file.nesting.feature.enabled.checkbox:
+    text: '&Show files with the same names as nested'
+file.nesting.reset.to.default.button:
+    text: '&Reset to Default'
+file.nesting.table.title:
+    text: 'Nesting rules:'
+parent.file.suffix.column.name:
+    text: Parent File Suffix
+select.in.aspects:
+    text: Aspects
+select.in.commander:
+    text: Commander
+select.in.favorites:
+    text: Favorites
+select.in.nav.bar:
+    text: Navigation Bar
+select.in.packages:
+    text: Packages
+select.in.project:
+    text: Project
+select.in.scope:
+    text: Scope
