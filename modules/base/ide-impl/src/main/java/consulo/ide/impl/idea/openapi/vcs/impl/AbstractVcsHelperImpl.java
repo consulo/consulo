@@ -918,7 +918,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
                     mySettings,
                     myLocation,
                     0,
-                    new AsynchConsumer<>() {
+                    new AsynchConsumer<CommittedChangeList>() {
                         @Override
                         public void accept(CommittedChangeList committedChangeList) {
                             myRevisionsReturned = true;

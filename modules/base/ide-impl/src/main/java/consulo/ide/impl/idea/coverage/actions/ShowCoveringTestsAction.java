@@ -97,7 +97,7 @@ public class ShowCoveringTestsAction extends AnAction {
 
         if (ProgressManager.getInstance().runProcessWithProgressSynchronously(
             runnable,
-            "Extract information about tests",
+            ExecutionCoverageLocalize.extractInformationAboutTests(),
             false,
             project
         )) { //todo cache them? show nothing found message
