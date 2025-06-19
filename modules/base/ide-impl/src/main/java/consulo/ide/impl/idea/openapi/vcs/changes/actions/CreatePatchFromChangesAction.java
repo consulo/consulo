@@ -118,7 +118,7 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
           }
         }
       }
-    }, VcsLocalize.createPatchLoadingContentProgress().get(), true, project);
+    }, VcsLocalize.createPatchLoadingContentProgress(), true, project);
   }
 
   @Override

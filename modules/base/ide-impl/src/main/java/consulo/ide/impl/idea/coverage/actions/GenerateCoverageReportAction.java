@@ -4,6 +4,7 @@ import consulo.dataContext.DataContext;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.ide.impl.idea.codeInspection.export.ExportToHTMLDialog;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,7 +28,7 @@ public class GenerateCoverageReportAction extends AnAction {
 
         CoverageEngine coverageEngine = currentSuite.getCoverageEngine();
         ExportToHTMLDialog dialog = new ExportToHTMLDialog(project, true);
-        dialog.setTitle("Generate Coverage Report for: \'" + currentSuite.getPresentableName() + "\'");
+        dialog.setTitle(ExecutionCoverageLocalize.generateCoverageReportFor(currentSuite.getPresentableName()));
         dialog.reset();
         dialog.show();
         if (!dialog.isOK()) {

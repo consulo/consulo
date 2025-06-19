@@ -31,15 +31,17 @@ import java.awt.*;
  * @since 2024-12-06
  */
 public interface HintManagerEx extends HintManager {
-    void showEditorHint(LightweightHint hint,
-                        Editor editor,
-                        @PositionFlags short constraint,
-                        @HideFlags int flags,
-                        int timeout,
-                        boolean reviveOnEditorChange);
+    void showEditorHint(
+        LightweightHint hint,
+        Editor editor,
+        @PositionFlags short constraint,
+        @HideFlags int flags,
+        int timeout,
+        boolean reviveOnEditorChange
+    );
 
     void showEditorHint(
-        @Nonnull final LightweightHint hint,
+        @Nonnull LightweightHint hint,
         @Nonnull Editor editor,
         @Nonnull Point p,
         @HideFlags int flags,
@@ -48,7 +50,7 @@ public interface HintManagerEx extends HintManager {
     );
 
     void showEditorHint(
-        @Nonnull final LightweightHint hint,
+        @Nonnull LightweightHint hint,
         @Nonnull Editor editor,
         @Nonnull Point p,
         @HideFlags int flags,
@@ -58,7 +60,7 @@ public interface HintManagerEx extends HintManager {
     );
 
     public void showEditorHint(
-        @Nonnull final LightweightHint hint,
+        @Nonnull LightweightHint hint,
         @Nonnull Editor editor,
         @Nonnull Point p,
         @HideFlags int flags,
@@ -78,9 +80,9 @@ public interface HintManagerEx extends HintManager {
     );
 
     void adjustEditorHintPosition(
-        final LightweightHint hint,
-        final Editor editor,
-        final Point p,
+        LightweightHint hint,
+        Editor editor,
+        Point p,
         @PositionFlags short constraint
     );
 
@@ -103,5 +105,5 @@ public interface HintManagerEx extends HintManager {
         @PositionFlags short constraint
     );
 
-    void updateLocation(final LightweightHint hint, final Editor editor, Point p);
+    void updateLocation(LightweightHint hint, Editor editor, Point p);
 }

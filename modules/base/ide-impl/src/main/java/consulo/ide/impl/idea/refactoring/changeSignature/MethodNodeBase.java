@@ -89,7 +89,7 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
     final Ref<List<M>> callers = new Ref<>();
     if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
       () -> callers.set(computeCallers()),
-      RefactoringLocalize.callerChooserLookingForCallers().get(),
+      RefactoringLocalize.callerChooserLookingForCallers(),
       true,
       myProject
     )) {

@@ -6,6 +6,7 @@ import consulo.execution.coverage.*;
 import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
@@ -126,8 +127,8 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         return engines;
     }
 
-    private static String getCoverageRunnerTitle(CoverageRunner coverageRunner) {
-        return ExecutionCoverageLocalize.coverageDataRunnerName(coverageRunner.getPresentableName()).get();
+    private static LocalizeValue getCoverageRunnerTitle(CoverageRunner coverageRunner) {
+        return ExecutionCoverageLocalize.coverageDataRunnerName(coverageRunner.getPresentableName());
     }
 
     @Nullable
@@ -247,9 +248,9 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         ) {
             if (value instanceof CheckedTreeNode checkedTreeNode) {
                 if (checkedTreeNode.getUserObject() instanceof CoverageSuite suite) {
-                    getTextRenderer().append(suite.getPresentableName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                    getTextRenderer().append(LocalizeValue.of(suite.getPresentableName()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
                     String date = " (" + DateFormatUtil.formatPrettyDateTime(suite.getLastCoverageTimeStamp()) + ")";
-                    getTextRenderer().append(date, SimpleTextAttributes.GRAY_ATTRIBUTES);
+                    getTextRenderer().append(LocalizeValue.of(date), SimpleTextAttributes.GRAY_ATTRIBUTES);
                 }
             }
             else if (value instanceof DefaultMutableTreeNode mutableTreeNode) {
@@ -303,10 +304,10 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
                     new DefaultCoverageFileProvider(file.getPath())
                 );
 
-                String coverageRunnerTitle = getCoverageRunnerTitle(coverageRunner);
-                DefaultMutableTreeNode node = TreeUtil.findNodeWithObject(myRootNode, coverageRunnerTitle);
+                LocalizeValue coverageRunnerTitle = getCoverageRunnerTitle(coverageRunner);
+                DefaultMutableTreeNode node = TreeUtil.findNodeWithObject(myRootNode, coverageRunnerTitle.get());
                 if (node == null) {
-                    node = new DefaultMutableTreeNode(coverageRunnerTitle);
+                    node = new DefaultMutableTreeNode(coverageRunnerTitle.get());
                     myRootNode.add(node);
                 }
                 if (node.getChildCount() > 0) {
@@ -399,8 +400,8 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
             return engChooser;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             e.getPresentation().setVisible(collectEngines().size() > 1);

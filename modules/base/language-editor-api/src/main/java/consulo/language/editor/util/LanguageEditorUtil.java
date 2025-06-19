@@ -17,24 +17,26 @@ package consulo.language.editor.util;
 
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.TextComponentEditor;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.language.editor.hint.HintManager;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
- * @since 21-Apr-22
+ * @since 2022-04-21
  */
 public class LanguageEditorUtil {
   /**
    * @return true when not viewer
    * false otherwise, additionally information hint with warning would be shown
    */
+  @RequiredUIAccess
   public static boolean checkModificationAllowed(Editor editor) {
     if (!editor.isViewer()) return true;
     if (ApplicationManager.getApplication().isHeadlessEnvironment() || editor instanceof TextComponentEditor) return false;
 
-    HintManager.getInstance().showInformationHint(editor, EditorBundle.message("editing.viewer.hint"));
+    HintManager.getInstance().showInformationHint(editor, CodeEditorLocalize.editingViewerHint());
     return false;
   }
 }

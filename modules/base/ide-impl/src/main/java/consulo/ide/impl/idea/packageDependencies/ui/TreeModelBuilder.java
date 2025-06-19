@@ -276,7 +276,7 @@ public class TreeModelBuilder {
 
         if (showProgress) {
             final LocalizeValue title = AnalysisScopeLocalize.packageDependenciesBuildProcessTitle();
-            ProgressManager.getInstance().runProcessWithProgressSynchronously(buildingRunnable, title.get(), false, myProject);
+            ProgressManager.getInstance().runProcessWithProgressSynchronously(buildingRunnable, title, false, myProject);
         }
         else {
             buildingRunnable.run();

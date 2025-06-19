@@ -15,8 +15,7 @@
  */
 package consulo.desktop.awt.action.toolbar;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -84,10 +83,12 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
 
     private final ActionManagerEx myActionManager;
 
-    public AdvancedActionToolbarImpl(@Nonnull String place,
-                                     @Nonnull ActionGroup actionGroup,
-                                     @Nonnull Style style,
-                                     @Nonnull ActionManager actionManager) {
+    public AdvancedActionToolbarImpl(
+        @Nonnull String place,
+        @Nonnull ActionGroup actionGroup,
+        @Nonnull Style style,
+        @Nonnull ActionManager actionManager
+    ) {
         super(place, actionGroup, style);
         myActionManager = (ActionManagerEx) actionManager;
     }
@@ -118,20 +119,24 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         if (myLayoutPolicy == AUTO_LAYOUT_POLICY) {
             Dimension minSize = TargetAWT.to(myMinimumButtonSize);
 
-            final Insets i = getInsets();
+            Insets i = getInsets();
             if (myForceShowFirstComponent && getComponentCount() > 0) {
                 Component c = getComponent(0);
                 Dimension firstSize = c.getPreferredSize();
                 if (getOrientation() == SwingConstants.HORIZONTAL) {
-                    return new Dimension(firstSize.width + AllIcons.Ide.Link.getWidth() + i.left + i.right,
-                        Math.max(firstSize.height, minSize.height) + i.top + i.bottom);
+                    return new Dimension(
+                        firstSize.width + PlatformIconGroup.ideLink().getWidth() + i.left + i.right,
+                        Math.max(firstSize.height, minSize.height) + i.top + i.bottom
+                    );
                 }
                 else {
-                    return new Dimension(Math.max(firstSize.width, AllIcons.Ide.Link.getWidth()) + i.left + i.right,
-                        firstSize.height + minSize.height + i.top + i.bottom);
+                    return new Dimension(
+                        Math.max(firstSize.width, PlatformIconGroup.ideLink().getWidth()) + i.left + i.right,
+                        firstSize.height + minSize.height + i.top + i.bottom
+                    );
                 }
             }
-            return new Dimension(AllIcons.Ide.Link.getWidth() + i.left + i.right, minSize.height + i.top + i.bottom);
+            return new Dimension(PlatformIconGroup.ideLink().getWidth() + i.left + i.right, minSize.height + i.top + i.bottom);
         }
         else {
             return super.getMinimumSize();
@@ -139,17 +144,18 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     }
 
     @Override
-    protected void processMouseMotionEvent(final MouseEvent e) {
+    protected void processMouseMotionEvent(MouseEvent e) {
         super.processMouseMotionEvent(e);
 
         if (getLayoutPolicy() != AUTO_LAYOUT_POLICY) {
             return;
         }
         if (myAutoPopupRec != null && myAutoPopupRec.contains(e.getPoint())) {
-            ApplicationIdeFocusManager.getInstance().doWhenFocusSettlesDown(() -> showAutoPopup());
+            ApplicationIdeFocusManager.getInstance().doWhenFocusSettlesDown(this::showAutoPopup);
         }
     }
 
+    @RequiredUIAccess
     private void showAutoPopup() {
         if (isPopupShowing()) {
             return;
@@ -163,7 +169,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         else {
             List<? extends AnAction> visibleActions = myEngine.getVisibleActions();
 
-            final DefaultActionGroup outside = new DefaultActionGroup();
+            DefaultActionGroup outside = new DefaultActionGroup();
             for (int i = myFirstOutsideIndex; i < visibleActions.size(); i++) {
                 outside.add(visibleActions.get(i), myActionManager);
             }
@@ -172,6 +178,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
 
         PopupToolbar popupToolbar = new PopupToolbar(myEngine.getPlace(), group, this, myActionManager) {
             @Override
+            @RequiredUIAccess
             protected void onOtherActionPerformed() {
                 hidePopup();
             }
@@ -194,8 +201,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             location.y = location.y + getHeight() - popupToolbar.getPreferredSize().height;
         }
 
-
-        final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(popupToolbar, null);
+        ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(popupToolbar, null);
         builder.setResizable(false)
             .setMovable(true) // fit the screen automatically
             .setRequestFocus(false)
@@ -203,7 +209,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             .setCancelOnClickOutside(true)
             .setCancelOnOtherWindowOpen(true)
             .setCancelCallback(() -> {
-                final boolean toClose = myActionManager.isActionPopupStackEmpty();
+                boolean toClose = myActionManager.isActionPopupStackEmpty();
                 if (toClose) {
                     myEngine.updateActionsAsync();
                 }
@@ -211,10 +217,12 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             })
             .setCancelOnMouseOutCallback(event -> myAutoPopupRec != null && myActionManager.isActionPopupStackEmpty() && !new RelativeRectangle(
                 this,
-                myAutoPopupRec).contains(new RelativePoint(event)));
+                myAutoPopupRec
+            ).contains(new RelativePoint(event)));
 
         builder.addListener(new JBPopupAdapter() {
             @Override
+            @RequiredUIAccess
             public void onClosed(@Nonnull LightweightWindowEvent event) {
                 processClosed();
             }
@@ -224,26 +232,30 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
 
         myPopup.showInScreenCoordinates(this, location);
 
-        final Window window = SwingUtilities.getWindowAncestor(this);
+        Window window = SwingUtilities.getWindowAncestor(this);
         if (window != null) {
-            final ComponentAdapter componentAdapter = new ComponentAdapter() {
+            ComponentAdapter componentAdapter = new ComponentAdapter() {
                 @Override
-                public void componentResized(final ComponentEvent e) {
+                @RequiredUIAccess
+                public void componentResized(ComponentEvent e) {
                     hidePopup();
                 }
 
                 @Override
-                public void componentMoved(final ComponentEvent e) {
+                @RequiredUIAccess
+                public void componentMoved(ComponentEvent e) {
                     hidePopup();
                 }
 
                 @Override
-                public void componentShown(final ComponentEvent e) {
+                @RequiredUIAccess
+                public void componentShown(ComponentEvent e) {
                     hidePopup();
                 }
 
                 @Override
-                public void componentHidden(final ComponentEvent e) {
+                @RequiredUIAccess
+                public void componentHidden(ComponentEvent e) {
                     hidePopup();
                 }
             };
@@ -257,6 +269,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         return myPopup != null && !myPopup.isDisposed();
     }
 
+    @RequiredUIAccess
     private void hidePopup() {
         if (myPopup != null) {
             myPopup.cancel();
@@ -264,6 +277,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
     }
 
+    @RequiredUIAccess
     private void processClosed() {
         if (myPopup == null) {
             return;
@@ -280,12 +294,14 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     abstract static class PopupToolbar extends AdvancedActionToolbarImpl implements AnActionListener, DataProvider, Disposable {
         private final JComponent myParent;
 
-        PopupToolbar(@Nonnull String place,
-                     @Nonnull ActionGroup actionGroup,
-                     @Nonnull JComponent parent,
-                     @Nonnull ActionManager actionManager) {
+        PopupToolbar(
+            @Nonnull String place,
+            @Nonnull ActionGroup actionGroup,
+            @Nonnull JComponent parent,
+            @Nonnull ActionManager actionManager
+        ) {
             super(place, actionGroup, Style.HORIZONTAL, actionManager);
-            ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, this);
+            Application.get().getMessageBus().connect(this).subscribe(AnActionListener.class, this);
             myParent = parent;
             setBorder(myParent.getBorder());
         }
@@ -307,7 +323,11 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
 
         @Override
-        public void afterActionPerformed(@Nonnull final AnAction action, @Nonnull final DataContext dataContext, @Nonnull AnActionEvent event) {
+        public void afterActionPerformed(
+            @Nonnull AnAction action,
+            @Nonnull DataContext dataContext,
+            @Nonnull AnActionEvent event
+        ) {
             List<? extends AnAction> visibleActions = myEngine.getVisibleActions();
 
             if (!visibleActions.contains(action)) {
@@ -328,10 +348,10 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     }
 
     @Override
-    public void setMinimumButtonSize(@Nonnull final Size2D size) {
+    public void setMinimumButtonSize(@Nonnull Size2D size) {
         myMinimumButtonSize = size;
         for (int i = getComponentCount() - 1; i >= 0; i--) {
-            final Component component = getComponent(i);
+            Component component = getComponent(i);
             if (component instanceof ActionButton button) {
                 button.getComponent().setMinimumSize(TargetAWT.to(size));
             }
@@ -340,21 +360,19 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     }
 
     @Override
-    protected void paintComponent(final Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         if (myLayoutPolicy == AUTO_LAYOUT_POLICY && myAutoPopupRec != null) {
             Image link = PlatformIconGroup.ideLink();
 
             if (getOrientation() == SwingConstants.HORIZONTAL) {
-                final int dy = myAutoPopupRec.height / 2 - link.getHeight() / 2;
-                TargetAWT.to(link)
-                    .paintIcon(this, g, (int) myAutoPopupRec.getMaxX() - link.getWidth() - 1, myAutoPopupRec.y + dy);
+                int dy = myAutoPopupRec.height / 2 - link.getHeight() / 2;
+                TargetAWT.to(link).paintIcon(this, g, (int) myAutoPopupRec.getMaxX() - link.getWidth() - 1, myAutoPopupRec.y + dy);
             }
             else {
-                final int dx = myAutoPopupRec.width / 2 - link.getWidth() / 2;
-                TargetAWT.to(link)
-                    .paintIcon(this, g, myAutoPopupRec.x + dx, (int) myAutoPopupRec.getMaxY() - link.getWidth() - 1);
+                int dx = myAutoPopupRec.width / 2 - link.getWidth() / 2;
+                TargetAWT.to(link).paintIcon(this, g, myAutoPopupRec.x + dx, (int) myAutoPopupRec.getMaxY() - link.getWidth() - 1);
             }
         }
     }
@@ -394,7 +412,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     @Override
     @Nonnull
     public Dimension getPreferredSize() {
-        final ArrayList<Rectangle> bounds = new ArrayList<>();
+        ArrayList<Rectangle> bounds = new ArrayList<>();
         calculateBounds(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE), bounds);//it doesn't take into account wrapping
         if (bounds.isEmpty()) {
             return JBUI.emptySize();
@@ -402,7 +420,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         int forcedHeight = 0;
         int orientation = getOrientation();
         if (getWidth() > 0 && getLayoutPolicy() == ActionToolbar.WRAP_LAYOUT_POLICY && orientation == SwingConstants.HORIZONTAL) {
-            final ArrayList<Rectangle> limitedBounds = new ArrayList<>();
+            ArrayList<Rectangle> limitedBounds = new ArrayList<>();
             calculateBounds(new Dimension(getWidth(), Integer.MAX_VALUE), limitedBounds);
             Rectangle union = null;
             for (Rectangle bound : limitedBounds) {
@@ -415,7 +433,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         int xRight = Integer.MIN_VALUE;
         int yBottom = Integer.MIN_VALUE;
         for (int i = bounds.size() - 1; i >= 0; i--) {
-            final Rectangle each = bounds.get(i);
+            Rectangle each = bounds.get(i);
             if (each.x == Integer.MAX_VALUE) {
                 continue;
             }
@@ -424,7 +442,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             xRight = Math.max(xRight, each.x + each.width);
             yBottom = Math.max(yBottom, each.y + each.height);
         }
-        final Dimension dimension = new Dimension(xRight - xLeft, Math.max(yBottom - yTop, forcedHeight));
+        Dimension dimension = new Dimension(xRight - xLeft, Math.max(yBottom - yTop, forcedHeight));
 
         JBInsets.addTo(dimension, getInsets());
 
@@ -436,10 +454,10 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         if (!isValid()) {
             calculateBounds(getSize(), myComponentBounds);
         }
-        final int componentCount = getComponentCount();
+        int componentCount = getComponentCount();
         LOG.assertTrue(componentCount <= myComponentBounds.size());
         for (int i = componentCount - 1; i >= 0; i--) {
-            final Component component = getComponent(i);
+            Component component = getComponent(i);
             component.setBounds(myComponentBounds.get(i));
         }
     }
@@ -476,7 +494,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             int rightOffset = 0;
             Insets insets = getInsets();
             for (int i = getComponentCount() - 1, j = 1; i > 0; i--, j++) {
-                final Component component = getComponent(i);
+                Component component = getComponent(i);
                 if (component instanceof JComponent jComponent && jComponent.getClientProperty(RIGHT_ALIGN_KEY) == Boolean.TRUE) {
                     rightOffset += bounds.get(i).width;
                     Rectangle r = bounds.get(bounds.size() - j);
@@ -488,19 +506,19 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
     }
 
     private void calculateBoundsAutoImp(@Nonnull Dimension sizeToFit, @Nonnull List<? extends Rectangle> bounds) {
-        final int componentCount = getComponentCount();
+        int componentCount = getComponentCount();
         LOG.assertTrue(componentCount <= bounds.size());
 
-        final boolean actualLayout = bounds == myComponentBounds;
+        boolean actualLayout = bounds == myComponentBounds;
 
         if (actualLayout) {
             myAutoPopupRec = null;
         }
 
-        int autoButtonSize = AllIcons.Ide.Link.getWidth();
+        int autoButtonSize = PlatformIconGroup.ideLink().getWidth();
         boolean full = false;
 
-        final Insets insets = getInsets();
+        Insets insets = getInsets();
         int widthToFit = sizeToFit.width - insets.left - insets.right;
         int heightToFit = sizeToFit.height - insets.top - insets.bottom;
 
@@ -508,14 +526,15 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             int eachX = 0;
             int maxHeight = heightToFit;
             for (int i = 0; i < componentCount; i++) {
-                final Component eachComp = getComponent(i);
-                final boolean isLast = i == componentCount - 1;
+                boolean isLast = i == componentCount - 1;
 
-                final Rectangle eachBound = new Rectangle(getChildPreferredSize(i));
+                Rectangle eachBound = new Rectangle(getChildPreferredSize(i));
                 maxHeight = Math.max(eachBound.height, maxHeight);
 
                 if (!full) {
-                    boolean inside = isLast ? eachX + eachBound.width <= widthToFit : eachX + eachBound.width + autoButtonSize <= widthToFit;
+                    boolean inside = isLast
+                        ? eachX + eachBound.width <= widthToFit
+                        : eachX + eachBound.width + autoButtonSize <= widthToFit;
 
                     if (inside) {
                         eachBound.x = insets.left + eachX;
@@ -539,17 +558,16 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
                 bounds.get(i).setBounds(eachBound);
             }
 
-            for (final Rectangle r : bounds) {
+            for (Rectangle r : bounds) {
                 if (r.height < maxHeight) {
                     r.y += (maxHeight - r.height) / 2;
                 }
             }
-
         }
         else {
             int eachY = 0;
             for (int i = 0; i < componentCount; i++) {
-                final Rectangle eachBound = new Rectangle(getChildPreferredSize(i));
+                Rectangle eachBound = new Rectangle(getChildPreferredSize(i));
                 if (!full) {
                     boolean outside;
                     if (i < componentCount - 1) {
@@ -580,31 +598,30 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
                 bounds.get(i).setBounds(eachBound);
             }
         }
-
     }
 
     private void calculateBoundsNowrapImpl(@Nonnull List<? extends Rectangle> bounds) {
-        final int componentCount = getComponentCount();
+        int componentCount = getComponentCount();
         LOG.assertTrue(componentCount <= bounds.size());
 
-        final Insets insets = getInsets();
+        Insets insets = getInsets();
 
         if (getOrientation() == SwingConstants.HORIZONTAL) {
-            final int maxHeight = getMaxButtonHeight();
+            int maxHeight = getMaxButtonHeight();
             int offset = 0;
             for (int i = 0; i < componentCount; i++) {
-                final Dimension d = getChildPreferredSize(i);
-                final Rectangle r = bounds.get(i);
+                Dimension d = getChildPreferredSize(i);
+                Rectangle r = bounds.get(i);
                 r.setBounds(insets.left + offset, insets.top + (maxHeight - d.height) / 2, d.width, d.height);
                 offset += d.width;
             }
         }
         else {
-            final int maxWidth = getMaxButtonWidth();
+            int maxWidth = getMaxButtonWidth();
             int offset = 0;
             for (int i = 0; i < componentCount; i++) {
-                final Dimension d = getChildPreferredSize(i);
-                final Rectangle r = bounds.get(i);
+                Dimension d = getChildPreferredSize(i);
+                Rectangle r = bounds.get(i);
                 r.setBounds(insets.left + (maxWidth - d.width) / 2, insets.top + offset, d.width, d.height);
                 offset += d.height;
             }
@@ -628,10 +645,10 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
 
         Dimension minSize = TargetAWT.to(myMinimumButtonSize);
 
-        final int componentCount = getComponentCount();
+        int componentCount = getComponentCount();
         LOG.assertTrue(componentCount <= bounds.size());
 
-        final Insets insets = getInsets();
+        Insets insets = getInsets();
         int widthToFit = sizeToFit.width - insets.left - insets.right;
         int heightToFit = sizeToFit.height - insets.top - insets.bottom;
 
@@ -639,10 +656,10 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         if (orientation == SwingConstants.HORIZONTAL) {
             // Calculate row height
             int rowHeight = 0;
-            final Dimension[] dims = new Dimension[componentCount]; // we will use this dimensions later
+            Dimension[] dims = new Dimension[componentCount]; // we will use this dimensions later
             for (int i = 0; i < componentCount; i++) {
                 dims[i] = getChildPreferredSize(i);
-                final int height = dims[i].height;
+                int height = dims[i].height;
                 rowHeight = Math.max(rowHeight, height);
             }
 
@@ -653,13 +670,13 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             int maxRowWidth = getMaxRowWidth(widthToFit, minSize.width);
 
             for (int i = 0; i < componentCount; i++) {
-                final Dimension d = dims[i];
+                Dimension d = dims[i];
                 if (xOffset + d.width > maxRowWidth) { // place component at new row
                     xOffset = 0;
                     yOffset += rowHeight;
                 }
 
-                final Rectangle each = bounds.get(i);
+                Rectangle each = bounds.get(i);
                 each.setBounds(insets.left + xOffset, insets.top + yOffset + (rowHeight - d.height) / 2, d.width, d.height);
 
                 xOffset += d.width;
@@ -668,10 +685,10 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         else {
             // Calculate row width
             int rowWidth = 0;
-            final Dimension[] dims = new Dimension[componentCount]; // we will use this dimensions later
+            Dimension[] dims = new Dimension[componentCount]; // we will use this dimensions later
             for (int i = 0; i < componentCount; i++) {
                 dims[i] = getChildPreferredSize(i);
-                final int width = dims[i].width;
+                int width = dims[i].width;
                 rowWidth = Math.max(rowWidth, width);
             }
 
@@ -679,15 +696,15 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             int xOffset = 0;
             int yOffset = 0;
             // Calculate max size of a row. It's not possible to make more then 3 column toolbar
-            final int maxRowHeight = Math.max(heightToFit, componentCount * minSize.height / 3);
+            int maxRowHeight = Math.max(heightToFit, componentCount * minSize.height / 3);
             for (int i = 0; i < componentCount; i++) {
-                final Dimension d = dims[i];
+                Dimension d = dims[i];
                 if (yOffset + d.height > maxRowHeight) { // place component at new row
                     yOffset = 0;
                     xOffset += rowWidth;
                 }
 
-                final Rectangle each = bounds.get(i);
+                Rectangle each = bounds.get(i);
                 each.setBounds(insets.left + xOffset + (rowWidth - d.width) / 2, insets.top + yOffset, d.width, d.height);
 
                 yOffset += d.height;
@@ -700,7 +717,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         // Calculate max size of a row. It's not possible to make more than 3 row toolbar
         int maxRowWidth = Math.max(widthToFit, componentCount * maxWidth / 3);
         for (int i = 0; i < componentCount; i++) {
-            final Component component = getComponent(i);
+            Component component = getComponent(i);
             if (component instanceof JComponent jComponent && jComponent.getClientProperty(RIGHT_ALIGN_KEY) == Boolean.TRUE) {
                 maxRowWidth -= getChildPreferredSize(i).width;
             }
