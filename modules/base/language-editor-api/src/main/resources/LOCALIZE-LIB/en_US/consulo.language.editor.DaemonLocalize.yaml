@@ -1,126 +1,138 @@
-method.is.implemented.too.many:
-  text: Has implementations
-method.is.overridden.too.many:
-  text: Is overridden in subclasses
-interface.is.implemented.too.many:
-  text: Has implementations
-class.is.subclassed.too.many:
-  text: Has subclasses
-method.implements:
-  text: Implements method in ''{1}''
-method.implements.in:
-  text: Implements method ''{0}'' in ''{1}''
-method.overrides:
-  text: Overrides method in ''{1}''
-method.overrides.in:
-  text: Overrides method ''{0}'' in ''{1}''
-analysis.hasnot.been.run:
-  text: No analysis has been performed
-no.syntax.highlighting.performed:
-  text: No syntax highlighting performed
-no.inspections.performed:
-  text: No inspections performed
-no.syntax.highlighting.performed.for:
-  text: No syntax highlighting performed for {0}
-no.inspections.performed.for:
-  text: No inspections performed {0}
-pass.syntax:
-  text: Syntax analysis
-pass.inspection:
-  text: Inspections
-pass.wolf:
-  text: Checking red files
-pass.whole.inspections:
-  text: Slow Inspections
 analysis.completed:
-  text: Analysis completed
-no.errors.or.warnings.found:
-  text: No problems found
-no.errors.or.warnings.found.so.far:
-  text: No problems found so far
-errors.found.so.far:
-  text: <b>{0}</b> {1} found so far
-errors.found:
-  text: <b>{0}</b> {1} found
-error.highlighting.settings:
-  text: Error highlighting settings
-method.is.implemented.header:
-  text: Is implemented in <br>
-method.is.overriden.header:
-  text: Is overridden in <br>
-interface.is.implemented.by.header:
-  text: Is implemented by<br>
-class.is.subclassed.by.header:
-  text: Is subclassed by<br>
-navigation.title.super.method:
-  text: Choose Super Method of {0}
-navigation.findUsages.title.super.method:
-  text: Super Methods of {0}
-navigation.title.implementation.method:
-  text: <html><body>Choose Implementation of <b>{0}</b> ({1} methods found)</body></html>
-navigation.title.overrider.method:
-  text: <html><body>Choose Overriding Method of <b>{0}</b> ({1} methods found)</body></html>
-navigation.title.subclass:
-  text: <html><body>Choose Subclass of <b>{0}</b> ({1} classes found)</body></html>
-performing.code.analysis:
-  text: Performing code analysis
-inspection.extended.description:
-  text: more...
-inspection.collapse.description:
-  text: less...
-import.popup.text:
-  text: '{0}?'
-import.popup.multiple:
-  text: '{0}? (multiple choices...)'
-process.title.highlighting.level.is.none:
-  text: Highlighting level is None
-process.title.highlighting.is.paused.temporarily:
-  text: Highlighting is paused temporarily
-process.title.heavy.operation.is.running:
-  text: Heavy operation is running
-process.title.highlighting.is.disabled.for.this.file:
-  text: Highlighting is disabled for this file
-process.title.file.is.decompiled:
-  text: File is decompiled
-process.title.file.is.binary:
-  text: File is binary
-process.title.file.is.generated:
-  text: File is generated
-process.title.project.is.disposed:
-  text: Project is disposed
-process.title.no.file:
-  text: No file
-label.code.analysis.is.disabled.in.power.save.mode:
-  text: Code analysis is disabled in power save mode
-label.no.analysis.has.been.performed:
-  text: No analysis has been performed
-label.code.analysis.has.been.suspended:
-  text: Code analysis has been suspended
-label.shallow.analysis.completed:
-  text: Shallow analysis completed
-label.complete.results.will.be.available.after.indexing:
-  text: Complete results will be available after indexing
-popup.action.configure.inspections:
-  text: Configure Inspections...
-popup.title.configure.highlighting.level:
-  text: Highlighting Level for {0}
-shallow.analysis.completed:
-  text: Shallow analysis completed
-shallow.analysis.completed.details:
-  text: Complete results will be available after indexing
-no.analysis.performed:
-  text: No analysis has been performed
+    text: Analysis completed
+analysis.hasnot.been.run:
+    text: No analysis has been performed
 analysis.suspended:
-  text: Code analysis has been suspended
-iw.status.off:
-  text: 'OFF'
-iw.status.analyzing:
-  text: Analyzing...
-iw.status.paused:
-  text: Paused...
+    text: Code analysis has been suspended
+class.is.subclassed.by.header:
+    text: Is subclassed by<br>
+class.is.subclassed.too.many:
+    text: Has subclasses
+error.highlighting.settings:
+    text: Error highlighting settings
+errors.found:
+    text: <b>{0}</b> {1} found
+errors.found.so.far:
+    text: <b>{0}</b> {1} found so far
 heavyProcess.type.indexing:
-  text: Indexing...
-heavyProcess.type.syncing:
-  text: Syncing...
+    text: Indexing...
 heavyProcess.type.processing:
-  text: Processing...
+    text: Processing...
+heavyProcess.type.syncing:
+    text: Syncing...
+import.popup.hint.action.text:
+    text: Import
+import.popup.hint.action.kind.class:
+    text: class
+import.popup.hint.text:
+    text: <html><body><a href="action">{3} {0}...</a> {1}? <span style="color:{4}">{2}</span></body></html>
+    names:
+        - kind
+        - name
+        - shortcut
+        - actionName
+        - shortcutColor
+import.popup.multiple:
+    text: '{0}? (multiple choices...)'
+import.popup.text:
+    text: '{0}?'
+inspection.collapse.description:
+    text: less...
+inspection.extended.description:
+    text: more...
+interface.is.implemented.by.header:
+    text: Is implemented by<br>
+interface.is.implemented.too.many:
+    text: Has implementations
+iw.status.analyzing:
+    text: Analyzing...
+iw.status.off:
+    text: 'OFF'
+iw.status.paused:
+    text: Paused...
+label.code.analysis.has.been.suspended:
+    text: Code analysis has been suspended
+label.code.analysis.is.disabled.in.power.save.mode:
+    text: Code analysis is disabled in power save mode
+label.complete.results.will.be.available.after.indexing:
+    text: Complete results will be available after indexing
+label.no.analysis.has.been.performed:
+    text: No analysis has been performed
+label.shallow.analysis.completed:
+    text: Shallow analysis completed
+method.implements:
+    text: Implements method in ''{1}''
+method.implements.in:
+    text: Implements method ''{0}'' in ''{1}''
+method.is.implemented.header:
+    text: Is implemented in <br>
+method.is.implemented.too.many:
+    text: Has implementations
+method.is.overridden.too.many:
+    text: Is overridden in subclasses
+method.is.overriden.header:
+    text: Is overridden in <br>
+method.overrides:
+    text: Overrides method in ''{1}''
+method.overrides.in:
+    text: Overrides method ''{0}'' in ''{1}''
+navigation.findUsages.title.super.method:
+    text: Super Methods of {0}
+navigation.title.implementation.method:
+    text: <html><body>Choose Implementation of <b>{0}</b> ({1} methods found)</body></html>
+navigation.title.overrider.method:
+    text: <html><body>Choose Overriding Method of <b>{0}</b> ({1} methods found)</body></html>
+navigation.title.subclass:
+    text: <html><body>Choose Subclass of <b>{0}</b> ({1} classes found)</body></html>
+navigation.title.super.method:
+    text: Choose Super Method of {0}
+no.analysis.performed:
+    text: No analysis has been performed
+no.errors.or.warnings.found:
+    text: No problems found
+no.errors.or.warnings.found.so.far:
+    text: No problems found so far
+no.inspections.performed:
+    text: No inspections performed
+no.inspections.performed.for:
+    text: No inspections performed {0}
+no.syntax.highlighting.performed:
+    text: No syntax highlighting performed
+no.syntax.highlighting.performed.for:
+    text: No syntax highlighting performed for {0}
+pass.inspection:
+    text: Inspections
+pass.syntax:
+    text: Syntax analysis
+pass.whole.inspections:
+    text: Slow Inspections
+pass.wolf:
+    text: Checking red files
+performing.code.analysis:
+    text: Performing code analysis
+popup.action.configure.inspections:
+    text: Configure Inspections...
+popup.title.configure.highlighting.level:
+    text: Highlighting Level for {0}
+process.title.file.is.binary:
+    text: File is binary
+process.title.file.is.decompiled:
+    text: File is decompiled
+process.title.file.is.generated:
+    text: File is generated
+process.title.heavy.operation.is.running:
+    text: Heavy operation is running
+process.title.highlighting.is.disabled.for.this.file:
+    text: Highlighting is disabled for this file
+process.title.highlighting.is.paused.temporarily:
+    text: Highlighting is paused temporarily
+process.title.highlighting.level.is.none:
+    text: Highlighting level is None
+process.title.no.file:
+    text: No file
+process.title.project.is.disposed:
+    text: Project is disposed
+shallow.analysis.completed:
+    text: Shallow analysis completed
+shallow.analysis.completed.details:
+    text: Complete results will be available after indexing

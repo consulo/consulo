@@ -61,6 +61,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.*;
@@ -867,6 +868,22 @@ public class HintManagerImpl implements HintManagerEx {
     public void showQuestionHint(@Nonnull Editor editor, @Nonnull String hintText, int offset1, int offset2, @Nonnull QuestionAction action) {
         JComponent label = HintUtil.createQuestionLabel(hintText);
         LightweightHintImpl hint = new LightweightHintImpl(label);
+
+        if (hint.getComponent() instanceof HintUtil.HintLabel hintLabel) {
+            JEditorPane pane = hintLabel.getPane();
+            if (pane != null) {
+                pane.addHyperlinkListener(e -> {
+                    if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED && "action".equals(e.getDescription()) && hint.isVisible()) {
+                        boolean execute = action.execute();
+
+                        if (execute) {
+                            hint.hide();
+                        }
+                    }
+                });
+            }
+        }
+
         showQuestionHint(editor, offset1, offset2, hint, action, ABOVE);
     }
 

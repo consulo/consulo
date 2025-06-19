@@ -21,10 +21,6 @@ import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.keymap.util.KeymapUtil;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -34,20 +30,40 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface AutoImportHelper {
-  static AutoImportHelper getInstance(@Nonnull Project project) {
-    return project.getInstance(AutoImportHelper.class);
-  }
+    static AutoImportHelper getInstance(@Nonnull Project project) {
+        return project.getInstance(AutoImportHelper.class);
+    }
 
-  boolean canChangeFileSilently(@Nonnull PsiFile file);
+    boolean canChangeFileSilently(@Nonnull PsiFile file);
 
-  boolean mayAutoImportNow(@Nonnull PsiFile psiFile, boolean isInContent);
+    boolean mayAutoImportNow(@Nonnull PsiFile psiFile, boolean isInContent);
 
-  void runOptimizeImports(@Nonnull Project project, @Nonnull PsiFile file, boolean withProgress);
+    void runOptimizeImports(@Nonnull Project project, @Nonnull PsiFile file, boolean withProgress);
 
-  @Nonnull
-  default String getImportMessage(final boolean multiple, @Nonnull String name) {
-    String hintText = multiple ? DaemonLocalize.importPopupMultiple(name).get() : DaemonLocalize.importPopupText(name).get();
-    hintText += " " + LocalizeValue.localizeTODO(KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS)));
-    return hintText;
-  }
+    @Nonnull
+    default LocalizeValue getImportMessage(@Nonnull LocalizeValue kind,
+                                           boolean multiple,
+                                           @Nonnull String name) {
+        return getImportMessage(DaemonLocalize.importPopupHintActionText(), kind, multiple, name);
+    }
+
+//    @Nonnull
+//    default LocalizeValue getImportMessage(boolean multiple,
+//                                           @Nonnull String name) {
+//        return getImportMessage(DaemonLocalize.importPopupHintActionText(), DaemonLocalize.importPopupHintActionKindClass(), multiple, name);
+//    }
+
+    @Nonnull
+    LocalizeValue getImportMessage(@Nonnull LocalizeValue actioName,
+                                   @Nonnull LocalizeValue kind,
+                                   boolean multiple,
+                                   @Nonnull String name);
+
+    @Nonnull
+    default String getImportMessage(boolean multiple, @Nonnull String name) {
+        LocalizeValue value =
+            getImportMessage(DaemonLocalize.importPopupHintActionText(), DaemonLocalize.importPopupHintActionKindClass(), multiple, name);
+
+        return value.get();
+    }
 }

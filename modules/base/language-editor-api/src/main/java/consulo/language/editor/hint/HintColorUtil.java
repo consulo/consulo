@@ -21,6 +21,7 @@ import consulo.colorScheme.EditorColorsUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.LightDarkColorValue;
 import consulo.util.lang.ObjectUtil;
 
@@ -63,7 +64,7 @@ public class HintColorUtil {
 
   @Nonnull
   public static ColorValue getQuestionColor() {
-    return ObjectUtil.notNull(EditorColorsUtil.getGlobalOrDefaultColor(QUESTION_COLOR_KEY), QUESTION_COLOR_KEY.getDefaultColorValue());
+    return TargetAWT.from(JBColor.namedColor("ToolTip.background", new JBColor(0xf7f7f7, 0x474a4c)));
   }
 
   @Nonnull

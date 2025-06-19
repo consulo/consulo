@@ -6,6 +6,7 @@ import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.logging.Logger;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.OpaquePanel;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.HintListener;
@@ -161,13 +162,26 @@ public class LightweightHintImpl extends UserDataHolderBase implements Lightweig
                     public boolean canBeDismissedOnTimeout() {
                         return false;
                     }
-                }.setToCenterIfSmall(hintHint.isMayCenterTooltip()).setPreferredPosition(hintHint.getPreferredPosition()).setHighlighterType(hintHint.isHighlighterType()).setTextForeground(hintHint.getTextForeground()).setTextBackground(hintHint.getTextBackground()).setBorderColor(hintHint.getBorderColor()).setBorderInsets(hintHint.getBorderInsets())
-                    .setFont(hintHint.getTextFont()).setCalloutShift(hintHint.getCalloutShift()).setPositionChangeShift(hintHint.getPositionChangeX(), hintHint.getPositionChangeY()).setExplicitClose(hintHint.isExplicitClose()).setRequestFocus(hintHint.isRequestFocus()).setHint(true);
+                }.setToCenterIfSmall(hintHint.isMayCenterTooltip())
+                    .setPreferredPosition(hintHint.getPreferredPosition())
+                    .setHighlighterType(hintHint.isHighlighterType())
+                    .setTextForeground(hintHint.getTextForeground())
+                    .setTextBackground(hintHint.getTextBackground())
+                    .setBorderColor(hintHint.getBorderColor())
+                    .setBorderInsets(hintHint.getBorderInsets())
+                    .setFont(hintHint.getTextFont())
+                    .setCalloutShift(hintHint.getCalloutShift())
+                    .setPositionChangeShift(hintHint.getPositionChangeX(), hintHint.getPositionChangeY())
+                    .setExplicitClose(hintHint.isExplicitClose())
+                    .setRequestFocus(hintHint.isRequestFocus())
+                    .setHint(true);
                 myComponent.validate();
                 Border border = hintHint.getComponentBorder();
                 if (border != null) {
                     tooltip.setComponentBorder(border);
                 }
+
+                tooltip.setPointerSize(JBUI.size(16, 8)).setPointerShiftedToStart(true);
 
                 myCurrentIdeTooltip = IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, hintHint.isShowImmediately(), hintHint.isAnimationEnabled());
             }
