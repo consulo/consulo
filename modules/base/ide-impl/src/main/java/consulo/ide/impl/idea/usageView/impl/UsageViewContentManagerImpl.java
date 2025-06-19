@@ -3,33 +3,33 @@
 package consulo.ide.impl.idea.usageView.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.DumbAwareToggleAction;
-import consulo.util.collection.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.usage.UsageView;
-import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewContentManager;
 import consulo.usage.UsageViewSettings;
+import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.UsageFilteringRuleListener;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -53,8 +53,9 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
     public UsageViewContentManagerImpl(@Nonnull Project project, @Nonnull ToolWindowManager toolWindowManager) {
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.FIND, true, ToolWindowAnchor.BOTTOM, project, true);
         //toolWindow.setHelpId(UsageViewImpl.HELP_ID);
+        toolWindow.setDisplayName(FindLocalize.toolwindowFindDisplayName());
         toolWindow.setToHideOnEmptyContent(true);
-        toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowFind);
+        toolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowfind());
 
         DumbAwareToggleAction toggleNewTabAction = new DumbAwareToggleAction(FindLocalize.findOpenInNewTabAction()) {
             @Override
@@ -69,7 +70,11 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         };
 
         DumbAwareToggleAction toggleSortAction =
-            new DumbAwareToggleAction(UsageViewBundle.message("sort.alphabetically.action.text"), null, AllIcons.ObjectBrowser.Sorted) {
+            new DumbAwareToggleAction(
+                UsageLocalize.sortAlphabeticallyActionText(),
+                LocalizeValue.empty(),
+                PlatformIconGroup.objectbrowserSorted()
+            ) {
                 @Override
                 public boolean isSelected(@Nonnull AnActionEvent e) {
                     return UsageViewSettings.getInstance().isSortAlphabetically();
@@ -118,7 +123,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
     public Content addContent(
         @Nonnull String contentName,
         boolean reusable,
-        @Nonnull final JComponent component,
+        @Nonnull JComponent component,
         boolean toOpenInNewTab,
         boolean isLockable
     ) {
@@ -132,7 +137,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         String tabName,
         String toolwindowTitle,
         boolean reusable,
-        @Nonnull final JComponent component,
+        @Nonnull JComponent component,
         boolean toOpenInNewTab,
         boolean isLockable
     ) {

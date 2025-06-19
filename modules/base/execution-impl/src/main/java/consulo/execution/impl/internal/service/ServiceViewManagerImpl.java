@@ -188,9 +188,9 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
                 continue;
             }
 
-            ServiceViewToolWindowDescriptor descriptor = ToolWindowId.SERVICES.equals(entry.getKey()) ?
-                getServicesToolWindowDescriptor() :
-                getContributorToolWindowDescriptor(contributor);
+            ServiceViewToolWindowDescriptor descriptor = ToolWindowId.SERVICES.equals(entry.getKey())
+                ? getServicesToolWindowDescriptor()
+                : getContributorToolWindowDescriptor(contributor);
             registerToolWindow(descriptor, !Collections.disjoint(activeContributors, contributors));
         }
     }
@@ -1178,7 +1178,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
 
             @Override
             public @Nonnull String getStripeTitle() {
-                return UIBundle.message("tool.window.name.services");
+                return ExecutionLocalize.toolwindowServicesDisplayName().get();
             }
         };
     }

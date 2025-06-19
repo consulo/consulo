@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.bookmark.icon.BookmarkIconGroup;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesPanel;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.localize.LocalizeValue;
@@ -37,45 +38,45 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class BookmarksToolWindowFactory implements ToolWindowFactory, DumbAware {
-  @Nonnull
-  @Override
-  public String getId() {
-    return ToolWindowId.BOOKMARKS;
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return ToolWindowId.BOOKMARKS;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
-    final ContentManager contentManager = toolWindow.getContentManager();
-    final FavoritesTreeViewPanel panel = new FavoritesPanel(project).getPanel();
-    panel.setupToolWindow(toolWindow);
+    @RequiredUIAccess
+    @Override
+    public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
+        ContentManager contentManager = toolWindow.getContentManager();
+        FavoritesTreeViewPanel panel = new FavoritesPanel(project).getPanel();
+        panel.setupToolWindow(toolWindow);
 
-    Content content = contentManager.getFactory().createContent(panel, null, false);
+        Content content = contentManager.getFactory().createContent(panel, null, false);
 
-    contentManager.addContent(content);
-    contentManager.addDataProvider(panel);
-  }
+        contentManager.addContent(content);
+        contentManager.addDataProvider(panel);
+    }
 
-  @Override
-  public boolean isSecondary() {
-    return true;
-  }
+    @Override
+    public boolean isSecondary() {
+        return true;
+    }
 
-  @Nonnull
-  @Override
-  public ToolWindowAnchor getAnchor() {
-    return ToolWindowAnchor.LEFT;
-  }
+    @Nonnull
+    @Override
+    public ToolWindowAnchor getAnchor() {
+        return ToolWindowAnchor.LEFT;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return BookmarkIconGroup.toolwindowBookmarks();
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return BookmarkIconGroup.toolwindowBookmarks();
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Bookmarks");
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return BookmarkLocalize.toolwindowBookmarksDisplayName();
+    }
 }

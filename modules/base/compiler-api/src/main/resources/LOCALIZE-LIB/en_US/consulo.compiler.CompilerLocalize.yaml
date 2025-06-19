@@ -1,451 +1,453 @@
-message.category.error:
-  text: ERROR
-message.category.warning:
-  text: WARNING
-message.category.information:
-  text: INFORMATION
-message.category.statistics:
-  text: STATISTICS
-error.copying:
-  text: |-
-    Error copying {0}
-    to {1}:
-    {2}
-file.copying.compiler.description:
-  text: File copying compiler
-error.javac.out.of.memory:
-  text: Out of memory. Increase the maximum heap size in Project Properties|Compiler settings.
-progress.loading.classes:
-  text: Loading classes...
-progress.compiling.class:
-  text: Compiling {0}...
-progress.parsing.file:
-  text: Parsing {0}...
-label.generate.ant.script.use.jdk.definitions:
-  text: Use JDK definitions from project files
-label.generate.ant.script.overwrite.files:
-  text: Overwrite previously generated files
-label.generate.ant.script.backup.files:
-  text: Backup previously generated files
-label.generate.ant.script.single.file:
-  text: Generate single-file ant build
-label.generate.ant.script.generate.multiple.files:
-  text: Generate multiple-file ant build (requires ant 1.6 or later to execute)
-label.generate.ant.script.enable.ui.forms.compilation:
-  text: Enable UI forms compilation (requires "javac2" ant task from IDEA distribution)
 action.compile.description.module:
-  text: Module ''{0}''
+    text: Module ''{0}''
 action.compile.description.selected.files:
-  text: Selected Files
-rebuild.lvcs.label.no.errors:
-  text: '''''{0}'''' with no errors'
-rebuild.lvcs.label.with.errors:
-  text: '''''{0}'''' with errors'
-message.ant.files.generated.ok:
-  text: |-
-    Ant build files successfully generated:
-    {0}
-error.ant.files.generate.failed:
-  text: 'Failed to generate ant build script: {0}'
-error.ant.files.backup.failed:
-  text: Failed to backup file {0}
-generate.ant.build.dialog.cyclic.modules.table.title:
-  text: Cyclic Module Dependencies
-generate.ant.build.dialog.cyclic.modules.table.description:
-  text: |-
-    Some modules have cyclic dependencies.
-    In order to generate ant build script, please select the "main" (representative) module for each dependency cycle.
-    The source code for all modules in the cycle will be compiled into the main module's output folders;
-    All modules in the cycle will use the JDK assigned to the main module;
-    Any jar archives created will be named after the name of the main module.
-generate.ant.build.dialog.cyclic.modules.table.number.column.header:
-  text: Cycle
-generate.ant.build.dialog.cyclic.modules.table.name.column.header:
-  text: Main Module
-action.make.selected.modules.text:
-  text: Build Selected _Modules
-generated.ant.build.disable.tests.property.comment:
-  text: Uncomment the following property if no tests compilation is needed
-generated.ant.build.compiler.options.comment:
-  text: Compiler options
-generated.ant.build.project.libraries.comment:
-  text: Project Libraries
-generated.ant.build.global.libraries.comment:
-  text: Global Libraries
-generated.ant.build.jdk.definitions.comment:
-  text: JDK definitions
-message.resource.patterns.format.changed:
-  text: |-
-    The format of resource patterns has changed.
-    {0} failed to convert existing regular expression patterns:
-    {1}
-    Please enter pattern string in a new format.
-    Each resource pattern may contain the following wildcards:
-    ? - one character
-    * - zero or more characters
-    ! - negate the pattern (allowed only at the start of a pattern)
-    Use ; (semicolon) to separate resource patterns;
-    Escape the "!" character with a backslash ("\").
-    You might also need to modify template project settings.
-    Press ''{2}'' to accept entered patterns, ''{3}'' to load default patterns in new format.
-pattern.conversion.dialog.title:
-  text: Pattern Conversion
-error.bad.resource.patterns:
-  text: The following resource patterns are malformed:{0}
-bad.resource.patterns.dialog.title:
-  text: Malformed Resource Patterns
-compiler.results.export.text.prefix:
-  text: line ({0})
-value.undefined:
-  text: undefined
-generated.ant.build.bootclasspath.comment:
-  text: Paths to be included in compilation bootclasspath
-generated.ant.build.cleanup.module.task.comment:
-  text: cleanup module
-generated.ant.build.clean.all.task.comment:
-  text: cleanup all
-generated.ant.build.compile.modules.main.target.comment:
-  text: Compile {0,choice, 1#module|2#modules} {1}
-generated.ant.build.compile.modules.production.classes.target.comment:
-  text: Compile {0,choice, 1#module|2#modules} {1}; production classes
-generated.ant.build.compile.modules.tests.target.comment:
-  text: compile {0,choice, 1#module|2#modules} {1}; test classes
-generated.ant.build.modules.section.title:
-  text: Modules
-generated.ant.build.initialization.section.title:
-  text: Build initialization
-generated.ant.build.initialization.section.comment:
-  text: Perform any build initialization in this target
-generated.ant.build.build.all.modules.target.name:
-  text: build all modules
-generated.ant.build.build.all.target.name:
-  text: build all
-generated.ant.build.building.concrete.module.section.title:
-  text: Module {0}
-compiler.error.exception:
-  text: 'Error: {0}'
-error.compiler.caches.corrupted:
-  text: Compiler caches are corrupted. Starting rebuild...
-error.caches.old.format:
-  text: Compiler caches on disk have old format. Project rebuild is required.
-error.previous.compilation.failed:
-  text: Previous compilation did not terminate properly. Caches may have been corrupted. Starting rebuild...
-error.dependency.info.on.disk.corrupted:
-  text: Compiler dependency information on disk is corrupted. Rebuild required.
-error.vfs.was.rebuilt:
-  text: File system caches were invalidated. Rebuild required.
-status.compilation.aborted:
-  text: Compilation aborted
-status.all.up.to.date:
-  text: All files are up-to-date
-progress.saving.caches:
-  text: Saving caches...
-progress.clearing.output:
-  text: Clearing output directories...
-compiler.error.failed.to.delete:
-  text: Failed to delete {0}
-progress.synchronizing.output.directory:
-  text: Synchronizing output directory...
-progress.updating.caches:
-  text: Updating caches...
-progress.processing.outdated.files:
-  text: Processing outdated files...
-compiler.content.name.compile:
-  text: Compile
-compiler.content.name.make:
-  text: Make
-status.compilation.completed.successfully.with.warnings:
-  text: Compilation completed successfully with {0} {0,choice, 0#warnings|1#warning|2#warnings}
-status.compilation.completed.successfully:
-  text: Compilation completed successfully
-status.compilation.completed.successfully.with.warnings.and.errors:
-  text: Compilation completed with {0} {0,choice, 0#errors|1#error|2#errors} and {1} {1,choice, 0#warnings|1#warning|2#warnings}
-progress.executing.precompile.tasks:
-  text: Executing pre-compile tasks...
-progress.executing.postcompile.tasks:
-  text: Executing post-compile tasks...
-error.failed.to.create.directory:
-  text: Failed to create directory {0}
-error.chunk.modules.must.have.same.jdk:
-  text: |-
-    The following modules must have the same JDK assigned because of cyclic dependencies between them:
-    {0}
-    Please update modules configuration
-error.chunk.modules.must.have.same.language.level:
-  text: |-
-    The following modules must have the same language level assigned because of cyclic dependencies between them:
-    {0}
-    Please update modules configuration
-error.annotation.processing.not.supported.for.module.cycles:
-  text: |-
-    Annotation processors running is not supported for module cycles. The following modules form a cycle:
-    {0}
-    Please either update modules configuration or exclude these modules from annotation processing
-warning.sources.under.output.paths:
-  text: |-
-    Compiler option "Clear output directory on rebuild" is currently on.
-    However, source files may exist in the following output paths:
-    {0}
-    Compilation will proceed without clearing output directories.
+    text: Selected Files
 action.compiler.properties.text:
-  text: Compiler Properties
-actions.exclude.from.compile.text:
-  text: Exclude from Compile
-progress.deleting.temp.files:
-  text: Deleting temp files...
-progress.checking.dependencies:
-  text: Checking dependencies...
-progress.found.dependent.files:
-  text: Found {0} dependent files
-error.compiler.internal.error:
-  text: Compiler internal error. Process terminated with exit code {0}
-error.bad.class.file.format:
-  text: |-
-    Bad class file format:
-    {0}
-java.compiler.description:
-  text: Java Compiler
-annotation.processing.compiler.description:
-  text: Java Annotation Processing Compiler
-resource.compiler.description:
-  text: Resource Compiler
-progress.copying.resources:
-  text: Copying resources...
-progress.generating.rmi.stubs:
-  text: Generating RMI stubs...
-rmi.compiler.description:
-  text: RMI Compiler
-error.jdk.not.specified:
-  text: |-
-    Cannot start compiler: the SDK is not specified for {0,choice, 1#module|2#modules
-    } {1}.
-    Specify the SDK at Project Structure dialog.
-error.output.not.specified:
-  text: |-
-    Cannot start compilation: the output path is not specified for {0,choice, 1#module|2#modules
-    } {1}.
-    Specify the output path in Configure Project.
-error.project.output.not.specified:
-  text: |-
-    Cannot start compilation: some compilers require that project path is defined.
-    Specify project output path in Configure Project.
-statistics.files.classes.module:
-  text: 'Files: {0} - Classes: {1} - Module: {2}'
-statistics.files.classes:
-  text: 'Files: {0} - Classes: {1}'
-compiler.javac.name:
-  text: Javac
-javac.error.jdk.home.missing:
-  text: |-
-    Cannot find home directory ''{1}'' for JDK ''{0}''.
-    Update JDK configuration.
-javac.error.vm.executable.missing:
-  text: |-
-    Cannot obtain path to VM executable for JDK {0}.
-    Update JDK configuration.
-javac.error.tools.jar.missing:
-  text: |-
-    Cannot obtain path javac classes for JDK {0}.
-    Update JDK configuration.
-javac.error.unknown.jdk.version:
-  text: |-
-    Cannot determine version for JDK {0}.
-    Update JDK configuration.
-javac.error.1_0_compilation.not.supported:
-  text: Compilation is not supported for JDK 1.0
-compiler.jikes.name:
-  text: Jikes
-jikes.error.path.to.compiler.unspecified:
-  text: |-
-    Cannot start Jikes compiler.
-    The path to compiler executable is not configured
-jikes.error.path.to.compiler.missing:
-  text: |-
-    Cannot start Jikes compiler.
-    The file {0} not found.
-compiler.configurable.display.name:
-  text: Compiler
-label.option.honor.dependencies:
-  text: Honor &dependencies on "Compile" command
-label.option.compile.in.background:
-  text: C&ompile in background
-label.option.deploy.ask:
-  text: Ask
-label.option.deploy.never:
-  text: Never
-label.option.deploy.always:
-  text: Always
-label.option.deploy.text:
-  text: 'Deploy web applications to server after compilation:'
-label.option.clear.output.directory.on.rebuild:
-  text: C&lear output directory on rebuild
-label.option.resource.patterns.text:
-  text: 'Resource patterns:'
-error.compiler.configurable.malformed.patterns:
-  text: |-
-    The following resource patterns are malformed:
-    {0}
-exclude.from.compile.table.path.column.name:
-  text: Path
-exclude.from.compile.table.recursively.column.name:
-  text: Recursively
-no.excludes:
-  text: No excludes
-option.use.compiler.text:
-  text: 'Use compiler:'
-java.compiler.option.additional.command.line.parameters:
-  text: 'Additional command line parameters:'
-java.compiler.option.generate.no.warnings:
-  text: Generate no warnings
-java.compiler.option.generate.debugging.info:
-  text: Generate debugging info
-java.compiler.option.report.deprecated:
-  text: Report use of deprecated features
-javac.option.max.heap.size:
-  text: 'Maximum heap size (MB):'
-jikes.option.path.to.executable:
-  text: 'Path to Jikes executable:'
-jikes.options.group.title:
-  text: Jikes Options
-javac.options.group.title:
-  text: Javac Options
-rmic.option.generate.iiop.stubs:
-  text: Generate IIOP stubs
-rmic.option.enable.rmi.stubs:
-  text: Enable RMI stubs generation
-compile.progress.title:
-  text: Compile Progress
-statistics.error.count:
-  text: '{0} {0,choice, 0#errors|1#error|2#errors}'
-statistics.warnings.count:
-  text: '{0} {0,choice, 0#warnings|1#warning|2#warnings}'
-compiler.running.dialog.title:
-  text: Compiler Running
-warning.compiler.running.on.project.close:
-  text: The compiler is running. Proceed with project closing?
-warning.compiler.running.on.toolwindow.close:
-  text: The compiler is running. Terminate it?
-class.parsing.error.wrong.record.tag.expected.another:
-  text: 'Wrong record tag: {0}; expected: {1}'
-class.parsing.error.wrong.tag.annotation.member.value:
-  text: 'Wrong tag for annotation member value: {0}'
-error.signature.parsing.unknown.type.signature:
-  text: Unknown type signature
-error.signature.parsing.expected.other.symbol:
-  text: 'Symbol ''''{0}'''' expected: {1}'
-error.compiler.process.not.started:
-  text: 'Compiler not started: {0}'
-packaging.element.text.output.root:
-  text: <output root>
-label.text.main.class:
-  text: '&Main Class:'
-label.text.class.path:
-  text: 'Class &Path:'
-element.type.name.artifact:
-  text: Artifact
-dialog.title.choose.artifacts:
-  text: Choose Artifacts
-node.text.0.directory.content:
-  text: '''''{0}'''' directory content'
-element.type.name.library.files:
-  text: Library Files
-node.text.0.1.compile.output:
-  text: '''''{0}'''' {1} compile output'
-node.text.0.with.dependencies:
-  text: '''''{0}'''' with dependencies'
-element.type.name.module.output:
-  text: Module Output
-element.type.name.module.resource.output:
-  text: Module Resource Output
-element.type.name.module.test.output:
-  text: Module Test Output
-element.type.name.module.test.resource.output:
-  text: Module Test Resource Output
-element.type.name.directory:
-  text: Directory
-element.type.name.jar.archive:
-  text: Jar Archive
-element.type.name.zip.archive:
-  text: Zip Archive
-artifact.type.plain:
-  text: Other
-build.artifacts.before.run.description.empty:
-  text: Build Artifacts
-build.artifacts.before.run.description.single:
-  text: Build ''{0}'' artifact
-build.artifacts.before.run.description.multiple:
-  text: Build {0} artifacts
-build.artifacts.before.run.selector.title:
-  text: Select Artifacts
-message.text.destination.is.directory:
-  text: '{0} Destination is a directory.'
-message.text.error.copying.file.to.file:
-  text: Error copying ''{0}'' to ''{1}''.
-message.text.compiling.item.deployment.descriptor.could.not.be.found:
-  text: 'Compiling {0}: Deployment item ''''{1}'''' could not be found'
-message.text.compiling.module.message:
-  text: 'Compiling {0}: {1}'
-message.text.xml.file.invalid:
-  text: XML file ''{0}'' is invalid
-mesage.text.deployment.descriptor.file.not.exist:
-  text: Deployment descriptor file ''{0}'' does not exist
-message.text.deployment.description.invalid.file:
-  text: Invalid file
-warning.text.file.has.been.changed:
-  text: File has been changed during compilation, inspection validation skipped
-packaging.compiler.message.deleting.outdated.files:
-  text: Deleting outdated files...
-packaging.compiler.message.updating.caches:
-  text: Updating artifacts compiler caches...
-packaging.compiler.message.building.archives:
-  text: Building archives...
-packaging.compiler.error.cannot.build.circular.dependency.found.between.0.and.1:
-  text: 'Cannot build: circular dependency found between ''''{0}'''' and ''''{1}'''''
-packaging.compiler.message.building.0:
-  text: Building ''{0}''...
-packaging.compiler.message.copying.archives:
-  text: Copying archives...
-compiler.initial.scanning.progress.text:
-  text: Looking for sources to recompile
-dialog.title.output.directory.for.artifact:
-  text: Output Directory for Artifact
-chooser.description.select.output.directory.for.0.artifact:
-  text: Select output directory for ''{0}'' artifact
-action.name.package.file:
-  text: Package file
+    text: Compiler Properties
 action.description.package.file:
-  text: Update the file in the corresponding artifacts
-message.tect.package.file.io.error:
-  text: |-
-    IO Error:
-    {0}
-command.name.package.file:
-  text: Package file
-status.text.file.has.been.packaged:
-  text: '{0, choice, 1#File|2#Files} {1} {0, choice, 1#has|2#have} been packaged at {2}.'
-action.name.package.files:
-  text: Package files
-validation.display.name:
-  text: Validation
+    text: Update the file in the corresponding artifacts
+action.make.selected.modules.text:
+    text: Build Selected _Modules
 action.name.exclude.from.validation:
-  text: Exclude from Validation
-no.validators:
-  text: No validators available
-generate.ant.build.custom.compiler.conflict.title:
-  text: Conflicting Custom Compilers for Chunk(s)
+    text: Exclude from Validation
+action.name.package.file:
+    text: Package file
+action.name.package.files:
+    text: Package files
+actions.exclude.from.compile.text:
+    text: Exclude from Compile
+annotation.processing.compiler.description:
+    text: Java Annotation Processing Compiler
+artifact.type.plain:
+    text: Other
+bad.resource.patterns.dialog.title:
+    text: Malformed Resource Patterns
+build.artifacts.before.run.description.empty:
+    text: Build Artifacts
+build.artifacts.before.run.description.multiple:
+    text: Build {0} artifacts
+build.artifacts.before.run.description.single:
+    text: Build ''{0}'' artifact
+build.artifacts.before.run.selector.title:
+    text: Select Artifacts
+chooser.description.select.output.directory.for.0.artifact:
+    text: Select output directory for ''{0}'' artifact
+class.parsing.error.wrong.record.tag.expected.another:
+    text: 'Wrong record tag: {0}; expected: {1}'
+class.parsing.error.wrong.tag.annotation.member.value:
+    text: 'Wrong tag for annotation member value: {0}'
+command.name.package.file:
+    text: Package file
+compile.progress.title:
+    text: Compile Progress
+compiler.configurable.display.name:
+    text: Compiler
+compiler.content.name.compile:
+    text: Compile
+compiler.content.name.make:
+    text: Make
+compiler.error.exception:
+    text: 'Error: {0}'
+compiler.error.failed.to.delete:
+    text: Failed to delete {0}
+compiler.initial.scanning.progress.text:
+    text: Looking for sources to recompile
+compiler.javac.name:
+    text: Javac
+compiler.jikes.name:
+    text: Jikes
+compiler.results.export.text.prefix:
+    text: line ({0})
+compiler.running.dialog.title:
+    text: Compiler Running
+dialog.title.choose.artifacts:
+    text: Choose Artifacts
+dialog.title.output.directory.for.artifact:
+    text: Output Directory for Artifact
+element.type.name.artifact:
+    text: Artifact
+element.type.name.directory:
+    text: Directory
+element.type.name.jar.archive:
+    text: Jar Archive
+element.type.name.library.files:
+    text: Library Files
+element.type.name.module.output:
+    text: Module Output
+element.type.name.module.resource.output:
+    text: Module Resource Output
+element.type.name.module.test.output:
+    text: Module Test Output
+element.type.name.module.test.resource.output:
+    text: Module Test Resource Output
+element.type.name.zip.archive:
+    text: Zip Archive
+error.annotation.processing.not.supported.for.module.cycles:
+    text: |-
+        Annotation processors running is not supported for module cycles. The following modules form a cycle:
+        {0}
+        Please either update modules configuration or exclude these modules from annotation processing
+error.ant.files.backup.failed:
+    text: Failed to backup file {0}
+error.ant.files.generate.failed:
+    text: 'Failed to generate ant build script: {0}'
+error.bad.class.file.format:
+    text: |-
+        Bad class file format:
+        {0}
+error.bad.resource.patterns:
+    text: The following resource patterns are malformed:{0}
+error.caches.old.format:
+    text: Compiler caches on disk have old format. Project rebuild is required.
+error.chunk.modules.must.have.same.jdk:
+    text: |-
+        The following modules must have the same JDK assigned because of cyclic dependencies between them:
+        {0}
+        Please update modules configuration
+error.chunk.modules.must.have.same.language.level:
+    text: |-
+        The following modules must have the same language level assigned because of cyclic dependencies between them:
+        {0}
+        Please update modules configuration
+error.compiler.caches.corrupted:
+    text: Compiler caches are corrupted. Starting rebuild...
+error.compiler.configurable.malformed.patterns:
+    text: |-
+        The following resource patterns are malformed:
+        {0}
+error.compiler.internal.error:
+    text: Compiler internal error. Process terminated with exit code {0}
+error.compiler.process.not.started:
+    text: 'Compiler not started: {0}'
+error.copying:
+    text: |-
+        Error copying {0}
+        to {1}:
+        {2}
+error.dependency.info.on.disk.corrupted:
+    text: Compiler dependency information on disk is corrupted. Rebuild required.
+error.failed.to.create.directory:
+    text: Failed to create directory {0}
+error.javac.out.of.memory:
+    text: Out of memory. Increase the maximum heap size in Project Properties|Compiler settings.
+error.jdk.not.specified:
+    text: |-
+        Cannot start compiler: the SDK is not specified for {0,choice, 1#module|2#modules
+        } {1}.
+        Specify the SDK at Project Structure dialog.
+error.output.not.specified:
+    text: |-
+        Cannot start compilation: the output path is not specified for {0,choice, 1#module|2#modules
+        } {1}.
+        Specify the output path in Configure Project.
+error.previous.compilation.failed:
+    text: Previous compilation did not terminate properly. Caches may have been corrupted. Starting rebuild...
+error.project.output.not.specified:
+    text: |-
+        Cannot start compilation: some compilers require that project path is defined.
+        Specify project output path in Configure Project.
+error.signature.parsing.expected.other.symbol:
+    text: 'Symbol ''''{0}'''' expected: {1}'
+error.signature.parsing.unknown.type.signature:
+    text: Unknown type signature
+error.vfs.was.rebuilt:
+    text: File system caches were invalidated. Rebuild required.
+exclude.from.compile.table.path.column.name:
+    text: Path
+exclude.from.compile.table.recursively.column.name:
+    text: Recursively
+file.copying.compiler.description:
+    text: File copying compiler
 generate.ant.build.custom.compiler.conflict.message:
-  text: <html>The chunks listed below use more then one custom compiler.<br/>for them you will need to resolve conflict between<br/>compilers manually. The compilation task will also contain<br/>the fail task.<ul>{0}</ul></html>
+    text: <html>The chunks listed below use more then one custom compiler.<br/>for them you will need to resolve conflict between<br/>compilers manually. The compilation task will also contain<br/>the fail task.<ul>{0}</ul></html>
 generate.ant.build.custom.compiler.conflict.message.row:
-  text: <li>{0}</li>
+    text: <li>{0}</li>
+generate.ant.build.custom.compiler.conflict.title:
+    text: Conflicting Custom Compilers for Chunk(s)
+generate.ant.build.dialog.cyclic.modules.table.description:
+    text: |-
+        Some modules have cyclic dependencies.
+        In order to generate ant build script, please select the "main" (representative) module for each dependency cycle.
+        The source code for all modules in the cycle will be compiled into the main module's output folders;
+        All modules in the cycle will use the JDK assigned to the main module;
+        Any jar archives created will be named after the name of the main module.
+generate.ant.build.dialog.cyclic.modules.table.name.column.header:
+    text: Main Module
+generate.ant.build.dialog.cyclic.modules.table.number.column.header:
+    text: Cycle
+generate.ant.build.dialog.cyclic.modules.table.title:
+    text: Cyclic Module Dependencies
+generated.ant.build.bootclasspath.comment:
+    text: Paths to be included in compilation bootclasspath
+generated.ant.build.build.all.modules.target.name:
+    text: build all modules
+generated.ant.build.build.all.target.name:
+    text: build all
+generated.ant.build.building.concrete.module.section.title:
+    text: Module {0}
+generated.ant.build.clean.all.task.comment:
+    text: cleanup all
+generated.ant.build.cleanup.module.task.comment:
+    text: cleanup module
 generated.ant.build.compile.modules.fail.custom.compilers:
-  text: Conflict between custom compilers should be resolved manually.
+    text: Conflict between custom compilers should be resolved manually.
+generated.ant.build.compile.modules.main.target.comment:
+    text: Compile {0,choice, 1#module|2#modules} {1}
+generated.ant.build.compile.modules.production.classes.target.comment:
+    text: Compile {0,choice, 1#module|2#modules} {1}; production classes
+generated.ant.build.compile.modules.tests.target.comment:
+    text: compile {0,choice, 1#module|2#modules} {1}; test classes
+generated.ant.build.compiler.options.comment:
+    text: Compiler options
 generated.ant.build.custom.compilers.comment:
-  text: Register Custom Compiler Taskdefs
-label.generate.ant.script.inline.runtime.classpaths:
-  text: Inline runtime classpaths
-label.generate.ant.script.generate.idea.home:
-  text: Use current IDEA instance for idea.home property
-label.option.autoshow.first.error:
-  text: Automatically show first &error in editor
+    text: Register Custom Compiler Taskdefs
+generated.ant.build.disable.tests.property.comment:
+    text: Uncomment the following property if no tests compilation is needed
+generated.ant.build.global.libraries.comment:
+    text: Global Libraries
+generated.ant.build.initialization.section.comment:
+    text: Perform any build initialization in this target
+generated.ant.build.initialization.section.title:
+    text: Build initialization
+generated.ant.build.jdk.definitions.comment:
+    text: JDK definitions
+generated.ant.build.modules.section.title:
+    text: Modules
+generated.ant.build.project.libraries.comment:
+    text: Project Libraries
+java.compiler.description:
+    text: Java Compiler
+java.compiler.option.additional.command.line.parameters:
+    text: 'Additional command line parameters:'
+java.compiler.option.generate.debugging.info:
+    text: Generate debugging info
+java.compiler.option.generate.no.warnings:
+    text: Generate no warnings
+java.compiler.option.report.deprecated:
+    text: Report use of deprecated features
+javac.error.1_0_compilation.not.supported:
+    text: Compilation is not supported for JDK 1.0
+javac.error.jdk.home.missing:
+    text: |-
+        Cannot find home directory ''{1}'' for JDK ''{0}''.
+        Update JDK configuration.
+javac.error.tools.jar.missing:
+    text: |-
+        Cannot obtain path javac classes for JDK {0}.
+        Update JDK configuration.
+javac.error.unknown.jdk.version:
+    text: |-
+        Cannot determine version for JDK {0}.
+        Update JDK configuration.
+javac.error.vm.executable.missing:
+    text: |-
+        Cannot obtain path to VM executable for JDK {0}.
+        Update JDK configuration.
+javac.option.max.heap.size:
+    text: 'Maximum heap size (MB):'
+javac.options.group.title:
+    text: Javac Options
+jikes.error.path.to.compiler.missing:
+    text: |-
+        Cannot start Jikes compiler.
+        The file {0} not found.
+jikes.error.path.to.compiler.unspecified:
+    text: |-
+        Cannot start Jikes compiler.
+        The path to compiler executable is not configured
+jikes.option.path.to.executable:
+    text: 'Path to Jikes executable:'
+jikes.options.group.title:
+    text: Jikes Options
+label.generate.ant.script.backup.files:
+    text: Backup previously generated files
+label.generate.ant.script.enable.ui.forms.compilation:
+    text: Enable UI forms compilation (requires "javac2" ant task from IDEA distribution)
 label.generate.ant.script.filename:
-  text: 'Output file name:'
+    text: 'Output file name:'
+label.generate.ant.script.generate.idea.home:
+    text: Use current IDEA instance for idea.home property
+label.generate.ant.script.generate.multiple.files:
+    text: Generate multiple-file ant build (requires ant 1.6 or later to execute)
+label.generate.ant.script.inline.runtime.classpaths:
+    text: Inline runtime classpaths
+label.generate.ant.script.overwrite.files:
+    text: Overwrite previously generated files
+label.generate.ant.script.single.file:
+    text: Generate single-file ant build
+label.generate.ant.script.use.jdk.definitions:
+    text: Use JDK definitions from project files
+label.option.autoshow.first.error:
+    text: Automatically show first &error in editor
+label.option.clear.output.directory.on.rebuild:
+    text: C&lear output directory on rebuild
+label.option.compile.in.background:
+    text: C&ompile in background
+label.option.deploy.always:
+    text: Always
+label.option.deploy.ask:
+    text: Ask
+label.option.deploy.never:
+    text: Never
+label.option.deploy.text:
+    text: 'Deploy web applications to server after compilation:'
+label.option.honor.dependencies:
+    text: Honor &dependencies on "Compile" command
+label.option.resource.patterns.text:
+    text: 'Resource patterns:'
+label.text.class.path:
+    text: 'Class &Path:'
+label.text.main.class:
+    text: '&Main Class:'
+mesage.text.deployment.descriptor.file.not.exist:
+    text: Deployment descriptor file ''{0}'' does not exist
+message.ant.files.generated.ok:
+    text: |-
+        Ant build files successfully generated:
+        {0}
+message.category.error:
+    text: ERROR
+message.category.information:
+    text: INFORMATION
+message.category.statistics:
+    text: STATISTICS
+message.category.warning:
+    text: WARNING
+message.resource.patterns.format.changed:
+    text: |-
+        The format of resource patterns has changed.
+        {0} failed to convert existing regular expression patterns:
+        {1}
+        Please enter pattern string in a new format.
+        Each resource pattern may contain the following wildcards:
+        ? - one character
+        * - zero or more characters
+        ! - negate the pattern (allowed only at the start of a pattern)
+        Use ; (semicolon) to separate resource patterns;
+        Escape the "!" character with a backslash ("\").
+        You might also need to modify template project settings.
+        Press ''{2}'' to accept entered patterns, ''{3}'' to load default patterns in new format.
+message.tect.package.file.io.error:
+    text: |-
+        IO Error:
+        {0}
+message.text.compiling.item.deployment.descriptor.could.not.be.found:
+    text: 'Compiling {0}: Deployment item ''''{1}'''' could not be found'
+message.text.compiling.module.message:
+    text: 'Compiling {0}: {1}'
+message.text.deployment.description.invalid.file:
+    text: Invalid file
+message.text.destination.is.directory:
+    text: '{0} Destination is a directory.'
+message.text.error.copying.file.to.file:
+    text: Error copying ''{0}'' to ''{1}''.
+message.text.xml.file.invalid:
+    text: XML file ''{0}'' is invalid
+no.excludes:
+    text: No excludes
+no.validators:
+    text: No validators available
+node.text.0.1.compile.output:
+    text: '''''{0}'''' {1} compile output'
+node.text.0.directory.content:
+    text: '''''{0}'''' directory content'
+node.text.0.with.dependencies:
+    text: '''''{0}'''' with dependencies'
+option.use.compiler.text:
+    text: 'Use compiler:'
+packaging.compiler.error.cannot.build.circular.dependency.found.between.0.and.1:
+    text: 'Cannot build: circular dependency found between ''''{0}'''' and ''''{1}'''''
+packaging.compiler.message.building.0:
+    text: Building ''{0}''...
+packaging.compiler.message.building.archives:
+    text: Building archives...
+packaging.compiler.message.copying.archives:
+    text: Copying archives...
+packaging.compiler.message.deleting.outdated.files:
+    text: Deleting outdated files...
+packaging.compiler.message.updating.caches:
+    text: Updating artifacts compiler caches...
+packaging.element.text.output.root:
+    text: <output root>
+pattern.conversion.dialog.title:
+    text: Pattern Conversion
+progress.checking.dependencies:
+    text: Checking dependencies...
+progress.clearing.output:
+    text: Clearing output directories...
+progress.compiling.class:
+    text: Compiling {0}...
+progress.copying.resources:
+    text: Copying resources...
+progress.deleting.temp.files:
+    text: Deleting temp files...
+progress.executing.postcompile.tasks:
+    text: Executing post-compile tasks...
+progress.executing.precompile.tasks:
+    text: Executing pre-compile tasks...
+progress.found.dependent.files:
+    text: Found {0} dependent files
+progress.generating.rmi.stubs:
+    text: Generating RMI stubs...
+progress.loading.classes:
+    text: Loading classes...
+progress.parsing.file:
+    text: Parsing {0}...
+progress.processing.outdated.files:
+    text: Processing outdated files...
+progress.saving.caches:
+    text: Saving caches...
+progress.synchronizing.output.directory:
+    text: Synchronizing output directory...
+progress.updating.caches:
+    text: Updating caches...
+rebuild.lvcs.label.no.errors:
+    text: '''''{0}'''' with no errors'
+rebuild.lvcs.label.with.errors:
+    text: '''''{0}'''' with errors'
+resource.compiler.description:
+    text: Resource Compiler
+rmi.compiler.description:
+    text: RMI Compiler
+rmic.option.enable.rmi.stubs:
+    text: Enable RMI stubs generation
+rmic.option.generate.iiop.stubs:
+    text: Generate IIOP stubs
+statistics.error.count:
+    text: '{0} {0,choice, 0#errors|1#error|2#errors}'
+statistics.files.classes:
+    text: 'Files: {0} - Classes: {1}'
+statistics.files.classes.module:
+    text: 'Files: {0} - Classes: {1} - Module: {2}'
+statistics.warnings.count:
+    text: '{0} {0,choice, 0#warnings|1#warning|2#warnings}'
+status.all.up.to.date:
+    text: All files are up-to-date
+status.compilation.aborted:
+    text: Compilation aborted
+status.compilation.completed.successfully:
+    text: Compilation completed successfully
+status.compilation.completed.successfully.with.warnings:
+    text: Compilation completed successfully with {0} {0,choice, 0#warnings|1#warning|2#warnings}
+status.compilation.completed.successfully.with.warnings.and.errors:
+    text: Compilation completed with {0} {0,choice, 0#errors|1#error|2#errors} and {1} {1,choice, 0#warnings|1#warning|2#warnings}
+status.text.file.has.been.packaged:
+    text: '{0, choice, 1#File|2#Files} {1} {0, choice, 1#has|2#have} been packaged at {2}.'
+validation.display.name:
+    text: Validation
+value.undefined:
+    text: undefined
+toolwindow.build.display.name:
+    text: Build
+warning.compiler.running.on.project.close:
+    text: The compiler is running. Proceed with project closing?
+warning.compiler.running.on.toolwindow.close:
+    text: The compiler is running. Terminate it?
+warning.sources.under.output.paths:
+    text: |-
+        Compiler option "Clear output directory on rebuild" is currently on.
+        However, source files may exist in the following output paths:
+        {0}
+        Compilation will proceed without clearing output directories.
+warning.text.file.has.been.changed:
+    text: File has been changed during compilation, inspection validation skipped

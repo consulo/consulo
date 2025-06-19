@@ -16,7 +16,6 @@
 package consulo.desktop.awt.internal.notification;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
@@ -30,6 +29,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -52,129 +52,137 @@ import java.util.List;
  */
 @ExtensionImpl
 public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAware {
-  @Nonnull
-  @Override
-  public String getId() {
-    return EventLog.NOTIFICATIONS_TOOLWINDOW_ID;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(@Nonnull final Project project, @Nonnull ToolWindow toolWindow) {
-    NotificationProjectTracker tracker = NotificationProjectTracker.getInstance(project);
-    createContent(project, toolWindow, tracker.getEventLogConsole(), "");
-    tracker.initDefaultContent();
-  }
-
-  @Nonnull
-  @Override
-  public ToolWindowAnchor getAnchor() {
-    return ToolWindowAnchor.RIGHT;
-  }
-
-  @Override
-  public boolean isSecondary() {
-    return true;
-  }
-
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.toolwindowsNotifications();
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Notifications");
-  }
-
-  private static void createContent(Project project, ToolWindow toolWindow, EventLogConsole console, String title) {
-    ContentManager contentManager = toolWindow.getContentManager();
-    final Editor editor = console.getConsoleEditor();
-
-    SimpleToolWindowPanel panel = new SimpleToolWindowPanel(false, true) {
-      @Override
-      public Object getData(@Nonnull Key dataId) {
-        return (HelpManager.HELP_ID == dataId) ? EventLog.HELP_ID : super.getData(dataId);
-      }
-    };
-    panel.setContent(editor.getComponent());
-    panel.addAncestorListener(new LogShownTracker(project));
-
-    Content content = ContentFactory.getInstance().createContent(panel, title, false);
-    contentManager.addContent(content);
-    contentManager.setSelectedContent(content);
-
-    List<AnAction> group = new ArrayList<>();
-    group.add(new DisplayBalloons());
-    group.add(new ToggleSoftWraps(editor));
-    group.add(new ScrollToTheEndToolbarAction(editor));
-    group.add(new MarkAllNotificationsAsReadAction());
-    group.add(new EventLogConsole.ClearLogAction(console));
-    group.add(new EditNotificationSettings(project));
-
-    toolWindow.setTabActions(group.toArray(AnAction.EMPTY_ARRAY));
-  }
-
-  private static class DisplayBalloons extends ToggleAction implements DumbAware {
-    public DisplayBalloons() {
-      super("Show balloons", "Enable or suppress notification balloons", AllIcons.General.Balloon);
-    }
-
+    @Nonnull
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
-      return NotificationsConfigurationImpl.getInstanceImpl().SHOW_BALLOONS;
-    }
-
-    @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-      NotificationsConfigurationImpl.getInstanceImpl().SHOW_BALLOONS = state;
-    }
-  }
-
-  private static class EditNotificationSettings extends DumbAwareAction {
-    private final Project myProject;
-
-    public EditNotificationSettings(Project project) {
-      super("Settings", "Edit notification settings", AllIcons.General.Settings);
-      myProject = project;
+    public String getId() {
+        return EventLog.NOTIFICATIONS_TOOLWINDOW_ID;
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      ShowSettingsUtil.getInstance().showAndSelect(myProject, NotificationsConfigurable.class);
+    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+        NotificationProjectTracker tracker = NotificationProjectTracker.getInstance(project);
+        createContent(project, toolWindow, tracker.getEventLogConsole(), "");
+        tracker.initDefaultContent();
     }
-  }
 
-  private static class ToggleSoftWraps extends ToggleUseSoftWrapsToolbarAction {
-    private final Editor myEditor;
-
-    public ToggleSoftWraps(Editor editor) {
-      super(SoftWrapAppliancePlaces.CONSOLE);
-      myEditor = editor;
+    @Nonnull
+    @Override
+    public ToolWindowAnchor getAnchor() {
+        return ToolWindowAnchor.RIGHT;
     }
 
     @Override
-    protected Editor getEditor(AnActionEvent e) {
-      return myEditor;
-    }
-  }
-
-  private static class LogShownTracker extends AncestorListenerAdapter {
-    private final Project myProject;
-
-    public LogShownTracker(Project project) {
-      myProject = project;
+    public boolean isSecondary() {
+        return true;
     }
 
+    @Nonnull
     @Override
-    public void ancestorAdded(AncestorEvent event) {
-      ToolWindow log = EventLog.getEventLog(myProject);
-      if (log != null && log.isVisible()) {
-        EventLog.getLogModel(myProject).logShown();
-      }
+    public Image getIcon() {
+        return PlatformIconGroup.toolwindowsNotifications();
     }
-  }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return ProjectUIViewLocalize.toolwindowNotificationsDisplayName();
+    }
+
+    private static void createContent(Project project, ToolWindow toolWindow, EventLogConsole console, String title) {
+        ContentManager contentManager = toolWindow.getContentManager();
+        Editor editor = console.getConsoleEditor();
+
+        SimpleToolWindowPanel panel = new SimpleToolWindowPanel(false, true) {
+            @Override
+            public Object getData(@Nonnull Key dataId) {
+                return (HelpManager.HELP_ID == dataId) ? EventLog.HELP_ID : super.getData(dataId);
+            }
+        };
+        panel.setContent(editor.getComponent());
+        panel.addAncestorListener(new LogShownTracker(project));
+
+        Content content = ContentFactory.getInstance().createContent(panel, title, false);
+        contentManager.addContent(content);
+        contentManager.setSelectedContent(content);
+
+        List<AnAction> group = new ArrayList<>();
+        group.add(new DisplayBalloons());
+        group.add(new ToggleSoftWraps(editor));
+        group.add(new ScrollToTheEndToolbarAction(editor));
+        group.add(new MarkAllNotificationsAsReadAction());
+        group.add(new EventLogConsole.ClearLogAction(console));
+        group.add(new EditNotificationSettings(project));
+
+        toolWindow.setTabActions(group.toArray(AnAction.EMPTY_ARRAY));
+    }
+
+    private static class DisplayBalloons extends ToggleAction implements DumbAware {
+        public DisplayBalloons() {
+            super(
+                LocalizeValue.localizeTODO("Show balloons"),
+                LocalizeValue.localizeTODO("Enable or suppress notification balloons"),
+                PlatformIconGroup.generalBalloon()
+            );
+        }
+
+        @Override
+        public boolean isSelected(@Nonnull AnActionEvent e) {
+            return NotificationsConfigurationImpl.getInstanceImpl().SHOW_BALLOONS;
+        }
+
+        @Override
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            NotificationsConfigurationImpl.getInstanceImpl().SHOW_BALLOONS = state;
+        }
+    }
+
+    private static class EditNotificationSettings extends DumbAwareAction {
+        private final Project myProject;
+
+        public EditNotificationSettings(Project project) {
+            super(
+                LocalizeValue.localizeTODO("Settings"),
+                LocalizeValue.localizeTODO("Edit notification settings"),
+                PlatformIconGroup.generalSettings()
+            );
+            myProject = project;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            ShowSettingsUtil.getInstance().showAndSelect(myProject, NotificationsConfigurable.class);
+        }
+    }
+
+    private static class ToggleSoftWraps extends ToggleUseSoftWrapsToolbarAction {
+        private final Editor myEditor;
+
+        public ToggleSoftWraps(Editor editor) {
+            super(SoftWrapAppliancePlaces.CONSOLE);
+            myEditor = editor;
+        }
+
+        @Override
+        protected Editor getEditor(AnActionEvent e) {
+            return myEditor;
+        }
+    }
+
+    private static class LogShownTracker extends AncestorListenerAdapter {
+        private final Project myProject;
+
+        public LogShownTracker(Project project) {
+            myProject = project;
+        }
+
+        @Override
+        public void ancestorAdded(AncestorEvent event) {
+            ToolWindow log = EventLog.getEventLog(myProject);
+            if (log != null && log.isVisible()) {
+                EventLog.getLogModel(myProject).logShown();
+            }
+        }
+    }
 }

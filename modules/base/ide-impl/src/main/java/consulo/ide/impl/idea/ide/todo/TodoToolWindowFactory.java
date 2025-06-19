@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -35,33 +34,33 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
-  @Nonnull
-  @Override
-  public String getId() {
-    return ToolWindowId.TODO_VIEW;
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return ToolWindowId.TODO_VIEW;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
-    project.getInstance(TodoView.class).initToolWindow(toolWindow);
-  }
+    @RequiredUIAccess
+    @Override
+    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+        project.getInstance(TodoView.class).initToolWindow(toolWindow);
+    }
 
-  @Nonnull
-  @Override
-  public ToolWindowAnchor getAnchor() {
-    return ToolWindowAnchor.BOTTOM;
-  }
+    @Nonnull
+    @Override
+    public ToolWindowAnchor getAnchor() {
+        return ToolWindowAnchor.BOTTOM;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.toolwindowsToolwindowtodo();
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.toolwindowsToolwindowtodo();
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("TODO");
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("TODO");
+    }
 }

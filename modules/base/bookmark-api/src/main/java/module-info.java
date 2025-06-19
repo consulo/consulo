@@ -11,4 +11,5 @@ module consulo.bookmark.api {
     exports consulo.bookmark;
     exports consulo.bookmark.event;
     exports consulo.bookmark.icon;
+    exports consulo.bookmark.localize;
 }

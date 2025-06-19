@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -68,7 +69,7 @@ public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAwar
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Project");
+        return ProjectUIViewLocalize.toolwindowProjectDisplayName();
     }
 
     @Override

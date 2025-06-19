@@ -353,3 +353,5 @@ select.next.occurence.not.found.message:
     text: Not found, try again to search from top
 tooltip.close.search.bar.escape:
     text: Close
+toolwindow.find.display.name:
+    text: Find

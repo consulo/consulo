@@ -33,6 +33,7 @@ import consulo.util.lang.Trinity;
 import consulo.versionControlSystem.VcsToolWindow;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -41,67 +42,66 @@ import java.util.List;
  */
 @ExtensionImpl
 public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return VcsToolWindow.ID;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
-    final ContentManager contentManager = toolWindow.getContentManager();
-
-    ChangesViewContentManager manager = (ChangesViewContentManager)ChangesViewContentManager.getInstance(project);
-
-    manager.loadExtensionTabs();
-
-    Trinity<Image, LocalizeValue, Boolean> state = manager.getAlreadyLoadedState();
-    manager.setAlreadyLoadedState(null);
-    List<Content> contents = manager.setContentManager(toolWindow, contentManager);
-
-    final List<Content> ordered = ChangesViewContentManager.doPresetOrdering(contents);
-    for (Content content : ordered) {
-      contentManager.addContent(content);
+    @Nonnull
+    @Override
+    public String getId() {
+        return VcsToolWindow.ID;
     }
 
-    if (contentManager.getContentCount() > 0) {
-      contentManager.setSelectedContent(contentManager.getContent(0));
+    @RequiredUIAccess
+    @Override
+    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+        ContentManager contentManager = toolWindow.getContentManager();
+
+        ChangesViewContentManager manager = (ChangesViewContentManager) ChangesViewContentManager.getInstance(project);
+
+        manager.loadExtensionTabs();
+
+        Trinity<Image, LocalizeValue, Boolean> state = manager.getAlreadyLoadedState();
+        manager.setAlreadyLoadedState(null);
+        List<Content> contents = manager.setContentManager(toolWindow, contentManager);
+
+        List<Content> ordered = ChangesViewContentManager.doPresetOrdering(contents);
+        for (Content content : ordered) {
+            contentManager.addContent(content);
+        }
+
+        if (contentManager.getContentCount() > 0) {
+            contentManager.setSelectedContent(contentManager.getContent(0));
+        }
+
+        if (state != null) {
+            toolWindow.setIcon(state.getFirst());
+            toolWindow.setDisplayName(state.getSecond());
+            toolWindow.setAvailable(state.getThird(), null);
+        }
     }
 
-    if (state != null) {
-      toolWindow.setIcon(state.getFirst());
-      toolWindow.setDisplayName(state.getSecond());
-      toolWindow.setAvailable(state.getThird(), null);
+    @Override
+    public boolean shouldBeAvailable(@Nonnull Project project) {
+        ChangesViewContentManager manager = (ChangesViewContentManager) project.getInstanceIfCreated(ChangesViewContentI.class);
+        if (manager != null) {
+            Trinity<Image, LocalizeValue, Boolean> alreadyLoadedState = manager.getAlreadyLoadedState();
+            return alreadyLoadedState != null && alreadyLoadedState.getThird();
+        }
+        return false;
     }
-  }
 
-  @Override
-  public boolean shouldBeAvailable(@Nonnull Project project) {
-    ChangesViewContentManager manager = (ChangesViewContentManager)project.getInstanceIfCreated(ChangesViewContentI.class);
-    if (manager != null) {
-      Trinity<Image, LocalizeValue, Boolean> alreadyLoadedState = manager.getAlreadyLoadedState();
-      return alreadyLoadedState != null && alreadyLoadedState.getThird();
+    @Nonnull
+    @Override
+    public ToolWindowAnchor getAnchor() {
+        return ToolWindowAnchor.BOTTOM;
     }
-    return false;
-  }
 
-  @Nonnull
-  @Override
-  public ToolWindowAnchor getAnchor() {
-    return ToolWindowAnchor.BOTTOM;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.toolwindowsToolwindowchanges();
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.toolwindowsToolwindowchanges();
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Version Control");
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Version Control");
+    }
 }

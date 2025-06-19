@@ -16,7 +16,6 @@
 package consulo.sandboxPlugin.ide.toolwindow;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.ToolWindowTabRenameActionBase;
 import consulo.localize.LocalizeValue;
@@ -37,71 +36,75 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19.03.14
+ * @since 2014-03-19
  */
 @ExtensionImpl
 public class SandToolWindowFactory implements ToolWindowFactory {
-  @Nonnull
-  @Override
-  public String getId() {
-    return "Sand";
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return "Sand";
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
-    ContentFactory contentFactory = ContentFactory.getInstance();
+    @RequiredUIAccess
+    @Override
+    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+        ContentFactory contentFactory = ContentFactory.getInstance();
 
-    Content content = contentFactory.createUIContent(Label.create(LocalizeValue.localizeTODO("test")), "Test", false);
-    toolWindow.getContentManager().addContent(content);
-
-    toolWindow.setTitleActions(new AnAction("Expand All", null, AllIcons.Actions.Expandall) {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        Messages.showInfoMessage("Expand All", Application.get().getName().get());
-      }
-    });
-
-    toolWindow.setTabDoubleClickActions(new ToolWindowTabRenameActionBase("Sand", "Enter new session name"));
-
-    toolWindow.setTabActions(new AnAction("Add Tab", null, AllIcons.General.Add) {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        Content content = contentFactory.createUIContent(Label.create("test"), "Test", false);
-        content.setCloseable(true);
-
+        Content content = contentFactory.createUIContent(Label.create(LocalizeValue.localizeTODO("test")), "Test", false);
         toolWindow.getContentManager().addContent(content);
-      }
-    });
-  }
 
-  @Override
-  public boolean isUnified() {
-    return true;
-  }
+        toolWindow.setTitleActions(new AnAction(
+            LocalizeValue.localizeTODO("Expand All"),
+            LocalizeValue.empty(),
+            PlatformIconGroup.actionsExpandall()
+        ) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                Messages.showInfoMessage("Expand All", Application.get().getName().get());
+            }
+        });
 
-  @Override
-  public boolean canCloseContents() {
-    return true;
-  }
+        toolWindow.setTabDoubleClickActions(new ToolWindowTabRenameActionBase("Sand", "Enter new session name"));
 
-  @Nonnull
-  @Override
-  public ToolWindowAnchor getAnchor() {
-    return ToolWindowAnchor.RIGHT;
-  }
+        toolWindow.setTabActions(new AnAction(LocalizeValue.localizeTODO("Add Tab"), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                Content content = contentFactory.createUIContent(Label.create("test"), "Test", false);
+                content.setCloseable(true);
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.toolwindowsToolwindowpalette();
-  }
+                toolWindow.getContentManager().addContent(content);
+            }
+        });
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Sand");
-  }
+    @Override
+    public boolean isUnified() {
+        return true;
+    }
+
+    @Override
+    public boolean canCloseContents() {
+        return true;
+    }
+
+    @Nonnull
+    @Override
+    public ToolWindowAnchor getAnchor() {
+        return ToolWindowAnchor.RIGHT;
+    }
+
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.toolwindowsToolwindowpalette();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Sand");
+    }
 }

@@ -17,47 +17,52 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: evgeny.zakrevsky
- * Date: 11/8/12
+ * @author evgeny.zakrevsky
+ * @since 2012-11-08
  */
 @ExtensionImpl
 public class TasksToolWindowFactory implements ToolWindowFactory, DumbAware {
+    @Nonnull
+    @Override
+    public String getId() {
+        return ToolWindowId.TASKS;
+    }
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return ToolWindowId.TASKS;
-  }
+    @RequiredUIAccess
+    @Override
+    public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
+        ContentManager contentManager = toolWindow.getContentManager();
+        Content content = ContentFactory.getInstance().createContent(
+            new TasksToolWindowPanel(
+                project,
+                toolWindow.getAnchor() == ToolWindowAnchor.LEFT || toolWindow.getAnchor() == ToolWindowAnchor.RIGHT
+            ),
+            null,
+            false
+        );
+        contentManager.addContent(content);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(final Project project, final ToolWindow toolWindow) {
-    final ContentManager contentManager = toolWindow.getContentManager();
-    final Content content = ContentFactory.getInstance().
-            createContent(new TasksToolWindowPanel(project, toolWindow.getAnchor() == ToolWindowAnchor.LEFT || toolWindow.getAnchor() == ToolWindowAnchor.RIGHT), null, false);
-    contentManager.addContent(content);
-  }
+    @Nonnull
+    @Override
+    public ToolWindowAnchor getAnchor() {
+        return ToolWindowAnchor.RIGHT;
+    }
 
-  @Nonnull
-  @Override
-  public ToolWindowAnchor getAnchor() {
-    return ToolWindowAnchor.RIGHT;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return TaskIconGroup.clock();
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return TaskIconGroup.clock();
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Time Tracking");
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Time Tracking");
-  }
-
-  @Override
-  public boolean shouldBeAvailable(@Nonnull Project project) {
-    return TimeTrackingManager.getInstance(project).isTimeTrackingToolWindowAvailable();
-  }
+    @Override
+    public boolean shouldBeAvailable(@Nonnull Project project) {
+        return TimeTrackingManager.getInstance(project).isTimeTrackingToolWindowAvailable();
+    }
 }
