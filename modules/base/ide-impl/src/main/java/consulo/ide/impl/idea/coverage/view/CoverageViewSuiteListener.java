@@ -2,10 +2,11 @@ package consulo.ide.impl.idea.coverage.view;
 
 import consulo.execution.coverage.*;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
- * User: anna
- * Date: 1/5/12
+ * @author anna
+ * @since 2012-01-05
  */
 public class CoverageViewSuiteListener implements CoverageSuiteListener {
     private final CoverageDataManager myDataManager;
@@ -16,27 +17,29 @@ public class CoverageViewSuiteListener implements CoverageSuiteListener {
         myProject = project;
     }
 
+    @Override
     public void beforeSuiteChosen() {
-        final CoverageSuitesBundle suitesBundle = myDataManager.getCurrentSuitesBundle();
+        CoverageSuitesBundle suitesBundle = myDataManager.getCurrentSuitesBundle();
         if (suitesBundle != null) {
             CoverageViewManager.getInstance(myProject).closeView(CoverageViewManager.getDisplayName(suitesBundle));
         }
     }
 
+    @Override
+    @RequiredUIAccess
     public void afterSuiteChosen() {
-        final CoverageSuitesBundle suitesBundle = myDataManager.getCurrentSuitesBundle();
+        CoverageSuitesBundle suitesBundle = myDataManager.getCurrentSuitesBundle();
         if (suitesBundle == null) {
             return;
         }
-        final CoverageViewManager viewManager = CoverageViewManager.getInstance(myProject);
+        CoverageViewManager viewManager = CoverageViewManager.getInstance(myProject);
         if (suitesBundle.getCoverageEngine().createCoverageViewExtension(myProject, suitesBundle, viewManager.getState()) != null) {
             viewManager.createToolWindow(CoverageViewManager.getDisplayName(suitesBundle), shouldActivate(suitesBundle));
         }
     }
 
     private static boolean shouldActivate(CoverageSuitesBundle suitesBundle) {
-        final CoverageSuite[] suites = suitesBundle.getSuites();
-        for (CoverageSuite suite : suites) {
+        for (CoverageSuite suite : suitesBundle.getSuites()) {
             if (!(suite.getCoverageDataFileProvider() instanceof DefaultCoverageFileProvider)) {
                 return false;
             }

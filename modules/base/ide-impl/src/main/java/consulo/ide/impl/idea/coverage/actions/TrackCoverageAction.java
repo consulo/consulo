@@ -1,14 +1,13 @@
 package consulo.ide.impl.idea.coverage.actions;
 
-import consulo.execution.coverage.CoverageExecutor;
-import consulo.application.ApplicationManager;
-import consulo.disposer.Disposable;
+import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.ModuleBasedConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.execution.coverage.CoverageExecutor;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.execution.executor.Executor;
@@ -21,7 +20,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.Alarm;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.event.TreeSelectionEvent;
@@ -49,7 +48,8 @@ public class TrackCoverageAction extends ToggleModelAction {
         myProperties = properties;
     }
 
-    public void setSelected(final AnActionEvent e, final boolean state) {
+    @Override
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         super.setSelected(e, state);
         if (!TestConsoleProperties.TRACK_CODE_COVERAGE.value(myProperties)) {
             restoreMergedCoverage();
@@ -60,21 +60,22 @@ public class TrackCoverageAction extends ToggleModelAction {
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
         return super.isSelected(e) && CoverageDataManager.getInstance(myProperties.getProject()).isSubCoverageActive();
     }
 
     private void restoreMergedCoverage() {
-        final CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(myProperties.getProject());
+        CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(myProperties.getProject());
         if (coverageDataManager.isSubCoverageActive()) {
-            final CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
+            CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
             if (currentSuite != null) {
                 coverageDataManager.restoreMergedCoverage(currentSuite);
             }
         }
     }
 
-    public void setModel(final TestFrameworkRunningModel model) {
+    @Override
+    public void setModel(TestFrameworkRunningModel model) {
         if (myModel != null) {
             myModel.getTreeView().removeTreeSelectionListener(myTreeSelectionListener);
         }
@@ -82,22 +83,19 @@ public class TrackCoverageAction extends ToggleModelAction {
         if (model != null) {
             myTreeSelectionListener = new MyTreeSelectionListener();
             model.getTreeView().addTreeSelectionListener(myTreeSelectionListener);
-            Disposer.register(model, new Disposable() {
-                public void dispose() {
-                    restoreMergedCoverage();
-                }
-            });
+            Disposer.register(model, this::restoreMergedCoverage);
         }
     }
 
+    @Override
     protected boolean isEnabled() {
-        final CoverageSuitesBundle suite = getCurrentCoverageSuite();
+        CoverageSuitesBundle suite = getCurrentCoverageSuite();
         return suite != null && suite.isCoverageByTestApplicable() && suite.isCoverageByTestEnabled();
     }
 
     @Override
     protected boolean isVisible() {
-        final CoverageSuitesBundle suite = getCurrentCoverageSuite();
+        CoverageSuitesBundle suite = getCurrentCoverageSuite();
         return suite != null && suite.isCoverageByTestApplicable();
     }
 
@@ -107,7 +105,7 @@ public class TrackCoverageAction extends ToggleModelAction {
             return null;
         }
 
-        final RunProfile runConf = myModel.getProperties().getConfiguration();
+        RunProfile runConf = myModel.getProperties().getConfiguration();
         if (runConf instanceof ModuleBasedConfiguration) {
             // if coverage supported for run configuration
             if (CoverageEnabledConfiguration.isApplicableTo((ModuleBasedConfiguration) runConf)) {
@@ -122,18 +120,18 @@ public class TrackCoverageAction extends ToggleModelAction {
     }
 
     private void selectSubCoverage() {
-        final CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(myProperties.getProject());
-        final CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
+        CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(myProperties.getProject());
+        CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
         if (currentSuite != null) {
-            final AbstractTestProxy test = myModel.getTreeView().getSelectedTest();
-            List<String> testMethods = new ArrayList<String>();
+            AbstractTestProxy test = myModel.getTreeView().getSelectedTest();
+            List<String> testMethods = new ArrayList<>();
             if (test != null && !test.isInProgress()) {
-                final List<? extends AbstractTestProxy> list = test.getAllTests();
+                List<? extends AbstractTestProxy> list = test.getAllTests();
                 for (AbstractTestProxy proxy : list) {
-                    final Location location = proxy.getLocation(myProperties.getProject(), myProperties.getScope());
+                    Location location = proxy.getLocation(myProperties.getProject(), myProperties.getScope());
                     if (location != null) {
-                        final PsiElement element = location.getPsiElement();
-                        final String name = currentSuite.getCoverageEngine().getTestMethodName(element, proxy);
+                        PsiElement element = location.getPsiElement();
+                        String name = currentSuite.getCoverageEngine().getTestMethodName(element, proxy);
                         if (name != null) {
                             testMethods.add(name);
                         }
@@ -151,7 +149,8 @@ public class TrackCoverageAction extends ToggleModelAction {
             myUpdateCoverageAlarm = new Alarm(myModel);
         }
 
-        public void valueChanged(final TreeSelectionEvent e) {
+        @Override
+        public void valueChanged(TreeSelectionEvent e) {
             if (myUpdateCoverageAlarm.isDisposed()) {
                 return;
             }
@@ -159,19 +158,15 @@ public class TrackCoverageAction extends ToggleModelAction {
                 return;
             }
             myUpdateCoverageAlarm.cancelAllRequests();
-            final Project project = myModel.getProperties().getProject();
-            final CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
-            final CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
+            Project project = myModel.getProperties().getProject();
+            CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
+            CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
             if (currentSuite != null) {
-                if (ApplicationManager.getApplication().isDispatchThread()) {
-                    myUpdateCoverageAlarm.addRequest(new Runnable() {
-                        public void run() {
-                            selectSubCoverage();
-                        }
-                    }, 300);
+                if (Application.get().isDispatchThread()) {
+                    myUpdateCoverageAlarm.addRequest(TrackCoverageAction.this::selectSubCoverage, 300);
                 }
                 else if (coverageDataManager.isSubCoverageActive()) {
-                  coverageDataManager.restoreMergedCoverage(currentSuite);
+                    coverageDataManager.restoreMergedCoverage(currentSuite);
                 }
             }
         }
