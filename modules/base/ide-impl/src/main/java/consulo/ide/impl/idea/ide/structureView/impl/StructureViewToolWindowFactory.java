@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.structureView.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.structureView.StructureViewFactory;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.localize.LanguageEditorLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -64,7 +65,7 @@ public class StructureViewToolWindowFactory implements ToolWindowFactory, DumbAw
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Structure");
+        return LanguageEditorLocalize.toolwindowStructureDisplayName();
     }
 
     @Override

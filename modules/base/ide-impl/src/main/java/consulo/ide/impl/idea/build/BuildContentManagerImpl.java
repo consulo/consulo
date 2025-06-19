@@ -7,6 +7,7 @@ import consulo.build.ui.BuildContentManager;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.localize.BuildLocalize;
 import consulo.build.ui.process.BuildProcessHandler;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -14,6 +15,8 @@ import consulo.disposer.Disposer;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.impl.internal.ui.BaseContentCloseListener;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.ContentUtilEx;
 import consulo.language.LangBundle;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -61,7 +64,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
     @Deprecated
     public static final String Build = BuildLocalize.tabTitleBuild().get();
 
-    public static final Supplier<String> Build_Tab_Title_Supplier = () -> BuildLocalize.tabTitleBuild().get();
+    public static final Supplier<String> Build_Tab_Title_Supplier = BuildLocalize.tabTitleBuild();
 
     private static final List<Supplier<String>> ourPresetOrder = Arrays.asList(
         LangBundle.messagePointer("tab.title.sync"),
@@ -80,8 +83,9 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         myProject = project;
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredUIAccess
     public ToolWindow getOrCreateToolWindow() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
         ToolWindow toolWindow = toolWindowManager.getToolWindow(TOOL_WINDOW_ID);
@@ -90,6 +94,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         }
 
         toolWindow = toolWindowManager.registerToolWindow(TOOL_WINDOW_ID, true, ToolWindowAnchor.BOTTOM, false);
+        toolWindow.setDisplayName(CompilerLocalize.toolwindowBuildDisplayName());
         toolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowbuild());
         ContentManager contentManager = toolWindow.getContentManager();
         contentManager.addDataProvider(new DataProvider() {
@@ -116,26 +121,26 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         if (myProject.isDefault()) {
             return;
         }
-        StartupManagerEx.getInstanceEx(myProject).runAfterOpened(() -> {
-            GuiUtils.invokeLaterIfNeeded(runnable, IdeaModalityState.defaultModalityState(), myProject.getDisposed());
-        });
+        StartupManagerEx.getInstanceEx(myProject).runAfterOpened(
+            () -> GuiUtils.invokeLaterIfNeeded(runnable, IdeaModalityState.defaultModalityState(), myProject.getDisposed())
+        );
     }
 
     @Override
     public void addContent(Content content) {
         invokeLaterIfNeeded(() -> {
             ContentManager contentManager = getOrCreateToolWindow().getContentManager();
-            final String name = content.getTabName();
-            final String category = StringUtil.trimEnd(StringUtil.split(name, " ").get(0), ':');
+            String name = content.getTabName();
+            String category = StringUtil.trimEnd(StringUtil.split(name, " ").get(0), ':');
             int idx = -1;
             for (int i = 0; i < ourPresetOrder.size(); i++) {
-                final String s = ourPresetOrder.get(i).get();
+                String s = ourPresetOrder.get(i).get();
                 if (s.equals(category)) {
                     idx = i;
                     break;
                 }
             }
-            final Content[] existingContents = contentManager.getContents();
+            Content[] existingContents = contentManager.getContents();
             if (idx != -1) {
                 MultiMap<String, String> existingCategoriesNames = new MultiMap<>();
                 for (Content existingContent : existingContents) {
@@ -294,15 +299,15 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         @Nullable
         BuildProcessHandler myProcessHandler;
 
-        private CloseListener(final @Nonnull Content content, @Nonnull BuildProcessHandler processHandler) {
+        private CloseListener( @Nonnull Content content, @Nonnull BuildProcessHandler processHandler) {
             super(content, myProject);
             myProcessHandler = processHandler;
         }
 
         @Override
         protected void disposeContent(@Nonnull Content content) {
-            if (myProcessHandler instanceof Disposable) {
-                Disposer.dispose((Disposable) myProcessHandler);
+            if (myProcessHandler instanceof Disposable disposable) {
+                Disposer.dispose(disposable);
             }
             myProcessHandler = null;
         }
@@ -314,8 +319,9 @@ public final class BuildContentManagerImpl implements BuildContentManager {
             }
             myProcessHandler.putUserData(RunContentManagerImpl.ALWAYS_USE_DEFAULT_STOPPING_BEHAVIOUR_KEY, Boolean.TRUE);
             final String sessionName = myProcessHandler.getExecutionName();
-            final WaitForProcessTask task = new WaitForProcessTask(myProcessHandler, sessionName, modal, myProject) {
+            WaitForProcessTask task = new WaitForProcessTask(myProcessHandler, sessionName, modal, myProject) {
                 @Override
+                @RequiredUIAccess
                 public void onCancel() {
                     // stop waiting for the process
                     myProcessHandler.forceProcessDetach();

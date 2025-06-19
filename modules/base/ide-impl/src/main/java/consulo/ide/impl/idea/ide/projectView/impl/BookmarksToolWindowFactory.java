@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.bookmark.icon.BookmarkIconGroup;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesPanel;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.localize.LocalizeValue;
@@ -76,6 +77,6 @@ public class BookmarksToolWindowFactory implements ToolWindowFactory, DumbAware 
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Bookmarks");
+        return BookmarkLocalize.toolwindowBookmarksDisplayName();
     }
 }

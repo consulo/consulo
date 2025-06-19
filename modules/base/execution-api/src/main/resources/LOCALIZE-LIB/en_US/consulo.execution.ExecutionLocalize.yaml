@@ -873,6 +873,8 @@ title.submitting.error.report:
     text: Submitting Error Report
 tool.window.name.run:
     text: Run
+toolwindow.services.display.name:
+    text: Services
 up.the.stack.trace:
     text: Up the stack trace
 waiting.for.vm.detach.progress.text:

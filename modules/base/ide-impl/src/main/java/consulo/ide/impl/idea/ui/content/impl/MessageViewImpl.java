@@ -16,12 +16,14 @@
 package consulo.ide.impl.idea.ui.content.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.view.MessageView;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -44,19 +46,17 @@ public class MessageViewImpl implements MessageView {
     private final List<Runnable> myPostponedRunnables = new ArrayList<Runnable>();
 
     @Inject
-    public MessageViewImpl(final Project project, final StartupManager startupManager, final ToolWindowManager toolWindowManager) {
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                myToolWindow =
-                    toolWindowManager.registerToolWindow(ToolWindowId.MESSAGES_WINDOW, true, ToolWindowAnchor.BOTTOM, project, true);
-                myToolWindow.setIcon(AllIcons.Toolwindows.ToolWindowMessages);
-                ContentManagerWatcher.watchContentManager(myToolWindow, getContentManager());
-                for (Runnable postponedRunnable : myPostponedRunnables) {
-                    postponedRunnable.run();
-                }
-                myPostponedRunnables.clear();
+    public MessageViewImpl(Project project, StartupManager startupManager, ToolWindowManager toolWindowManager) {
+        @RequiredUIAccess
+        Runnable runnable = () -> {
+            myToolWindow = toolWindowManager.registerToolWindow(ToolWindowId.MESSAGES_WINDOW, true, ToolWindowAnchor.BOTTOM, project, true);
+            myToolWindow.setDisplayName(ProjectUIViewLocalize.toolwindowMessagesDisplayName());
+            myToolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowmessages());
+            ContentManagerWatcher.watchContentManager(myToolWindow, getContentManager());
+            for (Runnable postponedRunnable : myPostponedRunnables) {
+                postponedRunnable.run();
             }
+            myPostponedRunnables.clear();
         };
         if (project.isInitialized()) {
             runnable.run();
@@ -64,7 +64,6 @@ public class MessageViewImpl implements MessageView {
         else {
             startupManager.registerPostStartupActivity(runnable::run);
         }
-
     }
 
     @Nonnull

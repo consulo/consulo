@@ -46,3 +46,5 @@ settings.inlay.java.exclude.list:
     text: Exclude list…
 settings.inlay.parameter.hints.panel.name:
     text: Parameter hints
+toolwindow.structure.display.name:
+    text: Structure

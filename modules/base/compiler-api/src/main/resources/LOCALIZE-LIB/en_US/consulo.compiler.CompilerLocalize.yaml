@@ -437,6 +437,8 @@ validation.display.name:
     text: Validation
 value.undefined:
     text: undefined
+toolwindow.build.display.name:
+    text: Build
 warning.compiler.running.on.project.close:
     text: The compiler is running. Proceed with project closing?
 warning.compiler.running.on.toolwindow.close:

@@ -29,6 +29,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -85,7 +86,7 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Notifications");
+        return ProjectUIViewLocalize.toolwindowNotificationsDisplayName();
     }
 
     private static void createContent(Project project, ToolWindow toolWindow, EventLogConsole console, String title) {
