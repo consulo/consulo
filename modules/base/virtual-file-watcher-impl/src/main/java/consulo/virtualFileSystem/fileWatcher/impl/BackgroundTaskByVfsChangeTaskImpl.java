@@ -183,7 +183,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
                         uiAccess.give(
                             () -> ProgressManager.getInstance().runProcessWithProgressSynchronously(
                                 () -> fileByPath.refresh(false, true),
-                                LocalizeValue.localizeTODO("Refreshing Files...").get(),
+                                LocalizeValue.localizeTODO("Refreshing Files..."),
                                 false,
                                 myProject
                             )

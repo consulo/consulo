@@ -193,7 +193,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         };
 
         if (!ProgressManager.getInstance()
-            .runProcessWithProgressSynchronously(findUsagesRunnable, RefactoringLocalize.progressText().get(), true, myProject)) {
+            .runProcessWithProgressSynchronously(findUsagesRunnable, RefactoringLocalize.progressText(), true, myProject)) {
             return;
         }
 

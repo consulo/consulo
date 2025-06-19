@@ -397,7 +397,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             }
             finally {
                 try {
-                    ProgressManager.progress(VcsLocalize.progressTextSynchronizingFiles().get());
+                    ProgressManager.progress(VcsLocalize.progressTextSynchronizingFiles());
                     doVfsRefresh();
                 }
                 finally {
@@ -548,14 +548,14 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                     }
                     AbstractVcsHelper.getInstance(myProject).showErrors(
                         myGroupedExceptions,
-                        VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText()).get()
+                        VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText())
                     );
                 }
                 else if (someSessionWasCancelled) {
-                    ProgressManager.progress(VcsLocalize.progressTextUpdatingCanceled().get());
+                    ProgressManager.progress(VcsLocalize.progressTextUpdatingCanceled());
                 }
                 else {
-                    ProgressManager.progress(VcsLocalize.progressTextUpdatingDone().get());
+                    ProgressManager.progress(VcsLocalize.progressTextUpdatingDone());
                 }
 
                 final boolean noMerged = myUpdatedFiles.getGroupById(FileGroup.MERGED_WITH_CONFLICT_ID).isEmpty();
@@ -602,7 +602,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             gatherContextInterruptedMessages();
             AbstractVcsHelper.getInstance(myProject).showErrors(
                 myGroupedExceptions,
-                VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText()).get()
+                VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText())
             );
         }
 

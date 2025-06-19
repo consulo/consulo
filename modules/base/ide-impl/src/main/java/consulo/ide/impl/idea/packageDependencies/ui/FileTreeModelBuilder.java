@@ -218,7 +218,7 @@ public class FileTreeModelBuilder {
     if (showProgress) {
       ProgressManager.getInstance().runProcessWithProgressSynchronously(
         buildingRunnable,
-        AnalysisScopeLocalize.packageDependenciesBuildProcessTitle().get(),
+        AnalysisScopeLocalize.packageDependenciesBuildProcessTitle(),
         false,
         myProject
       );

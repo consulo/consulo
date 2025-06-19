@@ -17,10 +17,12 @@ package consulo.ide.impl.idea.openapi.editor;
 
 import consulo.application.util.LineTokenizer;
 import consulo.codeEditor.*;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.util.Producer;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.LanguageEditorUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CopyPasteManager;
 
 import jakarta.annotation.Nonnull;
@@ -186,9 +188,10 @@ public class EditorModificationUtil {
     return consulo.codeEditor.util.EditorModificationUtil.calcBlockSelectionState(editor, blockStart, blockEnd);
   }
 
+  @RequiredUIAccess
   public static boolean requestWriting(@Nonnull Editor editor) {
     if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), editor.getProject())) {
-      HintManager.getInstance().showInformationHint(editor, EditorBundle.message("editing.read.only.file.hint"));
+      HintManager.getInstance().showInformationHint(editor, CodeEditorLocalize.editingReadOnlyFileHint());
       return false;
     }
     return true;

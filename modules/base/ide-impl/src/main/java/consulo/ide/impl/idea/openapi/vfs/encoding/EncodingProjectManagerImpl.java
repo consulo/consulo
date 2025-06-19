@@ -18,6 +18,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.internal.InternalStdFileTypes;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.platform.Platform;
@@ -385,7 +386,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
                 }
                 return true;
             }
-            ProgressManager.progress(IdeLocalize.progressTextReloadingFiles().get(), file.getPresentableUrl());
+            ProgressManager.progress(IdeLocalize.progressTextReloadingFiles(), LocalizeValue.of(file.getPresentableUrl()));
             project.getUIAccess().give(() -> clearAndReload(file, project));
             return true;
         };
@@ -462,7 +463,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
             }
             Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
             if (cachedDocument != null) {
-                ProgressManager.progress(IdeLocalize.progressTextReloadingFile().get(), file.getPresentableUrl());
+                ProgressManager.progress(IdeLocalize.progressTextReloadingFile(), LocalizeValue.of(file.getPresentableUrl()));
                 reload(file, myProject, (FileDocumentManagerImpl) FileDocumentManager.getInstance());
             }
             // for not loaded files deep under project, reset encoding to give them chance re-detect the right one later

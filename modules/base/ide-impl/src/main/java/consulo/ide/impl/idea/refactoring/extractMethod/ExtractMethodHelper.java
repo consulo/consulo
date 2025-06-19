@@ -107,7 +107,7 @@ public class ExtractMethodHelper {
                         () -> finder.findDuplicates(searchScopes, generatedMethod);
                     return AccessRule.read(action);
                 },
-                RefactoringLocalize.searchingForDuplicates().get(),
+                RefactoringLocalize.searchingForDuplicates(),
                 true,
                 project
             );

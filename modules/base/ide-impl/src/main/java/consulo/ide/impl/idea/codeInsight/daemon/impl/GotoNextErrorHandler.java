@@ -16,27 +16,27 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.DaemonCodeAnalyzerSettings;
-import consulo.language.editor.hint.HintManager;
-import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.document.Document;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 
 public class GotoNextErrorHandler implements CodeInsightActionHandler {
@@ -116,11 +116,12 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     }
   }
 
+  @RequiredUIAccess
   static void showMessageWhenNoHighlights(Project project, PsiFile file, Editor editor) {
     DaemonCodeAnalyzerImpl codeHighlighter = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project);
-    String message = codeHighlighter.isErrorAnalyzingFinished(file)
-                     ? InspectionsBundle.message("no.errors.found.in.this.file")
-                     : InspectionsBundle.message("error.analysis.is.in.progress");
+    LocalizeValue message = codeHighlighter.isErrorAnalyzingFinished(file)
+        ? InspectionLocalize.noErrorsFoundInThisFile()
+        : InspectionLocalize.errorAnalysisIsInProgress();
     HintManager.getInstance().showInformationHint(editor, message);
   }
 

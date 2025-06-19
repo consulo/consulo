@@ -15,12 +15,14 @@
  */
 package consulo.application.progress;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
@@ -65,25 +67,43 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     @Override
     public abstract ProgressIndicator getProgressIndicator();
 
+    public static void progress(@Nonnull LocalizeValue text) throws ProcessCanceledException {
+        progress(text, LocalizeValue.empty());
+    }
+
+    public static void progress2(@Nonnull LocalizeValue text) throws ProcessCanceledException {
+        ProgressIndicator pi = getInstance().getProgressIndicator();
+        if (pi != null) {
+            pi.checkCanceled();
+            pi.setText2Value(text);
+        }
+    }
+
+    public static void progress(@Nonnull LocalizeValue text, @Nonnull LocalizeValue text2) throws ProcessCanceledException {
+        ProgressIndicator pi = getInstance().getProgressIndicator();
+        if (pi != null) {
+            pi.checkCanceled();
+            pi.setTextValue(text);
+            pi.setText2Value(text2);
+        }
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public static void progress(@Nonnull String text) throws ProcessCanceledException {
-        progress(text, "");
+        progress(LocalizeValue.of(text), LocalizeValue.empty());
     }
 
-    public static void progress2(@Nonnull final String text) throws ProcessCanceledException {
-        final ProgressIndicator pi = getInstance().getProgressIndicator();
-        if (pi != null) {
-            pi.checkCanceled();
-            pi.setText2(text);
-        }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public static void progress2(@Nonnull String text) throws ProcessCanceledException {
+        progress2(LocalizeValue.of(text));
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public static void progress(@Nonnull String text, @Nullable String text2) throws ProcessCanceledException {
-        final ProgressIndicator pi = getInstance().getProgressIndicator();
-        if (pi != null) {
-            pi.checkCanceled();
-            pi.setText(text);
-            pi.setText2(text2 == null ? "" : text2);
-        }
+        progress(LocalizeValue.of(text), LocalizeValue.ofNullable(text2));
     }
 
     public abstract void executeNonCancelableSection(@Nonnull Runnable runnable);
@@ -100,6 +120,74 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @param project       the project in the context of which the operation is executed.
      * @return true if the operation completed successfully, false if it was cancelled.
      */
+    public boolean runProcessWithProgressSynchronously(
+        @Nonnull Runnable process,
+        @Nonnull LocalizeValue progressTitle,
+        boolean canBeCanceled,
+        @Nullable ComponentManager project
+    ) {
+        return runProcessWithProgressSynchronously(process, progressTitle.get(), canBeCanceled, project);
+    }
+
+    /**
+     * Runs the specified operation in a background thread and shows a modal progress dialog in the
+     * main thread while the operation is executing.
+     * If a dialog can't be shown (e.g. under write action or in headless environment),
+     * runs the given operation synchronously in the calling thread.
+     *
+     * @param process       the operation to execute.
+     * @param progressTitle the title of the progress window.
+     * @param canBeCanceled whether "Cancel" button is shown on the progress window.
+     * @param project       the project in the context of which the operation is executed.
+     * @return true result of operation
+     * @throws E exception thrown by process
+     */
+    public <T, E extends Exception> T runProcessWithProgressSynchronously(
+        @Nonnull ThrowableComputable<T, E> process,
+        @Nonnull LocalizeValue progressTitle,
+        boolean canBeCanceled,
+        @Nullable ComponentManager project
+    ) throws E {
+        return runProcessWithProgressSynchronously(process, progressTitle.get(), canBeCanceled, project);
+    }
+
+    /**
+     * Runs the specified operation in a background thread and shows a modal progress dialog in the
+     * main thread while the operation is executing.
+     * If a dialog can't be shown (e.g. under write action or in headless environment),
+     * runs the given operation synchronously in the calling thread.
+     *
+     * @param process         the operation to execute.
+     * @param progressTitle   the title of the progress window.
+     * @param canBeCanceled   whether "Cancel" button is shown on the progress window.
+     * @param project         the project in the context of which the operation is executed.
+     * @param parentComponent the component which will be used to calculate the progress window ancestor
+     * @return true if the operation completed successfully, false if it was cancelled.
+     */
+    public boolean runProcessWithProgressSynchronously(
+        @Nonnull Runnable process,
+        @Nonnull LocalizeValue progressTitle,
+        boolean canBeCanceled,
+        @Nullable ComponentManager project,
+        @Nullable JComponent parentComponent
+    ) {
+        return runProcessWithProgressSynchronously(process, progressTitle.get(), canBeCanceled, project, parentComponent);
+    }
+
+    /**
+     * Runs the specified operation in a background thread and shows a modal progress dialog in the
+     * main thread while the operation is executing.
+     * If a dialog can't be shown (e.g. under write action or in headless environment),
+     * runs the given operation synchronously in the calling thread.
+     *
+     * @param process       the operation to execute.
+     * @param progressTitle the title of the progress window.
+     * @param canBeCanceled whether "Cancel" button is shown on the progress window.
+     * @param project       the project in the context of which the operation is executed.
+     * @return true if the operation completed successfully, false if it was cancelled.
+     */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public abstract boolean runProcessWithProgressSynchronously(
         @Nonnull Runnable process,
         @Nonnull String progressTitle,
@@ -120,6 +208,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @return true result of operation
      * @throws E exception thrown by process
      */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public abstract <T, E extends Exception> T runProcessWithProgressSynchronously(
         @Nonnull ThrowableComputable<T, E> process,
         @Nonnull String progressTitle,
@@ -140,6 +230,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @param parentComponent the component which will be used to calculate the progress window ancestor
      * @return true if the operation completed successfully, false if it was cancelled.
      */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public boolean runProcessWithProgressSynchronously(
         @Nonnull Runnable process,
         @Nonnull String progressTitle,
@@ -256,7 +348,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @param action    the code to execute under read action
      * @param indicator progress indicator that should be cancelled if a write action is about to start. Can be null.
      */
-    public abstract boolean runInReadActionWithWriteActionPriority(@Nonnull final Runnable action, @Nullable ProgressIndicator indicator);
+    public abstract boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator);
 
     public abstract boolean isInNonCancelableSection();
 
