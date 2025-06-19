@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.coverage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.coverage.CoverageAnnotator;
 import consulo.execution.coverage.CoverageDataManager;
@@ -18,40 +19,41 @@ import jakarta.inject.Inject;
  */
 @ExtensionImpl
 public class CoverageProjectViewDirectoryNodeDecorator extends AbstractCoverageProjectViewNodeDecorator {
-  @Inject
-  public CoverageProjectViewDirectoryNodeDecorator(final CoverageDataManager coverageDataManager) {
-    super(coverageDataManager);
-  }
-
-  public void decorate(ProjectViewNode node, PresentationData data) {
-    final CoverageDataManager manager = getCoverageDataManager();
-    final CoverageSuitesBundle currentSuite = manager.getCurrentSuitesBundle();
-    final CoverageAnnotator coverageAnnotator = currentSuite != null ? currentSuite.getAnnotator(node.getProject())
-                                                                     : null;
-    if (coverageAnnotator == null) {
-      // N/A
-      return;
+    @Inject
+    public CoverageProjectViewDirectoryNodeDecorator(CoverageDataManager coverageDataManager) {
+        super(coverageDataManager);
     }
 
-    final Object value = node.getValue();
-    PsiElement element = null;
-    if (value instanceof PsiElement) {
-      element = (PsiElement)value;
-    }
-    else if (value instanceof SmartPsiElementPointer) {
-      element = ((SmartPsiElementPointer)value).getElement();
-    }
+    @Override
+    @RequiredReadAction
+    public void decorate(ProjectViewNode node, PresentationData data) {
+        CoverageDataManager manager = getCoverageDataManager();
+        CoverageSuitesBundle currentSuite = manager.getCurrentSuitesBundle();
+        CoverageAnnotator coverageAnnotator = currentSuite != null ? currentSuite.getAnnotator(node.getProject()) : null;
+        if (coverageAnnotator == null) {
+            // N/A
+            return;
+        }
 
-    String informationString = null;
-    if (element instanceof PsiDirectory) {
-      informationString = coverageAnnotator.getDirCoverageInformationString((PsiDirectory)element, currentSuite, manager);
-    } else if (element instanceof PsiFile) {
-      informationString = coverageAnnotator.getFileCoverageInformationString((PsiFile)element, currentSuite, manager);
-    }
+        Object value = node.getValue();
+        PsiElement element = null;
+        if (value instanceof PsiElement psiElement) {
+            element = psiElement;
+        }
+        else if (value instanceof SmartPsiElementPointer elementPointer) {
+            element = elementPointer.getElement();
+        }
 
-    if (informationString != null) {
-      data.setLocationString(informationString);
-    }
-  }
+        String informationString = null;
+        if (element instanceof PsiDirectory directory) {
+            informationString = coverageAnnotator.getDirCoverageInformationString(directory, currentSuite, manager);
+        }
+        else if (element instanceof PsiFile file) {
+            informationString = coverageAnnotator.getFileCoverageInformationString(file, currentSuite, manager);
+        }
 
+        if (informationString != null) {
+            data.setLocationString(informationString);
+        }
+    }
 }

@@ -22,6 +22,7 @@ import consulo.document.Document;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.coverage.*;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
@@ -72,9 +73,9 @@ import java.util.function.Supplier;
 @State(name = "CoverageDataManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public class CoverageDataManagerImpl extends CoverageDataManager implements JDOMExternalizable {
-    private static final String REPLACE_ACTIVE_SUITES = "&Replace active suites";
-    private static final String ADD_TO_ACTIVE_SUITES = "&Add to active suites";
-    private static final String DO_NOT_APPLY_COLLECTED_COVERAGE = "Do not apply &collected coverage";
+    private static final LocalizeValue REPLACE_ACTIVE_SUITES = ExecutionCoverageLocalize.coverageReplaceActiveSuites();
+    private static final LocalizeValue ADD_TO_ACTIVE_SUITES = ExecutionCoverageLocalize.coverageAddToActiveSuites();
+    private static final LocalizeValue DO_NOT_APPLY_COLLECTED_COVERAGE = ExecutionCoverageLocalize.coverageDoNotApplyCollectedCoverage();
 
     private final List<CoverageSuiteListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
     private static final Logger LOG = Logger.getInstance(CoverageDataManagerImpl.class);
@@ -160,6 +161,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
+    @RequiredUIAccess
     public CoverageSuite addCoverageSuite(
         String name,
         CoverageFileProvider fileProvider,
@@ -210,6 +212,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
+    @RequiredUIAccess
     public CoverageSuite addCoverageSuite(CoverageEnabledConfiguration config) {
         String name = config.getName() + " Coverage Results";
         String covFilePath = config.getCoverageFilePath();
@@ -236,11 +239,10 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
         boolean deleteTraces = suite.isTracingEnabled();
         if (!FileUtil.isAncestor(ContainerPathManager.get().getSystemPath(), fileName, false)) {
-            String message = "Would you like to delete file \'" + fileName + "\' ";
+            String message = ExecutionCoverageLocalize.dialogMessageWouldYouLikeToDeleteFileOnDisk(fileName).get();
             if (deleteTraces) {
-                message += "and traces directory \'" + FileUtil.getNameWithoutExtension(new File(fileName)) + "\' ";
+                message += " And traces directory \'" + FileUtil.getNameWithoutExtension(new File(fileName)) + "\' as well.";
             }
-            message += "on disk?";
             if (Messages.showYesNoDialog(
                 myProject,
                 message,
@@ -348,8 +350,8 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                     }
                 };
                 String[] options = myCurrentSuitesBundle.getCoverageEngine() == suite.getCoverageEngine()
-                    ? new String[]{REPLACE_ACTIVE_SUITES, ADD_TO_ACTIVE_SUITES, DO_NOT_APPLY_COLLECTED_COVERAGE}
-                    : new String[]{REPLACE_ACTIVE_SUITES, DO_NOT_APPLY_COLLECTED_COVERAGE};
+                    ? new String[]{REPLACE_ACTIVE_SUITES.get(), ADD_TO_ACTIVE_SUITES.get(), DO_NOT_APPLY_COLLECTED_COVERAGE.get()}
+                    : new String[]{REPLACE_ACTIVE_SUITES.get(), DO_NOT_APPLY_COLLECTED_COVERAGE.get()};
                 int answer = doNotAskOption.isToBeShown()
                     ? Messages.showDialog(
                         message.get(),
@@ -437,14 +439,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     private void applyInformationToEditor(FileEditor[] editors, VirtualFile file) {
-        PsiFile psiFile = doInReadActionIfProjectOpen(new Computable<PsiFile>() {
-            @Nullable
-            @Override
-            @RequiredReadAction
-            public PsiFile compute() {
-                return PsiManager.getInstance(myProject).findFile(file);
-            }
-        });
+        PsiFile psiFile = doInReadActionIfProjectOpen(() -> PsiManager.getInstance(myProject).findFile(file));
         if (psiFile != null && myCurrentSuitesBundle != null && psiFile.isPhysical()) {
             CoverageEngine engine = myCurrentSuitesBundle.getCoverageEngine();
             if (!engine.coverageEditorHighlightingApplicableTo(psiFile)) {
@@ -485,7 +480,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public <T> T doInReadActionIfProjectOpen(Supplier<T> computation) {
+    public <T> T doInReadActionIfProjectOpen(@RequiredReadAction Supplier<T> computation) {
         synchronized (myLock) {
             if (myIsProjectClosing) {
                 return null;
