@@ -12,12 +12,14 @@ import consulo.dataContext.DataContext;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuite;
 import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
 import consulo.ide.impl.idea.openapi.ui.PanelWithText;
 import consulo.ide.impl.idea.ui.popup.NotLookupOrSearchCondition;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -48,7 +50,11 @@ public class ShowCoveringTestsAction extends AnAction {
     private final LineData myLineData;
 
     public ShowCoveringTestsAction(String classFQName, LineData lineData) {
-        super("Show tests covering line", "Show tests covering line", PlatformIconGroup.modulesTestroot());
+        super(
+            ExecutionCoverageLocalize.actionShowTestsCoveringLineText(),
+            ExecutionCoverageLocalize.actionShowTestsCoveringLineDescription(),
+            PlatformIconGroup.modulesTestroot()
+        );
         myClassFQName = classFQName;
         myLineData = lineData;
     }
@@ -98,12 +104,12 @@ public class ShowCoveringTestsAction extends AnAction {
             String[] testNames = ArrayUtil.toStringArray(tests);
             Arrays.sort(testNames);
             if (testNames.length == 0) {
-                HintManager.getInstance().showErrorHint(editor, "Failed to load covered tests");
+                HintManager.getInstance().showErrorHint(editor, ExecutionCoverageLocalize.hintTextFailedToLoadCoveredTests());
                 return;
             }
             List<PsiElement> elements = currentSuite.getCoverageEngine().findTestsByNames(testNames, project);
             ImplementationViewComponent component;
-            String title = "Tests covering line " + myClassFQName + ":" + myLineData.getLineNumber();
+            LocalizeValue title = ExecutionCoverageLocalize.popupTitleTestsCoveringLine(myClassFQName, myLineData.getLineNumber());
             ComponentPopupBuilder popupBuilder;
             if (!elements.isEmpty()) {
                 component = new ImplementationViewComponent(PsiUtilCore.toPsiElementArray(elements), 0);
@@ -118,11 +124,12 @@ public class ShowCoveringTestsAction extends AnAction {
             }
             else {
                 component = null;
-                JPanel panel =
-                    new PanelWithText("Following test" + (testNames.length > 1 ? "s" : "") + " could not be found: " + StringUtil.join(
-                        testNames,
-                        ","
-                    ).replace("_", "."));
+                JPanel panel = new PanelWithText(
+                    ExecutionCoverageLocalize.followingTestCouldNotBeFound1(
+                        testNames.length,
+                        StringUtil.join(testNames, ",").replace("_", ".")
+                    ).get()
+                );
                 popupBuilder = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, null);
             }
             JBPopup popup = popupBuilder.setRequestFocusCondition(project, NotLookupOrSearchCondition.INSTANCE)
@@ -180,7 +187,6 @@ public class ShowCoveringTestsAction extends AnAction {
         }
         List<File> files = new ArrayList<>();
         for (CoverageSuite coverageSuite : currentSuite.getSuites()) {
-
             String filePath = coverageSuite.getCoverageDataFileName();
             String dirName = FileUtil.getNameWithoutExtension(new File(filePath).getName());
 

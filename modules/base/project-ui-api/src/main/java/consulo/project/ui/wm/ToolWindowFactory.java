@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.project.ui.wm;
 
 import consulo.annotation.component.ComponentScope;
@@ -38,76 +37,76 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ToolWindowFactory {
-  @Nonnull
-  String getId();
+    @Nonnull
+    String getId();
 
-  @RequiredUIAccess
-  void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow);
+    @RequiredUIAccess
+    void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow);
 
-  @Nonnull
-  ToolWindowAnchor getAnchor();
+    @Nonnull
+    ToolWindowAnchor getAnchor();
 
-  @Nonnull
-  Image getIcon();
+    @Nonnull
+    Image getIcon();
 
-  @Nonnull
-  LocalizeValue getDisplayName();
+    @Nonnull
+    LocalizeValue getDisplayName();
 
-  default boolean activateOnProjectOpening() {
-      return false;
-  }
+    default boolean activateOnProjectOpening() {
+        return false;
+    }
 
-  default boolean isSecondary() {
-    return false;
-  }
+    default boolean isSecondary() {
+        return false;
+    }
 
-  default boolean canCloseContents() {
-    return false;
-  }
+    default boolean canCloseContents() {
+        return false;
+    }
 
-  /**
-   * Perform additional initialisation routine here
-   *
-   * @param toolWindow Tool Window
-   */
-  @RequiredUIAccess
-  default void init(Project project, ToolWindow toolWindow) {
-    init(toolWindow);
-  }
+    /**
+     * Perform additional initialisation routine here
+     *
+     * @param toolWindow Tool Window
+     */
+    @RequiredUIAccess
+    default void init(Project project, ToolWindow toolWindow) {
+        init(toolWindow);
+    }
 
-  @Deprecated
-  default void init(ToolWindow window) {
-  }
+    @Deprecated
+    default void init(ToolWindow window) {
+    }
 
-  /**
-   * Tool Window saves its state on project close and restore on when project opens
-   * In some cases, it is useful to postpone Tool Window activation until user explicitly activates it.
-   * Example: Tool Window initialisation takes huge amount of time and makes project loading slower.
-   *
-   * @return {@code true} if Tool Window should not be activated on start even if was opened previously.
-   * {@code false} otherwise.
-   */
-  default boolean isDoNotActivateOnStart() {
-    return false;
-  }
+    /**
+     * Tool Window saves its state on project close and restore on when project opens
+     * In some cases, it is useful to postpone Tool Window activation until user explicitly activates it.
+     * Example: Tool Window initialisation takes huge amount of time and makes project loading slower.
+     *
+     * @return {@code true} if Tool Window should not be activated on start even if was opened previously.
+     * {@code false} otherwise.
+     */
+    default boolean isDoNotActivateOnStart() {
+        return false;
+    }
 
-  /**
-   * Check if toolwindow (and its stripe button) should be visible after startup.
-   *
-   * @see ToolWindow#isAvailable()
-   */
-  default boolean shouldBeAvailable(@Nonnull Project project) {
-    return true;
-  }
+    /**
+     * Check if toolwindow (and its stripe button) should be visible after startup.
+     *
+     * @see ToolWindow#isAvailable()
+     */
+    default boolean shouldBeAvailable(@Nonnull Project project) {
+        return true;
+    }
 
-  default boolean isUnified() {
-    return false;
-  }
+    default boolean isUnified() {
+        return false;
+    }
 
-  /**
-   * If return false - toolwindow will be unregistered
-   */
-  default boolean validate(@Nonnull Project project) {
-    return true;
-  }
+    /**
+     * If return false - toolwindow will be unregistered
+     */
+    default boolean validate(@Nonnull Project project) {
+        return true;
+    }
 }

@@ -1,10 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.hint;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import jakarta.annotation.Nonnull;
@@ -48,8 +50,19 @@ public interface HintManager {
     int DONT_CONSUME_ESCAPE = 0x200;
     int HIDE_BY_CARET_MOVE = 0x400;
 
-    @MagicConstant(flags = {HIDE_BY_ESCAPE, HIDE_BY_ANY_KEY, HIDE_BY_LOOKUP_ITEM_CHANGE, HIDE_BY_TEXT_CHANGE, HIDE_BY_OTHER_HINT, HIDE_BY_SCROLLING, HIDE_IF_OUT_OF_EDITOR, UPDATE_BY_SCROLLING,
-        HIDE_BY_MOUSEOVER, DONT_CONSUME_ESCAPE, HIDE_BY_CARET_MOVE})
+    @MagicConstant(flags = {
+        HIDE_BY_ESCAPE,
+        HIDE_BY_ANY_KEY,
+        HIDE_BY_LOOKUP_ITEM_CHANGE,
+        HIDE_BY_TEXT_CHANGE,
+        HIDE_BY_OTHER_HINT,
+        HIDE_BY_SCROLLING,
+        HIDE_IF_OUT_OF_EDITOR,
+        UPDATE_BY_SCROLLING,
+        HIDE_BY_MOUSEOVER,
+        DONT_CONSUME_ESCAPE,
+        HIDE_BY_CARET_MOVE
+    })
     public @interface HideFlags {
     }
 
@@ -57,8 +70,22 @@ public interface HintManager {
     void showHint(@Nonnull JComponent component, @Nonnull RelativePoint p, @HideFlags int flags, int timeout);
 
     @RequiredUIAccess
+    default void showErrorHint(@Nonnull Editor editor, @Nonnull LocalizeValue text) {
+        showErrorHint(editor, text.get());
+    }
+
+    @RequiredUIAccess
+    default void showErrorHint(@Nonnull Editor editor, @Nonnull LocalizeValue text, @PositionFlags short position) {
+        showErrorHint(editor, text.get(), position);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @RequiredUIAccess
     void showErrorHint(@Nonnull Editor editor, @Nonnull String text);
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
     void showErrorHint(@Nonnull Editor editor, @Nonnull String text, @PositionFlags short position);
 

@@ -20,22 +20,43 @@
  */
 package consulo.execution.test.action;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.action.ToggleBooleanProperty;
 import consulo.component.util.config.AbstractProperty;
 import consulo.component.util.config.BooleanProperty;
 import consulo.execution.test.TestFrameworkRunningModel;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 public abstract class ToggleModelAction extends ToggleBooleanProperty.Disablable {
-  public ToggleModelAction(String text, String description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
-    super(text, description, icon, properties, property);
-  }
+    public ToggleModelAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties,
+        BooleanProperty property
+    ) {
+        super(text, description, icon, properties, property);
+    }
 
-  @Override
-  protected boolean isVisible() {
-    return true;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @SuppressWarnings("deprecation")
+    public ToggleModelAction(
+        String text,
+        String description,
+        Image icon,
+        AbstractProperty.AbstractPropertyContainer properties,
+        BooleanProperty property
+    ) {
+        super(text, description, icon, properties, property);
+    }
 
-  public abstract void setModel(TestFrameworkRunningModel model);
+    @Override
+    protected boolean isVisible() {
+        return true;
+    }
 
+    public abstract void setModel(TestFrameworkRunningModel model);
 }

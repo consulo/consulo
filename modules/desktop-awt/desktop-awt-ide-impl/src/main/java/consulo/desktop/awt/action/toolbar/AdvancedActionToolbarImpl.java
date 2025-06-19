@@ -22,6 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Size2D;
@@ -198,7 +199,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         builder.setResizable(false)
             .setMovable(true) // fit the screen automatically
             .setRequestFocus(false)
-            .setTitle(null)
+            .setTitle(LocalizeValue.empty())
             .setCancelOnClickOutside(true)
             .setCancelOnOtherWindowOpen(true)
             .setCancelCallback(() -> {

@@ -6,6 +6,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
@@ -84,7 +85,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         DumbAwareToggleAction toggleAutoscrollAction = new DumbAwareToggleAction(
             UILocalize.autoscrollToSourceActionName(),
             UILocalize.autoscrollToSourceActionDescription(),
-            AllIcons.General.AutoscrollToSource
+            PlatformIconGroup.generalAutoscrolltosource()
         ) {
             @Override
             public boolean isSelected(@Nonnull AnActionEvent e) {
@@ -181,7 +182,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
     private int getContentCount(boolean reusable) {
         Key<Boolean> contentKey = reusable ? REUSABLE_CONTENT_KEY : NOT_REUSABLE_CONTENT_KEY;
         Content[] contents = myFindContentManager.getContents();
-        return (int)Arrays.stream(contents).filter(content -> content.getUserData(contentKey) != null).count();
+        return (int) Arrays.stream(contents).filter(content -> content.getUserData(contentKey) != null).count();
     }
 
     @Override

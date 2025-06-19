@@ -1,7 +1,3 @@
-/*
- * User: anna
- * Date: 20-Nov-2007
- */
 package consulo.ide.impl.idea.coverage.actions;
 
 import consulo.dataContext.DataContext;
@@ -10,47 +6,55 @@ import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.ide.impl.idea.codeInspection.export.ExportToHTMLDialog;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
+/**
+ * @author anna
+ * @since 2007-11-20
+ */
 public class GenerateCoverageReportAction extends AnAction {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Project project = dataContext.getData(Project.KEY);
+        assert project != null;
+        CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
+        CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
 
-  @Override
-  public void actionPerformed(final AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    assert project != null;
-    final CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
-    final CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
-
-    final CoverageEngine coverageEngine = currentSuite.getCoverageEngine();
-    final ExportToHTMLDialog dialog = new ExportToHTMLDialog(project, true);
-    dialog.setTitle("Generate Coverage Report for: \'" + currentSuite.getPresentableName() + "\'");
-    dialog.reset();
-    dialog.show();
-    if (!dialog.isOK()) return;
-    dialog.apply();
-
-    coverageEngine.generateReport(project, dataContext, currentSuite);
-  }
-
-  public void update(final AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Presentation presentation = e.getPresentation();
-    presentation.setEnabled(false);
-    presentation.setVisible(false);
-    final Project project = dataContext.getData(Project.KEY);
-    if (project != null) {
-      final CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
-      if (currentSuite != null) {
-        final CoverageEngine coverageEngine = currentSuite.getCoverageEngine();
-        if (coverageEngine.isReportGenerationAvailable(project, dataContext, currentSuite)) {
-          presentation.setEnabled(true);
-          presentation.setVisible(true);
+        CoverageEngine coverageEngine = currentSuite.getCoverageEngine();
+        ExportToHTMLDialog dialog = new ExportToHTMLDialog(project, true);
+        dialog.setTitle("Generate Coverage Report for: \'" + currentSuite.getPresentableName() + "\'");
+        dialog.reset();
+        dialog.show();
+        if (!dialog.isOK()) {
+            return;
         }
-      }
-    }
-  }
+        dialog.apply();
 
+        coverageEngine.generateReport(project, dataContext, currentSuite);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Presentation presentation = e.getPresentation();
+        presentation.setEnabled(false);
+        presentation.setVisible(false);
+        Project project = dataContext.getData(Project.KEY);
+        if (project != null) {
+            CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
+            if (currentSuite != null) {
+                CoverageEngine coverageEngine = currentSuite.getCoverageEngine();
+                if (coverageEngine.isReportGenerationAvailable(project, dataContext, currentSuite)) {
+                    presentation.setEnabled(true);
+                    presentation.setVisible(true);
+                }
+            }
+        }
+    }
 }

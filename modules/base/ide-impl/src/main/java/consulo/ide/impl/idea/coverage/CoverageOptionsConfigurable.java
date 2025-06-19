@@ -4,6 +4,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.execution.coverage.CoverageOptionsProvider;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
@@ -51,26 +52,26 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
             ValueGroup<Boolean> group = ValueGroup.createBool();
             VerticalLayout primaryGroup = VerticalLayout.create();
 
-            myShowOptionsRB = RadioButton.create(LocalizeValue.localizeTODO("Show options before applying coverage to the editor"));
+            myShowOptionsRB = RadioButton.create(ExecutionCoverageLocalize.settingsCoverageShowOptionsBeforeApplyingCoverageToTheEditor());
             primaryGroup.add(myShowOptionsRB);
             group.add(myShowOptionsRB);
 
-            myDoNotApplyRB = RadioButton.create(LocalizeValue.localizeTODO("Do not apply collected coverage"));
+            myDoNotApplyRB = RadioButton.create(ExecutionCoverageLocalize.coverageDoNotApplyCollectedCoverage());
             primaryGroup.add(myDoNotApplyRB);
             group.add(myDoNotApplyRB);
 
-            myReplaceRB = RadioButton.create(LocalizeValue.localizeTODO("Replace active suites with the new one"));
+            myReplaceRB = RadioButton.create(ExecutionCoverageLocalize.settingsCoverageReplaceActiveSuitesWithTheNewOne());
             primaryGroup.add(myReplaceRB);
             group.add(myReplaceRB);
 
-            myAddRB = RadioButton.create(LocalizeValue.localizeTODO("Add to the active suites"));
+            myAddRB = RadioButton.create(ExecutionCoverageLocalize.settingsCoverageAddToTheActiveSuites());
             primaryGroup.add(myAddRB);
             group.add(myAddRB);
 
-            myActivateCoverageViewCB = CheckBox.create(LocalizeValue.localizeTODO("Activate Coverage &View "));
+            myActivateCoverageViewCB = CheckBox.create(ExecutionCoverageLocalize.settingsCoverageActivateCoverageView());
             primaryGroup.add(myActivateCoverageViewCB);
 
-            myWholePanel.add(LabeledLayout.create(LocalizeValue.localizeTODO("When new coverage is gathered"), primaryGroup));
+            myWholePanel.add(LabeledLayout.create(ExecutionCoverageLocalize.settingsCoverageWhenNewCoverageIsGathered(), primaryGroup));
 
             for (CoverageOptions options : CoverageOptions.EP_NAME.getExtensionList(project)) {
                 Configurable configurable = options.createConfigurable();
@@ -117,18 +118,18 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
     @Nonnull
     @Override
     public String getDisplayName() {
-        return LocalizeValue.localizeTODO("Coverage").get();
+        return ExecutionCoverageLocalize.configurableCoverageoptionsconfigurableDisplayName().get();
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
+    @RequiredUIAccess
     protected Panel createPanel(@Nonnull Disposable uiDisposable) {
         return new Panel(myProject, uiDisposable);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void apply(@Nonnull Panel panel) throws ConfigurationException {
         myManager.setOptionsToReplace(getSelectedValue(panel));
         myManager.setActivateViewOnRun(panel.myActivateCoverageViewCB.getValueOrError());
@@ -138,22 +139,15 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void reset(@Nonnull Panel panel) {
         int addOrReplace = myManager.getOptionToReplace();
         switch (addOrReplace) {
-            case 0:
-                panel.myReplaceRB.setValue(true);
-                break;
-            case 1:
-                panel.myAddRB.setValue(true);
-                break;
-            case 2:
-                panel.myDoNotApplyRB.setValue(true);
-                break;
-            default:
-                panel.myShowOptionsRB.setValue(true);
+            case 0 -> panel.myReplaceRB.setValue(true);
+            case 1 -> panel.myAddRB.setValue(true);
+            case 2 -> panel.myDoNotApplyRB.setValue(true);
+            default -> panel.myShowOptionsRB.setValue(true);
         }
 
         panel.myActivateCoverageViewCB.setValue(myManager.activateViewOnRun());
@@ -163,8 +157,8 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected boolean isModified(@Nonnull Panel panel) {
         if (myManager.getOptionToReplace() != getSelectedValue(panel)) {
             return true;
@@ -182,8 +176,8 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
         return false;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void disposeUIResources(@Nonnull Panel panel) {
         for (Configurable child : panel.myChildren) {
             child.disposeUIResources();

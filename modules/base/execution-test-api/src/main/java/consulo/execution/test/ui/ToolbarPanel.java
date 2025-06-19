@@ -23,12 +23,13 @@ import consulo.application.ui.action.ToggleBooleanProperty;
 import consulo.disposer.Disposable;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.test.FailedTestsNavigator;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.action.*;
 import consulo.execution.test.export.ExportTestResultsAction;
+import consulo.execution.test.localize.ExecutionTestLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.*;
@@ -55,15 +56,15 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         super(new BorderLayout());
         DefaultActionGroup actionGroup = new DefaultActionGroup();
         actionGroup.addAction(new DumbAwareToggleInvertedBooleanProperty(
-            ExecutionLocalize.junitRunHidePassedActionName().get(),
-            ExecutionLocalize.junitRunHidePassedActionDescription().get(),
+            ExecutionTestLocalize.actionHidePassedText(),
+            ExecutionTestLocalize.actionHidePassedDescription(),
             PlatformIconGroup.runconfigurationsTestpassed(),
             properties,
             TestConsoleProperties.HIDE_PASSED_TESTS
         ));
         actionGroup.add(new DumbAwareToggleInvertedBooleanProperty(
-            "Show Ignored",
-            "Show Ignored",
+            ExecutionTestLocalize.actionShowIgnoredText(),
+            ExecutionTestLocalize.actionShowIgnoredDescription(),
             PlatformIconGroup.runconfigurationsTestignored(),
             properties,
             TestConsoleProperties.HIDE_IGNORED_TEST
@@ -71,8 +72,8 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         actionGroup.addSeparator();
 
         actionGroup.addAction(new DumbAwareToggleBooleanProperty(
-            ExecutionLocalize.junitRuningInfoSortAlphabeticallyActionName().get(),
-            ExecutionLocalize.junitRuningInfoSortAlphabeticallyActionDescription().get(),
+            ExecutionTestLocalize.actionSortAlphabeticallyText(),
+            ExecutionTestLocalize.actionSortAlphabeticallyDescription(),
             PlatformIconGroup.objectbrowserSorted(),
             properties,
             TestConsoleProperties.SORT_ALPHABETICALLY
@@ -83,11 +84,11 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         actionGroup.addSeparator();
 
         AnAction action = CommonActionsManager.getInstance().createExpandAllAction(myTreeExpander, parent);
-        action.getTemplatePresentation().setDescriptionValue(ExecutionLocalize.junitRuningInfoExpandTestActionName());
+        action.getTemplatePresentation().setDescriptionValue(ExecutionTestLocalize.actionExpandTestText());
         actionGroup.add(action);
 
         action = CommonActionsManager.getInstance().createCollapseAllAction(myTreeExpander, parent);
-        action.getTemplatePresentation().setDescriptionValue(ExecutionLocalize.junitRuningInfoCollapseTestActionName());
+        action.getTemplatePresentation().setDescriptionValue(ExecutionTestLocalize.actionCollapseTestText());
         actionGroup.add(action);
 
         actionGroup.addSeparator();
@@ -117,16 +118,16 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         secondaryGroup.setPopup(true);
         secondaryGroup.getTemplatePresentation().setIcon(PlatformIconGroup.generalGearplain());
         secondaryGroup.add(new DumbAwareToggleBooleanProperty(
-            ExecutionLocalize.junitRuningInfoTrackTestActionName().get(),
-            ExecutionLocalize.junitRuningInfoTrackTestActionDescription().get(),
+            ExecutionTestLocalize.actionTrackTestText(),
+            ExecutionTestLocalize.actionTrackTestDescription(),
             null,
             properties,
             TestConsoleProperties.TRACK_RUNNING_TEST
         ));
 
         secondaryGroup.add(new DumbAwareToggleBooleanProperty(
-            "Show Inline Statistics",
-            "Toggle the visibility of the test duration in the tree",
+            ExecutionTestLocalize.actionShowInlineStatisticsText(),
+            ExecutionTestLocalize.actionShowInlineStatisticsDescription(),
             null,
             properties,
             TestConsoleProperties.SHOW_INLINE_STATISTICS
@@ -134,15 +135,15 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
 
         secondaryGroup.addSeparator();
         secondaryGroup.add(new DumbAwareToggleBooleanProperty(
-            ExecutionLocalize.junitRuningInfoScrollToStacktraceActionName().get(),
-            ExecutionLocalize.junitRuningInfoScrollToStacktraceActionDescription().get(),
+            ExecutionTestLocalize.actionScrollToStacktraceText(),
+            ExecutionTestLocalize.actionScrollToStacktraceDescription(),
             null,
             properties,
             TestConsoleProperties.SCROLL_TO_STACK_TRACE
         ));
         secondaryGroup.add(new ToggleBooleanProperty(
-            ExecutionLocalize.junitRuningInfoOpenSourceAtExceptionActionName().get(),
-            ExecutionLocalize.junitRuningInfoOpenSourceAtExceptionActionDescription().get(),
+            ExecutionTestLocalize.actionOpenSourceAtExceptionText(),
+            ExecutionTestLocalize.actionOpenSourceAtExceptionDescription(),
             null,
             properties,
             TestConsoleProperties.OPEN_FAILURE_LINE
@@ -153,8 +154,8 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         secondaryGroup.add(new AdjustAutotestDelayActionGroup(parent));
         secondaryGroup.addSeparator();
         secondaryGroup.add(new DumbAwareToggleBooleanProperty(
-            ExecutionLocalize.junitRuningInfoSelectFirstFailedActionName().get(),
-            null,
+            ExecutionTestLocalize.actionSelectFirstFailedText(),
+            LocalizeValue.empty(),
             null,
             properties,
             TestConsoleProperties.SELECT_FIRST_DEFECT
@@ -178,18 +179,28 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
         for (ToggleModelAction action : myActions) {
             action.setModel(model);
         }
-        TestFrameworkActions.addPropertyListener(TestConsoleProperties.SORT_ALPHABETICALLY, value -> {
-            AbstractTestTreeBuilder builder = model.getTreeBuilder();
-            if (builder != null) {
-                builder.setTestsComparator(value);
-            }
-        }, model, true);
-        TestFrameworkActions.addPropertyListener(TestConsoleProperties.SORT_BY_DURATION, value -> {
-            AbstractTestTreeBuilder builder = model.getTreeBuilder();
-            if (builder != null) {
-                builder.setStatisticsComparator(model.getProperties(), value);
-            }
-        }, model, true);
+        TestFrameworkActions.addPropertyListener(
+            TestConsoleProperties.SORT_ALPHABETICALLY,
+            value -> {
+                AbstractTestTreeBuilder builder = model.getTreeBuilder();
+                if (builder != null) {
+                    builder.setTestsComparator(value);
+                }
+            },
+            model,
+            true
+        );
+        TestFrameworkActions.addPropertyListener(
+            TestConsoleProperties.SORT_BY_DURATION,
+            value -> {
+                AbstractTestTreeBuilder builder = model.getTreeBuilder();
+                if (builder != null) {
+                    builder.setStatisticsComparator(model.getProperties(), value);
+                }
+            },
+            model,
+            true
+        );
     }
 
     @Override
@@ -231,13 +242,12 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     }
 
     private static class SortByDurationAction extends ToggleModelAction implements DumbAware {
-
         private TestFrameworkRunningModel myModel;
 
         public SortByDurationAction(TestConsoleProperties properties) {
             super(
-                ExecutionLocalize.junitRuningInfoSortByStatisticsActionName().get(),
-                ExecutionLocalize.junitRuningInfoSortByStatisticsActionDescription().get(),
+                ExecutionTestLocalize.actionSortByStatisticsText(),
+                ExecutionTestLocalize.actionSortByStatisticsDescription(),
                 PlatformIconGroup.runconfigurationsSortbyduration(),
                 properties,
                 TestConsoleProperties.SORT_BY_DURATION

@@ -14,11 +14,11 @@ action.SwitchCoverage.description:
     text: Inspect previously opened coverage reports
 action.SwitchCoverage.text:
     text: Manage Coverage Reports…
-action.description.show.tests.covering.line:
+action.show.tests.covering.line.description:
     text: Show tests covering line
 action.name.cover:
     text: Cover
-action.text.show.tests.covering.line:
+action.show.tests.covering.line.text:
     text: Show Tests Covering Line
 branch.coverage.message:
     text: |-

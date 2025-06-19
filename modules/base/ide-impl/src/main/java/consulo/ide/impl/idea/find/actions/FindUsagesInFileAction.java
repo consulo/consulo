@@ -73,7 +73,7 @@ public class FindUsagesInFileAction extends AnAction {
             );
         }
         else {
-            HintManager.getInstance().showErrorHint(editor, FindLocalize.findNoUsagesAtCursorError().get());
+            HintManager.getInstance().showErrorHint(editor, FindLocalize.findNoUsagesAtCursorError());
         }
     }
 

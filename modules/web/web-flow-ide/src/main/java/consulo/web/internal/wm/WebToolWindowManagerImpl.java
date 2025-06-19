@@ -15,7 +15,6 @@
  */
 package consulo.web.internal.wm;
 
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.RoamingType;
@@ -74,14 +73,17 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         }
 
         MessageBusConnection busConnection = project.getMessageBus().connect();
-        busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
-            @Override
-            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-                if (project == myProject) {
-                    WebToolWindowManagerImpl.this.projectClosed();
+        busConnection.subscribe(
+            ProjectManagerListener.class,
+            new ProjectManagerListener() {
+                @Override
+                public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+                    if (project == myProject) {
+                        WebToolWindowManagerImpl.this.projectClosed();
+                    }
                 }
             }
-        });
+        );
     }
 
     @Override
@@ -110,8 +112,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         myFrame = null;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void initializeEditorComponent() {
         Component editorComponent = getEditorComponent(myProject);
 
@@ -132,8 +134,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         return label;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void doWhenFirstShown(Object component, Runnable runnable) {
         UIAccess.get().give(runnable);
     }
@@ -144,7 +146,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         return new MyInternalDecoratorListenerBase() {
             @Override
             public void resized(@Nonnull ToolWindowInternalDecorator source) {
-
             }
         };
     }
@@ -152,20 +153,34 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     @Nonnull
     @Override
     protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
-        return new WebToolWindowStripeButtonImpl((WebToolWindowInternalDecorator) internalDecorator, (WebToolWindowPanelImpl) myToolWindowPanel);
+        return new WebToolWindowStripeButtonImpl(
+            (WebToolWindowInternalDecorator) internalDecorator,
+            (WebToolWindowPanelImpl) myToolWindowPanel
+        );
     }
 
     @Nonnull
     @Override
     @RequiredUIAccess
-    protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
+    protected ToolWindowEx createToolWindow(
+        String id,
+        LocalizeValue displayName,
+        boolean canCloseContent,
+        @Nullable Object component,
+        boolean shouldBeAvailable
+    ) {
         return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
     }
 
     @Nonnull
     @Override
     @RequiredUIAccess
-    protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
+    protected ToolWindowInternalDecorator createInternalDecorator(
+        Project project,
+        @Nonnull WindowInfoImpl info,
+        ToolWindowEx toolWindow,
+        boolean dumbAware
+    ) {
         return new WebToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl) toolWindow, dumbAware);
     }
 
@@ -174,46 +189,41 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         return true;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void requestFocusInToolWindow(String id, boolean forced) {
-
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void removeWindowedDecorator(WindowInfoImpl info) {
-
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void addFloatingDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
-
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void addWindowedDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
-
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void updateToolWindowsPane() {
-
     }
 
-    @RequiredUIAccess
     @Nullable
     @Override
+    @RequiredUIAccess
     public Element getStateFromUI() {
         return new Element("state");
     }
 
-    @RequiredWriteAction
     @Nullable
     @Override
+    @RequiredUIAccess
     public Element getState(Element element) {
         return element;
     }
@@ -225,7 +235,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     public void activateEditorComponent() {
-
     }
 
     @Override
@@ -235,7 +244,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
-
     }
 
     @Nullable
@@ -251,6 +259,5 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
-
     }
 }

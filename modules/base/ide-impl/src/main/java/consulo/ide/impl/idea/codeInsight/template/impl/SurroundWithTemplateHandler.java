@@ -10,6 +10,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
@@ -40,7 +41,7 @@ public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
 
     List<AnAction> group = createActionGroup(editor, file, new HashSet<>());
     if (group.isEmpty()) {
-      HintManager.getInstance().showErrorHint(editor, CodeInsightBundle.message("templates.surround.no.defined"));
+      HintManager.getInstance().showErrorHint(editor, CodeInsightLocalize.templatesSurroundNoDefined());
       return;
     }
 

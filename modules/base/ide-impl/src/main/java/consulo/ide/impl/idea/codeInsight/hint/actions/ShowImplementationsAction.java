@@ -306,7 +306,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
             final ImplementationViewComponent component = (ImplementationViewComponent)((AbstractPopup)popup).getComponent();
             popup.setCaption(title.get());
             component.update(impls, index);
-            updateInBackground(editor, element, component, title.get(), (AbstractPopup)popup, usageView);
+            updateInBackground(editor, element, component, title, (AbstractPopup)popup, usageView);
             if (invokedByShortcut) {
                 ((AbstractPopup)popup).focusPreferredComponent();
             }
@@ -333,7 +333,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
                 .setResizable(true)
                 .setMovable(true)
                 .setRequestFocus(invokedFromEditor && LookupManager.getActiveLookup(editor) == null)
-                .setTitle(title.get())
+                .setTitle(title)
                 .setCouldPin(popup1 -> {
                     usageView.set(component.showInUsageView());
                     popup1.cancel();
@@ -349,10 +349,10 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
                 })
                 .createPopup();
 
-            updateInBackground(editor, element, component, title.get(), (AbstractPopup)popup, usageView);
+            updateInBackground(editor, element, component, title, (AbstractPopup)popup, usageView);
 
             PopupPositionManager.positionPopupInBestPosition(popup, editor, DataManager.getInstance().getDataContext());
-            component.setHint(popup, title.get());
+            component.setHint(popup, title);
 
             myPopupRef = new WeakReference<>(popup);
         }
@@ -362,7 +362,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         Editor editor,
         @Nullable PsiElement element,
         @Nonnull ImplementationViewComponent component,
-        String title,
+        @Nonnull LocalizeValue title,
         @Nonnull AbstractPopup popup,
         @Nonnull SimpleReference<UsageView> usageView
     ) {
@@ -485,7 +485,8 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     }
 
     private class ImplementationsUpdaterTask extends BackgroundUpdaterTaskBase<PsiElement> {
-        private final String myCaption;
+        @Nonnull
+        private final LocalizeValue myCaption;
         private final Editor myEditor;
         @Nonnull
         private final PsiElement myElement;
@@ -497,7 +498,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         private ImplementationsUpdaterTask(
             @Nonnull PsiElement element,
             final Editor editor,
-            final String caption,
+            final @Nonnull LocalizeValue caption,
             boolean includeSelf,
             ImplementationViewComponent component
         ) {
@@ -511,7 +512,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
 
         @Override
         public String getCaption(int size) {
-            return myCaption;
+            return myCaption.get();
         }
 
         @Override

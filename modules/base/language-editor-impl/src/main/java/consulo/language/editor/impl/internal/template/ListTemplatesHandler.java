@@ -74,7 +74,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
         if (matchingTemplates.isEmpty() && customTemplatesLookupElements.isEmpty()) {
             if (!Application.get().isUnitTestMode()) {
-                HintManager.getInstance().showErrorHint(editor, CodeInsightLocalize.templatesNoDefined().get());
+                HintManager.getInstance().showErrorHint(editor, CodeInsightLocalize.templatesNoDefined());
             }
             return;
         }
