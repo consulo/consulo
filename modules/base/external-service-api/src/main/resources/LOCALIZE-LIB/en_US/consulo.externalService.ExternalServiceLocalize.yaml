@@ -1,304 +1,304 @@
 action.download.and.install.plugin:
-  text: Download and Install
+    text: Download and Install
 action.uninstall.plugin:
-  text: Uninstall
+    text: Uninstall
 action.update.plugin:
-  text: Update Plugin
+    text: Update Plugin
 checksum.failed:
-  text: Checksum mismatch. Try again later
+    text: Checksum mismatch. Try again later
 column.plugins.category:
-  text: Category
+    text: Category
 column.plugins.date:
-  text: Date
+    text: Date
 column.plugins.downloads:
-  text: Downloads
+    text: Downloads
 column.plugins.name:
-  text: Name
+    text: Name
 column.plugins.rate:
-  text: Rating
+    text: Rating
 diagnostic.error.report.additional.info.label:
-  text: '&Additional information (steps to reproduce, what were you doing when the exception occurred):'
+    text: '&Additional information (steps to reproduce, what were you doing when the exception occurred):'
 diagnostic.error.report.description:
-  text: |-
-    If you would like to get notified when the exceptions you submit are fixed,
-    please fill in your Consulo Account login and password.
+    text: |-
+        If you would like to get notified when the exceptions you submit are fixed,
+        please fill in your Consulo Account login and password.
 diagnostic.error.report.include.attachment.warning:
-  text: 'Report will include attachment: ''''<a>{0}</a>''''.'
+    text: 'Report will include attachment: ''''<a>{0}</a>''''.'
 diagnostic.error.report.include.attachments.warning:
-  text: Report will include <a>{0} attachments</a>.
+    text: Report will include <a>{0} attachments</a>.
 diagnostic.error.report.login.name:
-  text: '&Username:'
+    text: '&Username:'
 diagnostic.error.report.login.password:
-  text: '&Password:'
+    text: '&Password:'
 diagnostic.error.report.send:
-  text: '&Send'
+    text: '&Send'
 diagnostic.error.report.submit.error.anonymously:
-  text: <html>Submit report anonymously or use <a>JetBrains Account...</a></html>
+    text: <html>Submit report anonymously or use <a>JetBrains Account...</a></html>
 diagnostic.error.report.submit.report.as:
-  text: <html>Submit report as <a>{0}</a></html>
+    text: <html>Submit report as <a>{0}</a></html>
 diagnostic.out.of.memory.continue:
-  text: Continue
+    text: Continue
 diagnostic.out.of.memory.currentValue:
-  text: '(current value: {0})'
+    text: '(current value: {0})'
 diagnostic.out.of.memory.currentValue.unknown:
-  text: Unknown
+    text: Unknown
 diagnostic.out.of.memory.dump:
-  text: Memory Dump
+    text: Memory Dump
 diagnostic.out.of.memory.error:
-  text: <html>There is not enough memory to perform the requested operation.<br>Please increase ''{0}'' setting and restart the IDE for change to take effect.</html>
+    text: <html>There is not enough memory to perform the requested operation.<br>Please increase ''{0}'' setting and restart the IDE for change to take effect.</html>
 diagnostic.out.of.memory.title:
-  text: Out of Memory
+    text: Out of Memory
 diagnostic.out.of.memory.willBeSavedTo:
-  text: <html><b>Changes will be saved to</b> ''{0}''</html>
+    text: <html><b>Changes will be saved to</b> ''{0}''</html>
 error.attachments.tab.title:
-  text: Attachments
+    text: Attachments
 error.cannot.create.temp.dir:
-  text: Unable to create temp directory ''{0}''
+    text: Unable to create temp directory ''{0}''
 error.comments.tab.title:
-  text: Comments
+    text: Comments
 error.details.tab.title:
-  text: Details
+    text: Details
 error.dialog.attachment.include.column.title:
-  text: Include
+    text: Include
 error.dialog.attachment.path.column.title:
-  text: Path
+    text: Path
 error.dialog.clear.action:
-  text: '&Clear'
+    text: '&Clear'
 error.dialog.clear.all.action:
-  text: '&Clear all'
+    text: '&Clear all'
 error.dialog.comment.prompt:
-  text: '<html><u>P</u>lease fill in any details that may be important: steps to reproduce, what were you doing when problem occurred, etc.:</html>'
+    text: '<html><u>P</u>lease fill in any details that may be important: steps to reproduce, what were you doing when problem occurred, etc.:</html>'
 error.dialog.conflict.plugin.button.disable.all:
-  text: Disable All and Restart
+    text: Disable All and Restart
 error.dialog.conflict.plugin.button.enable.and.restart:
-  text: Enable and Restart
+    text: Enable and Restart
 error.dialog.conflict.plugin.disable.all:
-  text: None, disable all plugins above
+    text: None, disable all plugins above
 error.dialog.conflict.plugin.header.each.other:
-  text: '<html><p style="line-height: 150%;">The plugins below cannot function at the same time. Select which to enable:</p></html>'
+    text: '<html><p style="line-height: 150%;">The plugins below cannot function at the same time. Select which to enable:</p></html>'
 error.dialog.conflict.plugin.header.platform:
-  text: 'The following plugin{0,choice,1#|2#s} conflict{0,choice,1#s|2#} with IDE:'
+    text: 'The following plugin{0,choice,1#|2#s} conflict{0,choice,1#s|2#} with IDE:'
 error.dialog.conflict.plugin.title:
-  text: Conflicting Plugins
+    text: Conflicting Plugins
 error.dialog.disable.plugin.action.disable:
-  text: '&Disable'
+    text: '&Disable'
 error.dialog.disable.plugin.action.disableAndRestart:
-  text: Disable and &Restart
+    text: Disable and &Restart
 error.dialog.disable.plugin.norestart:
-  text: After disabling the plugin please restart {0} to apply changes in plugin configuration.
+    text: After disabling the plugin please restart {0} to apply changes in plugin configuration.
 error.dialog.disable.plugin.prompt:
-  text: <html>Are you sure to disable plugin <b>{0}</b>?<br/>Functionality provided by the plugin will no longer be available.</html>
+    text: <html>Are you sure to disable plugin <b>{0}</b>?<br/>Functionality provided by the plugin will no longer be available.</html>
 error.dialog.disable.plugin.prompt.dependants:
-  text: <html>Are you sure you would like to disable plugin <b>{0}</b>?<br/>Functionality provided by the plugin and dependent plugins will no longer be available.</html>
+    text: <html>Are you sure you would like to disable plugin <b>{0}</b>?<br/>Functionality provided by the plugin and dependent plugins will no longer be available.</html>
 error.dialog.disable.plugin.restart:
-  text: Changes in plugin configuration will take effect after {0} restart.
+    text: Changes in plugin configuration will take effect after {0} restart.
 error.dialog.disable.plugin.title:
-  text: Disable Plugin
+    text: Disable Plugin
 error.dialog.error.prompt:
-  text: '&Error message'
+    text: '&Error message'
 error.dialog.filecontent.title:
-  text: File content
+    text: File content
 error.dialog.foreign.plugin.warning.text:
-  text: This plugin is not a production of Consulo. Please report the problem to plugin vendor.
+    text: This plugin is not a production of Consulo. Please report the problem to plugin vendor.
 error.dialog.foreign.plugin.warning.text.vendor:
-  text: 'This plugin is not a production of Consulo. Please report the problem to plugin vendor:'
+    text: 'This plugin is not a production of Consulo. Please report the problem to plugin vendor:'
 error.http.result.code:
-  text: 'HTTP Result code: {0}'
+    text: 'HTTP Result code: {0}'
 error.itn.returns.wrong.data:
-  text: ITN returns wrong data
+    text: ITN returns wrong data
 error.list.back.action:
-  text: Back
+    text: Back
 error.list.clear.action:
-  text: _Clear And Close
+    text: _Clear And Close
 error.list.close.action:
-  text: C_lose
+    text: C_lose
 error.list.disable.plugin:
-  text: '&Disable plugin...'
+    text: '&Disable plugin...'
 error.list.disable.plugin.0:
-  text: Disable plugin {0}
+    text: Disable plugin {0}
 error.list.empty:
-  text: (no errors)
+    text: (no errors)
 error.list.forward.action:
-  text: Forward
+    text: Forward
 error.list.message.blame.core:
-  text: Exception in platform.
+    text: Exception in platform.
 error.list.message.blame.plugin:
-  text: Exception in plugin <b>{0}</b>.
+    text: Exception in plugin <b>{0}</b>.
 error.list.message.blame.unknown.plugin:
-  text: Exception in <b>unknown plugin</b>.
+    text: Exception in <b>unknown plugin</b>.
 error.list.message.duplicate:
-  text: '[Duplicate]'
+    text: '[Duplicate]'
 error.list.message.index.count:
-  text: '{0} of {1}'
+    text: '{0} of {1}'
 error.list.message.info:
-  text: '{0}. Occurred {1,choice,1#once|2#{1} times} since the last clear.'
+    text: '{0}. Occurred {1,choice,1#once|2#{1} times} since the last clear.'
 error.list.message.submission.failed:
-  text: Submission failed
+    text: Submission failed
 error.list.message.submitted:
-  text: Submitted
+    text: Submitted
 error.list.message.submitted.as.link:
-  text: Submitted as <a href="{0}">{1}</a>
+    text: Submitted as <a href="{0}">{1}</a>
 error.list.message.unread:
-  text: Unread.
+    text: Unread.
 error.list.of.plugins.was.not.loaded:
-  text: 'List of plugins was not loaded: {0}'
+    text: 'List of plugins was not loaded: {0}'
 error.list.popup.immediately.checkbox:
-  text: Popup this window immediately next time internal error occurs
+    text: Popup this window immediately next time internal error occurs
 error.list.restart.action:
-  text: R_estart
+    text: R_estart
 error.list.shutdown.action:
-  text: Shut_down
+    text: Shut_down
 error.list.submit.action:
-  text: Submit
+    text: Submit
 error.list.title:
-  text: IDE Fatal Errors
+    text: IDE Fatal Errors
 error.monitor.too.many.errors:
-  text: Too many IDE fatal errors. Monitoring stopped.
+    text: Too many IDE fatal errors. Monitoring stopped.
 error.new.notification.link:
-  text: See Details and Submit Report
+    text: See Details and Submit Report
 error.new.notification.title:
-  text: IDE Error Occurred
+    text: IDE Error Occurred
 error.notification.empty.text:
-  text: No IDE fatal errors
+    text: No IDE fatal errors
 error.notification.tooltip:
-  text: <html><body>IDE internal error occurred.<br>Click to see details and submit a bug report.</body></html>
+    text: <html><body>IDE internal error occurred.<br>Click to see details and submit a bug report.</body></html>
 error.plugin.download.failed:
-  text: Plugin download failed
+    text: Plugin download failed
 error.report.authentication.failed:
-  text: Consulo Account authentication failed. Do you want to try again?
+    text: Consulo Account authentication failed. Do you want to try again?
 error.report.exception.title:
-  text: Error Report
+    text: Error Report
 error.report.failure.message:
-  text: Error report sending failed.
+    text: Error report sending failed.
 error.report.gratitude:
-  text: Thank you for your feedback!
+    text: Thank you for your feedback!
 error.report.new.eap.build.message:
-  text: New build {0} is available.
+    text: New build {0} is available.
 error.report.posting.failed:
-  text: 'Report posting failed: {0}. Do you want to try again?'
+    text: 'Report posting failed: {0}. Do you want to try again?'
 error.report.sending.failure:
-  text: Sending failed. Do you want to try again?
+    text: Sending failed. Do you want to try again?
 error.report.title:
-  text: Error Report
+    text: Error Report
 error.report.to.consulo.action:
-  text: Send Report
+    text: Send Report
 error.report.update.required.message:
-  text: Error report rejected. Update required
+    text: Error report rejected. Update required
 log.console.filter.show.all:
-  text: all
+    text: all
 log.console.filter.show.errors:
-  text: errors
+    text: errors
 log.console.filter.show.errors.and.warnings:
-  text: warnings
+    text: warnings
 log.console.filter.show.errors.warnings.and.infos:
-  text: infos
+    text: infos
 log.monitor.add.button:
-  text: A&dd
+    text: A&dd
 log.monitor.edit.aliases.location:
-  text: '&Log File Location:'
+    text: '&Log File Location:'
 log.monitor.edit.aliases.name:
-  text: '&Alias:'
+    text: '&Alias:'
 log.monitor.edit.aliases.show.all.checkbox.title:
-  text: '&Show all files coverable by pattern'
+    text: '&Show all files coverable by pattern'
 log.monitor.edit.aliases.title:
-  text: Edit Log Files Aliases
+    text: Edit Log Files Aliases
 log.monitor.group:
-  text: Log files to be shown in console
+    text: Log files to be shown in console
 log.monitor.is.active.column:
-  text: Is Active
+    text: Is Active
 log.monitor.is.skipped.column:
-  text: Skip Content
+    text: Skip Content
 log.monitor.log.file.column:
-  text: Log File Entry
+    text: Log File Entry
 log.monitor.no.files:
-  text: No log files attached
+    text: No log files attached
 log.monitor.remove.button:
-  text: '&Remove'
+    text: '&Remove'
 message.idea.restart.required:
-  text: Restart {0} to activate changes in plugins?
+    text: Restart {0} to activate changes in plugins?
 message.idea.shutdown.required:
-  text: Shutdown {0} to activate changes in plugins?
+    text: Shutdown {0} to activate changes in plugins?
 plugin.advestiser.notification.install.link:
-  text: Install {0, choice, 1#plugin|2#plugins}
+    text: Install {0, choice, 1#plugin|2#plugins}
 plugin.advestiser.notification.install.plugin.link:
-  text: Install ''{0}''
+    text: Install ''{0}''
 plugin.advestiser.notification.text:
-  text: '{0, choice, 1#Plugin|2#Plugins} supporting current file are found'
+    text: '{0, choice, 1#Plugin|2#Plugins} supporting current file are found'
 plugin.info.unknown:
-  text: unknown
+    text: unknown
 plugin.install.dialog.title:
-  text: Plugin Install
+    text: Plugin Install
 plugin.manager.incompatible.deps.tooltip:
-  text: Required {0, choice, 1#plugin|2#plugins} {1} {0, choice, 1#is|2#are} not enabled
+    text: Required {0, choice, 1#plugin|2#plugins} {1} {0, choice, 1#is|2#are} not enabled
 plugin.manager.incompatible.not.loaded.tooltip:
-  text: The plugin was not loaded
+    text: The plugin was not loaded
 plugin.manager.wrong.platform.not.loaded.tooltip:
-  text: The plugin ''{0}'' was not loaded due wrong platform
+    text: The plugin ''{0}'' was not loaded due wrong platform
 plugin.status.not.specified:
-  text: (not specified)
+    text: (not specified)
 progress.connecting.to.plugin.manager:
-  text: Connecting to {0}
+    text: Connecting to {0}
 progress.download.plugins:
-  text: Downloading...
+    text: Downloading...
 progress.downloading.list.of.plugins:
-  text: Downloading List of Plugins
+    text: Downloading List of Plugins
 progress.downloading.platform:
-  text: Downloading platform
+    text: Downloading platform
 progress.downloading.plugin:
-  text: Downloading plugin ''{0}''
+    text: Downloading plugin ''{0}''
 progress.extracting.platform:
-  text: Extracting platform
+    text: Extracting platform
 progress.installing.plugins:
-  text: Installing plugins...
+    text: Installing plugins...
 prompt.download.and.install.plugin:
-  text: Would you like to download and install plugin ''{0}''?
+    text: Would you like to download and install plugin ''{0}''?
 prompt.install.several.plugins:
-  text: Install or update {0} plugins ?
+    text: Install or update {0} plugins ?
 prompt.uninstall.plugin:
-  text: Do you really want to uninstall plugin ''{0}''?
+    text: Do you really want to uninstall plugin ''{0}''?
 prompt.uninstall.several.plugins:
-  text: Do you really want to uninstall these {0} plugins ?
+    text: Do you really want to uninstall these {0} plugins ?
 prompt.update.plugin:
-  text: Would you like to update plugin ''{0}''?
+    text: Would you like to update plugin ''{0}''?
 several.plugins.depend.on.0.continue.to.remove:
-  text: Several plugins depend on {0}. Continue to remove?
+    text: Several plugins depend on {0}. Continue to remove?
 title.plugin.uninstall:
-  text: Plugin Uninstall
+    text: Plugin Uninstall
 title.plugins:
-  text: Platform and Plugins
+    text: Platform and Plugins
 title.plugins.changed:
-  text: Plugins Changed
+    text: Plugins Changed
 title.submitting.error.report:
-  text: Submitting Error Report
+    text: Submitting Error Report
 unknown.error:
-  text: Unknown error
+    text: Unknown error
 update.available:
-  text: Updates available
+    text: Updates available
 update.available.group:
-  text: Update Checker
+    text: Update Checker
 update.there.are.no.updates:
-  text: There are no updates
+    text: There are no updates
 update.view.updates:
-  text: View updates
+    text: View updates
 virus.scanning.dont.show.again:
-  text: Don't show again
+    text: Don't show again
 virus.scanning.dont.show.again.this.project:
-  text: Don't show again for this project
+    text: Don't show again for this project
 virus.scanning.fix.automatically:
-  text: Configure Automatically
+    text: Configure Automatically
 virus.scanning.fix.explanation:
-  text: <html>To improve performance, {0} can update your Windows Defender configuration to exclude your project directories from real-time scanning.<br>This will require running a command with administrator privileges.<br>Alternatively, you can configure Windows Defender manually, according to the <a href="{1}">instructions</a>.
+    text: <html>To improve performance, {0} can update your Windows Defender configuration to exclude your project directories from real-time scanning.<br>This will require running a command with administrator privileges.<br>Alternatively, you can configure Windows Defender manually, according to the <a href="{1}">instructions</a>.
 virus.scanning.fix.failed:
-  text: 'Failed to update Windows Defender configuration: {0}'
+    text: 'Failed to update Windows Defender configuration: {0}'
 virus.scanning.fix.manually:
-  text: Configure Manually
+    text: Configure Manually
 virus.scanning.fix.success.notification:
-  text: Windows Defender configuration updated
+    text: Windows Defender configuration updated
 virus.scanning.fix.title:
-  text: Configure Windows Defender
+    text: Configure Windows Defender
 virus.scanning.warn.message:
-  text: Windows Defender might be impacting your build and IDE performance. {0} checked the following directories:<br>{1}
+    text: Windows Defender might be impacting your build and IDE performance. {0} checked the following directories:<br>{1}
 whatsnew.action.custom.description:
-  text: Find out about the new features in this version of {0}
+    text: Find out about the new features in this version of {0}
 whatsnew.action.custom.text:
-  text: What''s _New in {0}
+    text: What''s _New in {0}
