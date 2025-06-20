@@ -19,38 +19,46 @@ import consulo.module.Module;
 import consulo.project.Project;
 
 public class LibrariesElement {
-  private final Module myModule;
-  private final Project myProject;
+    private final Module myModule;
+    private final Project myProject;
 
-  public LibrariesElement(final Module module, final Project project) {
-    myModule = module;
-    myProject = project;
-  }
+    public LibrariesElement(final Module module, final Project project) {
+        myModule = module;
+        myProject = project;
+    }
 
-  public Module getModule() {
-    return myModule;
-  }
+    public Module getModule() {
+        return myModule;
+    }
 
-  public Project getProject() {
-    return myProject;
-  }
+    public Project getProject() {
+        return myProject;
+    }
 
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof LibrariesElement)) return false;
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof LibrariesElement)) {
+            return false;
+        }
 
-    final LibrariesElement librariesElement = (LibrariesElement)o;
+        final LibrariesElement librariesElement = (LibrariesElement) o;
 
-    if (myModule != null ? !myModule.equals(librariesElement.myModule) : librariesElement.myModule != null) return false;
-    if (!myProject.equals(librariesElement.myProject)) return false;
+        if (myModule != null ? !myModule.equals(librariesElement.myModule) : librariesElement.myModule != null) {
+            return false;
+        }
+        if (!myProject.equals(librariesElement.myProject)) {
+            return false;
+        }
 
-    return true;
-  }
+        return true;
+    }
 
-  public int hashCode() {
-    int result;
-    result = (myModule != null ? myModule.hashCode() : 0);
-    result = 29 * result + myProject.hashCode();
-    return result;
-  }
+    public int hashCode() {
+        int result;
+        result = (myModule != null ? myModule.hashCode() : 0);
+        result = 29 * result + myProject.hashCode();
+        return result;
+    }
 }

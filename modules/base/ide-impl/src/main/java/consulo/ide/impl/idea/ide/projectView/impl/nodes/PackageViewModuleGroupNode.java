@@ -26,21 +26,21 @@ import consulo.project.Project;
  * Date: Feb 22, 2005
  */
 public class PackageViewModuleGroupNode extends ModuleGroupNode {
-  public PackageViewModuleGroupNode(final Project project, final Object value, final ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
+    public PackageViewModuleGroupNode(final Project project, final Object value, final ViewSettings viewSettings) {
+        super(project, value, viewSettings);
+    }
 
-  public PackageViewModuleGroupNode(final Project project, final ModuleGroup value, final ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
+    public PackageViewModuleGroupNode(final Project project, final ModuleGroup value, final ViewSettings viewSettings) {
+        super(project, value, viewSettings);
+    }
 
-  @Override
-  protected AbstractTreeNode createModuleNode(Module module) {
-    return new PackageViewModuleNode(module.getProject(), module, getSettings());
-  }
+    @Override
+    protected AbstractTreeNode createModuleNode(Module module) {
+        return new PackageViewModuleNode(module.getProject(), module, getSettings());
+    }
 
-  @Override
-  protected ModuleGroupNode createModuleGroupNode(ModuleGroup moduleGroup) {
-    return new PackageViewModuleGroupNode(getProject(), moduleGroup, getSettings());
-  }
+    @Override
+    protected ModuleGroupNode createModuleGroupNode(ModuleGroup moduleGroup) {
+        return new PackageViewModuleGroupNode(getProject(), moduleGroup, getSettings());
+    }
 }

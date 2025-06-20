@@ -31,56 +31,59 @@ import consulo.language.psi.PsiManager;
 import consulo.annotation.access.RequiredReadAction;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class ProjectViewModuleNode extends AbstractModuleNode {
-  public ProjectViewModuleNode(Project project, Module value, ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
-
-  @Override
-  @Nonnull
-  @RequiredReadAction
-  public Collection<AbstractTreeNode> getChildren() {
-    Module module = getValue();
-    if (module == null || module.isDisposed()) {
-      return Collections.emptyList();
+    public ProjectViewModuleNode(Project project, Module value, ViewSettings viewSettings) {
+        super(project, value, viewSettings);
     }
-    ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-    ModuleFileIndex moduleFileIndex = rootManager.getFileIndex();
 
-    final VirtualFile[] contentRoots = rootManager.getContentRoots();
-    final List<AbstractTreeNode> children = new ArrayList<>(contentRoots.length + 1);
-    final PsiManager psiManager = PsiManager.getInstance(module.getProject());
-    for (final VirtualFile contentRoot : contentRoots) {
-      if (!moduleFileIndex.isInContent(contentRoot)) continue;
+    @Override
+    @Nonnull
+    @RequiredReadAction
+    public Collection<AbstractTreeNode> getChildren() {
+        Module module = getValue();
+        if (module == null || module.isDisposed()) {
+            return Collections.emptyList();
+        }
+        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+        ModuleFileIndex moduleFileIndex = rootManager.getFileIndex();
 
-      if (contentRoot.isDirectory()) {
-        PsiDirectory directory = psiManager.findDirectory(contentRoot);
-        if(directory != null) {
-          children.add(new PsiDirectoryNode(getProject(), directory, getSettings()));
+        final VirtualFile[] contentRoots = rootManager.getContentRoots();
+        final List<AbstractTreeNode> children = new ArrayList<>(contentRoots.length + 1);
+        final PsiManager psiManager = PsiManager.getInstance(module.getProject());
+        for (final VirtualFile contentRoot : contentRoots) {
+            if (!moduleFileIndex.isInContent(contentRoot)) {
+                continue;
+            }
+
+            if (contentRoot.isDirectory()) {
+                PsiDirectory directory = psiManager.findDirectory(contentRoot);
+                if (directory != null) {
+                    children.add(new PsiDirectoryNode(getProject(), directory, getSettings()));
+                }
+            }
+            else {
+                PsiFile file = psiManager.findFile(contentRoot);
+                if (file != null) {
+                    children.add(new PsiFileNode(getProject(), file, getSettings()));
+                }
+            }
         }
-      }
-      else {
-        PsiFile file = psiManager.findFile(contentRoot);
-        if(file != null) {
-          children.add(new PsiFileNode(getProject(), file, getSettings()));
-        }
-      }
+        return children;
     }
-    return children;
-  }
 
-  @Override
-  public int getWeight() {
-    return 10;
-  }
+    @Override
+    public int getWeight() {
+        return 10;
+    }
 
-  @Override
-  public int getTypeSortWeight(final boolean sortByType) {
-    return 2;
-  }
+    @Override
+    public int getTypeSortWeight(final boolean sortByType) {
+        return 2;
+    }
 }

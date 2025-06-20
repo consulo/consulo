@@ -30,67 +30,68 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
-  private static final Logger LOG = Logger.getInstance(AbstractProjectNode.class);
+    private static final Logger LOG = Logger.getInstance(AbstractProjectNode.class);
 
-  protected AbstractProjectNode(Project project, Project value, ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
+    protected AbstractProjectNode(Project project, Project value, ViewSettings viewSettings) {
+        super(project, value, viewSettings);
+    }
 
-  protected Collection<AbstractTreeNode> modulesAndGroups(Module[] modules) {
-    Map<String, List<Module>> groups = new HashMap<>();
-    List<Module> nonGroupedModules = new ArrayList<>(Arrays.asList(modules));
-    for (final Module module : modules) {
-      final String[] path = ModuleManager.getInstance(getProject()).getModuleGroupPath(module);
-      if (path != null) {
-        final String topLevelGroupName = path[0];
-        List<Module> moduleList = groups.get(topLevelGroupName);
-        if (moduleList == null) {
-          moduleList = new ArrayList<>();
-          groups.put(topLevelGroupName, moduleList);
+    protected Collection<AbstractTreeNode> modulesAndGroups(Module[] modules) {
+        Map<String, List<Module>> groups = new HashMap<>();
+        List<Module> nonGroupedModules = new ArrayList<>(Arrays.asList(modules));
+        for (final Module module : modules) {
+            final String[] path = ModuleManager.getInstance(getProject()).getModuleGroupPath(module);
+            if (path != null) {
+                final String topLevelGroupName = path[0];
+                List<Module> moduleList = groups.get(topLevelGroupName);
+                if (moduleList == null) {
+                    moduleList = new ArrayList<>();
+                    groups.put(topLevelGroupName, moduleList);
+                }
+                moduleList.add(module);
+                nonGroupedModules.remove(module);
+            }
         }
-        moduleList.add(module);
-        nonGroupedModules.remove(module);
-      }
+        List<AbstractTreeNode> result = new ArrayList<>();
+        try {
+            for (String groupPath : groups.keySet()) {
+                result.add(createModuleGroupNode(new ModuleGroup(new String[]{groupPath})));
+            }
+            for (Module module : nonGroupedModules) {
+                result.add(createModuleGroup(module));
+            }
+        }
+        catch (ProcessCanceledException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            LOG.error(e);
+            return new ArrayList<>();
+        }
+        return result;
     }
-    List<AbstractTreeNode> result = new ArrayList<>();
-    try {
-      for (String groupPath : groups.keySet()) {
-        result.add(createModuleGroupNode(new ModuleGroup(new String[]{groupPath})));
-      }
-      for (Module module : nonGroupedModules) {
-        result.add(createModuleGroup(module));
-      }
+
+    protected abstract AbstractTreeNode createModuleGroup(final Module module);
+
+    protected abstract AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup);
+
+    @Override
+    public void update(PresentationData presentation) {
+        presentation.setIcon(Application.get().getIcon());
+        presentation.setPresentableText(getProject().getName());
     }
-    catch (ProcessCanceledException e) {
-      throw e;
+
+    @Override
+    public String getTestPresentation() {
+        return "Project";
     }
-    catch (Exception e) {
-      LOG.error(e);
-      return new ArrayList<>();
+
+    @Override
+    public boolean contains(@Nonnull VirtualFile file) {
+        return ProjectViewPaneImpl.canBeSelectedInProjectView(getProject(), file);
     }
-    return result;
-  }
-
-  protected abstract AbstractTreeNode createModuleGroup(final Module module);
-
-  protected abstract AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup);
-
-  @Override
-  public void update(PresentationData presentation) {
-    presentation.setIcon(Application.get().getIcon());
-    presentation.setPresentableText(getProject().getName());
-  }
-
-  @Override
-  public String getTestPresentation() {
-    return "Project";
-  }
-
-  @Override
-  public boolean contains(@Nonnull VirtualFile file) {
-    return ProjectViewPaneImpl.canBeSelectedInProjectView(getProject(), file);
-  }
 }

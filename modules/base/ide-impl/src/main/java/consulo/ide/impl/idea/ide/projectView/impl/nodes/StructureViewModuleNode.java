@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
@@ -31,48 +30,48 @@ import java.util.Collections;
 import java.util.List;
 
 public class StructureViewModuleNode extends AbstractModuleNode {
-  public StructureViewModuleNode(Project project, Module value, ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public Collection<AbstractTreeNode> getChildren() {
-    final Module module = getValue();
-    if (module == null) {
-      // just deleted a module from project view
-      return Collections.emptyList();
+    public StructureViewModuleNode(Project project, Module value, ViewSettings viewSettings) {
+        super(project, value, viewSettings);
     }
-    final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>(2);
-    children.add(new LibraryGroupNode(getProject(), new LibraryGroupElement(module), getSettings()) {
-      @Override
-      public boolean isAlwaysExpand() {
+
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public Collection<AbstractTreeNode> getChildren() {
+        final Module module = getValue();
+        if (module == null) {
+            // just deleted a module from project view
+            return Collections.emptyList();
+        }
+        final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>(2);
+        children.add(new LibraryGroupNode(getProject(), new LibraryGroupElement(module), getSettings()) {
+            @Override
+            public boolean isAlwaysExpand() {
+                return true;
+            }
+        });
+
+        children.add(new ModuleListNode(getProject(), module, getSettings()));
+        return children;
+    }
+
+    @Override
+    public int getWeight() {
+        return 10;
+    }
+
+    @Override
+    public int getTypeSortWeight(final boolean sortByType) {
+        return 2;
+    }
+
+    @Override
+    public boolean contains(@Nonnull VirtualFile file) {
+        return false;
+    }
+
+    @Override
+    public boolean someChildContainsFile(VirtualFile file) {
         return true;
-      }
-    });
-
-    children.add(new ModuleListNode(getProject(), module, getSettings()));
-    return children;
-  }
-
-  @Override
-  public int getWeight() {
-    return 10;
-  }
-
-  @Override
-  public int getTypeSortWeight(final boolean sortByType) {
-    return 2;
-  }
-
-  @Override
-  public boolean contains(@Nonnull VirtualFile file) {
-    return false;
-  }
-
-  @Override
-  public boolean someChildContainsFile(VirtualFile file) {
-    return true;
-  }
+    }
 }

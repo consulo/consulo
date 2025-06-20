@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -33,50 +32,49 @@ import java.util.Collection;
 import java.util.List;
 
 public class ModuleListNode extends ProjectViewNode<Module> {
-
-  public ModuleListNode(Project project, Module value, ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public Collection<AbstractTreeNode> getChildren() {
-    Module module = getValue();
-
-    final Module[] deps = ModuleRootManager.getInstance(module).getDependencies(true);
-    final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-    for (Module dependency : deps) {
-      children.add(new ProjectViewModuleNode(myProject, dependency, getSettings()) {
-        @Override
-        protected boolean showModuleNameInBold() {
-          return false;
-        }
-      });
+    public ModuleListNode(Project project, Module value, ViewSettings viewSettings) {
+        super(project, value, viewSettings);
     }
 
-    return children;
-  }
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public Collection<AbstractTreeNode> getChildren() {
+        Module module = getValue();
+
+        final Module[] deps = ModuleRootManager.getInstance(module).getDependencies(true);
+        final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
+        for (Module dependency : deps) {
+            children.add(new ProjectViewModuleNode(myProject, dependency, getSettings()) {
+                @Override
+                protected boolean showModuleNameInBold() {
+                    return false;
+                }
+            });
+        }
+
+        return children;
+    }
 
 
-  @Override
-  public String getTestPresentation() {
-    return "Modules";
-  }
+    @Override
+    public String getTestPresentation() {
+        return "Modules";
+    }
 
-  @Override
-  public boolean contains(@Nonnull VirtualFile file) {
-    return someChildContainsFile(file);
-  }
+    @Override
+    public boolean contains(@Nonnull VirtualFile file) {
+        return someChildContainsFile(file);
+    }
 
-  @Override
-  public void update(PresentationData presentation) {
-    presentation.setPresentableText("Module Dependencies");
-    presentation.setIcon(AllIcons.Nodes.ModuleGroup);
-  }
+    @Override
+    public void update(PresentationData presentation) {
+        presentation.setPresentableText("Module Dependencies");
+        presentation.setIcon(AllIcons.Nodes.ModuleGroup);
+    }
 
-  @Override
-  public boolean isAlwaysExpand() {
-    return true;
-  }
+    @Override
+    public boolean isAlwaysExpand() {
+        return true;
+    }
 }

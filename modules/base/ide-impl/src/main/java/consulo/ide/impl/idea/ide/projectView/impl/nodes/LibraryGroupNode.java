@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -53,7 +52,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
-
     public LibraryGroupNode(Project project, LibraryGroupElement value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
@@ -82,7 +80,11 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
                     addLibraryChildren(libraryOrderEntry, children, getProject(), this);
                 }
                 else {
-                    children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(module, libraryOrderEntry), getSettings()));
+                    children.add(new NamedLibraryElementNode(
+                        getProject(),
+                        new NamedLibraryElement(module, libraryOrderEntry),
+                        getSettings()
+                    ));
                 }
             }
             else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
@@ -96,10 +98,16 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         return children;
     }
 
-    public static void addLibraryChildren(final OrderEntry entry, final List<AbstractTreeNode> children, Project project, ProjectViewNode node) {
+    public static void addLibraryChildren(
+        final OrderEntry entry,
+        final List<AbstractTreeNode> children,
+        Project project,
+        ProjectViewNode node
+    ) {
         final PsiManager psiManager = PsiManager.getInstance(project);
-        VirtualFile[] files =
-            entry instanceof LibraryOrderEntry ? getLibraryRoots((LibraryOrderEntry) entry) : entry.getFiles(BinariesOrderRootType.getInstance());
+        VirtualFile[] files = entry instanceof LibraryOrderEntry
+            ? getLibraryRoots((LibraryOrderEntry) entry)
+            : entry.getFiles(BinariesOrderRootType.getInstance());
         for (final VirtualFile file : files) {
             if (!file.isValid()) {
                 continue;

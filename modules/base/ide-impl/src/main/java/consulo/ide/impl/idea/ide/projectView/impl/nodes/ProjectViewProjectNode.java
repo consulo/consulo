@@ -29,73 +29,75 @@ import consulo.language.psi.PsiManager;
 import consulo.annotation.access.RequiredReadAction;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 public class ProjectViewProjectNode extends AbstractProjectNode {
-
-  public ProjectViewProjectNode(Project project, ViewSettings viewSettings) {
-    super(project, project, viewSettings);
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public Collection<AbstractTreeNode> getChildren() {
-    List<VirtualFile> topLevelContentRoots = BaseProjectViewDirectoryHelper.getTopLevelRoots(myProject);
-
-    Set<Module> modules = new LinkedHashSet<>(topLevelContentRoots.size());
-
-    Project project = getProject();
-
-    for (VirtualFile root : topLevelContentRoots) {
-      final Module module = ModuleUtil.findModuleForFile(root, project);
-      if (module != null) { // Some people exclude module's content roots...
-        modules.add(module);
-      }
+    public ProjectViewProjectNode(Project project, ViewSettings viewSettings) {
+        super(project, project, viewSettings);
     }
 
-    ArrayList<AbstractTreeNode> nodes = new ArrayList<>();
-    final PsiManager psiManager = PsiManager.getInstance(project);
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public Collection<AbstractTreeNode> getChildren() {
+        List<VirtualFile> topLevelContentRoots = BaseProjectViewDirectoryHelper.getTopLevelRoots(myProject);
 
-    nodes.addAll(modulesAndGroups(modules.toArray(new Module[modules.size()])));
+        Set<Module> modules = new LinkedHashSet<>(topLevelContentRoots.size());
 
-    final VirtualFile baseDir = project.getBaseDir();
-    if (baseDir == null) return nodes;
+        Project project = getProject();
 
-    final VirtualFile[] files = baseDir.getChildren();
-    for (VirtualFile file : files) {
-      if (ModuleUtil.findModuleForFile(file, project) == null) {
-        if (!file.isDirectory()) {
-          PsiFile psiFile = psiManager.findFile(file);
-          if(psiFile != null) {
-            nodes.add(new PsiFileNode(project, psiFile, getSettings()));
-          }
+        for (VirtualFile root : topLevelContentRoots) {
+            final Module module = ModuleUtil.findModuleForFile(root, project);
+            if (module != null) { // Some people exclude module's content roots...
+                modules.add(module);
+            }
         }
-      }
+
+        ArrayList<AbstractTreeNode> nodes = new ArrayList<>();
+        final PsiManager psiManager = PsiManager.getInstance(project);
+
+        nodes.addAll(modulesAndGroups(modules.toArray(new Module[modules.size()])));
+
+        final VirtualFile baseDir = project.getBaseDir();
+        if (baseDir == null) {
+            return nodes;
+        }
+
+        final VirtualFile[] files = baseDir.getChildren();
+        for (VirtualFile file : files) {
+            if (ModuleUtil.findModuleForFile(file, project) == null) {
+                if (!file.isDirectory()) {
+                    PsiFile psiFile = psiManager.findFile(file);
+                    if (psiFile != null) {
+                        nodes.add(new PsiFileNode(project, psiFile, getSettings()));
+                    }
+                }
+            }
+        }
+
+        if (getSettings().isShowLibraryContents()) {
+            nodes.add(new ExternalLibrariesNode(project, getSettings()));
+        }
+
+        return nodes;
     }
 
-    if (getSettings().isShowLibraryContents()) {
-      nodes.add(new ExternalLibrariesNode(project, getSettings()));
+    @Override
+    protected AbstractTreeNode createModuleGroup(final Module module) {
+        final VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
+        if (roots.length == 1) {
+            final PsiDirectory psi = PsiManager.getInstance(myProject).findDirectory(roots[0]);
+            if (psi != null) {
+                return new PsiDirectoryNode(myProject, psi, getSettings());
+            }
+        }
+
+        return new ProjectViewModuleNode(getProject(), module, getSettings());
     }
 
-    return nodes;
-  }
-
-  @Override
-  protected AbstractTreeNode createModuleGroup(final Module module) {
-    final VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
-    if (roots.length == 1) {
-      final PsiDirectory psi = PsiManager.getInstance(myProject).findDirectory(roots[0]);
-      if (psi != null) {
-        return new PsiDirectoryNode(myProject, psi, getSettings());
-      }
+    @Override
+    protected AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup) {
+        return new ProjectViewModuleGroupNode(getProject(), moduleGroup, getSettings());
     }
-
-    return new ProjectViewModuleNode(getProject(), module, getSettings());
-  }
-
-  @Override
-  protected AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup) {
-    return new ProjectViewModuleGroupNode(getProject(), moduleGroup, getSettings());
-  }
 }
