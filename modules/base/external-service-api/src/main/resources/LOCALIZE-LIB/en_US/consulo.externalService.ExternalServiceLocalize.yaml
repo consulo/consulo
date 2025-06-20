@@ -1,9 +1,15 @@
 action.download.and.install.plugin:
     text: Download and Install
+action.restart.text:
+    text: Restart {0}
 action.uninstall.plugin:
     text: Uninstall
+action.update.platform.and.plugins.text:
+    text: Update {0} and Plugins
 action.update.plugin:
     text: Update Plugin
+action.update.plugins.text:
+    text: Update Plugins
 checksum.failed:
     text: Checksum mismatch. Try again later
 column.plugins.category:
@@ -33,7 +39,7 @@ diagnostic.error.report.login.password:
 diagnostic.error.report.send:
     text: '&Send'
 diagnostic.error.report.submit.error.anonymously:
-    text: <html>Submit report anonymously or use <a>JetBrains Account...</a></html>
+    text: <html>Submit report anonymously or use <a>Consulo Account...</a></html>
 diagnostic.error.report.submit.report.as:
     text: <html>Submit report as <a>{0}</a></html>
 diagnostic.out.of.memory.continue:
@@ -214,10 +220,14 @@ log.monitor.no.files:
     text: No log files attached
 log.monitor.remove.button:
     text: '&Remove'
+message.idea.few.plugins.will.be.not.updated:
+    text: Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?
 message.idea.restart.required:
     text: Restart {0} to activate changes in plugins?
 message.idea.shutdown.required:
     text: Shutdown {0} to activate changes in plugins?
+notification.group.platform.or.plugins.update.display.name:
+    text: Platform Or Plugins Update
 plugin.advestiser.notification.install.link:
     text: Install {0, choice, 1#plugin|2#plugins}
 plugin.advestiser.notification.install.plugin.link:
@@ -236,6 +246,8 @@ plugin.manager.wrong.platform.not.loaded.tooltip:
     text: The plugin ''{0}'' was not loaded due wrong platform
 plugin.status.not.specified:
     text: (not specified)
+plugin.following.will.be.downloaded.label:
+    text: Following nodes will be downloaded & installed
 progress.connecting.to.plugin.manager:
     text: Connecting to {0}
 progress.download.plugins:
@@ -260,6 +272,14 @@ prompt.uninstall.several.plugins:
     text: Do you really want to uninstall these {0} plugins ?
 prompt.update.plugin:
     text: Would you like to update plugin ''{0}''?
+settings.update.channel.label:
+    text: Channel
+settings.update.display.name:
+    text: Update Settings
+settings.update.enable.updates.label:
+    text: Updates enabled
+settings.update.group.repository.settings.label:
+    text: Repository settings
 several.plugins.depend.on.0.continue.to.remove:
     text: Several plugins depend on {0}. Continue to remove?
 title.plugin.uninstall:
@@ -276,6 +296,8 @@ update.available:
     text: Updates available
 update.available.group:
     text: Update Checker
+update.checking:
+    text: Checking for updates
 update.there.are.no.updates:
     text: There are no updates
 update.view.updates:

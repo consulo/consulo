@@ -20,10 +20,10 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 23/05/2023
+ * @since 2023-05-23
  */
 @FunctionalInterface
 public interface PluginDownloadUrlBuilder {
-  @Nonnull
-  String buildUrl(PluginDescriptor descriptor, int tryIndex);
+    @Nonnull
+    String buildUrl(PluginDescriptor descriptor, int tryIndex);
 }

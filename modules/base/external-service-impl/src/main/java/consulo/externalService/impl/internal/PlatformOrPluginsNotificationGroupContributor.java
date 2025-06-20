@@ -39,6 +39,6 @@ public class PlatformOrPluginsNotificationGroupContributor implements Notificati
     @Override
     public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
         registrator.accept(ourPluginsLifecycleGroup);
-        registrator.accept(PlatformOrPluginUpdateChecker.ourGroup);
+        registrator.accept(PlatformOrPluginUpdateChecker.NOTIFICATION_GROUP);
     }
 }

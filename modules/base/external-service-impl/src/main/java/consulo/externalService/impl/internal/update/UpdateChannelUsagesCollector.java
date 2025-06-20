@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -20,23 +21,23 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class UpdateChannelUsagesCollector extends UsagesCollector {
-  private final UpdateSettings myUpdateSettings;
+    private final UpdateSettings myUpdateSettings;
 
-  @Inject
-  public UpdateChannelUsagesCollector(UpdateSettings updateSettings) {
-    myUpdateSettings = updateSettings;
-  }
+    @Inject
+    public UpdateChannelUsagesCollector(UpdateSettings updateSettings) {
+        myUpdateSettings = updateSettings;
+    }
 
-  @Nonnull
-  @Override
-  public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
-    UpdateChannel channel = myUpdateSettings.getChannel();
-    return Collections.singleton(new UsageDescriptor(channel.name(), 1));
-  }
+    @Nonnull
+    @Override
+    public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
+        UpdateChannel channel = myUpdateSettings.getChannel();
+        return Collections.singleton(new UsageDescriptor(channel.name(), 1));
+    }
 
-  @Nonnull
-  @Override
-  public String getGroupId() {
-    return "consulo.platform.base:update.channel";
-  }
+    @Nonnull
+    @Override
+    public String getGroupId() {
+        return "consulo.platform.base:update.channel";
+    }
 }

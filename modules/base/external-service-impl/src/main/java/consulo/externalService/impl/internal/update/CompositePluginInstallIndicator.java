@@ -20,7 +20,7 @@ import consulo.application.progress.ProgressIndicator;
 
 /**
  * @author VISTALL
- * @since 30-Jun-24
+ * @since 2024-06-30
  */
 public class CompositePluginInstallIndicator extends DelegatingProgressIndicator {
   private final int myCurrentIndex;

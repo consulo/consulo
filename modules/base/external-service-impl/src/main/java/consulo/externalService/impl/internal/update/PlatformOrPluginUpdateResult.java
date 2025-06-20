@@ -23,12 +23,15 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 10-Oct-16
+ * @since 2016-10-10
  */
 public class PlatformOrPluginUpdateResult {
-    public static PlatformOrPluginUpdateResult CANCELED = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.CANCELED, Collections.emptyList());
-    public static PlatformOrPluginUpdateResult NO_UPDATE = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.NO_UPDATE, Collections.emptyList());
-    public static PlatformOrPluginUpdateResult RESTART_REQUIRED = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED, Collections.emptyList());
+    public static PlatformOrPluginUpdateResult CANCELED =
+        new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.CANCELED, Collections.emptyList());
+    public static PlatformOrPluginUpdateResult NO_UPDATE =
+        new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.NO_UPDATE, Collections.emptyList());
+    public static PlatformOrPluginUpdateResult RESTART_REQUIRED =
+        new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED, Collections.emptyList());
 
     private final PlatformOrPluginUpdateResultType myType;
     private final List<PlatformOrPluginNode> myPlugins;

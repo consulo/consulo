@@ -39,38 +39,38 @@ import java.util.concurrent.TimeUnit;
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class UpdateCheckerComponent implements Disposable {
-  private static final long ourCheckInterval = DateFormatUtil.DAY;
+    private static final long ourCheckInterval = DateFormatUtil.DAY;
 
-  private final UpdateSettingsEx myUpdateSettings;
-  private final Runnable myCheckRunnable;
+    private final UpdateSettingsEx myUpdateSettings;
+    private final Runnable myCheckRunnable;
 
-  private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
+    private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
 
-  @Inject
-  public UpdateCheckerComponent(@Nonnull UpdateSettings updateSettings) {
-    myUpdateSettings = (UpdateSettingsEx)updateSettings;
+    @Inject
+    public UpdateCheckerComponent(@Nonnull UpdateSettings updateSettings) {
+        myUpdateSettings = (UpdateSettingsEx) updateSettings;
 
-    myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult().doWhenDone(() -> {
-      myUpdateSettings.setLastTimeCheck(System.currentTimeMillis());
-      queueNextUpdateCheck(ourCheckInterval);
-    });
+        myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult().doWhenDone(() -> {
+            myUpdateSettings.setLastTimeCheck(System.currentTimeMillis());
+            queueNextUpdateCheck(ourCheckInterval);
+        });
 
-    final long interval = myUpdateSettings.getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
-    queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
+        long interval = myUpdateSettings.getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
+        queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
 
-    // reset on restart
-    PlatformOrPluginUpdateResultType lastCheckResult = myUpdateSettings.getLastCheckResult();
-    if(lastCheckResult == PlatformOrPluginUpdateResultType.RESTART_REQUIRED) {
-      myUpdateSettings.setLastCheckResult(PlatformOrPluginUpdateResultType.NO_UPDATE);
+        // reset on restart
+        PlatformOrPluginUpdateResultType lastCheckResult = myUpdateSettings.getLastCheckResult();
+        if (lastCheckResult == PlatformOrPluginUpdateResultType.RESTART_REQUIRED) {
+            myUpdateSettings.setLastCheckResult(PlatformOrPluginUpdateResultType.NO_UPDATE);
+        }
     }
-  }
 
-  private void queueNextUpdateCheck(long interval) {
-    myCheckFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(myCheckRunnable, interval, TimeUnit.MILLISECONDS);
-  }
+    private void queueNextUpdateCheck(long interval) {
+        myCheckFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule(myCheckRunnable, interval, TimeUnit.MILLISECONDS);
+    }
 
-  @Override
-  public void dispose() {
-    myCheckFuture.cancel(false);
-  }
+    @Override
+    public void dispose() {
+        myCheckFuture.cancel(false);
+    }
 }

@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -35,71 +36,81 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 01/04/2021
+ * @since 2021-04-01
  */
 @ExtensionImpl
 public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPointActionProvider {
-  private static class IconifiedCheckForUpdateAction extends CheckForUpdateAction {
-    private final boolean myIsPlatform;
+    private static class IconifiedCheckForUpdateAction extends CheckForUpdateAction {
+        private final boolean myIsPlatform;
 
-    public IconifiedCheckForUpdateAction(Provider<UpdateSettings> updateSettingsProvider, boolean isPlatform) {
-      super(updateSettingsProvider);
-      getTemplatePresentation().setTextValue(isPlatform ? LocalizeValue.localizeTODO("Update " + Application.get().getName() + " and Plugins") : LocalizeValue.localizeTODO("Update Plugins"));
-      myIsPlatform = isPlatform;
+        public IconifiedCheckForUpdateAction(Provider<UpdateSettings> updateSettingsProvider, boolean isPlatform) {
+            super(updateSettingsProvider);
+            getTemplatePresentation().setTextValue(
+                isPlatform
+                    ? ExternalServiceLocalize.actionUpdatePlatformAndPluginsText(Application.get().getName())
+                    : ExternalServiceLocalize.actionUpdatePluginsText()
+            );
+            myIsPlatform = isPlatform;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+            Presentation presentation = e.getPresentation();
+
+            presentation.setEnabledAndVisible(true);
+            presentation.setDisabledMnemonic(true);
+            presentation.setIcon(myIsPlatform ? PlatformIconGroup.ideNotificationIdeupdate() : PlatformIconGroup.ideNotificationPluginupdate());
+        }
     }
 
-    @RequiredUIAccess
+    private static class RestartConsuloAction extends DumbAwareAction {
+        private final UpdateSettings myUpdateSettings;
+
+        private RestartConsuloAction(UpdateSettings updateSettings) {
+            super(
+                ExternalServiceLocalize.actionRestartText(Application.get().getName()),
+                LocalizeValue.empty(),
+                PlatformIconGroup.ideNotificationRestartrequiredupdate()
+            );
+            myUpdateSettings = updateSettings;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            Application application = Application.get();
+            application.restart();
+            ((UpdateSettingsEx) myUpdateSettings).setLastCheckResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED);
+        }
+    }
+
+    private final Provider<ActionManager> myActionManagerProvider;
+    private final Provider<UpdateSettings> myUpdateSettingsProvider;
+
+    @Inject
+    public UpdateSettingsEntryPointActionProvider(
+        Provider<ActionManager> actionManagerProvider,
+        Provider<UpdateSettings> updateSettingsProvider
+    ) {
+        myActionManagerProvider = actionManagerProvider;
+        myUpdateSettingsProvider = updateSettingsProvider;
+    }
+
+    @Nonnull
     @Override
-    public void update(@Nonnull AnActionEvent e) {
-      Presentation presentation = e.getPresentation();
+    public Collection<AnAction> getUpdateActions(@Nonnull DataContext context) {
+        UpdateSettings updateSettings = myUpdateSettingsProvider.get();
 
-      presentation.setEnabledAndVisible(true);
-      presentation.setDisabledMnemonic(true);
-      presentation.setIcon(myIsPlatform ? PlatformIconGroup.ideNotificationIdeupdate() : PlatformIconGroup.ideNotificationPluginupdate());
+        PlatformOrPluginUpdateResultType type = ((UpdateSettingsEx) updateSettings).getLastCheckResult();
+        return switch (type) {
+            case NO_UPDATE -> List.of(myActionManagerProvider.get().getAction("CheckForUpdate"));
+            case RESTART_REQUIRED -> List.<AnAction>of(new RestartConsuloAction(updateSettings));
+            case PLATFORM_UPDATE, PLUGIN_UPDATE -> List.<AnAction>of(new IconifiedCheckForUpdateAction(
+                myUpdateSettingsProvider,
+                type == PlatformOrPluginUpdateResultType.PLATFORM_UPDATE
+            ));
+            default -> List.<AnAction>of();
+        };
     }
-  }
-
-  private static class RestartConsuloAction extends DumbAwareAction {
-    private final UpdateSettings myUpdateSettings;
-
-    private RestartConsuloAction(UpdateSettings updateSettings) {
-      super(LocalizeValue.localizeTODO("Restart " + Application.get().getName()), LocalizeValue.empty(), PlatformIconGroup.ideNotificationRestartrequiredupdate());
-      myUpdateSettings = updateSettings;
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      Application application = Application.get();
-      application.restart();
-      ((UpdateSettingsEx)myUpdateSettings).setLastCheckResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED);
-    }
-  }
-
-  private final Provider<ActionManager> myActionManagerProvider;
-  private final Provider<UpdateSettings> myUpdateSettingsProvider;
-
-  @Inject
-  public UpdateSettingsEntryPointActionProvider(Provider<ActionManager> actionManagerProvider, Provider<UpdateSettings> updateSettingsProvider) {
-    myActionManagerProvider = actionManagerProvider;
-    myUpdateSettingsProvider = updateSettingsProvider;
-  }
-
-  @Nonnull
-  @Override
-  public Collection<AnAction> getUpdateActions(@Nonnull DataContext context) {
-    UpdateSettings updateSettings = myUpdateSettingsProvider.get();
-
-    PlatformOrPluginUpdateResultType type = ((UpdateSettingsEx)updateSettings).getLastCheckResult();
-    switch (type) {
-      case NO_UPDATE:
-        return List.of(myActionManagerProvider.get().getAction("CheckForUpdate"));
-      case RESTART_REQUIRED:
-        return List.of(new RestartConsuloAction(updateSettings));
-      case PLATFORM_UPDATE:
-      case PLUGIN_UPDATE:
-        return List.of(new IconifiedCheckForUpdateAction(myUpdateSettingsProvider, type == PlatformOrPluginUpdateResultType.PLATFORM_UPDATE));
-    }
-    return List.of();
-  }
 }

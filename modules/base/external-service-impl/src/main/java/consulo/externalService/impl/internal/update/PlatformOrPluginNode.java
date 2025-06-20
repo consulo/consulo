@@ -11,35 +11,39 @@ import jakarta.annotation.Nullable;
  * @since 2018-07-08
  */
 public class PlatformOrPluginNode {
-  @Nonnull
-  private final PluginId myPluginId;
-  @Nullable
-  private final PluginDescriptor myCurrentDescriptor;
-  @Nullable
-  private final PluginDescriptor myFutureDescriptor;
+    @Nonnull
+    private final PluginId myPluginId;
+    @Nullable
+    private final PluginDescriptor myCurrentDescriptor;
+    @Nullable
+    private final PluginDescriptor myFutureDescriptor;
 
-  public PlatformOrPluginNode(@Nonnull PluginId pluginId, @Nullable PluginDescriptor currentDescriptor, @Nullable PluginDescriptor futureDescriptor) {
-    myPluginId = pluginId;
-    myCurrentDescriptor = currentDescriptor;
-    myFutureDescriptor = futureDescriptor;
+    public PlatformOrPluginNode(
+        @Nonnull PluginId pluginId,
+        @Nullable PluginDescriptor currentDescriptor,
+        @Nullable PluginDescriptor futureDescriptor
+    ) {
+        myPluginId = pluginId;
+        myCurrentDescriptor = currentDescriptor;
+        myFutureDescriptor = futureDescriptor;
 
-    if(myCurrentDescriptor == null && myFutureDescriptor == null) {
-      throw new IllegalArgumentException("Current or future descriptor must be set");
+        if (myCurrentDescriptor == null && myFutureDescriptor == null) {
+            throw new IllegalArgumentException("Current or future descriptor must be set");
+        }
     }
-  }
 
-  @Nonnull
-  public PluginId getPluginId() {
-    return myPluginId;
-  }
+    @Nonnull
+    public PluginId getPluginId() {
+        return myPluginId;
+    }
 
-  @Nullable
-  public PluginDescriptor getCurrentDescriptor() {
-    return myCurrentDescriptor;
-  }
+    @Nullable
+    public PluginDescriptor getCurrentDescriptor() {
+        return myCurrentDescriptor;
+    }
 
-  @Nullable
-  public PluginDescriptor getFutureDescriptor() {
-    return myFutureDescriptor;
-  }
+    @Nullable
+    public PluginDescriptor getFutureDescriptor() {
+        return myFutureDescriptor;
+    }
 }
