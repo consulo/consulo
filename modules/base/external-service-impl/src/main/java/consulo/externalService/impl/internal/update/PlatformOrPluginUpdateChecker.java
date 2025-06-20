@@ -57,13 +57,17 @@ import java.util.*;
 
 /**
  * @author VISTALL
- * @since 10-Oct-16
+ * @since 2016-10-10
  */
 public class PlatformOrPluginUpdateChecker {
     private static final Logger LOG = Logger.getInstance(PlatformOrPluginUpdateChecker.class);
 
-    public static final NotificationGroup ourGroup =
-        new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
+    public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup(
+        "platformOrPluginsUpdate",
+        ExternalServiceLocalize.notificationGroupPlatformOrPluginsUpdateDisplayName(),
+        NotificationDisplayType.STICKY_BALLOON,
+        false
+    );
 
     private static final String ourForceJREBuild = "force.jre.build.on.update";
     private static final String ourForceJREBuildVersion = "force.jre.build.on.update.version";
@@ -110,18 +114,18 @@ public class PlatformOrPluginUpdateChecker {
             return false;
         }
 
-        final long timeDelta = System.currentTimeMillis() - updateSettings.getLastTimeCheck();
+        long timeDelta = System.currentTimeMillis() - updateSettings.getLastTimeCheck();
         return Math.abs(timeDelta) >= DateFormatUtil.DAY;
     }
 
     @Nonnull
     public static AsyncResult<PlatformOrPluginUpdateResultType> updateAndShowResult() {
-        final AsyncResult<PlatformOrPluginUpdateResultType> result = AsyncResult.undefined();
-        final Application app = Application.get();
+        AsyncResult<PlatformOrPluginUpdateResultType> result = AsyncResult.undefined();
+        Application app = Application.get();
 
         UIAccess lastUIAccess = app.getLastUIAccess();
 
-        final UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
+        UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
         if (updateSettings.isEnable()) {
             app.executeOnPooledThread(() -> checkAndNotifyForUpdates(null, false, null, lastUIAccess, result));
         }
@@ -140,7 +144,8 @@ public class PlatformOrPluginUpdateChecker {
             uiAccess.give(() -> {
                 LocalizeValue className = LocalizeValue.of(e.getClass().getSimpleName());
                 LocalizeValue message = LocalizeValue.of(e.getLocalizedMessage());
-                Alert<Object> alert = Alerts.okError(LocalizeValue.join(className, LocalizeValue.colon(), LocalizeValue.space(), message));
+                Alert<Object> alert =
+                    Alerts.okError(LocalizeValue.join(className, LocalizeValue.colon(), LocalizeValue.space(), message));
                 if (project != null) {
                     alert.showAsync(project);
                 }
@@ -152,17 +157,21 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     @RequiredUIAccess
-    private static void showUpdateResult(@Nullable Project project,
-                                         final PlatformOrPluginUpdateResult targetsForUpdate,
-                                         final boolean showResults) {
+    private static void showUpdateResult(
+        @Nullable Project project,
+        final PlatformOrPluginUpdateResult targetsForUpdate,
+        boolean showResults
+    ) {
         PlatformOrPluginUpdateResultType type = targetsForUpdate.getType();
         switch (type) {
             case NO_UPDATE:
                 if (showResults) {
-                    ourGroup.createNotification(ExternalServiceLocalize.updateAvailableGroup().get(),
+                    NOTIFICATION_GROUP.createNotification(
+                        ExternalServiceLocalize.updateAvailableGroup().get(),
                         ExternalServiceLocalize.updateThereAreNoUpdates().get(),
                         NotificationType.INFORMATION,
-                        null).notify(project);
+                        null
+                    ).notify(project);
                 }
                 break;
             case RESTART_REQUIRED:
@@ -174,10 +183,12 @@ public class PlatformOrPluginUpdateChecker {
                     new PlatformOrPluginDialog(project, targetsForUpdate, null, null, false).showAsync();
                 }
                 else {
-                    Notification notification = ourGroup.createNotification(ExternalServiceLocalize.updateAvailableGroup().get(),
+                    Notification notification = NOTIFICATION_GROUP.createNotification(
+                        ExternalServiceLocalize.updateAvailableGroup().get(),
                         ExternalServiceLocalize.updateAvailable().get(),
                         NotificationType.INFORMATION,
-                        null);
+                        null
+                    );
                     notification.addAction(new NotificationAction(ExternalServiceLocalize.updateViewUpdates()) {
                         @RequiredUIAccess
                         @Override
@@ -199,11 +210,13 @@ public class PlatformOrPluginUpdateChecker {
         });
     }
 
-    public static void checkAndNotifyForUpdates(@Nullable Project project,
-                                                boolean showResults,
-                                                @Nullable ProgressIndicator indicator,
-                                                @Nonnull UIAccess uiAccess,
-                                                @Nonnull AsyncResult<PlatformOrPluginUpdateResultType> result) {
+    public static void checkAndNotifyForUpdates(
+        @Nullable Project project,
+        boolean showResults,
+        @Nullable ProgressIndicator indicator,
+        @Nonnull UIAccess uiAccess,
+        @Nonnull AsyncResult<PlatformOrPluginUpdateResultType> result
+    ) {
         UIAccess.assetIsNotUIThread();
 
         registerSettingsGroupUpdate(result);
@@ -222,10 +235,12 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     @Nonnull
-    private static PlatformOrPluginUpdateResult checkForUpdates(final boolean showResults,
-                                                                @Nullable ProgressIndicator indicator,
-                                                                @Nonnull UIAccess uiAccess,
-                                                                @Nullable Project project) {
+    private static PlatformOrPluginUpdateResult checkForUpdates(
+        boolean showResults,
+        @Nullable ProgressIndicator indicator,
+        @Nonnull UIAccess uiAccess,
+        @Nullable Project project
+    ) {
         PluginId platformPluginId = getPlatformPluginId();
 
         ApplicationInfo appInfo = ApplicationInfo.getInstance();
@@ -246,7 +261,7 @@ public class PlatformOrPluginUpdateChecker {
         }
 
         boolean alreadyVisited = false;
-        final InstalledPluginsState state = InstalledPluginsState.getInstance();
+        InstalledPluginsState state = InstalledPluginsState.getInstance();
 
         PluginDescriptor newPlatformPlugin = null;
         // try to search platform number
@@ -267,7 +282,7 @@ public class PlatformOrPluginUpdateChecker {
             }
         }
 
-        final Map<PluginId, PlatformOrPluginNode> targets = new LinkedHashMap<>();
+        Map<PluginId, PlatformOrPluginNode> targets = new LinkedHashMap<>();
         if (newPlatformPlugin != null) {
             PluginNode thisPlatform = new PluginNode(platformPluginId);
             thisPlatform.setVersion(appInfo.getBuild().asString());
@@ -289,8 +304,8 @@ public class PlatformOrPluginUpdateChecker {
             }
         }
 
-        final Map<PluginId, PluginDescriptor> ourPlugins = new HashMap<>();
-        final List<PluginDescriptor> installedPlugins = PluginManager.getPlugins();
+        Map<PluginId, PluginDescriptor> ourPlugins = new HashMap<>();
+        List<PluginDescriptor> installedPlugins = PluginManager.getPlugins();
         for (PluginDescriptor installedPlugin : installedPlugins) {
             if (PluginIds.isPlatformPlugin(installedPlugin.getPluginId())) {
                 continue;
@@ -301,8 +316,8 @@ public class PlatformOrPluginUpdateChecker {
         state.getOutdatedPlugins().clear();
         if (!ourPlugins.isEmpty()) {
             try {
-                for (final Map.Entry<PluginId, PluginDescriptor> entry : ourPlugins.entrySet()) {
-                    final PluginId pluginId = entry.getKey();
+                for (Map.Entry<PluginId, PluginDescriptor> entry : ourPlugins.entrySet()) {
+                    PluginId pluginId = entry.getKey();
 
                     PluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
@@ -352,9 +367,11 @@ public class PlatformOrPluginUpdateChecker {
         }
     }
 
-    private static void processDependencies(@Nonnull PluginDescriptor target,
-                                            Map<PluginId, PlatformOrPluginNode> targets,
-                                            List<PluginDescriptor> remotePlugins) {
+    private static void processDependencies(
+        @Nonnull PluginDescriptor target,
+        Map<PluginId, PlatformOrPluginNode> targets,
+        List<PluginDescriptor> remotePlugins
+    ) {
         PluginId[] dependentPluginIds = target.getDependentPluginIds();
         for (PluginId pluginId : dependentPluginIds) {
             if (targets.containsKey(pluginId)) {

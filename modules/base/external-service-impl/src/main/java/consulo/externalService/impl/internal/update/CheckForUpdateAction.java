@@ -20,6 +20,7 @@ import consulo.application.AccessToken;
 import consulo.application.progress.Task;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -34,8 +35,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 @ActionImpl(id = "CheckForUpdate")
 public class CheckForUpdateAction extends DumbAwareAction {
     private final Provider<UpdateSettings> myUpdateSettingsProvider;
@@ -45,8 +44,8 @@ public class CheckForUpdateAction extends DumbAwareAction {
         myUpdateSettingsProvider = updateSettingsProvider;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         String place = e.getPlace();
 
@@ -75,16 +74,21 @@ public class CheckForUpdateAction extends DumbAwareAction {
         if (UpdateBusyLocker.isBusy()) {
             return;
         }
-        
-        Task.Backgroundable.queue(project, "Checking for updates", true, indicator -> {
-            indicator.setIndeterminate(true);
 
-            try (AccessToken ignored = UpdateBusyLocker.block()) {
-                AsyncResult<PlatformOrPluginUpdateResultType> result = AsyncResult.undefined();
-                result.doWhenDone(() -> ((UpdateSettingsEx) updateSettings).setLastTimeCheck(System.currentTimeMillis()));
+        Task.Backgroundable.queue(
+            project,
+            ExternalServiceLocalize.updateChecking(),
+            true,
+            indicator -> {
+                indicator.setIndeterminate(true);
 
-                PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator, uiAccess, result);
+                try (AccessToken ignored = UpdateBusyLocker.block()) {
+                    AsyncResult<PlatformOrPluginUpdateResultType> result = AsyncResult.undefined();
+                    result.doWhenDone(() -> ((UpdateSettingsEx) updateSettings).setLastTimeCheck(System.currentTimeMillis()));
+
+                    PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator, uiAccess, result);
+                }
             }
-        });
+        );
     }
 }

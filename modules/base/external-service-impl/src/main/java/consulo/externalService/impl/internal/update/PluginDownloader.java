@@ -55,7 +55,7 @@ import java.util.Locale;
 
 /**
  * @author anna
- * @since 10-Aug-2007
+ * @since 2007-08-10
  */
 public class PluginDownloader {
     private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
@@ -139,7 +139,11 @@ public class PluginDownloader {
                     }
                     else {
                         errorMessage = ExternalServiceLocalize.checksumFailed();
-                        LOG.warn("Checksum check failed. Plugin: " + myPluginId + ", expected: " + expectedChecksum + ", actual: " + info.getSecond());
+                        LOG.warn(
+                            "Checksum check failed. Plugin: " + myPluginId +
+                                ", expected: " + expectedChecksum +
+                                ", actual: " + info.getSecond()
+                        );
                     }
                 }
                 catch (ProcessCanceledException e) {
@@ -246,7 +250,7 @@ public class PluginDownloader {
         }
     }
 
-    public static void install(final File fromFile, final String pluginName, boolean deleteFromFile) throws IOException {
+    public static void install(File fromFile, String pluginName, boolean deleteFromFile) throws IOException {
         // add command to unzip file to the plugins path
         String unzipPath;
         if (ZipUtil.isZipContainsFolder(fromFile)) {
@@ -277,7 +281,7 @@ public class PluginDownloader {
         if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
             throw new IOException(ExternalServiceLocalize.errorCannotCreateTempDir(pluginsTemp).get());
         }
-        final File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
+        File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
 
         indicator.checkCanceled();
         if (myIsPlatform) {

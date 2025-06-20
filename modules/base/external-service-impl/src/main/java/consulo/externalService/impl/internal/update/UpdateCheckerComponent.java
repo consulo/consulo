@@ -55,7 +55,7 @@ public class UpdateCheckerComponent implements Disposable {
             queueNextUpdateCheck(ourCheckInterval);
         });
 
-        final long interval = myUpdateSettings.getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
+        long interval = myUpdateSettings.getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
         queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
 
         // reset on restart

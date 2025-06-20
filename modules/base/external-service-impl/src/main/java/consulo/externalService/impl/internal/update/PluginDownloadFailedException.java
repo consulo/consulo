@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 23/11/2021
+ * @since 2021-11-23
  */
 public class PluginDownloadFailedException extends Exception {
     @Nonnull

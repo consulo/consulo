@@ -62,7 +62,7 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 07-Nov-16
+ * @since 2016-11-07
  */
 public class PlatformOrPluginDialog extends DialogWrapper {
     @Nonnull
@@ -154,7 +154,8 @@ public class PlatformOrPluginDialog extends DialogWrapper {
                 return new PluginsListRender(null) {
                     @Override
                     protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginNode) {
-                        PlatformOrPluginNode node = ContainerUtil.find(myNodes, it -> it.getPluginId().equals(pluginNode.getPluginId()));
+                        PlatformOrPluginNode node =
+                            ContainerUtil.find(myNodes, it -> it.getPluginId().equals(pluginNode.getPluginId()));
                         assert node != null;
 
                         PluginDescriptor currentDescriptor = node.getCurrentDescriptor();
@@ -211,9 +212,9 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         if (brokenPlugin != null) {
             if (Messages.showOkCancelDialog(
                 myProject,
-                "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?",
+                ExternalServiceLocalize.messageIdeaFewPluginsWillBeNotUpdated().get(),
                 Application.get().getName().get(),
-                Messages.getErrorIcon()
+                UIUtil.getErrorIcon()
             ) != Messages.OK) {
                 return;
             }
@@ -330,14 +331,16 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         };
 
         if (myModalProgress) {
-            Task.Modal.queue(myProject,
+            Task.Modal.queue(
+                myProject,
                 ExternalServiceLocalize.progressDownloadPlugins(),
                 true,
                 progressIndicator -> {
                     try (AccessToken ignored = UpdateBusyLocker.block()) {
                         processor.accept(progressIndicator);
                     }
-                });
+                }
+            );
         }
         else {
             Task.Backgroundable.queue(
@@ -348,7 +351,8 @@ public class PlatformOrPluginDialog extends DialogWrapper {
                     try (AccessToken ignored = UpdateBusyLocker.block()) {
                         processor.accept(progressIndicator);
                     }
-                });
+                }
+            );
         }
     }
 
@@ -367,10 +371,11 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
     @Nullable
     @Override
+    @RequiredUIAccess
     protected JComponent createSouthPanel() {
         JComponent southPanel = super.createSouthPanel();
         if (southPanel != null) {
-            southPanel.add(new JBLabel("Following nodes will be downloaded & installed"), BorderLayout.WEST);
+            southPanel.add(new JBLabel(ExternalServiceLocalize.pluginFollowingWillBeDownloadedLabel().get()), BorderLayout.WEST);
             southPanel.setBorder(JBUI.Borders.empty(DialogWrapper.ourDefaultBorderInsets));
 
             BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);

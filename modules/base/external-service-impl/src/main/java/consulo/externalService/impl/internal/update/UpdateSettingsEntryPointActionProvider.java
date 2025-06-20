@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -35,7 +36,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 01/04/2021
+ * @since 2021-04-01
  */
 @ExtensionImpl
 public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPointActionProvider {
@@ -46,8 +47,8 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
             super(updateSettingsProvider);
             getTemplatePresentation().setTextValue(
                 isPlatform
-                    ? LocalizeValue.localizeTODO("Update " + Application.get().getName() + " and Plugins")
-                    : LocalizeValue.localizeTODO("Update Plugins")
+                    ? ExternalServiceLocalize.actionUpdatePlatformAndPluginsText(Application.get().getName())
+                    : ExternalServiceLocalize.actionUpdatePluginsText()
             );
             myIsPlatform = isPlatform;
         }
@@ -68,7 +69,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
 
         private RestartConsuloAction(UpdateSettings updateSettings) {
             super(
-                LocalizeValue.localizeTODO("Restart " + Application.get().getName()),
+                ExternalServiceLocalize.actionRestartText(Application.get().getName()),
                 LocalizeValue.empty(),
                 PlatformIconGroup.ideNotificationRestartrequiredupdate()
             );
@@ -102,18 +103,14 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
         UpdateSettings updateSettings = myUpdateSettingsProvider.get();
 
         PlatformOrPluginUpdateResultType type = ((UpdateSettingsEx) updateSettings).getLastCheckResult();
-        switch (type) {
-            case NO_UPDATE:
-                return List.of(myActionManagerProvider.get().getAction("CheckForUpdate"));
-            case RESTART_REQUIRED:
-                return List.of(new RestartConsuloAction(updateSettings));
-            case PLATFORM_UPDATE:
-            case PLUGIN_UPDATE:
-                return List.of(new IconifiedCheckForUpdateAction(
-                    myUpdateSettingsProvider,
-                    type == PlatformOrPluginUpdateResultType.PLATFORM_UPDATE
-                ));
-        }
-        return List.of();
+        return switch (type) {
+            case NO_UPDATE -> List.of(myActionManagerProvider.get().getAction("CheckForUpdate"));
+            case RESTART_REQUIRED -> List.<AnAction>of(new RestartConsuloAction(updateSettings));
+            case PLATFORM_UPDATE, PLUGIN_UPDATE -> List.<AnAction>of(new IconifiedCheckForUpdateAction(
+                myUpdateSettingsProvider,
+                type == PlatformOrPluginUpdateResultType.PLATFORM_UPDATE
+            ));
+            default -> List.<AnAction>of();
+        };
     }
 }
