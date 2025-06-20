@@ -1,12 +1,13 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.application.CommonBundle;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.ex.awt.util.Alarm;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -43,12 +44,12 @@ public class LoadingDecorator {
         myDelay = startDelayMs;
         myStartAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, parent);
 
-        setLoadingText(CommonBundle.getLoadingTreeNodeText());
+        setLoadingText(CommonLocalize.treeNodeLoading());
 
         myFadeOutAnimator = new Animator("Loading", 10, RemoteDesktopService.isRemoteSession() ? 2500 : 500, false) {
             @Override
-            public void paintNow(final int frame, final int totalFrames, final int cycle) {
-                myLoadingLayer.setAlpha(1f - ((float) frame) / ((float) totalFrames));
+            public void paintNow(int frame, int totalFrames, int cycle) {
+                myLoadingLayer.setAlpha(1f - ((float) frame) / totalFrames);
             }
 
             @Override
@@ -73,13 +74,15 @@ public class LoadingDecorator {
         myLoadingLayer.setVisible(false);
     }
 
-    /* Placing the invisible layer on top of JViewport suppresses blit-accelerated scrolling
-       as JViewport.canUseWindowBlitter() doesn't take component's visibility into account.
-
-       We need to add / remove the loading layer on demand to preserve the blit-based scrolling.
-
-       Blit-acceleration copies as much of the rendered area as possible and then repaints only newly exposed region.
-       This helps to improve scrolling performance and to reduce CPU usage (especially if drawing is compute-intensive). */
+    /**
+     * Placing the invisible layer on top of JViewport suppresses blit-accelerated scrolling
+     * as JViewport.canUseWindowBlitter() doesn't take component's visibility into account.
+     *
+     * We need to add / remove the loading layer on demand to preserve the blit-based scrolling.
+     *
+     * Blit-acceleration copies as much of the rendered area as possible and then repaints only newly exposed region.
+     * This helps to improve scrolling performance and to reduce CPU usage (especially if drawing is compute-intensive).
+     */
     private void addLoadingLayerOnDemand() {
         if (myPane != myLoadingLayer.getParent()) {
             myPane.add(myLoadingLayer, JLayeredPane.DRAG_LAYER, 1);
@@ -89,12 +92,12 @@ public class LoadingDecorator {
     protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
         parent.setLayout(new GridBagLayout());
 
-        final Font font = text.getFont();
+        Font font = text.getFont();
         text.setFont(font.deriveFont(font.getStyle(), font.getSize() + 8));
         //text.setForeground(Color.black);
 
-        final int gap = new JLabel().getIconTextGap();
-        final NonOpaquePanel result = new NonOpaquePanel(new FlowLayout(FlowLayout.CENTER, gap * 3, 0));
+        int gap = new JLabel().getIconTextGap();
+        NonOpaquePanel result = new NonOpaquePanel(new FlowLayout(FlowLayout.CENTER, gap * 3, 0));
         result.add(icon);
         result.add(text);
         parent.add(result);
@@ -106,7 +109,7 @@ public class LoadingDecorator {
         return myPane;
     }
 
-    public void startLoading(final boolean takeSnapshot) {
+    public void startLoading(boolean takeSnapshot) {
         if (isLoading() || myStartRequest || myStartAlarm.isDisposed()) {
             return;
         }
@@ -125,7 +128,7 @@ public class LoadingDecorator {
         }
     }
 
-    protected void _startLoading(final boolean takeSnapshot) {
+    protected void _startLoading(boolean takeSnapshot) {
         addLoadingLayerOnDemand();
         myLoadingLayer.setVisible(true, takeSnapshot);
     }
@@ -145,6 +148,12 @@ public class LoadingDecorator {
         return myLoadingLayer.myText.getText();
     }
 
+    public void setLoadingText(LocalizeValue loadingText) {
+        myLoadingLayer.myText.setText(loadingText.get());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void setLoadingText(String loadingText) {
         myLoadingLayer.myText.setText(loadingText);
     }
@@ -175,7 +184,7 @@ public class LoadingDecorator {
             myProgress.suspend();
         }
 
-        public void setVisible(final boolean visible, boolean takeSnapshot) {
+        public void setVisible(boolean visible, boolean takeSnapshot) {
             if (myVisible == visible) {
                 return;
             }
@@ -192,9 +201,9 @@ public class LoadingDecorator {
 
                 if (takeSnapshot && getWidth() > 0 && getHeight() > 0) {
                     mySnapshot = ImageUtil.createImage(getGraphics(), getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-                    final Graphics2D g = mySnapshot.createGraphics();
+                    Graphics2D g = mySnapshot.createGraphics();
                     myPane.paint(g);
-                    final Component opaque = UIUtil.findNearestOpaque(this);
+                    Component opaque = UIUtil.findNearestOpaque(this);
                     mySnapshotBg = opaque != null ? opaque.getBackground() : UIUtil.getPanelBackground();
                     g.dispose();
                 }
@@ -222,7 +231,7 @@ public class LoadingDecorator {
         }
 
         @Override
-        protected void paintComponent(final Graphics g) {
+        protected void paintComponent(Graphics g) {
             if (mySnapshot != null) {
                 if (mySnapshot.getWidth() == getWidth() && mySnapshot.getHeight() == getHeight()) {
                     g.drawImage(mySnapshot, 0, 0, getWidth(), getHeight(), null);
@@ -241,13 +250,13 @@ public class LoadingDecorator {
             }
         }
 
-        public void setAlpha(final float alpha) {
+        public void setAlpha(float alpha) {
             myCurrentAlpha = alpha;
             paintImmediately(myTextComponent.getBounds());
         }
 
         @Override
-        protected void paintChildren(final Graphics g) {
+        protected void paintChildren(Graphics g) {
             if (myCurrentAlpha != -1) {
                 ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, myCurrentAlpha));
             }
@@ -279,7 +288,7 @@ public class LoadingDecorator {
         public void doLayout() {
             super.doLayout();
             for (int i = 0; i < getComponentCount(); i++) {
-                final Component each = getComponent(i);
+                Component each = getComponent(i);
                 if (each instanceof Icon) {
                     each.setBounds(0, 0, each.getWidth(), each.getHeight());
                 }

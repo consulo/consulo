@@ -21,27 +21,27 @@ import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
- * @since 02/12/2021
+ * @since 2021-12-02
  */
 public class WhatsNewCommitParser {
-  private static final Pattern ourFixPattern = Pattern.compile("(fixed|fixes|fix)\\s+#(\\d+)");
+    private static final Pattern ourFixPattern = Pattern.compile("(fixed|fixes|fix)\\s+#(\\d+)");
 
-  public static HtmlChunk parse(String commitMessage) {
-    //Map<TextRange, CharSequence> parts = new LinkedHashMap<>();
-    //Matcher matcher = ourFixPattern.matcher(commitMessage);
-    //while (matcher.find()) {
-    //  int s = matcher.regionStart();
-    //  int e = matcher.regionEnd();
-    //
-    //  String issueId = matcher.group(1);
-    //
-    //  parts.put(new TextRange(s, e), issueId);
-    //}
-    //
-    //if (parts.isEmpty()) {
-    //  return HtmlChunk.span().addText(commitMessage);
-    //}
+    public static HtmlChunk parse(String commitMessage) {
+        //Map<TextRange, CharSequence> parts = new LinkedHashMap<>();
+        //Matcher matcher = ourFixPattern.matcher(commitMessage);
+        //while (matcher.find()) {
+        //    int s = matcher.regionStart();
+        //    int e = matcher.regionEnd();
+        //
+        //    String issueId = matcher.group(1);
+        //
+        //    parts.put(new TextRange(s, e), issueId);
+        //}
+        //
+        //if (parts.isEmpty()) {
+        //    return HtmlChunk.span().addText(commitMessage);
+        //}
 
-    return HtmlChunk.span().addText(commitMessage);
-  }
+        return HtmlChunk.span().addText(commitMessage);
+    }
 }

@@ -15,7 +15,9 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.event.JBLoadingPanelListener;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.util.collection.Lists;
@@ -45,7 +47,7 @@ public class JBLoadingPanel extends JPanel {
             panel -> new LoadingDecorator(panel, parent, startDelayMs) {
                 @Override
                 protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
-                    final NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
+                    NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
                     customizeStatusText(text);
                     return panel;
                 }
@@ -82,6 +84,12 @@ public class JBLoadingPanel extends JPanel {
         text.setForeground(ColorUtil.toAlpha(UIUtil.getLabelForeground(), 150));
     }
 
+    public void setLoadingText(LocalizeValue text) {
+        myDecorator.setLoadingText(text);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void setLoadingText(String text) {
         myDecorator.setLoadingText(text);
     }

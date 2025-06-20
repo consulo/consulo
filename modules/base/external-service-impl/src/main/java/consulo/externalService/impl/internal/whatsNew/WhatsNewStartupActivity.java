@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
- * @since 21/11/2021
+ * @since 2021-11-21
  */
 @ExtensionImpl(id = "WhatsNew", order = "after OpenFilesActivity")
 public class WhatsNewStartupActivity implements PostStartupActivity, DumbAware {
@@ -41,8 +41,10 @@ public class WhatsNewStartupActivity implements PostStartupActivity, DumbAware {
     private final AtomicBoolean myAlreadyShow = new AtomicBoolean();
 
     @Inject
-    public WhatsNewStartupActivity(Provider<UpdateHistory> updateHistoryProvider,
-                                   Provider<ConfigurationFileEditorManager> configurationFileEditorManagerProvider) {
+    public WhatsNewStartupActivity(
+        Provider<UpdateHistory> updateHistoryProvider,
+        Provider<ConfigurationFileEditorManager> configurationFileEditorManagerProvider
+    ) {
         myUpdateHistoryProvider = updateHistoryProvider;
         myConfigurationFileEditorManagerProvider = configurationFileEditorManagerProvider;
     }
