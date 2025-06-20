@@ -30,25 +30,29 @@ public interface Notifications {
     NotificationGroup SYSTEM_MESSAGES_GROUP = NotificationGroup.balloonGroup("System Messages");
 
     class Bus {
-        public static void notify(@Nonnull final Notification notification) {
+        public static void notify(@Nonnull Notification notification) {
             notify(notification, null);
         }
 
-        public static void notify(@Nonnull final Notification notification, @Nullable final Project project) {
+        public static void notify(@Nonnull Notification notification, @Nullable Project project) {
             Application.get().getInstance(NotificationService.class).notify(notification, project);
         }
 
-        public static void notifyAndHide(@Nonnull final Notification notification) {
+        public static void notifyAndHide(@Nonnull Notification notification) {
             notifyAndHide(notification, null);
         }
 
-        public static void notifyAndHide(@Nonnull final Notification notification, @Nullable Project project) {
+        public static void notifyAndHide(@Nonnull Notification notification, @Nullable Project project) {
             notify(notification);
-            AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
-                if (project == null || !project.isDisposed()) {
-                    notification.expire();
-                }
-            }, 5, TimeUnit.SECONDS);
+            AppExecutorUtil.getAppScheduledExecutorService().schedule(
+                () -> {
+                    if (project == null || !project.isDisposed()) {
+                        notification.expire();
+                    }
+                },
+                5,
+                TimeUnit.SECONDS
+            );
         }
     }
 }

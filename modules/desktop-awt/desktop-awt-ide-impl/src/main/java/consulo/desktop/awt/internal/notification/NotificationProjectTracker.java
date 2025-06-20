@@ -18,14 +18,13 @@ package consulo.desktop.awt.internal.notification;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
-import consulo.application.dumb.DumbAwareRunnable;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.wm.StatusBar;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
@@ -39,7 +38,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 18-Jun-22
+ * @since 2022-06-18
  */
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -57,7 +56,7 @@ public class NotificationProjectTracker implements Disposable {
     protected LogModel myProjectModel;
 
     @Inject
-    public NotificationProjectTracker(@Nonnull final Project project, EventLog eventLog) {
+    public NotificationProjectTracker(@Nonnull Project project, EventLog eventLog) {
         myProject = project;
         myEventLog = eventLog;
         myProjectModel = new LogModel(project, project);
@@ -97,23 +96,16 @@ public class NotificationProjectTracker implements Disposable {
         doPrintNotification(notification, console);
     }
 
-    private void doPrintNotification(@Nonnull final Notification notification, @Nonnull final EventLogConsole console) {
-        StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new DumbAwareRunnable() {
-            @Override
-            public void run() {
-                if (!ShutDownTracker.isShutdownHookRunning() && !myProject.isDisposed()) {
-                    ApplicationManager.getApplication().runReadAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            console.doPrintNotification(notification);
-                        }
-                    });
-                }
+    private void doPrintNotification(@Nonnull Notification notification, @Nonnull EventLogConsole console) {
+        StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
+            if (!ShutDownTracker.isShutdownHookRunning() && !myProject.isDisposed()) {
+                myProject.getApplication().runReadAction(() -> console.doPrintNotification(notification));
             }
         });
     }
 
-    protected void showNotification(@Nonnull final String groupId, @Nonnull final List<String> ids) {
+    @RequiredUIAccess
+    protected void showNotification(@Nonnull String groupId, @Nonnull List<String> ids) {
         ToolWindow eventLog = EventLog.getEventLog(myProject);
         if (eventLog != null) {
             EventLog.activate(eventLog, groupId, () -> myEventLogConsole.showNotification(ids));

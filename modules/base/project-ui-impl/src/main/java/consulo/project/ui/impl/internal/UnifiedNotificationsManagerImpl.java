@@ -23,7 +23,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.Balloon;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
@@ -41,12 +41,11 @@ import java.lang.reflect.Array;
 public class UnifiedNotificationsManagerImpl extends NotificationsManager {
     @Override
     public void expire(@Nonnull Notification notification) {
-
     }
 
-    @RequiredUIAccess
     @Nullable
     @Override
+    @RequiredUIAccess
     public Window findWindowForBalloon(@Nullable Project project) {
         return null;
     }
@@ -58,7 +57,14 @@ public class UnifiedNotificationsManagerImpl extends NotificationsManager {
     }
 
     @Override
-    public Balloon createBalloon(@Nullable JComponent windowComponent, @Nonnull Notification notification, boolean showCallout, boolean hideOnClickOutside, @Nonnull Ref<Object> layoutDataRef, @Nonnull Disposable parentDisposable) {
+    public Balloon createBalloon(
+        @Nullable JComponent windowComponent,
+        @Nonnull Notification notification,
+        boolean showCallout,
+        boolean hideOnClickOutside,
+        @Nonnull SimpleReference<Object> layoutDataRef,
+        @Nonnull Disposable parentDisposable
+    ) {
         return null;
     }
 }

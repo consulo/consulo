@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 07-Aug-22
+ * @since 2022-08-07
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface NotificationGroupContributor {

@@ -100,7 +100,7 @@ public final class NotificationGroup {
 
     @Nonnull
     @Deprecated
-    public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId, final boolean logByDefault) {
+    public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId, boolean logByDefault) {
         return new NotificationGroup(id, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
     }
 
@@ -109,7 +109,7 @@ public final class NotificationGroup {
         @Nonnull String id,
         @Nonnull LocalizeValue displayName,
         @Nonnull String toolWindowId,
-        final boolean logByDefault
+        boolean logByDefault
     ) {
         return new NotificationGroup(id, displayName, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
     }
@@ -136,15 +136,15 @@ public final class NotificationGroup {
     }
 
     @Nonnull
-    public Notification createNotification(@Nonnull final String content, @Nonnull final NotificationType type) {
+    public Notification createNotification(@Nonnull String content, @Nonnull NotificationType type) {
         return createNotification("", content, type, null);
     }
 
     @Nonnull
     public Notification createNotification(
-        @Nonnull final String title,
-        @Nonnull final String content,
-        @Nonnull final NotificationType type,
+        @Nonnull String title,
+        @Nonnull String content,
+        @Nonnull NotificationType type,
         @Nullable NotificationListener listener
     ) {
         return new Notification(this, title, content, type, listener);

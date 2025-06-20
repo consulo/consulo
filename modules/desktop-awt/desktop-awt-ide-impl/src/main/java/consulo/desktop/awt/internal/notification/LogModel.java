@@ -61,11 +61,11 @@ public class LogModel implements Disposable {
     }
 
     private static void fireModelChanged(Project project) {
-        ApplicationManager.getApplication().getMessageBus().syncPublisher(LogModelListener.class).modelChanged(project);
+        project.getApplication().getMessageBus().syncPublisher(LogModelListener.class).modelChanged(project);
     }
 
     List<Notification> takeNotifications() {
-        final ArrayList<Notification> result;
+        ArrayList<Notification> result;
         synchronized (myNotifications) {
             result = getNotifications();
             myNotifications.clear();

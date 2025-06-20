@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 21/08/2023
+ * @since 2023-08-21
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface NotificationService {

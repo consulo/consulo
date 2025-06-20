@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.popup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.FrameStateManager;
 import consulo.application.ui.RemoteDesktopService;
@@ -20,6 +21,7 @@ import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -1644,6 +1646,28 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
         public ActionButton(
             @Nonnull consulo.ui.image.Image icon,
             @Nullable consulo.ui.image.Image hoverIcon,
+            @Nonnull LocalizeValue hint,
+            @Nonnull Consumer<? super MouseEvent> listener
+        ) {
+            myIcon = icon;
+            myHoverIcon = hoverIcon;
+            myListener = listener;
+
+            setToolTipText(hint == LocalizeValue.empty() ? null : hint.get());
+
+            myButton = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
+                @Override
+                protected void execute(MouseEvent e) {
+                    myListener.accept(e);
+                }
+            };
+        }
+
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
+        public ActionButton(
+            @Nonnull consulo.ui.image.Image icon,
+            @Nullable consulo.ui.image.Image hoverIcon,
             @Nullable String hint,
             @Nonnull Consumer<? super MouseEvent> listener
         ) {
@@ -1690,7 +1714,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
     private class CloseButton extends ActionButton {
         private CloseButton(@Nonnull Consumer<? super MouseEvent> listener) {
-            super(getCloseButton(), null, null, listener);
+            super(getCloseButton(), null, LocalizeValue.empty(), listener);
             setVisible(myEnableButtons);
         }
 

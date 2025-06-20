@@ -26,7 +26,7 @@ public enum NotificationDisplayType {
 
     private final String myTitle;
 
-    private NotificationDisplayType(final String humanTitle) {
+    private NotificationDisplayType(String humanTitle) {
         myTitle = humanTitle;
     }
 

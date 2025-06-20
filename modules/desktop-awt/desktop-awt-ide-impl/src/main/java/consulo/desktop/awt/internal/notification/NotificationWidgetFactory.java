@@ -7,7 +7,6 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
 

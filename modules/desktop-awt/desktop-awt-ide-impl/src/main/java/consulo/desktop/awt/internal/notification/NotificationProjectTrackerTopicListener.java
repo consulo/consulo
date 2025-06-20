@@ -25,7 +25,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 2022-08-08
  */
 @TopicImpl(ComponentScope.APPLICATION)
 public class NotificationProjectTrackerTopicListener implements NotificationServiceListener {

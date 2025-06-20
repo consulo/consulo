@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 16-Jun-24
+ * @since 2024-06-16
  */
 @TopicImpl(ComponentScope.APPLICATION)
 public class NotificationLogModelListener implements LogModelListener {

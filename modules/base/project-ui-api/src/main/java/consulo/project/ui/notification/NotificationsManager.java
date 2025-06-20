@@ -60,7 +60,6 @@ public abstract class NotificationsManager {
         return createBalloon(window.getComponent(), notification, showCallout, hideOnClickOutside, layoutDataRef, parentDisposable);
     }
 
-
     public abstract Balloon createBalloon(
         @Nullable JComponent windowComponent,
         @Nonnull Notification notification,

@@ -21,6 +21,7 @@ import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurable;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBRectangle;
@@ -74,7 +75,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
             mySettingButton = myBalloon.new ActionButton(
                 PlatformIconGroup.ideNotificationGear(),
                 PlatformIconGroup.ideNotificationGearhover(),
-                "Configure VcsBranchMappingChangedNotification",
+                LocalizeValue.localizeTODO("Configure VcsBranchMappingChangedNotification"),
                 event -> myBalloon.runWithSmartFadeoutPause(() -> ShowSettingsUtil.getInstance().showAndSelect(
                     myLayoutData.project,
                     NotificationsConfigurable.class,
@@ -106,7 +107,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
         myCloseButton = myBalloon.new ActionButton(
             PlatformIconGroup.ideNotificationClose(),
             PlatformIconGroup.ideNotificationClosehover(),
-            "Close VcsBranchMappingChangedNotification (Alt-Click close all notifications)",
+            LocalizeValue.localizeTODO("Close VcsBranchMappingChangedNotification (Alt-Click close all notifications)"),
             event -> {
                 int modifiers = event.getModifiers();
                 //noinspection SSBasedInspection

@@ -73,6 +73,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
     }
 
     @Override
+    @RequiredUIAccess
     public void install(@Nonnull StatusBar statusBar) {
         myStatusBar = statusBar;
         updateStatus();
@@ -85,7 +86,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
 
     @RequiredUIAccess
     private void updateStatus() {
-        final Project project = getProject();
+        Project project = getProject();
         List<Notification> notifications = EventLog.getLogModel(project).getNotifications();
 
         applyIconToStatusAndToolWindow(

@@ -1,8 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.internal.notification;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
 import consulo.application.internal.MessagePool;
 import consulo.application.internal.MessagePoolListener;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
@@ -10,7 +8,9 @@ import consulo.disposer.Disposer;
 import consulo.externalService.impl.internal.errorReport.IdeErrorsDialog;
 import consulo.externalService.impl.internal.errorReport.ReportMessages;
 import consulo.externalService.localize.ExternalServiceLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.internal.LogMessage;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.Balloon;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -61,6 +61,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
         add(myIcon, BorderLayout.CENTER);
         new ClickListener() {
             @Override
+            @RequiredUIAccess
             public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
                 openErrorsDialog(null);
                 return true;
@@ -96,11 +97,13 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     public void install(@Nonnull StatusBar statusBar) {
     }
 
+    @Nonnull
     @Override
     public JComponent getComponent() {
         return this;
     }
 
+    @RequiredUIAccess
     public void openErrorsDialog(@Nullable LogMessage message) {
         if (myDialog != null) {
             return;
@@ -112,6 +115,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
 
         new Runnable() {
             @Override
+            @RequiredUIAccess
             public void run() {
                 if (!isOtherModalWindowActive()) {
                     try {
@@ -129,6 +133,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
         }.run();
     }
 
+    @RequiredUIAccess
     private void doOpenErrorsDialog(@Nullable LogMessage message) {
         Project project = myFrame != null ? myFrame.getProject() : null;
         myDialog = new IdeErrorsDialog(myMessagePool, project, message) {
@@ -189,7 +194,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
         else if (state == MessagePool.State.UnreadErrors && !myNotificationPopupAlreadyShown && isActive(myFrame)) {
             Project project = myFrame.getProject();
             if (project != null) {
-                ApplicationManager.getApplication().invokeLater(() -> showErrorNotification(project), project.getDisposed());
+                project.getApplication().invokeLater(() -> showErrorNotification(project), project.getDisposed());
                 myNotificationPopupAlreadyShown = true;
             }
         }
@@ -200,9 +205,9 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     }
 
     private void showErrorNotification(@Nonnull Project project) {
-        String title = ExternalServiceLocalize.errorNewNotificationTitle().get();
+        LocalizeValue title = ExternalServiceLocalize.errorNewNotificationTitle();
         Notification notification =
-            new Notification(ReportMessages.GROUP, AllIcons.Ide.FatalError, title, null, null, NotificationType.ERROR, null);
+            new Notification(ReportMessages.GROUP, PlatformIconGroup.ideFatalerror(), title.get(), null, null, NotificationType.ERROR, null);
         notification.addAction(new NotificationAction(ExternalServiceLocalize.errorNewNotificationLink()) {
             @RequiredUIAccess
             @Override
@@ -223,7 +228,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
 
         assert myBalloon == null;
         myBalloon = NotificationsManagerImpl.getNotificationsManager()
-            .createBalloon(myFrame, notification, false, false, new Ref<>(layoutData), project);
+            .createBalloon(myFrame, notification, false, false, new SimpleReference<>(layoutData), project);
         Disposer.register(myBalloon, () -> myBalloon = null);
         layout.add(myBalloon);
     }

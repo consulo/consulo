@@ -26,29 +26,20 @@ public enum NotificationType {
     ERROR;
 
     public consulo.ui.NotificationType toUI() {
-        switch (this) {
-            case INFORMATION:
-                return consulo.ui.NotificationType.INFO;
-            case WARNING:
-                return consulo.ui.NotificationType.WARNING;
-            case ERROR:
-                return consulo.ui.NotificationType.ERROR;
-        }
-
-        throw new UnsupportedOperationException();
+        return switch (this) {
+            case INFORMATION -> consulo.ui.NotificationType.INFO;
+            case WARNING -> consulo.ui.NotificationType.WARNING;
+            case ERROR -> consulo.ui.NotificationType.ERROR;
+        };
     }
 
     @Nonnull
     public static NotificationType from(consulo.ui.NotificationType type) {
-        switch (type) {
-            case INFO:
-                return INFORMATION;
-            case WARNING:
-                return WARNING;
-            case ERROR:
-                return ERROR;
-            default:
-                throw new UnsupportedOperationException();
-        }
+        return switch (type) {
+            case INFO -> INFORMATION;
+            case WARNING -> WARNING;
+            case ERROR -> ERROR;
+            default -> throw new UnsupportedOperationException();
+        };
     }
 }

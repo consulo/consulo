@@ -16,11 +16,11 @@
 
 package consulo.desktop.awt.internal.notification;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.document.Document;
@@ -28,8 +28,6 @@ import consulo.document.RangeMarker;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.util.TextRange;
 import consulo.execution.ui.console.HyperlinkInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -49,17 +47,18 @@ import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -74,7 +73,7 @@ import java.util.regex.Pattern;
 @ServiceImpl
 public class EventLog {
     public static EventLog getApplicationComponent() {
-        return ApplicationManager.getApplication().getComponent(EventLog.class);
+        return Application.get().getComponent(EventLog.class);
     }
 
     public static final String LOG_REQUESTOR = "Internal log requestor";
@@ -98,7 +97,7 @@ public class EventLog {
                 return;
             }
 
-            final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
             if (openProjects.length == 0) {
                 myModel.addNotification(notification);
             }
@@ -126,7 +125,7 @@ public class EventLog {
 
     public static void markAllAsRead(@Nullable Project project) {
         LogModel model = getLogModel(project);
-        Set<String> groups = new HashSet<String>();
+        Set<String> groups = new HashSet<>();
         for (Notification notification : model.getNotifications()) {
             groups.add(notification.getGroupId());
             model.removeNotification(notification);
@@ -147,11 +146,12 @@ public class EventLog {
         return getLogModel(project).getStatusMessage();
     }
 
-    public static LogEntry formatForLog(@Nonnull final Notification notification, final String indent) {
+    @RequiredWriteAction
+    public static LogEntry formatForLog(@Nonnull Notification notification, String indent) {
         DocumentImpl logDoc = new DocumentImpl("", true);
         AtomicBoolean showMore = new AtomicBoolean(false);
         Map<RangeMarker, HyperlinkInfo> links = new LinkedHashMap<>();
-        List<RangeMarker> lineSeparators = new ArrayList<RangeMarker>();
+        List<RangeMarker> lineSeparators = new ArrayList<>();
 
         String title = notification.getTitle();
         String subtitle = notification.getSubtitle();
@@ -175,21 +175,26 @@ public class EventLog {
 
         List<AnAction> actions = notification.getActions();
         if (!actions.isEmpty()) {
-            String text = "<p>" + StringUtil.join(actions, new Function<AnAction, String>() {
-                private int index;
+            String text = "<p>" + StringUtil.join(
+                actions,
+                new Function<>() {
+                    private int index;
 
-                @Override
-                public String apply(AnAction action) {
-                    return "<a href=\"" + index++ + "\">" + action.getTemplatePresentation().getText() + "</a>";
-                }
-            }, isLongLine(actions) ? "<br>" : "&nbsp;") + "</p>";
-            Notification n =
-                new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "", ".", NotificationType.INFORMATION, new NotificationListener() {
                     @Override
-                    public void hyperlinkUpdate(@Nonnull Notification n, @Nonnull HyperlinkEvent event) {
-                        Notification.fire(notification, notification.getActions().get(Integer.parseInt(event.getDescription())));
+                    public String apply(AnAction action) {
+                        return "<a href=\"" + index++ + "\">" + action.getTemplatePresentation().getText() + "</a>";
                     }
-                });
+                },
+                isLongLine(actions) ? "<br>" : "&nbsp;"
+            ) + "</p>";
+            Notification n = new Notification(
+                Notifications.SYSTEM_MESSAGES_GROUP,
+                "",
+                ".",
+                NotificationType.INFORMATION,
+                (n1, event) ->
+                    Notification.fire(notification, notification.getActions().get(Integer.parseInt(event.getDescription())))
+            );
             if (title.length() > 0 || content.length() > 0) {
                 lineSeparators.add(logDoc.createRangeMarker(TextRange.from(logDoc.getTextLength(), 0)));
             }
@@ -200,7 +205,7 @@ public class EventLog {
 
         indentNewLines(logDoc, lineSeparators, afterTitle, hasHtml, indent);
 
-        ArrayList<Pair<TextRange, HyperlinkInfo>> list = new ArrayList<Pair<TextRange, HyperlinkInfo>>();
+        List<Pair<TextRange, HyperlinkInfo>> list = new ArrayList<>();
         for (RangeMarker marker : links.keySet()) {
             if (!marker.isValid()) {
                 showMore.set(true);
@@ -215,7 +220,7 @@ public class EventLog {
                 appendText(logDoc, " ");
             }
             appendText(logDoc, "(" + sb + ")");
-            list.add(new Pair<TextRange, HyperlinkInfo>(
+            list.add(new Pair<>(
                 TextRange.from(logDoc.getTextLength() - 1 - sb.length(), sb.length()),
                 new ShowBalloon(notification)
             ));
@@ -253,6 +258,7 @@ public class EventLog {
         return title;
     }
 
+    @RequiredWriteAction
     private static void indentNewLines(
         DocumentImpl logDoc,
         List<RangeMarker> lineSeparators,
@@ -298,7 +304,7 @@ public class EventLog {
         boolean hasHtml
     ) {
         DocumentImpl statusDoc = new DocumentImpl(logDoc.getImmutableCharSequence(), true);
-        List<RangeMarker> statusSeparators = new ArrayList<RangeMarker>();
+        List<RangeMarker> statusSeparators = new ArrayList<>();
         for (RangeMarker separator : lineSeparators) {
             if (separator.isValid()) {
                 statusSeparators.add(statusDoc.createRangeMarker(separator.getStartOffset(), separator.getEndOffset()));
@@ -333,7 +339,7 @@ public class EventLog {
             appendText(document, content.substring(0, tagMatcher.start()));
             Matcher aMatcher = A_PATTERN.matcher(tagStart);
             if (aMatcher.matches()) {
-                final String href = aMatcher.group(2);
+                String href = aMatcher.group(2);
                 int linkEnd = content.indexOf(A_CLOSING, tagMatcher.end());
                 if (linkEnd > 0) {
                     String linkText = content.substring(tagMatcher.end(), linkEnd).replaceAll(TAG_PATTERN.pattern(), "");
@@ -477,8 +483,9 @@ public class EventLog {
         return project == null ? null : ToolWindowManager.getInstance(project).getToolWindow(NOTIFICATIONS_TOOLWINDOW_ID);
     }
 
-    public static void toggleLog(@Nullable final Project project, @Nullable final Notification notification) {
-        final ToolWindow eventLog = getEventLog(project);
+    @RequiredUIAccess
+    public static void toggleLog(@Nullable Project project, @Nullable Notification notification) {
+        ToolWindow eventLog = getEventLog(project);
         if (eventLog != null) {
             if (!eventLog.isVisible()) {
                 activate(eventLog, notification == null ? null : notification.getGroupId(), null);
@@ -489,22 +496,20 @@ public class EventLog {
         }
     }
 
-    protected static void activate(@Nonnull final ToolWindow eventLog, @Nullable final String groupId, @Nullable final Runnable r) {
+    @RequiredUIAccess
+    protected static void activate(@Nonnull ToolWindow eventLog, @Nullable String groupId, @Nullable Runnable r) {
         eventLog.activate(
-            new Runnable() {
-                @Override
-                public void run() {
-                    if (groupId == null) {
-                        return;
-                    }
-                    String contentName = DEFAULT_CATEGORY;
-                    Content content = eventLog.getContentManager().findContent(contentName);
-                    if (content != null) {
-                        eventLog.getContentManager().setSelectedContent(content);
-                    }
-                    if (r != null) {
-                        r.run();
-                    }
+            () -> {
+                if (groupId == null) {
+                    return;
+                }
+                String contentName = DEFAULT_CATEGORY;
+                Content content = eventLog.getContentManager().findContent(contentName);
+                if (content != null) {
+                    eventLog.getContentManager().setSelectedContent(content);
+                }
+                if (r != null) {
+                    r.run();
                 }
             },
             true
@@ -561,12 +566,11 @@ public class EventLog {
             if (target != null) {
                 IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
                 assert frame != null;
-                Ref<Object> layoutDataRef = null;
                 BalloonLayoutData layoutData = new BalloonLayoutData();
                 layoutData.groupId = "";
                 layoutData.showFullContent = true;
                 layoutData.showSettingButton = false;
-                layoutDataRef = Ref.create(layoutData);
+                SimpleReference<Object> layoutDataRef = SimpleReference.create(layoutData);
 
                 Balloon balloon =
                     NotificationsManager.getNotificationsManager().createBalloon(frame, myNotification, true, true, layoutDataRef, project);

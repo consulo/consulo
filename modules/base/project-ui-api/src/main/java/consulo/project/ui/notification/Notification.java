@@ -242,7 +242,7 @@ public class Notification {
         return e.getData(KEY);
     }
 
-    public static void fire(@Nonnull final Notification notification, @Nonnull AnAction action) {
+    public static void fire(@Nonnull Notification notification, @Nonnull AnAction action) {
         fire(notification, action, null);
     }
 
@@ -323,7 +323,7 @@ public class Notification {
             return;
         }
 
-        Application.get().getLastUIAccess().giveIfNeed(() -> hideBalloon());
+        Application.get().getLastUIAccess().giveIfNeed(this::hideBalloon);
         NotificationsManager.getNotificationsManager().expire(this);
 
         Runnable whenExpired = myWhenExpired;
@@ -339,7 +339,7 @@ public class Notification {
 
     public void hideBalloon() {
         if (myBalloonRef != null) {
-            final Balloon balloon = myBalloonRef.get();
+            Balloon balloon = myBalloonRef.get();
             if (balloon != null) {
                 balloon.hide();
             }

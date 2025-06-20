@@ -16,7 +16,6 @@
 package consulo.desktop.awt.internal.notification;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.FrameStateManager;
@@ -32,6 +31,7 @@ import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.startup.StartupManager;
@@ -63,7 +63,6 @@ import consulo.ui.style.StyleManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -75,7 +74,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
-import javax.swing.text.html.ParagraphView;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
@@ -369,7 +367,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         text.setEditorKit(kit);
         text.setForeground(layoutData.textColor);
 
-        final HyperlinkListener listener = NotificationsUtil.wrapListener(notification);
+        HyperlinkListener listener = NotificationsUtil.wrapListener(notification);
         if (listener != null) {
             text.addHyperlinkListener(listener);
         }
@@ -393,7 +391,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
         text.setBorder(null);
 
-        final JPanel content = new NonOpaquePanel(new BorderLayout());
+        JPanel content = new NonOpaquePanel(new BorderLayout());
 
         if (text.getCaret() != null) {
             text.setCaretPosition(0);
@@ -467,38 +465,42 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
             text.setCaret(new TextCaret(layoutData));
 
-            expandAction = new LinkLabel<>(null, AllIcons.Ide.Notification.Expand, (LinkListener<Void>) (link, ignored) -> {
-                layoutData.showMinSize = !layoutData.showMinSize;
+            expandAction = new LinkLabel<>(
+                null,
+                PlatformIconGroup.ideNotificationExpand(),
+                (LinkListener<Void>) (link, ignored) -> {
+                    layoutData.showMinSize = !layoutData.showMinSize;
 
-                text.setPreferredSize(null);
-                Dimension size1 = text.getPreferredSize();
+                    text.setPreferredSize(null);
+                    Dimension size1 = text.getPreferredSize();
 
-                if (layoutData.showMinSize) {
-                    size1.height = layoutData.twoLineHeight;
-                    pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-                    link.setIcon(TargetAWT.to(AllIcons.Ide.Notification.Expand));
-                    link.setHoveringIcon(TargetAWT.to(AllIcons.Ide.Notification.ExpandHover));
+                    if (layoutData.showMinSize) {
+                        size1.height = layoutData.twoLineHeight;
+                        pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+                        link.setIcon(TargetAWT.to(PlatformIconGroup.ideNotificationExpand()));
+                        link.setHoveringIcon(TargetAWT.to(PlatformIconGroup.ideNotificationExpandhover()));
+                    }
+                    else {
+                        text.select(0, 0);
+                        size1.height = layoutData.fullHeight;
+                        pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+                        link.setIcon(TargetAWT.to(PlatformIconGroup.ideNotificationCollapse()));
+                        link.setHoveringIcon(TargetAWT.to(PlatformIconGroup.ideNotificationCollapsehover()));
+                    }
+
+                    text.setPreferredSize(size1);
+                    text.setSize(size1);
+
+                    if (!layoutData.showMinSize) {
+                        size1 = new Dimension(size1.width, layoutData.maxScrollHeight);
+                    }
+                    pane.setPreferredSize(size1);
+
+                    content.doLayout();
+                    layoutData.doLayout.run();
                 }
-                else {
-                    text.select(0, 0);
-                    size1.height = layoutData.fullHeight;
-                    pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-                    link.setIcon(TargetAWT.to(AllIcons.Ide.Notification.Collapse));
-                    link.setHoveringIcon(TargetAWT.to(AllIcons.Ide.Notification.CollapseHover));
-                }
-
-                text.setPreferredSize(size1);
-                text.setSize(size1);
-
-                if (!layoutData.showMinSize) {
-                    size1 = new Dimension(size1.width, layoutData.maxScrollHeight);
-                }
-                pane.setPreferredSize(size1);
-
-                content.doLayout();
-                layoutData.doLayout.run();
-            });
-            expandAction.setHoveringIcon(TargetAWT.to(AllIcons.Ide.Notification.ExpandHover));
+            );
+            expandAction.setHoveringIcon(TargetAWT.to(PlatformIconGroup.ideNotificationExpandhover()));
         }
 
         final CenteredLayoutWithActions layout = new CenteredLayoutWithActions(text, layoutData);
@@ -618,7 +620,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
             pane.setPreferredSize(new Dimension(maxWidth, paneSize.height + UIUtil.getScrollBarWidth()));
         }
 
-        final BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(content);
+        BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(content);
         builder.setFillColor(layoutData.fillColor)
             .setCloseButtonEnabled(buttons == null)
             .setShowCallout(showCallout)
@@ -635,7 +637,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
             builder.setFadeoutTime(layoutData.fadeoutTime);
         }
 
-        final BalloonImpl balloon = (BalloonImpl) builder.createBalloon();
+        BalloonImpl balloon = (BalloonImpl) builder.createBalloon();
         balloon.setAnimationEnabled(false);
         notification.setBalloon(balloon);
 
@@ -665,7 +667,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
             buttons.setOpaque(false);
             content.add(BorderLayout.SOUTH, buttons);
 
-            final Ref<JButton> defaultButton = new Ref<>();
+            final SimpleReference<JButton> defaultButton = new SimpleReference<>();
 
             for (NotificationActionProvider.Action action : provider.getActions(listener)) {
                 JButton button = new JButton(action);
@@ -716,7 +718,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     private static void createActionPanel(
-        @Nonnull final Notification notification,
+        @Nonnull Notification notification,
         @Nonnull JPanel centerPanel,
         int gap,
         @Nonnull HoverAdapter hoverAdapter
@@ -746,12 +748,15 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
         for (AnAction action : actions) {
             Presentation presentation = action.getTemplatePresentation();
-            actionPanel.add(HorizontalLayout.LEFT, new LinkLabel<>(
-                presentation.getText(),
-                presentation.getIcon(),
-                (aSource, action1) -> Notification.fire(notification, action1),
-                action
-            ));
+            actionPanel.add(
+                HorizontalLayout.LEFT,
+                new LinkLabel<>(
+                    presentation.getText(),
+                    presentation.getIcon(),
+                    (aSource, action1) -> Notification.fire(notification, action1),
+                    action
+                )
+            );
         }
 
         Insets hover = JBUI.insets(8, 5, 8, 7);
@@ -881,8 +886,13 @@ public class NotificationsManagerImpl extends NotificationsManager {
     private static void createMergeAction(@Nonnull final BalloonLayoutData layoutData, @Nonnull JPanel panel) {
         StringBuilder title = new StringBuilder().append(layoutData.mergeData.count).append(" more");
 
-        LinkLabel<BalloonLayoutData> action = new LinkLabel<>(title.toString(), null, (aSource, layoutData1) -> EventLog.showNotification(
-            layoutData1.project, layoutData1.groupId, layoutData1.getMergeIds()), layoutData) {
+        LinkLabel<BalloonLayoutData> action = new LinkLabel<>(
+            title.toString(),
+            null,
+            (aSource, layoutData1) ->
+                EventLog.showNotification(layoutData1.project, layoutData1.groupId, layoutData1.getMergeIds()),
+            layoutData
+        ) {
             @Override
             protected boolean isInClickableArea(Point pt) {
                 return true;
@@ -951,7 +961,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     private static class DropDownAction extends LinkLabel<Void> {
-        Image myIcon = AllIcons.Ide.Notification.DropTriangle;
+        Image myIcon = PlatformIconGroup.ideNotificationDroptriangle();
 
         public DropDownAction(String text, @Nullable LinkListener<Void> listener) {
             super(text, null, listener);
