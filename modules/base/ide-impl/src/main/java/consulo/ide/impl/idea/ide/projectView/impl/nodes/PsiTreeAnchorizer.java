@@ -68,9 +68,7 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
     @Nonnull
     @Override
     public Object createAnchor(@Nonnull Object element) {
-        if (element instanceof PsiElement) {
-            PsiElement psi = (PsiElement) element;
-
+        if (element instanceof PsiElement psi) {
             return myApplication.runReadAction((Supplier<Object>) () -> {
                 if (!psi.isValid()) {
                     return psi;
@@ -84,16 +82,16 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
     @RequiredReadAction
     @Override
     @Nullable
-    public Object retrieveElement(@Nonnull final Object pointer) {
-        if (pointer instanceof SmartPsiElementPointer) {
-            return myApplication.runReadAction((Supplier<Object>)() -> ((SmartPsiElementPointer) pointer).getElement());
+    public Object retrieveElement(@Nonnull Object pointer) {
+        if (pointer instanceof SmartPsiElementPointer smartPointer) {
+            return myApplication.runReadAction((Supplier<Object>) () -> smartPointer.getElement());
         }
 
         return super.retrieveElement(pointer);
     }
 
     @Override
-    public void freeAnchor(final Object element) {
+    public void freeAnchor(Object element) {
         if (element instanceof SmartPsiElementPointer pointer) {
             myApplication.runReadAction(() -> {
                 Project project = pointer.getProject();
@@ -101,7 +99,8 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
                     SmartPointerManager.getInstance(project).removePointer(pointer);
                 }
             });
-        } else {
+        }
+        else {
             super.freeAnchor(element);
         }
     }

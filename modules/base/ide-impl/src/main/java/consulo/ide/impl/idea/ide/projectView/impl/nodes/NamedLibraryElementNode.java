@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkUtil;
@@ -29,6 +27,7 @@ import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.language.pom.NavigatableWithText;
 import consulo.module.content.layer.orderEntry.*;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -50,107 +49,114 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement> implements NavigatableWithText {
-  public NamedLibraryElementNode(Project project, NamedLibraryElement value, ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public Collection<AbstractTreeNode> getChildren() {
-    final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-    LibraryGroupNode.addLibraryChildren(getValue().getOrderEntry(), children, getProject(), this);
-    return children;
-  }
-
-  @Override
-  public String getTestPresentation() {
-    return "Library: " + getValue().getName();
-  }
-
-  @Override
-  public String getName() {
-    return getValue().getName();
-  }
-
-  @Override
-  public boolean contains(@Nonnull VirtualFile file) {
-    return orderEntryContainsFile(getValue().getOrderEntry(), file);
-  }
-
-  private static boolean orderEntryContainsFile(OrderEntry orderEntry, VirtualFile file) {
-    for (OrderRootType rootType : OrderRootType.getAllTypes()) {
-      if (containsFileInOrderType(orderEntry, rootType, file)) return true;
+    public NamedLibraryElementNode(Project project, NamedLibraryElement value, ViewSettings viewSettings) {
+        super(project, value, viewSettings);
     }
-    return false;
-  }
 
-  private static boolean containsFileInOrderType(final OrderEntry orderEntry, final OrderRootType orderType, final VirtualFile file) {
-    if (!orderEntry.isValid()) return false;
-    VirtualFile[] files = orderEntry.getFiles(orderType);
-    for (VirtualFile virtualFile : files) {
-      boolean ancestor = VfsUtilCore.isAncestor(virtualFile, file, false);
-      if (ancestor) return true;
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public Collection<AbstractTreeNode> getChildren() {
+        List<AbstractTreeNode> children = new ArrayList<>();
+        LibraryGroupNode.addLibraryChildren(getValue().getOrderEntry(), children, getProject(), this);
+        return children;
     }
-    return false;
-  }
 
-  @Override
-  public void update(PresentationData presentation) {
-    presentation.setPresentableText(getValue().getName());
-    final OrderEntry orderEntry = getValue().getOrderEntry();
+    @Override
+    public String getTestPresentation() {
+        return "Library: " + getValue().getName();
+    }
 
-    if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
-      final Sdk sdk = sdkOrderEntry.getSdk();
-      presentation.setIcon(SdkUtil.getIcon(sdkOrderEntry.getSdk()));
-      if (sdk != null) { //jdk not specified
-        final String path = sdk.getHomePath();
-        if (path != null) {
-          presentation.setLocationString(FileUtil.toSystemDependentName(path));
+    @Override
+    public String getName() {
+        return getValue().getName();
+    }
+
+    @Override
+    public boolean contains(@Nonnull VirtualFile file) {
+        return orderEntryContainsFile(getValue().getOrderEntry(), file);
+    }
+
+    private static boolean orderEntryContainsFile(OrderEntry orderEntry, VirtualFile file) {
+        for (OrderRootType rootType : OrderRootType.getAllTypes()) {
+            if (containsFileInOrderType(orderEntry, rootType, file)) {
+                return true;
+            }
         }
-      }
-      presentation.setTooltip(null);
+        return false;
     }
-    else if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
-      presentation.setIcon(getIconForLibrary(orderEntry));
-      presentation.setTooltip(StringUtil.capitalize(IdeLocalize.nodeProjectviewLibrary(libraryOrderEntry.getLibraryLevel()).get()));
+
+    private static boolean containsFileInOrderType(OrderEntry orderEntry, OrderRootType orderType, VirtualFile file) {
+        if (!orderEntry.isValid()) {
+            return false;
+        }
+        VirtualFile[] files = orderEntry.getFiles(orderType);
+        for (VirtualFile virtualFile : files) {
+            boolean ancestor = VfsUtilCore.isAncestor(virtualFile, file, false);
+            if (ancestor) {
+                return true;
+            }
+        }
+        return false;
     }
-    else if (orderEntry instanceof OrderEntryWithTracking) {
-      Consumer<ColoredTextContainer> renderForOrderEntry = OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(orderEntry);
-      ColoredStringBuilder builder = new ColoredStringBuilder();
-      renderForOrderEntry.accept(builder);
 
-      Image icon = builder.getIcon();
-      presentation.setIcon(icon == null ? AllIcons.Actions.Help : icon);
+    @Override
+    public void update(PresentationData presentation) {
+        presentation.setPresentableText(getValue().getName());
+        OrderEntry orderEntry = getValue().getOrderEntry();
+
+        if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
+            Sdk sdk = sdkOrderEntry.getSdk();
+            presentation.setIcon(SdkUtil.getIcon(sdkOrderEntry.getSdk()));
+            if (sdk != null) { //jdk not specified
+                String path = sdk.getHomePath();
+                if (path != null) {
+                    presentation.setLocationString(FileUtil.toSystemDependentName(path));
+                }
+            }
+            presentation.setTooltip(null);
+        }
+        else if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
+            presentation.setIcon(getIconForLibrary(orderEntry));
+            presentation.setTooltip(StringUtil.capitalize(IdeLocalize.nodeProjectviewLibrary(libraryOrderEntry.getLibraryLevel()).get()));
+        }
+        else if (orderEntry instanceof OrderEntryWithTracking) {
+            Consumer<ColoredTextContainer> renderForOrderEntry =
+                OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(orderEntry);
+            ColoredStringBuilder builder = new ColoredStringBuilder();
+            renderForOrderEntry.accept(builder);
+
+            Image icon = builder.getIcon();
+            presentation.setIcon(icon == null ? PlatformIconGroup.actionsHelp() : icon);
+        }
     }
-  }
 
-  private static Image getIconForLibrary(OrderEntry orderEntry) {
-    if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
-      Library library = libraryOrderEntry.getLibrary();
-      if (library != null) {
-        return LibraryPresentationManager.getInstance().getNamedLibraryIcon(library, null);
-      }
+    private static Image getIconForLibrary(OrderEntry orderEntry) {
+        if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
+            Library library = libraryOrderEntry.getLibrary();
+            if (library != null) {
+                return LibraryPresentationManager.getInstance().getNamedLibraryIcon(library, null);
+            }
+        }
+        return PlatformIconGroup.nodesPplib();
     }
-    return AllIcons.Nodes.PpLib;
-  }
 
-  @Override
-  @SuppressWarnings("unchecked")
-  @RequiredUIAccess
-  public void navigate(final boolean requestFocus) {
-    OrderEntryType type = getValue().getOrderEntry().getType();
-    OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
-    editor.navigate(getValue().getOrderEntry());
-  }
+    @Override
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    public void navigate(boolean requestFocus) {
+        OrderEntryType type = getValue().getOrderEntry().getType();
+        OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
+        editor.navigate(getValue().getOrderEntry());
+    }
 
-  @Override
-  public boolean canNavigate() {
-    return true;
-  }
+    @Override
+    public boolean canNavigate() {
+        return true;
+    }
 
-  @Override
-  public String getNavigateActionText(boolean focusEditor) {
-    return "Open Library Settings";
-  }
+    @Override
+    public String getNavigateActionText(boolean focusEditor) {
+        return "Open Library Settings";
+    }
 }

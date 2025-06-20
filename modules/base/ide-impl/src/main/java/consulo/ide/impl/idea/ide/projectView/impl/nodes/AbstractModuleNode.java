@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
@@ -34,77 +35,84 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public abstract class AbstractModuleNode extends ProjectViewNode<Module> implements NavigatableWithText {
-  protected AbstractModuleNode(Project project, Module module, ViewSettings viewSettings) {
-    super(project, module, viewSettings);
-  }
-
-  @Override
-  public void update(PresentationData presentation) {
-    if (getValue().isDisposed()) {
-      setValue(null);
-      return;
-    }
-    presentation.setPresentableText(getValue().getName());
-    if (showModuleNameInBold()) {
-      presentation.addText(getValue().getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+    protected AbstractModuleNode(Project project, Module module, ViewSettings viewSettings) {
+        super(project, module, viewSettings);
     }
 
-    presentation.setIcon(AllIcons.Nodes.Module);
-  }
+    @Override
+    public void update(PresentationData presentation) {
+        if (getValue().isDisposed()) {
+            setValue(null);
+            return;
+        }
+        presentation.setPresentableText(getValue().getName());
+        if (showModuleNameInBold()) {
+            presentation.addText(getValue().getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+        }
 
-  protected boolean showModuleNameInBold() {
-    return true;
-  }
-
-  @Override
-  public String getTestPresentation() {
-    return "Module";
-  }
-
-  @Override
-  public Collection<VirtualFile> getRoots() {
-    return Arrays.asList(ModuleRootManager.getInstance(getValue()).getContentRoots());
-  }
-
-  @Override
-  public boolean contains(@Nonnull VirtualFile file) {
-    Module module = getValue();
-    if (module == null || module.isDisposed()) return false;
-
-    final VirtualFile testee;
-    if (file.getFileSystem() instanceof ArchiveFileSystem) {
-      testee = ((ArchiveFileSystem)file.getFileSystem()).getLocalVirtualFileFor(file);
-      if (testee == null) return false;
+        presentation.setIcon(PlatformIconGroup.nodesModule());
     }
-    else {
-      testee = file;
+
+    protected boolean showModuleNameInBold() {
+        return true;
     }
-    for (VirtualFile root : ModuleRootManager.getInstance(module).getContentRoots()) {
-      if (VfsUtilCore.isAncestor(root, testee, false)) return true;
+
+    @Override
+    public String getTestPresentation() {
+        return "Module";
     }
-    return false;
-  }
 
-  @Override
-  public String getToolTip() {
-    return "tooltip";
-  }
-
-  @Override
-  public void navigate(final boolean requestFocus) {
-    Module module = getValue();
-    if (module != null) {
-      ProjectSettingsService.getInstance(myProject).openModuleSettings(module);
+    @Override
+    public Collection<VirtualFile> getRoots() {
+        return Arrays.asList(ModuleRootManager.getInstance(getValue()).getContentRoots());
     }
-  }
 
-  @Override
-  public String getNavigateActionText(boolean focusEditor) {
-    return "Open Module Settings";
-  }
+    @Override
+    public boolean contains(@Nonnull VirtualFile file) {
+        Module module = getValue();
+        if (module == null || module.isDisposed()) {
+            return false;
+        }
 
-  @Override
-  public boolean canNavigate() {
-    return ProjectSettingsService.getInstance(myProject).canOpenModuleSettings() && getValue() != null;
-  }
+        VirtualFile testee;
+        if (file.getFileSystem() instanceof ArchiveFileSystem archiveFileSystem) {
+            testee = archiveFileSystem.getLocalVirtualFileFor(file);
+            if (testee == null) {
+                return false;
+            }
+        }
+        else {
+            testee = file;
+        }
+        for (VirtualFile root : ModuleRootManager.getInstance(module).getContentRoots()) {
+            if (VfsUtilCore.isAncestor(root, testee, false)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String getToolTip() {
+        return "tooltip";
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void navigate(boolean requestFocus) {
+        Module module = getValue();
+        if (module != null) {
+            ProjectSettingsService.getInstance(myProject).openModuleSettings(module);
+        }
+    }
+
+    @Override
+    public String getNavigateActionText(boolean focusEditor) {
+        return "Open Module Settings";
+    }
+
+    @Override
+    public boolean canNavigate() {
+        return ProjectSettingsService.getInstance(myProject).canOpenModuleSettings() && getValue() != null;
+    }
 }

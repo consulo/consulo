@@ -30,38 +30,43 @@ import consulo.language.content.LanguageContentFolderScopes;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class PackageViewModuleNode extends AbstractModuleNode{
-  public PackageViewModuleNode(Project project, Module value, ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
-
-  public PackageViewModuleNode(Project project, Object value, ViewSettings viewSettings) {
-    this(project, (Module)value, viewSettings);
-  }
-
-  @RequiredReadAction
-  @Override
-  @Nonnull
-  public Collection<AbstractTreeNode> getChildren() {
-    final Collection<AbstractTreeNode> result = PackageNodeUtil
-      .createPackageViewChildrenOnFiles(Arrays.asList(ModuleRootManager.getInstance(getValue()).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest())), myProject, getSettings(),
-                                        getValue(), false);
-    if (getSettings().isShowLibraryContents()) {
-      result.add(new PackageViewLibrariesNode(getProject(), getValue(),getSettings()));
+public class PackageViewModuleNode extends AbstractModuleNode {
+    public PackageViewModuleNode(Project project, Module value, ViewSettings viewSettings) {
+        super(project, value, viewSettings);
     }
-    return result;
 
-  }
+    public PackageViewModuleNode(Project project, Object value, ViewSettings viewSettings) {
+        this(project, (Module) value, viewSettings);
+    }
 
-  @Override
-  public boolean contains(@Nonnull VirtualFile file) {
-    Module module = getValue();
-    return module != null && !module.isDisposed() &&
-           (ModuleUtilCore.moduleContainsFile(module, file, false) || ModuleUtilCore.moduleContainsFile(module, file, true));
-  }
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public Collection<AbstractTreeNode> getChildren() {
+        Collection<AbstractTreeNode> result = PackageNodeUtil.createPackageViewChildrenOnFiles(
+            Arrays.asList(
+                ModuleRootManager.getInstance(getValue()).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest())
+            ),
+            myProject,
+            getSettings(),
+            getValue(),
+            false
+        );
+        if (getSettings().isShowLibraryContents()) {
+            result.add(new PackageViewLibrariesNode(getProject(), getValue(), getSettings()));
+        }
+        return result;
+    }
 
-  @Override
-  public boolean someChildContainsFile(VirtualFile file) {
-    return true;
-  }
+    @Override
+    public boolean contains(@Nonnull VirtualFile file) {
+        Module module = getValue();
+        return module != null && !module.isDisposed()
+            && (ModuleUtilCore.moduleContainsFile(module, file, false) || ModuleUtilCore.moduleContainsFile(module, file, true));
+    }
+
+    @Override
+    public boolean someChildContainsFile(VirtualFile file) {
+        return true;
+    }
 }
