@@ -15,20 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.application.Application;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
@@ -40,13 +39,14 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
         super(project, value, viewSettings);
     }
 
+    @RequiredReadAction
     protected Collection<AbstractTreeNode> modulesAndGroups(Module[] modules) {
         Map<String, List<Module>> groups = new HashMap<>();
         List<Module> nonGroupedModules = new ArrayList<>(Arrays.asList(modules));
-        for (final Module module : modules) {
-            final String[] path = ModuleManager.getInstance(getProject()).getModuleGroupPath(module);
+        for (Module module : modules) {
+            String[] path = ModuleManager.getInstance(getProject()).getModuleGroupPath(module);
             if (path != null) {
-                final String topLevelGroupName = path[0];
+                String topLevelGroupName = path[0];
                 List<Module> moduleList = groups.get(topLevelGroupName);
                 if (moduleList == null) {
                     moduleList = new ArrayList<>();
@@ -75,13 +75,13 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
         return result;
     }
 
-    protected abstract AbstractTreeNode createModuleGroup(final Module module);
+    protected abstract AbstractTreeNode createModuleGroup(Module module);
 
-    protected abstract AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup);
+    protected abstract AbstractTreeNode createModuleGroupNode(ModuleGroup moduleGroup);
 
     @Override
     public void update(PresentationData presentation) {
-        presentation.setIcon(Application.get().getIcon());
+        presentation.setIcon(getProject().getApplication().getIcon());
         presentation.setPresentableText(getProject().getName());
     }
 

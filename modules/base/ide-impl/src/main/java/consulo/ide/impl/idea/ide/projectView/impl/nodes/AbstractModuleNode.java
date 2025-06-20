@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
@@ -49,7 +50,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
             presentation.addText(getValue().getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
         }
 
-        presentation.setIcon(AllIcons.Nodes.Module);
+        presentation.setIcon(PlatformIconGroup.nodesModule());
     }
 
     protected boolean showModuleNameInBold() {
@@ -73,9 +74,9 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
             return false;
         }
 
-        final VirtualFile testee;
-        if (file.getFileSystem() instanceof ArchiveFileSystem) {
-            testee = ((ArchiveFileSystem) file.getFileSystem()).getLocalVirtualFileFor(file);
+        VirtualFile testee;
+        if (file.getFileSystem() instanceof ArchiveFileSystem archiveFileSystem) {
+            testee = archiveFileSystem.getLocalVirtualFileFor(file);
             if (testee == null) {
                 return false;
             }
@@ -97,7 +98,8 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
     }
 
     @Override
-    public void navigate(final boolean requestFocus) {
+    @RequiredUIAccess
+    public void navigate(boolean requestFocus) {
         Module module = getValue();
         if (module != null) {
             ProjectSettingsService.getInstance(myProject).openModuleSettings(module);

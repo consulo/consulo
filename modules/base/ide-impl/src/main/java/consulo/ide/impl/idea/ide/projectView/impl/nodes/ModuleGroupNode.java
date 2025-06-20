@@ -15,24 +15,23 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.project.ui.view.tree.ViewSettings;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesToGroupAction;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.project.ui.view.tree.ModuleGroup;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.dataContext.DataContext;
-import consulo.module.Module;
-import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
-
+import consulo.module.Module;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -42,11 +41,11 @@ import java.util.*;
 public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> implements DropTargetNode {
     private static final Logger LOG = Logger.getInstance(ModuleGroupNode.class);
 
-    public ModuleGroupNode(final Project project, final ModuleGroup value, final ViewSettings viewSettings) {
+    public ModuleGroupNode(Project project, ModuleGroup value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 
-    public ModuleGroupNode(final Project project, final Object value, final ViewSettings viewSettings) {
+    public ModuleGroupNode(Project project, Object value, ViewSettings viewSettings) {
         this(project, (ModuleGroup) value, viewSettings);
     }
 
@@ -58,9 +57,9 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
     @Override
     @Nonnull
     public Collection<AbstractTreeNode> getChildren() {
-        final Collection<ModuleGroup> childGroups = getValue().childGroups(getProject());
-        final List<AbstractTreeNode> result = new ArrayList<>();
-        for (final ModuleGroup childGroup : childGroups) {
+        Collection<ModuleGroup> childGroups = getValue().childGroups(getProject());
+        List<AbstractTreeNode> result = new ArrayList<>();
+        for (ModuleGroup childGroup : childGroups) {
             result.add(createModuleGroupNode(childGroup));
         }
         Collection<Module> modules = getValue().modulesInGroup(getProject(), false);
@@ -80,12 +79,13 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
     }
 
     @Override
+    @RequiredReadAction
     public Collection<VirtualFile> getRoots() {
         Collection<AbstractTreeNode> children = getChildren();
         Set<VirtualFile> result = new HashSet<>();
         for (AbstractTreeNode each : children) {
-            if (each instanceof ProjectViewNode) {
-                result.addAll(((ProjectViewNode) each).getRoots());
+            if (each instanceof ProjectViewNode projectViewNode) {
+                result.addAll(projectViewNode.getRoots());
             }
         }
 
@@ -99,9 +99,9 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
 
     @Override
     public void update(PresentationData presentation) {
-        final String[] groupPath = getValue().getGroupPath();
+        String[] groupPath = getValue().getGroupPath();
         presentation.setPresentableText(groupPath[groupPath.length - 1]);
-        presentation.setIcon(AllIcons.Nodes.ModuleGroup);
+        presentation.setIcon(PlatformIconGroup.nodesModulegroup());
     }
 
     @Override
@@ -111,7 +111,7 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
 
     @Override
     public String getToolTip() {
-        return IdeBundle.message("tooltip.module.group");
+        return IdeLocalize.tooltipModuleGroup().get();
     }
 
     @Override
@@ -120,19 +120,19 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
     }
 
     @Override
-    public int getTypeSortWeight(final boolean sortByType) {
+    public int getTypeSortWeight(boolean sortByType) {
         return 1;
     }
 
     @Override
-    public boolean canDrop(TreeNode[] sourceNodes) {
-        final List<Module> modules = extractModules(sourceNodes);
+    public boolean canDrop(@Nonnull TreeNode[] sourceNodes) {
+        List<Module> modules = extractModules(sourceNodes);
         return !modules.isEmpty();
     }
 
     @Override
-    public void drop(TreeNode[] sourceNodes, DataContext dataContext) {
-        final List<Module> modules = extractModules(sourceNodes);
+    public void drop(@Nonnull TreeNode[] sourceNodes, @Nonnull DataContext dataContext) {
+        List<Module> modules = extractModules(sourceNodes);
         MoveModulesToGroupAction.doMove(modules.toArray(new Module[modules.size()]), getValue(), dataContext);
     }
 
@@ -142,13 +142,11 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
     }
 
     private static List<Module> extractModules(TreeNode[] sourceNodes) {
-        final List<Module> modules = new ArrayList<>();
+        List<Module> modules = new ArrayList<>();
         for (TreeNode sourceNode : sourceNodes) {
-            if (sourceNode instanceof DefaultMutableTreeNode) {
-                final Object userObject = AbstractProjectViewPane.extractValueFromNode(sourceNode);
-                if (userObject instanceof Module) {
-                    modules.add((Module) userObject);
-                }
+            if (sourceNode instanceof DefaultMutableTreeNode
+                && AbstractProjectViewPane.extractValueFromNode(sourceNode) instanceof Module module) {
+                modules.add(module);
             }
         }
         return modules;

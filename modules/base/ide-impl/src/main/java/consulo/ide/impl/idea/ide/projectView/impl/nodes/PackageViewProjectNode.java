@@ -29,7 +29,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
 import consulo.language.content.LanguageContentFolderScopes;
@@ -48,10 +48,10 @@ public class PackageViewProjectNode extends AbstractProjectNode {
     @Nonnull
     public Collection<AbstractTreeNode> getChildren() {
         if (getSettings().isShowModules()) {
-            final List<Module> allModules = new ArrayList<Module>(Arrays.asList(ModuleManager.getInstance(getProject()).getModules()));
+            List<Module> allModules = new ArrayList<>(Arrays.asList(ModuleManager.getInstance(getProject()).getModules()));
             for (Iterator<Module> it = allModules.iterator(); it.hasNext(); ) {
-                final Module module = it.next();
-                final VirtualFile[] sourceRoots =
+                Module module = it.next();
+                VirtualFile[] sourceRoots =
                     ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
                 if (sourceRoots.length == 0) {
                     // do not show modules with no source roots configured
@@ -61,25 +61,25 @@ public class PackageViewProjectNode extends AbstractProjectNode {
             return modulesAndGroups(allModules.toArray(new Module[allModules.size()]));
         }
         else {
-            final List<VirtualFile> sourceRoots = new ArrayList<VirtualFile>();
-            final ProjectRootManager projectRootManager = ProjectRootManager.getInstance(myProject);
+            List<VirtualFile> sourceRoots = new ArrayList<>();
+            ProjectRootManager projectRootManager = ProjectRootManager.getInstance(myProject);
             ContainerUtil.addAll(sourceRoots, projectRootManager.getContentSourceRoots());
 
-            final PsiManager psiManager = PsiManager.getInstance(myProject);
-            final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-            final Set<PsiPackage> topLevelPackages = new HashSet<PsiPackage>();
+            PsiManager psiManager = PsiManager.getInstance(myProject);
+            List<AbstractTreeNode> children = new ArrayList<>();
+            Set<PsiPackage> topLevelPackages = new HashSet<>();
 
-            for (final VirtualFile root : sourceRoots) {
-                final PsiDirectory directory = psiManager.findDirectory(root);
+            for (VirtualFile root : sourceRoots) {
+                PsiDirectory directory = psiManager.findDirectory(root);
                 if (directory == null) {
                     continue;
                 }
-                final PsiPackage directoryPackage = PsiPackageManager.getInstance(myProject).findAnyPackage(directory);
+                PsiPackage directoryPackage = PsiPackageManager.getInstance(myProject).findAnyPackage(directory);
                 if (directoryPackage == null || PackageNodeUtil.isPackageDefault(directoryPackage)) {
                     // add subpackages
-                    final PsiDirectory[] subdirectories = directory.getSubdirectories();
+                    PsiDirectory[] subdirectories = directory.getSubdirectories();
                     for (PsiDirectory subdirectory : subdirectories) {
-                        final PsiPackage aPackage = PsiPackageManager.getInstance(myProject).findAnyPackage(subdirectory);
+                        PsiPackage aPackage = PsiPackageManager.getInstance(myProject).findAnyPackage(subdirectory);
                         if (aPackage != null && !PackageNodeUtil.isPackageDefault(aPackage)) {
                             topLevelPackages.add(aPackage);
                         }
@@ -93,7 +93,7 @@ public class PackageViewProjectNode extends AbstractProjectNode {
                 }
             }
 
-            for (final PsiPackage psiPackage : topLevelPackages) {
+            for (PsiPackage psiPackage : topLevelPackages) {
                 PackageNodeUtil.addPackageAsChild(children, psiPackage, null, getSettings(), false);
             }
 
@@ -106,12 +106,12 @@ public class PackageViewProjectNode extends AbstractProjectNode {
     }
 
     @Override
-    protected AbstractTreeNode createModuleGroup(final Module module) {
+    protected AbstractTreeNode createModuleGroup(Module module) {
         return new PackageViewModuleNode(getProject(), module, getSettings());
     }
 
     @Override
-    protected AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup) {
+    protected AbstractTreeNode createModuleGroupNode(ModuleGroup moduleGroup) {
         return new PackageViewModuleGroupNode(getProject(), moduleGroup, getSettings());
     }
 

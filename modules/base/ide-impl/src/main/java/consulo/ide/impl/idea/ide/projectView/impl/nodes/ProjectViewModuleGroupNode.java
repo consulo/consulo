@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.ModuleGroup;
@@ -27,23 +28,24 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
 
 /**
- * User: anna
- * Date: Feb 22, 2005
+ * @author anna
+ * @since 2005-02-22
  */
 public class ProjectViewModuleGroupNode extends ModuleGroupNode {
-    public ProjectViewModuleGroupNode(final Project project, final Object value, final ViewSettings viewSettings) {
+    public ProjectViewModuleGroupNode(Project project, Object value, ViewSettings viewSettings) {
         super(project, (ModuleGroup) value, viewSettings);
     }
 
-    public ProjectViewModuleGroupNode(final Project project, final ModuleGroup value, final ViewSettings viewSettings) {
+    public ProjectViewModuleGroupNode(Project project, ModuleGroup value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 
     @Override
+    @RequiredReadAction
     protected AbstractTreeNode createModuleNode(Module module) {
-        final VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
+        VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
         if (roots.length == 1) {
-            final PsiDirectory psi = PsiManager.getInstance(myProject).findDirectory(roots[0]);
+            PsiDirectory psi = PsiManager.getInstance(myProject).findDirectory(roots[0]);
             if (psi != null) {
                 return new PsiDirectoryNode(myProject, psi, getSettings());
             }

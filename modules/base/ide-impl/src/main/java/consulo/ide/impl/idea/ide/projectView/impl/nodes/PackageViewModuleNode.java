@@ -43,7 +43,7 @@ public class PackageViewModuleNode extends AbstractModuleNode {
     @Override
     @Nonnull
     public Collection<AbstractTreeNode> getChildren() {
-        final Collection<AbstractTreeNode> result = PackageNodeUtil.createPackageViewChildrenOnFiles(
+        Collection<AbstractTreeNode> result = PackageNodeUtil.createPackageViewChildrenOnFiles(
             Arrays.asList(
                 ModuleRootManager.getInstance(getValue()).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest())
             ),
@@ -56,14 +56,13 @@ public class PackageViewModuleNode extends AbstractModuleNode {
             result.add(new PackageViewLibrariesNode(getProject(), getValue(), getSettings()));
         }
         return result;
-
     }
 
     @Override
     public boolean contains(@Nonnull VirtualFile file) {
         Module module = getValue();
-        return module != null && !module.isDisposed() &&
-            (ModuleUtilCore.moduleContainsFile(module, file, false) || ModuleUtilCore.moduleContainsFile(module, file, true));
+        return module != null && !module.isDisposed()
+            && (ModuleUtilCore.moduleContainsFile(module, file, false) || ModuleUtilCore.moduleContainsFile(module, file, true));
     }
 
     @Override

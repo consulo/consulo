@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkUtil;
@@ -28,6 +27,7 @@ import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.language.pom.NavigatableWithText;
 import consulo.module.content.layer.orderEntry.*;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -53,11 +53,11 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
         super(project, value, viewSettings);
     }
 
-    @RequiredReadAction
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
-        final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
+        List<AbstractTreeNode> children = new ArrayList<>();
         LibraryGroupNode.addLibraryChildren(getValue().getOrderEntry(), children, getProject(), this);
         return children;
     }
@@ -86,7 +86,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
         return false;
     }
 
-    private static boolean containsFileInOrderType(final OrderEntry orderEntry, final OrderRootType orderType, final VirtualFile file) {
+    private static boolean containsFileInOrderType(OrderEntry orderEntry, OrderRootType orderType, VirtualFile file) {
         if (!orderEntry.isValid()) {
             return false;
         }
@@ -103,13 +103,13 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     @Override
     public void update(PresentationData presentation) {
         presentation.setPresentableText(getValue().getName());
-        final OrderEntry orderEntry = getValue().getOrderEntry();
+        OrderEntry orderEntry = getValue().getOrderEntry();
 
         if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
-            final Sdk sdk = sdkOrderEntry.getSdk();
+            Sdk sdk = sdkOrderEntry.getSdk();
             presentation.setIcon(SdkUtil.getIcon(sdkOrderEntry.getSdk()));
             if (sdk != null) { //jdk not specified
-                final String path = sdk.getHomePath();
+                String path = sdk.getHomePath();
                 if (path != null) {
                     presentation.setLocationString(FileUtil.toSystemDependentName(path));
                 }
@@ -127,7 +127,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
             renderForOrderEntry.accept(builder);
 
             Image icon = builder.getIcon();
-            presentation.setIcon(icon == null ? AllIcons.Actions.Help : icon);
+            presentation.setIcon(icon == null ? PlatformIconGroup.actionsHelp() : icon);
         }
     }
 
@@ -138,13 +138,13 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
                 return LibraryPresentationManager.getInstance().getNamedLibraryIcon(library, null);
             }
         }
-        return AllIcons.Nodes.PpLib;
+        return PlatformIconGroup.nodesPplib();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     @RequiredUIAccess
-    public void navigate(final boolean requestFocus) {
+    @SuppressWarnings("unchecked")
+    public void navigate(boolean requestFocus) {
         OrderEntryType type = getValue().getOrderEntry().getType();
         OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
         editor.navigate(getValue().getOrderEntry());

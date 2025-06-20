@@ -22,15 +22,15 @@ import consulo.module.Module;
 import consulo.project.Project;
 
 /**
- * User: anna
- * Date: Feb 22, 2005
+ * @author anna
+ * @since 2005-02-22
  */
 public class PackageViewModuleGroupNode extends ModuleGroupNode {
-    public PackageViewModuleGroupNode(final Project project, final Object value, final ViewSettings viewSettings) {
+    public PackageViewModuleGroupNode(Project project, Object value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 
-    public PackageViewModuleGroupNode(final Project project, final ModuleGroup value, final ViewSettings viewSettings) {
+    public PackageViewModuleGroupNode(Project project, ModuleGroup value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 

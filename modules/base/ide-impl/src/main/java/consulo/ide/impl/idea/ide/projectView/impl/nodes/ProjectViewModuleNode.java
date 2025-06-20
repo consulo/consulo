@@ -53,10 +53,10 @@ public class ProjectViewModuleNode extends AbstractModuleNode {
         ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         ModuleFileIndex moduleFileIndex = rootManager.getFileIndex();
 
-        final VirtualFile[] contentRoots = rootManager.getContentRoots();
-        final List<AbstractTreeNode> children = new ArrayList<>(contentRoots.length + 1);
-        final PsiManager psiManager = PsiManager.getInstance(module.getProject());
-        for (final VirtualFile contentRoot : contentRoots) {
+        VirtualFile[] contentRoots = rootManager.getContentRoots();
+        List<AbstractTreeNode> children = new ArrayList<>(contentRoots.length + 1);
+        PsiManager psiManager = PsiManager.getInstance(module.getProject());
+        for (VirtualFile contentRoot : contentRoots) {
             if (!moduleFileIndex.isInContent(contentRoot)) {
                 continue;
             }
@@ -83,7 +83,7 @@ public class ProjectViewModuleNode extends AbstractModuleNode {
     }
 
     @Override
-    public int getTypeSortWeight(final boolean sortByType) {
+    public int getTypeSortWeight(boolean sortByType) {
         return 2;
     }
 }

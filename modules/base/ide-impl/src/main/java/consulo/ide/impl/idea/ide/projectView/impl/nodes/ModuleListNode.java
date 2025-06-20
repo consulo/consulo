@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
@@ -36,14 +36,14 @@ public class ModuleListNode extends ProjectViewNode<Module> {
         super(project, value, viewSettings);
     }
 
-    @RequiredReadAction
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
         Module module = getValue();
 
-        final Module[] deps = ModuleRootManager.getInstance(module).getDependencies(true);
-        final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
+        Module[] deps = ModuleRootManager.getInstance(module).getDependencies(true);
+        List<AbstractTreeNode> children = new ArrayList<>();
         for (Module dependency : deps) {
             children.add(new ProjectViewModuleNode(myProject, dependency, getSettings()) {
                 @Override
@@ -70,7 +70,7 @@ public class ModuleListNode extends ProjectViewNode<Module> {
     @Override
     public void update(PresentationData presentation) {
         presentation.setPresentableText("Module Dependencies");
-        presentation.setIcon(AllIcons.Nodes.ModuleGroup);
+        presentation.setIcon(PlatformIconGroup.nodesModulegroup());
     }
 
     @Override

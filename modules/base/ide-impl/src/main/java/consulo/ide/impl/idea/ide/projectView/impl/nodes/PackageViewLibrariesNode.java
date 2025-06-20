@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.view.tree.PackageNodeUtil;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ProjectViewNode;
@@ -38,13 +38,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement> {
-    public PackageViewLibrariesNode(final Project project, Module module, final ViewSettings viewSettings) {
+    public PackageViewLibrariesNode(Project project, Module module, ViewSettings viewSettings) {
         super(project, new LibrariesElement(module, project), viewSettings);
     }
 
     @Override
-    public boolean contains(@Nonnull final VirtualFile file) {
+    public boolean contains(@Nonnull VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
+        //noinspection SimplifiableIfStatement
         if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) {
             return false;
         }
@@ -52,14 +53,14 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement> 
         return someChildContainsFile(file, false);
     }
 
-    @RequiredReadAction
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
-        final ArrayList<VirtualFile> roots = new ArrayList<VirtualFile>();
-        Module myModule = getValue().getModule();
+        List<VirtualFile> roots = new ArrayList<>();
+        Module myModule = getValue().module();
         if (myModule == null) {
-            final Module[] modules = ModuleManager.getInstance(getProject()).getModules();
+            Module[] modules = ModuleManager.getInstance(getProject()).getModules();
             for (Module module : modules) {
                 addModuleLibraryRoots(ModuleRootManager.getInstance(module), roots);
             }
@@ -74,6 +75,7 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement> 
     @Override
     public boolean someChildContainsFile(VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
+        //noinspection SimplifiableIfStatement
         if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) {
             return false;
         }
@@ -81,8 +83,8 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement> 
     }
 
     private static void addModuleLibraryRoots(ModuleRootManager moduleRootManager, List<VirtualFile> roots) {
-        final VirtualFile[] files = moduleRootManager.orderEntries().withoutModuleSourceEntries().withoutDepModules().classes().getRoots();
-        for (final VirtualFile file : files) {
+        VirtualFile[] files = moduleRootManager.orderEntries().withoutModuleSourceEntries().withoutDepModules().classes().getRoots();
+        for (VirtualFile file : files) {
             if (file.getFileSystem() instanceof ArchiveFileSystem && file.getParent() != null) {
                 // skip entries inside jars
                 continue;
@@ -92,9 +94,9 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement> 
     }
 
     @Override
-    public void update(final PresentationData presentation) {
-        presentation.setPresentableText(IdeBundle.message("node.projectview.libraries"));
-        presentation.setIcon(AllIcons.Nodes.PpLibFolder);
+    public void update(PresentationData presentation) {
+        presentation.setPresentableText(IdeLocalize.nodeProjectviewLibraries().get());
+        presentation.setIcon(PlatformIconGroup.nodesPplibfolder());
     }
 
     @Override

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.Sdk;
@@ -25,8 +24,8 @@ import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryType;
 import consulo.content.library.PersistentLibraryKind;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -37,11 +36,13 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -56,7 +57,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         super(project, value, viewSettings);
     }
 
-    public LibraryGroupNode(final Project project, final Object value, final ViewSettings viewSettings) {
+    public LibraryGroupNode(Project project, Object value, ViewSettings viewSettings) {
         this(project, (LibraryGroupElement) value, viewSettings);
     }
 
@@ -65,17 +66,16 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     @Nonnull
     public Collection<AbstractTreeNode> getChildren() {
         Module module = getValue().getModule();
-        final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-        final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-        final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
-        for (final OrderEntry orderEntry : orderEntries) {
-            if (orderEntry instanceof LibraryOrderEntry) {
-                final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry) orderEntry;
-                final Library library = libraryOrderEntry.getLibrary();
+        ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+        List<AbstractTreeNode> children = new ArrayList<>();
+        OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
+        for (OrderEntry orderEntry : orderEntries) {
+            if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
+                Library library = libraryOrderEntry.getLibrary();
                 if (library == null) {
                     continue;
                 }
-                final String libraryName = library.getName();
+                String libraryName = library.getName();
                 if (libraryName == null || libraryName.length() == 0) {
                     addLibraryChildren(libraryOrderEntry, children, getProject(), this);
                 }
@@ -87,9 +87,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
                     ));
                 }
             }
-            else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
-                final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry) orderEntry;
-                final Sdk jdk = sdkOrderEntry.getSdk();
+            else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
+                Sdk jdk = sdkOrderEntry.getSdk();
                 if (jdk != null) {
                     children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(module, sdkOrderEntry), getSettings()));
                 }
@@ -98,29 +97,25 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         return children;
     }
 
-    public static void addLibraryChildren(
-        final OrderEntry entry,
-        final List<AbstractTreeNode> children,
-        Project project,
-        ProjectViewNode node
-    ) {
-        final PsiManager psiManager = PsiManager.getInstance(project);
-        VirtualFile[] files = entry instanceof LibraryOrderEntry
-            ? getLibraryRoots((LibraryOrderEntry) entry)
+    @RequiredReadAction
+    public static void addLibraryChildren(OrderEntry entry, List<AbstractTreeNode> children, Project project, ProjectViewNode node) {
+        PsiManager psiManager = PsiManager.getInstance(project);
+        VirtualFile[] files = entry instanceof LibraryOrderEntry libraryOrderEntry
+            ? getLibraryRoots(libraryOrderEntry)
             : entry.getFiles(BinariesOrderRootType.getInstance());
-        for (final VirtualFile file : files) {
+        for (VirtualFile file : files) {
             if (!file.isValid()) {
                 continue;
             }
             if (file.isDirectory()) {
-                final PsiDirectory psiDir = psiManager.findDirectory(file);
+                PsiDirectory psiDir = psiManager.findDirectory(file);
                 if (psiDir == null) {
                     continue;
                 }
                 children.add(new PsiDirectoryNode(project, psiDir, node.getSettings()));
             }
             else {
-                final PsiFile psiFile = psiManager.findFile(file);
+                PsiFile psiFile = psiManager.findFile(file);
                 if (psiFile == null) {
                     continue;
                 }
@@ -137,7 +132,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
 
     @Override
     public boolean contains(@Nonnull VirtualFile file) {
-        final ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
+        ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
+        //noinspection SimplifiableIfStatement
         if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) {
             return false;
         }
@@ -147,8 +143,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
 
     @Override
     public void update(PresentationData presentation) {
-        presentation.setPresentableText(IdeBundle.message("node.projectview.libraries"));
-        presentation.setIcon(AllIcons.Nodes.PpLib);
+        presentation.setPresentableText(IdeLocalize.nodeProjectviewLibraries().get());
+        presentation.setIcon(PlatformIconGroup.nodesPplib());
     }
 
     @Override
@@ -157,7 +153,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     }
 
     @Override
-    public void navigate(final boolean requestFocus) {
+    @RequiredUIAccess
+    public void navigate(boolean requestFocus) {
         Module module = getValue().getModule();
         ProjectSettingsService.getInstance(myProject).openModuleLibrarySettings(module);
     }
@@ -181,7 +178,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
                 }
             }
         }
-        final ArrayList<VirtualFile> files = new ArrayList<VirtualFile>();
+        List<VirtualFile> files = new ArrayList<>();
         for (OrderRootType rootType : rootTypes) {
             files.addAll(Arrays.asList(library.getFiles(rootType)));
         }

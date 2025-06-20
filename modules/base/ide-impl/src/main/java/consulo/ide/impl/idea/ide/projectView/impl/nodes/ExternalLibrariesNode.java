@@ -19,46 +19,46 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.project.ui.view.internal.node.NamedLibraryElement;
-import consulo.project.ui.view.tree.PsiDirectoryNode;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.content.library.Library;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.project.Project;
-import consulo.content.bundle.Sdk;
-import consulo.content.library.Library;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiManager;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
-import consulo.content.base.BinariesOrderRootType;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.project.ui.view.tree.PsiDirectoryNode;
+import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.tree.PresentationData;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
 public class ExternalLibrariesNode extends ProjectViewNode<String> {
     public ExternalLibrariesNode(Project project, ViewSettings viewSettings) {
-        super(project, IdeBundle.message("node.projectview.external.libraries"), viewSettings);
+        super(project, IdeLocalize.nodeProjectviewExternalLibraries().get(), viewSettings);
     }
 
     @Override
     public boolean contains(@Nonnull VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
+        //noinspection SimplifiableIfStatement
         if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) {
             return false;
         }
@@ -71,21 +71,20 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
     @Override
     @RequiredUIAccess
     public Collection<? extends AbstractTreeNode> getChildren() {
-        final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
+        List<AbstractTreeNode> children = new ArrayList<>();
         ProjectFileIndex fileIndex = ProjectRootManager.getInstance(getProject()).getFileIndex();
         Module[] modules = ModuleManager.getInstance(getProject()).getModules();
-        Set<Library> processedLibraries = new HashSet<Library>();
-        Set<Sdk> processedSdk = new HashSet<Sdk>();
-        Set<OrderEntry> processedCustomOrderEntries = new HashSet<OrderEntry>();
+        Set<Library> processedLibraries = new HashSet<>();
+        Set<Sdk> processedSdk = new HashSet<>();
+        Set<OrderEntry> processedCustomOrderEntries = new HashSet<>();
 
         for (Module module : modules) {
-            final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-            final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
+            ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+            OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
             loop:
-            for (final OrderEntry orderEntry : orderEntries) {
-                if (orderEntry instanceof LibraryOrderEntry) {
-                    final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry) orderEntry;
-                    final Library library = libraryOrderEntry.getLibrary();
+            for (OrderEntry orderEntry : orderEntries) {
+                if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
+                    Library library = libraryOrderEntry.getLibrary();
                     if (library == null) {
                         continue;
                     }
@@ -98,7 +97,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
                         continue;
                     }
 
-                    final String libraryName = library.getName();
+                    String libraryName = library.getName();
                     if (libraryName == null || libraryName.length() == 0) {
                         addLibraryChildren(libraryOrderEntry, children, getProject(), this);
                     }
@@ -110,9 +109,8 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
                         ));
                     }
                 }
-                else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
-                    final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry) orderEntry;
-                    final Sdk sdk = sdkOrderEntry.getSdk();
+                else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
+                    Sdk sdk = sdkOrderEntry.getSdk();
                     if (sdk != null) {
                         if (processedSdk.contains(sdk)) {
                             continue;
@@ -144,15 +142,15 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
 
     @RequiredReadAction
     public static void addLibraryChildren(
-        final LibraryOrderEntry entry,
-        final List<AbstractTreeNode> children,
+        LibraryOrderEntry entry,
+        List<AbstractTreeNode> children,
         Project project,
         ProjectViewNode node
     ) {
-        final PsiManager psiManager = PsiManager.getInstance(project);
-        final VirtualFile[] files = entry.getFiles(BinariesOrderRootType.getInstance());
-        for (final VirtualFile file : files) {
-            final PsiDirectory psiDir = psiManager.findDirectory(file);
+        PsiManager psiManager = PsiManager.getInstance(project);
+        VirtualFile[] files = entry.getFiles(BinariesOrderRootType.getInstance());
+        for (VirtualFile file : files) {
+            PsiDirectory psiDir = psiManager.findDirectory(file);
             if (psiDir == null) {
                 continue;
             }
@@ -171,7 +169,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
 
     @Override
     protected void update(PresentationData presentation) {
-        presentation.setPresentableText(IdeBundle.message("node.projectview.external.libraries"));
-        presentation.setIcon(AllIcons.Nodes.PpLibFolder);
+        presentation.setPresentableText(IdeLocalize.nodeProjectviewExternalLibraries().get());
+        presentation.setIcon(PlatformIconGroup.nodesPplibfolder());
     }
 }
