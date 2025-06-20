@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
@@ -69,7 +70,7 @@ public class ModuleListNode extends ProjectViewNode<Module> {
 
     @Override
     public void update(PresentationData presentation) {
-        presentation.setPresentableText("Module Dependencies");
+        presentation.setPresentableText(ProjectUIViewLocalize.nodeModuleDependenciesText());
         presentation.setIcon(PlatformIconGroup.nodesModulegroup());
     }
 

@@ -42,7 +42,7 @@ public class PsiTreeAnchorizerValue implements TreeAnchorizerValue<PsiElement> {
     @Nullable
     @Override
     public PsiElement extractValue() {
-        return myApplication.runReadAction((Supplier<PsiElement>) () -> myPointer.getElement());
+        return myApplication.runReadAction((Supplier<PsiElement>) myPointer::getElement);
     }
 
     @Override
