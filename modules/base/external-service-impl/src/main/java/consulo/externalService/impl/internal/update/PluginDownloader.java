@@ -58,275 +58,282 @@ import java.util.Locale;
  * @since 10-Aug-2007
  */
 public class PluginDownloader {
-  private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
+    private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
 
-  private static final String CHECKSUM_ALGORITHM = "SHA3-256";
-  private static final int MAX_TRYS = 3;
+    private static final String CHECKSUM_ALGORITHM = "SHA3-256";
+    private static final int MAX_TRYS = 3;
 
-  @Nonnull
-  public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor, boolean viaUpdate) {
-    return createDownloader(descriptor, null, viaUpdate);
-  }
-
-  @Nonnull
-  public static PluginDownloader createDownloader(@Nonnull PluginDescriptor d,
-                                                  @Nullable String platformVersion,
-                                                  boolean viaUpdate) {
-    return new PluginDownloader(d, (descriptor, tryIndex) -> {
-      boolean noRedirect = tryIndex > 2;
-      return RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(),
-                                                  descriptor.getPluginId().toString(),
-                                                  platformVersion,
-                                                  false,
-                                                  viaUpdate,
-                                                  noRedirect);
-    });
-  }
-
-  private final PluginId myPluginId;
-  private final PluginDownloadUrlBuilder myPluginDownloadUrlBuilder;
-
-  private File myFile;
-  private File myOldFile;
-
-  private final PluginDescriptor myDescriptor;
-
-  private boolean myIsPlatform;
-
-  public PluginDownloader(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull PluginDownloadUrlBuilder pluginDownloadUrlBuilder) {
-    myPluginId = pluginDescriptor.getPluginId();
-    myDescriptor = pluginDescriptor;
-    myPluginDownloadUrlBuilder = pluginDownloadUrlBuilder;
-    myIsPlatform = PlatformOrPluginUpdateChecker.getPlatformPluginId() == pluginDescriptor.getPluginId();
-  }
-
-  private String buildUrl(int tryIndex) {
-    return myPluginDownloadUrlBuilder.buildUrl(myDescriptor, tryIndex);
-  }
-
-  public void download(@Nonnull ProgressIndicator pi) throws PluginDownloadFailedException {
-    PluginDescriptor descriptor;
-    if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.findPlugin(myPluginId) != null) {
-      //store old plugins file
-      descriptor = PluginManager.findPlugin(myPluginId);
-
-      myOldFile = descriptor.getPath();
+    @Nonnull
+    public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor, boolean viaUpdate) {
+        return createDownloader(descriptor, null, viaUpdate);
     }
 
-    boolean checkChecksum = true;
-
-    // if there no checksum at server, disable check
-    String expectedChecksum = myDescriptor.getChecksumSHA3_256();
-    if (expectedChecksum == null) {
-      checkChecksum = false;
+    @Nonnull
+    public static PluginDownloader createDownloader(
+        @Nonnull PluginDescriptor d,
+        @Nullable String platformVersion,
+        boolean viaUpdate
+    ) {
+        return new PluginDownloader(d, (descriptor, tryIndex) -> {
+            boolean noRedirect = tryIndex > 2;
+            return RepositoryHelper.buildUrlForDownload(
+                UpdateSettings.getInstance().getChannel(),
+                descriptor.getPluginId().toString(),
+                platformVersion,
+                false,
+                viaUpdate,
+                noRedirect
+            );
+        });
     }
 
-    LocalizeValue errorMessage = ExternalServiceLocalize.unknownError();
-    if (checkChecksum) {
-      for (int i = 0; i < MAX_TRYS; i++) {
-        try {
-          pi.checkCanceled();
+    private final PluginId myPluginId;
+    private final PluginDownloadUrlBuilder myPluginDownloadUrlBuilder;
 
-          Pair<File, String> info = downloadPlugin(pi, expectedChecksum, i);
+    private File myFile;
+    private File myOldFile;
 
-          if (StringUtil.equal(info.getSecond(), expectedChecksum, true)) {
-            myFile = info.getFirst();
-            break;
-          }
-          else {
-            errorMessage = ExternalServiceLocalize.checksumFailed();
-            LOG.warn("Checksum check failed. Plugin: " + myPluginId + ", expected: " + expectedChecksum + ", actual: " + info.getSecond());
-          }
+    private final PluginDescriptor myDescriptor;
+
+    private boolean myIsPlatform;
+
+    public PluginDownloader(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull PluginDownloadUrlBuilder pluginDownloadUrlBuilder) {
+        myPluginId = pluginDescriptor.getPluginId();
+        myDescriptor = pluginDescriptor;
+        myPluginDownloadUrlBuilder = pluginDownloadUrlBuilder;
+        myIsPlatform = PlatformOrPluginUpdateChecker.getPlatformPluginId() == pluginDescriptor.getPluginId();
+    }
+
+    private String buildUrl(int tryIndex) {
+        return myPluginDownloadUrlBuilder.buildUrl(myDescriptor, tryIndex);
+    }
+
+    public void download(@Nonnull ProgressIndicator pi) throws PluginDownloadFailedException {
+        PluginDescriptor descriptor;
+        if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.findPlugin(myPluginId) != null) {
+            //store old plugins file
+            descriptor = PluginManager.findPlugin(myPluginId);
+
+            myOldFile = descriptor.getPath();
         }
-        catch (ProcessCanceledException e) {
-            throw e;
+
+        boolean checkChecksum = true;
+
+        // if there no checksum at server, disable check
+        String expectedChecksum = myDescriptor.getChecksumSHA3_256();
+        if (expectedChecksum == null) {
+            checkChecksum = false;
         }
-        catch (Throwable e) {
-          myFile = null;
-          errorMessage = LocalizeValue.ofNullable(e.getLocalizedMessage());
 
-          TimeoutUtil.sleep(5000L);
-        }
-      }
-    }
-    else {
-      try {
-        myFile = downloadPlugin(pi, "<disabled>", -1).getFirst();
-      }
-      catch (ProcessCanceledException e) {
-          throw e;
-      }
-      catch (Throwable e) {
-        myFile = null;
-        errorMessage = LocalizeValue.ofNullable(e.getLocalizedMessage());
-      }
-    }
+        LocalizeValue errorMessage = ExternalServiceLocalize.unknownError();
+        if (checkChecksum) {
+            for (int i = 0; i < MAX_TRYS; i++) {
+                try {
+                    pi.checkCanceled();
 
-    if (myFile == null) {
-      throw new PluginDownloadFailedException(myPluginId, getPluginName(), errorMessage);
-    }
-  }
+                    Pair<File, String> info = downloadPlugin(pi, expectedChecksum, i);
 
-  public void install(boolean deleteTempFile) throws IOException {
-    install(null, deleteTempFile);
-  }
+                    if (StringUtil.equal(info.getSecond(), expectedChecksum, true)) {
+                        myFile = info.getFirst();
+                        break;
+                    }
+                    else {
+                        errorMessage = ExternalServiceLocalize.checksumFailed();
+                        LOG.warn("Checksum check failed. Plugin: " + myPluginId + ", expected: " + expectedChecksum + ", actual: " + info.getSecond());
+                    }
+                }
+                catch (ProcessCanceledException e) {
+                    throw e;
+                }
+                catch (Throwable e) {
+                    myFile = null;
+                    errorMessage = LocalizeValue.ofNullable(e.getLocalizedMessage());
 
-  public void install(@Nullable ProgressIndicator indicator, boolean deleteTempFile) throws IOException {
-    LOG.assertTrue(myFile != null);
-    if (myOldFile != null) {
-      // add command to delete the 'action script' file
-      StartupActionScriptManager.ActionCommand deleteOld = new StartupActionScriptManager.DeleteCommand(myOldFile);
-      StartupActionScriptManager.addActionCommand(deleteOld);
-    }
-
-    if (myIsPlatform) {
-      if (indicator != null) {
-        indicator.setText2Value(ExternalServiceLocalize.progressExtractingPlatform());
-      }
-
-      String prefix = Platform.current().os().isMac() ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
-
-      File platformDirectory = ContainerPathManager.get().getExternalPlatformDirectory();
-
-      try (TarArchiveInputStream ais = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(myFile)))) {
-        TarArchiveEntry tempEntry;
-        while ((tempEntry = (TarArchiveEntry)ais.getNextEntry()) != null) {
-          String name = tempEntry.getName();
-          // we interest only in new build
-          if (name.startsWith(prefix) && name.length() != prefix.length()) {
-            File targetFile = new File(platformDirectory, name.substring(prefix.length(), name.length()));
-
-            if (tempEntry.isDirectory()) {
-              FileUtil.createDirectory(targetFile);
+                    TimeoutUtil.sleep(5000L);
+                }
             }
-            else if (tempEntry.isSymbolicLink()) {
-              FileUtil.createParentDirs(targetFile);
-
-              Files.createSymbolicLink(targetFile.toPath(), Paths.get(tempEntry.getLinkName()));
-            }
-            else {
-              FileUtil.createParentDirs(targetFile);
-
-              try (OutputStream stream = new FileOutputStream(targetFile)) {
-                StreamUtil.copyStreamContent(ais, stream);
-              }
-
-              targetFile.setLastModified(tempEntry.getLastModifiedDate().getTime());
-
-              // it's a fix for TarArchiveEntry.DEFAULT_FILE_MODE
-              if (tempEntry.getMode() == 0b111_101_101) {
-                NioPathUtil.setPosixFilePermissions(targetFile.toPath(), NioPathUtil.convertModeToFilePermissions(tempEntry.getMode()));
-              }
-            }
-          }
         }
-      }
+        else {
+            try {
+                myFile = downloadPlugin(pi, "<disabled>", -1).getFirst();
+            }
+            catch (ProcessCanceledException e) {
+                throw e;
+            }
+            catch (Throwable e) {
+                myFile = null;
+                errorMessage = LocalizeValue.ofNullable(e.getLocalizedMessage());
+            }
+        }
 
-      // at start - delete old version, after restart. On mac - we can't delete boot build
-      String buildNumber = ApplicationInfo.getInstance().getBuild().asString();
-      File oldBuild = new File(platformDirectory, "build" + buildNumber);
-      if (oldBuild.exists()) {
-        StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(oldBuild);
-        StartupActionScriptManager.addActionCommand(deleteTemp);
-      }
-
-      FileUtil.delete(myFile);
-
-      myFile = null;
-    }
-    else {
-      install(myFile, getPluginName(), deleteTempFile);
-    }
-  }
-
-  public static void install(final File fromFile, final String pluginName, boolean deleteFromFile) throws IOException {
-    // add command to unzip file to the plugins path
-    String unzipPath;
-    if (ZipUtil.isZipContainsFolder(fromFile)) {
-      unzipPath = ContainerPathManager.get().getInstallPluginsPath();
-    }
-    else {
-      unzipPath = ContainerPathManager.get().getInstallPluginsPath() + File.separator + pluginName;
+        if (myFile == null) {
+            throw new PluginDownloadFailedException(myPluginId, getPluginName(), errorMessage);
+        }
     }
 
-    StartupActionScriptManager.ActionCommand unzip = new StartupActionScriptManager.UnzipCommand(fromFile, new File(unzipPath));
-
-    StartupActionScriptManager.addActionCommand(unzip);
-
-    // add command to remove temp plugin file
-    if (deleteFromFile) {
-      StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(fromFile);
-      StartupActionScriptManager.addActionCommand(deleteTemp);
-    }
-  }
-
-  @Nonnull
-  private Pair<File, String> downloadPlugin(
-    @Nonnull ProgressIndicator indicator,
-    String expectedChecksum,
-    int tryIndex
-  ) throws IOException {
-    File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
-    if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
-      throw new IOException(ExternalServiceLocalize.errorCannotCreateTempDir(pluginsTemp).get());
-    }
-    final File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
-
-    indicator.checkCanceled();
-    if (myIsPlatform) {
-      indicator.setText2Value(ExternalServiceLocalize.progressDownloadingPlatform());
-    }
-    else {
-      indicator.setText2Value(ExternalServiceLocalize.progressDownloadingPlugin(getPluginName()));
+    public void install(boolean deleteTempFile) throws IOException {
+        install(null, deleteTempFile);
     }
 
-    LOG.info("Downloading plugin: " + myPluginId + ", try: " + tryIndex + ", checksum: " + expectedChecksum);
+    public void install(@Nullable ProgressIndicator indicator, boolean deleteTempFile) throws IOException {
+        LOG.assertTrue(myFile != null);
+        if (myOldFile != null) {
+            // add command to delete the 'action script' file
+            StartupActionScriptManager.ActionCommand deleteOld = new StartupActionScriptManager.DeleteCommand(myOldFile);
+            StartupActionScriptManager.addActionCommand(deleteOld);
+        }
 
-    String downloadUrl = buildUrl(tryIndex);
-    return HttpRequests.request(downloadUrl).gzip(false).connect(request -> {
-      MessageDigest digest;
-      try {
-        digest = MessageDigest.getInstance(CHECKSUM_ALGORITHM);
-      }
-      catch (NoSuchAlgorithmException e) {
-        throw new IOException(e);
-      }
+        if (myIsPlatform) {
+            if (indicator != null) {
+                indicator.setText2Value(ExternalServiceLocalize.progressExtractingPlatform());
+            }
 
-      request.saveToFile(file, digest, indicator);
+            String prefix = Platform.current().os().isMac() ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
 
-      String checksum = Hex.encodeHexString(digest.digest()).toUpperCase(Locale.ROOT);
+            File platformDirectory = ContainerPathManager.get().getExternalPlatformDirectory();
 
-      String fileName = getFileName();
-      File newFile = new File(file.getParentFile(), fileName);
-      FileUtil.rename(file, newFile, FilePermissionCopier.BY_NIO2);
-      return Pair.create(newFile, checksum);
-    });
-  }
+            try (TarArchiveInputStream ais = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(myFile)))) {
+                TarArchiveEntry tempEntry;
+                while ((tempEntry = (TarArchiveEntry) ais.getNextEntry()) != null) {
+                    String name = tempEntry.getName();
+                    // we interest only in new build
+                    if (name.startsWith(prefix) && name.length() != prefix.length()) {
+                        File targetFile = new File(platformDirectory, name.substring(prefix.length(), name.length()));
 
-  @Nonnull
-  public PluginId getPluginId() {
-    return myPluginId;
-  }
+                        if (tempEntry.isDirectory()) {
+                            FileUtil.createDirectory(targetFile);
+                        }
+                        else if (tempEntry.isSymbolicLink()) {
+                            FileUtil.createParentDirs(targetFile);
 
-  @Nonnull
-  private String getFileName() {
-    String fileName = myPluginId + "_" + myDescriptor.getVersion();
-    if (myIsPlatform) {
-      fileName += ".tar.gz";
+                            Files.createSymbolicLink(targetFile.toPath(), Paths.get(tempEntry.getLinkName()));
+                        }
+                        else {
+                            FileUtil.createParentDirs(targetFile);
+
+                            try (OutputStream stream = new FileOutputStream(targetFile)) {
+                                StreamUtil.copyStreamContent(ais, stream);
+                            }
+
+                            targetFile.setLastModified(tempEntry.getLastModifiedDate().getTime());
+
+                            // it's a fix for TarArchiveEntry.DEFAULT_FILE_MODE
+                            if (tempEntry.getMode() == 0b111_101_101) {
+                                NioPathUtil.setPosixFilePermissions(
+                                    targetFile.toPath(),
+                                    NioPathUtil.convertModeToFilePermissions(tempEntry.getMode())
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+            // at start - delete old version, after restart. On mac - we can't delete boot build
+            String buildNumber = ApplicationInfo.getInstance().getBuild().asString();
+            File oldBuild = new File(platformDirectory, "build" + buildNumber);
+            if (oldBuild.exists()) {
+                StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(oldBuild);
+                StartupActionScriptManager.addActionCommand(deleteTemp);
+            }
+
+            FileUtil.delete(myFile);
+
+            myFile = null;
+        }
+        else {
+            install(myFile, getPluginName(), deleteTempFile);
+        }
     }
-    else {
-      fileName += ".zip";
+
+    public static void install(final File fromFile, final String pluginName, boolean deleteFromFile) throws IOException {
+        // add command to unzip file to the plugins path
+        String unzipPath;
+        if (ZipUtil.isZipContainsFolder(fromFile)) {
+            unzipPath = ContainerPathManager.get().getInstallPluginsPath();
+        }
+        else {
+            unzipPath = ContainerPathManager.get().getInstallPluginsPath() + File.separator + pluginName;
+        }
+
+        StartupActionScriptManager.ActionCommand unzip = new StartupActionScriptManager.UnzipCommand(fromFile, new File(unzipPath));
+
+        StartupActionScriptManager.addActionCommand(unzip);
+
+        // add command to remove temp plugin file
+        if (deleteFromFile) {
+            StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(fromFile);
+            StartupActionScriptManager.addActionCommand(deleteTemp);
+        }
     }
-    return fileName;
-  }
 
-  @Nonnull
-  public String getPluginName() {
-    return ObjectUtil.notNull(myDescriptor.getName(), myPluginId.toString());
-  }
+    @Nonnull
+    private Pair<File, String> downloadPlugin(
+        @Nonnull ProgressIndicator indicator,
+        String expectedChecksum,
+        int tryIndex
+    ) throws IOException {
+        File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
+        if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
+            throw new IOException(ExternalServiceLocalize.errorCannotCreateTempDir(pluginsTemp).get());
+        }
+        final File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
 
-  @Nonnull
-  public PluginDescriptor getPluginDescriptor() {
-    return myDescriptor;
-  }
+        indicator.checkCanceled();
+        if (myIsPlatform) {
+            indicator.setText2Value(ExternalServiceLocalize.progressDownloadingPlatform());
+        }
+        else {
+            indicator.setText2Value(ExternalServiceLocalize.progressDownloadingPlugin(getPluginName()));
+        }
+
+        LOG.info("Downloading plugin: " + myPluginId + ", try: " + tryIndex + ", checksum: " + expectedChecksum);
+
+        String downloadUrl = buildUrl(tryIndex);
+        return HttpRequests.request(downloadUrl).gzip(false).connect(request -> {
+            MessageDigest digest;
+            try {
+                digest = MessageDigest.getInstance(CHECKSUM_ALGORITHM);
+            }
+            catch (NoSuchAlgorithmException e) {
+                throw new IOException(e);
+            }
+
+            request.saveToFile(file, digest, indicator);
+
+            String checksum = Hex.encodeHexString(digest.digest()).toUpperCase(Locale.ROOT);
+
+            String fileName = getFileName();
+            File newFile = new File(file.getParentFile(), fileName);
+            FileUtil.rename(file, newFile, FilePermissionCopier.BY_NIO2);
+            return Pair.create(newFile, checksum);
+        });
+    }
+
+    @Nonnull
+    public PluginId getPluginId() {
+        return myPluginId;
+    }
+
+    @Nonnull
+    private String getFileName() {
+        String fileName = myPluginId + "_" + myDescriptor.getVersion();
+        if (myIsPlatform) {
+            fileName += ".tar.gz";
+        }
+        else {
+            fileName += ".zip";
+        }
+        return fileName;
+    }
+
+    @Nonnull
+    public String getPluginName() {
+        return ObjectUtil.notNull(myDescriptor.getName(), myPluginId.toString());
+    }
+
+    @Nonnull
+    public PluginDescriptor getPluginDescriptor() {
+        return myDescriptor;
+    }
 }

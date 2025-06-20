@@ -24,6 +24,6 @@ import jakarta.annotation.Nonnull;
  */
 @FunctionalInterface
 public interface PluginDownloadUrlBuilder {
-  @Nonnull
-  String buildUrl(PluginDescriptor descriptor, int tryIndex);
+    @Nonnull
+    String buildUrl(PluginDescriptor descriptor, int tryIndex);
 }

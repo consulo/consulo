@@ -57,10 +57,12 @@ public enum PlatformPluginId {
     private final CpuArchitecture myArchitecture;
     private final boolean myWithJre;
 
-    PlatformPluginId(@Nonnull String id,
-                     @Nonnull Predicate<PlatformOperatingSystem> osPredicate,
-                     CpuArchitecture architecture,
-                     boolean withJre) {
+    PlatformPluginId(
+        @Nonnull String id,
+        @Nonnull Predicate<PlatformOperatingSystem> osPredicate,
+        CpuArchitecture architecture,
+        boolean withJre
+    ) {
         myOsPredicate = osPredicate;
         myArchitecture = architecture;
         myWithJre = withJre;
@@ -85,7 +87,7 @@ public enum PlatformPluginId {
                 continue;
             }
 
-            if (platformPluginId.myArchitecture == null || platformPluginId.myArchitecture == arch)  {
+            if (platformPluginId.myArchitecture == null || platformPluginId.myArchitecture == arch) {
                 target = platformPluginId;
                 break;
             }
