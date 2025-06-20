@@ -15,7 +15,9 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.event.JBLoadingPanelListener;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.util.collection.Lists;
@@ -31,103 +33,114 @@ import java.util.function.Function;
  * @author Konstantin Bulenkov
  */
 public class JBLoadingPanel extends JPanel {
-  private final JPanel myPanel;
-  final LoadingDecorator myDecorator;
-  private final Collection<JBLoadingPanelListener> myListeners = Lists.newLockFreeCopyOnWriteList();
+    private final JPanel myPanel;
+    final LoadingDecorator myDecorator;
+    private final Collection<JBLoadingPanelListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-  public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent) {
-    this(manager, parent, -1);
-  }
-
-  public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent, int startDelayMs) {
-    this(manager, panel -> new LoadingDecorator(panel, parent, startDelayMs) {
-      @Override
-      protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
-        final NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
-        customizeStatusText(text);
-        return panel;
-      }
-    });
-  }
-
-  public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Function<? super JPanel, ? extends LoadingDecorator> createLoadingDecorator) {
-    super(new BorderLayout());
-    myPanel = manager == null ? new JPanel() : new JPanel(manager);
-    myPanel.setOpaque(false);
-    myPanel.setFocusable(false);
-    myDecorator = createLoadingDecorator.apply(myPanel);
-    super.add(myDecorator.getComponent(), BorderLayout.CENTER);
-  }
-
-  @Override
-  public void setLayout(LayoutManager mgr) {
-    if (!(mgr instanceof BorderLayout)) {
-      throw new IllegalArgumentException(String.valueOf(mgr));
+    public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent) {
+        this(manager, parent, -1);
     }
-    super.setLayout(mgr);
-    if (myDecorator != null) {
-      super.add(myDecorator.getComponent(), BorderLayout.CENTER);
+
+    public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent, int startDelayMs) {
+        this(
+            manager,
+            panel -> new LoadingDecorator(panel, parent, startDelayMs) {
+                @Override
+                protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
+                    NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
+                    customizeStatusText(text);
+                    return panel;
+                }
+            }
+        );
     }
-  }
 
-  public static void customizeStatusText(JLabel text) {
-    Font font = text.getFont();
-    text.setFont(font.deriveFont(font.getStyle(), font.getSize() + 6));
-    text.setForeground(ColorUtil.toAlpha(UIUtil.getLabelForeground(), 150));
-  }
-
-  public void setLoadingText(String text) {
-    myDecorator.setLoadingText(text);
-  }
-
-  public void stopLoading() {
-    myDecorator.stopLoading();
-    for (JBLoadingPanelListener listener : myListeners) {
-      listener.onLoadingFinish();
+    public JBLoadingPanel(
+        @Nullable LayoutManager manager,
+        @Nonnull Function<? super JPanel, ? extends LoadingDecorator> createLoadingDecorator
+    ) {
+        super(new BorderLayout());
+        myPanel = manager == null ? new JPanel() : new JPanel(manager);
+        myPanel.setOpaque(false);
+        myPanel.setFocusable(false);
+        myDecorator = createLoadingDecorator.apply(myPanel);
+        super.add(myDecorator.getComponent(), BorderLayout.CENTER);
     }
-  }
 
-  public boolean isLoading() {
-    return myDecorator.isLoading();
-  }
-
-  public void startLoading() {
-    myDecorator.startLoading(false);
-    for (JBLoadingPanelListener listener : myListeners) {
-      listener.onLoadingStart();
+    @Override
+    public void setLayout(LayoutManager mgr) {
+        if (!(mgr instanceof BorderLayout)) {
+            throw new IllegalArgumentException(String.valueOf(mgr));
+        }
+        super.setLayout(mgr);
+        if (myDecorator != null) {
+            super.add(myDecorator.getComponent(), BorderLayout.CENTER);
+        }
     }
-  }
 
-  public void addListener(@Nonnull JBLoadingPanelListener listener) {
-    myListeners.add(listener);
-  }
+    public static void customizeStatusText(JLabel text) {
+        Font font = text.getFont();
+        text.setFont(font.deriveFont(font.getStyle(), font.getSize() + 6));
+        text.setForeground(ColorUtil.toAlpha(UIUtil.getLabelForeground(), 150));
+    }
 
-  public boolean removeListener(@Nonnull JBLoadingPanelListener listener) {
-    return myListeners.remove(listener);
-  }
+    public void setLoadingText(LocalizeValue text) {
+        myDecorator.setLoadingText(text);
+    }
 
-  public JPanel getContentPanel() {
-    return myPanel;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void setLoadingText(String text) {
+        myDecorator.setLoadingText(text);
+    }
 
-  @Override
-  public Component add(Component comp) {
-    return myPanel.add(comp);
-  }
+    public void stopLoading() {
+        myDecorator.stopLoading();
+        for (JBLoadingPanelListener listener : myListeners) {
+            listener.onLoadingFinish();
+        }
+    }
 
-  @Override
-  public Component add(Component comp, int index) {
-    return myPanel.add(comp, index);
-  }
+    public boolean isLoading() {
+        return myDecorator.isLoading();
+    }
 
-  @Override
-  public void add(Component comp, Object constraints) {
+    public void startLoading() {
+        myDecorator.startLoading(false);
+        for (JBLoadingPanelListener listener : myListeners) {
+            listener.onLoadingStart();
+        }
+    }
 
-    myPanel.add(comp, constraints);
-  }
+    public void addListener(@Nonnull JBLoadingPanelListener listener) {
+        myListeners.add(listener);
+    }
 
-  @Override
-  public Dimension getPreferredSize() {
-    return getContentPanel().getPreferredSize();
-  }
+    public boolean removeListener(@Nonnull JBLoadingPanelListener listener) {
+        return myListeners.remove(listener);
+    }
+
+    public JPanel getContentPanel() {
+        return myPanel;
+    }
+
+    @Override
+    public Component add(Component comp) {
+        return myPanel.add(comp);
+    }
+
+    @Override
+    public Component add(Component comp, int index) {
+        return myPanel.add(comp, index);
+    }
+
+    @Override
+    public void add(Component comp, Object constraints) {
+        myPanel.add(comp, constraints);
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return getContentPanel().getPreferredSize();
+    }
 }

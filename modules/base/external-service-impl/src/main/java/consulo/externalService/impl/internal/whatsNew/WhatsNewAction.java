@@ -35,21 +35,28 @@ import java.util.Map;
 /**
  * @author max
  */
-@ActionImpl(id = "WhatsNewAction", parents = {
-    @ActionParentRef(value = @ActionRef(id = "HelpMenu"), anchor = ActionRefAnchor.AFTER, relatedToAction = @ActionRef(id = "OnlineDocAction"))
-})
+@ActionImpl(
+    id = "WhatsNewAction",
+    parents = {@ActionParentRef(
+        value = @ActionRef(id = "HelpMenu"),
+        anchor = ActionRefAnchor.AFTER,
+        relatedToAction = @ActionRef(id = "OnlineDocAction")
+    )}
+)
 public class WhatsNewAction extends AnAction implements DumbAware {
-    private final Application myApplication;
     private final ConfigurationFileEditorManager myConfigurationFileEditorManager;
 
     @Inject
     public WhatsNewAction(Application application, ConfigurationFileEditorManager configurationFileEditorManager) {
-        myApplication = application;
+        super(
+            ExternalServiceLocalize.whatsnewActionCustomText(application.getName()),
+            ExternalServiceLocalize.whatsnewActionCustomDescription(application.getName())
+        );
         myConfigurationFileEditorManager = configurationFileEditorManager;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -59,11 +66,9 @@ public class WhatsNewAction extends AnAction implements DumbAware {
         myConfigurationFileEditorManager.open(project, WhatsNewConfigurationFileEditorProvider.class, Map.of());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
         e.getPresentation().setVisible(e.getData(Project.KEY) != null);
-        e.getPresentation().setTextValue(ExternalServiceLocalize.whatsnewActionCustomText(myApplication.getName()));
-        e.getPresentation().setDescriptionValue(ExternalServiceLocalize.whatsnewActionCustomDescription(myApplication.getName()));
     }
 }

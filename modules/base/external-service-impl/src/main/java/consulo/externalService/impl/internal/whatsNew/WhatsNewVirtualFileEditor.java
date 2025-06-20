@@ -36,6 +36,7 @@ import consulo.externalService.impl.internal.repository.api.pluginHistory.Plugin
 import consulo.externalService.impl.internal.repository.api.pluginHistory.PluginHistoryRequest;
 import consulo.externalService.impl.internal.repository.api.pluginHistory.PluginHistoryResponse;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateChecker;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -59,7 +60,6 @@ import java.util.concurrent.Future;
  * @since 2021-11-15
  */
 public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
-
     private final UpdateHistory myUpdateHistory;
     private JEditorPane myEditorPanel;
 
@@ -100,7 +100,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
         myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myEditorPanel, true), BorderLayout.CENTER);
 
         UiNotifyConnector.doWhenFirstShown(myLoadingPanel, () -> {
-            myLoadingPanel.setLoadingText("Fetching change list...");
+            myLoadingPanel.setLoadingText(ExternalServiceLocalize.whatsnewLoadingText());
             myLoadingPanel.startLoading();
             fetchData();
         });
@@ -112,7 +112,9 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
     @DeprecationInfo("Migrate to unified UI. Also see AWTLanguageEditorUtil")
     public static Font getEditorFont() {
         EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-        int size = UISettings.getInstance().getPresentationMode() ? UISettings.getInstance().getPresentationModeFontSize() - 4 : scheme.getEditorFontSize();
+        int size = UISettings.getInstance().getPresentationMode()
+            ? UISettings.getInstance().getPresentationModeFontSize() - 4
+            : scheme.getEditorFontSize();
         return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
     }
 
@@ -143,7 +145,6 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
 
                 addPlugin(infos, plugin.getPluginId(), version);
             }
-
 
             PluginHistoryResponse response = PluginHistoryManager.fetchBatchHistory(new PluginHistoryRequest(infos));
 
@@ -187,14 +188,15 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
             for (Map.Entry<PluginId, Collection<PluginHistoryEntry>> entry : map.entrySet()) {
                 PluginId key = entry.getKey();
 
-                Set<PluginHistoryEntry> entries = new TreeSet<>((o1, o2) -> Long.compareUnsigned(o1.commitTimestamp, o2.commitTimestamp));
+                Set<PluginHistoryEntry> entries =
+                    new TreeSet<>((o1, o2) -> Long.compareUnsigned(o1.commitTimestamp, o2.commitTimestamp));
                 entries.addAll(entry.getValue());
 
                 String pluginName;
                 String pluginVersion;
                 if (PlatformOrPluginUpdateChecker.isPlatform(key)) {
-                    pluginName = "Platform";
-                    pluginVersion = Application.get().getBuildNumber().asString();
+                    pluginName = ExternalServiceLocalize.whatsnewPlatformText().get();
+                    pluginVersion = myProject.getApplication().getBuildNumber().asString();
                 }
                 else {
                     PluginDescriptor plugin = PluginManager.findPlugin(key);
@@ -205,7 +207,10 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
 
                 HtmlChunk.Element imgTd = HtmlChunk.tag("td");
 
-                HtmlChunk.Element pluginImg = HtmlChunk.tag("img").attr("src", key.getIdString()).attr("width", PluginIconHolder.ICON_SIZE).attr("height", PluginIconHolder.ICON_SIZE);
+                HtmlChunk.Element pluginImg = HtmlChunk.tag("img")
+                    .attr("src", key.getIdString())
+                    .attr("width", PluginIconHolder.ICON_SIZE)
+                    .attr("height", PluginIconHolder.ICON_SIZE);
                 imgTd = imgTd.child(pluginImg);
 
                 HtmlChunk.Element nameTd = HtmlChunk.tag("td").style("padding-left: 10px");
@@ -272,13 +277,18 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
 
                 body = body.child(ul);
 
-                body = body.child(HtmlChunk.hr().attr("size", 1).attr("noshade", "").attr("color", "#" + ColorValueUtil.toHex(StandardColors.LIGHT_GRAY)));
+                body = body.child(
+                    HtmlChunk.hr()
+                        .attr("size", 1)
+                        .attr("noshade", "")
+                        .attr("color", "#" + ColorValueUtil.toHex(StandardColors.LIGHT_GRAY))
+                );
 
                 body = body.child(HtmlChunk.br());
             }
         }
         else {
-            body = body.child(HtmlChunk.span().addText("No changes"));
+            body = body.child(HtmlChunk.span().addText(ExternalServiceLocalize.whatsnewNoChangesText().get()));
         }
 
         html.append(body);
