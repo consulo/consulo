@@ -28,14 +28,14 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface StatusBarWidgetsManager extends ModificationTracker {
-  @Nonnull
-  public static StatusBarWidgetsManager getInstance(@Nonnull Project project) {
-    return project.getInstance(StatusBarWidgetsManager.class);
-  }
+    @Nonnull
+    public static StatusBarWidgetsManager getInstance(@Nonnull Project project) {
+        return project.getInstance(StatusBarWidgetsManager.class);
+    }
 
-  void updateWidget(@Nonnull Class<? extends StatusBarWidgetFactory> factoryExtension, @Nonnull UIAccess uiAccess);
+    void updateWidget(@Nonnull Class<? extends StatusBarWidgetFactory> factoryExtension, @Nonnull UIAccess uiAccess);
 
-  void updateWidget(@Nonnull StatusBarWidgetFactory factory, @Nonnull UIAccess uiAccess);
+    void updateWidget(@Nonnull StatusBarWidgetFactory factory, @Nonnull UIAccess uiAccess);
 
-  void updateAllWidgets(@Nonnull UIAccess uiAccess);
+    void updateAllWidgets(@Nonnull UIAccess uiAccess);
 }

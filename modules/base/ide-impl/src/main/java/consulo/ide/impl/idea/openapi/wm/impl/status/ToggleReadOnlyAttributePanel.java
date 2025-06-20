@@ -28,109 +28,111 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
-  private final StatusBarWidgetFactory myFactory;
-  private StatusBar myStatusBar;
+    private final StatusBarWidgetFactory myFactory;
+    private StatusBar myStatusBar;
 
-  public ToggleReadOnlyAttributePanel(StatusBarWidgetFactory factory) {
-    myFactory = factory;
-  }
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return myFactory.getId();
-  }
-
-  @Override
-  @Nullable
-  public Image getIcon() {
-    if (!isReadonlyApplicable()) {
-      return null;
-    }
-    VirtualFile virtualFile = getCurrentFile();
-    return virtualFile == null || virtualFile.isWritable() ? AllIcons.Ide.Readwrite : AllIcons.Ide.Readonly;
-  }
-
-  @Override
-  public StatusBarWidget copy() {
-    return new ToggleReadOnlyAttributePanel(myFactory);
-  }
-
-  @Override
-  public WidgetPresentation getPresentation() {
-    return this;
-  }
-
-  @Override
-  public void dispose() {
-    myStatusBar = null;
-  }
-
-  @Override
-  public void install(@Nonnull StatusBar statusBar) {
-    myStatusBar = statusBar;
-    Project project = statusBar.getProject();
-    if (project == null) {
-      return;
+    public ToggleReadOnlyAttributePanel(StatusBarWidgetFactory factory) {
+        myFactory = factory;
     }
 
-    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
-      @Override
-      public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
-        if (myStatusBar != null) {
-          myStatusBar.updateWidget(getId());
+    @Nonnull
+    @Override
+    public String getId() {
+        return myFactory.getId();
+    }
+
+    @Override
+    @Nullable
+    public Image getIcon() {
+        if (!isReadonlyApplicable()) {
+            return null;
         }
-      }
-    });
-  }
+        VirtualFile virtualFile = getCurrentFile();
+        return virtualFile == null || virtualFile.isWritable() ? AllIcons.Ide.Readwrite : AllIcons.Ide.Readonly;
+    }
 
-  @Override
-  public String getTooltipText() {
-    VirtualFile virtualFile = getCurrentFile();
-    int writable = virtualFile == null || virtualFile.isWritable() ? 1 : 0;
-    int readonly = writable == 1 ? 0 : 1;
-    return ActionsBundle.message("action.ToggleReadOnlyAttribute.files", readonly, writable, 1, 0);
-  }
+    @Override
+    public StatusBarWidget copy() {
+        return new ToggleReadOnlyAttributePanel(myFactory);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public Consumer<MouseEvent> getClickConsumer() {
-    return mouseEvent -> {
-      final VirtualFile file = getCurrentFile();
-      if (!isReadOnlyApplicableForFile(file)) {
-        return;
-      }
-      FileDocumentManager.getInstance().saveAllDocuments();
+    @Override
+    public WidgetPresentation getPresentation() {
+        return this;
+    }
 
-      try {
-        WriteAction.run(() -> ReadOnlyAttributeUtil.setReadOnlyAttribute(file, file.isWritable()));
-        myStatusBar.updateWidget(getId());
-      }
-      catch (IOException e) {
-        Messages.showMessageDialog(getProject(), e.getMessage(), UIBundle.message("error.dialog.title"), UIUtil.getErrorIcon());
-      }
-    };
-  }
+    @Override
+    public void dispose() {
+        myStatusBar = null;
+    }
 
-  private boolean isReadonlyApplicable() {
-    VirtualFile file = getCurrentFile();
-    return isReadOnlyApplicableForFile(file);
-  }
+    @Override
+    public void install(@Nonnull StatusBar statusBar) {
+        myStatusBar = statusBar;
+        Project project = statusBar.getProject();
+        if (project == null) {
+            return;
+        }
 
-  private static boolean isReadOnlyApplicableForFile(@Nullable VirtualFile file) {
-    return file != null && !file.getFileSystem().isReadOnly();
-  }
+        project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
+            @Override
+            public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+                if (myStatusBar != null) {
+                    myStatusBar.updateWidget(getId());
+                }
+            }
+        });
+    }
 
-  @Nullable
-  private Project getProject() {
-    return myStatusBar != null ? myStatusBar.getProject() : null;
-  }
+    @Override
+    public String getTooltipText() {
+        VirtualFile virtualFile = getCurrentFile();
+        int writable = virtualFile == null || virtualFile.isWritable() ? 1 : 0;
+        int readonly = writable == 1 ? 0 : 1;
+        return ActionsBundle.message("action.ToggleReadOnlyAttribute.files", readonly, writable, 1, 0);
+    }
 
-  @Nullable
-  private VirtualFile getCurrentFile() {
-    final Project project = getProject();
-    if (project == null) return null;
-    FileEditorsSplitters splitters = FileEditorManagerEx.getInstanceEx(project).getSplittersFor(myStatusBar.getComponent());
-    return splitters.getCurrentFile();
-  }
+    @Override
+    @RequiredUIAccess
+    public Consumer<MouseEvent> getClickConsumer() {
+        return mouseEvent -> {
+            final VirtualFile file = getCurrentFile();
+            if (!isReadOnlyApplicableForFile(file)) {
+                return;
+            }
+            FileDocumentManager.getInstance().saveAllDocuments();
+
+            try {
+                WriteAction.run(() -> ReadOnlyAttributeUtil.setReadOnlyAttribute(file, file.isWritable()));
+                myStatusBar.updateWidget(getId());
+            }
+            catch (IOException e) {
+                Messages.showMessageDialog(getProject(), e.getMessage(), UIBundle.message("error.dialog.title"), UIUtil.getErrorIcon());
+            }
+        };
+    }
+
+    private boolean isReadonlyApplicable() {
+        VirtualFile file = getCurrentFile();
+        return isReadOnlyApplicableForFile(file);
+    }
+
+    private static boolean isReadOnlyApplicableForFile(@Nullable VirtualFile file) {
+        return file != null && !file.getFileSystem().isReadOnly();
+    }
+
+    @Nullable
+    private Project getProject() {
+        return myStatusBar != null ? myStatusBar.getProject() : null;
+    }
+
+    @Nullable
+    private VirtualFile getCurrentFile() {
+        final Project project = getProject();
+        if (project == null) {
+            return null;
+        }
+        FileEditorsSplitters splitters = FileEditorManagerEx.getInstanceEx(project).getSplittersFor(myStatusBar.getComponent());
+        return splitters.getCurrentFile();
+    }
 }

@@ -38,78 +38,82 @@ import java.util.function.Predicate;
  * @author spleaner
  */
 public interface StatusBar extends StatusBarInfo, Disposable {
-  Key<StatusBar> KEY = Key.create(StatusBar.class);
+    Key<StatusBar> KEY = Key.create(StatusBar.class);
 
-  abstract class Info implements StatusBarInfo {
-    private Info() {
-    }
-
-    public static void set(@Nullable final String text, @Nullable final Project project) {
-      set(text, project, null);
-    }
-
-    public static void set(@Nullable final String text, @Nullable final Project project, @Nullable final String requestor) {
-      if (project != null) {
-        if (project.isDisposed()) return;
-        if (!project.isInitialized()) {
-          StartupManager.getInstance(project)
-                        .runWhenProjectIsInitialized((p, ui) -> p.getMessageBus()
-                                                                 .syncPublisher(StatusBarInfo.class)
-                                                                 .setInfo(text, requestor));
-          return;
+    abstract class Info implements StatusBarInfo {
+        private Info() {
         }
-      }
 
-      final MessageBus bus = project == null ? ApplicationManager.getApplication().getMessageBus() : project.getMessageBus();
-      bus.syncPublisher(StatusBarInfo.class).setInfo(text, requestor);
+        public static void set(@Nullable final String text, @Nullable final Project project) {
+            set(text, project, null);
+        }
+
+        public static void set(@Nullable final String text, @Nullable final Project project, @Nullable final String requestor) {
+            if (project != null) {
+                if (project.isDisposed()) {
+                    return;
+                }
+                if (!project.isInitialized()) {
+                    StartupManager.getInstance(project)
+                        .runWhenProjectIsInitialized((p, ui) -> p.getMessageBus()
+                            .syncPublisher(StatusBarInfo.class)
+                            .setInfo(text, requestor));
+                    return;
+                }
+            }
+
+            final MessageBus bus = project == null ? ApplicationManager.getApplication().getMessageBus() : project.getMessageBus();
+            bus.syncPublisher(StatusBarInfo.class).setInfo(text, requestor);
+        }
     }
-  }
 
-  void updateWidget(@Nonnull String id);
+    void updateWidget(@Nonnull String id);
 
-  void updateWidget(@Nonnull Predicate<StatusBarWidget> widgetPredicate);
+    void updateWidget(@Nonnull Predicate<StatusBarWidget> widgetPredicate);
 
-  @Nonnull
-  <W extends StatusBarWidget> Optional<W> findWidget(@Nonnull Predicate<StatusBarWidget> predicate);
+    @Nonnull
+    <W extends StatusBarWidget> Optional<W> findWidget(@Nonnull Predicate<StatusBarWidget> predicate);
 
-  void fireNotificationPopup(@Nonnull JComponent content, Color backgroundColor);
+    void fireNotificationPopup(@Nonnull JComponent content, Color backgroundColor);
 
-  StatusBar createChild();
+    StatusBar createChild();
 
-  StatusBar findChild(Component c);
+    StatusBar findChild(Component c);
 
-  IdeFrame getFrame();
+    IdeFrame getFrame();
 
-  void install(IdeFrame frame);
+    void install(IdeFrame frame);
 
-  @Nullable
-  Project getProject();
+    @Nullable
+    Project getProject();
 
-  @Nullable
-  String getInfo();
+    @Nullable
+    String getInfo();
 
-  @Nonnull
-  default consulo.ui.Component getUIComponent() {
-    throw new AbstractMethodError();
-  }
+    @Nonnull
+    default consulo.ui.Component getUIComponent() {
+        throw new AbstractMethodError();
+    }
 
-  @Deprecated
-  @DeprecationInfo("AWT Dependency")
-  default JComponent getComponent() {
-    // override isUnified() too
-    throw new AbstractMethodError();
-  }
+    @Deprecated
+    @DeprecationInfo("AWT Dependency")
+    default JComponent getComponent() {
+        // override isUnified() too
+        throw new AbstractMethodError();
+    }
 
-  default boolean isUnified() {
-    return false;
-  }
+    default boolean isUnified() {
+        return false;
+    }
 
-  default BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody) {
-    return notifyProgressByBalloon(type, htmlBody, null, null);
-  }
+    default BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody) {
+        return notifyProgressByBalloon(type, htmlBody, null, null);
+    }
 
-  BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type,
-                                         @Nonnull String htmlBody,
-                                         @Nullable Image icon,
-                                         @Nullable HyperlinkListener listener);
+    BalloonHandler notifyProgressByBalloon(
+        @Nonnull NotificationType type,
+        @Nonnull String htmlBody,
+        @Nullable Image icon,
+        @Nullable HyperlinkListener listener
+    );
 }

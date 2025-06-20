@@ -156,14 +156,17 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             }
         }, this);
         if (myWriteableFileRequired) {
-            ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
-                @Override
-                public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
-                    if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
-                        updateForFile(event.getFile());
+            ApplicationManager.getApplication()
+                .getMessageBus()
+                .connect(this)
+                .subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
+                    @Override
+                    public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+                        if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
+                            updateForFile(event.getFile());
+                        }
                     }
-                }
-            }));
+                }));
         }
         setEditor(getEditor());
         update();
@@ -227,7 +230,11 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     }
 
     protected boolean isEmpty() {
-        Boolean result = ObjectUtil.doIfCast(myComponent, TextPanel.WithIconAndArrows.class, textPanel -> StringUtil.isEmpty(textPanel.getText()) && !textPanel.hasIcon());
+        Boolean result = ObjectUtil.doIfCast(
+            myComponent,
+            TextPanel.WithIconAndArrows.class,
+            textPanel -> StringUtil.isEmpty(textPanel.getText()) && !textPanel.hasIcon()
+        );
         return result != null && result;
     }
 

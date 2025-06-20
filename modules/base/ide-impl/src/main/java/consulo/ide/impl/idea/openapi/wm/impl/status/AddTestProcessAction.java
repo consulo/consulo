@@ -31,139 +31,158 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class AddTestProcessAction extends AnAction implements DumbAware {
-  public AddTestProcessAction() {
-    super("Add Test Process");
-  }
-
-  public void actionPerformed(AnActionEvent e) {
-
-    BalloonBuilder builder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder("" +
-                                                                                                      "Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend " +
-                                                                                                      "Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend " +
-                                                                                                      "Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend " +
-                                                                                                      "Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend " +
-                                                                                                      "Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend " +
-                                                                                                      "", NotificationType.INFO, null);
-
-    JFrame wnd = (JFrame)KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-    JRootPane ro = wnd.getRootPane();
-    Point point = new Point(ro.getWidth() - 200, ro.getHeight() - 200);
-    builder.createBalloon().show(new RelativePoint(ro, point), Balloon.Position.above);
-
-
-    final Project p = e.getData(Project.KEY);
-    if (p != null) {
-      ToolWindowManager.getInstance(p).notifyByBalloon(
-        "TODO",
-        NotificationType.INFO,
-        "Started. <a href=\"#a\">Click me!</a>",
-        null,
-        System.out::println
-      );
+    public AddTestProcessAction() {
+        super("Add Test Process");
     }
 
-    final Project project = e.getData(Project.KEY);
-    new Task.Backgroundable(project, "Test Process", true, PerformInBackgroundOption.DEAF) {
-      @Override
-      public void run(@Nonnull final ProgressIndicator indicator) {
-        try {
-          indicator.setText("welcome!");
+    public void actionPerformed(AnActionEvent e) {
+        BalloonBuilder builder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(
+            "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend " +
+                "Load up on guns bring your friends it's fun to loose and to pretend ",
+            NotificationType.INFO,
+            null
+        );
 
-          Thread.currentThread().sleep(6000);
+        JFrame wnd = (JFrame) KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        JRootPane ro = wnd.getRootPane();
+        Point point = new Point(ro.getWidth() - 200, ro.getHeight() - 200);
+        builder.createBalloon().show(new RelativePoint(ro, point), Balloon.Position.above);
 
-          countTo(1000, each -> {
-//              if (each == 5) {
-//                createAnotherProgress(project);
-//              }
-
-            indicator.setText("Found: " + each / 20 + 1);
-            if (each / 10.0 == Math.round(each / 10.0)) {
-              indicator.setText(null);
-            }
-            indicator.setFraction(each / 1000.0);
-
-            try {
-              Thread.currentThread().sleep(100);
-            }
-            catch (InterruptedException e1) {
-              e1.printStackTrace();
-            }
-
-            indicator.checkCanceled();
-            indicator.setText2("bla bla bla");
-          });
-          indicator.stop();
+        final Project p = e.getData(Project.KEY);
+        if (p != null) {
+            ToolWindowManager.getInstance(p).notifyByBalloon(
+                "TODO",
+                NotificationType.INFO,
+                "Started. <a href=\"#a\">Click me!</a>",
+                null,
+                System.out::println
+            );
         }
-        catch (ProcessCanceledException e1) {
-          try {
-            Thread.currentThread().sleep(2000);
-            indicator.stop();
-          }
-          catch (InterruptedException e2) {
-            e2.printStackTrace();
-          }
-        }
-        catch (InterruptedException e1) {
-          e1.printStackTrace();
-        }
-      }
-    }.queue();
-  }
 
-  private void createAnotherProgress(final Project project) {
-    final Task.Modal task = new Task.Modal(project, "Test2", true/*, PerformInBackgroundOption.DEAF*/) {
-      @Override
-      public void run(@Nonnull final ProgressIndicator indicator) {
-        try {
-          countTo(1000, each -> {
-            indicator.setText("Found: " + each / 20 + 1);
-            if (each / 10.0 == Math.round(each / 10.0)) {
-              indicator.setText(null);
+        final Project project = e.getData(Project.KEY);
+        new Task.Backgroundable(project, "Test Process", true, PerformInBackgroundOption.DEAF) {
+            @Override
+            public void run(@Nonnull final ProgressIndicator indicator) {
+                try {
+                    indicator.setText("welcome!");
+
+                    Thread.currentThread().sleep(6000);
+
+                    countTo(
+                        1000,
+                        each -> {
+                            //if (each == 5) {
+                            //    createAnotherProgress(project);
+                            //}
+
+                            indicator.setText("Found: " + each / 20 + 1);
+                            if (each / 10.0 == Math.round(each / 10.0)) {
+                                indicator.setText(null);
+                            }
+                            indicator.setFraction(each / 1000.0);
+
+                            try {
+                                Thread.currentThread().sleep(100);
+                            }
+                            catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+
+                            indicator.checkCanceled();
+                            indicator.setText2("bla bla bla");
+                        }
+                    );
+                    indicator.stop();
+                }
+                catch (ProcessCanceledException e1) {
+                    try {
+                        Thread.currentThread().sleep(2000);
+                        indicator.stop();
+                    }
+                    catch (InterruptedException e2) {
+                        e2.printStackTrace();
+                    }
+                }
+                catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
             }
-            indicator.setFraction(each / 1000.0);
-
-            try {
-              Thread.currentThread().sleep(100);
-            }
-            catch (InterruptedException e1) {
-              e1.printStackTrace();
-            }
-
-            indicator.checkCanceled();
-            indicator.setText2("bla bla bla");
-          });
-          indicator.stop();
-        }
-        catch (ProcessCanceledException e1) {
-          try {
-            Thread.currentThread().sleep(2000);
-            indicator.stop();
-          }
-          catch (InterruptedException e2) {
-            e2.printStackTrace();
-          }
-        }
-      }
-    };
-
-//    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-//    task.run(indicator != null ? indicator : new EmptyProgressIndicator());
-
-    SwingUtilities.invokeLater(task::queue);
-  }
-
-  private void countTo(int top, Count count) {
-    for (int i = 0; i < top; i++) {
-      count.onCount(i);
+        }.queue();
     }
-  }
 
-  private static interface Count {
-    void onCount(int each);
-  }
+    private void createAnotherProgress(final Project project) {
+        final Task.Modal task = new Task.Modal(project, "Test2", true/*, PerformInBackgroundOption.DEAF*/) {
+            @Override
+            public void run(@Nonnull final ProgressIndicator indicator) {
+                try {
+                    countTo(1000, each -> {
+                        indicator.setText("Found: " + each / 20 + 1);
+                        if (each / 10.0 == Math.round(each / 10.0)) {
+                            indicator.setText(null);
+                        }
+                        indicator.setFraction(each / 1000.0);
+
+                        try {
+                            Thread.currentThread().sleep(100);
+                        }
+                        catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+
+                        indicator.checkCanceled();
+                        indicator.setText2("bla bla bla");
+                    });
+                    indicator.stop();
+                }
+                catch (ProcessCanceledException e1) {
+                    try {
+                        Thread.currentThread().sleep(2000);
+                        indicator.stop();
+                    }
+                    catch (InterruptedException e2) {
+                        e2.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        //ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+        //task.run(indicator != null ? indicator : new EmptyProgressIndicator());
+
+        SwingUtilities.invokeLater(task::queue);
+    }
+
+    private void countTo(int top, Count count) {
+        for (int i = 0; i < top; i++) {
+            count.onCount(i);
+        }
+    }
+
+    private static interface Count {
+        void onCount(int each);
+    }
 }

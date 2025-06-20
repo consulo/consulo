@@ -25,63 +25,64 @@ import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.charset.Charset;
 
 public class EncodingPanel extends EditorBasedStatusBarPopup {
-  public EncodingPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
-    super(project, factory, true);
-  }
-
-  @Nonnull
-  @Override
-  protected WidgetState getWidgetState(@Nullable VirtualFile file) {
-    if (file == null) {
-      return WidgetState.HIDDEN;
+    public EncodingPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+        super(project, factory, true);
     }
 
-    Pair<Charset, String> check = EncodingUtil.getCharsetAndTheReasonTooltip(file);
-    String failReason = Pair.getSecond(check);
-    Charset charset = ObjectUtil.notNull(Pair.getFirst(check), file.getCharset());
-    String charsetName = ObjectUtil.notNull(charset.displayName(), "n/a");
-    String toolTipText = failReason == null ? "File Encoding: " + charsetName : StringUtil.capitalize(failReason) + ".";
-    return new WidgetState(toolTipText, charsetName, failReason == null);
-  }
-
-  @Nullable
-  @Override
-  protected ListPopup createPopup(DataContext context) {
-    ChangeFileEncodingAction action = new ChangeFileEncodingAction();
-    action.getTemplatePresentation().setText("File Encoding");
-    return action.createPopup(context);
-  }
-
-  @Override
-  protected void registerCustomListeners() {
-    MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(this);
-
-    // should update to reflect encoding-from-content
-    connection.subscribe(EncodingManagerListener.class, new EncodingManagerListener() {
-      @Override
-      public void propertyChanged(@Nullable Object document, @Nonnull String propertyName, Object oldValue, Object newValue) {
-        if (propertyName.equals(EncodingManagerImpl.PROP_CACHED_ENCODING_CHANGED)) {
-          updateForDocument((Document)document);
+    @Nonnull
+    @Override
+    protected WidgetState getWidgetState(@Nullable VirtualFile file) {
+        if (file == null) {
+            return WidgetState.HIDDEN;
         }
-      }
-    });
 
-    connection.subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
-      @Override
-      public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
-        if (VirtualFile.PROP_ENCODING.equals(event.getPropertyName())) {
-          updateForFile(event.getFile());
-        }
-      }
-    }));
-  }
+        Pair<Charset, String> check = EncodingUtil.getCharsetAndTheReasonTooltip(file);
+        String failReason = Pair.getSecond(check);
+        Charset charset = ObjectUtil.notNull(Pair.getFirst(check), file.getCharset());
+        String charsetName = ObjectUtil.notNull(charset.displayName(), "n/a");
+        String toolTipText = failReason == null ? "File Encoding: " + charsetName : StringUtil.capitalize(failReason) + ".";
+        return new WidgetState(toolTipText, charsetName, failReason == null);
+    }
 
-  @Nonnull
-  @Override
-  protected StatusBarWidget createInstance(@Nonnull Project project) {
-    return new EncodingPanel(project, myFactory);
-  }
+    @Nullable
+    @Override
+    protected ListPopup createPopup(DataContext context) {
+        ChangeFileEncodingAction action = new ChangeFileEncodingAction();
+        action.getTemplatePresentation().setText("File Encoding");
+        return action.createPopup(context);
+    }
+
+    @Override
+    protected void registerCustomListeners() {
+        MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(this);
+
+        // should update to reflect encoding-from-content
+        connection.subscribe(EncodingManagerListener.class, new EncodingManagerListener() {
+            @Override
+            public void propertyChanged(@Nullable Object document, @Nonnull String propertyName, Object oldValue, Object newValue) {
+                if (propertyName.equals(EncodingManagerImpl.PROP_CACHED_ENCODING_CHANGED)) {
+                    updateForDocument((Document) document);
+                }
+            }
+        });
+
+        connection.subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
+            @Override
+            public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+                if (VirtualFile.PROP_ENCODING.equals(event.getPropertyName())) {
+                    updateForFile(event.getFile());
+                }
+            }
+        }));
+    }
+
+    @Nonnull
+    @Override
+    protected StatusBarWidget createInstance(@Nonnull Project project) {
+        return new EncodingPanel(project, myFactory);
+    }
 }

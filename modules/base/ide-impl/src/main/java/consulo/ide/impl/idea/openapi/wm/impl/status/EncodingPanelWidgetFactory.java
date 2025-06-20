@@ -11,17 +11,16 @@ import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "encodingWidget", order = "after lineSeparatorWidget")
 public class EncodingPanelWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-  @Override
-  public
-  @Nls
-  @Nonnull
-  String getDisplayName() {
-    return UIBundle.message("status.bar.encoding.widget.name");
-  }
+    @Nls
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return UIBundle.message("status.bar.encoding.widget.name");
+    }
 
-  @Override
-  @Nonnull
-  public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new EncodingPanel(project, this);
-  }
+    @Override
+    @Nonnull
+    public StatusBarWidget createWidget(@Nonnull Project project) {
+        return new EncodingPanel(project, this);
+    }
 }

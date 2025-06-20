@@ -31,8 +31,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
-public final class PositionPanel extends EditorBasedWidget
-    implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, CaretListener, SelectionListener, BulkAwareDocumentListener.Simple {
+public final class PositionPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation,
+    CaretListener, SelectionListener, BulkAwareDocumentListener.Simple {
 
     public static final Key<Object> DISABLE_FOR_EDITOR = Key.create("positionPanel.disableForEditor");
 

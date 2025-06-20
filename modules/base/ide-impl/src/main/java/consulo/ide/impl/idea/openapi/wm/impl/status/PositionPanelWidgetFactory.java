@@ -10,15 +10,15 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "positionWidget")
 public class PositionPanelWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-  @Override
-  @Nonnull
-  public String getDisplayName() {
-    return UIBundle.message("status.bar.position.widget.name");
-  }
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return UIBundle.message("status.bar.position.widget.name");
+    }
 
-  @Override
-  @Nonnull
-  public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new PositionPanel(project, this);
-  }
+    @Override
+    @Nonnull
+    public StatusBarWidget createWidget(@Nonnull Project project) {
+        return new PositionPanel(project, this);
+    }
 }

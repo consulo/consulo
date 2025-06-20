@@ -11,18 +11,17 @@ import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "readOnlyWidget", order = "after codeStyleWidget")
 public class ReadOnlyAttributeWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-  @Override
-  public
-  @Nls
-  @Nonnull
-  String getDisplayName() {
-    return UIBundle.message("status.bar.read.only.widget.name");
-  }
+    @Nls
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return UIBundle.message("status.bar.read.only.widget.name");
+    }
 
-  @Override
-  public
-  @Nonnull
-  StatusBarWidget createWidget(@Nonnull Project project) {
-    return new ToggleReadOnlyAttributePanel(this);
-  }
+    @Override
+    public
+    @Nonnull
+    StatusBarWidget createWidget(@Nonnull Project project) {
+        return new ToggleReadOnlyAttributePanel(this);
+    }
 }

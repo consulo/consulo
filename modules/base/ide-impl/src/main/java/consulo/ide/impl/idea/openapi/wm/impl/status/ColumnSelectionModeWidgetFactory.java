@@ -12,21 +12,21 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "selectionModeWidget", order = "after moduleLayerWidget")
 public class ColumnSelectionModeWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-  @Override
-  @Nonnull
-  public String getDisplayName() {
-    return UIBundle.message("status.bar.selection.mode.widget.name");
-  }
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return UIBundle.message("status.bar.selection.mode.widget.name");
+    }
 
-  @Override
-  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
-    Editor editor = getTextEditor(statusBar);
-    return editor != null && editor.isColumnMode();
-  }
+    @Override
+    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+        Editor editor = getTextEditor(statusBar);
+        return editor != null && editor.isColumnMode();
+    }
 
-  @Override
-  @Nonnull
-  public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new ColumnSelectionModePanel(project, this);
-  }
+    @Override
+    @Nonnull
+    public StatusBarWidget createWidget(@Nonnull Project project) {
+        return new ColumnSelectionModePanel(project, this);
+    }
 }

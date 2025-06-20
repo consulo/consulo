@@ -11,17 +11,16 @@ import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "lineSeparatorWidget", order = "after positionWidget")
 public class LineSeparatorWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-  @Override
-  public
-  @Nls
-  @Nonnull
-  String getDisplayName() {
-    return UIBundle.message("status.bar.line.separator.widget.name");
-  }
+    @Nls
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return UIBundle.message("status.bar.line.separator.widget.name");
+    }
 
-  @Override
-  @Nonnull
-  public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new LineSeparatorPanel(project, this);
-  }
+    @Override
+    @Nonnull
+    public StatusBarWidget createWidget(@Nonnull Project project) {
+        return new LineSeparatorPanel(project, this);
+    }
 }

@@ -26,32 +26,31 @@ import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
 
 public class ShowProcessWindowAction extends ToggleAction implements DumbAware {
-
-  public ShowProcessWindowAction() {
-    super(ActionLocalize.actionShowprocesswindowText(), ActionLocalize.actionShowprocesswindowDescription(), null);
-  }
-
-  @Override
-  public boolean isSelected(@Nonnull final AnActionEvent e) {
-    IdeFrame frame = IdeFrameUtil.findFocusedRootIdeFrame();
-    StatusBarEx statusBar = frame == null ? null : (StatusBarEx)frame.getStatusBar();
-    return statusBar != null && statusBar.isProcessWindowOpen();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setEnabled(IdeFrameUtil.findFocusedRootIdeFrame() != null);
-  }
-
-  @Override
-  public void setSelected(@Nonnull AnActionEvent e, final boolean state) {
-    IdeFrame frame = IdeFrameUtil.findFocusedRootIdeFrame();
-    StatusBarEx statusBar = frame == null ? null : (StatusBarEx)frame.getStatusBar();
-
-    if (statusBar != null) {
-      statusBar.setProcessWindowOpen(state);
+    public ShowProcessWindowAction() {
+        super(ActionLocalize.actionShowprocesswindowText(), ActionLocalize.actionShowprocesswindowDescription(), null);
     }
-  }
+
+    @Override
+    public boolean isSelected(@Nonnull final AnActionEvent e) {
+        IdeFrame frame = IdeFrameUtil.findFocusedRootIdeFrame();
+        StatusBarEx statusBar = frame == null ? null : (StatusBarEx) frame.getStatusBar();
+        return statusBar != null && statusBar.isProcessWindowOpen();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(IdeFrameUtil.findFocusedRootIdeFrame() != null);
+    }
+
+    @Override
+    public void setSelected(@Nonnull AnActionEvent e, final boolean state) {
+        IdeFrame frame = IdeFrameUtil.findFocusedRootIdeFrame();
+        StatusBarEx statusBar = frame == null ? null : (StatusBarEx) frame.getStatusBar();
+
+        if (statusBar != null) {
+            statusBar.setProcessWindowOpen(state);
+        }
+    }
 }
