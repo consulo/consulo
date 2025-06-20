@@ -6,17 +6,15 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "memoryIndicatorWidget", order = "last")
 public class MemoryIndicatorWidgetFactory implements StatusBarWidgetFactory {
-    @Nls
     @Nonnull
     @Override
     public String getDisplayName() {
-        return UIBundle.message("status.bar.memory.usage.widget.name");
+        return UILocalize.statusBarMemoryUsageWidgetName().get();
     }
 
     @Override

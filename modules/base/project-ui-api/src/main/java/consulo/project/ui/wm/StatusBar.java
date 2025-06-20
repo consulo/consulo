@@ -16,7 +16,7 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
@@ -44,25 +44,26 @@ public interface StatusBar extends StatusBarInfo, Disposable {
         private Info() {
         }
 
-        public static void set(@Nullable final String text, @Nullable final Project project) {
+        public static void set(@Nullable String text, @Nullable Project project) {
             set(text, project, null);
         }
 
-        public static void set(@Nullable final String text, @Nullable final Project project, @Nullable final String requestor) {
+        public static void set(@Nullable String text, @Nullable Project project, @Nullable String requestor) {
             if (project != null) {
                 if (project.isDisposed()) {
                     return;
                 }
                 if (!project.isInitialized()) {
-                    StartupManager.getInstance(project)
-                        .runWhenProjectIsInitialized((p, ui) -> p.getMessageBus()
+                    StartupManager.getInstance(project).runWhenProjectIsInitialized(
+                        (p, ui) -> p.getMessageBus()
                             .syncPublisher(StatusBarInfo.class)
-                            .setInfo(text, requestor));
+                            .setInfo(text, requestor)
+                    );
                     return;
                 }
             }
 
-            final MessageBus bus = project == null ? ApplicationManager.getApplication().getMessageBus() : project.getMessageBus();
+            MessageBus bus = project == null ? Application.get().getMessageBus() : project.getMessageBus();
             bus.syncPublisher(StatusBarInfo.class).setInfo(text, requestor);
         }
     }

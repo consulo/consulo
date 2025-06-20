@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 04.05.2024
+ * @since 2024-05-04
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface StatusBarWidgetsManager extends ModificationTracker {

@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.application.AllIcons;
 import consulo.application.WriteAction;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorsSplitters;
@@ -9,11 +8,11 @@ import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.awt.Messages;
@@ -48,7 +47,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
             return null;
         }
         VirtualFile virtualFile = getCurrentFile();
-        return virtualFile == null || virtualFile.isWritable() ? AllIcons.Ide.Readwrite : AllIcons.Ide.Readonly;
+        return virtualFile == null || virtualFile.isWritable() ? PlatformIconGroup.ideReadwrite() : PlatformIconGroup.ideReadonly();
     }
 
     @Override
@@ -93,10 +92,9 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
     }
 
     @Override
-    @RequiredUIAccess
     public Consumer<MouseEvent> getClickConsumer() {
         return mouseEvent -> {
-            final VirtualFile file = getCurrentFile();
+            VirtualFile file = getCurrentFile();
             if (!isReadOnlyApplicableForFile(file)) {
                 return;
             }
@@ -128,7 +126,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
 
     @Nullable
     private VirtualFile getCurrentFile() {
-        final Project project = getProject();
+        Project project = getProject();
         if (project == null) {
             return null;
         }

@@ -14,8 +14,8 @@ import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.FocusUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeEvent;
@@ -57,8 +57,8 @@ public class ColumnSelectionModePanel extends EditorBasedWidget
 
         FocusUtil.addFocusOwnerListener(this, evt -> updateStatus());
         EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
-        if (multicaster instanceof EditorEventMulticasterEx) {
-            ((EditorEventMulticasterEx) multicaster).addPropertyChangeListener(this, this);
+        if (multicaster instanceof EditorEventMulticasterEx multicasterEx) {
+            multicasterEx.addPropertyChangeListener(this, this);
         }
     }
 
@@ -66,7 +66,7 @@ public class ColumnSelectionModePanel extends EditorBasedWidget
         if (!myProject.isDisposed()) {
             return;
         }
-        final Editor editor = getFocusedEditor();
+        Editor editor = getFocusedEditor();
         if (editor != null && !isOurEditor(editor)) {
             return;
         }
@@ -75,7 +75,7 @@ public class ColumnSelectionModePanel extends EditorBasedWidget
         }
         else {
             myTextPanel.setVisible(true);
-            myTextPanel.setText(UIBundle.message("status.bar.column.status.text"));
+            myTextPanel.setText(UILocalize.statusBarColumnStatusText().get());
             myTextPanel.setToolTipText("Column selection mode");
         }
     }

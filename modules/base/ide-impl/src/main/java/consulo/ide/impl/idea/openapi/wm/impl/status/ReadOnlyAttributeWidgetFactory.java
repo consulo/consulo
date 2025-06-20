@@ -5,17 +5,15 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "readOnlyWidget", order = "after codeStyleWidget")
 public class ReadOnlyAttributeWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-    @Nls
     @Nonnull
     @Override
     public String getDisplayName() {
-        return UIBundle.message("status.bar.read.only.widget.name");
+        return UILocalize.statusBarReadOnlyWidgetName().get();
     }
 
     @Override

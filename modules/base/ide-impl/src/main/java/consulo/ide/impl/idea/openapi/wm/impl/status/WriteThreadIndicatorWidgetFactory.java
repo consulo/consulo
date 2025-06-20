@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
@@ -10,7 +10,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
 import jakarta.annotation.Nonnull;
@@ -28,12 +28,12 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
     @Override
     @Nonnull
     public String getDisplayName() {
-        return UIBundle.message("status.bar.write.thread.widget.name");
+        return UILocalize.statusBarWriteThreadWidgetName().get();
     }
 
     @Override
     public boolean isAvailable(@Nonnull Project project) {
-        return ApplicationManager.getApplication().isInternal();
+        return project.getApplication().isInternal();
     }
 
     @Override
@@ -45,12 +45,12 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
 
     @Override
     public boolean isConfigurable() {
-        return ApplicationManager.getApplication().isInternal();
+        return Application.get().isInternal();
     }
 
     @Override
     public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
-        return ApplicationManager.getApplication().isInternal();
+        return Application.get().isInternal();
     }
 
     @Override
@@ -85,6 +85,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
             return myFactory.getId();
         }
 
+        @Nonnull
         @Override
         public JComponent getComponent() {
             return myComponent;
@@ -99,20 +100,24 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
 
         @Override
         public void install(@Nonnull StatusBar statusBar) {
-            BaseApplication application = ObjectUtil.tryCast(ApplicationManager.getApplication(), BaseApplication.class);
+            BaseApplication application = ObjectUtil.tryCast(Application.get(), BaseApplication.class);
             if (application == null) {
                 return;
             }
 
-            ourTimer2.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    boolean currentValue = application.isCurrentWriteOnUIThread();
-                    AtomicIntegerArray currentStats = myCurrentStats;
-                    currentStats.incrementAndGet((currentValue ? ThreeState.YES : ThreeState.NO).ordinal());
-                    currentStats.incrementAndGet(3);
-                }
-            }, 0, 1);
+            ourTimer2.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        boolean currentValue = application.isCurrentWriteOnUIThread();
+                        AtomicIntegerArray currentStats = myCurrentStats;
+                        currentStats.incrementAndGet((currentValue ? ThreeState.YES : ThreeState.NO).ordinal());
+                        currentStats.incrementAndGet(3);
+                    }
+                },
+                0,
+                1
+            );
             myTimer.start();
         }
 

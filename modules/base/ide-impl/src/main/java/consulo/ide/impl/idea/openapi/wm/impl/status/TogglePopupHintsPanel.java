@@ -2,13 +2,12 @@
 
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
-import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.HectorComponent;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -19,16 +18,16 @@ import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -42,7 +41,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
 
     public TogglePopupHintsPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
         super(project, factory);
-        myCurrentIcon = ImageEffects.grayed(AllIcons.Ide.HectorOff);
+        myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideHectoroff());
     }
 
     @Override
@@ -75,12 +74,12 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
     @Override
     public Consumer<MouseEvent> getClickConsumer() {
         return e -> {
-            final PsiFile file = getCurrentFile();
+            PsiFile file = getCurrentFile();
             if (file != null) {
                 if (!DaemonCodeAnalyzer.getInstance(file.getProject()).isHighlightingAvailable(file)) {
                     return;
                 }
-                final HectorComponent component = new HectorComponent(file);
+                HectorComponent component = new HectorComponent(file);
                 component.showComponent(e.getComponent(), d -> new Point(-d.width, -d.height));
             }
         };
@@ -112,7 +111,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
     }
 
     public void clear() {
-        myCurrentIcon = ImageEffects.grayed(AllIcons.Ide.HectorOff);
+        myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideHectoroff());
         myToolTipText = null;
         myStatusBar.updateWidget(getId());
     }
@@ -128,32 +127,32 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
         }
         if (isStateChangeable(file)) {
             if (PowerSaveMode.isEnabled()) {
-                myCurrentIcon = ImageEffects.grayed(AllIcons.Ide.HectorOff);
+                myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideHectoroff());
                 myToolTipText = "Code analysis is disabled in power save mode.\n";
             }
             else if (HighlightingLevelManager.getInstance(getProject()).shouldInspect(file)) {
-                myCurrentIcon = AllIcons.Ide.HectorOn;
+                myCurrentIcon = PlatformIconGroup.ideHectoron();
                 InspectionProfileImpl profile = InspectionProjectProfileManager.getInstance(file.getProject()).getCurrentProfile();
                 if (profile.wasInitialized()) {
                     myToolTipText = "Current inspection profile: " + profile.getName() + ".\n";
                 }
             }
             else if (HighlightingLevelManager.getInstance(getProject()).shouldHighlight(file)) {
-                myCurrentIcon = AllIcons.Ide.HectorSyntax;
+                myCurrentIcon = PlatformIconGroup.ideHectorsyntax();
                 myToolTipText = "Highlighting level is: Syntax.\n";
             }
             else {
-                myCurrentIcon = AllIcons.Ide.HectorOff;
+                myCurrentIcon = PlatformIconGroup.ideHectoroff();
                 myToolTipText = "Inspections are off.\n";
             }
-            myToolTipText += UIBundle.message("popup.hints.panel.click.to.configure.highlighting.tooltip.text");
+            myToolTipText += UILocalize.popupHintsPanelClickToConfigureHighlightingTooltipText();
         }
         else {
-            myCurrentIcon = file != null ? ImageEffects.grayed(AllIcons.Ide.HectorOff) : null;
+            myCurrentIcon = file != null ? ImageEffects.grayed(PlatformIconGroup.ideHectoroff()) : null;
             myToolTipText = null;
         }
 
-        if (!ApplicationManager.getApplication().isUnitTestMode() && myStatusBar != null) {
+        if (!myProject.getApplication().isUnitTestMode() && myStatusBar != null) {
             myStatusBar.updateWidget(getId());
         }
     }
@@ -163,6 +162,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
     }
 
     @Nullable
+    @RequiredReadAction
     private PsiFile getCurrentFile() {
         VirtualFile virtualFile = getSelectedFile();
         if (virtualFile != null && virtualFile.isValid()) {

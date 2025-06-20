@@ -41,7 +41,7 @@ public interface StatusBarWidget extends Disposable {
     @Nullable
     WidgetPresentation getPresentation();
 
-    void install(@Nonnull final StatusBar statusBar);
+    void install(@Nonnull StatusBar statusBar);
 
     @RequiredUIAccess
     default void beforeUpdate() {

@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -9,7 +8,6 @@ import consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingUtil;
 import consulo.project.Project;
-import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -22,7 +20,6 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -58,17 +55,17 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
 
     @Override
     protected void registerCustomListeners() {
-        MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(this);
+        MessageBusConnection connection = myProject.getApplication().getMessageBus().connect(this);
 
         // should update to reflect encoding-from-content
-        connection.subscribe(EncodingManagerListener.class, new EncodingManagerListener() {
-            @Override
-            public void propertyChanged(@Nullable Object document, @Nonnull String propertyName, Object oldValue, Object newValue) {
+        connection.subscribe(
+            EncodingManagerListener.class,
+            (document, propertyName, oldValue, newValue) -> {
                 if (propertyName.equals(EncodingManagerImpl.PROP_CACHED_ENCODING_CHANGED)) {
                     updateForDocument((Document) document);
                 }
             }
-        });
+        );
 
         connection.subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
             @Override

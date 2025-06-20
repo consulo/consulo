@@ -5,17 +5,15 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "lineSeparatorWidget", order = "after positionWidget")
 public class LineSeparatorWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-    @Nls
     @Nonnull
     @Override
     public String getDisplayName() {
-        return UIBundle.message("status.bar.line.separator.widget.name");
+        return UILocalize.statusBarLineSeparatorWidgetName().get();
     }
 
     @Override

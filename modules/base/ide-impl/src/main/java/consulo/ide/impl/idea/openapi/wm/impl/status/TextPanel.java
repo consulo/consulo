@@ -10,7 +10,6 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -47,14 +46,14 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
     }
 
     public void recomputeSize() {
-        final JLabel label = new JLabel("XXX");
+        JLabel label = new JLabel("XXX");
         label.setFont(getFont());
         myPrefHeight = label.getPreferredSize().height;
     }
 
     @Override
-    protected void paintComponent(final Graphics g) {
-        @Nls String s = getText();
+    protected void paintComponent(Graphics g) {
+        String s = getText();
         int panelWidth = getWidth();
         int panelHeight = getHeight();
         if (s == null) {
@@ -99,8 +98,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
         return insets.left;
     }
 
-    @Nls
-    protected String truncateText(@Nls String text, Rectangle bounds, FontMetrics fm, Rectangle textR, Rectangle iconR, int maxWidth) {
+    protected String truncateText(String text, Rectangle bounds, FontMetrics fm, Rectangle textR, Rectangle iconR, int maxWidth) {
         return SwingUtilities.layoutCompoundLabel(
             this,
             fm,
@@ -117,7 +115,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
         );
     }
 
-    public void setTextAlignment(final float alignment) {
+    public void setTextAlignment(float alignment) {
         myAlignment = alignment;
     }
 
@@ -148,7 +146,6 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
     }
 
     @Nullable
-    @Nls
     public String getText() {
         return myText;
     }
@@ -188,7 +185,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
         private Image myIcon;
 
         @Override
-        protected void paintComponent(@Nonnull final Graphics g) {
+        protected void paintComponent(@Nonnull Graphics g) {
             super.paintComponent(g);
             Icon icon = TargetAWT.to(myIcon == null || isEnabled() ? myIcon : ImageEffects.grayed(myIcon));
             if (icon != null) {

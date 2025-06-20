@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
@@ -17,6 +18,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.update.Activatable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -34,7 +36,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
     private static final Color USED_COLOR = JBColor.namedColor("MemoryIndicator.usedBackground", new JBColor(Gray._185, Gray._110));
     private static final Color UNUSED_COLOR = JBColor.namedColor("MemoryIndicator.allocatedBackground", new JBColor(Gray._215, Gray._90));
 
-    private final String mySample;
+    private final LocalizeValue mySample;
     private final Project myProject;
     private final StatusBarWidgetFactory myFactory;
     private long myLastAllocated = -1;
@@ -47,7 +49,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
         myProject = project;
         myFactory = factory;
         long max = Math.min(Runtime.getRuntime().maxMemory() / MEGABYTE, 9999);
-        mySample = UIBundle.message("memory.usage.panel.message.text", max, max);
+        mySample = UILocalize.memoryUsagePanelMessageText(max, max);
 
         setOpaque(false);
         setFocusable(false);
@@ -115,6 +117,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
         myBufferedImage = null;
     }
 
+    @Nonnull
     @Override
     public JComponent getComponent() {
         return this;
@@ -161,10 +164,10 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
 
             // label
             g2.setColor(pressed ? UIUtil.getLabelDisabledForeground() : JBColor.foreground());
-            String text = UIBundle.message("memory.usage.panel.message.text", usedMem / MEGABYTE, maxMem / MEGABYTE);
+            LocalizeValue text = UILocalize.memoryUsagePanelMessageText(usedMem / MEGABYTE, maxMem / MEGABYTE);
             int textX = insets.left;
             int textY = insets.top + (size.height - insets.top - insets.bottom - textHeight) / 2 + textHeight - JBUIScale.scale(1);
-            g2.drawString(text, textX, textY);
+            g2.drawString(text.get(), textX, textY);
 
             g2.dispose();
         }
@@ -176,7 +179,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
     public Dimension getPreferredSize() {
         FontMetrics metrics = getFontMetrics(getFont());
         Insets insets = getInsets();
-        int width = metrics.stringWidth(mySample) + insets.left + insets.right + JBUIScale.scale(2) + INDENT;
+        int width = metrics.stringWidth(mySample.get()) + insets.left + insets.right + JBUIScale.scale(2) + INDENT;
         int height = metrics.getHeight() + insets.top + insets.bottom + JBUIScale.scale(2);
         return new Dimension(width, height);
     }

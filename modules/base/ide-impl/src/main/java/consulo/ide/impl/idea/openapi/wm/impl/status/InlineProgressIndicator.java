@@ -99,7 +99,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
             myProcessName.setText(processInfo.getTitle());
             myComponent.add(captionPanel, BorderLayout.NORTH);
 
-            final NonOpaquePanel content = new NonOpaquePanel(new BorderLayout());
+            NonOpaquePanel content = new NonOpaquePanel(new BorderLayout());
             content.setBorder(JBUI.Borders.empty(2));
 
             myComponent.add(content, BorderLayout.CENTER);
@@ -136,6 +136,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         queueProgressUpdate();
     }
 
+    @RequiredUIAccess
     public void updateAndRepaint() {
         if (isDisposed()) {
             return;
@@ -146,6 +147,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         myComponent.repaint();
     }
 
+    @RequiredUIAccess
     public void updateProgressNow() {
         if (isPaintingIndeterminate()) {
             myProgress.setIndeterminate(true);
@@ -198,6 +200,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         return false;
     }
 
+    @RequiredUIAccess
     protected void queueProgressUpdate() {
         updateAndRepaint();
     }

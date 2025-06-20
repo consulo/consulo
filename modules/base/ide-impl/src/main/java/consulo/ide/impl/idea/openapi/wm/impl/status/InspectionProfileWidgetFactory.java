@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
 
 // fully disabled
@@ -18,7 +18,7 @@ public abstract class InspectionProfileWidgetFactory extends StatusBarEditorBase
     @Nonnull
     @Override
     public String getDisplayName() {
-        return UIBundle.message("status.bar.inspection.profile.widget.name");
+        return UILocalize.statusBarInspectionProfileWidgetName().get();
     }
 
     @Nonnull

@@ -20,6 +20,7 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -41,6 +42,8 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
         super("Add Test Process");
     }
 
+    @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         BalloonBuilder builder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(
             "Load up on guns bring your friends it's fun to loose and to pretend " +
@@ -72,7 +75,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
         Point point = new Point(ro.getWidth() - 200, ro.getHeight() - 200);
         builder.createBalloon().show(new RelativePoint(ro, point), Balloon.Position.above);
 
-        final Project p = e.getData(Project.KEY);
+        Project p = e.getData(Project.KEY);
         if (p != null) {
             ToolWindowManager.getInstance(p).notifyByBalloon(
                 "TODO",
@@ -86,7 +89,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
         final Project project = e.getData(Project.KEY);
         new Task.Backgroundable(project, "Test Process", true, PerformInBackgroundOption.DEAF) {
             @Override
-            public void run(@Nonnull final ProgressIndicator indicator) {
+            public void run(@Nonnull ProgressIndicator indicator) {
                 try {
                     indicator.setText("welcome!");
 
@@ -135,7 +138,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
     }
 
     private void createAnotherProgress(final Project project) {
-        final Task.Modal task = new Task.Modal(project, "Test2", true/*, PerformInBackgroundOption.DEAF*/) {
+        Task.Modal task = new Task.Modal(project, "Test2", true/*, PerformInBackgroundOption.DEAF*/) {
             @Override
             public void run(@Nonnull final ProgressIndicator indicator) {
                 try {
