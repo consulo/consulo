@@ -35,23 +35,22 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class DesktopAWTNotificationServiceImpl implements NotificationService, Disposable {
-  private final NotificationServiceListener myNotificationServiceListener;
+    private final NotificationServiceListener myNotificationServiceListener;
 
-  @Inject
-  public DesktopAWTNotificationServiceImpl(Application application) {
-    myNotificationServiceListener = application.getMessageBus().syncPublisher(NotificationServiceListener.class);
-  }
+    @Inject
+    public DesktopAWTNotificationServiceImpl(Application application) {
+        myNotificationServiceListener = application.getMessageBus().syncPublisher(NotificationServiceListener.class);
+    }
 
-  @Override
-  public void notify(@Nonnull Notification notification, @Nullable Project project) {
-    NotificationsManagerImpl manager = (NotificationsManagerImpl)NotificationsManager.getNotificationsManager();
-    manager.doNotify(notification, project);
+    @Override
+    public void notify(@Nonnull Notification notification, @Nullable Project project) {
+        NotificationsManagerImpl manager = (NotificationsManagerImpl) NotificationsManager.getNotificationsManager();
+        manager.doNotify(notification, project);
 
-    myNotificationServiceListener.notify(notification, project);
-  }
+        myNotificationServiceListener.notify(notification, project);
+    }
 
-  @Override
-  public void dispose() {
-    
-  }
+    @Override
+    public void dispose() {
+    }
 }

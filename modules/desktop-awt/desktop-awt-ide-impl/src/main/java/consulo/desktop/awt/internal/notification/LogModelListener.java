@@ -22,9 +22,9 @@ import consulo.project.Project;
 
 /**
  * @author VISTALL
- * @since 19-Jun-22
+ * @since 2022-06-19
  */
 @TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface LogModelListener {
-  void modelChanged(Project project);
+    void modelChanged(Project project);
 }

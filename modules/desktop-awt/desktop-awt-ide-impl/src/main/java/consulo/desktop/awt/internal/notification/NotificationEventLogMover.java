@@ -22,21 +22,22 @@ import consulo.project.ui.notification.Notification;
 import consulo.ui.UIAccess;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 
 /**
  * @author VISTALL
- * @since 29-Aug-22
+ * @since 2022-08-29
  */
 @ExtensionImpl
 public class NotificationEventLogMover implements BackgroundStartupActivity {
-  @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    EventLog applicationComponent = EventLog.getApplicationComponent();
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        EventLog applicationComponent = EventLog.getApplicationComponent();
 
-    ArrayList<Notification> notifications = applicationComponent.myModel.getNotifications();
-    if (!notifications.isEmpty()) {
-      NotificationProjectTracker.getInstance(project).printToProjectEventLog();
+        ArrayList<Notification> notifications = applicationComponent.myModel.getNotifications();
+        if (!notifications.isEmpty()) {
+            NotificationProjectTracker.getInstance(project).printToProjectEventLog();
+        }
     }
-  }
 }

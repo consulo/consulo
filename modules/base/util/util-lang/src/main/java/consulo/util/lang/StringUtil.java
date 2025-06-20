@@ -1072,6 +1072,11 @@ public final class StringUtil {
         return s != null && !s.isEmpty();
     }
 
+    @Contract(pure = true)
+    public static int length(@Nullable CharSequence cs) {
+        return cs == null ? 0 : cs.length();
+    }
+
     /**
      * @return {@code text} with some characters replaced with standard XML entities, e.g. '<' replaced with '{@code &lt;}'
      */

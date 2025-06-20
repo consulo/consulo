@@ -27,28 +27,32 @@ import java.util.concurrent.TimeUnit;
  * @author spleaner
  */
 public interface Notifications {
-  NotificationGroup SYSTEM_MESSAGES_GROUP = NotificationGroup.balloonGroup("System Messages");
+    NotificationGroup SYSTEM_MESSAGES_GROUP = NotificationGroup.balloonGroup("System Messages");
 
-  class Bus {
-    public static void notify(@Nonnull final Notification notification) {
-      notify(notification, null);
-    }
-
-    public static void notify(@Nonnull final Notification notification, @Nullable final Project project) {
-      Application.get().getInstance(NotificationService.class).notify(notification, project);
-    }
-
-    public static void notifyAndHide(@Nonnull final Notification notification) {
-      notifyAndHide(notification, null);
-    }
-
-    public static void notifyAndHide(@Nonnull final Notification notification, @Nullable Project project) {
-      notify(notification);
-      AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
-        if (project == null || !project.isDisposed()) {
-          notification.expire();
+    class Bus {
+        public static void notify(@Nonnull Notification notification) {
+            notify(notification, null);
         }
-      }, 5, TimeUnit.SECONDS);
+
+        public static void notify(@Nonnull Notification notification, @Nullable Project project) {
+            Application.get().getInstance(NotificationService.class).notify(notification, project);
+        }
+
+        public static void notifyAndHide(@Nonnull Notification notification) {
+            notifyAndHide(notification, null);
+        }
+
+        public static void notifyAndHide(@Nonnull Notification notification, @Nullable Project project) {
+            notify(notification);
+            AppExecutorUtil.getAppScheduledExecutorService().schedule(
+                () -> {
+                    if (project == null || !project.isDisposed()) {
+                        notification.expire();
+                    }
+                },
+                5,
+                TimeUnit.SECONDS
+            );
+        }
     }
-  }
 }

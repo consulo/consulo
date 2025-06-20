@@ -21,6 +21,7 @@ import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.NotificationType;
@@ -125,7 +126,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
         @Nonnull
         @Override
         public List<BalloonImpl.ActionButton> createActions() {
-          myAction = myPopupBalloon.new ActionButton(PlatformIconGroup.ideNotificationClose(), null, null, event -> {});
+          myAction = myPopupBalloon.new ActionButton(PlatformIconGroup.ideNotificationClose(), null, LocalizeValue.empty(), event -> {});
           return Collections.singletonList(myAction);
         }
 

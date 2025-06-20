@@ -26,135 +26,172 @@ import jakarta.annotation.Nullable;
  * @author peter
  */
 public final class NotificationGroup {
-  @Nonnull
-  private final String myId;
-  @Nonnull
-  private final LocalizeValue myDisplayName;
-  @Nonnull
-  private final NotificationDisplayType myDisplayType;
-  private final boolean myLogByDefault;
-  @Nullable
-  private final String myToolWindowId;
+    @Nonnull
+    private final String myId;
+    @Nonnull
+    private final LocalizeValue myDisplayName;
+    @Nonnull
+    private final NotificationDisplayType myDisplayType;
+    private final boolean myLogByDefault;
+    @Nullable
+    private final String myToolWindowId;
 
-  @Deprecated
-  @DeprecationInfo("Use constructor with LocalizeValue parameter")
-  public NotificationGroup(@Nonnull String id, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault) {
-    this(id, LocalizeValue.of(id), defaultDisplayType, logByDefault, null);
-  }
+    @Deprecated
+    @DeprecationInfo("Use constructor with LocalizeValue parameter")
+    public NotificationGroup(@Nonnull String id, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault) {
+        this(id, LocalizeValue.of(id), defaultDisplayType, logByDefault, null);
+    }
 
-  public NotificationGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault) {
-    this(id, displayName, defaultDisplayType, logByDefault, null);
-  }
+    public NotificationGroup(
+        @Nonnull String id,
+        @Nonnull LocalizeValue displayName,
+        @Nonnull NotificationDisplayType defaultDisplayType,
+        boolean logByDefault
+    ) {
+        this(id, displayName, defaultDisplayType, logByDefault, null);
+    }
 
-  @Deprecated
-  @DeprecationInfo("Use constructor with LocalizeValue parameter")
-  public NotificationGroup(@Nonnull String id, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault, @Nullable String toolWindowId) {
-    this(id, LocalizeValue.of(id), defaultDisplayType, logByDefault, toolWindowId);
-  }
+    @Deprecated
+    @DeprecationInfo("Use constructor with LocalizeValue parameter")
+    public NotificationGroup(
+        @Nonnull String id,
+        @Nonnull NotificationDisplayType defaultDisplayType,
+        boolean logByDefault,
+        @Nullable String toolWindowId
+    ) {
+        this(id, LocalizeValue.of(id), defaultDisplayType, logByDefault, toolWindowId);
+    }
 
-  public NotificationGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault, @Nullable String toolWindowId) {
-    myId = id;
-    myDisplayType = defaultDisplayType;
-    myLogByDefault = logByDefault;
-    myToolWindowId = toolWindowId;
-    myDisplayName = displayName;
-  }
+    public NotificationGroup(
+        @Nonnull String id,
+        @Nonnull LocalizeValue displayName,
+        @Nonnull NotificationDisplayType defaultDisplayType,
+        boolean logByDefault,
+        @Nullable String toolWindowId
+    ) {
+        myId = id;
+        myDisplayType = defaultDisplayType;
+        myLogByDefault = logByDefault;
+        myToolWindowId = toolWindowId;
+        myDisplayName = displayName;
+    }
 
-  @Nonnull
-  @Deprecated
-  public static NotificationGroup balloonGroup(@Nonnull String id) {
-    return new NotificationGroup(id, NotificationDisplayType.BALLOON, true);
-  }
+    @Nonnull
+    @Deprecated
+    public static NotificationGroup balloonGroup(@Nonnull String id) {
+        return new NotificationGroup(id, NotificationDisplayType.BALLOON, true);
+    }
 
-  @Nonnull
-  public static NotificationGroup balloonGroup(@Nonnull String id, @Nonnull LocalizeValue displayName) {
-    return new NotificationGroup(id, displayName, NotificationDisplayType.BALLOON, true);
-  }
+    @Nonnull
+    public static NotificationGroup balloonGroup(@Nonnull String id, @Nonnull LocalizeValue displayName) {
+        return new NotificationGroup(id, displayName, NotificationDisplayType.BALLOON, true);
+    }
 
-  @Nonnull
-  @Deprecated
-  public static NotificationGroup logOnlyGroup(@Nonnull String displayId) {
-    return new NotificationGroup(displayId, NotificationDisplayType.NONE, true);
-  }
+    @Nonnull
+    @Deprecated
+    public static NotificationGroup logOnlyGroup(@Nonnull String displayId) {
+        return new NotificationGroup(displayId, NotificationDisplayType.NONE, true);
+    }
 
-  @Nonnull
-  public static NotificationGroup logOnlyGroup(@Nonnull String id, @Nonnull LocalizeValue displayName) {
-    return new NotificationGroup(id, displayName, NotificationDisplayType.NONE, true);
-  }
+    @Nonnull
+    public static NotificationGroup logOnlyGroup(@Nonnull String id, @Nonnull LocalizeValue displayName) {
+        return new NotificationGroup(id, displayName, NotificationDisplayType.NONE, true);
+    }
 
-  @Nonnull
-  @Deprecated
-  public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId, final boolean logByDefault) {
-    return new NotificationGroup(id, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
-  }
+    @Nonnull
+    @Deprecated
+    public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId, boolean logByDefault) {
+        return new NotificationGroup(id, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
+    }
 
-  @Nonnull
-  public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull String toolWindowId, final boolean logByDefault) {
-    return new NotificationGroup(id, displayName, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
-  }
+    @Nonnull
+    public static NotificationGroup toolWindowGroup(
+        @Nonnull String id,
+        @Nonnull LocalizeValue displayName,
+        @Nonnull String toolWindowId,
+        boolean logByDefault
+    ) {
+        return new NotificationGroup(id, displayName, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
+    }
 
-  @Nonnull
-  @Deprecated
-  public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId) {
-    return toolWindowGroup(id, toolWindowId, true);
-  }
+    @Nonnull
+    @Deprecated
+    public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId) {
+        return toolWindowGroup(id, toolWindowId, true);
+    }
 
-  @Nonnull
-  public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull String toolWindowId) {
-    return toolWindowGroup(id, displayName, toolWindowId, true);
-  }
+    @Nonnull
+    public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull String toolWindowId) {
+        return toolWindowGroup(id, displayName, toolWindowId, true);
+    }
 
-  @Nonnull
-  public String getId() {
-    return myId;
-  }
+    @Nonnull
+    public String getId() {
+        return myId;
+    }
 
-  @Nonnull
-  public LocalizeValue getDisplayName() {
-    return myDisplayName;
-  }
+    @Nonnull
+    public LocalizeValue getDisplayName() {
+        return myDisplayName;
+    }
 
-  @Nonnull
-  public Notification createNotification(@Nonnull final String content, @Nonnull final NotificationType type) {
-    return createNotification("", content, type, null);
-  }
+    @Nonnull
+    public Notification createNotification(@Nonnull String content, @Nonnull NotificationType type) {
+        return createNotification("", content, type, null);
+    }
 
-  @Nonnull
-  public Notification createNotification(@Nonnull final String title, @Nonnull final String content, @Nonnull final NotificationType type, @Nullable NotificationListener listener) {
-    return new Notification(this, title, content, type, listener);
-  }
+    @Nonnull
+    public Notification createNotification(
+        @Nonnull String title,
+        @Nonnull String content,
+        @Nonnull NotificationType type,
+        @Nullable NotificationListener listener
+    ) {
+        return new Notification(this, title, content, type, listener);
+    }
 
-  @Nonnull
-  public Notification createNotification() {
-    return createNotification(NotificationType.INFORMATION);
-  }
+    @Nonnull
+    public Notification createNotification() {
+        return createNotification(NotificationType.INFORMATION);
+    }
 
-  @Nonnull
-  public Notification createNotification(@Nonnull NotificationType type) {
-    return createNotification(null, null, null, type, null);
-  }
+    @Nonnull
+    public Notification createNotification(@Nonnull NotificationType type) {
+        return createNotification(null, null, null, type, null);
+    }
 
-  @Nonnull
-  public Notification createNotification(@Nullable String title, @Nullable String subtitle, @Nullable String content, @Nonnull NotificationType type) {
-    return createNotification(title, subtitle, content, type, null);
-  }
+    @Nonnull
+    public Notification createNotification(
+        @Nullable String title,
+        @Nullable String subtitle,
+        @Nullable String content,
+        @Nonnull NotificationType type
+    ) {
+        return createNotification(title, subtitle, content, type, null);
+    }
 
-  @Nonnull
-  public Notification createNotification(@Nullable String title, @Nullable String subtitle, @Nullable String content, @Nonnull NotificationType type, @Nullable NotificationListener listener) {
-    return new Notification(this, null, title, subtitle, content, type, listener);
-  }
+    @Nonnull
+    public Notification createNotification(
+        @Nullable String title,
+        @Nullable String subtitle,
+        @Nullable String content,
+        @Nonnull NotificationType type,
+        @Nullable NotificationListener listener
+    ) {
+        return new Notification(this, null, title, subtitle, content, type, listener);
+    }
 
-  @Nonnull
-  public NotificationDisplayType getDisplayType() {
-    return myDisplayType;
-  }
+    @Nonnull
+    public NotificationDisplayType getDisplayType() {
+        return myDisplayType;
+    }
 
-  public boolean isLogByDefault() {
-    return myLogByDefault;
-  }
+    public boolean isLogByDefault() {
+        return myLogByDefault;
+    }
 
-  @Nullable
-  public String getToolWindowId() {
-    return myToolWindowId;
-  }
+    @Nullable
+    public String getToolWindowId() {
+        return myToolWindowId;
+    }
 }

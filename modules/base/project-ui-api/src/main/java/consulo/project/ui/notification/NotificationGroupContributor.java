@@ -19,13 +19,14 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 07-Aug-22
+ * @since 2022-08-07
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface NotificationGroupContributor {
-  void contribute(@Nonnull Consumer<NotificationGroup> registrator);
+    void contribute(@Nonnull Consumer<NotificationGroup> registrator);
 }

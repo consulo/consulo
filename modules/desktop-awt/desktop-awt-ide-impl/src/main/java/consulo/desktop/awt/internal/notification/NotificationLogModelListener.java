@@ -27,23 +27,23 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 16-Jun-24
+ * @since 2024-06-16
  */
 @TopicImpl(ComponentScope.APPLICATION)
 public class NotificationLogModelListener implements LogModelListener {
-  @Override
-  public void modelChanged(Project project) {
-    if (project == null) {
-      return;
+    @Override
+    public void modelChanged(Project project) {
+        if (project == null) {
+            return;
+        }
+
+        project.getUIAccess().giveIfNeed(() -> {
+            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(EventLog.NOTIFICATIONS_TOOLWINDOW_ID);
+            if (toolWindow != null) {
+                List<Notification> notifications = EventLog.getLogModel(project).getNotifications();
+
+                toolWindow.setIcon(NotificationIconBuilder.getIcon(notifications.stream().map(Notification::getType).toList()));
+            }
+        });
     }
-
-    project.getUIAccess().giveIfNeed(() -> {
-      ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(EventLog.NOTIFICATIONS_TOOLWINDOW_ID);
-      if (toolWindow != null) {
-        List<Notification> notifications = EventLog.getLogModel(project).getNotifications();
-
-        toolWindow.setIcon(NotificationIconBuilder.getIcon(notifications.stream().map(Notification::getType).toList()));
-      }
-    });
-  }
 }

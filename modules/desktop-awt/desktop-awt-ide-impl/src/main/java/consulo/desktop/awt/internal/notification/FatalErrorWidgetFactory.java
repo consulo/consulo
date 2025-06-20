@@ -8,38 +8,35 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "fatalErrorWidget", order = "after notificationsWidget")
 public class FatalErrorWidgetFactory implements StatusBarWidgetFactory {
-  @Override
-  public
-  @Nls
-  @Nonnull
-  String getDisplayName() {
-    return UIBundle.message("status.bar.fatal.error.widget.name");
-  }
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return UILocalize.statusBarFatalErrorWidgetName().get();
+    }
 
-  @Override
-  public boolean isAvailable(@Nonnull Project project) {
-    return true;
-  }
+    @Override
+    public boolean isAvailable(@Nonnull Project project) {
+        return true;
+    }
 
-  @Override
-  @Nonnull
-  public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new IdeMessagePanel(project, this, WindowManager.getInstance().getIdeFrame(project), MessagePool.getInstance());
-  }
+    @Override
+    @Nonnull
+    public StatusBarWidget createWidget(@Nonnull Project project) {
+        return new IdeMessagePanel(project, this, WindowManager.getInstance().getIdeFrame(project), MessagePool.getInstance());
+    }
 
-  @Override
-  public boolean isConfigurable() {
-    return false;
-  }
+    @Override
+    public boolean isConfigurable() {
+        return false;
+    }
 
-  @Override
-  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
-    return false;
-  }
+    @Override
+    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+        return false;
+    }
 }
