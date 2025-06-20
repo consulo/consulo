@@ -18,6 +18,7 @@ package consulo.ui.ex.tree;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationWithSeparator;
 import consulo.navigation.LocationPresentation;
@@ -56,6 +57,29 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     private boolean myChanged;
     private String myLocationPrefix;
     private String myLocationSuffix;
+
+    /**
+     * Creates an instance with the specified parameters.
+     *
+     * @param presentableText the name of the object to be presented in most renderers across the program.
+     * @param locationString  the location of the object (for example, the package of a class). The location
+     *                        string is used by some renderers and usually displayed as grayed text next to
+     *                        the item name.
+     * @param icon            the icon shown for the node when it is collapsed in a tree, or when it is displayed
+     *                        in a non-tree view.
+     * @param attributesKey   the attributes for rendering the item text.
+     */
+    public PresentationData(
+        @Nonnull LocalizeValue presentableText,
+        String locationString,
+        Image icon,
+        @Nullable TextAttributesKey attributesKey
+    ) {
+        myIcon = icon;
+        myLocationString = locationString;
+        myPresentableText = presentableText.get();
+        myAttributesKey = attributesKey;
+    }
 
     /**
      * Creates an instance with the specified parameters.
@@ -115,9 +139,27 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      *
      * @param locationString the location of the object.
      */
+    public void setLocationString(@Nonnull LocalizeValue locationString) {
+        myLocationString = locationString.get();
+    }
 
+    /**
+     * Sets the location of the object (for example, the package of a class). The location
+     * string is used by some renderers and usually displayed as grayed text next to the item name.
+     *
+     * @param locationString the location of the object.
+     */
     public void setLocationString(String locationString) {
         myLocationString = locationString;
+    }
+
+    /**
+     * Sets the name of the object to be presented in most renderers across the program.
+     *
+     * @param presentableText the name of the object.
+     */
+    public void setPresentableText(@Nonnull LocalizeValue presentableText) {
+        myPresentableText = presentableText.get();
     }
 
     /**
@@ -138,13 +180,13 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         setIcon(presentation.getIcon());
         setPresentableText(presentation.getPresentableText());
         setLocationString(presentation.getLocationString());
-        if (presentation instanceof ColoredItemPresentation) {
-            setAttributesKey(((ColoredItemPresentation) presentation).getTextAttributesKey());
+        if (presentation instanceof ColoredItemPresentation coloredItemPresentation) {
+            setAttributesKey(coloredItemPresentation.getTextAttributesKey());
         }
         setSeparatorAbove(presentation instanceof ItemPresentationWithSeparator);
-        if (presentation instanceof LocationPresentation) {
-            myLocationPrefix = ((LocationPresentation) presentation).getLocationPrefix();
-            myLocationSuffix = ((LocationPresentation) presentation).getLocationSuffix();
+        if (presentation instanceof LocationPresentation locationPresentation) {
+            myLocationPrefix = locationPresentation.getLocationPrefix();
+            myLocationSuffix = locationPresentation.getLocationSuffix();
         }
     }
 
@@ -152,7 +194,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         return mySeparatorAbove;
     }
 
-    public void setSeparatorAbove(final boolean b) {
+    public void setSeparatorAbove(boolean b) {
         mySeparatorAbove = b;
     }
 
@@ -166,7 +208,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      *
      * @param attributesKey the attributes for rendering the item text.
      */
-    public void setAttributesKey(final TextAttributesKey attributesKey) {
+    public void setAttributesKey(TextAttributesKey attributesKey) {
         myAttributesKey = attributesKey;
     }
 
@@ -174,7 +216,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         return myTooltip;
     }
 
-    public void setTooltip(@Nullable final String tooltip) {
+    public void setTooltip(@Nullable String tooltip) {
         myTooltip = tooltip;
     }
 

@@ -1,8 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.ide.todo.nodes;
 
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.PsiFileNode;
@@ -155,7 +154,7 @@ public final class TodoFileNode extends PsiFileNode {
       return;
     }
     if (todoItemCount > 0) {
-      data.setLocationString(IdeBundle.message("node.todo.items", todoItemCount));
+      data.setLocationString(IdeLocalize.nodeTodoItems(todoItemCount));
     }
   }
 
