@@ -29,10 +29,10 @@ import jakarta.annotation.Nullable;
  */
 @TopicImpl(ComponentScope.APPLICATION)
 public class NotificationProjectTrackerTopicListener implements NotificationServiceListener {
-  @Override
-  public void notify(@Nonnull Notification notification, @Nullable Project project) {
-    if (project != null) {
-      NotificationProjectTracker.getInstance(project).printNotification(notification);
+    @Override
+    public void notify(@Nonnull Notification notification, @Nullable Project project) {
+        if (project != null) {
+            NotificationProjectTracker.getInstance(project).printNotification(notification);
+        }
     }
-  }
 }

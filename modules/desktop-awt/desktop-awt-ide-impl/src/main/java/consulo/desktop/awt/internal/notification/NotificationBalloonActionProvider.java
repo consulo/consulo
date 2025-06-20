@@ -39,102 +39,113 @@ import java.util.List;
  * @author Alexander Lobas
  */
 public class NotificationBalloonActionProvider implements BalloonImpl.ActionProvider {
-  private final BalloonImpl myBalloon;
-  private final BalloonLayoutData myLayoutData;
-  private final String myDisplayGroupId;
-  private final Component myRepaintPanel;
-  private BalloonImpl.ActionButton mySettingButton;
-  private BalloonImpl.ActionButton myCloseButton;
-  private List<BalloonImpl.ActionButton> myActions;
+    private final BalloonImpl myBalloon;
+    private final BalloonLayoutData myLayoutData;
+    private final String myDisplayGroupId;
+    private final Component myRepaintPanel;
+    private BalloonImpl.ActionButton mySettingButton;
+    private BalloonImpl.ActionButton myCloseButton;
+    private List<BalloonImpl.ActionButton> myActions;
 
-  private static final Rectangle CloseHoverBounds = new JBRectangle(5, 5, 12, 10);
+    private static final Rectangle CloseHoverBounds = new JBRectangle(5, 5, 12, 10);
 
-  public NotificationBalloonActionProvider(@Nonnull BalloonImpl balloon, @Nullable Component repaintPanel, @Nonnull BalloonLayoutData layoutData, @Nullable String displayGroupId) {
-    myLayoutData = layoutData;
-    myDisplayGroupId = displayGroupId;
-    myBalloon = balloon;
-    myRepaintPanel = repaintPanel;
-  }
-
-  @Nonnull
-  @Override
-  public List<BalloonImpl.ActionButton> createActions() {
-    myActions = new ArrayList<>();
-
-    if (!myLayoutData.showSettingButton || myDisplayGroupId == null || !NotificationsConfigurationImpl.getInstanceImpl().isRegistered(myDisplayGroupId)) {
-      mySettingButton = null;
-    }
-    else {
-      mySettingButton = myBalloon.new ActionButton(
-          PlatformIconGroup.ideNotificationGear(),
-          PlatformIconGroup.ideNotificationGearhover(),
-          "Configure VcsBranchMappingChangedNotification",
-          event -> myBalloon.runWithSmartFadeoutPause(() -> ShowSettingsUtil.getInstance().showAndSelect(
-              myLayoutData.project,
-              NotificationsConfigurable.class,
-              notificationsConfigurable -> notificationsConfigurable.enableSearch(myDisplayGroupId).run()
-          ))
-      ) {
-        @Override
-        public void repaint() {
-          super.repaint();
-          if (myRepaintPanel != null) {
-            myRepaintPanel.repaint();
-          }
-        }
-      };
-      myActions.add(mySettingButton);
-
-      if (myRepaintPanel != null) {
-        myLayoutData.showActions = () -> {
-          for (BalloonImpl.ActionButton action : myActions) {
-            if (!action.isShowing() || !action.hasPaint()) {
-              return Boolean.FALSE;
-            }
-          }
-          return Boolean.TRUE;
-        };
-      }
-    }
-
-    myCloseButton = myBalloon.new ActionButton(
-        PlatformIconGroup.ideNotificationClose(),
-        PlatformIconGroup.ideNotificationClosehover(),
-        "Close VcsBranchMappingChangedNotification (Alt-Click close all notifications)",
-        event -> {
-          int modifiers = event.getModifiers();
-          //noinspection SSBasedInspection
-          SwingUtilities.invokeLater(() -> {
-            if ((modifiers & InputEvent.ALT_MASK) != 0) {
-              myLayoutData.closeAll.run();
-            }
-            else {
-              myBalloon.hide();
-            }
-          });
-        }
+    public NotificationBalloonActionProvider(
+        @Nonnull BalloonImpl balloon,
+        @Nullable Component repaintPanel,
+        @Nonnull BalloonLayoutData layoutData,
+        @Nullable String displayGroupId
     ) {
-      @Override
-      protected void paintIcon(@Nonnull Graphics g, @Nonnull Image icon) {
-        TargetAWT.to(icon).paintIcon(this, g, CloseHoverBounds.x, CloseHoverBounds.y);
-      }
-    };
-    myActions.add(myCloseButton);
-
-    return myActions;
-  }
-
-  @Override
-  public void layout(@Nonnull Rectangle2D bounds) {
-    Dimension closeSize = myCloseButton.getPreferredSize();
-    ImmutableInsets borderInsets = myBalloon.getShadowBorderImmutableInsets();
-    int x = bounds.maxX() - borderInsets.right() - closeSize.width - myLayoutData.configuration.rightActionsOffset.width;
-    int y = bounds.minY() + borderInsets.top() + myLayoutData.configuration.rightActionsOffset.height;
-    myCloseButton.setBounds(x - CloseHoverBounds.x, y - CloseHoverBounds.y, closeSize.width + CloseHoverBounds.width, closeSize.height + CloseHoverBounds.height);
-
-    if (mySettingButton != null) {
-      Dimension size = mySettingButton.getPreferredSize();
-      mySettingButton.setBounds(x - size.width - myLayoutData.configuration.gearCloseSpace, y, size.width, size.height);
+        myLayoutData = layoutData;
+        myDisplayGroupId = displayGroupId;
+        myBalloon = balloon;
+        myRepaintPanel = repaintPanel;
     }
-  }
+
+    @Nonnull
+    @Override
+    public List<BalloonImpl.ActionButton> createActions() {
+        myActions = new ArrayList<>();
+
+        if (!myLayoutData.showSettingButton || myDisplayGroupId == null
+            || !NotificationsConfigurationImpl.getInstanceImpl().isRegistered(myDisplayGroupId)) {
+            mySettingButton = null;
+        }
+        else {
+            mySettingButton = myBalloon.new ActionButton(
+                PlatformIconGroup.ideNotificationGear(),
+                PlatformIconGroup.ideNotificationGearhover(),
+                "Configure VcsBranchMappingChangedNotification",
+                event -> myBalloon.runWithSmartFadeoutPause(() -> ShowSettingsUtil.getInstance().showAndSelect(
+                    myLayoutData.project,
+                    NotificationsConfigurable.class,
+                    notificationsConfigurable -> notificationsConfigurable.enableSearch(myDisplayGroupId).run()
+                ))
+            ) {
+                @Override
+                public void repaint() {
+                    super.repaint();
+                    if (myRepaintPanel != null) {
+                        myRepaintPanel.repaint();
+                    }
+                }
+            };
+            myActions.add(mySettingButton);
+
+            if (myRepaintPanel != null) {
+                myLayoutData.showActions = () -> {
+                    for (BalloonImpl.ActionButton action : myActions) {
+                        if (!action.isShowing() || !action.hasPaint()) {
+                            return Boolean.FALSE;
+                        }
+                    }
+                    return Boolean.TRUE;
+                };
+            }
+        }
+
+        myCloseButton = myBalloon.new ActionButton(
+            PlatformIconGroup.ideNotificationClose(),
+            PlatformIconGroup.ideNotificationClosehover(),
+            "Close VcsBranchMappingChangedNotification (Alt-Click close all notifications)",
+            event -> {
+                int modifiers = event.getModifiers();
+                //noinspection SSBasedInspection
+                SwingUtilities.invokeLater(() -> {
+                    if ((modifiers & InputEvent.ALT_MASK) != 0) {
+                        myLayoutData.closeAll.run();
+                    }
+                    else {
+                        myBalloon.hide();
+                    }
+                });
+            }
+        ) {
+            @Override
+            protected void paintIcon(@Nonnull Graphics g, @Nonnull Image icon) {
+                TargetAWT.to(icon).paintIcon(this, g, CloseHoverBounds.x, CloseHoverBounds.y);
+            }
+        };
+        myActions.add(myCloseButton);
+
+        return myActions;
+    }
+
+    @Override
+    public void layout(@Nonnull Rectangle2D bounds) {
+        Dimension closeSize = myCloseButton.getPreferredSize();
+        ImmutableInsets borderInsets = myBalloon.getShadowBorderImmutableInsets();
+        int x = bounds.maxX() - borderInsets.right() - closeSize.width - myLayoutData.configuration.rightActionsOffset.width;
+        int y = bounds.minY() + borderInsets.top() + myLayoutData.configuration.rightActionsOffset.height;
+        myCloseButton.setBounds(
+            x - CloseHoverBounds.x,
+            y - CloseHoverBounds.y,
+            closeSize.width + CloseHoverBounds.width,
+            closeSize.height + CloseHoverBounds.height
+        );
+
+        if (mySettingButton != null) {
+            Dimension size = mySettingButton.getPreferredSize();
+            mySettingButton.setBounds(x - size.width - myLayoutData.configuration.gearCloseSpace, y, size.width, size.height);
+        }
+    }
 }

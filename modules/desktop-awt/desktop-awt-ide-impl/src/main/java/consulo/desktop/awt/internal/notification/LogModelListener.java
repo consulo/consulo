@@ -26,5 +26,5 @@ import consulo.project.Project;
  */
 @TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface LogModelListener {
-  void modelChanged(Project project);
+    void modelChanged(Project project);
 }

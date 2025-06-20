@@ -28,8 +28,10 @@ import java.util.function.BiConsumer;
  */
 public abstract class NotificationAction extends DumbAwareAction {
     @Nonnull
-    public static NotificationAction create(@Nonnull LocalizeValue textValue,
-                                            @RequiredUIAccess @Nonnull BiConsumer<AnActionEvent, Notification> consumer) {
+    public static NotificationAction create(
+        @Nonnull LocalizeValue textValue,
+        @RequiredUIAccess @Nonnull BiConsumer<AnActionEvent, Notification> consumer
+    ) {
         return new NotificationAction(textValue) {
             @RequiredUIAccess
             @Override
@@ -39,8 +41,10 @@ public abstract class NotificationAction extends DumbAwareAction {
         };
     }
 
-    public static NotificationAction createExpiring(@Nonnull LocalizeValue textValue,
-                                                    @RequiredUIAccess @Nonnull BiConsumer<AnActionEvent, Notification> consumer) {
+    public static NotificationAction createExpiring(
+        @Nonnull LocalizeValue textValue,
+        @RequiredUIAccess @Nonnull BiConsumer<AnActionEvent, Notification> consumer
+    ) {
         return new NotificationAction(textValue) {
             @RequiredUIAccess
             @Override

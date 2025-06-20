@@ -19,19 +19,18 @@ package consulo.project.ui.notification;
  * @author spleaner
  */
 public enum NotificationDisplayType {
-  NONE("No popup"),
-  BALLOON("Balloon"),
-  STICKY_BALLOON("Sticky balloon"),
-  TOOL_WINDOW("Tool window balloon"),
-  ;
+    NONE("No popup"),
+    BALLOON("Balloon"),
+    STICKY_BALLOON("Sticky balloon"),
+    TOOL_WINDOW("Tool window balloon");
 
-  private final String myTitle;
+    private final String myTitle;
 
-  private NotificationDisplayType(final String humanTitle) {
-    myTitle = humanTitle;
-  }
+    private NotificationDisplayType(final String humanTitle) {
+        myTitle = humanTitle;
+    }
 
-  public String getTitle() {
-    return myTitle;
-  }
+    public String getTitle() {
+        return myTitle;
+    }
 }

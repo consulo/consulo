@@ -57,7 +57,14 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
             g.fill(new RoundRectangle2D.Double(bounds.minX(), bounds.minY(), bounds.width(), bounds.height(), arc, arc));
 
             g.setColor(myBorderColor);
-            g.draw(new RoundRectangle2D.Double(bounds.minX() + 0.5, bounds.minY() + 0.5, bounds.width() - 1, bounds.height() - 1, arc, arc));
+            g.draw(new RoundRectangle2D.Double(
+                bounds.minX() + 0.5,
+                bounds.minY() + 0.5,
+                bounds.width() - 1,
+                bounds.height() - 1,
+                arc,
+                arc
+            ));
         }
         else {
             g.setColor(myFillColor);
@@ -69,7 +76,12 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
     }
 
     @Override
-    public void paintPointingShape(@Nonnull Rectangle2D bounds, @Nonnull Point2D pointTarget, @Nonnull Balloon.Position position, @Nonnull Graphics2D g) {
+    public void paintPointingShape(
+        @Nonnull Rectangle2D bounds,
+        @Nonnull Point2D pointTarget,
+        @Nonnull Balloon.Position position,
+        @Nonnull Graphics2D g
+    ) {
         int x, y, length;
 
         if (position == Balloon.Position.above) {

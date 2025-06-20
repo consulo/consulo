@@ -27,9 +27,9 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface NotificationService {
-  default void notify(@Nonnull Notification notification) {
-    notify(notification, null);
-  }
+    default void notify(@Nonnull Notification notification) {
+        notify(notification, null);
+    }
 
-  void notify(@Nonnull Notification notification, @Nullable Project project);
+    void notify(@Nonnull Notification notification, @Nullable Project project);
 }

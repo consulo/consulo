@@ -13,27 +13,27 @@ import java.awt.*;
 import static consulo.ui.ex.awt.EmptyIcon.ICON_16;
 
 class IdeErrorsIcon extends JLabel {
-  private final boolean myEnableBlink;
+    private final boolean myEnableBlink;
 
-  IdeErrorsIcon(boolean enableBlink) {
-    myEnableBlink = enableBlink;
-  }
+    IdeErrorsIcon(boolean enableBlink) {
+        myEnableBlink = enableBlink;
+    }
 
-  void setState(MessagePool.State state) {
-    Icon myUnreadIcon = !myEnableBlink ? TargetAWT.to(AllIcons.Ide.FatalError) : new Blinking(AllIcons.Ide.FatalError);
-    if (state != null && state != MessagePool.State.NoErrors) {
-      setIcon(state == MessagePool.State.ReadErrors ? TargetAWT.to(AllIcons.Ide.FatalError_read): myUnreadIcon);
-      setToolTipText(ExternalServiceLocalize.errorNotificationTooltip().get());
-      if (!myEnableBlink) {
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      }
+    void setState(MessagePool.State state) {
+        Icon myUnreadIcon = !myEnableBlink ? TargetAWT.to(AllIcons.Ide.FatalError) : new Blinking(AllIcons.Ide.FatalError);
+        if (state != null && state != MessagePool.State.NoErrors) {
+            setIcon(state == MessagePool.State.ReadErrors ? TargetAWT.to(AllIcons.Ide.FatalError_read) : myUnreadIcon);
+            setToolTipText(ExternalServiceLocalize.errorNotificationTooltip().get());
+            if (!myEnableBlink) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+        }
+        else {
+            setIcon(ICON_16);
+            setToolTipText(null);
+            if (!myEnableBlink) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+        }
     }
-    else {
-      setIcon(ICON_16);
-      setToolTipText(null);
-      if (!myEnableBlink) {
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-      }
-    }
-  }
 }

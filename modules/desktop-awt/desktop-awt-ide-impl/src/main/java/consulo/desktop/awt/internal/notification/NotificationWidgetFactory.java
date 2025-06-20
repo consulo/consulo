@@ -8,33 +8,34 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "notificationsWidget", order = "after readOnlyWidget")
 public class NotificationWidgetFactory implements StatusBarWidgetFactory {
-  public static boolean isAvailable() {
-    return UISettings.getInstance().getHideToolStripes() || UISettings.getInstance().getPresentationMode();
-  }
+    public static boolean isAvailable() {
+        return UISettings.getInstance().getHideToolStripes() || UISettings.getInstance().getPresentationMode();
+    }
 
-  @Override
-  @Nonnull
-  public String getDisplayName() {
-    return UIBundle.message("status.bar.notifications.widget.name");
-  }
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return UILocalize.statusBarNotificationsWidgetName().get();
+    }
 
-  @Override
-  public boolean isAvailable(@Nonnull Project project) {
-    return isAvailable();
-  }
+    @Override
+    public boolean isAvailable(@Nonnull Project project) {
+        return isAvailable();
+    }
 
-  @Override
-  @Nonnull
-  public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new IdeNotificationArea(this);
-  }
+    @Override
+    @Nonnull
+    public StatusBarWidget createWidget(@Nonnull Project project) {
+        return new IdeNotificationArea(this);
+    }
 
-  @Override
-  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
-    return isAvailable();
-  }
+    @Override
+    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+        return isAvailable();
+    }
 }

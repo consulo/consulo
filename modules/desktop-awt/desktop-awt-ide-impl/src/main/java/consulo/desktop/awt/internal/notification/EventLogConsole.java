@@ -99,14 +99,17 @@ class EventLogConsole {
         editor.getSettings().setUseSoftWraps(true);
 
         installNotificationsFont(editor);
-        myProjectModel.getProject().getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
-            @Override
-            public void projectClosed(Project project, UIAccess uiAccess) {
-                if (project == myProjectModel.getProject()) {
-                    EditorFactory.getInstance().releaseEditor(editor);
+        myProjectModel.getProject().getMessageBus().connect().subscribe(
+            ProjectManagerListener.class,
+            new ProjectManagerListener() {
+                @Override
+                public void projectClosed(Project project, UIAccess uiAccess) {
+                    if (project == myProjectModel.getProject()) {
+                        EditorFactory.getInstance().releaseEditor(editor);
+                    }
                 }
             }
-        });
+        );
 
         editor.getMarkupModel().setErrorStripeVisible(true);
 
@@ -162,17 +165,25 @@ class EventLogConsole {
             public void setConsoleFontSize(int fontSize) {
             }
         };
-        EditorColorsManager.getInstance().addEditorColorsListener(new EditorColorsListener() {
-            @Override
-            public void globalSchemeChange(EditorColorsScheme scheme) {
-                globalScheme.setDelegate(EditorColorsManager.getInstance().getGlobalScheme());
-                editor.reinitSettings();
-            }
-        }, myProjectModel);
+        EditorColorsManager.getInstance().addEditorColorsListener(
+            new EditorColorsListener() {
+                @Override
+                public void globalSchemeChange(EditorColorsScheme scheme) {
+                    globalScheme.setDelegate(EditorColorsManager.getInstance().getGlobalScheme());
+                    editor.reinitSettings();
+                }
+            },
+            myProjectModel
+        );
         editor.setColorsScheme(ConsoleViewUtil.updateConsoleColorScheme(editor.createBoundColorSchemeDelegate(globalScheme)));
     }
 
-    private static DefaultActionGroup createPopupActions(ActionManager actionManager, ClearLogAction action, EditorEx editor, EditorMouseEvent event) {
+    private static DefaultActionGroup createPopupActions(
+        ActionManager actionManager,
+        ClearLogAction action,
+        EditorEx editor,
+        EditorMouseEvent event
+    ) {
         AnAction[] children = ((ActionGroup) actionManager.getAction(IdeActions.GROUP_CONSOLE_EDITOR_POPUP)).getChildren(null);
         DefaultActionGroup group = new DefaultActionGroup();
         addConfigureNotificationAction(editor, event, group);
@@ -182,7 +193,11 @@ class EventLogConsole {
         return group;
     }
 
-    private static void addConfigureNotificationAction(@Nonnull EditorEx editor, @Nonnull EditorMouseEvent event, @Nonnull final DefaultActionGroup actions) {
+    private static void addConfigureNotificationAction(
+        @Nonnull EditorEx editor,
+        @Nonnull EditorMouseEvent event,
+        @Nonnull final DefaultActionGroup actions
+    ) {
         LogicalPosition position = editor.xyToLogicalPosition(event.getMouseEvent().getPoint());
         if (EditorUtil.inVirtualSpace(editor, position)) {
             return;
@@ -207,7 +222,8 @@ class EventLogConsole {
         NotificationDisplayType current = settings.getDisplayType();
 
         for (NotificationDisplayType type : NotificationDisplayType.values()) {
-            if (type != NotificationDisplayType.TOOL_WINDOW || NotificationsConfigurationImpl.getInstanceImpl().hasToolWindowCapability(groupId)) {
+            if (type != NotificationDisplayType.TOOL_WINDOW || NotificationsConfigurationImpl.getInstanceImpl()
+                .hasToolWindowCapability(groupId)) {
                 displayTypeGroup.add(new DisplayTypeAction(settings, type, current));
             }
         }
@@ -221,7 +237,11 @@ class EventLogConsole {
         private final NotificationDisplayType myType;
         private final NotificationDisplayType myCurrent;
 
-        public DisplayTypeAction(@Nonnull NotificationSettings settings, @Nonnull NotificationDisplayType type, @Nonnull NotificationDisplayType current) {
+        public DisplayTypeAction(
+            @Nonnull NotificationSettings settings,
+            @Nonnull NotificationDisplayType type,
+            @Nonnull NotificationDisplayType current
+        ) {
             super(type.getTitle());
             mySettings = settings;
             myType = type;
@@ -275,19 +295,23 @@ class EventLogConsole {
         final NotificationType type = notification.getType();
         TextAttributesKey key = type == NotificationType.ERROR
             ? ConsoleViewContentType.LOG_ERROR_OUTPUT_KEY
-            : type == NotificationType.INFORMATION ? ConsoleViewContentType.NORMAL_OUTPUT_KEY : ConsoleViewContentType.LOG_WARNING_OUTPUT_KEY;
+            : type == NotificationType.INFORMATION
+            ? ConsoleViewContentType.NORMAL_OUTPUT_KEY
+            : ConsoleViewContentType.LOG_WARNING_OUTPUT_KEY;
 
         int msgStart = document.getTextLength();
         append(document, pair.message);
 
         TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(key);
         int layer = HighlighterLayer.CARET_ROW + 1;
-        RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(msgStart, document.getTextLength(), layer, attributes, HighlighterTargetArea.EXACT_RANGE);
+        RangeHighlighter highlighter = editor.getMarkupModel()
+            .addRangeHighlighter(msgStart, document.getTextLength(), layer, attributes, HighlighterTargetArea.EXACT_RANGE);
         GROUP_ID.set(highlighter, notification.getGroupId());
         NOTIFICATION_ID.set(highlighter, notification.id);
 
         for (Pair<TextRange, HyperlinkInfo> link : pair.links) {
-            final RangeHighlighter rangeHighlighter = myHyperlinkSupport.getValue().createHyperlink(link.first.getStartOffset() + msgStart, link.first.getEndOffset() + msgStart, null, link.second);
+            final RangeHighlighter rangeHighlighter = myHyperlinkSupport.getValue()
+                .createHyperlink(link.first.getStartOffset() + msgStart, link.first.getEndOffset() + msgStart, null, link.second);
             if (link.second instanceof EventLog.ShowBalloon) {
                 ((EventLog.ShowBalloon) link.second).setRangeHighlighter(rangeHighlighter);
             }
@@ -329,12 +353,26 @@ class EventLogConsole {
         }
     }
 
-    private void highlightNotification(final Notification notification, String message, final int startLine, final int endLine, int titleOffset, int titleLength) {
+    private void highlightNotification(
+        final Notification notification,
+        String message,
+        final int startLine,
+        final int endLine,
+        int titleOffset,
+        int titleLength
+    ) {
 
         final MarkupModel markupModel = getConsoleEditor().getMarkupModel();
         TextAttributes bold = new TextAttributes(null, null, null, null, Font.BOLD);
-        final RangeHighlighter colorHighlighter = markupModel.addRangeHighlighter(titleOffset, titleOffset + titleLength, HighlighterLayer.CARET_ROW + 1, bold, HighlighterTargetArea.EXACT_RANGE);
-        ColorValue color = notification.getType() == NotificationType.ERROR ? StandardColors.RED : notification.getType() == NotificationType.WARNING ? StandardColors.YELLOW : StandardColors.GREEN;
+        final RangeHighlighter colorHighlighter = markupModel.addRangeHighlighter(
+            titleOffset,
+            titleOffset + titleLength,
+            HighlighterLayer.CARET_ROW + 1,
+            bold,
+            HighlighterTargetArea.EXACT_RANGE
+        );
+        ColorValue color =
+            notification.getType() == NotificationType.ERROR ? StandardColors.RED : notification.getType() == NotificationType.WARNING ? StandardColors.YELLOW : StandardColors.GREEN;
         colorHighlighter.setErrorStripeMarkColor(color);
         colorHighlighter.setErrorStripeTooltip(message);
 
@@ -346,7 +384,13 @@ class EventLogConsole {
             TextAttributes italic = new TextAttributes(null, null, null, null, Font.ITALIC);
             for (int line = startLine; line < endLine; line++) {
                 for (RangeHighlighter highlighter : myHyperlinkSupport.getValue().findAllHyperlinksOnLine(line)) {
-                    markupModel.addRangeHighlighter(highlighter.getStartOffset(), highlighter.getEndOffset(), HighlighterLayer.CARET_ROW + 2, italic, HighlighterTargetArea.EXACT_RANGE);
+                    markupModel.addRangeHighlighter(
+                        highlighter.getStartOffset(),
+                        highlighter.getEndOffset(),
+                        HighlighterLayer.CARET_ROW + 2,
+                        italic,
+                        HighlighterTargetArea.EXACT_RANGE
+                    );
                     myHyperlinkSupport.getValue().removeHyperlink(highlighter);
                 }
             }
@@ -400,13 +444,25 @@ class EventLogConsole {
             }
 
             //noinspection UseJBColor
-            TextAttributes attributes = new TextAttributes(null, TargetAWT.from(ColorUtil.mix(TargetAWT.to(editor.getBackgroundColor()), new Color(0x808080), 0.1)), null, EffectType.BOXED, Font.PLAIN);
+            TextAttributes attributes = new TextAttributes(
+                null,
+                TargetAWT.from(ColorUtil.mix(TargetAWT.to(editor.getBackgroundColor()), new Color(0x808080), 0.1)),
+                null,
+                EffectType.BOXED,
+                Font.PLAIN
+            );
             MarkupModelEx markupModel = editor.getMarkupModel();
 
             for (Point range : ranges) {
                 int start = document.getLineStartOffset(range.x);
                 int end = document.getLineStartOffset(range.y);
-                myNMoreHighlighters.add(markupModel.addRangeHighlighter(start, end, HighlighterLayer.CARET_ROW + 2, attributes, HighlighterTargetArea.EXACT_RANGE));
+                myNMoreHighlighters.add(markupModel.addRangeHighlighter(
+                    start,
+                    end,
+                    HighlighterLayer.CARET_ROW + 2,
+                    attributes,
+                    HighlighterTargetArea.EXACT_RANGE
+                ));
             }
         }
     }
@@ -452,15 +508,15 @@ class EventLogConsole {
             myConsole = console;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             LogModel model = myConsole.myProjectModel;
             e.getPresentation().setEnabled(!model.getNotifications().isEmpty());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             LogModel model = myConsole.myProjectModel;
             for (Notification notification : model.getNotifications()) {

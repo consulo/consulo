@@ -41,84 +41,89 @@ import java.util.List;
  * @author spleaner
  */
 public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCustomStatusBarWidget {
-  private final StatusBarWidgetFactory myFactory;
-  private StatusBar myStatusBar;
+    private final StatusBarWidgetFactory myFactory;
+    private StatusBar myStatusBar;
 
-  private Label myLabel;
+    private Label myLabel;
 
-  public IdeNotificationArea(StatusBarWidgetFactory factory) {
-    myFactory = factory;
-    myLabel = Label.create();
-    myLabel.addClickListener(event -> EventLog.toggleLog(getProject(), null));
+    public IdeNotificationArea(StatusBarWidgetFactory factory) {
+        myFactory = factory;
+        myLabel = Label.create();
+        myLabel.addClickListener(event -> EventLog.toggleLog(getProject(), null));
 
-    Application application = Application.get();
-    MessageBusConnection connection = application.getMessageBus().connect(this);
-    connection.subscribe(UISettingsListener.class, source -> updateStatus());
-    connection.subscribe(LogModelListener.class, (project) -> application.invokeLater(IdeNotificationArea.this::updateStatus));
-  }
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return myFactory.getId();
-  }
-
-  @Override
-  public WidgetPresentation getPresentation() {
-    return null;
-  }
-
-  @Override
-  public void dispose() {
-  }
-
-  @Override
-  public void install(@Nonnull StatusBar statusBar) {
-    myStatusBar = statusBar;
-    updateStatus();
-  }
-
-  @Nullable
-  private Project getProject() {
-    return myStatusBar == null ? null : myStatusBar.getProject();
-  }
-
-  @RequiredUIAccess
-  private void updateStatus() {
-    final Project project = getProject();
-    List<Notification> notifications = EventLog.getLogModel(project).getNotifications();
-
-    applyIconToStatusAndToolWindow(project, NotificationIconBuilder.getIcon(notifications.stream().map(Notification::getType).toList()));
-
-    int count = notifications.size();
-    myLabel.setToolTipText(LocalizeValue.localizeTODO(count > 0 ? String.format("%s notification%s pending", count, count == 1 ? "" : "s") : "No new notifications"));
-
-    myStatusBar.updateWidget(getId());
-  }
-
-  @RequiredUIAccess
-  private void applyIconToStatusAndToolWindow(Project project, Image icon) {
-    if (UISettings.getInstance().HIDE_TOOL_STRIPES || UISettings.getInstance().PRESENTATION_MODE) {
-      myLabel.setVisible(true);
-      myLabel.setImage(icon);
+        Application application = Application.get();
+        MessageBusConnection connection = application.getMessageBus().connect(this);
+        connection.subscribe(UISettingsListener.class, source -> updateStatus());
+        connection.subscribe(LogModelListener.class, (project) -> application.invokeLater(IdeNotificationArea.this::updateStatus));
     }
-    else {
-      ToolWindow eventLog = EventLog.getEventLog(project);
-      if (eventLog != null) {
-        eventLog.setIcon(icon);
-      }
-      myLabel.setVisible(false);
+
+    @Nonnull
+    @Override
+    public String getId() {
+        return myFactory.getId();
     }
-  }
 
-  @Nullable
-  @Override
-  public Component getUIComponent() {
-    return myLabel;
-  }
+    @Override
+    public WidgetPresentation getPresentation() {
+        return null;
+    }
 
-  @Override
-  public boolean isUnified() {
-    return true;
-  }
+    @Override
+    public void dispose() {
+    }
+
+    @Override
+    public void install(@Nonnull StatusBar statusBar) {
+        myStatusBar = statusBar;
+        updateStatus();
+    }
+
+    @Nullable
+    private Project getProject() {
+        return myStatusBar == null ? null : myStatusBar.getProject();
+    }
+
+    @RequiredUIAccess
+    private void updateStatus() {
+        final Project project = getProject();
+        List<Notification> notifications = EventLog.getLogModel(project).getNotifications();
+
+        applyIconToStatusAndToolWindow(
+            project,
+            NotificationIconBuilder.getIcon(notifications.stream().map(Notification::getType).toList())
+        );
+
+        int count = notifications.size();
+        myLabel.setToolTipText(LocalizeValue.localizeTODO(
+            count > 0 ? String.format("%s notification%s pending", count, count == 1 ? "" : "s") : "No new notifications")
+        );
+
+        myStatusBar.updateWidget(getId());
+    }
+
+    @RequiredUIAccess
+    private void applyIconToStatusAndToolWindow(Project project, Image icon) {
+        if (UISettings.getInstance().HIDE_TOOL_STRIPES || UISettings.getInstance().PRESENTATION_MODE) {
+            myLabel.setVisible(true);
+            myLabel.setImage(icon);
+        }
+        else {
+            ToolWindow eventLog = EventLog.getEventLog(project);
+            if (eventLog != null) {
+                eventLog.setIcon(icon);
+            }
+            myLabel.setVisible(false);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Component getUIComponent() {
+        return myLabel;
+    }
+
+    @Override
+    public boolean isUnified() {
+        return true;
+    }
 }

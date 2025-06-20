@@ -18,13 +18,13 @@ package consulo.project.ui.notification;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.Balloon;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -36,34 +36,37 @@ import java.awt.*;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class NotificationsManager {
+    public static NotificationsManager getNotificationsManager() {
+        return Application.get().getInstance(NotificationsManager.class);
+    }
 
-  public static NotificationsManager getNotificationsManager() {
-    return ApplicationManager.getApplication().getInstance(NotificationsManager.class);
-  }
+    public abstract void expire(@Nonnull Notification notification);
 
-  public abstract void expire(@Nonnull final Notification notification);
+    @Nullable
+    @RequiredUIAccess
+    public abstract Window findWindowForBalloon(@Nullable Project project);
 
-  @Nullable
-  @RequiredUIAccess
-  public abstract Window findWindowForBalloon(@Nullable Project project);
+    public abstract <T extends Notification> T[] getNotificationsOfType(Class<T> klass, @Nullable Project project);
 
-  public abstract <T extends Notification> T[] getNotificationsOfType(Class<T> klass, @Nullable Project project);
-
-  @Nonnull
-  public Balloon createBalloon(@Nonnull final IdeFrame window,
-                               @Nonnull final Notification notification,
-                               final boolean showCallout,
-                               final boolean hideOnClickOutside,
-                               @Nonnull Ref<Object> layoutDataRef,
-                               @Nonnull Disposable parentDisposable) {
-    return createBalloon(window.getComponent(), notification, showCallout, hideOnClickOutside, layoutDataRef, parentDisposable);
-  }
+    @Nonnull
+    public Balloon createBalloon(
+        @Nonnull IdeFrame window,
+        @Nonnull Notification notification,
+        boolean showCallout,
+        boolean hideOnClickOutside,
+        @Nonnull SimpleReference<Object> layoutDataRef,
+        @Nonnull Disposable parentDisposable
+    ) {
+        return createBalloon(window.getComponent(), notification, showCallout, hideOnClickOutside, layoutDataRef, parentDisposable);
+    }
 
 
-  public abstract Balloon createBalloon(@Nullable final JComponent windowComponent,
-                                        @Nonnull final Notification notification,
-                                        final boolean showCallout,
-                                        final boolean hideOnClickOutside,
-                                        @Nonnull Ref<Object> layoutDataRef,
-                                        @Nonnull Disposable parentDisposable);
+    public abstract Balloon createBalloon(
+        @Nullable JComponent windowComponent,
+        @Nonnull Notification notification,
+        boolean showCallout,
+        boolean hideOnClickOutside,
+        @Nonnull SimpleReference<Object> layoutDataRef,
+        @Nonnull Disposable parentDisposable
+    );
 }

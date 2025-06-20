@@ -31,19 +31,19 @@ import java.util.List;
  */
 @TopicImpl(ComponentScope.APPLICATION)
 public class NotificationLogModelListener implements LogModelListener {
-  @Override
-  public void modelChanged(Project project) {
-    if (project == null) {
-      return;
+    @Override
+    public void modelChanged(Project project) {
+        if (project == null) {
+            return;
+        }
+
+        project.getUIAccess().giveIfNeed(() -> {
+            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(EventLog.NOTIFICATIONS_TOOLWINDOW_ID);
+            if (toolWindow != null) {
+                List<Notification> notifications = EventLog.getLogModel(project).getNotifications();
+
+                toolWindow.setIcon(NotificationIconBuilder.getIcon(notifications.stream().map(Notification::getType).toList()));
+            }
+        });
     }
-
-    project.getUIAccess().giveIfNeed(() -> {
-      ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(EventLog.NOTIFICATIONS_TOOLWINDOW_ID);
-      if (toolWindow != null) {
-        List<Notification> notifications = EventLog.getLogModel(project).getNotifications();
-
-        toolWindow.setIcon(NotificationIconBuilder.getIcon(notifications.stream().map(Notification::getType).toList()));
-      }
-    });
-  }
 }

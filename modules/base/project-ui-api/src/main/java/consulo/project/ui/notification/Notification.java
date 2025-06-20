@@ -103,13 +103,15 @@ public class Notification {
      * @param type     notification type
      * @param listener notification lifecycle listener
      */
-    public Notification(@Nonnull NotificationGroup group,
-                        @Nullable Image icon,
-                        @Nullable String title,
-                        @Nullable String subtitle,
-                        @Nullable String content,
-                        @Nonnull NotificationType type,
-                        @Nullable NotificationListener listener) {
+    public Notification(
+        @Nonnull NotificationGroup group,
+        @Nullable Image icon,
+        @Nullable String title,
+        @Nullable String subtitle,
+        @Nullable String content,
+        @Nonnull NotificationType type,
+        @Nullable NotificationListener listener
+    ) {
         myGroupId = group.getId();
         myTitle = StringUtil.notNullize(title);
         myContent = StringUtil.notNullize(content);
@@ -131,11 +133,13 @@ public class Notification {
      * @param type     notification type
      * @param listener notification lifecycle listener
      */
-    public Notification(@Nonnull NotificationGroup group,
-                        @Nonnull String title,
-                        @Nonnull String content,
-                        @Nonnull NotificationType type,
-                        @Nullable @RequiredUIAccess NotificationListener listener) {
+    public Notification(
+        @Nonnull NotificationGroup group,
+        @Nonnull String title,
+        @Nonnull String content,
+        @Nonnull NotificationType type,
+        @Nullable @RequiredUIAccess NotificationListener listener
+    ) {
         myGroupId = group.getId();
         myTitle = title;
         myContent = content;
@@ -384,6 +388,9 @@ public class Notification {
     }
 
     private void assertHasTitleOrContent() {
-        LOG.assertTrue(hasTitle() || hasContent(), "Notification should have title: [" + myTitle + "] and/or content: [" + myContent + "]; groupId: " + myGroupId);
+        LOG.assertTrue(
+            hasTitle() || hasContent(),
+            "Notification should have title: [" + myTitle + "] and/or content: [" + myContent + "]; groupId: " + myGroupId
+        );
     }
 }

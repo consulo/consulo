@@ -21,34 +21,34 @@ import jakarta.annotation.Nonnull;
  * @author spleaner
  */
 public enum NotificationType {
-  INFORMATION,
-  WARNING,
-  ERROR;
+    INFORMATION,
+    WARNING,
+    ERROR;
 
-  public consulo.ui.NotificationType toUI() {
-    switch (this) {
-      case INFORMATION:
-        return consulo.ui.NotificationType.INFO;
-      case WARNING:
-        return consulo.ui.NotificationType.WARNING;
-      case ERROR:
-        return consulo.ui.NotificationType.ERROR;
-    }
+    public consulo.ui.NotificationType toUI() {
+        switch (this) {
+            case INFORMATION:
+                return consulo.ui.NotificationType.INFO;
+            case WARNING:
+                return consulo.ui.NotificationType.WARNING;
+            case ERROR:
+                return consulo.ui.NotificationType.ERROR;
+        }
 
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  public static NotificationType from(consulo.ui.NotificationType type) {
-    switch (type) {
-      case INFO:
-        return INFORMATION;
-      case WARNING:
-        return WARNING;
-      case ERROR:
-        return ERROR;
-      default:
         throw new UnsupportedOperationException();
     }
-  }
+
+    @Nonnull
+    public static NotificationType from(consulo.ui.NotificationType type) {
+        switch (type) {
+            case INFO:
+                return INFORMATION;
+            case WARNING:
+                return WARNING;
+            case ERROR:
+                return ERROR;
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
 }

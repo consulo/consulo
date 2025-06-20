@@ -45,83 +45,82 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class NotificationProjectTracker implements Disposable {
-
-  static NotificationProjectTracker getInstance(Project project) {
-    return project.getInstance(NotificationProjectTracker.class);
-  }
-
-  private final EventLogConsole myEventLogConsole;
-  private final List<Notification> myInitial = Lists.newLockFreeCopyOnWriteList();
-  private final Project myProject;
-  private final EventLog myEventLog;
-
-  protected LogModel myProjectModel;
-
-  @Inject
-  public NotificationProjectTracker(@Nonnull final Project project, EventLog eventLog) {
-    myProject = project;
-    myEventLog = eventLog;
-    myProjectModel = new LogModel(project, project);
-    myEventLogConsole = new EventLogConsole(myProjectModel);
-  }
-
-  public EventLogConsole getEventLogConsole() {
-    return myEventLogConsole;
-  }
-
-  public void printToProjectEventLog() {
-    for (Notification notification : myEventLog.myModel.takeNotifications()) {
-      printNotification(notification);
+    static NotificationProjectTracker getInstance(Project project) {
+        return project.getInstance(NotificationProjectTracker.class);
     }
-  }
 
-  void initDefaultContent() {
-    for (Notification notification : myInitial) {
-      doPrintNotification(notification, ObjectUtil.assertNotNull(myEventLogConsole));
+    private final EventLogConsole myEventLogConsole;
+    private final List<Notification> myInitial = Lists.newLockFreeCopyOnWriteList();
+    private final Project myProject;
+    private final EventLog myEventLog;
+
+    protected LogModel myProjectModel;
+
+    @Inject
+    public NotificationProjectTracker(@Nonnull final Project project, EventLog eventLog) {
+        myProject = project;
+        myEventLog = eventLog;
+        myProjectModel = new LogModel(project, project);
+        myEventLogConsole = new EventLogConsole(myProjectModel);
     }
-    myInitial.clear();
-  }
 
-  @Override
-  public void dispose() {
-    myEventLog.myModel.setStatusMessage(null, 0);
-    StatusBar.Info.set("", null, EventLog.LOG_REQUESTOR);
-  }
-
-  protected void printNotification(Notification notification) {
-    if (!NotificationsConfigurationImpl.getSettings(notification.getGroupId()).isShouldLog()) {
-      return;
+    public EventLogConsole getEventLogConsole() {
+        return myEventLogConsole;
     }
-    myProjectModel.addNotification(notification);
 
-    EventLogConsole console = myEventLogConsole;
-    doPrintNotification(notification, console);
-  }
+    public void printToProjectEventLog() {
+        for (Notification notification : myEventLog.myModel.takeNotifications()) {
+            printNotification(notification);
+        }
+    }
 
-  private void doPrintNotification(@Nonnull final Notification notification, @Nonnull final EventLogConsole console) {
-    StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        if (!ShutDownTracker.isShutdownHookRunning() && !myProject.isDisposed()) {
-          ApplicationManager.getApplication().runReadAction(new Runnable() {
+    void initDefaultContent() {
+        for (Notification notification : myInitial) {
+            doPrintNotification(notification, ObjectUtil.assertNotNull(myEventLogConsole));
+        }
+        myInitial.clear();
+    }
+
+    @Override
+    public void dispose() {
+        myEventLog.myModel.setStatusMessage(null, 0);
+        StatusBar.Info.set("", null, EventLog.LOG_REQUESTOR);
+    }
+
+    protected void printNotification(Notification notification) {
+        if (!NotificationsConfigurationImpl.getSettings(notification.getGroupId()).isShouldLog()) {
+            return;
+        }
+        myProjectModel.addNotification(notification);
+
+        EventLogConsole console = myEventLogConsole;
+        doPrintNotification(notification, console);
+    }
+
+    private void doPrintNotification(@Nonnull final Notification notification, @Nonnull final EventLogConsole console) {
+        StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new DumbAwareRunnable() {
             @Override
             public void run() {
-              console.doPrintNotification(notification);
+                if (!ShutDownTracker.isShutdownHookRunning() && !myProject.isDisposed()) {
+                    ApplicationManager.getApplication().runReadAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            console.doPrintNotification(notification);
+                        }
+                    });
+                }
             }
-          });
-        }
-      }
-    });
-  }
-
-  protected void showNotification(@Nonnull final String groupId, @Nonnull final List<String> ids) {
-    ToolWindow eventLog = EventLog.getEventLog(myProject);
-    if (eventLog != null) {
-      EventLog.activate(eventLog, groupId, () -> myEventLogConsole.showNotification(ids));
+        });
     }
-  }
 
-  protected void clearNMore(@Nonnull Collection<String> groups) {
-    myEventLogConsole.clearNMore();
-  }
+    protected void showNotification(@Nonnull final String groupId, @Nonnull final List<String> ids) {
+        ToolWindow eventLog = EventLog.getEventLog(myProject);
+        if (eventLog != null) {
+            EventLog.activate(eventLog, groupId, () -> myEventLogConsole.showNotification(ids));
+        }
+    }
+
+    protected void clearNMore(@Nonnull Collection<String> groups) {
+        myEventLogConsole.clearNMore();
+    }
 }
