@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.internal.notification;
 
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.DateFormatUtil;
 import consulo.application.util.NotNullLazyValue;
 import consulo.codeEditor.*;
@@ -32,7 +31,6 @@ import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.localize.LocalizeValue;
-import consulo.util.collection.ContainerUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
@@ -47,6 +45,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -260,7 +259,6 @@ class EventLogConsole {
         }
     }
 
-    @RequiredWriteAction
     void doPrintNotification(Notification notification) {
         Editor editor = getConsoleEditor();
         if (editor.isDisposed()) {
@@ -370,8 +368,11 @@ class EventLogConsole {
             bold,
             HighlighterTargetArea.EXACT_RANGE
         );
-        ColorValue color =
-            notification.getType() == NotificationType.ERROR ? StandardColors.RED : notification.getType() == NotificationType.WARNING ? StandardColors.YELLOW : StandardColors.GREEN;
+        ColorValue color = switch (notification.getType()) {
+            case ERROR -> StandardColors.RED;
+            case WARNING -> StandardColors.YELLOW;
+            case INFORMATION -> StandardColors.GREEN;
+        };
         colorHighlighter.setErrorStripeMarkColor(color);
         colorHighlighter.setErrorStripeTooltip(message);
 
@@ -421,7 +422,7 @@ class EventLogConsole {
         myNMoreHighlighters = new ArrayList<>();
 
         EditorEx editor = (EditorEx) getConsoleEditor();
-        List<RangeHighlighterEx> highlighters = ContainerUtil.mapNotNull(ids, id -> EventLogConsole.this.findHighlighter(id));
+        List<RangeHighlighterEx> highlighters = ContainerUtil.mapNotNull(ids, EventLogConsole.this::findHighlighter);
 
         if (!highlighters.isEmpty()) {
             editor.getCaretModel().moveToOffset(highlighters.get(0).getStartOffset());

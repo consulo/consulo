@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.internal.notification;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
@@ -39,12 +39,16 @@ public class LogModel implements Disposable {
     private final List<Notification> myNotifications = new ArrayList<>();
     private final Map<Notification, Long> myStamps = Collections.synchronizedMap(new WeakHashMap<Notification, Long>());
     private Trinity<Notification, String, Long> myStatusMessage;
+    @Nonnull
+    private final Application myApplication;
+    @Nullable
     private final Project myProject;
     final Map<Notification, Runnable> removeHandlers = new HashMap<>();
 
-    LogModel(@Nullable Project project, @Nonnull Disposable parentDisposable) {
+    LogModel(@Nonnull Application application, @Nullable Project project) {
+        myApplication = application;
         myProject = project;
-        Disposer.register(parentDisposable, this);
+        Disposer.register(project != null ? project : application, this);
     }
 
     void addNotification(Notification notification) {
@@ -57,11 +61,11 @@ public class LogModel implements Disposable {
         }
         myStamps.put(notification, stamp);
         setStatusMessage(notification, stamp);
-        fireModelChanged(myProject);
+        fireModelChanged();
     }
 
-    private static void fireModelChanged(Project project) {
-        project.getApplication().getMessageBus().syncPublisher(LogModelListener.class).modelChanged(project);
+    private void fireModelChanged() {
+        myApplication.getMessageBus().syncPublisher(LogModelListener.class).modelChanged(myProject);
     }
 
     List<Notification> takeNotifications() {
@@ -70,7 +74,7 @@ public class LogModel implements Disposable {
             result = getNotifications();
             myNotifications.clear();
         }
-        fireModelChanged(myProject);
+        fireModelChanged();
         return result;
     }
 
@@ -130,7 +134,7 @@ public class LogModel implements Disposable {
         if (oldStatus != null && notification == oldStatus.first) {
             setStatusToImportant();
         }
-        fireModelChanged(myProject);
+        fireModelChanged();
     }
 
     private void setStatusToImportant() {
@@ -147,8 +151,8 @@ public class LogModel implements Disposable {
         }
     }
 
+    @Nullable
     public Project getProject() {
-        //noinspection ConstantConditions
         return myProject;
     }
 

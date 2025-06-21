@@ -16,7 +16,6 @@
 
 package consulo.desktop.awt.internal.notification;
 
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -89,22 +88,25 @@ public class EventLog {
 
     @Inject
     public EventLog(Application application) {
-        myModel = new LogModel(null, application);
+        myModel = new LogModel(application, null);
 
-        application.getMessageBus().connect().subscribe(NotificationServiceListener.class, (notification, project) -> {
-            if (project != null) {
-                // see NotificationProjectTrackerTopicListener
-                return;
-            }
+        application.getMessageBus().connect().subscribe(
+            NotificationServiceListener.class,
+            (notification, project) -> {
+                if (project != null) {
+                    // see NotificationProjectTrackerTopicListener
+                    return;
+                }
 
-            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-            if (openProjects.length == 0) {
-                myModel.addNotification(notification);
+                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+                if (openProjects.length == 0) {
+                    myModel.addNotification(notification);
+                }
+                for (Project p : openProjects) {
+                    NotificationProjectTracker.getInstance(p).printNotification(notification);
+                }
             }
-            for (Project p : openProjects) {
-                NotificationProjectTracker.getInstance(p).printNotification(notification);
-            }
-        });
+        );
     }
 
     public static void expireNotification(@Nonnull Notification notification) {
@@ -114,6 +116,7 @@ public class EventLog {
         }
     }
 
+    @RequiredUIAccess
     public static void showNotification(@Nonnull Project project, @Nonnull String groupId, @Nonnull List<String> ids) {
         NotificationProjectTracker.getInstance(project).showNotification(groupId, ids);
     }
@@ -146,7 +149,6 @@ public class EventLog {
         return getLogModel(project).getStatusMessage();
     }
 
-    @RequiredWriteAction
     public static LogEntry formatForLog(@Nonnull Notification notification, String indent) {
         DocumentImpl logDoc = new DocumentImpl("", true);
         AtomicBoolean showMore = new AtomicBoolean(false);
@@ -258,7 +260,6 @@ public class EventLog {
         return title;
     }
 
-    @RequiredWriteAction
     private static void indentNewLines(
         DocumentImpl logDoc,
         List<RangeMarker> lineSeparators,
