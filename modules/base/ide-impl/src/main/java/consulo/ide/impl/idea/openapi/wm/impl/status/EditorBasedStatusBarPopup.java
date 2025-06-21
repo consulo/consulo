@@ -1,8 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.dataContext.DataContext;
@@ -45,7 +43,6 @@ import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -87,13 +84,13 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
 
     @Override
     public final void selectionChanged(@Nonnull FileEditorManagerEvent event) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (myProject.getApplication().isUnitTestMode()) {
             return;
         }
         VirtualFile newFile = event.getNewFile();
 
         FileEditor fileEditor = newFile == null ? null : FileEditorManager.getInstance(getProject()).getSelectedEditor(newFile);
-        Editor editor = fileEditor instanceof TextEditor ? ((TextEditor) fileEditor).getEditor() : null;
+        Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : null;
         setEditor(editor);
 
         fileChanged(newFile);
@@ -104,12 +101,12 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     }
 
     public final void selectionChanged(@Nullable VirtualFile newFile) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (myProject.getApplication().isUnitTestMode()) {
             return;
         }
 
         FileEditor fileEditor = newFile == null ? null : FileEditorManager.getInstance(getProject()).getSelectedEditor(newFile);
-        Editor editor = fileEditor instanceof TextEditor ? ((TextEditor) fileEditor).getEditor() : null;
+        Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : null;
         myEditor = new WeakReference<>(editor);
 
         fileChanged(newFile);
@@ -148,22 +145,28 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     public void install(@Nonnull StatusBar statusBar) {
         super.install(statusBar);
         registerCustomListeners();
-        EditorFactory.getInstance().getEventMulticaster().addDocumentListener(new DocumentListener() {
-            @Override
-            public void documentChanged(@Nonnull DocumentEvent e) {
-                Document document = e.getDocument();
-                updateForDocument(document);
-            }
-        }, this);
-        if (myWriteableFileRequired) {
-            ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
+        EditorFactory.getInstance().getEventMulticaster().addDocumentListener(
+            new DocumentListener() {
                 @Override
-                public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
-                    if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
-                        updateForFile(event.getFile());
-                    }
+                public void documentChanged(@Nonnull DocumentEvent e) {
+                    Document document = e.getDocument();
+                    updateForDocument(document);
                 }
-            }));
+            },
+            this
+        );
+        if (myWriteableFileRequired) {
+            myProject.getApplication()
+                .getMessageBus()
+                .connect(this)
+                .subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
+                    @Override
+                    public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+                        if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
+                            updateForFile(event.getFile());
+                        }
+                    }
+                }));
         }
         setEditor(getEditor());
         update();
@@ -227,7 +230,11 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     }
 
     protected boolean isEmpty() {
-        Boolean result = ObjectUtil.doIfCast(myComponent, TextPanel.WithIconAndArrows.class, textPanel -> StringUtil.isEmpty(textPanel.getText()) && !textPanel.hasIcon());
+        Boolean result = ObjectUtil.doIfCast(
+            myComponent,
+            TextPanel.WithIconAndArrows.class,
+            textPanel -> StringUtil.isEmpty(textPanel.getText()) && !textPanel.hasIcon()
+        );
         return result != null && result;
     }
 
@@ -276,44 +283,48 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         }
 
         update.cancelAllRequests();
-        update.addRequest(() -> {
-            if (isDisposed()) {
-                return;
-            }
+        update.addRequest(
+            () -> {
+                if (isDisposed()) {
+                    return;
+                }
 
-            VirtualFile file = getSelectedFile();
+                VirtualFile file = getSelectedFile();
 
-            WidgetState state = getWidgetState(file);
-            if (state == WidgetState.NO_CHANGE) {
-                return;
-            }
+                WidgetState state = getWidgetState(file);
+                if (state == WidgetState.NO_CHANGE) {
+                    return;
+                }
 
-            if (state == WidgetState.NO_CHANGE_MAKE_VISIBLE) {
+                if (state == WidgetState.NO_CHANGE_MAKE_VISIBLE) {
+                    myComponent.setVisible(true);
+                    return;
+                }
+
+                if (state == WidgetState.HIDDEN) {
+                    myComponent.setVisible(false);
+                    return;
+                }
+
                 myComponent.setVisible(true);
-                return;
-            }
 
-            if (state == WidgetState.HIDDEN) {
-                myComponent.setVisible(false);
-                return;
-            }
+                actionEnabled = state.actionEnabled && isEnabledForFile(file);
 
-            myComponent.setVisible(true);
+                myComponent.setEnabled(actionEnabled);
+                updateComponent(state);
 
-            actionEnabled = state.actionEnabled && isEnabledForFile(file);
+                if (myStatusBar != null && !myComponent.isValid()) {
+                    myStatusBar.updateWidget(getId());
+                }
 
-            myComponent.setEnabled(actionEnabled);
-            updateComponent(state);
-
-            if (myStatusBar != null && !myComponent.isValid()) {
-                myStatusBar.updateWidget(getId());
-            }
-
-            if (finishUpdate != null) {
-                finishUpdate.run();
-            }
-            afterVisibleUpdate(state);
-        }, 200, IdeaModalityState.any());
+                if (finishUpdate != null) {
+                    finishUpdate.run();
+                }
+                afterVisibleUpdate(state);
+            },
+            200,
+            myProject.getApplication().getAnyModalityState()
+        );
     }
 
     protected void afterVisibleUpdate(@Nonnull WidgetState state) {
@@ -365,7 +376,6 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
             return shortcutText;
         }
 
-        @Nls
         public String getText() {
             return text;
         }

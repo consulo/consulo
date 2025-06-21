@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.LogicalPosition;
@@ -31,8 +30,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
-public final class PositionPanel extends EditorBasedWidget
-    implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, CaretListener, SelectionListener, BulkAwareDocumentListener.Simple {
+public final class PositionPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation,
+    CaretListener, SelectionListener, BulkAwareDocumentListener.Simple {
 
     public static final Key<Object> DISABLE_FOR_EDITOR = Key.create("positionPanel.disableForEditor");
 
@@ -120,7 +119,7 @@ public final class PositionPanel extends EditorBasedWidget
     }
 
     @Override
-    public void selectionChanged(@Nonnull final SelectionEvent e) {
+    public void selectionChanged(@Nonnull SelectionEvent e) {
         Editor editor = e.getEditor();
         if (isFocusedEditor(editor)) {
             updatePosition(editor);
@@ -128,7 +127,7 @@ public final class PositionPanel extends EditorBasedWidget
     }
 
     @Override
-    public void caretPositionChanged(@Nonnull final CaretEvent e) {
+    public void caretPositionChanged(@Nonnull CaretEvent e) {
         Editor editor = e.getEditor();
         // When multiple carets exist in editor, we don't show information about caret positions
         if (editor.getCaretModel().getCaretCount() == 1 && isFocusedEditor(editor)) {
@@ -159,14 +158,14 @@ public final class PositionPanel extends EditorBasedWidget
 
     private boolean isFocusedEditor(Editor editor) {
         // TODO [VISTALL] temp hack
-        if (!Application.get().isSwingApplication()) {
+        if (!myProject.getApplication().isSwingApplication()) {
             return editor.isShowing();
         }
         Component focusOwner = getFocusedComponent();
         return focusOwner == editor.getContentComponent();
     }
 
-    private void updatePosition(final Editor editor) {
+    private void updatePosition(Editor editor) {
         if (editor == null || DISABLE_FOR_EDITOR.isIn(editor)) {
             myText = "";
         }

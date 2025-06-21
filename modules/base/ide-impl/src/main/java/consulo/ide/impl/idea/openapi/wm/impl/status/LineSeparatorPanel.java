@@ -18,39 +18,40 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public final class LineSeparatorPanel extends EditorBasedStatusBarPopup {
-  public LineSeparatorPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
-    super(project, factory, true);
-  }
-
-  @Nonnull
-  @Override
-  protected WidgetState getWidgetState(@Nullable VirtualFile file) {
-    if (file == null) {
-      return WidgetState.HIDDEN;
-    }
-    String lineSeparator = LoadTextUtil.detectLineSeparator(file, true);
-    if (lineSeparator == null) {
-      return WidgetState.HIDDEN;
-    }
-    String toolTipText = String.format("Line Separator: %s", StringUtil.escapeLineBreak(lineSeparator));
-    String panelText = LineSeparator.fromString(lineSeparator).toString();
-    return new WidgetState(toolTipText, panelText, true);
-  }
-
-  @Nullable
-  @Override
-  protected ListPopup createPopup(DataContext context) {
-    AnAction group = ActionManager.getInstance().getAction("ChangeLineSeparators");
-    if (!(group instanceof ActionGroup)) {
-      return null;
+    public LineSeparatorPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+        super(project, factory, true);
     }
 
-    return JBPopupFactory.getInstance().createActionGroupPopup("Line Separator", (ActionGroup)group, context, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
-  }
+    @Nonnull
+    @Override
+    protected WidgetState getWidgetState(@Nullable VirtualFile file) {
+        if (file == null) {
+            return WidgetState.HIDDEN;
+        }
+        String lineSeparator = LoadTextUtil.detectLineSeparator(file, true);
+        if (lineSeparator == null) {
+            return WidgetState.HIDDEN;
+        }
+        String toolTipText = String.format("Line Separator: %s", StringUtil.escapeLineBreak(lineSeparator));
+        String panelText = LineSeparator.fromString(lineSeparator).toString();
+        return new WidgetState(toolTipText, panelText, true);
+    }
 
-  @Nonnull
-  @Override
-  protected StatusBarWidget createInstance(@Nonnull Project project) {
-    return new LineSeparatorPanel(project, myFactory);
-  }
+    @Nullable
+    @Override
+    protected ListPopup createPopup(DataContext context) {
+        AnAction group = ActionManager.getInstance().getAction("ChangeLineSeparators");
+        if (!(group instanceof ActionGroup)) {
+            return null;
+        }
+
+        return JBPopupFactory.getInstance()
+            .createActionGroupPopup("Line Separator", (ActionGroup) group, context, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+    }
+
+    @Nonnull
+    @Override
+    protected StatusBarWidget createInstance(@Nonnull Project project) {
+        return new LineSeparatorPanel(project, myFactory);
+    }
 }

@@ -26,46 +26,46 @@ import jakarta.annotation.Nonnull;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class AddTestProcessActionIndefinite extends AnAction implements DumbAware {
-  public AddTestProcessActionIndefinite() {
-    super("Add Test Process");
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-
-    new Task.Backgroundable(project, "Test", true) {
-      @Override
-      public void run(@Nonnull final ProgressIndicator indicator) {
-        try {
-          Thread.currentThread().sleep(6000);
-
-          countTo(900, each -> {
-            indicator.setText("Found: " + each / 20 + 1);
-            if (each / 10.0 == Math.round(each / 10.0)) {
-              indicator.setText("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            }
-            Thread.currentThread().sleep(10);
-            indicator.checkCanceled();
-            indicator.setText2("bla bla bla");
-          });
-          indicator.stop();
-        }
-        catch (Exception e1) {
-          indicator.stop();
-        }
-      }
-    }.queue();
-  }
-
-  private void countTo(int top, AddTestProcessActionIndefinite.Count count) throws Exception {
-    for (int i = 0; i < top; i++) {
-      count.onCount(i);
+    public AddTestProcessActionIndefinite() {
+        super("Add Test Process");
     }
-  }
 
-  private static interface Count {
-    void onCount(int each) throws InterruptedException;
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+
+        new Task.Backgroundable(project, "Test", true) {
+            @Override
+            public void run(@Nonnull final ProgressIndicator indicator) {
+                try {
+                    Thread.currentThread().sleep(6000);
+
+                    countTo(900, each -> {
+                        indicator.setText("Found: " + each / 20 + 1);
+                        if (each / 10.0 == Math.round(each / 10.0)) {
+                            indicator.setText("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                        }
+                        Thread.currentThread().sleep(10);
+                        indicator.checkCanceled();
+                        indicator.setText2("bla bla bla");
+                    });
+                    indicator.stop();
+                }
+                catch (Exception e1) {
+                    indicator.stop();
+                }
+            }
+        }.queue();
+    }
+
+    private void countTo(int top, AddTestProcessActionIndefinite.Count count) throws Exception {
+        for (int i = 0; i < top; i++) {
+            count.onCount(i);
+        }
+    }
+
+    private static interface Count {
+        void onCount(int each) throws InterruptedException;
+    }
 }

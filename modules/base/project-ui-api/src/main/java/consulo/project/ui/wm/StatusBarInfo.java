@@ -26,7 +26,6 @@ import jakarta.annotation.Nullable;
 @TopicAPI(ComponentScope.APPLICATION)
 @Deprecated
 public interface StatusBarInfo {
-
     /**
      * Set status bar text
      *

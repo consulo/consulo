@@ -20,29 +20,30 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
  * User: spLeaner
  */
 public interface CustomStatusBarWidget extends StatusBarWidget {
-  @Nonnull
-  default JComponent getComponent() {
-    Component uiComponent = getUIComponent();
-    if (uiComponent != null) {
-      return (JComponent)TargetAWT.to(uiComponent);
+    @Nonnull
+    default JComponent getComponent() {
+        Component uiComponent = getUIComponent();
+        if (uiComponent != null) {
+            return (JComponent) TargetAWT.to(uiComponent);
+        }
+
+        throw new AbstractMethodError();
     }
 
-    throw new AbstractMethodError();
-  }
+    @Nullable
+    default Component getUIComponent() {
+        // override isUnified() too
+        return null;
+    }
 
-  @Nullable
-  default Component getUIComponent() {
-    // override isUnified() too
-    return null;
-  }
-
-  default boolean isUnified() {
-    return false;
-  }
+    default boolean isUnified() {
+        return false;
+    }
 }
