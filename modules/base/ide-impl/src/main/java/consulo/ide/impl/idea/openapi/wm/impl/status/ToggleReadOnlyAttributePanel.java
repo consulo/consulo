@@ -7,7 +7,6 @@ import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
@@ -19,6 +18,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
