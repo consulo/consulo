@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
+import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
@@ -34,5 +35,5 @@ import consulo.ui.ex.action.DefaultActionGroup;
         },
         parents = @ActionParentRef(value = @ActionRef(id = "TouchBarDefault"), anchor = ActionRefAnchor.FIRST)
 )
-public class TouchBarDefaultExecutionActionGroup extends DefaultActionGroup {
+public class TouchBarDefaultExecutionActionGroup extends DefaultActionGroup implements DumbAware {
 }

@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
+import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
@@ -34,7 +35,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
                 @ActionRef(type = TouchBarToggleMatchCase.class)
         }
 )
-public class TouchBarEditorSearchActionGroup extends DefaultActionGroup {
+public class TouchBarEditorSearchActionGroup extends DefaultActionGroup implements DumbAware {
 
     /* <action id="EditorSearchSession.ToggleMatchCase" class="com.intellij.find.editorHeaderActions.ToggleMatchCase"/>
       <action id="EditorSearchSession.ToggleWholeWordsOnlyAction" class="com.intellij.find.editorHeaderActions.ToggleWholeWordsOnlyAction"/>
