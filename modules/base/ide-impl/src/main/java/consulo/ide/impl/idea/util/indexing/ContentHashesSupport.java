@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.util.lang.ShutDownTracker;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.ContentHashesUtil;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FlushingDaemon;
+import consulo.index.io.ContentHashesUtil;
 import consulo.index.io.data.IOUtil;
+import consulo.util.lang.ShutDownTracker;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.internal.FlushingDaemon;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,66 +33,72 @@ import java.security.MessageDigest;
  * @since 4/10/2014.
  */
 class ContentHashesSupport {
-  private static volatile ContentHashesUtil.HashEnumerator ourHashesWithFileType;
+    private static volatile ContentHashesUtil.HashEnumerator ourHashesWithFileType;
 
-  static void initContentHashesEnumerator() throws IOException {
-    if (ourHashesWithFileType != null) return;
-    synchronized (ContentHashesSupport.class) {
-      if (ourHashesWithFileType != null) return;
-      final File hashEnumeratorFile = new File(IndexInfrastructure.getPersistentIndexRoot(), "hashesWithFileType");
-      try {
-        ContentHashesUtil.HashEnumerator hashEnumerator = new ContentHashesUtil.HashEnumerator(hashEnumeratorFile, null);
-        FlushingDaemon.everyFiveSeconds(ContentHashesSupport::flushContentHashes);
-        ShutDownTracker.getInstance().registerShutdownTask(ContentHashesSupport::flushContentHashes);
-        ourHashesWithFileType = hashEnumerator;
-      }
-      catch (IOException ex) {
-        IOUtil.deleteAllFilesStartingWith(hashEnumeratorFile);
-        throw ex;
-      }
+    static void initContentHashesEnumerator() throws IOException {
+        if (ourHashesWithFileType != null) {
+            return;
+        }
+        synchronized (ContentHashesSupport.class) {
+            if (ourHashesWithFileType != null) {
+                return;
+            }
+            File hashEnumeratorFile = new File(IndexInfrastructure.getPersistentIndexRoot(), "hashesWithFileType");
+            try {
+                ContentHashesUtil.HashEnumerator hashEnumerator = new ContentHashesUtil.HashEnumerator(hashEnumeratorFile, null);
+                FlushingDaemon.everyFiveSeconds(ContentHashesSupport::flushContentHashes);
+                ShutDownTracker.getInstance().registerShutdownTask(ContentHashesSupport::flushContentHashes);
+                ourHashesWithFileType = hashEnumerator;
+            }
+            catch (IOException ex) {
+                IOUtil.deleteAllFilesStartingWith(hashEnumeratorFile);
+                throw ex;
+            }
+        }
     }
-  }
 
-  static void flushContentHashes() {
-    if (ourHashesWithFileType != null && ourHashesWithFileType.isDirty()) ourHashesWithFileType.force();
-  }
+    static void flushContentHashes() {
+        if (ourHashesWithFileType != null && ourHashesWithFileType.isDirty()) {
+            ourHashesWithFileType.force();
+        }
+    }
 
-  static byte[] calcContentHash(@Nonnull byte[] bytes, @Nonnull FileType fileType) {
-    MessageDigest messageDigest = ContentHashesUtil.HASHER_CACHE.getValue();
+    static byte[] calcContentHash(@Nonnull byte[] bytes, @Nonnull FileType fileType) {
+        MessageDigest messageDigest = ContentHashesUtil.HASHER_CACHE.getValue();
 
-    Charset defaultCharset = Charset.defaultCharset();
-    messageDigest.update(fileType.getName().getBytes(defaultCharset));
-    messageDigest.update((byte)0);
-    messageDigest.update(String.valueOf(bytes.length).getBytes(defaultCharset));
-    messageDigest.update((byte)0);
-    messageDigest.update(bytes, 0, bytes.length);
-    return messageDigest.digest();
-  }
+        Charset defaultCharset = Charset.defaultCharset();
+        messageDigest.update(fileType.getId().getBytes(defaultCharset));
+        messageDigest.update((byte) 0);
+        messageDigest.update(String.valueOf(bytes.length).getBytes(defaultCharset));
+        messageDigest.update((byte) 0);
+        messageDigest.update(bytes, 0, bytes.length);
+        return messageDigest.digest();
+    }
 
-  static int calcContentHashIdWithFileType(@Nonnull byte[] bytes, @Nullable Charset charset, @Nonnull FileType fileType) throws IOException {
-    return enumerateHash(calcContentHashWithFileType(bytes, charset, fileType));
-  }
+    static int calcContentHashIdWithFileType(@Nonnull byte[] bytes, @Nullable Charset charset, @Nonnull FileType fileType) throws IOException {
+        return enumerateHash(calcContentHashWithFileType(bytes, charset, fileType));
+    }
 
-  static int calcContentHashId(@Nonnull byte[] bytes, @Nonnull FileType fileType) throws IOException {
-    return enumerateHash(calcContentHash(bytes, fileType));
-  }
+    static int calcContentHashId(@Nonnull byte[] bytes, @Nonnull FileType fileType) throws IOException {
+        return enumerateHash(calcContentHash(bytes, fileType));
+    }
 
-  static int enumerateHash(@Nonnull byte[] digest) throws IOException {
-    return ourHashesWithFileType.enumerate(digest);
-  }
+    static int enumerateHash(@Nonnull byte[] digest) throws IOException {
+        return ourHashesWithFileType.enumerate(digest);
+    }
 
-  static byte[] calcContentHashWithFileType(@Nonnull byte[] bytes, @Nullable Charset charset, @Nonnull FileType fileType) {
-    MessageDigest messageDigest = ContentHashesUtil.HASHER_CACHE.getValue();
+    static byte[] calcContentHashWithFileType(@Nonnull byte[] bytes, @Nullable Charset charset, @Nonnull FileType fileType) {
+        MessageDigest messageDigest = ContentHashesUtil.HASHER_CACHE.getValue();
 
-    Charset defaultCharset = Charset.defaultCharset();
-    messageDigest.update(fileType.getName().getBytes(defaultCharset));
-    messageDigest.update((byte)0);
-    messageDigest.update(String.valueOf(bytes.length).getBytes(defaultCharset));
-    messageDigest.update((byte)0);
-    messageDigest.update((charset != null ? charset.name():"null_charset").getBytes(defaultCharset));
-    messageDigest.update((byte)0);
+        Charset defaultCharset = Charset.defaultCharset();
+        messageDigest.update(fileType.getName().getBytes(defaultCharset));
+        messageDigest.update((byte) 0);
+        messageDigest.update(String.valueOf(bytes.length).getBytes(defaultCharset));
+        messageDigest.update((byte) 0);
+        messageDigest.update((charset != null ? charset.name() : "null_charset").getBytes(defaultCharset));
+        messageDigest.update((byte) 0);
 
-    messageDigest.update(bytes, 0, bytes.length);
-    return messageDigest.digest();
-  }
+        messageDigest.update(bytes, 0, bytes.length);
+        return messageDigest.digest();
+    }
 }

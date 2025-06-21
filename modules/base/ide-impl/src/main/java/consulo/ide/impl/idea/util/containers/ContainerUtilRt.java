@@ -34,7 +34,7 @@ import java.util.function.Function;
 
 @Deprecated
 @DeprecationInfo("Use ContainerUtil")
-@SuppressWarnings("UtilityClassWithoutPrivateConstructor")
+@SuppressWarnings("ALL")
 public class ContainerUtilRt {
     private static final int ARRAY_COPY_THRESHOLD = 20;
 

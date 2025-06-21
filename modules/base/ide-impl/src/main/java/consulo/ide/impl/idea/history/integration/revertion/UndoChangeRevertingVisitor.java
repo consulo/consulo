@@ -29,7 +29,7 @@ import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import java.util.HashSet;
-import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;

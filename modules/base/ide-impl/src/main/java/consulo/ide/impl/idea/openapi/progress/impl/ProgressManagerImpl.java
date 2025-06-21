@@ -17,7 +17,7 @@ import consulo.application.progress.TaskInfo;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.progress.util.PingProgress;
+import consulo.application.progress.PingProgress;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;

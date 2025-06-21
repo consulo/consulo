@@ -99,8 +99,7 @@
                 <action id="MarkFileDirty" internal="true" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.MarkFileDirtyAction"
                         text="Mark File Dirty"/>
                 <separator/>
-                <action id="CheckVfsSanity" internal="true" class="consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.CheckSanityAction"
-                        text="Check VFS sanity"/>
+                <reference id="CheckVfsSanity"/>
                 <action id="LoadAllContent" internal="true" class="consulo.ide.impl.idea.internal.LoadAllContentsAction"
                         text="Load all files content"/>
                 <action id="LoadAllVFSContent" internal="true" class="consulo.ide.impl.idea.internal.LoadAllVfsStoredContentsAction"
@@ -117,7 +116,6 @@
 
             <action internal="true" id="CompilerTest" class="consulo.ui.ex.action.EmptyAction"
                     text="Test Rebuild Performance"/>
-            <!--consulo.ide.impl.idea.compiler.impl.javaCompiler.api.CompilerPerfTestAction-->
 
             <add-to-group group-id="Internal" anchor="last"/>
         </group>

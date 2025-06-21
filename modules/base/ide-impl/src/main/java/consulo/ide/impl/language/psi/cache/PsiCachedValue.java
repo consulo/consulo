@@ -26,12 +26,13 @@ import consulo.project.content.ProjectRootModificationTracker;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.internal.VirtualFileRestrictedUserData;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
-public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
+public abstract class PsiCachedValue<T> extends CachedValueBase<T> implements VirtualFileRestrictedUserData {
     private static final Key<?> PSI_MOD_COUNT_OPTIMIZATION = Key.create("PSI_MOD_COUNT_OPTIMIZATION");
     private final PsiManager myManager;
 

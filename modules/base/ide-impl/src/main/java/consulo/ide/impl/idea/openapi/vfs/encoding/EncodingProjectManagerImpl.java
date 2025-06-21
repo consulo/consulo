@@ -15,7 +15,6 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.internal.InternalStdFileTypes;
 import consulo.localize.LocalizeValue;
@@ -38,6 +37,7 @@ import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.internal.InternalNewVirtualFile;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
@@ -376,7 +376,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
             if (file.isDirectory()) {
                 return true;
             }
-            if (!(file instanceof VirtualFileSystemEntry)) {
+            if (!(file instanceof InternalNewVirtualFile)) {
                 return false;
             }
             Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
@@ -458,7 +458,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
 
     private void reloadAllFilesUnder(@Nullable final VirtualFile root) {
         tryStartReloadWithProgress(() -> processSubFiles(root, file -> {
-            if (!(file instanceof VirtualFileSystemEntry)) {
+            if (!(file instanceof InternalNewVirtualFile)) {
                 return true;
             }
             Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);

@@ -15,7 +15,7 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.util.ModificationTracker;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
+import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.*;

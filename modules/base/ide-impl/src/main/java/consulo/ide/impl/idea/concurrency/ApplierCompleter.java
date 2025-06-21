@@ -21,7 +21,7 @@ import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.util.concurrency.AtomicFieldUpdater;
+import consulo.util.concurrent.AtomicFieldUpdater;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

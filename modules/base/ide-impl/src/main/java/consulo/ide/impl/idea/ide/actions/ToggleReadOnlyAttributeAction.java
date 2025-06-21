@@ -24,7 +24,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;

@@ -18,6 +18,7 @@ package consulo.desktop.awt.container.impl;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.StartupAbortedException;
 import consulo.application.impl.internal.start.StartupUtil;
+import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
@@ -26,9 +27,8 @@ import consulo.container.util.StatCollector;
 import consulo.desktop.awt.startup.DesktopApplicationStarter;
 import consulo.desktop.container.impl.DesktopContainerPathManager;
 import consulo.desktop.startup.DesktopImportantFolderLocker;
-import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.logging.Logger;
-import consulo.virtualFileSystem.impl.internal.mediator.FileSystemMediatorOverride;
+import consulo.virtualFileSystem.internal.FileSystemMediatorOverride;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;

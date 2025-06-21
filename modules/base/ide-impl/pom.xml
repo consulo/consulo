@@ -253,11 +253,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-virtual-file-system-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-util-xml-fast-reader</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.vfs;
 
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.language.file.FileTypeManager;
@@ -311,30 +310,11 @@ public class VfsUtil extends VfsUtilCore {
 
     @Nonnull
     public static String[] filterNames(@Nonnull String[] names) {
-        int filteredCount = 0;
-        for (String string : names) {
-            if (isBadName(string)) {
-                filteredCount++;
-            }
-        }
-        if (filteredCount == 0) {
-            return names;
-        }
-
-        String[] result = ArrayUtil.newStringArray(names.length - filteredCount);
-        int count = 0;
-        for (String string : names) {
-            if (isBadName(string)) {
-                continue;
-            }
-            result[count++] = string;
-        }
-
-        return result;
+        return VirtualFileUtil.filterNames(names);
     }
 
     public static boolean isBadName(String name) {
-        return name == null || name.isEmpty() || "/".equals(name) || "\\".equals(name);
+        return VirtualFileUtil.isBadName(name);
     }
 
     public static VirtualFile createDirectories(@Nonnull final String directoryPath) throws IOException {

@@ -20,7 +20,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.impl.DocumentImpl;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
+import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;

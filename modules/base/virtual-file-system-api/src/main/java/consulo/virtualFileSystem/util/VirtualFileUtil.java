@@ -18,6 +18,7 @@ package consulo.virtualFileSystem.util;
 import consulo.application.WriteAction;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.io.*;
@@ -1031,5 +1032,45 @@ public final class VirtualFileUtil {
             Url url = Urls.parseUrlUnsafe(file.getUrl());
             return url == null ? Urls.newPathUrl(file.getPath()) : url;
         }
+    }
+
+    @Nonnull
+    public static String[] filterNames(@Nonnull String[] names) {
+        int filteredCount = 0;
+        for (String string : names) {
+            if (isBadName(string)) {
+                filteredCount++;
+            }
+        }
+        if (filteredCount == 0) {
+            return names;
+        }
+
+        String[] result = ArrayUtil.newStringArray(names.length - filteredCount);
+        int count = 0;
+        for (String string : names) {
+            if (isBadName(string)) {
+                continue;
+            }
+            result[count++] = string;
+        }
+
+        return result;
+    }
+
+    public static boolean isBadName(String name) {
+        return name == null || name.isEmpty() || "/".equals(name) || "\\".equals(name);
+    }
+
+    @Nonnull
+    public static VirtualFile getRootFile(@Nonnull VirtualFile file) {
+        while (true) {
+            VirtualFile parent = file.getParent();
+            if (parent == null) {
+                break;
+            }
+            file = parent;
+        }
+        return file;
     }
 }

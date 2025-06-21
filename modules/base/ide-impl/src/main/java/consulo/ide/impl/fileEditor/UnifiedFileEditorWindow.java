@@ -25,7 +25,7 @@ import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.internal.FileEditorWindowBase;
 import consulo.fileEditor.impl.internal.FileEditorsSplittersBase;
-import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.project.Project;

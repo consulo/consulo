@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.util;
 
-import consulo.application.AllIcons;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
+import consulo.util.io.URLUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class JarSubfileCellAppearance extends ValidFileCellAppearance {
   public JarSubfileCellAppearance(VirtualFile file) {
@@ -27,12 +27,12 @@ public class JarSubfileCellAppearance extends ValidFileCellAppearance {
 
   @Override
   protected Image getIcon() {
-    return AllIcons.FileTypes.Archive;
+    return PlatformIconGroup.filetypesArchive();
   }
 
   @Override
   protected int getSplitUrlIndex(String url) {
-    int jarNameEnd = url.lastIndexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR.charAt(0));
+    int jarNameEnd = url.lastIndexOf(URLUtil.ARCHIVE_SEPARATOR.charAt(0));
     String jarUrl = jarNameEnd >= 0 ? url.substring(0, jarNameEnd) : url;
     return super.getSplitUrlIndex(jarUrl);
   }

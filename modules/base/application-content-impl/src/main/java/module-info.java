@@ -4,7 +4,7 @@
  */
 module consulo.application.content.impl {
   requires transitive consulo.application.content.api;
-  requires transitive consulo.virtual.file.system.impl;
+  requires transitive consulo.virtual.file.system.api;
   requires static consulo.component.impl;
 
   exports consulo.application.content.impl.internal to consulo.ide.impl, consulo.module.impl;

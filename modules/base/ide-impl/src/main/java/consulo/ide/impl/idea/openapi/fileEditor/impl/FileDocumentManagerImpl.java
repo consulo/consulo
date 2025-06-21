@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
@@ -60,8 +59,8 @@ import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
+import consulo.virtualFileSystem.internal.SafeWriteRequestor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -782,7 +781,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     private static int getPreviewCharCount(@Nonnull VirtualFile file) {
         Charset charset = EncodingManager.getInstance().getEncoding(file, false);
         float bytesPerChar = charset == null ? 2 : charset.newEncoder().averageBytesPerChar();
-        return (int) (RawFileLoaderImpl.LARGE_FILE_PREVIEW_SIZE / bytesPerChar);
+        return (int) (RawFileLoader.getInstance().getLargeFilePreviewSize() / bytesPerChar);
     }
 
     @RequiredUIAccess

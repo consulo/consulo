@@ -19,8 +19,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.io.FileTooBigException;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -28,36 +28,43 @@ import java.nio.file.Path;
 
 /**
  * @author VISTALL
- * @since 15-Feb-22
- *
  * @see RawFileLoaderHelper
+ * @since 15-Feb-22
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface RawFileLoader {
-  @Nonnull
-  static RawFileLoader getInstance() {
-    return Application.get().getInstance(RawFileLoader.class);
-  }
+    @Nonnull
+    static RawFileLoader getInstance() {
+        return Application.get().getInstance(RawFileLoader.class);
+    }
 
-  default byte[] loadFileBytes(@Nonnull Path path) throws IOException, FileTooBigException {
-    return loadFileBytes(path.toFile());
-  }
+    default byte[] loadFileBytes(@Nonnull Path path) throws IOException, FileTooBigException {
+        return loadFileBytes(path.toFile());
+    }
 
-  @Nonnull
-  byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException;
+    @Nonnull
+    byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException;
 
-  @Nonnull
-  default String loadFileText(@Nonnull File file, @Nonnull Charset charset) throws IOException, FileTooBigException {
-    return new String(loadFileBytes(file), charset);
-  }
+    @Nonnull
+    default String loadFileText(@Nonnull File file, @Nonnull Charset charset) throws IOException, FileTooBigException {
+        return new String(loadFileBytes(file), charset);
+    }
 
-  default boolean isTooLarge(long length) {
-    return isLargeForContentLoading(length);
-  }
+    default boolean isTooLarge(long length) {
+        return isLargeForContentLoading(length);
+    }
 
-  boolean isLargeForContentLoading(long length);
+    default boolean isLargeForContentLoading(long length) {
+        return length >= getFileLengthToCacheThreshold();
+    }
 
-  int getMaxIntellisenseFileSize();
+    int getMaxIntellisenseFileSize();
 
-  int getFileLengthToCacheThreshold();
+    int getFileLengthToCacheThreshold();
+
+    default int getLargeFilePreviewSize() {
+        return getFileLengthToCacheThreshold();
+    }
+
+    int getUserContentLoadLimit();
 }

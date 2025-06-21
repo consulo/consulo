@@ -21,14 +21,14 @@
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.internal.InternalNewVirtualFile;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;
 
@@ -219,7 +219,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
       String suffix = name.substring(name.length() - i);
       if (!suffixes.increment(suffix)) suffixes.put(suffix, 1);
     }
-    Collection<VirtualFile> cachedChildren = ((VirtualFileSystemEntry)root).getCachedChildren();
+    Collection<VirtualFile> cachedChildren = ((InternalNewVirtualFile)root).getCachedChildren();
     //VirtualFile[] cachedChildren = ((VirtualFileSystemEntry)root).getChildren();
     for (VirtualFile cachedChild : cachedChildren) {
       compute(cachedChild);

@@ -33,7 +33,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.usage.rule.SingleParentUsageGroupingRule;
 import consulo.usage.rule.UsageInFile;
-import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;

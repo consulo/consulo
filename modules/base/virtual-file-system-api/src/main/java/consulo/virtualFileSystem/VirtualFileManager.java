@@ -258,10 +258,8 @@ public abstract class VirtualFileManager implements ModificationTracker {
         return null;
     }
 
-    //@ApiStatus.Internal
     public abstract int storeName(@Nonnull String name);
 
-    //@ApiStatus.Internal
     @Nonnull
     public abstract CharSequence getVFileName(int nameId);
 

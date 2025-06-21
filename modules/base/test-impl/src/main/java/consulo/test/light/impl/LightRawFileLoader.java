@@ -33,24 +33,29 @@ import java.nio.file.Files;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightRawFileLoader implements RawFileLoader {
-  @Nonnull
-  @Override
-  public byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException {
-    return Files.readAllBytes(file.toPath());
-  }
+    @Nonnull
+    @Override
+    public byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException {
+        return Files.readAllBytes(file.toPath());
+    }
 
-  @Override
-  public boolean isLargeForContentLoading(long length) {
-    return false;
-  }
+    @Override
+    public boolean isLargeForContentLoading(long length) {
+        return false;
+    }
 
-  @Override
-  public int getMaxIntellisenseFileSize() {
-    return Integer.MAX_VALUE;
-  }
+    @Override
+    public int getMaxIntellisenseFileSize() {
+        return Integer.MAX_VALUE;
+    }
 
-  @Override
-  public int getFileLengthToCacheThreshold() {
-    return Integer.MAX_VALUE;
-  }
+    @Override
+    public int getFileLengthToCacheThreshold() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public int getUserContentLoadLimit() {
+        return Integer.MAX_VALUE;
+    }
 }

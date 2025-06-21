@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.gist;
 
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
+import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.language.psi.stub.gist.GistManager;

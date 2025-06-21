@@ -9,7 +9,7 @@ import consulo.awt.hacking.PotemkinEvents;
 import consulo.awt.hacking.SunToolkitHacking;
 import consulo.component.ProcessCanceledException;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.ide.impl.idea.openapi.progress.util.PingProgress;
+import consulo.application.progress.PingProgress;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;

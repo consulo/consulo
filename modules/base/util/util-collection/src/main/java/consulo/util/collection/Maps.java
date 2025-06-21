@@ -48,6 +48,12 @@ public final class Maps {
         return prev == null ? defaultValue : prev;
     }
 
+    public static <K, V> void putIfNotNull(K key, @Nullable V value, @Nonnull Map<K, V> result) {
+        if (value != null) {
+            result.put(key, value);
+        }
+    }
+
     /**
      * @return defaultValue if there is no entry in the map (in that case defaultValue is placed into the map),
      * or corresponding value if entry already exists.

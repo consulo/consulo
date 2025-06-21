@@ -36,7 +36,7 @@ import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

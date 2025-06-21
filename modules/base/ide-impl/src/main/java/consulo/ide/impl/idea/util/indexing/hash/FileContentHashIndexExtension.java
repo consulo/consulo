@@ -11,7 +11,7 @@ import consulo.language.psi.stub.FileContent;
 import consulo.logging.Logger;
 import consulo.disposer.Disposer;
 import consulo.util.lang.ShutDownTracker;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.ContentHashesUtil;
+import consulo.index.io.ContentHashesUtil;
 import consulo.ide.impl.idea.util.indexing.*;
 import consulo.index.io.IndexStorage;
 import consulo.index.io.data.DataInputOutputUtil;

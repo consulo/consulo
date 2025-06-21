@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 

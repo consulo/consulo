@@ -25,7 +25,6 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
@@ -54,14 +53,9 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
 
     @Inject
     public BaseVirtualFileManager(@Nonnull Application application) {
-        this(application, application.getExtensionPoint(VirtualFileSystem.class).getExtensionList());
-    }
-
-    public BaseVirtualFileManager(@Nonnull Application application, @Nonnull List<VirtualFileSystem> fileSystems) {
         myApplication = application;
-        for (VirtualFileSystem system : fileSystems) {
-            registerFileSystem(system);
-        }
+
+        application.getExtensionPoint(VirtualFileSystem.class).forEach(this::registerFileSystem);
 
         if (LOG.isDebugEnabled()) {
             addVirtualFileListener(new LoggingListener());
@@ -125,7 +119,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
-    public void refreshWithoutFileWatcher(final boolean asynchronous) {
+    public void refreshWithoutFileWatcher(boolean asynchronous) {
         if (!asynchronous) {
             //noinspection RequiredXAction
             UIAccess.assertIsUIThread();
@@ -189,7 +183,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
-    public void addVirtualFileManagerListener(@Nonnull final VirtualFileManagerListener listener, @Nonnull Disposable parentDisposable) {
+    public void addVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener, @Nonnull Disposable parentDisposable) {
         addVirtualFileManagerListener(listener);
         Disposer.register(parentDisposable, () -> removeVirtualFileManagerListener(listener));
     }
@@ -214,7 +208,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
                                       @Nonnull final String property,
                                       final Object oldValue,
                                       final Object newValue) {
-        final Runnable runnable = new Runnable() {
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 if (virtualFile.isValid() && !myApplication.isDisposed()) {
@@ -237,7 +231,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     @Override
     public void fireBeforeRefreshStart(boolean asynchronous) {
         if (myRefreshCount++ == 0) {
-            for (final VirtualFileManagerListener listener : myVirtualFileManagerListeners) {
+            for (VirtualFileManagerListener listener : myVirtualFileManagerListeners) {
                 try {
                     listener.beforeRefreshStart(asynchronous);
                 }
@@ -251,7 +245,7 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     @Override
     public void fireAfterRefreshFinish(boolean asynchronous) {
         if (--myRefreshCount == 0) {
-            for (final VirtualFileManagerListener listener : myVirtualFileManagerListeners) {
+            for (VirtualFileManagerListener listener : myVirtualFileManagerListeners) {
                 try {
                     listener.afterRefreshFinish(asynchronous);
                 }

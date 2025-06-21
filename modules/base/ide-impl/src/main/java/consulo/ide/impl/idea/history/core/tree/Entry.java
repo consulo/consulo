@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.history.core.Content;
 import consulo.ide.impl.idea.history.core.Paths;
 import consulo.ide.impl.idea.history.core.StreamUtil;
 import consulo.ide.impl.idea.history.core.revisions.Difference;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
@@ -52,13 +52,13 @@ public abstract class Entry {
   protected static int toNameId(String name) {
     if (name == null) return NULL_NAME_ID;
     if (name.isEmpty()) return EMPTY_NAME_ID;
-    return FileNameCache.storeName(name);
+    return VirtualFileManager.getInstance().storeName(name);
   }
 
   private static CharSequence fromNameId(int nameId) {
     if (nameId == NULL_NAME_ID) return null;
     if (nameId == EMPTY_NAME_ID) return "";
-    return FileNameCache.getVFileName(nameId);
+    return VirtualFileManager.getInstance().getVFileName(nameId);
   }
 
   public Entry(DataInput in) throws IOException {

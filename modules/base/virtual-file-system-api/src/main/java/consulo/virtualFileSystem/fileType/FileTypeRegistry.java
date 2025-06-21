@@ -35,88 +35,97 @@ import jakarta.annotation.Nullable;
  * @author yole
  */
 public abstract class FileTypeRegistry {
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use constructor injection")
-  public static FileTypeRegistry getInstance() {
-    return RootComponentHolder.getRootComponent().getInstance(FileTypeRegistry.class);
-  }
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use constructor injection")
+    public static FileTypeRegistry getInstance() {
+        return RootComponentHolder.getRootComponent().getInstance(FileTypeRegistry.class);
+    }
 
-  public abstract boolean isFileIgnored(@Nonnull VirtualFile file);
+    /**
+     * Checks if the specified file is ignored by the IDE. Ignored files are not visible in
+     * different project views and cannot be opened in the editor. They will neither be parsed nor compiled.
+     *
+     * @param name The name of the file to check.
+     * @return {@code true} if the file is ignored, {@code false} otherwise.
+     */
+    public abstract boolean isFileIgnored(@Nonnull String name);
 
-  /**
-   * Checks if the given file has the given file type. This is faster than getting the file type
-   * and comparing it, because for file types that are identified by virtual file, it will only
-   * check if the given file type matches, and will not run other detectors. However, this can
-   * lead to inconsistent results if two file types report the same file as matching (which should
-   * generally be avoided).
-   */
-  public abstract boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type);
+    public abstract boolean isFileIgnored(@Nonnull VirtualFile file);
 
-  /**
-   * Returns the list of all registered file types.
-   *
-   * @return The list of file types.
-   */
-  @Nonnull
-  public abstract FileType[] getRegisteredFileTypes();
+    /**
+     * Checks if the given file has the given file type. This is faster than getting the file type
+     * and comparing it, because for file types that are identified by virtual file, it will only
+     * check if the given file type matches, and will not run other detectors. However, this can
+     * lead to inconsistent results if two file types report the same file as matching (which should
+     * generally be avoided).
+     */
+    public abstract boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type);
 
-  /**
-   * Returns the file type for the specified file.
-   *
-   * @param file The file for which the type is requested.
-   * @return The file type instance.
-   */
-  @Nonnull
-  public abstract FileType getFileTypeByFile(@Nonnull VirtualFile file);
+    /**
+     * Returns the list of all registered file types.
+     *
+     * @return The list of file types.
+     */
+    @Nonnull
+    public abstract FileType[] getRegisteredFileTypes();
 
-  /**
-   * Returns the file type for the specified file.
-   *
-   * @param file    The file for which the type is requested.
-   * @param content Content of the file (if already available, to avoid reading from disk again)
-   * @return The file type instance.
-   */
-  @Nonnull
-  public FileType getFileTypeByFile(@Nonnull VirtualFile file, @Nullable byte[] content) {
-    return getFileTypeByFile(file);
-  }
+    /**
+     * Returns the file type for the specified file.
+     *
+     * @param file The file for which the type is requested.
+     * @return The file type instance.
+     */
+    @Nonnull
+    public abstract FileType getFileTypeByFile(@Nonnull VirtualFile file);
 
-  /**
-   * Returns the file type for the specified file name.
-   *
-   * @param fileNameSeq The file name for which the type is requested.
-   * @return The file type instance, or {@link FileTypes#UNKNOWN} if not found.
-   */
-  @Nonnull
-  public FileType getFileTypeByFileName(@Nonnull CharSequence fileNameSeq) {
-    return getFileTypeByFileName(fileNameSeq.toString());
-  }
+    /**
+     * Returns the file type for the specified file.
+     *
+     * @param file    The file for which the type is requested.
+     * @param content Content of the file (if already available, to avoid reading from disk again)
+     * @return The file type instance.
+     */
+    @Nonnull
+    public FileType getFileTypeByFile(@Nonnull VirtualFile file, @Nullable byte[] content) {
+        return getFileTypeByFile(file);
+    }
 
-  /**
-   * Same as {@linkplain FileTypeRegistry#getFileTypeByFileName(CharSequence)} but receives String parameter.
-   * <p>
-   * Consider to use the method above in case when you want to get VirtualFile's file type by file name.
-   */
-  @Nonnull
-  public abstract FileType getFileTypeByFileName(@Nonnull String fileTypeId);
+    /**
+     * Returns the file type for the specified file name.
+     *
+     * @param fileNameSeq The file name for which the type is requested.
+     * @return The file type instance, or {@link FileTypes#UNKNOWN} if not found.
+     */
+    @Nonnull
+    public FileType getFileTypeByFileName(@Nonnull CharSequence fileNameSeq) {
+        return getFileTypeByFileName(fileNameSeq.toString());
+    }
 
-  /**
-   * Returns the file type for the specified extension.
-   * Note that a more general way of obtaining file type is with {@link #getFileTypeByFile(VirtualFile)}
-   *
-   * @param extension The extension for which the file type is requested, not including the leading '.'.
-   * @return The file type instance, or {@link UnknownFileType#INSTANCE} if corresponding file type not found
-   */
-  @Nonnull
-  public abstract FileType getFileTypeByExtension(@Nonnull String extension);
+    /**
+     * Same as {@linkplain FileTypeRegistry#getFileTypeByFileName(CharSequence)} but receives String parameter.
+     * <p>
+     * Consider to use the method above in case when you want to get VirtualFile's file type by file name.
+     */
+    @Nonnull
+    public abstract FileType getFileTypeByFileName(@Nonnull String fileTypeId);
 
-  /**
-   * Finds a file type with the specified name.
-   */
-  @Nullable
-  public abstract FileType findFileTypeByName(@Nonnull String fileTypeName);
+    /**
+     * Returns the file type for the specified extension.
+     * Note that a more general way of obtaining file type is with {@link #getFileTypeByFile(VirtualFile)}
+     *
+     * @param extension The extension for which the file type is requested, not including the leading '.'.
+     * @return The file type instance, or {@link UnknownFileType#INSTANCE} if corresponding file type not found
+     */
+    @Nonnull
+    public abstract FileType getFileTypeByExtension(@Nonnull String extension);
 
-  @Nullable
-  public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project);
+    /**
+     * Finds a file type with the specified name.
+     */
+    @Nullable
+    public abstract FileType findFileTypeByName(@Nonnull String fileTypeName);
+
+    @Nullable
+    public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project);
 }

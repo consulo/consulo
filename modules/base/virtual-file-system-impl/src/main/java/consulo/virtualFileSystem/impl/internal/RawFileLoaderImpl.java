@@ -20,9 +20,9 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.util.io.FileTooBigException;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.RawFileLoader;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,72 +35,84 @@ import java.io.InputStream;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class RawFileLoaderImpl implements RawFileLoader {
-  private static final int KILOBYTE = 1024;
+    private static final int KILOBYTE = 1024;
+    private static final int MEGABYTE = KILOBYTE * KILOBYTE;
 
-  private static final int DEFAULT_INTELLISENSE_LIMIT = 2500 * KILOBYTE;
-  public static final int MEGABYTE = KILOBYTE * KILOBYTE;
-  public static final int LARGE_FOR_CONTENT_LOADING = Math.max(20 * MEGABYTE, Math.max(getUserFileSizeLimit(), getUserContentLoadLimit()));
-  public static final int LARGE_FILE_PREVIEW_SIZE = Math.min(getLargeFilePreviewSize(), LARGE_FOR_CONTENT_LOADING);
+    private static final int DEFAULT_INTELLISENSE_LIMIT = 2500 * KILOBYTE;
 
-  /**
-   * always  in range [0, PersistentFS.FILE_LENGTH_TO_CACHE_THRESHOLD]
-   */
-  private static int ourMaxIntellisenseFileSize = Math.min(RawFileLoaderImpl.getUserFileSizeLimit(), (int)LARGE_FOR_CONTENT_LOADING);
+    private final int myLargeForContentLoading = Math.max(20 * MEGABYTE, Math.max(getUserFileSizeLimitImpl(), getUserContentLoadLimitImpl()));
+    private final int myLargeFilePreviewSize = Math.min(getLargeFilePreviewSizeImpl(), myLargeForContentLoading);
 
-  @Nonnull
-  @Override
-  public byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException {
-    byte[] bytes;
-    try (InputStream stream = new FileInputStream(file)) {
-      final long len = file.length();
-      if (len < 0) {
-        throw new IOException("File length reported negative, probably doesn't exist");
-      }
+    private final int myUserFileSizeLimit = getUserContentLoadLimit();
 
-      if (isTooLarge(len)) {
-        throw new FileTooBigException("Attempt to load '" + file + "' in memory buffer, file length is " + len + " bytes.");
-      }
+    private int myMaxIntellisenseFileSize = Math.min(RawFileLoaderImpl.getUserFileSizeLimitImpl(), (int) myLargeForContentLoading);
 
-      bytes = FileUtil.loadBytes(stream, (int)len);
+    private static int getUserFileSizeLimitImpl() {
+        return parseKilobyteProperty("idea.max.intellisense.filesize", DEFAULT_INTELLISENSE_LIMIT);
     }
-    return bytes;
-  }
 
-  @Override
-  public boolean isLargeForContentLoading(long length) {
-    return length >= LARGE_FOR_CONTENT_LOADING;
-  }
-
-  @Override
-  public int getMaxIntellisenseFileSize() {
-    return ourMaxIntellisenseFileSize;
-  }
-
-  @Override
-  public int getFileLengthToCacheThreshold() {
-    return LARGE_FOR_CONTENT_LOADING;
-  }
-
-  private static int parseKilobyteProperty(String key, int defaultValue) {
-    try {
-      long i = Integer.parseInt(System.getProperty(key, String.valueOf(defaultValue / KILOBYTE)));
-      if (i < 0) return Integer.MAX_VALUE;
-      return (int)Math.min(i * KILOBYTE, Integer.MAX_VALUE);
+    private static int getUserContentLoadLimitImpl() {
+        return parseKilobyteProperty("idea.max.content.load.filesize", 20 * MEGABYTE);
     }
-    catch (NumberFormatException e) {
-      return defaultValue;
+
+    private static int getLargeFilePreviewSizeImpl() {
+        return parseKilobyteProperty("idea.max.content.load.large.preview.size", DEFAULT_INTELLISENSE_LIMIT);
     }
-  }
 
-  public static int getUserFileSizeLimit() {
-    return parseKilobyteProperty("idea.max.intellisense.filesize", DEFAULT_INTELLISENSE_LIMIT);
-  }
+    @Nonnull
+    @Override
+    public byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException {
+        byte[] bytes;
+        try (InputStream stream = new FileInputStream(file)) {
+            long len = file.length();
+            if (len < 0) {
+                throw new IOException("File length reported negative, probably doesn't exist");
+            }
 
-  public static int getUserContentLoadLimit() {
-    return parseKilobyteProperty("idea.max.content.load.filesize", 20 * MEGABYTE);
-  }
+            if (isTooLarge(len)) {
+                throw new FileTooBigException("Attempt to load '" + file + "' in memory buffer, file length is " + len + " bytes.");
+            }
 
-  private static int getLargeFilePreviewSize() {
-    return parseKilobyteProperty("idea.max.content.load.large.preview.size", DEFAULT_INTELLISENSE_LIMIT);
-  }
+            bytes = FileUtil.loadBytes(stream, (int) len);
+        }
+        return bytes;
+    }
+
+    @Override
+    public boolean isLargeForContentLoading(long length) {
+        return length >= myLargeForContentLoading;
+    }
+
+    @Override
+    public int getMaxIntellisenseFileSize() {
+        return myMaxIntellisenseFileSize;
+    }
+
+    @Override
+    public int getFileLengthToCacheThreshold() {
+        return myLargeForContentLoading;
+    }
+
+    @Override
+    public int getLargeFilePreviewSize() {
+        return myLargeFilePreviewSize;
+    }
+
+    @Override
+    public int getUserContentLoadLimit() {
+        return myUserFileSizeLimit;
+    }
+
+    private static int parseKilobyteProperty(String key, int defaultValue) {
+        try {
+            long i = Integer.parseInt(System.getProperty(key, String.valueOf(defaultValue / KILOBYTE)));
+            if (i < 0) {
+                return Integer.MAX_VALUE;
+            }
+            return (int) Math.min(i * KILOBYTE, Integer.MAX_VALUE);
+        }
+        catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
 }

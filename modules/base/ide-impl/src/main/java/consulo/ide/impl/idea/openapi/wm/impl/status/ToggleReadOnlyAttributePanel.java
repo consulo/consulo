@@ -8,7 +8,7 @@ import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;

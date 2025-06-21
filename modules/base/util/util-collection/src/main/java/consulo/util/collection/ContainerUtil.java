@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
@@ -1047,47 +1048,19 @@ public class ContainerUtil {
 
     @Nonnull
     @Contract(pure = true)
+    @Deprecated
     public static <U> Iterator<U> mapIterator(@Nonnull PrimitiveIterator.OfInt iterator, @Nonnull IntFunction<? extends U> mapper) {
-        return new Iterator<>() {
-            @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public U next() {
-                return mapper.apply(iterator.next());
-            }
-
-            @Override
-            public void remove() {
-                iterator.remove();
-            }
-        };
+        return Iterators.mapIterator(iterator, mapper);
     }
 
     @Contract(pure = true)
     @Nonnull
+    @Deprecated
     public static <T, U> Iterator<U> mapIterator(
         @Nonnull Iterator<? extends T> iterator,
         @Nonnull Function<? super T, ? extends U> mapper
     ) {
-        return new Iterator<>() {
-            @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public U next() {
-                return mapper.apply(iterator.next());
-            }
-
-            @Override
-            public void remove() {
-                iterator.remove();
-            }
-        };
+        return Iterators.mapIterator(iterator, mapper);
     }
 
     @Nonnull
@@ -1695,5 +1668,65 @@ public class ContainerUtil {
             }
         }
         return list;
+    }
+
+    @Nonnull
+    @Contract(pure = true)
+    public static <T> Collection<T> toCollection(@Nonnull Iterable<T> iterable) {
+        return iterable instanceof Collection ? (Collection<T>) iterable : newArrayList(iterable);
+    }
+
+    @SafeVarargs
+    public static <T> boolean removeAll(@Nonnull Collection<T> collection, @Nonnull T... elements) {
+        boolean modified = false;
+        for (T element : elements) {
+            modified |= collection.remove(element);
+        }
+        return modified;
+    }
+
+    public static <T> void processSortedListsInOrder(
+        @Nonnull List<? extends T> list1,
+        @Nonnull List<? extends T> list2,
+        @Nonnull Comparator<? super T> comparator,
+        boolean mergeEqualItems,
+        @Nonnull Consumer<? super T> processor
+    ) {
+        int index1 = 0;
+        int index2 = 0;
+        while (index1 < list1.size() || index2 < list2.size()) {
+            T e;
+            if (index1 >= list1.size()) {
+                e = list2.get(index2++);
+            }
+            else if (index2 >= list2.size()) {
+                e = list1.get(index1++);
+            }
+            else {
+                T element1 = list1.get(index1);
+                T element2 = list2.get(index2);
+                int c = comparator.compare(element1, element2);
+                if (c == 0) {
+                    index1++;
+                    index2++;
+                    if (mergeEqualItems) {
+                        e = element1;
+                    }
+                    else {
+                        processor.accept(element1);
+                        e = element2;
+                    }
+                }
+                else if (c < 0) {
+                    e = element1;
+                    index1++;
+                }
+                else {
+                    e = element2;
+                    index2++;
+                }
+            }
+            processor.accept(e);
+        }
     }
 }

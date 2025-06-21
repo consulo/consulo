@@ -29,6 +29,8 @@ import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.ManagingFS;
+import consulo.virtualFileSystem.internal.PersistentFS;
 import jakarta.annotation.Nonnull;
 
 import java.io.FileNotFoundException;
@@ -49,8 +51,10 @@ public class ProjectVirtualFileSanityChecker implements BackgroundStartupActivit
                 return;
             }
 
+            PersistentFS fs = (PersistentFS) ManagingFS.getInstance();
+
             boolean expected = Platform.current().fs().isCaseSensitive();
-            boolean actual = consulo.ide.impl.idea.openapi.util.io.FileUtil.isFileSystemCaseSensitive(path);
+            boolean actual = fs.isFileSystemCaseSensitive(path);
             LOG.info(path + " case-sensitivity: expected=" + expected + " actual=" + actual);
             if (actual != expected) {
                 int prefix = expected ? 1 : 0;  // IDE=true -> FS=false -> prefix='in'

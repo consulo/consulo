@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util.containers;
 
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.concurrency.AtomicFieldUpdater;
+import consulo.util.concurrent.AtomicFieldUpdater;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;

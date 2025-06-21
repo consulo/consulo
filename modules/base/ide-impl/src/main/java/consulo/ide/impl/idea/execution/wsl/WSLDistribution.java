@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.execution.wsl;
 
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemBase;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
@@ -16,6 +15,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -404,7 +404,7 @@ public class WSLDistribution {
 
   /**
    * @return UNC root for the distribution, e.g. {@code \\wsl$\Ubuntu}
-   * @implNote there is a hack in {@link LocalFileSystemBase#getAttributes(VirtualFile)} which causes all network
+   * @implNote there is a hack in {@link NewVirtualFileSystem#getAttributes(VirtualFile)} which causes all network
    * virtual files to exists all the time. So we need to check explicitly that root exists. After implementing proper non-blocking check
    * for the network resource availability, this method may be simplified to findFileByIoFile
    * @see VfsUtil#findFileByIoFile(java.io.File, boolean)

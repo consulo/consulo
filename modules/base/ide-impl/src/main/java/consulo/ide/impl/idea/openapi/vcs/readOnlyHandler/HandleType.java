@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 
 import jakarta.annotation.Nullable;
 import java.io.IOException;

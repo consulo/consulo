@@ -2,7 +2,6 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.IndexInfrastructure;
 import consulo.ide.impl.idea.util.indexing.IndexingStamp;
@@ -22,6 +21,7 @@ import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.internal.FSRecordsProxy;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TObjectLongHashMap;
 import jakarta.annotation.Nonnull;
@@ -236,7 +236,7 @@ class StubVersionMap {
   private static final FileAttribute VERSION_STAMP = new FileAttribute("stubIndex.versionStamp", 2, true);
 
   public void persistIndexedState(int fileId, @Nonnull VirtualFile file) throws IOException {
-    try (DataOutputStream stream = FSRecords.writeAttribute(fileId, VERSION_STAMP)) {
+    try (DataOutputStream stream = FSRecordsProxy.getInstance().writeAttribute(fileId, VERSION_STAMP)) {
       FileType[] type = {null};
       ProgressManager.getInstance().executeNonCancelableSection(() -> {
         type[0] = file.getFileType();
@@ -246,7 +246,7 @@ class StubVersionMap {
   }
 
   public boolean isIndexed(int fileId, @Nonnull VirtualFile file) throws IOException {
-    DataInputStream stream = FSRecords.readAttributeWithLock(fileId, VERSION_STAMP);
+    DataInputStream stream = FSRecordsProxy.getInstance().readAttributeWithLock(fileId, VERSION_STAMP);
     int diff = stream != null ? DataInputOutputUtil.readINT(stream) : 0;
     if (diff == 0) return false;
     FileType fileType = getFileTypeByIndexingTimestampDiff(diff);

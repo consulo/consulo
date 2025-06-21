@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.history.core;
 
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
+import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import org.jetbrains.annotations.TestOnly;
 

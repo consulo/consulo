@@ -24,16 +24,15 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
+import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.structureView.*;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
-import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.PersistentFSConstants;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.structureView.StructureViewComposite;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -56,6 +55,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -381,7 +381,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
 
   @Nullable
   private FileEditor createTempFileEditor(@Nonnull VirtualFile file) {
-    if (file.getLength() > PersistentFSConstants.getMaxIntellisenseFileSize()) return null;
+    if (file.getLength() > RawFileLoader.getInstance().getMaxIntellisenseFileSize()) return null;
 
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
     final FileEditorProvider[] providers = editorProviderManager.getProviders(myProject, file);

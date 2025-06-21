@@ -15,12 +15,12 @@
  */
 package consulo.virtualFileSystem.impl.internal.local;
 
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
-import java.util.function.Consumer;
 
 /**
  * @author dslomov
@@ -40,5 +40,5 @@ public interface FileWatcherNotificationSink {
 
   void notifyReset(@Nullable String path);
 
-  void notifyUserOnFailure(@Nonnull String cause);
+  void notifyUserOnFailure(@Nonnull LocalizeValue cause);
 }

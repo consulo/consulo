@@ -21,6 +21,7 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
+import consulo.util.io.NioFiles;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
@@ -140,7 +141,7 @@ public class VMOptions {
             }
 
             if (file.exists()) {
-                consulo.ide.impl.idea.openapi.util.io.FileUtil.setReadOnlyAttribute(file.getPath(), false);
+                NioFiles.setReadOnly(file.toPath(), false);
             }
             else {
                 FileUtil.ensureExists(file.getParentFile());

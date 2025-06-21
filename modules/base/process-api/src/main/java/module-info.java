@@ -17,5 +17,5 @@ module consulo.process.api {
   exports consulo.process.localize;
   exports consulo.process.util;
 
-  exports consulo.process.internal to consulo.ide.impl, consulo.execution.debug.api;
+  exports consulo.process.internal to consulo.ide.impl, consulo.execution.debug.api, consulo.virtual.file.system.impl;
 }

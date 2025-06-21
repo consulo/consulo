@@ -23,7 +23,7 @@ import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.impl.internal.VirtualFilePointerContainerImpl;
+import consulo.virtualFileSystem.internal.VirtualFilePointerContainerImpl;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;

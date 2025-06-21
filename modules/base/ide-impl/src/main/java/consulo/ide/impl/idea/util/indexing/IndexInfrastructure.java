@@ -13,7 +13,7 @@ import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.openapi.project.CacheUpdateRunner;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
+import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.StubIndexKey;

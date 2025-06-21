@@ -19,7 +19,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.ManagingFS;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
+import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.logging.Logger;
 
 import jakarta.annotation.Nonnull;

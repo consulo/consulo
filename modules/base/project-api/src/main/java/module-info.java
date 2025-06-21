@@ -32,6 +32,7 @@ module consulo.project.api {
         consulo.project.ui.impl,
         consulo.execution.impl,
         consulo.language.impl,
+        consulo.virtual.file.system.impl,
         consulo.external.system.impl,
         consulo.external.service.impl;
 }

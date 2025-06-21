@@ -3,15 +3,23 @@
  * @since 27-Feb-22
  */
 module consulo.virtual.file.system.impl {
-  requires transitive consulo.virtual.file.system.api;
-  requires transitive consulo.util.collection;
-  requires consulo.process.api;
-  requires consulo.application.impl;
+    requires consulo.virtual.file.system.api;
+    requires consulo.util.collection;
 
-  requires static com.sun.jna;
-  requires static consulo.util.jna;
+    requires consulo.process.api;
+    requires consulo.application.api;
+    requires consulo.project.api;
+    requires consulo.module.content.api;
+    requires consulo.index.io;
 
-  exports consulo.virtualFileSystem.impl.internal.mediator to consulo.ide.impl, consulo.desktop.awt.ide.impl;
-  exports consulo.virtualFileSystem.impl.internal.local to consulo.ide.impl;
-  exports consulo.virtualFileSystem.impl.internal to consulo.ide.impl, consulo.application.content.impl;
+    requires static com.sun.jna;
+    requires static consulo.util.jna;
+
+    requires gnu.trove;
+
+    // TODO remove in future - need for java plugin
+    exports consulo.virtualFileSystem.impl;
+
+    // FIXME used by AtomicFieldUpdater - maybe replace it?
+    opens consulo.virtualFileSystem.impl.internal.entry to consulo.util.concurrent;
 }

@@ -22,7 +22,7 @@ import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.ide.impl.idea.openapi.fileTypes.FileTypesBundle;
 import consulo.ide.impl.idea.openapi.fileTypes.NativeFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeRenderer;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
+import consulo.virtualFileSystem.internal.FakeVirtualFile;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;

@@ -25,7 +25,6 @@ import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.idea.util.ReflectionUtil;
-import consulo.ide.impl.idea.util.containers.ConcurrentPackedBitsArray;
 import consulo.ide.impl.idea.util.containers.HashSetQueue;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
@@ -37,6 +36,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ConcurrentPackedBitsArray;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.dataholder.Key;
@@ -52,7 +52,6 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.fileType.*;
-import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcherImpl;
@@ -878,7 +877,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                 int bufferLength = StreamSupport.stream(detectors.spliterator(), false)
                     .map(FileTypeDetector::getDesiredContentPrefixLength)
                     .max(Comparator.naturalOrder())
-                    .orElse(RawFileLoaderImpl.getUserContentLoadLimit());
+                    .orElse(RawFileLoader.getInstance().getMaxIntellisenseFileSize());
                 byte[] buffer = fileLength <= FileUtil.THREAD_LOCAL_BUFFER_LENGTH
                     ? FileUtil.getThreadLocalBuffer() : new byte[Math.min(fileLength, bufferLength)];
 

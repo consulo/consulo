@@ -69,6 +69,7 @@ module consulo.application.api {
         consulo.execution.impl,
         consulo.diff.impl,
         consulo.external.service.impl,
+        consulo.virtual.file.system.api,
         consulo.desktop.awt.os.mac;
 
     exports consulo.application.internal.plugin to

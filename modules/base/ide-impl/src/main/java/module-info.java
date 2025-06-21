@@ -61,7 +61,6 @@ open module consulo.ide.impl {
   requires transitive consulo.ide.api;
   requires transitive consulo.component.impl;
   requires transitive consulo.ui.ex.awt.api;
-  requires transitive consulo.virtual.file.system.impl;
   requires transitive consulo.language.editor.ui.api;
   requires transitive consulo.language.editor.impl;
   requires transitive consulo.code.editor.impl;
@@ -467,7 +466,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.options.ex;
   exports consulo.ide.impl.idea.openapi.paths;
   exports consulo.ide.impl.idea.openapi.progress.impl;
-  exports consulo.ide.impl.idea.openapi.progress.util;
   exports consulo.ide.impl.idea.openapi.project;
   exports consulo.ide.impl.idea.openapi.project.impl;
   exports consulo.ide.impl.idea.openapi.projectRoots.impl;
@@ -539,14 +537,8 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vfs;
   exports consulo.ide.impl.idea.openapi.vfs.encoding;
   exports consulo.ide.impl.idea.openapi.vfs.ex.dummy;
-  exports consulo.ide.impl.idea.openapi.vfs.ex.temp;
-  exports consulo.ide.impl.idea.openapi.vfs.impl;
   exports consulo.ide.impl.idea.openapi.vfs.impl.http;
-  exports consulo.ide.impl.idea.openapi.vfs.impl.jar;
   exports consulo.ide.impl.idea.openapi.vfs.impl.local;
-  exports consulo.ide.impl.idea.openapi.vfs.newvfs;
-  exports consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
-  exports consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
   exports consulo.ide.impl.idea.openapi.wm;
   exports consulo.ide.impl.idea.openapi.wm.ex;
   exports consulo.ide.impl.idea.openapi.wm.impl;
@@ -750,8 +742,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.ui.tree.impl;
   exports consulo.ide.impl.usage;
   exports consulo.ide.impl.vcs;
-  exports consulo.ide.impl.vfs.newvfs;
-  exports consulo.ide.impl.vfs.newvfs.persistent;
   exports consulo.ide.impl.welcomeScreen;
   exports consulo.ide.impl.wm.impl;
   exports consulo.ide.impl.wm.impl.layout;

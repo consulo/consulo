@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.history.integration;
 
+import consulo.application.ApplicationManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.history.core.LocalHistoryFacade;
 import consulo.ide.impl.idea.history.core.Paths;
 import consulo.ide.impl.idea.history.core.StoredContent;
@@ -22,32 +25,23 @@ import consulo.ide.impl.idea.history.core.tree.DirectoryEntry;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.core.tree.FileEntry;
 import consulo.ide.impl.idea.history.core.tree.RootEntry;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.util.io.CharsetToolkit;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.util.lang.Clock;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
+import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.Clock;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.*;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
-import consulo.virtualFileSystem.ManagingFS;
-import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.virtualFileSystem.VirtualFile;
-
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.internal.InternalNewVirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -317,8 +311,8 @@ public class IdeaGateway {
     }
 
     DirectoryEntry newDir = null;
-    if (file instanceof VirtualFileSystemEntry) {
-      int nameId = ((VirtualFileSystemEntry)file).getNameId();
+    if (file instanceof InternalNewVirtualFile) {
+      int nameId = ((InternalNewVirtualFile)file).getNameId();
       if (nameId > 0) {
         newDir = new DirectoryEntry(nameId);
       }
@@ -335,14 +329,14 @@ public class IdeaGateway {
 
   @Nonnull
   private Entry doCreateFileEntry(@Nonnull VirtualFile file, Pair<StoredContent, Long> contentAndStamps) {
-    if (file instanceof VirtualFileSystemEntry) {
-      return new FileEntry(((VirtualFileSystemEntry)file).getNameId(), contentAndStamps.first, contentAndStamps.second, !file.isWritable());
+    if (file instanceof InternalNewVirtualFile) {
+      return new FileEntry(((InternalNewVirtualFile)file).getNameId(), contentAndStamps.first, contentAndStamps.second, !file.isWritable());
     }
     return new FileEntry(file.getName(), contentAndStamps.first, contentAndStamps.second, !file.isWritable());
   }
 
   private void doCreateChildren(@Nonnull DirectoryEntry parent, Iterable<VirtualFile> children, final boolean forDeletion) {
-    List<Entry> entries = ContainerUtil.mapNotNull(children, (NullableFunction<VirtualFile, Entry>)each -> doCreateEntry(each, forDeletion));
+    List<Entry> entries = ContainerUtil.mapNotNull(children, each -> doCreateEntry(each, forDeletion));
     parent.addChildren(entries);
   }
 

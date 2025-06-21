@@ -13,7 +13,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.util.Iconable;
 import consulo.fileEditor.history.PlaceInfo;
-import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.platform.Platform;

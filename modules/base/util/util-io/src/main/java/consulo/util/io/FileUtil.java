@@ -1645,4 +1645,86 @@ public class FileUtil {
         }
         return delete(file);
     }
+
+    /**
+     * converts back slashes to forward slashes
+     * removes double slashes inside the path, e.g. "x/y//z" => "x/y/z"
+     */
+    @Nonnull
+    public static String normalize(@Nonnull String path, boolean isWindows) {
+        int start = 0;
+        boolean separator = false;
+        if (isWindows) {
+            if (path.startsWith("//")) {
+                start = 2;
+                separator = true;
+            }
+            else if (path.startsWith("\\\\")) {
+                return normalizeTail(isWindows, 0, path, false);
+            }
+        }
+
+        for (int i = start; i < path.length(); ++i) {
+            final char c = path.charAt(i);
+            if (c == '/') {
+                if (separator) {
+                    return normalizeTail(isWindows, i, path, true);
+                }
+                separator = true;
+            }
+            else if (c == '\\') {
+                return normalizeTail(isWindows, i, path, separator);
+            }
+            else {
+                separator = false;
+            }
+        }
+
+        return path;
+    }
+
+    @Nonnull
+    private static String normalizeTail(boolean isWindows, int prefixEnd, @Nonnull String path, boolean separator) {
+        final StringBuilder result = new StringBuilder(path.length());
+        result.append(path, 0, prefixEnd);
+        int start = prefixEnd;
+        if (start == 0 && isWindows && (path.startsWith("//") || path.startsWith("\\\\"))) {
+            start = 2;
+            result.append("//");
+            separator = true;
+        }
+
+        for (int i = start; i < path.length(); ++i) {
+            final char c = path.charAt(i);
+            if (c == '/' || c == '\\') {
+                if (!separator) result.append('/');
+                separator = true;
+            }
+            else {
+                result.append(c);
+                separator = false;
+            }
+        }
+
+        return result.toString();
+    }
+
+    public static void setLastModified(@Nonnull File file, long timeStamp) throws IOException {
+        if (!file.setLastModified(timeStamp)) {
+            LOG.warn(file.getPath());
+        }
+    }
+
+    public static void copyFileOrDir(@Nonnull File from, @Nonnull File to, @Nonnull FilePermissionCopier copier) throws IOException {
+        copyFileOrDir(from, to, from.isDirectory(), copier);
+    }
+
+    public static void copyFileOrDir(@Nonnull File from, @Nonnull File to, boolean isDir, @Nonnull FilePermissionCopier copier) throws IOException {
+        if (isDir) {
+            copyDir(from, to, copier);
+        }
+        else {
+            copy(from, to, copier);
+        }
+    }
 }

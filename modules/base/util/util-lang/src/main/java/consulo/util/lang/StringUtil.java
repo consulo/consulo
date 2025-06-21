@@ -3299,4 +3299,16 @@ public final class StringUtil {
     private static boolean isWhitespaceOrTab(char c) {
         return c == ' ' || c == '\t';
     }
+
+    @Contract(pure = true)
+    public static boolean endsWith(@Nonnull CharSequence text, int start, int end, @Nonnull CharSequence suffix) {
+        int suffixLen = suffix.length();
+        if (end < suffixLen) return false;
+
+        for (int i = end - 1; i >= end - suffixLen && i >= start; i--) {
+            if (text.charAt(i) != suffix.charAt(i + suffixLen - end)) return false;
+        }
+
+        return true;
+    }
 }

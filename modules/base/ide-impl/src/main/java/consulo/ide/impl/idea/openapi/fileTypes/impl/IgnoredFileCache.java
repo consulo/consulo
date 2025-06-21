@@ -7,7 +7,7 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
-import consulo.ide.impl.idea.util.containers.ConcurrentBitSet;
+import consulo.util.collection.ConcurrentBitSet;
 import consulo.component.messagebus.MessageBusConnection;
 import jakarta.annotation.Nonnull;
 

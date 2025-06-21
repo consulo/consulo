@@ -21,10 +21,11 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -171,7 +172,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
 
   private void assertAllowModifications() {
     try {
-      assert myAllowDirt : CHANGES_NOT_ALLOWED_DURING_HIGHLIGHTING;
+      assert myAllowDirt : VirtualFileSystemInternalHelper.CHANGES_NOT_ALLOWED_DURING_HIGHLIGHTING;
     }
     finally {
       myAllowDirt = true; //give next test a chance

@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.*;
 
-@SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
+@SuppressWarnings("ALL")
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use consulo.util.collection.ContainerUtil")
 public class ContainerUtil extends ContainerUtilRt {
@@ -1178,11 +1178,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
     @SafeVarargs
     public static <T> boolean removeAll(@Nonnull Collection<T> collection, @Nonnull T... elements) {
-        boolean modified = false;
-        for (T element : elements) {
-            modified |= collection.remove(element);
-        }
-        return modified;
+        return consulo.util.collection.ContainerUtil.removeAll(collection, elements);
     }
 
     // returns true if the collection was modified
