@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.project.ui.view.ProjectView;
@@ -26,27 +25,27 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public final class ChangeProjectViewAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getDataContext().getData(Project.KEY);
-    if (project == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getDataContext().getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        ProjectView projectView = ProjectView.getInstance(project);
+        projectView.changeView();
     }
-    ProjectView projectView = ProjectView.getInstance(project);
-    projectView.changeView();
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    Project project = event.getDataContext().getData(Project.KEY);
-    if (project == null){
-      presentation.setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getDataContext().getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
+        presentation.setEnabled(ToolWindowId.PROJECT_VIEW.equals(id));
     }
-    String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
-    presentation.setEnabled(ToolWindowId.PROJECT_VIEW.equals(id));
-  }
 }

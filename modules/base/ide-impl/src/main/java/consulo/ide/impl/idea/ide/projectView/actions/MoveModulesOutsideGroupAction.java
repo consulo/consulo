@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ide.impl.idea.ide.projectView.actions;
+
+import consulo.dataContext.DataContext;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.LangDataKeys;
+import consulo.module.Module;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author cdr
  */
-package consulo.ide.impl.idea.ide.projectView.actions;
-
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.module.Module;
-
 public class MoveModulesOutsideGroupAction extends AnAction {
+    public MoveModulesOutsideGroupAction() {
+        super(IdeLocalize.actionMoveModuleOutsideAnyGroup());
+    }
 
-  public MoveModulesOutsideGroupAction() {
-    super(IdeBundle.message("action.move.module.outside.any.group"));
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
-    MoveModulesToGroupAction.doMove(modules, null, dataContext);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        MoveModulesToGroupAction.doMove(modules, null, dataContext);
+    }
 }
