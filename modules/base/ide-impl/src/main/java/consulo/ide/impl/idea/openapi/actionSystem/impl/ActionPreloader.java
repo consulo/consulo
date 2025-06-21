@@ -21,8 +21,11 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.internal.ExecutorRegistryEx;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.touchBar.TouchBarController;
+import consulo.ui.ex.internal.TouchBarControllerInternal;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * @author yole
@@ -31,11 +34,15 @@ import jakarta.inject.Inject;
 public class ActionPreloader extends PreloadingActivity {
     private final ActionManager myActionManager;
     private final ExecutorRegistry myExecutorRegistry;
+    private final Provider<TouchBarController> myTouchBarControllerProvider;
 
     @Inject
-    public ActionPreloader(ActionManager actionManager, ExecutorRegistry executorRegistry) {
+    public ActionPreloader(ActionManager actionManager,
+                           ExecutorRegistry executorRegistry,
+                           Provider<TouchBarController> touchBarControllerProvider) {
         myActionManager = actionManager;
         myExecutorRegistry = executorRegistry;
+        myTouchBarControllerProvider = touchBarControllerProvider;
     }
 
     @Override
@@ -49,6 +56,11 @@ public class ActionPreloader extends PreloadingActivity {
             ((ExecutorRegistryEx) myExecutorRegistry).initExecuteActions();
 
             actionManager.preloadActions(indicator);
+
+            TouchBarControllerInternal touchBarController =
+                    (TouchBarControllerInternal) myTouchBarControllerProvider.get();
+
+            touchBarController.tryToInitialize();
         });
     }
 }

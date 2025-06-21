@@ -69,6 +69,8 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.touchBar.TouchBarController;
+import consulo.ui.ex.internal.TouchBarControllerInternal;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;

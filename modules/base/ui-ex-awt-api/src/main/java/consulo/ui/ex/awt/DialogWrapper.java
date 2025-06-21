@@ -39,6 +39,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.internal.*;
@@ -591,6 +592,8 @@ public abstract class DialogWrapper {
         }
 
         panel.setBorder(IdeBorderFactory.createEmptyBorder(JBUI.insetsTop(8)));
+
+        TouchBarController.getInstance().setButtonActions(panel, buttonMap.values(), List.of(), null);
 
         return panel;
     }

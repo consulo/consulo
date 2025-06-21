@@ -8,10 +8,7 @@ import consulo.dataContext.DataProvider;
 import consulo.find.FindInProjectSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.SearchReplaceComponent;
-import consulo.ide.impl.idea.find.editorHeaderActions.ContextAwareShortcutProvider;
-import consulo.ide.impl.idea.find.editorHeaderActions.EditorHeaderSetSearchContextAction;
-import consulo.ide.impl.idea.find.editorHeaderActions.Embeddable;
-import consulo.ide.impl.idea.find.editorHeaderActions.VariantsCompletionAction;
+import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHeaderComponent;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
@@ -25,6 +22,7 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
@@ -212,6 +210,8 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
                 }
             }
         }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)), this);
+
+        TouchBarController.getInstance().setActions(this, ActionGroup.of(new PrevOccurrenceAction(), new NextOccurrenceAction()));
     }
 
     @Override

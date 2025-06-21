@@ -17,3 +17,5 @@
 --add-opens=java.desktop/com.apple.laf=consulo.container.api
 --add-opens=java.desktop/com.apple.eawt=consulo.container.api
 --add-opens=java.desktop/com.apple.eawt.event=consulo.container.api
+--add-opens=java.desktop/sun.lwawt=consulo.container.api
+--add-opens=java.desktop/sun.lwawt.macosx=consulo.container.api

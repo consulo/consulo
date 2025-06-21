@@ -64,6 +64,7 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.*;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -899,6 +900,17 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         ContainerUtil.addAll(focusOrder, focusableComponents(TargetAWT.to(bottomLayout)));
         setFocusCycleRoot(true);
         setFocusTraversalPolicy(new ListFocusTraversalPolicy(focusOrder));
+
+        List<JButton> principalButtons = new ArrayList<>();
+        principalButtons.add((JButton) TargetAWT.to(myOKButton));
+
+        TouchBarController.getInstance().setButtonActions(
+                (JComponent) TargetAWT.to(bottomLayout),
+                null,
+                principalButtons,
+                (JButton) TargetAWT.to(myOKButton),
+                new DefaultActionGroup(caseSensitiveAction, wholeWordsAction, regexAction)
+        );
     }
 
     @Contract("_,!null,_->!null")

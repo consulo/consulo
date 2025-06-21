@@ -18,7 +18,18 @@ package consulo.ui.ex.action.touchBar;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.disposer.Disposable;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.internal.TouchBarControllerInternal;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Collection;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -31,4 +42,31 @@ public sealed interface TouchBarController permits TouchBarControllerInternal {
     }
 
     boolean isEnabled();
+
+    default void setButtonActions(@Nonnull JComponent component,
+                                  Collection<? extends JButton> buttons,
+                                  Collection<? extends JButton> principal,
+                                  JButton defaultButton) {
+        setButtonActions(component, buttons, principal, defaultButton, null);
+    }
+
+    void setButtonActions(@Nonnull JComponent component,
+                          Collection<? extends JButton> buttons,
+                          Collection<? extends JButton> principal,
+                          JButton defaultButton,
+                          @Nullable ActionGroup extraActions);
+
+    @Nullable
+    Disposable showWindowActions(@Nonnull Component contentPane);
+
+    default void setActions(@Nonnull JComponent component, @Nonnull String actionId) {
+        ActionGroup action = (ActionGroup) ActionManager.getInstance().getAction(actionId);
+        setActions(component, Objects.requireNonNull(action, () -> "Can't find action group: " + actionId));
+    }
+
+    default void setActions(@Nonnull JComponent component, @Nonnull AnAction anAction) {
+        setActions(component, ActionGroup.of(anAction));
+    }
+
+    void setActions(@Nonnull JComponent component, @Nullable ActionGroup group);
 }

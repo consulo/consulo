@@ -31,6 +31,7 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.TitlelessDecorator;
@@ -51,7 +52,10 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
     private final Runnable myClearInstance;
     
     private WelcomeDesktopBalloonLayoutImpl myBalloonLayout;
+
     private boolean myDisposed;
+
+    private Disposable muTouchBarDisposable;
 
     @RequiredUIAccess
     public FlatWelcomeFrame(Application application, Runnable clearInstance) {
@@ -88,6 +92,8 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         Disposer.register(application, this);
 
         titlelessDecorator.install(this);
+
+        muTouchBarDisposable = TouchBarController.getInstance().showWindowActions(getContentPane());
     }
 
     static void setupCloseAction(final JFrame frame) {
@@ -140,6 +146,11 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
         if (myBalloonLayout != null) {
             myBalloonLayout.dispose();
             myBalloonLayout = null;
+        }
+
+        if (muTouchBarDisposable != null) {
+            muTouchBarDisposable.disposeWithTree();
+            muTouchBarDisposable = null;
         }
 
         myClearInstance.run();

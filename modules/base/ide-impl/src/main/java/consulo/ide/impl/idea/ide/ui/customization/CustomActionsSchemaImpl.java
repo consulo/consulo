@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -90,6 +91,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
         myIdToNameList.put(IdeActions.GROUP_J2EE_VIEW_POPUP, KeyMapLocalize.j2eeViewPopupMenuTitle());
         myIdToNameList.put(IdeActions.GROUP_NAVBAR_POPUP, LocalizeValue.localizeTODO("Navigation Bar"));
         myIdToNameList.put("NavBarToolBar", LocalizeValue.localizeTODO("Navigation Bar Toolbar"));
+        myIdToNameList.put(IdeActions.GROUP_TOUCHBAR, LocalizeValue.localizeTODO("Touch Bar"));
 
         CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar = myIdToNameList::put;
 

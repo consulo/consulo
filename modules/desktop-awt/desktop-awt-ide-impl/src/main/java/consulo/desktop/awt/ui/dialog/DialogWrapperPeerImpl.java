@@ -35,8 +35,10 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.dataContext.TypeSafeDataProviderAdapter;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
 import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
@@ -475,6 +477,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             myWindowManager.doNotSuggestAsParent(TargetAWT.from(myDialog.getWindow()));
         }
 
+        final Disposable tb = TouchBarController.getInstance().showWindowActions(myDialog.getContentPane());
+        if (tb != null) {
+            myDisposeActions.add(() -> Disposer.dispose(tb));
+        }
+
         final CommandProcessorEx commandProcessor =
             ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
         final boolean appStarted = commandProcessor != null;
@@ -543,6 +550,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         UIAccess uiAccess = UIAccess.current();
 
         AsyncResult<Void> result = AsyncResult.undefined();
+
+        Disposable tb = TouchBarController.getInstance().showWindowActions(myDialog.getContentPane());
+        if (tb != null) {
+            myDisposeActions.add(() -> Disposer.dispose(tb));
+        }
 
         uiAccess.give(() -> {
             if (changeModalityState) {

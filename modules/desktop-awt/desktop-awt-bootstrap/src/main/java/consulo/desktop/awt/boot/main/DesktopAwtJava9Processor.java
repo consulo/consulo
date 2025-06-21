@@ -48,6 +48,9 @@ public class DesktopAwtJava9Processor implements Java9ModuleProcessor {
     boolean isMac = System.getProperty("os.name").toLowerCase(Locale.ROOT).startsWith("mac");
     if (isMac) {
       toOpenMap.add(new Opens("java.desktop", "com.apple.laf", "consulo.desktop.awt.hacking"));
+      toOpenMap.add(new Opens("java.desktop", "sun.lwawt", "consulo.desktop.awt.hacking"));
+      toOpenMap.add(new Opens("java.desktop", "sun.lwawt.macosx", "consulo.desktop.awt.hacking"));
+
       toOpenMap.add(new Opens("java.desktop", "com.apple.eawt", "consulo.desktop.awt.eawt.wrapper"));
       toOpenMap.add(new Opens("java.desktop", "com.apple.eawt.event", "consulo.desktop.awt.eawt.wrapper"));
     }

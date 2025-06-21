@@ -34,10 +34,6 @@ public final class NST {
     // NOTE: JNA is stateless (doesn't have any limitations of multithreading use)
     private static NSTLibrary nstLibrary = null;
 
-    public static boolean isSupportedOS() {
-        return SystemInfo.isMac;
-    }
-
     static void loadLibrary() {
         try {
             loadLibraryImpl();
@@ -70,7 +66,7 @@ public final class NST {
     }
 
     public static NSTLibrary loadLibraryImpl() {
-        String libFileName = Platform.current().mapLibraryName("libnst");
+        String libFileName = Platform.current().mapLibraryName("nst");
 
         File pluginPath = PluginManager.getPluginPath(NST.class);
         File nativePluginDirectory = new File(pluginPath, "native");

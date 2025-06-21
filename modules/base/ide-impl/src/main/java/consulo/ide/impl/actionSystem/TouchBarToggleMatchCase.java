@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.internal;
+package consulo.ide.impl.actionSystem;
 
-import consulo.ui.ex.action.touchBar.TouchBarController;
-import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
-
-import javax.swing.*;
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.impl.idea.find.editorHeaderActions.ToggleMatchCase;
 
 /**
  * @author VISTALL
- * @since 2025-06-08
+ * @since 21.06.2025.
  */
-public non-sealed interface TouchBarControllerInternal extends TouchBarController {
-    void tryToInitialize();
-
-    void showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent);
-
-    void onUpdateEditorHeader(@Nonnull Object editor, JComponent header);
+@ActionImpl(id = "EditorSearchSession.ToggleMatchCase")
+public class TouchBarToggleMatchCase extends ToggleMatchCase {
 }

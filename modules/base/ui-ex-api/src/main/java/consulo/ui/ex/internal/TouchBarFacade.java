@@ -17,6 +17,15 @@ package consulo.ui.ex.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.disposer.Disposable;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.popup.JBPopup;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -25,4 +34,23 @@ import consulo.annotation.component.ExtensionAPI;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TouchBarFacade {
     boolean isAvailable();
+
+    boolean isEnabled();
+
+    void initialize();
+
+    void setButtonActions(@Nonnull JComponent component,
+                          Collection<? extends JButton> buttons,
+                          Collection<? extends JButton> principal,
+                          JButton defaultButton,
+                          @Nullable ActionGroup extraActions);
+
+    @Nullable
+    Disposable showWindowActions(@Nonnull Component contentPane);
+
+    void onUpdateEditorHeader(@Nonnull Object editor, JComponent header);
+
+    void showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent);
+
+    void setActions(@Nonnull JComponent component, @Nullable ActionGroup group);
 }

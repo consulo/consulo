@@ -125,9 +125,6 @@ public final class TouchbarSupport {
                 reloadAllActions();
             }
         });
-
-        // add settings item
-        // TODO ! CustomActionsSchema.addSettingsGroup(IdeActions.GROUP_TOUCHBAR, IdeBundle.message("settings.menus.group.touch.bar"));
     }
 
     public static void enable(boolean enable) {
@@ -147,8 +144,6 @@ public final class TouchbarSupport {
                     ourConnection.disconnect();
                 }
                 ourConnection = null;
-
-                // TODO !  CustomActionsSchema.removeSettingsGroup(IdeActions.GROUP_TOUCHBAR);
 
                 isEnabled = false;
             }
