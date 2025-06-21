@@ -149,6 +149,9 @@ public class DesktopUIInternalImpl extends UIInternal {
 
     @Override
     public Image _ImageEffects_grayed(@Nonnull Image original) {
+        if (original instanceof DesktopDisabledImageImpl desktopDisabledImage) {
+            return desktopDisabledImage;
+        }
         return DesktopDisabledImageImpl.of(original);
     }
 

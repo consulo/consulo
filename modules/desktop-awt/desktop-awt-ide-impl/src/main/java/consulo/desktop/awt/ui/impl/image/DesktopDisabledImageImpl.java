@@ -40,84 +40,112 @@ import java.awt.image.RGBImageFilter;
  * <p>
  * In other ways, we will return not cached image
  */
-public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image {
-  public static Image of(@Nonnull Image original) {
-    return new DesktopDisabledImageImpl(original);
-  }
-
-  private final Icon myIcon;
-
-  private DesktopDisabledImageImpl(Image original) {
-    myIcon = getDisabledIcon(TargetAWT.to(original));
-  }
-
-  /**
-   * Gets (creates if necessary) disabled icon based on the passed one.
-   *
-   * @return <code>ImageIcon</code> constructed from disabled image of passed icon.
-   */
-  @Nullable
-  public Icon getDisabledIcon(@Nullable Icon icon) {
-    if (icon instanceof DesktopLazyImageImpl) icon = ((DesktopLazyImageImpl)icon).getOrComputeIcon();
-    if (icon == null) return null;
-
-    return filterIcon(icon, UIUtil.getGrayFilter(StyleManager.get().getCurrentStyle().isDark()), null);
-  }
-
-  /**
-   * Creates new icon with the filter applied.
-   */
-  @SuppressWarnings("UndesirableClassUsage")
-  public static Icon filterIcon(@Nonnull Icon icon, RGBImageFilter filter, @Nullable Component ancestor) {
-    if (icon instanceof DesktopLazyImageImpl) icon = ((DesktopLazyImageImpl)icon).getOrComputeIcon();
-
-    final float scale;
-    if (icon instanceof JBUI.ScaleContextAware) {
-      scale = (float)((JBUI.ScaleContextAware)icon).getScale(JBUI.ScaleType.SYS_SCALE);
+public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, DesktopAWTImage {
+    public static DesktopAWTImage of(@Nonnull Image original) {
+        return new DesktopDisabledImageImpl(original);
     }
-    else {
-      scale = UIUtil.isJreHiDPI() ? JBUI.sysScale(ancestor) : 1f;
+
+    private final Image myOriginal;
+
+    private final Icon myDisabledIcon;
+
+    private DesktopDisabledImageImpl(Image original) {
+        myOriginal = original;
+        myDisabledIcon = getDisabledIcon(TargetAWT.to(original));
     }
-    BufferedImage image =
-      new BufferedImage((int)(scale * icon.getIconWidth()), (int)(scale * icon.getIconHeight()), BufferedImage.TYPE_INT_ARGB);
-    final Graphics2D graphics = image.createGraphics();
 
-    graphics.setColor(UIUtil.TRANSPARENT_COLOR);
-    graphics.fillRect(0, 0, icon.getIconWidth(), icon.getIconHeight());
-    graphics.scale(scale, scale);
-    icon.paintIcon(LabelHolder.ourFakeComponent, graphics, 0, 0);
-
-    graphics.dispose();
-
-    java.awt.Image img = ImageUtil.filter(image, filter);
-    if (UIUtil.isJreHiDPI()) img = RetinaImage.createFrom(img, scale, null);
-
-    icon = new JBImageIcon(img);
-    return icon;
-  }
-
-
-  private static class LabelHolder {
     /**
-     * To get disabled icon with paint it into the image. Some icons require
-     * not null component to paint.
+     * Gets (creates if necessary) disabled icon based on the passed one.
+     *
+     * @return <code>ImageIcon</code> constructed from disabled image of passed icon.
      */
-    private static final JComponent ourFakeComponent = new JLabel();
-  }
+    @Nullable
+    public Icon getDisabledIcon(@Nullable Icon icon) {
+        if (icon instanceof DesktopLazyImageImpl) {
+            icon = ((DesktopLazyImageImpl) icon).getOrComputeIcon();
+        }
+        if (icon == null) {
+            return null;
+        }
 
-  @Nonnull
-  @Override
-  public Icon toSwingIcon() {
-    return myIcon;
-  }
+        return filterIcon(icon, UIUtil.getGrayFilter(StyleManager.get().getCurrentStyle().isDark()), null);
+    }
 
-  @Override
-  public int getHeight() {
-    return myIcon.getIconHeight();
-  }
+    /**
+     * Creates new icon with the filter applied.
+     */
+    @SuppressWarnings("UndesirableClassUsage")
+    public static Icon filterIcon(@Nonnull Icon icon, RGBImageFilter filter, @Nullable Component ancestor) {
+        if (icon instanceof DesktopLazyImageImpl) {
+            icon = ((DesktopLazyImageImpl) icon).getOrComputeIcon();
+        }
 
-  @Override
-  public int getWidth() {
-    return myIcon.getIconWidth();
-  }
+        float scale;
+        if (icon instanceof JBUI.ScaleContextAware) {
+            scale = (float) ((JBUI.ScaleContextAware) icon).getScale(JBUI.ScaleType.SYS_SCALE);
+        }
+        else {
+            scale = UIUtil.isJreHiDPI() ? JBUI.sysScale(ancestor) : 1f;
+        }
+        BufferedImage image =
+            new BufferedImage((int) (scale * icon.getIconWidth()), (int) (scale * icon.getIconHeight()), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = image.createGraphics();
+
+        graphics.setColor(UIUtil.TRANSPARENT_COLOR);
+        graphics.fillRect(0, 0, icon.getIconWidth(), icon.getIconHeight());
+        graphics.scale(scale, scale);
+        icon.paintIcon(LabelHolder.ourFakeComponent, graphics, 0, 0);
+
+        graphics.dispose();
+
+        java.awt.Image img = ImageUtil.filter(image, filter);
+        if (UIUtil.isJreHiDPI()) {
+            img = RetinaImage.createFrom(img, scale, null);
+        }
+
+        icon = new JBImageIcon(img);
+        return icon;
+    }
+
+    private static class LabelHolder {
+        /**
+         * To get disabled icon with paint it into the image. Some icons require
+         * not null component to paint.
+         */
+        private static final JComponent ourFakeComponent = new JLabel();
+    }
+
+    @Nonnull
+    @Override
+    public Icon toSwingIcon() {
+        return myDisabledIcon;
+    }
+
+    @Override
+    public int getHeight() {
+        return myOriginal.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return myOriginal.getWidth();
+    }
+
+    @Nonnull
+    @Override
+    public DesktopAWTImage copyWithNewSize(int width, int height) {
+        if (myOriginal instanceof DesktopAWTImage desktopAWTImage) {
+            return of(desktopAWTImage.copyWithNewSize(width, height));
+        }
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
+        if (myOriginal instanceof DesktopAWTImage desktopAWTImage) {
+            return of(desktopAWTImage.copyWithForceLibraryId(libraryId));
+        }
+        return this;
+    }
 }
