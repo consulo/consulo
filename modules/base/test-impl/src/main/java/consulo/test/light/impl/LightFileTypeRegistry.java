@@ -35,78 +35,83 @@ import java.util.Map;
  * @since 2018-08-25
  */
 public class LightFileTypeRegistry extends FileTypeRegistry {
-  private final Map<String, FileType> myExtensionsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
-  private final List<FileType> myAllFileTypes = new ArrayList<>();
+    private final Map<String, FileType> myExtensionsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
+    private final List<FileType> myAllFileTypes = new ArrayList<>();
 
-  @Inject
-  public LightFileTypeRegistry() {
-    myAllFileTypes.add(UnknownFileType.INSTANCE);
-  }
-
-  @Override
-  public boolean isFileIgnored(@Nonnull VirtualFile file) {
-    return false;
-  }
-
-  @Override
-  public boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type) {
-    return file.getFileType() == type;
-  }
-
-  @Nonnull
-  @Override
-  public FileType[] getRegisteredFileTypes() {
-    return myAllFileTypes.toArray(new FileType[myAllFileTypes.size()]);
-  }
-
-  @Nonnull
-  @Override
-  public FileType getFileTypeByFile(@Nonnull VirtualFile file) {
-    return getFileTypeByFileName(file.getName());
-  }
-
-  @Nonnull
-  @Override
-  public FileType getFileTypeByFileName(@Nonnull String fileName) {
-    final String extension = FileUtil.getExtension(fileName);
-    return getFileTypeByExtension(extension);
-  }
-
-  @Nonnull
-  @Override
-  public FileType getFileTypeByFileName(@Nonnull CharSequence fileName) {
-    final String extension = FileUtil.getExtension(fileName.toString());
-    return getFileTypeByExtension(extension);
-  }
-
-  @Nonnull
-  @Override
-  public FileType getFileTypeByExtension(@Nonnull String extension) {
-    final FileType result = myExtensionsMap.get(extension);
-    return result == null ? UnknownFileType.INSTANCE : result;
-  }
-
-  public void registerFileType(@Nonnull FileType fileType, @Nonnull String extension) {
-    myAllFileTypes.add(fileType);
-    for (final String ext : extension.split(";")) {
-      myExtensionsMap.put(ext, fileType);
+    @Inject
+    public LightFileTypeRegistry() {
+        myAllFileTypes.add(UnknownFileType.INSTANCE);
     }
-  }
 
-  @Nullable
-  @Override
-  public FileType findFileTypeByName(@Nonnull String fileTypeName) {
-    for (FileType type : myAllFileTypes) {
-      if (type.getId().equals(fileTypeName)) {
-        return type;
-      }
+    @Override
+    public boolean isFileIgnored(@Nonnull String name) {
+        return false;
     }
-    return null;
-  }
 
-  @Nullable
-  @Override
-  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project) {
-    return null;
-  }
+    @Override
+    public boolean isFileIgnored(@Nonnull VirtualFile file) {
+        return false;
+    }
+
+    @Override
+    public boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type) {
+        return file.getFileType() == type;
+    }
+
+    @Nonnull
+    @Override
+    public FileType[] getRegisteredFileTypes() {
+        return myAllFileTypes.toArray(new FileType[myAllFileTypes.size()]);
+    }
+
+    @Nonnull
+    @Override
+    public FileType getFileTypeByFile(@Nonnull VirtualFile file) {
+        return getFileTypeByFileName(file.getName());
+    }
+
+    @Nonnull
+    @Override
+    public FileType getFileTypeByFileName(@Nonnull String fileName) {
+        final String extension = FileUtil.getExtension(fileName);
+        return getFileTypeByExtension(extension);
+    }
+
+    @Nonnull
+    @Override
+    public FileType getFileTypeByFileName(@Nonnull CharSequence fileName) {
+        final String extension = FileUtil.getExtension(fileName.toString());
+        return getFileTypeByExtension(extension);
+    }
+
+    @Nonnull
+    @Override
+    public FileType getFileTypeByExtension(@Nonnull String extension) {
+        final FileType result = myExtensionsMap.get(extension);
+        return result == null ? UnknownFileType.INSTANCE : result;
+    }
+
+    public void registerFileType(@Nonnull FileType fileType, @Nonnull String extension) {
+        myAllFileTypes.add(fileType);
+        for (final String ext : extension.split(";")) {
+            myExtensionsMap.put(ext, fileType);
+        }
+    }
+
+    @Nullable
+    @Override
+    public FileType findFileTypeByName(@Nonnull String fileTypeName) {
+        for (FileType type : myAllFileTypes) {
+            if (type.getId().equals(fileTypeName)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project) {
+        return null;
+    }
 }
