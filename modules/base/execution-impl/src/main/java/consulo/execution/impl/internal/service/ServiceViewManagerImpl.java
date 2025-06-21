@@ -4,7 +4,6 @@ package consulo.execution.impl.internal.service;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.AppUIExecutor;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
@@ -24,7 +23,6 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.ui.ex.awt.Messages;
@@ -685,7 +683,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
                     return null;
                 }
             }
-            return new PresentationData(name, null, AllIcons.Nodes.Folder, null);
+            return new PresentationData(name, null, PlatformIconGroup.nodesFolder(), null);
         }
         return null;
     }

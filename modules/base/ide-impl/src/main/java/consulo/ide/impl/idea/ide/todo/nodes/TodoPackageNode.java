@@ -19,12 +19,12 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.HighlightedRegionProvider;
 import consulo.ide.impl.idea.ide.todo.TodoFileDirAndModuleComparator;
 import consulo.ide.impl.idea.ide.todo.TodoTreeBuilder;
 import consulo.ide.impl.idea.ide.todo.TodoTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiPackage;
@@ -39,6 +39,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.PackageElement;
 import consulo.project.ui.view.tree.PackageElementNode;
 import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.HighlightedRegion;
@@ -86,6 +87,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   }
 
   @Override
+  @RequiredUIAccess
   protected void update(PresentationData data) {
     super.update(data);
     final PackageElement packageElement = getValue();
@@ -113,7 +115,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
 
       int nameEndOffset = newName.length();
       int todoItemCount = getTodoItemCount(packageElement);
-      newName = IdeBundle.message("node.todo.group", todoItemCount);
+      newName = IdeLocalize.nodeTodoGroup(todoItemCount).get();
 
       myHighlightedRegions.clear();
 

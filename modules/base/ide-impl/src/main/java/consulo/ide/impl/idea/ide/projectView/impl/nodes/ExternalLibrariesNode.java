@@ -169,7 +169,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
 
     @Override
     protected void update(PresentationData presentation) {
-        presentation.setPresentableText(IdeLocalize.nodeProjectviewExternalLibraries().get());
+        presentation.setPresentableText(IdeLocalize.nodeProjectviewExternalLibraries());
         presentation.setIcon(PlatformIconGroup.nodesPplibfolder());
     }
 }

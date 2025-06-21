@@ -1,8 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.ide.todo.nodes;
 
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.PsiDirectoryNode;
@@ -44,7 +43,7 @@ public final class TodoDirNode extends PsiDirectoryNode {
     String newName = isProjectRoot || getStructure().getIsFlattenPackages() ? getValue().getVirtualFile().getPresentableUrl() : getValue().getName();
 
     int todoItemCount = getTodoItemCount(getValue());
-    data.setLocationString(IdeBundle.message("node.todo.group", todoItemCount));
+    data.setLocationString(IdeLocalize.nodeTodoGroup(todoItemCount));
     data.setPresentableText(newName);
   }
 

@@ -4,6 +4,10 @@ action.ProjectView.FileNesting.description:
     text: Configure file nesting
 action.ProjectView.FileNesting.text:
     text: File Nesting…
+action.open.library.settings.text:
+    text: Open Library Settings
+action.open.module.settings.text:
+    text: Open Module Settings
 action.show.excluded.files:
     text: Show Excluded Files
 action.show.hide.excluded.files:
@@ -24,6 +28,8 @@ file.nesting.reset.to.default.button:
     text: '&Reset to Default'
 file.nesting.table.title:
     text: 'Nesting rules:'
+node.module.dependencies.text:
+    text: Module Dependencies
 parent.file.suffix.column.name:
     text: Parent File Suffix
 select.in.aspects:

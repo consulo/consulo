@@ -143,7 +143,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
 
     @Override
     public void update(PresentationData presentation) {
-        presentation.setPresentableText(IdeLocalize.nodeProjectviewLibraries().get());
+        presentation.setPresentableText(IdeLocalize.nodeProjectviewLibraries());
         presentation.setIcon(PlatformIconGroup.nodesPplib());
     }
 

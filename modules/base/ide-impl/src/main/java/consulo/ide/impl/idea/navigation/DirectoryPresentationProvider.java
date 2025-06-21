@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.navigation;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProjectRootsUtil;
@@ -26,6 +25,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
@@ -54,7 +54,7 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
     if (ProjectRootsUtil.isModuleContentRoot(directory)) {
       final Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(vFile);
       assert module != null : directory;
-      return new PresentationData(module.getName(), locationString, AllIcons.Nodes.Module, null);
+      return new PresentationData(module.getName(), locationString, PlatformIconGroup.nodesModule(), null);
     }
 
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
@@ -62,6 +62,6 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
     if (contentFolderTypeForFile != null) {
       return new PresentationData(directory.getName(), locationString, contentFolderTypeForFile.getIcon(), null);
     }
-    return new PresentationData(directory.getName(), locationString, AllIcons.Nodes.TreeClosed, null);
+    return new PresentationData(directory.getName(), locationString, PlatformIconGroup.nodesTreeclosed(), null);
   }
 }
