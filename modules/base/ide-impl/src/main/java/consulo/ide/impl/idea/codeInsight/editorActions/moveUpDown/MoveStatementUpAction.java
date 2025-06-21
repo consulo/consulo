@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
+
+import consulo.codeEditor.action.EditorAction;
 
 /*
  * Created by IntelliJ IDEA.
@@ -22,12 +25,8 @@
  * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
-
-import consulo.codeEditor.action.EditorAction;
-
 public class MoveStatementUpAction extends EditorAction {
-  public MoveStatementUpAction() {
-    super(new MoveStatementHandler(false));
-  }
+    public MoveStatementUpAction() {
+        super(new MoveStatementHandler(false));
+    }
 }

@@ -28,29 +28,29 @@ import consulo.project.Project;
  * @since May 14, 2002
  */
 public class TextStartAction extends TextComponentEditorAction {
-  public TextStartAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      editor.getCaretModel().removeSecondaryCarets();
-      editor.getCaretModel().moveToOffset(0);
-      editor.getSelectionModel().removeSelection();
-
-      ScrollingModel scrollingModel = editor.getScrollingModel();
-      scrollingModel.disableAnimation();
-      scrollingModel.scrollToCaret(ScrollType.RELATIVE);
-      scrollingModel.enableAnimation();
-
-      Project project = dataContext.getData(Project.KEY);
-      if (project != null) {
-        IdeDocumentHistory instance = IdeDocumentHistory.getInstance(project);
-        if (instance != null) {
-          instance.includeCurrentCommandAsNavigation();
-        }
-      }
+    public TextStartAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void execute(Editor editor, DataContext dataContext) {
+            editor.getCaretModel().removeSecondaryCarets();
+            editor.getCaretModel().moveToOffset(0);
+            editor.getSelectionModel().removeSelection();
+
+            ScrollingModel scrollingModel = editor.getScrollingModel();
+            scrollingModel.disableAnimation();
+            scrollingModel.scrollToCaret(ScrollType.RELATIVE);
+            scrollingModel.enableAnimation();
+
+            Project project = dataContext.getData(Project.KEY);
+            if (project != null) {
+                IdeDocumentHistory instance = IdeDocumentHistory.getInstance(project);
+                if (instance != null) {
+                    instance.includeCurrentCommandAsNavigation();
+                }
+            }
+        }
+    }
 }

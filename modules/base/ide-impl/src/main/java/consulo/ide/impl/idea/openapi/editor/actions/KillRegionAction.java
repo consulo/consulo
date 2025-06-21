@@ -22,14 +22,13 @@ import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
  * <p/>
  * Generally, it removes currently selected text from the document and puts it to the {@link KillRingTransferable kill ring}.
  * <p/>
- * Thread-safe. 
- * 
+ * Thread-safe.
+ *
  * @author Denis Zhdanov
  * @since 4/19/11 6:01 PM
  */
 public class KillRegionAction extends TextComponentEditorAction {
-
-  public KillRegionAction() {
-    super(new KillRingSaveAction.Handler(true));
-  }
+    public KillRegionAction() {
+        super(new KillRingSaveAction.Handler(true));
+    }
 }

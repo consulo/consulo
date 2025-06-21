@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.folding.impl.actions;
 
 import consulo.language.editor.folding.CodeFoldingManager;
@@ -27,33 +26,33 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class CollapseRegionAction extends EditorAction {
-  public CollapseRegionAction() {
-    super(new BaseFoldingHandler() {
-      @Override
-      public void doExecute(@Nonnull final Editor editor, @Nullable Caret caret, DataContext dataContext) {
-        CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(editor.getProject());
-        foldingManager.updateFoldRegions(editor);
+    public CollapseRegionAction() {
+        super(new BaseFoldingHandler() {
+            @Override
+            public void doExecute(@Nonnull final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+                CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(editor.getProject());
+                foldingManager.updateFoldRegions(editor);
 
-        final int line = editor.getCaretModel().getLogicalPosition().line;
+                final int line = editor.getCaretModel().getLogicalPosition().line;
 
-        Runnable processor = () -> {
-          FoldRegion region = FoldingUtil.findFoldRegionStartingAtLine(editor, line);
-          if (region != null && region.isExpanded()) {
-            region.setExpanded(false);
-          }
-          else {
-            int offset = editor.getCaretModel().getOffset();
-            FoldRegion[] regions = FoldingUtil.getFoldRegionsAtOffset(editor, offset);
-            for (FoldRegion region1 : regions) {
-              if (region1.isExpanded()) {
-                region1.setExpanded(false);
-                break;
-              }
+                Runnable processor = () -> {
+                    FoldRegion region = FoldingUtil.findFoldRegionStartingAtLine(editor, line);
+                    if (region != null && region.isExpanded()) {
+                        region.setExpanded(false);
+                    }
+                    else {
+                        int offset = editor.getCaretModel().getOffset();
+                        FoldRegion[] regions = FoldingUtil.getFoldRegionsAtOffset(editor, offset);
+                        for (FoldRegion region1 : regions) {
+                            if (region1.isExpanded()) {
+                                region1.setExpanded(false);
+                                break;
+                            }
+                        }
+                    }
+                };
+                editor.getFoldingModel().runBatchFoldingOperation(processor);
             }
-          }
-        };
-        editor.getFoldingModel().runBatchFoldingOperation(processor);
-      }
-    });
-  }
+        });
+    }
 }

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 8:26:04 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.action.EditorActionUtil;
@@ -39,6 +30,14 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 13, 2002
+ * Time: 8:26:04 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class BackspaceAction extends EditorAction {
     public BackspaceAction() {
         super(new Handler());

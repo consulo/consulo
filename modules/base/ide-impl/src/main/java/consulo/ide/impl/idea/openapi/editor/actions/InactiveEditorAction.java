@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.language.editor.CommonDataKeys;
@@ -27,14 +23,17 @@ import consulo.codeEditor.action.EditorActionHandler;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/*
+ * @author max
+ */
 public class InactiveEditorAction extends EditorAction {
-  protected InactiveEditorAction(EditorActionHandler defaultHandler) {
-    super(defaultHandler);
-  }
+    protected InactiveEditorAction(EditorActionHandler defaultHandler) {
+        super(defaultHandler);
+    }
 
-  @Override
-  @Nullable
-  protected Editor getEditor(@Nonnull final DataContext dataContext) {
-    return dataContext.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
-  }
+    @Override
+    @Nullable
+    protected Editor getEditor(@Nonnull final DataContext dataContext) {
+        return dataContext.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
+    }
 }

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 9:58:23 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.action.EditorActionUtil;
@@ -33,35 +24,43 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import jakarta.annotation.Nullable;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 13, 2002
+ * Time: 9:58:23 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class MoveCaretDownWithSelectionAction extends EditorAction {
-  public MoveCaretDownWithSelectionAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      if (!editor.getCaretModel().supportsMultipleCarets()) {
-        editor.getCaretModel().moveCaretRelatively(0, 1, true, editor.isColumnMode(), true);
-        return;
-      }
-      if (editor.isColumnMode()) {
-        EditorActionUtil.cloneOrRemoveCaret(editor, caret == null ? editor.getCaretModel().getPrimaryCaret() : caret, false);
-      }
-      else {
-        CaretAction caretAction = new CaretAction() {
-          @Override
-          public void perform(Caret caret) {
-            caret.moveCaretRelatively(0, 1, true, true);
-          }
-        };
-        if (caret == null) {
-          editor.getCaretModel().runForEachCaret(caretAction);
-        }
-        else {
-          caretAction.perform(caret);
-        }
-      }
+    public MoveCaretDownWithSelectionAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            if (!editor.getCaretModel().supportsMultipleCarets()) {
+                editor.getCaretModel().moveCaretRelatively(0, 1, true, editor.isColumnMode(), true);
+                return;
+            }
+            if (editor.isColumnMode()) {
+                EditorActionUtil.cloneOrRemoveCaret(editor, caret == null ? editor.getCaretModel().getPrimaryCaret() : caret, false);
+            }
+            else {
+                CaretAction caretAction = new CaretAction() {
+                    @Override
+                    public void perform(Caret caret) {
+                        caret.moveCaretRelatively(0, 1, true, true);
+                    }
+                };
+                if (caret == null) {
+                    editor.getCaretModel().runForEachCaret(caretAction);
+                }
+                else {
+                    caretAction.perform(caret);
+                }
+            }
+        }
+    }
 }

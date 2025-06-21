@@ -33,24 +33,24 @@ import java.util.function.Supplier;
  * @since May 13, 2002
  */
 public class PasteAction extends EditorAction {
-  public static final Key<Supplier<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
+    public static final Key<Supplier<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
 
-  public PasteAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends BasePasteHandler {
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      TextRange range = null;
-      if (myTransferable != null) {
-        TextRange[] ranges = EditorCopyPasteHelper.getInstance().pasteTransferable(editor, myTransferable);
-        if (ranges != null && ranges.length == 1) {
-          range = ranges[0];
-        }
-      }
-      editor.putUserData(EditorEx.LAST_PASTED_REGION, range);
+    public PasteAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends BasePasteHandler {
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+            TextRange range = null;
+            if (myTransferable != null) {
+                TextRange[] ranges = EditorCopyPasteHelper.getInstance().pasteTransferable(editor, myTransferable);
+                if (ranges != null && ranges.length == 1) {
+                    range = ranges[0];
+                }
+            }
+            editor.putUserData(EditorEx.LAST_PASTED_REGION, range);
+        }
+    }
 }

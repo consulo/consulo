@@ -36,30 +36,29 @@ import consulo.annotation.access.RequiredWriteAction;
  * @since 4/19/11 4:18 PM
  */
 public class KillToWordStartAction extends TextComponentEditorAction {
-
-  public KillToWordStartAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      CaretModel caretModel = editor.getCaretModel();
-      int caretOffset = caretModel.getOffset();
-      if (caretOffset <= 0) {
-        return;
-      }
-
-      boolean camel = editor.getSettings().isCamelWords();
-      for (int i = caretOffset - 1; i >= 0; i--) {
-        if (EditorActionUtil.isWordOrLexemeStart(editor, i, camel)) {
-          KillRingUtil.cut(editor, i, caretOffset);
-          return;
-        }
-      }
-
-      KillRingUtil.cut(editor, 0, caretOffset);
+    public KillToWordStartAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorWriteActionHandler {
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+            CaretModel caretModel = editor.getCaretModel();
+            int caretOffset = caretModel.getOffset();
+            if (caretOffset <= 0) {
+                return;
+            }
+
+            boolean camel = editor.getSettings().isCamelWords();
+            for (int i = caretOffset - 1; i >= 0; i--) {
+                if (EditorActionUtil.isWordOrLexemeStart(editor, i, camel)) {
+                    KillRingUtil.cut(editor, i, caretOffset);
+                    return;
+                }
+            }
+
+            KillRingUtil.cut(editor, 0, caretOffset);
+        }
+    }
 }

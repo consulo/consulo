@@ -30,50 +30,50 @@ import jakarta.annotation.Nonnull;
  */
 public class MatchBraceAction extends EditorAction {
 
-  private static final TIntHashSet OPEN_BRACES = new TIntHashSet(new int[] {  '(', '[', '{', '<' });
-  private static final TIntHashSet CLOSE_BRACES = new TIntHashSet(new int[] { ')', ']', '}', '>' });
+    private static final TIntHashSet OPEN_BRACES = new TIntHashSet(new int[]{'(', '[', '{', '<'});
+    private static final TIntHashSet CLOSE_BRACES = new TIntHashSet(new int[]{')', ']', '}', '>'});
 
-  public MatchBraceAction() {
-    super(new MyHandler());
-  }
-
-  private static class MyHandler extends EditorActionHandler {
-    public MyHandler() {
-      super(true);
+    public MatchBraceAction() {
+        super(new MyHandler());
     }
 
-    @Override
-    public void execute(@Nonnull Editor editor, DataContext dataContext) {
-      Project project = dataContext.getData(Project.KEY);
-      if (project == null) {
-        return;
-      }
-
-      CaretModel caretModel = editor.getCaretModel();
-      int offset = caretModel.getOffset();
-      CharSequence text = editor.getDocument().getCharsSequence();
-      char c = text.charAt(offset);
-      if (!OPEN_BRACES.contains(c) && !CLOSE_BRACES.contains(c)) {
-        boolean canContinue = false;
-        for (offset--; offset >= 0; offset--) {
-          c = text.charAt(offset);
-          if (OPEN_BRACES.contains(c) || CLOSE_BRACES.contains(c)) {
-            canContinue = true;
-            caretModel.moveToOffset(offset);
-            break;
-          }
+    private static class MyHandler extends EditorActionHandler {
+        public MyHandler() {
+            super(true);
         }
-        if (!canContinue) {
-          return;
-        }
-      }
 
-      if (OPEN_BRACES.contains(c)) {
-        CodeBlockUtil.moveCaretToCodeBlockEnd(project, editor, false);
-      }
-      else if (CLOSE_BRACES.contains(c)) {
-        CodeBlockUtil.moveCaretToCodeBlockStart(project, editor, false);
-      }
+        @Override
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+            Project project = dataContext.getData(Project.KEY);
+            if (project == null) {
+                return;
+            }
+
+            CaretModel caretModel = editor.getCaretModel();
+            int offset = caretModel.getOffset();
+            CharSequence text = editor.getDocument().getCharsSequence();
+            char c = text.charAt(offset);
+            if (!OPEN_BRACES.contains(c) && !CLOSE_BRACES.contains(c)) {
+                boolean canContinue = false;
+                for (offset--; offset >= 0; offset--) {
+                    c = text.charAt(offset);
+                    if (OPEN_BRACES.contains(c) || CLOSE_BRACES.contains(c)) {
+                        canContinue = true;
+                        caretModel.moveToOffset(offset);
+                        break;
+                    }
+                }
+                if (!canContinue) {
+                    return;
+                }
+            }
+
+            if (OPEN_BRACES.contains(c)) {
+                CodeBlockUtil.moveCaretToCodeBlockEnd(project, editor, false);
+            }
+            else if (CLOSE_BRACES.contains(c)) {
+                CodeBlockUtil.moveCaretToCodeBlockStart(project, editor, false);
+            }
+        }
     }
-  }
 }

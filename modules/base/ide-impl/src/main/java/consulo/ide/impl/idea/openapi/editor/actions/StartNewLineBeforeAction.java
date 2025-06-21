@@ -32,36 +32,35 @@ import consulo.annotation.access.RequiredWriteAction;
  * @since 5/19/11 10:42 AM
  */
 public class StartNewLineBeforeAction extends EditorAction {
-
-  public StartNewLineBeforeAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    public Handler() {
-      super(true);
+    public StartNewLineBeforeAction() {
+        super(new Handler());
     }
 
-    @Override
-    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-      return getHandler(IdeActions.ACTION_EDITOR_ENTER).isEnabled(editor, caret, dataContext);
-    }
+    private static class Handler extends EditorWriteActionHandler {
+        public Handler() {
+            super(true);
+        }
 
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      editor.getSelectionModel().removeSelection();
-      LogicalPosition caretPosition = editor.getCaretModel().getLogicalPosition();
-      final int line = caretPosition.line;
-      int lineStartOffset = editor.getDocument().getLineStartOffset(line);
-      editor.getCaretModel().moveToOffset(lineStartOffset);
-      getHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, caret, dataContext);
-      editor.getCaretModel().moveToOffset(editor.getDocument().getLineStartOffset(line));
-      getHandler(IdeActions.ACTION_EDITOR_MOVE_LINE_END).execute(editor, caret, dataContext);
-    }
+        @Override
+        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+            return getHandler(IdeActions.ACTION_EDITOR_ENTER).isEnabled(editor, caret, dataContext);
+        }
 
-    private static EditorActionHandler getHandler(@Nonnull String actionId) {
-      return EditorActionManager.getInstance().getActionHandler(actionId);
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+            editor.getSelectionModel().removeSelection();
+            LogicalPosition caretPosition = editor.getCaretModel().getLogicalPosition();
+            final int line = caretPosition.line;
+            int lineStartOffset = editor.getDocument().getLineStartOffset(line);
+            editor.getCaretModel().moveToOffset(lineStartOffset);
+            getHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, caret, dataContext);
+            editor.getCaretModel().moveToOffset(editor.getDocument().getLineStartOffset(line));
+            getHandler(IdeActions.ACTION_EDITOR_MOVE_LINE_END).execute(editor, caret, dataContext);
+        }
+
+        private static EditorActionHandler getHandler(@Nonnull String actionId) {
+            return EditorActionManager.getInstance().getActionHandler(actionId);
+        }
     }
-  }
 }

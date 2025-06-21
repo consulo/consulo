@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 3:16:36 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.action.EditorActionUtil;
@@ -33,42 +24,50 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import jakarta.annotation.Nullable;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 13, 2002
+ * Time: 3:16:36 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class PageDownWithSelectionAction extends EditorAction {
-  public static class Handler extends EditorActionHandler {
-    @Override
-    public void doExecute(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      if (!editor.getCaretModel().supportsMultipleCarets()) {
-        EditorActionUtil.moveCaretPageDown(editor, true);
-        return;
-      }
-      if (editor.isColumnMode()) {
-        int lines = editor.getScrollingModel().getVisibleArea().height / editor.getLineHeight();
-        Caret currentCaret = caret == null ? editor.getCaretModel().getPrimaryCaret() : caret;
-        for (int i = 0; i < lines; i++) {
-          if (!EditorActionUtil.cloneOrRemoveCaret(editor, currentCaret, false)) {
-            break;
-          }
-          currentCaret = editor.getCaretModel().getPrimaryCaret();
-        }
-      }
-      else {
-        if (caret == null) {
-          editor.getCaretModel().runForEachCaret(new CaretAction() {
-            @Override
-            public void perform(Caret caret) {
-              EditorActionUtil.moveCaretPageDown(editor, true);
+    public static class Handler extends EditorActionHandler {
+        @Override
+        public void doExecute(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            if (!editor.getCaretModel().supportsMultipleCarets()) {
+                EditorActionUtil.moveCaretPageDown(editor, true);
+                return;
             }
-          });
+            if (editor.isColumnMode()) {
+                int lines = editor.getScrollingModel().getVisibleArea().height / editor.getLineHeight();
+                Caret currentCaret = caret == null ? editor.getCaretModel().getPrimaryCaret() : caret;
+                for (int i = 0; i < lines; i++) {
+                    if (!EditorActionUtil.cloneOrRemoveCaret(editor, currentCaret, false)) {
+                        break;
+                    }
+                    currentCaret = editor.getCaretModel().getPrimaryCaret();
+                }
+            }
+            else {
+                if (caret == null) {
+                    editor.getCaretModel().runForEachCaret(new CaretAction() {
+                        @Override
+                        public void perform(Caret caret) {
+                            EditorActionUtil.moveCaretPageDown(editor, true);
+                        }
+                    });
+                }
+                else {
+                    // assuming caret is equal to CaretModel.getCurrentCaret()
+                    EditorActionUtil.moveCaretPageDown(editor, true);
+                }
+            }
         }
-        else {
-          // assuming caret is equal to CaretModel.getCurrentCaret()
-          EditorActionUtil.moveCaretPageDown(editor, true);
-        }
-      }
     }
-  }
 
-  public PageDownWithSelectionAction() {
-    super(new Handler());
-  }
+    public PageDownWithSelectionAction() {
+        super(new Handler());
+    }
 }

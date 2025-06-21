@@ -32,47 +32,46 @@ import consulo.annotation.access.RequiredWriteAction;
  * it to the {@link KillRingTransferable kill ring}.
  * <p/>
  * Thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/19/11 1:58 PM
  */
 public class KillToWordEndAction extends TextComponentEditorAction {
-
-  public KillToWordEndAction() {
-    super(new Handler());
-  }
-  
-  private static class Handler extends EditorWriteActionHandler {
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      CaretModel caretModel = editor.getCaretModel();
-      int caretOffset = caretModel.getOffset();
-      Document document = editor.getDocument();
-      if (caretOffset >= document.getTextLength()) {
-        return;
-      }
-
-      int caretLine = caretModel.getLogicalPosition().line;
-      int lineEndOffset = document.getLineEndOffset(caretLine);
-      CharSequence text = document.getCharsSequence();
-      boolean camel = editor.getSettings().isCamelWords();
-      for (int i = caretOffset + 1; i < lineEndOffset; i++) {
-        if (EditorActionUtil.isWordEnd(text, i, camel)) {
-          KillRingUtil.cut(editor, caretOffset, i);
-          return;
-        }
-      }
-      
-      int end = lineEndOffset;
-      if (caretLine < document.getLineCount() - 1) {
-        // No word end found between the current position and line end, hence, remove line feed sign if possible.
-        end++;
-      }
-
-      if (end > caretOffset) {
-        KillRingUtil.cut(editor, caretOffset, end);
-      }
+    public KillToWordEndAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorWriteActionHandler {
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+            CaretModel caretModel = editor.getCaretModel();
+            int caretOffset = caretModel.getOffset();
+            Document document = editor.getDocument();
+            if (caretOffset >= document.getTextLength()) {
+                return;
+            }
+
+            int caretLine = caretModel.getLogicalPosition().line;
+            int lineEndOffset = document.getLineEndOffset(caretLine);
+            CharSequence text = document.getCharsSequence();
+            boolean camel = editor.getSettings().isCamelWords();
+            for (int i = caretOffset + 1; i < lineEndOffset; i++) {
+                if (EditorActionUtil.isWordEnd(text, i, camel)) {
+                    KillRingUtil.cut(editor, caretOffset, i);
+                    return;
+                }
+            }
+
+            int end = lineEndOffset;
+            if (caretLine < document.getLineCount() - 1) {
+                // No word end found between the current position and line end, hence, remove line feed sign if possible.
+                end++;
+            }
+
+            if (end > caretOffset) {
+                KillRingUtil.cut(editor, caretOffset, end);
+            }
+        }
+    }
 }

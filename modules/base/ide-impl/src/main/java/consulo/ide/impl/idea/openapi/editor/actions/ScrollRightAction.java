@@ -25,15 +25,14 @@ import consulo.codeEditor.action.EditorActionHandler;
  * @since 5/25/12 9:25 AM
  */
 public class ScrollRightAction extends InactiveEditorAction {
-  
-  public ScrollRightAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      EditorActionUtil.scrollRelatively(editor, 0, 1, false);
+    public ScrollRightAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void execute(Editor editor, DataContext dataContext) {
+            EditorActionUtil.scrollRelatively(editor, 0, 1, false);
+        }
+    }
 }

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 6:20:22 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.Editor;
@@ -30,15 +21,23 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 14, 2002
+ * Time: 6:20:22 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class MoveDownAndScrollAction extends EditorAction {
-  public MoveDownAndScrollAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      EditorActionUtil.moveCaretRelativelyAndScroll(editor, 0, 1, false);
+    public MoveDownAndScrollAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void execute(Editor editor, DataContext dataContext) {
+            EditorActionUtil.moveCaretRelativelyAndScroll(editor, 0, 1, false);
+        }
+    }
 }

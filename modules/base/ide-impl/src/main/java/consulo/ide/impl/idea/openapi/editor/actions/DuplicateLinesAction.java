@@ -28,33 +28,33 @@ import consulo.util.lang.Pair;
  * @author yole
  */
 public class DuplicateLinesAction extends EditorAction {
-  public DuplicateLinesAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    public Handler() {
-      super(true);
+    public DuplicateLinesAction() {
+        super(new Handler());
     }
 
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      if (editor.getSelectionModel().hasSelection()) {
-        int selStart = editor.getSelectionModel().getSelectionStart();
-        int selEnd = editor.getSelectionModel().getSelectionEnd();
-        VisualPosition rangeStart = editor.offsetToVisualPosition(Math.min(selStart, selEnd));
-        VisualPosition rangeEnd = editor.offsetToVisualPosition(Math.max(selStart, selEnd));
-        final Pair<Integer,Integer> copiedRange =
-          DuplicateAction.duplicateLinesRange(editor, editor.getDocument(), rangeStart, rangeEnd);
-        if (copiedRange != null) {
-          editor.getSelectionModel().setSelection(copiedRange.first, copiedRange.second);
+    private static class Handler extends EditorWriteActionHandler {
+        public Handler() {
+            super(true);
         }
-      }
-      else {
-        VisualPosition caretPos = editor.getCaretModel().getVisualPosition();
-        DuplicateAction.duplicateLinesRange(editor, editor.getDocument(), caretPos, caretPos);
-      }
+
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+            if (editor.getSelectionModel().hasSelection()) {
+                int selStart = editor.getSelectionModel().getSelectionStart();
+                int selEnd = editor.getSelectionModel().getSelectionEnd();
+                VisualPosition rangeStart = editor.offsetToVisualPosition(Math.min(selStart, selEnd));
+                VisualPosition rangeEnd = editor.offsetToVisualPosition(Math.max(selStart, selEnd));
+                final Pair<Integer, Integer> copiedRange =
+                    DuplicateAction.duplicateLinesRange(editor, editor.getDocument(), rangeStart, rangeEnd);
+                if (copiedRange != null) {
+                    editor.getSelectionModel().setSelection(copiedRange.first, copiedRange.second);
+                }
+            }
+            else {
+                VisualPosition caretPos = editor.getCaretModel().getVisualPosition();
+                DuplicateAction.duplicateLinesRange(editor, editor.getDocument(), caretPos, caretPos);
+            }
+        }
     }
-  }
 }

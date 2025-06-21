@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight;
 import consulo.codeEditor.action.EditorAction;
 
 public class MoveElementRightAction extends EditorAction {
-  public MoveElementRightAction() {
-    super(new MoveElementLeftRightActionHandler(false));
-    setInjectedContext(true);
-  }
+    public MoveElementRightAction() {
+        super(new MoveElementLeftRightActionHandler(false));
+        setInjectedContext(true);
+    }
 }

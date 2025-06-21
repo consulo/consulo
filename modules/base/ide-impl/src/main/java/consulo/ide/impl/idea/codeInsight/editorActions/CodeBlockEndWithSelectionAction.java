@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 6:49:27 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.dataContext.DataContext;
@@ -34,23 +25,31 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 14, 2002
+ * Time: 6:49:27 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class CodeBlockEndWithSelectionAction extends EditorAction {
-  public CodeBlockEndWithSelectionAction() {
-    super(new Handler());
-    setInjectedContext(true);
-  }
-
-  private static class Handler extends EditorActionHandler {
-    public Handler() {
-      super(true);
+    public CodeBlockEndWithSelectionAction() {
+        super(new Handler());
+        setInjectedContext(true);
     }
 
-    @Override
-    public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = dataContext.getData(Project.KEY);
-      if (project != null) {
-        CodeBlockUtil.moveCaretToCodeBlockEnd(project, editor, true);
-      }
+    private static class Handler extends EditorActionHandler {
+        public Handler() {
+            super(true);
+        }
+
+        @Override
+        public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            Project project = dataContext.getData(Project.KEY);
+            if (project != null) {
+                CodeBlockUtil.moveCaretToCodeBlockEnd(project, editor, true);
+            }
+        }
     }
-  }
 }

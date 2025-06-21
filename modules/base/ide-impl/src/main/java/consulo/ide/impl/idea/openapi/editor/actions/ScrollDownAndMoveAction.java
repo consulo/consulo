@@ -22,20 +22,19 @@ import consulo.codeEditor.action.EditorActionHandler;
 
 /**
  * Moves editor viewport one visual line down. Caret is also moved one line down if it becomes off-screen
- * 
+ *
  * @author Denis Zhdanov
  * @since 1/13/12 1:22 PM
  */
 public class ScrollDownAndMoveAction extends InactiveEditorAction {
-  
-  public ScrollDownAndMoveAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      EditorActionUtil.scrollRelatively(editor, 1, 0, true);
+    public ScrollDownAndMoveAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void execute(Editor editor, DataContext dataContext) {
+            EditorActionUtil.scrollRelatively(editor, 1, 0, true);
+        }
+    }
 }

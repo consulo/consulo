@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 6:41:17 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
@@ -36,28 +27,36 @@ import consulo.annotation.access.RequiredWriteAction;
 
 import jakarta.annotation.Nullable;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 13, 2002
+ * Time: 6:41:17 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class CutAction extends EditorAction {
-  public CutAction() {
-    super(new Handler());
-  }
-
-  public static class Handler extends EditorWriteActionHandler {
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      if(!editor.getSelectionModel().hasSelection(true)) {
-        if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
-          return;
-        }
-        editor.getCaretModel().runForEachCaret(new CaretAction() {
-          @Override
-          public void perform(Caret caret) {
-            editor.getSelectionModel().selectLineAtCaret();
-          }
-        });
-      }
-      editor.getSelectionModel().copySelectionToClipboard();
-      EditorModificationUtil.deleteSelectedTextForAllCarets(editor);
+    public CutAction() {
+        super(new Handler());
     }
-  }
+
+    public static class Handler extends EditorWriteActionHandler {
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            if (!editor.getSelectionModel().hasSelection(true)) {
+                if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
+                    return;
+                }
+                editor.getCaretModel().runForEachCaret(new CaretAction() {
+                    @Override
+                    public void perform(Caret caret) {
+                        editor.getSelectionModel().selectLineAtCaret();
+                    }
+                });
+            }
+            editor.getSelectionModel().copySelectionToClipboard();
+            EditorModificationUtil.deleteSelectedTextForAllCarets(editor);
+        }
+    }
 }

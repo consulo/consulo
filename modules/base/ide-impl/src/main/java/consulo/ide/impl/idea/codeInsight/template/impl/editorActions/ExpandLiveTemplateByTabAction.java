@@ -22,8 +22,8 @@ import consulo.codeEditor.action.EditorAction;
  * @author peter
  */
 public class ExpandLiveTemplateByTabAction extends EditorAction {
-  public ExpandLiveTemplateByTabAction() {
-    super(ExpandLiveTemplateCustomAction.createExpandTemplateHandler(TemplateSettingsImpl.TAB_CHAR));
-    setInjectedContext(true);
-  }
+    public ExpandLiveTemplateByTabAction() {
+        super(ExpandLiveTemplateCustomAction.createExpandTemplateHandler(TemplateSettingsImpl.TAB_CHAR));
+        setInjectedContext(true);
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.hint.actions;
 
 import consulo.ide.impl.idea.codeInsight.hint.PrevNextParameterHandler;
@@ -23,8 +22,8 @@ import consulo.codeEditor.action.EditorAction;
  * @author ven
  */
 public class NextParameterAction extends EditorAction {
-  public NextParameterAction() {
-    super(new PrevNextParameterHandler(true));
-    setInjectedContext(true);
-  }
+    public NextParameterAction() {
+        super(new PrevNextParameterHandler(true));
+        setInjectedContext(true);
+    }
 }

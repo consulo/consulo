@@ -13,6 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ide.impl.idea.openapi.editor.actions;
+
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.EditorEx;
+import consulo.dataContext.DataContext;
 
 /*
  * Created by IntelliJ IDEA.
@@ -22,24 +29,16 @@
  * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.openapi.editor.actions;
-
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.EditorEx;
-import consulo.dataContext.DataContext;
-
 public class ToggleInsertStateAction extends EditorAction {
-  public ToggleInsertStateAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      EditorEx editorex = (EditorEx) editor;
-      editorex.setInsertMode(!editorex.isInsertMode());
+    public ToggleInsertStateAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void execute(Editor editor, DataContext dataContext) {
+            EditorEx editorex = (EditorEx) editor;
+            editorex.setInsertMode(!editorex.isInsertMode());
+        }
+    }
 }

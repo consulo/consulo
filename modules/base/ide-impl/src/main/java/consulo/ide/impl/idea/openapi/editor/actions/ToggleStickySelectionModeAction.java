@@ -25,25 +25,24 @@ import consulo.codeEditor.EditorEx;
  * Allows to toggle {@link EditorEx#isStickySelection() sticky selection} for editors.
  * <p/>
  * Thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/20/11 3:28 PM
  */
 public class ToggleStickySelectionModeAction extends EditorAction {
-
-  public ToggleStickySelectionModeAction() {
-    super(new Handler());
-  }
-
-  static class Handler extends EditorActionHandler {
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      if (!(editor instanceof EditorEx)) {
-        return;
-      }
-      
-      EditorEx ex = (EditorEx)editor;
-      ex.setStickySelection(!ex.isStickySelection());
+    public ToggleStickySelectionModeAction() {
+        super(new Handler());
     }
-  }
+
+    static class Handler extends EditorActionHandler {
+        @Override
+        public void execute(Editor editor, DataContext dataContext) {
+            if (!(editor instanceof EditorEx)) {
+                return;
+            }
+
+            EditorEx ex = (EditorEx) editor;
+            ex.setStickySelection(!ex.isStickySelection());
+        }
+    }
 }

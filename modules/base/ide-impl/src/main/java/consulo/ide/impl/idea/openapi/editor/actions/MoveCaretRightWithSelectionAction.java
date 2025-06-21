@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 9:58:23 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
@@ -30,20 +21,28 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 13, 2002
+ * Time: 9:58:23 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class MoveCaretRightWithSelectionAction extends EditorAction {
-  public MoveCaretRightWithSelectionAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    public Handler() {
-      super(true);
+    public MoveCaretRightWithSelectionAction() {
+        super(new Handler());
     }
 
-    @Override
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
-      editor.getCaretModel().moveCaretRelatively(1, 0, true, editor.isColumnMode(),
-                                                 caret == editor.getCaretModel().getPrimaryCaret());
+    private static class Handler extends EditorActionHandler {
+        public Handler() {
+            super(true);
+        }
+
+        @Override
+        public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+            editor.getCaretModel()
+                .moveCaretRelatively(1, 0, true, editor.isColumnMode(), caret == editor.getCaretModel().getPrimaryCaret());
+        }
     }
-  }
 }

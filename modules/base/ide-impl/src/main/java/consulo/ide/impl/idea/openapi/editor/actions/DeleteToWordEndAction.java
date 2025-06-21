@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 7:18:30 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.action.EditorActionUtil;
@@ -34,6 +25,14 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.annotation.access.RequiredWriteAction;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 14, 2002
+ * Time: 7:18:30 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class DeleteToWordEndAction extends TextComponentEditorAction {
     public DeleteToWordEndAction() {
         super(new Handler(false));

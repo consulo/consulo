@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 20, 2002
- * Time: 4:13:37 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.action.EditorWriteActionHandler;
@@ -33,82 +24,98 @@ import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.util.lang.ref.Ref;
 
 import jakarta.annotation.Nullable;
+
 import java.util.Locale;
 
 import static consulo.language.ast.StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 20, 2002
+ * Time: 4:13:37 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class ToggleCaseAction extends TextComponentEditorAction {
-  public ToggleCaseAction() {
-    super(new Handler());
-  }
+    public ToggleCaseAction() {
+        super(new Handler());
+    }
 
-  private static class Handler extends EditorWriteActionHandler {
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      final Ref<Boolean> toLowerCase = new Ref<Boolean>(Boolean.FALSE);
-      runForCaret(editor, caret, new CaretAction() {
+    private static class Handler extends EditorWriteActionHandler {
+        @RequiredWriteAction
         @Override
-        public void perform(Caret caret) {
-          if (!caret.hasSelection()) {
-            caret.selectWordAtCaret(true);
-          }
-          int selectionStartOffset = caret.getSelectionStart();
-          int selectionEndOffset = caret.getSelectionEnd();
-          String originalText = editor.getDocument().getText(new TextRange(selectionStartOffset, selectionEndOffset));
-          if (!originalText.equals(toCase(editor, selectionStartOffset, selectionEndOffset, true))) {
-            toLowerCase.set(Boolean.TRUE);
-          }
+        public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            final Ref<Boolean> toLowerCase = new Ref<Boolean>(Boolean.FALSE);
+            runForCaret(editor, caret, new CaretAction() {
+                @Override
+                public void perform(Caret caret) {
+                    if (!caret.hasSelection()) {
+                        caret.selectWordAtCaret(true);
+                    }
+                    int selectionStartOffset = caret.getSelectionStart();
+                    int selectionEndOffset = caret.getSelectionEnd();
+                    String originalText = editor.getDocument().getText(new TextRange(selectionStartOffset, selectionEndOffset));
+                    if (!originalText.equals(toCase(editor, selectionStartOffset, selectionEndOffset, true))) {
+                        toLowerCase.set(Boolean.TRUE);
+                    }
+                }
+            });
+            runForCaret(
+                editor,
+                caret,
+                new CaretAction() {
+                    @Override
+                    public void perform(Caret caret) {
+                        VisualPosition caretPosition = caret.getVisualPosition();
+                        int selectionStartOffset = caret.getSelectionStart();
+                        int selectionEndOffset = caret.getSelectionEnd();
+                        VisualPosition selectionStartPosition = caret.getSelectionStartPosition();
+                        VisualPosition selectionEndPosition = caret.getSelectionEndPosition();
+                        caret.removeSelection();
+                        editor.getDocument().replaceString(selectionStartOffset, selectionEndOffset,
+                            toCase(editor, selectionStartOffset, selectionEndOffset, toLowerCase.get())
+                        );
+                        caret.moveToVisualPosition(caretPosition);
+                        caret.setSelection(selectionStartPosition, selectionStartOffset, selectionEndPosition, selectionEndOffset);
+                    }
+                }
+            );
         }
-      });
-      runForCaret(editor, caret, new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          VisualPosition caretPosition = caret.getVisualPosition();
-          int selectionStartOffset = caret.getSelectionStart();
-          int selectionEndOffset = caret.getSelectionEnd();
-          VisualPosition selectionStartPosition = caret.getSelectionStartPosition();
-          VisualPosition selectionEndPosition = caret.getSelectionEndPosition();
-          caret.removeSelection();
-          editor.getDocument().replaceString(selectionStartOffset, selectionEndOffset,
-                                             toCase(editor, selectionStartOffset, selectionEndOffset, toLowerCase.get()));
-          caret.moveToVisualPosition(caretPosition);
-          caret.setSelection(selectionStartPosition, selectionStartOffset, selectionEndPosition, selectionEndOffset);
+
+        private static void runForCaret(Editor editor, Caret caret, CaretAction action) {
+            if (caret == null) {
+                editor.getCaretModel().runForEachCaret(action);
+            }
+            else {
+                action.perform(caret);
+            }
         }
-      });
+
+        private static String toCase(Editor editor, int startOffset, int endOffset, final boolean lower) {
+            CharSequence text = editor.getDocument().getImmutableCharSequence();
+            EditorHighlighter highlighter = editor.getHighlighter();
+            HighlighterIterator iterator = highlighter.createIterator(startOffset);
+            StringBuilder builder = new StringBuilder(endOffset - startOffset);
+            while (!iterator.atEnd()) {
+                int start = trim(iterator.getStart(), startOffset, endOffset);
+                int end = trim(iterator.getEnd(), startOffset, endOffset);
+                CharSequence fragment = text.subSequence(start, end);
+
+                builder.append(iterator.getTokenType() == VALID_STRING_ESCAPE_TOKEN ? fragment :
+                    lower ? fragment.toString().toLowerCase(Locale.getDefault()) :
+                        fragment.toString().toUpperCase(Locale.getDefault()));
+
+                if (end == endOffset) {
+                    break;
+                }
+                iterator.advance();
+            }
+            return builder.toString();
+        }
+
+        private static int trim(int value, int lowerLimit, int upperLimit) {
+            return Math.min(upperLimit, Math.max(lowerLimit, value));
+        }
     }
-
-    private static void runForCaret(Editor editor, Caret caret, CaretAction action) {
-      if (caret == null) {
-        editor.getCaretModel().runForEachCaret(action);
-      }
-      else {
-        action.perform(caret);
-      }
-    }
-
-    private static String toCase(Editor editor, int startOffset, int endOffset, final boolean lower) {
-      CharSequence text = editor.getDocument().getImmutableCharSequence();
-      EditorHighlighter highlighter = editor.getHighlighter();
-      HighlighterIterator iterator = highlighter.createIterator(startOffset);
-      StringBuilder builder = new StringBuilder(endOffset - startOffset);
-      while (!iterator.atEnd()) {
-        int start = trim(iterator.getStart(), startOffset, endOffset);
-        int end = trim(iterator.getEnd(), startOffset, endOffset);
-        CharSequence fragment = text.subSequence(start, end);
-
-        builder.append(iterator.getTokenType() == VALID_STRING_ESCAPE_TOKEN ? fragment :
-                       lower ? fragment.toString().toLowerCase(Locale.getDefault()) :
-                       fragment.toString().toUpperCase(Locale.getDefault()));
-
-        if (end == endOffset) break;
-        iterator.advance();
-      }
-      return builder.toString();
-    }
-
-    private static int trim(int value, int lowerLimit, int upperLimit) {
-      return Math.min(upperLimit, Math.max(lowerLimit, value));
-    }
-  }
 }

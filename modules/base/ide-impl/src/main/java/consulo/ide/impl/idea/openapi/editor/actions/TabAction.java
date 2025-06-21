@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 9:51:34 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.access.RequiredWriteAction;
@@ -47,6 +38,14 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 13, 2002
+ * Time: 9:51:34 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class TabAction extends EditorAction {
     public TabAction() {
         super(new Handler());
@@ -72,7 +71,7 @@ public class TabAction extends EditorAction {
 
         @Override
         public boolean isEnabled(Editor editor, DataContext dataContext) {
-            return !editor.isOneLineMode() && !((EditorEx)editor).isEmbeddedIntoDialogWrapper() && !editor.isViewer();
+            return !editor.isOneLineMode() && !((EditorEx) editor).isEmbeddedIntoDialogWrapper() && !editor.isViewer();
         }
     }
 

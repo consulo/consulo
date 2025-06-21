@@ -30,53 +30,53 @@ import consulo.document.util.TextRange;
 import jakarta.annotation.Nullable;
 
 public class SelectAllOccurrencesAction extends EditorAction {
-  public SelectAllOccurrencesAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends SelectOccurrencesActionHandler {
-    @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
-      return super.isEnabled(editor, dataContext) && editor.getProject() != null && editor.getCaretModel().supportsMultipleCarets();
+    public SelectAllOccurrencesAction() {
+        super(new Handler());
     }
 
-    @Override
-    public void doExecute(Editor editor, @Nullable Caret c, DataContext dataContext) {
-      Caret caret = c == null ? editor.getCaretModel().getPrimaryCaret() : c;
-
-      if (!caret.hasSelection()) {
-        TextRange wordSelectionRange = getSelectionRange(editor, caret);
-        if (wordSelectionRange != null) {
-          setSelection(editor, caret, wordSelectionRange);
+    private static class Handler extends SelectOccurrencesActionHandler {
+        @Override
+        public boolean isEnabled(Editor editor, DataContext dataContext) {
+            return super.isEnabled(editor, dataContext) && editor.getProject() != null && editor.getCaretModel().supportsMultipleCarets();
         }
-      }
 
-      String selectedText = caret.getSelectedText();
-      Project project = editor.getProject();
-      if (project == null || selectedText == null) {
-        return;
-      }
+        @Override
+        public void doExecute(Editor editor, @Nullable Caret c, DataContext dataContext) {
+            Caret caret = c == null ? editor.getCaretModel().getPrimaryCaret() : c;
 
-      int caretShiftFromSelectionStart = caret.getOffset() - caret.getSelectionStart();
-      FindManager findManager = FindManager.getInstance(project);
+            if (!caret.hasSelection()) {
+                TextRange wordSelectionRange = getSelectionRange(editor, caret);
+                if (wordSelectionRange != null) {
+                    setSelection(editor, caret, wordSelectionRange);
+                }
+            }
 
-      FindModel model = new FindModel();
-      model.setStringToFind(selectedText);
-      model.setCaseSensitive(true);
-      model.setWholeWordsOnly(true);
+            String selectedText = caret.getSelectedText();
+            Project project = editor.getProject();
+            if (project == null || selectedText == null) {
+                return;
+            }
 
-      int searchStartOffset = 0;
-      FindResult findResult = findManager.findString(editor.getDocument().getCharsSequence(), searchStartOffset, model);
-      while (findResult.isStringFound()) {
-        int newCaretOffset = caretShiftFromSelectionStart + findResult.getStartOffset();
-        EditorActionUtil.makePositionVisible(editor, newCaretOffset);
-        Caret newCaret = editor.getCaretModel().addCaret(editor.offsetToVisualPosition(newCaretOffset));
-        if (newCaret != null) {
-          setSelection(editor, newCaret, findResult);
+            int caretShiftFromSelectionStart = caret.getOffset() - caret.getSelectionStart();
+            FindManager findManager = FindManager.getInstance(project);
+
+            FindModel model = new FindModel();
+            model.setStringToFind(selectedText);
+            model.setCaseSensitive(true);
+            model.setWholeWordsOnly(true);
+
+            int searchStartOffset = 0;
+            FindResult findResult = findManager.findString(editor.getDocument().getCharsSequence(), searchStartOffset, model);
+            while (findResult.isStringFound()) {
+                int newCaretOffset = caretShiftFromSelectionStart + findResult.getStartOffset();
+                EditorActionUtil.makePositionVisible(editor, newCaretOffset);
+                Caret newCaret = editor.getCaretModel().addCaret(editor.offsetToVisualPosition(newCaretOffset));
+                if (newCaret != null) {
+                    setSelection(editor, newCaret, findResult);
+                }
+                findResult = findManager.findString(editor.getDocument().getCharsSequence(), findResult.getEndOffset(), model);
+            }
+            editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
         }
-        findResult = findManager.findString(editor.getDocument().getCharsSequence(), findResult.getEndOffset(), model);
-      }
-      editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
-  }
 }

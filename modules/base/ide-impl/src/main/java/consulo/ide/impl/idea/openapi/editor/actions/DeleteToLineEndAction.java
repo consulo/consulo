@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 import consulo.codeEditor.action.EditorAction;
 
 public class DeleteToLineEndAction extends EditorAction {
-  public DeleteToLineEndAction() {
-    super(new CutLineActionHandler(false, false, false));
-  }
+    public DeleteToLineEndAction() {
+        super(new CutLineActionHandler(false, false, false));
+    }
 }

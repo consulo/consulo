@@ -26,18 +26,18 @@ import consulo.codeEditor.action.EditorActionHandler;
  */
 public class NextWordInDifferentHumpsModeAction extends TextComponentEditorAction {
 
-  public NextWordInDifferentHumpsModeAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    public Handler() {
-      super(true);
+    public NextWordInDifferentHumpsModeAction() {
+        super(new Handler());
     }
 
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      EditorActionUtil.moveCaretToNextWord(editor, false, !editor.getSettings().isCamelWords());
+    private static class Handler extends EditorActionHandler {
+        public Handler() {
+            super(true);
+        }
+
+        @Override
+        public void execute(Editor editor, DataContext dataContext) {
+            EditorActionUtil.moveCaretToNextWord(editor, false, !editor.getSettings().isCamelWords());
+        }
     }
-  }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.access.RequiredWriteAction;
@@ -37,123 +36,130 @@ import consulo.ui.ex.action.Presentation;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class IndentSelectionAction extends EditorAction {
-  public IndentSelectionAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    public Handler() {
-      super(true);
+    public IndentSelectionAction() {
+        super(new Handler());
     }
 
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = dataContext.getData(Project.KEY);
-      if (isEnabled(editor, caret, dataContext)) {
-        indentSelection(editor, project);
-      }
-    }
-  }
+    private static class Handler extends EditorWriteActionHandler {
+        public Handler() {
+            super(true);
+        }
 
-  @Override
-  public void update(Editor editor, Presentation presentation, DataContext dataContext) {
-    presentation.setEnabled(originalIsEnabled(editor, true));
-  }
-
-  @Override
-  public void updateForKeyboardAccess(Editor editor, Presentation presentation, DataContext dataContext) {
-    presentation.setEnabled(isEnabled(editor, dataContext));
-  }
-
-  protected boolean isEnabled(Editor editor, DataContext dataContext) {
-    return originalIsEnabled(editor, true);
-  }
-
-  protected static boolean originalIsEnabled(Editor editor, boolean wantSelection) {
-    return (!wantSelection || hasSuitableSelection(editor)) && !editor.isOneLineMode();
-  }
-
-  /**
-   * Returns true if there is a selection in the editor and it contains at least one non-whitespace character
-   */
-  private static boolean hasSuitableSelection(Editor editor) {
-    if (!editor.getSelectionModel().hasSelection()) {
-      return false;
-    }
-    Document document = editor.getDocument();
-    int selectionStart = editor.getSelectionModel().getSelectionStart();
-    int selectionEnd = editor.getSelectionModel().getSelectionEnd();
-    return !CharArrayUtil.containsOnlyWhiteSpaces(document.getCharsSequence().subSequence(selectionStart, selectionEnd));
-  }
-
-  private static void indentSelection(Editor editor, Project project) {
-    int oldSelectionStart = editor.getSelectionModel().getSelectionStart();
-    int oldSelectionEnd = editor.getSelectionModel().getSelectionEnd();
-    if(!editor.getSelectionModel().hasSelection()) {
-      oldSelectionStart = editor.getCaretModel().getOffset();
-      oldSelectionEnd = oldSelectionStart;
-    }
-
-    Document document = editor.getDocument();
-    int startIndex = document.getLineNumber(oldSelectionStart);
-    if(startIndex == -1) {
-      startIndex = document.getLineCount() - 1;
-    }
-    int endIndex = document.getLineNumber(oldSelectionEnd);
-    if(endIndex > 0 && document.getLineStartOffset(endIndex) == oldSelectionEnd && editor.getSelectionModel().hasSelection()) {
-      endIndex --;
-    }
-    if(endIndex == -1) {
-      endIndex = document.getLineCount() - 1;
-    }
-
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
-    int blockIndent = CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).INDENT_SIZE;
-    doIndent(endIndex, startIndex, document, project, editor, blockIndent);
-  }
-
-  static void doIndent(final int endIndex, final int startIndex, final Document document, final Project project, final Editor editor,
-                       final int blockIndent) {
-    final int[] caretOffset = {editor.getCaretModel().getOffset()};
-
-    boolean bulkMode = endIndex - startIndex > 50;
-    DocumentUtil.executeInBulk(document, bulkMode, ()-> {
-      List<Integer> nonModifiableLines = new ArrayList<>();
-      if (project != null) {
-        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
-        IndentStrategy indentStrategy = IndentStrategy.forFile(file);
-        // it's not default indent strategy
-        if (indentStrategy.getLanguage() != Language.ANY) {
-          for (int i = startIndex; i <= endIndex; i++) {
-            if (!canIndent(document, file, i, indentStrategy)) {
-              nonModifiableLines.add(i);
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            Project project = dataContext.getData(Project.KEY);
+            if (isEnabled(editor, caret, dataContext)) {
+                indentSelection(editor, project);
             }
-          }
         }
-      }
-      for(int i=startIndex; i<=endIndex; i++) {
-        if (!nonModifiableLines.contains(i)) {
-          caretOffset[0] = EditorActionUtil.indentLine(project, editor, i, blockIndent, caretOffset[0]);
-        }
-      }
-    });
-
-    editor.getCaretModel().moveToOffset(caretOffset[0]);
-  }
-
-  static boolean canIndent(Document document, PsiFile file, int line, @Nonnull IndentStrategy indentStrategy) {
-    int offset = document.getLineStartOffset(line);
-    if (file != null) {
-      PsiElement element = file.findElementAt(offset);
-      if (element != null) {
-        return indentStrategy.canIndent(element);
-      }
     }
-    return true;
-  }
+
+    @Override
+    public void update(Editor editor, Presentation presentation, DataContext dataContext) {
+        presentation.setEnabled(originalIsEnabled(editor, true));
+    }
+
+    @Override
+    public void updateForKeyboardAccess(Editor editor, Presentation presentation, DataContext dataContext) {
+        presentation.setEnabled(isEnabled(editor, dataContext));
+    }
+
+    protected boolean isEnabled(Editor editor, DataContext dataContext) {
+        return originalIsEnabled(editor, true);
+    }
+
+    protected static boolean originalIsEnabled(Editor editor, boolean wantSelection) {
+        return (!wantSelection || hasSuitableSelection(editor)) && !editor.isOneLineMode();
+    }
+
+    /**
+     * Returns true if there is a selection in the editor and it contains at least one non-whitespace character
+     */
+    private static boolean hasSuitableSelection(Editor editor) {
+        if (!editor.getSelectionModel().hasSelection()) {
+            return false;
+        }
+        Document document = editor.getDocument();
+        int selectionStart = editor.getSelectionModel().getSelectionStart();
+        int selectionEnd = editor.getSelectionModel().getSelectionEnd();
+        return !CharArrayUtil.containsOnlyWhiteSpaces(document.getCharsSequence().subSequence(selectionStart, selectionEnd));
+    }
+
+    private static void indentSelection(Editor editor, Project project) {
+        int oldSelectionStart = editor.getSelectionModel().getSelectionStart();
+        int oldSelectionEnd = editor.getSelectionModel().getSelectionEnd();
+        if (!editor.getSelectionModel().hasSelection()) {
+            oldSelectionStart = editor.getCaretModel().getOffset();
+            oldSelectionEnd = oldSelectionStart;
+        }
+
+        Document document = editor.getDocument();
+        int startIndex = document.getLineNumber(oldSelectionStart);
+        if (startIndex == -1) {
+            startIndex = document.getLineCount() - 1;
+        }
+        int endIndex = document.getLineNumber(oldSelectionEnd);
+        if (endIndex > 0 && document.getLineStartOffset(endIndex) == oldSelectionEnd && editor.getSelectionModel().hasSelection()) {
+            endIndex--;
+        }
+        if (endIndex == -1) {
+            endIndex = document.getLineCount() - 1;
+        }
+
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
+        int blockIndent = CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).INDENT_SIZE;
+        doIndent(endIndex, startIndex, document, project, editor, blockIndent);
+    }
+
+    static void doIndent(
+        final int endIndex,
+        final int startIndex,
+        final Document document,
+        final Project project,
+        final Editor editor,
+        final int blockIndent
+    ) {
+        final int[] caretOffset = {editor.getCaretModel().getOffset()};
+
+        boolean bulkMode = endIndex - startIndex > 50;
+        DocumentUtil.executeInBulk(document, bulkMode, () -> {
+            List<Integer> nonModifiableLines = new ArrayList<>();
+            if (project != null) {
+                PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
+                IndentStrategy indentStrategy = IndentStrategy.forFile(file);
+                // it's not default indent strategy
+                if (indentStrategy.getLanguage() != Language.ANY) {
+                    for (int i = startIndex; i <= endIndex; i++) {
+                        if (!canIndent(document, file, i, indentStrategy)) {
+                            nonModifiableLines.add(i);
+                        }
+                    }
+                }
+            }
+            for (int i = startIndex; i <= endIndex; i++) {
+                if (!nonModifiableLines.contains(i)) {
+                    caretOffset[0] = EditorActionUtil.indentLine(project, editor, i, blockIndent, caretOffset[0]);
+                }
+            }
+        });
+
+        editor.getCaretModel().moveToOffset(caretOffset[0]);
+    }
+
+    static boolean canIndent(Document document, PsiFile file, int line, @Nonnull IndentStrategy indentStrategy) {
+        int offset = document.getLineStartOffset(line);
+        if (file != null) {
+            PsiElement element = file.findElementAt(offset);
+            if (element != null) {
+                return indentStrategy.canIndent(element);
+            }
+        }
+        return true;
+    }
 }

@@ -20,7 +20,7 @@ import consulo.codeEditor.action.EditorAction;
 
 @ActionImpl(id = "EditorLookupDown")
 public class LookupHandlerDownAction extends EditorAction {
-  public LookupHandlerDownAction() {
-    super(new LookupActionHandler.UpDownInEditorHandler(false));
-  }
+    public LookupHandlerDownAction() {
+        super(new LookupActionHandler.UpDownInEditorHandler(false));
+    }
 }

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 6:29:03 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.action.EditorActionUtil;
@@ -29,19 +20,27 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 
+/*
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: May 14, 2002
+ * Time: 6:29:03 PM
+ * To change template for new class use
+ * Code Style | Class Templates options (Tools | IDE Options).
+ */
 public class LineEndAction extends TextComponentEditorAction {
-  public LineEndAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    public Handler() {
-      super(true);
+    public LineEndAction() {
+        super(new Handler());
     }
 
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      EditorActionUtil.moveCaretToLineEnd(editor, false);
+    private static class Handler extends EditorActionHandler {
+        public Handler() {
+            super(true);
+        }
+
+        @Override
+        public void execute(Editor editor, DataContext dataContext) {
+            EditorActionUtil.moveCaretToLineEnd(editor, false);
+        }
     }
-  }
 }
