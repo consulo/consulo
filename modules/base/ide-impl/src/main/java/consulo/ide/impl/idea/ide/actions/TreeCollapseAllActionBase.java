@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.dataContext.DataManager;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.TreeExpander;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
@@ -27,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,6 +39,14 @@ import java.util.function.Function;
  * @author max
  */
 public abstract class TreeCollapseAllActionBase extends DumbAwareAction implements DumbAware {
+    protected TreeCollapseAllActionBase(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
