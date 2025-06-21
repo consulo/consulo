@@ -102,12 +102,8 @@ public abstract class ServiceViewItem implements ColoredItem {
 
     ItemPresentation presentation =
       viewOptions == null ? getViewDescriptor().getPresentation() : getViewDescriptor().getCustomPresentation(viewOptions, state);
-    myPresentation = presentation instanceof PresentationData ?
-      (PresentationData)presentation :
-      new PresentationData(presentation.getPresentableText(),
-                           presentation.getLocationString(),
-                           presentation.getIcon(false),
-                           null);
+    myPresentation = presentation instanceof PresentationData presentationData ? presentationData
+      : new PresentationData(presentation.getPresentableText(), presentation.getLocationString(), presentation.getIcon(false), null);
     return myPresentation;
   }
 

@@ -15,22 +15,33 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.ActionManager;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
+import jakarta.annotation.Nonnull;
 
 public class ExpandAllToolbarAction extends TreeExpandAllActionBase {
     private TreeExpander myTreeExpander;
 
     public ExpandAllToolbarAction(TreeExpander treeExpander) {
-        myTreeExpander = treeExpander;
-        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPAND_ALL));
+        this(treeExpander, LocalizeValue.empty());
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public ExpandAllToolbarAction(TreeExpander treeExpander, String description) {
-        this(treeExpander);
-        getTemplatePresentation().setDescription(description);
+        this(treeExpander, LocalizeValue.ofNullable(description));
+    }
+
+    public ExpandAllToolbarAction(TreeExpander treeExpander, @Nonnull LocalizeValue description) {
+        super(ActionLocalize.actionExpandallText(), description, PlatformIconGroup.actionsExpandall());
+        myTreeExpander = treeExpander;
+        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPAND_ALL));
     }
 
     @Override

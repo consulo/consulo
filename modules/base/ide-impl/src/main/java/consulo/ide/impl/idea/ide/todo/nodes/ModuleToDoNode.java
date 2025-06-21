@@ -17,8 +17,8 @@
 package consulo.ide.impl.idea.ide.todo.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ide.impl.idea.ide.todo.TodoTreeBuilder;
 import consulo.ide.impl.idea.ide.todo.TodoTreeStructure;
@@ -95,8 +95,8 @@ public class ModuleToDoNode extends BaseToDoNode<Module> {
     if (DumbService.getInstance(getProject()).isDumb()) return;
     String newName = getValue().getName();
     int todoItemCount = getTodoItemCount(getValue());
-    presentation.setLocationString(IdeBundle.message("node.todo.group", todoItemCount));
-    presentation.setIcon(AllIcons.Nodes.Module);
+    presentation.setLocationString(IdeLocalize.nodeTodoGroup(todoItemCount));
+    presentation.setIcon(PlatformIconGroup.nodesModule());
     presentation.setPresentableText(newName);
   }
 

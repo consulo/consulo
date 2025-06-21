@@ -30,6 +30,7 @@ import consulo.module.content.layer.orderEntry.*;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
@@ -157,6 +158,6 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
 
     @Override
     public String getNavigateActionText(boolean focusEditor) {
-        return "Open Library Settings";
+        return ProjectUIViewLocalize.actionOpenLibrarySettingsText().get();
     }
 }

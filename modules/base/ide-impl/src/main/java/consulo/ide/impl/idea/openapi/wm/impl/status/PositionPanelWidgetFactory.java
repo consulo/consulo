@@ -5,20 +5,20 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "positionWidget")
 public class PositionPanelWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-  @Override
-  @Nonnull
-  public String getDisplayName() {
-    return UIBundle.message("status.bar.position.widget.name");
-  }
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return UILocalize.statusBarPositionWidgetName().get();
+    }
 
-  @Override
-  @Nonnull
-  public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new PositionPanel(project, this);
-  }
+    @Override
+    @Nonnull
+    public StatusBarWidget createWidget(@Nonnull Project project) {
+        return new PositionPanel(project, this);
+    }
 }

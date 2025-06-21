@@ -6,38 +6,35 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "memoryIndicatorWidget", order = "last")
 public class MemoryIndicatorWidgetFactory implements StatusBarWidgetFactory {
-  @Override
-  public
-  @Nls
-  @Nonnull
-  String getDisplayName() {
-    return UIBundle.message("status.bar.memory.usage.widget.name");
-  }
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return UILocalize.statusBarMemoryUsageWidgetName().get();
+    }
 
-  @Override
-  public boolean isAvailable(@Nonnull Project project) {
-    return true;
-  }
+    @Override
+    public boolean isAvailable(@Nonnull Project project) {
+        return true;
+    }
 
-  @Override
-  public boolean isEnabledByDefault() {
-    return false;
-  }
+    @Override
+    public boolean isEnabledByDefault() {
+        return false;
+    }
 
-  @Override
-  @Nonnull
-  public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new MemoryUsagePanel(project, this);
-  }
+    @Override
+    @Nonnull
+    public StatusBarWidget createWidget(@Nonnull Project project) {
+        return new MemoryUsagePanel(project, this);
+    }
 
-  @Override
-  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
-    return true;
-  }
+    @Override
+    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+        return true;
+    }
 }

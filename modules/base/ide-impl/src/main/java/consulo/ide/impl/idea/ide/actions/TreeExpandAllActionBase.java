@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
@@ -23,6 +24,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,6 +32,14 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public abstract class TreeExpandAllActionBase extends DumbAwareAction implements DumbAware {
+    protected TreeExpandAllActionBase(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
+
     @Nullable
     protected abstract TreeExpander getExpander(DataContext dataContext);
 

@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ProjectViewNode;
@@ -108,7 +109,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
 
     @Override
     public String getNavigateActionText(boolean focusEditor) {
-        return "Open Module Settings";
+        return ProjectUIViewLocalize.actionOpenModuleSettingsText().get();
     }
 
     @Override

@@ -29,73 +29,73 @@ import java.util.function.Consumer;
  * User: spLeaner
  */
 public interface StatusBarWidget extends Disposable {
-  @Nonnull
-  @Deprecated(forRemoval = true)
-  default String ID() {
-    return getId();
-  }
-
-  @Nonnull
-  String getId();
-
-  @Nullable
-  WidgetPresentation getPresentation();
-
-  void install(@Nonnull final StatusBar statusBar);
-
-  @RequiredUIAccess
-  default void beforeUpdate() {
-  }
-
-  interface Multiframe extends StatusBarWidget {
-    StatusBarWidget copy();
-  }
-
-  interface WidgetPresentation {
-    @Nullable
-    String getTooltipText();
-
-    @Nullable
-    default String getShortcutText() {
-      return null;
+    @Nonnull
+    @Deprecated(forRemoval = true)
+    default String ID() {
+        return getId();
     }
 
-    @Nullable
-    Consumer<MouseEvent> getClickConsumer();
-  }
-
-  interface IconPresentation extends WidgetPresentation {
-    @Nullable
-    Image getIcon();
-  }
-
-  interface TextPresentation extends WidgetPresentation {
     @Nonnull
-    String getText();
-
-    float getAlignment();
-  }
-
-  interface MultipleTextValuesPresentation extends WidgetPresentation {
-    /**
-     * @return null means the widget is unable to show the popup
-     */
-    @Nullable
-    ListPopup getPopupStep();
+    String getId();
 
     @Nullable
+    WidgetPresentation getPresentation();
+
+    void install(@Nonnull StatusBar statusBar);
+
     @RequiredUIAccess
-    String getSelectedValue();
-
-    @Nonnull
-    @Deprecated
-    default String getMaxValue() {
-      return "";
+    default void beforeUpdate() {
     }
 
-    @Nullable
-    default Image getIcon() {
-      return null;
+    interface Multiframe extends StatusBarWidget {
+        StatusBarWidget copy();
     }
-  }
+
+    interface WidgetPresentation {
+        @Nullable
+        String getTooltipText();
+
+        @Nullable
+        default String getShortcutText() {
+            return null;
+        }
+
+        @Nullable
+        Consumer<MouseEvent> getClickConsumer();
+    }
+
+    interface IconPresentation extends WidgetPresentation {
+        @Nullable
+        Image getIcon();
+    }
+
+    interface TextPresentation extends WidgetPresentation {
+        @Nonnull
+        String getText();
+
+        float getAlignment();
+    }
+
+    interface MultipleTextValuesPresentation extends WidgetPresentation {
+        /**
+         * @return null means the widget is unable to show the popup
+         */
+        @Nullable
+        ListPopup getPopupStep();
+
+        @Nullable
+        @RequiredUIAccess
+        String getSelectedValue();
+
+        @Nonnull
+        @Deprecated
+        default String getMaxValue() {
+            return "";
+        }
+
+        @Nullable
+        default Image getIcon() {
+            return null;
+        }
+    }
 }

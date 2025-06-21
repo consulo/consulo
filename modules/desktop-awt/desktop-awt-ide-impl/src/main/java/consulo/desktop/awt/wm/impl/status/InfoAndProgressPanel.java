@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.impl.status;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
@@ -73,6 +72,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     private final Set<InlineProgressIndicator> myDirtyIndicators = Sets.newHashSet(HashingStrategy.identity());
     private final Update myUpdateIndicators = new Update("UpdateIndicators", false, 1) {
         @Override
+        @RequiredUIAccess
         public void run() {
             List<InlineProgressIndicator> indicators;
             synchronized (myDirtyIndicators) {
@@ -117,6 +117,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
+    @RequiredUIAccess
     private void handle(MouseEvent e) {
         if (UIUtil.isActionClick(e, MouseEvent.MOUSE_PRESSED)) {
             if (!myPopup.isShowing()) {
@@ -170,9 +171,10 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
+    @RequiredUIAccess
     public void addProgress(@Nonnull ProgressIndicator original, @Nonnull TaskInfo info) {
         synchronized (myOriginals) {
-            final boolean veryFirst = !hasProgressIndicators();
+            boolean veryFirst = !hasProgressIndicators();
 
             myOriginals.add((ProgressIndicatorEx)original);
             myInfos.add(info);
@@ -204,18 +206,19 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
+    @RequiredUIAccess
     private void removeProgress(@Nonnull MyInlineProgressIndicator progress) {
         synchronized (myOriginals) {
             if (!myInline2Original.containsKey(progress)) {
                 return; // already disposed
             }
 
-            final boolean last = myOriginals.size() == 1;
-            final boolean beforeLast = myOriginals.size() == 2;
+            boolean last = myOriginals.size() == 1;
+            boolean beforeLast = myOriginals.size() == 2;
 
             myPopup.removeIndicator(progress);
 
-            final ProgressIndicatorEx original = removeFromMaps(progress);
+            ProgressIndicatorEx original = removeFromMaps(progress);
             if (myOriginals.contains(original)) {
                 Disposer.dispose(progress);
                 return;
@@ -241,7 +244,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     }
 
     private ProgressIndicatorEx removeFromMaps(@Nonnull MyInlineProgressIndicator progress) {
-        final ProgressIndicatorEx original = myInline2Original.get(progress);
+        ProgressIndicatorEx original = myInline2Original.get(progress);
 
         myInline2Original.remove(progress);
         synchronized (myDirtyIndicators) {
@@ -250,7 +253,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
         myOriginal2Inlines.remove(original, progress);
         if (myOriginal2Inlines.get(original) == null) {
-            final int originalIndex = myOriginals.indexOf(original);
+            int originalIndex = myOriginals.indexOf(original);
             myOriginals.remove(originalIndex);
             myInfos.remove(originalIndex);
         }
@@ -258,6 +261,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         return original;
     }
 
+    @RequiredUIAccess
     private void openProcessPopup(boolean requestFocus) {
         synchronized (myOriginals) {
             if (myPopup.isShowing()) {
@@ -274,6 +278,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
+    @RequiredUIAccess
     void hideProcessPopup() {
         synchronized (myOriginals) {
             if (!myPopup.isShowing()) {
@@ -331,10 +336,11 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         super.removeAll();
     }
 
+    @RequiredUIAccess
     private void buildInInlineIndicator(@Nonnull MyInlineProgressIndicator inline) {
         removeAll();
         
-        final JRootPane pane = getRootPane();
+        JRootPane pane = getRootPane();
         if (pane == null) {
             return; // e.g. project frame is closed
         }
@@ -349,7 +355,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     }
 
     public BalloonHandler notifyByBalloon(MessageType type, String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
-        final Balloon balloon = JBPopupFactory.getInstance()
+        Balloon balloon = JBPopupFactory.getInstance()
             .createHtmlTextBalloonBuilder(
                 htmlBody.replace("\n", "<br>"),
                 icon != null ? icon : type.getDefaultIcon(),
@@ -374,11 +380,11 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                 balloon.show(new RelativePoint(comp, point), Balloon.Position.above);
             }
             else {
-                final JRootPane rootPane = SwingUtilities.getRootPane(comp);
+                JRootPane rootPane = SwingUtilities.getRootPane(comp);
                 if (rootPane != null && rootPane.isShowing()) {
-                    final Container contentPane = rootPane.getContentPane();
-                    final Rectangle bounds = contentPane.getBounds();
-                    final Point target = UIUtil.getCenterPoint(bounds, JBUI.size(1, 1));
+                    Container contentPane = rootPane.getContentPane();
+                    Rectangle bounds = contentPane.getBounds();
+                    Point target = UIUtil.getCenterPoint(bounds, JBUI.size(1, 1));
                     target.y = bounds.height - 3;
                     balloon.show(new RelativePoint(contentPane, target), Balloon.Position.above);
                 }
@@ -389,6 +395,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     }
 
     @Nonnull
+    @RequiredUIAccess
     private MyInlineProgressIndicator createInlineDelegate(@Nonnull TaskInfo info, @Nonnull ProgressIndicatorEx original, boolean compact) {
         Collection<MyInlineProgressIndicator> inlines = myOriginal2Inlines.get(original);
         if (inlines != null) {
@@ -407,11 +414,13 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         if (compact) {
             inline.getComponent().addMouseListener(new MouseAdapter() {
                 @Override
+                @RequiredUIAccess
                 public void mousePressed(MouseEvent e) {
                     handle(e);
                 }
 
                 @Override
+                @RequiredUIAccess
                 public void mouseReleased(MouseEvent e) {
                     handle(e);
                 }
@@ -421,6 +430,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         return inline;
     }
 
+    @RequiredUIAccess
     private void triggerPopupShowing() {
         if (myPopup.isShowing()) {
             hideProcessPopup();
@@ -434,7 +444,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         return myPopup.isShowing();
     }
 
-    public void setProcessWindowOpen(final boolean open) {
+    @RequiredUIAccess
+    public void setProcessWindowOpen(boolean open) {
         if (open) {
             openProcessPopup(true);
         }
@@ -492,7 +503,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                 ProgressSuspender suspender = getSuspender();
                 presentation.setEnabledAndVisible(suspender != null);
                 if (suspender != null) {
-                    presentation.setIcon(suspender.isSuspended() ? AllIcons.Actions.Resume : AllIcons.Actions.Pause);
+                    presentation.setIcon(suspender.isSuspended() ? PlatformIconGroup.actionsResume() : PlatformIconGroup.actionsPause());
                     presentation.setText(suspender.isSuspended() ? "Resume" : "Pause");
                 }
             }
@@ -500,7 +511,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
         private ProgressIndicatorEx myOriginal;
 
-        MyInlineProgressIndicator(final boolean compact, @Nonnull TaskInfo task, @Nonnull ProgressIndicatorEx original) {
+        @RequiredUIAccess
+        MyInlineProgressIndicator(boolean compact, @Nonnull TaskInfo task, @Nonnull ProgressIndicatorEx original) {
             super(compact, task);
             myOriginal = original;
             original.addStateDelegate(this);
@@ -546,7 +558,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
 
         @Override
-        public void finish(@Nonnull final TaskInfo task) {
+        public void finish(@Nonnull TaskInfo task) {
             super.finish(task);
             queueRunningUpdate(() -> removeProgress(this));
         }
@@ -563,6 +575,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
 
         @Override
+        @RequiredUIAccess
         protected void queueProgressUpdate() {
             synchronized (myDirtyIndicators) {
                 myDirtyIndicators.add(this);
@@ -571,7 +584,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
 
         @Override
-        protected void queueRunningUpdate(@Nonnull final Runnable update) {
+        protected void queueRunningUpdate(@RequiredUIAccess @Nonnull final Runnable update) {
             myUpdateQueue.queue(new Update(new Object(), false, 0) {
                 @Override
                 public void run() {
@@ -581,6 +594,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
 
         @Override
+        @RequiredUIAccess
         public void updateProgressNow() {
             myProgress.setVisible(!PowerSaveMode.isEnabled() || !isPaintingIndeterminate());
             super.updateProgressNow();

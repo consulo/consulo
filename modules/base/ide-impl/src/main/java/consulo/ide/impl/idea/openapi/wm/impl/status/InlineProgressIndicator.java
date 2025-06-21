@@ -26,7 +26,6 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class InlineProgressIndicator extends ProgressIndicatorBase implements Disposable {
-
     private final ActionToolbar myToolbar;
 
     private class CancelAction extends DumbAwareAction {
@@ -100,21 +99,23 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
             myProcessName.setText(processInfo.getTitle());
             myComponent.add(captionPanel, BorderLayout.NORTH);
 
-            final NonOpaquePanel content = new NonOpaquePanel(new BorderLayout());
+            NonOpaquePanel content = new NonOpaquePanel(new BorderLayout());
             content.setBorder(JBUI.Borders.empty(2));
-            
+
             myComponent.add(content, BorderLayout.CENTER);
 
             content.add(toolbar, BorderLayout.EAST);
             content.add(myText, BorderLayout.NORTH);
 
             // remove expanding
-            NonOpaquePanel progressWrapper = new NonOpaquePanel(new MigLayout(new LC()
-                .fillX()
-                .alignY("center")
-                .insets("")
-                .noVisualPadding(),
-                new AC().gap("0")));
+            NonOpaquePanel progressWrapper = new NonOpaquePanel(new MigLayout(
+                new LC()
+                    .fillX()
+                    .alignY("center")
+                    .insets("")
+                    .noVisualPadding(),
+                new AC().gap("0")
+            ));
             progressWrapper.add(myProgress, new CC().growX().alignY("center"));
 
             content.add(progressWrapper, BorderLayout.CENTER);
@@ -135,6 +136,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         queueProgressUpdate();
     }
 
+    @RequiredUIAccess
     public void updateAndRepaint() {
         if (isDisposed()) {
             return;
@@ -145,6 +147,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         myComponent.repaint();
     }
 
+    @RequiredUIAccess
     public void updateProgressNow() {
         if (isPaintingIndeterminate()) {
             myProgress.setIndeterminate(true);
@@ -197,6 +200,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         return false;
     }
 
+    @RequiredUIAccess
     protected void queueProgressUpdate() {
         updateAndRepaint();
     }

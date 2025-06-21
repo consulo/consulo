@@ -25,6 +25,7 @@ import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesToGroupAction;
 import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesToSubGroupAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.LangDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.ModuleGroup;
@@ -38,45 +39,47 @@ import java.util.Collections;
 import java.util.List;
 
 public class MoveModuleToGroup extends ActionGroup {
-  private final ModuleGroup myModuleGroup;
+    private final ModuleGroup myModuleGroup;
 
-  public MoveModuleToGroup(ModuleGroup moduleGroup) {
-    myModuleGroup = moduleGroup;
-    setPopup(true);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e){
-    final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
-    boolean active = project != null && modules != null && modules.length != 0;
-    final Presentation presentation = e.getPresentation();
-    presentation.setVisible(active);
-    presentation.setText(myModuleGroup.presentableText());
-  }
-
-  @Override
-  @Nonnull
-  @RequiredReadAction
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    if (e == null) return EMPTY_ARRAY;
-
-    List<ModuleGroup> children = new ArrayList<>(myModuleGroup.childGroups(e.getDataContext()));
-    Collections.sort ( children, (moduleGroup1,moduleGroup2) -> {
-        assert moduleGroup1.getGroupPath().length == moduleGroup2.getGroupPath().length;
-        return moduleGroup1.toString().compareToIgnoreCase(moduleGroup2.toString());
-      });
-
-    List<AnAction> result = new ArrayList<>();
-    result.add(new MoveModulesToGroupAction(myModuleGroup, IdeLocalize.actionMoveModuleToThisGroup().get()));
-    result.add(new MoveModulesToSubGroupAction(myModuleGroup));
-     result.add(AnSeparator.getInstance());
-    for (final ModuleGroup child : children) {
-      result.add(new MoveModuleToGroup(child));
+    public MoveModuleToGroup(ModuleGroup moduleGroup) {
+        myModuleGroup = moduleGroup;
+        setPopup(true);
     }
 
-    return result.toArray(new AnAction[result.size()]);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Project project = dataContext.getData(Project.KEY);
+        Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        boolean active = project != null && modules != null && modules.length != 0;
+        Presentation presentation = e.getPresentation();
+        presentation.setVisible(active);
+        presentation.setText(myModuleGroup.presentableText());
+    }
+
+    @Override
+    @Nonnull
+    @RequiredReadAction
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        if (e == null) {
+            return EMPTY_ARRAY;
+        }
+
+        List<ModuleGroup> children = new ArrayList<>(myModuleGroup.childGroups(e.getDataContext()));
+        Collections.sort(children, (moduleGroup1, moduleGroup2) -> {
+            assert moduleGroup1.getGroupPath().length == moduleGroup2.getGroupPath().length;
+            return moduleGroup1.toString().compareToIgnoreCase(moduleGroup2.toString());
+        });
+
+        List<AnAction> result = new ArrayList<>();
+        result.add(new MoveModulesToGroupAction(myModuleGroup, IdeLocalize.actionMoveModuleToThisGroup(), LocalizeValue.empty()));
+        result.add(new MoveModulesToSubGroupAction(myModuleGroup));
+        result.add(AnSeparator.getInstance());
+        for (ModuleGroup child : children) {
+            result.add(new MoveModuleToGroup(child));
+        }
+
+        return result.toArray(new AnAction[result.size()]);
+    }
 }

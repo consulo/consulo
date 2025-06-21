@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.todo.nodes;
 
-import consulo.ide.IdeBundle;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ide.impl.idea.ide.todo.CurrentFileTodosTreeBuilder;
 import consulo.ide.impl.idea.ide.todo.ToDoSummary;
@@ -106,7 +105,7 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
     if (DumbService.getInstance(getProject()).isDumb()) return;
     int todoItemCount = getTodoItemCount(getValue());
     int fileCount = getFileCount(getValue());
-    presentation.setPresentableText(IdeBundle.message("node.todo.summary", todoItemCount, fileCount));
+    presentation.setPresentableText(IdeLocalize.nodeTodoSummary(todoItemCount, fileCount));
   }
 
   @Override

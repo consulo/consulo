@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
@@ -272,7 +271,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
 
     @Override
     protected void update(@Nonnull PresentationData presentation) {
-      presentation.setIcon(AllIcons.Nodes.Folder);
+      presentation.setIcon(PlatformIconGroup.nodesFolder());
       presentation.setPresentableText(getRootType().getDisplayName());
     }
 
