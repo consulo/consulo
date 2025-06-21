@@ -39,13 +39,12 @@ import jakarta.inject.Inject;
 public class ProjectNewElementAction extends NewElementAction {
     @Inject
     public ProjectNewElementAction(ActionManager actionManager) {
-        super(actionManager);
-
-        Presentation presentation = getTemplatePresentation();
-        LocalizeValue text = ProjectUIViewLocalize.actionNewelementProjectviewText();
-        presentation.setTextValue(text);
-        presentation.setDescriptionValue(text);
-        presentation.setIcon(ImageEffects.layered(PlatformIconGroup.generalAdd(), PlatformIconGroup.generalDropdown()));
+        super(
+            actionManager,
+            ProjectUIViewLocalize.actionNewelementProjectviewText(),
+            ProjectUIViewLocalize.actionNewelementProjectviewText(),
+            ImageEffects.layered(PlatformIconGroup.generalAdd(), PlatformIconGroup.generalDropdown())
+        );
     }
 
     @Override

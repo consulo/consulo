@@ -15,22 +15,33 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.ActionManager;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
+import jakarta.annotation.Nonnull;
 
 public class CollapseAllToolbarAction extends TreeCollapseAllActionBase {
     private TreeExpander myTreeExpander;
 
     public CollapseAllToolbarAction(TreeExpander treeExpander) {
-        myTreeExpander = treeExpander;
-        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_COLLAPSE_ALL));
+        this(treeExpander, LocalizeValue.empty());
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public CollapseAllToolbarAction(TreeExpander treeExpander, String description) {
-        this(treeExpander);
-        getTemplatePresentation().setDescription(description);
+        this(treeExpander, LocalizeValue.ofNullable(description));
+    }
+
+    public CollapseAllToolbarAction(TreeExpander treeExpander, @Nonnull LocalizeValue description) {
+        super(ActionLocalize.actionCollapseallText(), description, PlatformIconGroup.actionsCollapseall());
+        myTreeExpander = treeExpander;
+        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_COLLAPSE_ALL));
     }
 
     @Override

@@ -8,6 +8,10 @@ action.open.library.settings.text:
     text: Open Library Settings
 action.open.module.settings.text:
     text: Open Module Settings
+action.scroll.from.source.description:
+    text: Select the file opened in the active editor
+action.scroll.from.source.text:
+    text: Scroll from Source
 action.show.excluded.files:
     text: Show Excluded Files
 action.show.hide.excluded.files:

@@ -33,33 +33,31 @@ import java.util.List;
  * @author yole
  */
 public class MarkRootGroup extends ActionGroup implements DumbAware {
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
-  }
-
-  @Nonnull
-  @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    if(e == null) {
-      return EMPTY_ARRAY;
-    }
-    Module module = e.getData(LangDataKeys.MODULE);
-    if(module == null) {
-      return EMPTY_ARRAY;
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
     }
 
+    @Nonnull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        if (e == null) {
+            return EMPTY_ARRAY;
+        }
+        Module module = e.getData(LangDataKeys.MODULE);
+        if (module == null) {
+            return EMPTY_ARRAY;
+        }
 
-    List<AnAction> actionList = new ArrayList<AnAction>(5);
- /*   for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
-      actionList.add(new MarkRootAction(contentFolderType));
+        List<AnAction> actionList = new ArrayList<>(5);
+        //for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+        //    actionList.add(new MarkRootAction(contentFolderType));
+        //}
+        //actionList.add(new MarkExcludeRootAction());
+        //if (!actionList.isEmpty()) {
+        //    actionList.add(AnSeparator.getInstance());
+        //    actionList.add(new UnmarkRootAction());
+        //}
+        return actionList.isEmpty() ? AnAction.EMPTY_ARRAY : actionList.toArray(new AnAction[actionList.size()]);
     }
-    actionList.add(new MarkExcludeRootAction());
-    if (!actionList.isEmpty()) {
-      actionList.add(AnSeparator.getInstance());
-      actionList.add(new UnmarkRootAction());
-    }
-         */
-    return actionList.isEmpty() ? AnAction.EMPTY_ARRAY : actionList.toArray(new AnAction[actionList.size()]);
-  }
 }

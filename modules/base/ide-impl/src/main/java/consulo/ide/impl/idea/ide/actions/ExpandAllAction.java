@@ -16,23 +16,21 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.TreeExpander;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "ExpandAll")
 public class ExpandAllAction extends TreeExpandAllActionBase {
+    public ExpandAllAction() {
+        super(ActionLocalize.actionExpandallText(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall());
+    }
+
     @Override
     protected TreeExpander getExpander(DataContext dataContext) {
         return dataContext.getData(PlatformDataKeys.TREE_EXPANDER);
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.actionsExpandall();
     }
 }

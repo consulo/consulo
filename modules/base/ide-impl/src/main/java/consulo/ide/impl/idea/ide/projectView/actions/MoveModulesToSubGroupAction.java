@@ -19,46 +19,53 @@
  */
 package consulo.ide.impl.idea.ide.projectView.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.project.ui.view.tree.ModuleGroup;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.ui.ex.action.Presentation;
-import consulo.module.Module;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.LangDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 
 public class MoveModulesToSubGroupAction extends MoveModulesToGroupAction {
-  public MoveModulesToSubGroupAction(ModuleGroup moduleGroup) {
-    super(moduleGroup, moduleGroup == null ? IdeBundle.message("action.move.module.new.top.level.group") : IdeBundle.message("action.move.module.to.new.sub.group"));
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    String description = IdeBundle.message("action.description.create.new.module.group");
-    presentation.setDescription(description);
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
-    final String[] newGroup;
-    if (myModuleGroup != null) {
-      String message = IdeBundle.message("prompt.specify.name.of.module.subgroup", myModuleGroup.presentableText(), whatToMove(modules));
-      String subgroup = Messages.showInputDialog(message, IdeBundle.message("title.module.sub.group"), Messages.getQuestionIcon());
-      if (subgroup == null || "".equals(subgroup.trim())) return;
-      newGroup = ArrayUtil.append(myModuleGroup.getGroupPath(), subgroup);
-    }
-    else {
-      String message = IdeBundle.message("prompt.specify.module.group.name", whatToMove(modules));
-      String group = Messages.showInputDialog(message, IdeBundle.message("title.module.group"), Messages.getQuestionIcon());
-      if (group == null || "".equals(group.trim())) return;
-      newGroup = new String[]{group};
+    public MoveModulesToSubGroupAction(ModuleGroup moduleGroup) {
+        super(
+            moduleGroup,
+            moduleGroup == null
+                ? IdeLocalize.actionMoveModuleNewTopLevelGroup()
+                : IdeLocalize.actionMoveModuleToNewSubGroup(),
+            IdeLocalize.actionDescriptionCreateNewModuleGroup()
+        );
     }
 
-    doMove(modules, new ModuleGroup(newGroup), dataContext);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        String[] newGroup;
+        if (myModuleGroup != null) {
+            LocalizeValue message =
+                IdeLocalize.promptSpecifyNameOfModuleSubgroup(myModuleGroup.presentableText(), whatToMove(modules));
+            String subgroup = Messages.showInputDialog(message.get(), IdeLocalize.titleModuleSubGroup().get(), UIUtil.getQuestionIcon());
+            if (subgroup == null || "".equals(subgroup.trim())) {
+                return;
+            }
+            newGroup = ArrayUtil.append(myModuleGroup.getGroupPath(), subgroup);
+        }
+        else {
+            LocalizeValue message = IdeLocalize.promptSpecifyModuleGroupName(whatToMove(modules));
+            String group = Messages.showInputDialog(message.get(), IdeLocalize.titleModuleGroup().get(), UIUtil.getQuestionIcon());
+            if (group == null || "".equals(group.trim())) {
+                return;
+            }
+            newGroup = new String[]{group};
+        }
+
+        doMove(modules, new ModuleGroup(newGroup), dataContext);
+    }
 }

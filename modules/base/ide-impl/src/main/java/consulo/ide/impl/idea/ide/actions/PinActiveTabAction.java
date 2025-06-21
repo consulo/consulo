@@ -17,7 +17,8 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ContentManagerUtil;
@@ -51,8 +52,12 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         }
     }
 
-    @RequiredUIAccess
+    public PinActiveTabAction() {
+        super(IdeLocalize.actionPinTab(), LocalizeValue.empty(), PlatformIconGroup.generalPin_tab());
+    }
+
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Handler handler = getHandler(e);
         if (handler == null) {
@@ -63,8 +68,8 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         e.getPresentation().putClientProperty(SELECTED_PROPERTY, selected);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         Handler handler = getHandler(e);
         boolean enabled = handler != null;
@@ -73,18 +78,19 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         e.getPresentation().setIcon(e.isFromActionToolbar() ? PlatformIconGroup.generalPin_tab() : null);
         e.getPresentation().putClientProperty(SELECTED_PROPERTY, selected);
 
-        String text;
+        LocalizeValue text;
         // add the word "active" if the target tab is not current
         if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace()) || handler != null && !handler.isActiveTab) {
-            text = selected ? IdeBundle.message("action.unpin.active.tab") : IdeBundle.message("action.pin.active.tab");
+            text = selected ? IdeLocalize.actionUnpinActiveTab() : IdeLocalize.actionPinActiveTab();
         }
         else {
-            text = selected ? IdeBundle.message("action.unpin.tab") : IdeBundle.message("action.pin.tab");
+            text = selected ? IdeLocalize.actionUnpinTab() : IdeLocalize.actionPinTab();
         }
-        e.getPresentation().setText(text);
+        e.getPresentation().setTextValue(text);
         e.getPresentation().setEnabledAndVisible(enabled);
     }
 
+    @RequiredUIAccess
     protected Handler getHandler(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         FileEditorWindow currentWindow = e.getData(FileEditorWindow.DATA_KEY);
@@ -106,6 +112,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     }
 
     @Nullable
+    @RequiredUIAccess
     protected Content getContentFromEvent(@Nonnull AnActionEvent e) {
         Content content = getNonToolWindowContent(e);
         if (content == null) {
@@ -135,6 +142,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     }
 
     @Nullable
+    @RequiredUIAccess
     private static Content getNonToolWindowContent(@Nonnull AnActionEvent e) {
         Content result = null;
         Content[] contents = e.getData(Content.KEY_OF_ARRAY);
@@ -181,6 +189,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         }
 
         @Override
+        @RequiredUIAccess
         protected Content getContentFromEvent(@Nonnull AnActionEvent e) {
             return getToolWindowContent(e);
         }
@@ -194,6 +203,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
         }
 
         @Override
+        @RequiredUIAccess
         protected Content getContentFromEvent(@Nonnull AnActionEvent e) {
             return null;
         }

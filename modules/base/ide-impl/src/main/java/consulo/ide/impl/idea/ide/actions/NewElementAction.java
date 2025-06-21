@@ -30,6 +30,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -45,6 +46,16 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
 
     @Inject
     public NewElementAction(ActionManager actionManager) {
+        myActionManager = actionManager;
+    }
+
+    public NewElementAction(
+        ActionManager actionManager,
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
         myActionManager = actionManager;
     }
 

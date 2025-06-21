@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -27,24 +28,28 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 27/02/2021
+ * @since 2021-02-27
  */
 @ActionImpl(id = "SelectInProjectView")
 public class SelectFileAction extends DumbAwareAction {
-  public SelectFileAction() {
-    super("Scroll from Source", "Select the file open in the active editor", PlatformIconGroup.generalLocate());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public SelectFileAction() {
+        super(
+            ProjectUIViewLocalize.actionScrollFromSourceText(),
+            ProjectUIViewLocalize.actionScrollFromSourceDescription(),
+            PlatformIconGroup.generalLocate()
+        );
     }
 
-    ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(project);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-    projectView.scrollFromSource();
-  }
+        ProjectViewImpl projectView = (ProjectViewImpl) ProjectView.getInstance(project);
+
+        projectView.scrollFromSource();
+    }
 }
