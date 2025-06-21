@@ -59,7 +59,7 @@ public class NotificationProjectTracker implements Disposable {
     public NotificationProjectTracker(@Nonnull Project project, EventLog eventLog) {
         myProject = project;
         myEventLog = eventLog;
-        myProjectModel = new LogModel(project, project);
+        myProjectModel = new LogModel(project.getApplication(), project);
         myEventLogConsole = new EventLogConsole(myProjectModel);
     }
 
