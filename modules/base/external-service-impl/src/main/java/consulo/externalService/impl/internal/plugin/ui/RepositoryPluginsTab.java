@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * User: anna
+ * @author anna
  */
 public class RepositoryPluginsTab extends PluginTab {
     public RepositoryPluginsTab(PluginsPanel pluginsPanel) {

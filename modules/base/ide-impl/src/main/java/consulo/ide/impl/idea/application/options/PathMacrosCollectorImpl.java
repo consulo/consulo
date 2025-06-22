@@ -33,7 +33,7 @@ import java.util.regex.Matcher;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 6, 2004
+ * @since 2004-12-06
  */
 public class PathMacrosCollectorImpl extends PathMacroMap {
   private static final String FILE_PROTOCOL = "file:";

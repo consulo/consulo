@@ -59,8 +59,8 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: anna
- * Date: 01-Jul-2006
+ * @author anna
+ * @since 2006-07-01
  */
 @ExtensionImpl
 public class ScopeChooserConfigurable extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoMargin, ProjectConfigurable {

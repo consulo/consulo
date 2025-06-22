@@ -8,8 +8,8 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 
 /**
- * User: Evgeny.Zakrevsky
- * Date: 8/14/12
+ * @author Evgeny.Zakrevsky
+ * @since 2012-08-14
  */
 public class PlaySavedMacros extends AnAction {
   @Override

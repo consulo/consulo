@@ -31,10 +31,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 6/9/12
- * Time: 5:33 PM
+ * @author Irina.Chernushina
+ * @since 2012-06-09
  */
 public class FavoritesTreeUtil {
   @Nonnull

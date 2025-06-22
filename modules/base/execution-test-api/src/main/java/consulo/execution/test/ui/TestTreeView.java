@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 25-May-2007
- */
 package consulo.execution.test.ui;
 
 import consulo.dataContext.DataContext;
@@ -50,6 +45,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2007-05-25
+ */
 public abstract class TestTreeView extends Tree implements DataProvider, CopyProvider {
   public static final Key<TestFrameworkRunningModel> MODEL_DATA_KEY = Key.create("testFrameworkModel.dataId");
 

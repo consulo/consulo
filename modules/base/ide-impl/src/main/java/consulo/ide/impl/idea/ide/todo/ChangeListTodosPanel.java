@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 27-Jul-2007
- */
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.application.ui.util.TodoPanelSettings;
@@ -35,6 +30,10 @@ import consulo.disposer.Disposer;
 
 import java.util.Collection;
 
+/**
+ * @author anna
+ * @since 2007-07-27
+ */
 public abstract class ChangeListTodosPanel extends TodoPanel{
   private final Alarm myAlarm;
 

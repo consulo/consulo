@@ -33,7 +33,7 @@ import java.awt.*;
 import java.util.EventObject;
 
 /**
- * User: cdr
+ * @author cdr
  */
 class TrafficTooltipRendererImpl extends ComparableObject.Impl implements TrafficTooltipRenderer {
   private TrafficProgressPanel myPanel;

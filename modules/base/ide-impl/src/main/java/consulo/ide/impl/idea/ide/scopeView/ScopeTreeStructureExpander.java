@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 22-Jan-2008
- */
 package consulo.ide.impl.idea.ide.scopeView;
 
 import consulo.annotation.component.ComponentScope;
@@ -25,6 +20,10 @@ import consulo.annotation.component.ExtensionAPI;
 
 import javax.swing.event.TreeWillExpandListener;
 
+/**
+ * @author anna
+ * @since 2008-01-22
+ */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ScopeTreeStructureExpander extends TreeWillExpandListener {
 }

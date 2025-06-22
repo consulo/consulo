@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 16-Jan-2008
- */
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
 import consulo.application.AllIcons;
@@ -25,6 +20,10 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
 
+/**
+ * @author anna
+ * @since 2008-01-16
+ */
 public class ShowModuleGroupsAction extends ToggleAction {
   private final Runnable myUpdate;
 

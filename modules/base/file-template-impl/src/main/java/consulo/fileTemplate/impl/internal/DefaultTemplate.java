@@ -23,7 +23,7 @@ import java.io.IOException;
 
 /**
  * @author Eugene Zhuravlev
- * Date: 3/28/11
+ * @since 2011-03-28
  */
 public class DefaultTemplate {
     private static final Logger LOG = Logger.getInstance(DefaultTemplate.class);

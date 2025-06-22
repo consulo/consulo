@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 25-Jan-2008
- */
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -31,6 +26,10 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2008-01-25
+ */
 public class FileSeparatorUtil {
   @Nonnull
   @RequiredReadAction

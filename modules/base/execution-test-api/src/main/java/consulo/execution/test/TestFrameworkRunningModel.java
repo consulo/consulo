@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 25-May-2007
- */
 package consulo.execution.test;
 
 import consulo.disposer.Disposable;
 import consulo.execution.test.ui.AbstractTestTreeBuilder;
 import consulo.execution.test.ui.TestTreeView;
 
+/**
+ * @author anna
+ * @since 2007-05-25
+ */
 public interface TestFrameworkRunningModel extends Disposable {
   TestConsoleProperties getProperties();
 

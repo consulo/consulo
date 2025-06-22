@@ -33,8 +33,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
-/*
- * @author: MYakovlev
+/**
+ * @author MYakovlev
  */
 public class CreateFromTemplatePanel {
   private JPanel myMainPanel;

@@ -25,9 +25,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
- * User: max
- * Date: Jul 22, 2003
- * Time: 3:33:04 PM
+ * @author max
+ * @since 2003-07-22
  */
 public class EditMacrosAction extends AnAction implements DumbAware {
   @Override

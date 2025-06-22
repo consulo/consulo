@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 26-Dec-2007
- */
 package consulo.ide.ui;
 
 import consulo.annotation.component.ComponentScope;
@@ -34,6 +29,10 @@ import jakarta.annotation.Nullable;
 
 import java.util.Map;
 
+/**
+ * @author anna
+ * @since 2007-12-26
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface OrderRootTypeUIFactory {
     ExtensionPointCacheKey<OrderRootTypeUIFactory, Map<String, OrderRootTypeUIFactory>> KEY =

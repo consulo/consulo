@@ -31,8 +31,8 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: 30-Jan-2006
+ * @author anna
+ * @since 2006-01-30
  */
 public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
   private final SmartPsiElementPointer myPsiElementPointer;

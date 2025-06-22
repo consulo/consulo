@@ -19,7 +19,7 @@ import consulo.colorScheme.ModifiableFontPreferences;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
+ * @author anna
  */
 public class ConsoleFontOptions extends FontOptions {
   public ConsoleFontOptions(ColorAndFontOptions options) {

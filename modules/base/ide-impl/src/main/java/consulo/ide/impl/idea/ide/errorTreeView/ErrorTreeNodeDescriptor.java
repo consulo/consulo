@@ -21,7 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Nov 12, 2004
+ * @since 2004-11-12
  */
 public class ErrorTreeNodeDescriptor extends NodeDescriptor<ErrorTreeElement>{
   private final ErrorTreeElement myElement;

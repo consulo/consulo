@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Nov 12, 2004
+ * @since 2004-11-12
  */
 public abstract class ErrorTreeElement {
   public static final ErrorTreeElement[] EMPTY_ARRAY = new ErrorTreeElement[0];

@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Anna.Kozlova
- * Date: 16-Jul-2006
- * Time: 16:29:04
- */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -30,6 +23,10 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * @author Anna.Kozlova
+ * @since 2006-07-16
+ */
 public class ModuleGroupUtil {
   private ModuleGroupUtil() {
   }

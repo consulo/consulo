@@ -27,11 +27,8 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jul 22, 2003
- * Time: 5:46:17 PM
- * To change this template use Options | File Templates.
+ * @author max
+ * @since 2003-07-22
  */
 public class MacrosGroup extends ActionGroup {
   @Nonnull

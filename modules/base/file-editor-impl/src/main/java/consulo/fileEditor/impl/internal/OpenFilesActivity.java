@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
- * Date: 4/11/12
+ * @since 2012-04-11
  */
 @ExtensionImpl(id = "OpenFilesActivity")
 public class OpenFilesActivity implements PostStartupActivity, DumbAware {

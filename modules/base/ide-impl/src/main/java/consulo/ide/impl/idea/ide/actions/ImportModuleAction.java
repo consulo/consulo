@@ -35,7 +35,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
- * Date: 10/31/12
+ * @since 2012-10-31
  */
 public class ImportModuleAction extends AnAction {
     @RequiredUIAccess

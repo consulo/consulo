@@ -34,7 +34,7 @@ import java.util.zip.ZipFile;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: 3/25/11
+ * @since 2011-03-25
  */
 public class UrlUtil {
   private static final String JAR_SEPARATOR = "!/";

@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 25-May-2007
- */
 package consulo.execution.test;
 
 import consulo.execution.localize.ExecutionLocalize;
@@ -27,6 +22,10 @@ import consulo.ui.ex.JBColor;
 
 import java.awt.*;
 
+/**
+ * @author anna
+ * @since 2007-05-25
+ */
 public class LvcsHelper {
   private static final Color RED = new JBColor(new Color(250, 220, 220), new Color(104, 67, 67));
   private static final Color GREEN = new JBColor(new Color(220, 250, 220), new Color(44, 66, 60));
