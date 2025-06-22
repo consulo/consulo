@@ -44,7 +44,7 @@ import java.util.List;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since May 24, 2010 3:09:52 PM
+ * @since 2010-05-24
  */
 public class AlignmentInColumnsHelper {
 

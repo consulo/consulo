@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
-* User: anna
-* Date: 08-Dec-2008
-*/
 package consulo.language.copyright.impl.internal.action;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -42,6 +37,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2008-12-08
+ */
 @ExtensionImpl(id = "copyright", order = "after code-cleanup")
 public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override

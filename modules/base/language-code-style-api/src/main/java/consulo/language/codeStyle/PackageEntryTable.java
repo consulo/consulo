@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: cdr
+ * @author cdr
  */
 public class PackageEntryTable implements JDOMExternalizable, Cloneable {
     @Nonnull

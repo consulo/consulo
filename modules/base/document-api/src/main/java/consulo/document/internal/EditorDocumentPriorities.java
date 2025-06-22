@@ -20,7 +20,7 @@ package consulo.document.internal;
  * editor.
  *
  * @author Denis Zhdanov
- * @since Sep 13, 2010 2:30:48 PM
+ * @since 2010-09-13
  */
 public class EditorDocumentPriorities {
 

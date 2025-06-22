@@ -17,8 +17,7 @@ package consulo.language.codeStyle.template;
 
 /**
  * @author Alexey Chmutov
- * Date: Jul 6, 2009
- * Time: 8:29:23 PM
+ * @since 2009-07-06
  */
 public interface BlockWithParent {
   BlockWithParent getParent();

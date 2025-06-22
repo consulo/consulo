@@ -37,8 +37,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
- * User: anna
- * Date: 28-Feb-2006
+ * @author anna
+ * @since 2006-02-28
  */
 @Singleton
 @State(name = "AnalysisUIOptions", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})

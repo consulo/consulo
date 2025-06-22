@@ -19,7 +19,7 @@ package consulo.codeEditor;
  * Enumerates types soft wrap-related drawings supported by {@link SoftWrapPainter}.
  *
  * @author Denis Zhdanov
- * @since Jul 1, 2010 5:19:45 PM
+ * @since 2010-07-01
  */
 public enum SoftWrapDrawingType {
   BEFORE_SOFT_WRAP_LINE_FEED, AFTER_SOFT_WRAP

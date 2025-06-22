@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: dsl
- * Date: 05.06.2002
- * Time: 12:25:03
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.refactoring.rename;
 
 import consulo.usage.MoveRenameUsageInfo;
 import consulo.language.psi.PsiElement;
 
+/**
+ * @author dsl
+ * @since 2002-06-05
+ */
 public class CollisionUsageInfo extends MoveRenameUsageInfo {
   public CollisionUsageInfo(PsiElement element, PsiElement referencedElement) {
     super(element, null, referencedElement);

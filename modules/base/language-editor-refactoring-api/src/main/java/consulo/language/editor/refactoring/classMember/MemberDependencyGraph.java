@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: dsl
- * Date: 08.07.2002
- * Time: 17:53:29
- * To change template for new interface use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
 
 import java.util.Set;
 
+/**
+ * @author dsl
+ * @since 2002-07-08
+ */
 public interface MemberDependencyGraph<T extends PsiElement, M extends MemberInfoBase<T>> {
   /**
    * Call this to notify that a new member info have been added

@@ -7,8 +7,8 @@ import consulo.component.util.Iconable;
 import consulo.ui.image.Image;
 
 /**
- * User: anna
- * Date: 11/11/11
+ * @author anna
+ * @since 2011-11-11
  */
 public abstract class BaseRefactoringIntentionAction extends PsiElementBaseIntentionAction implements Iconable, HighPriorityAction {
 

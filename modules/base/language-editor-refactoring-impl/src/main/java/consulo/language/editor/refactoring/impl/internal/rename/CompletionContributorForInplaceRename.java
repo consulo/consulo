@@ -28,8 +28,8 @@ import consulo.language.editor.template.TemplateState;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: 11/22/11
+ * @author anna
+ * @since 2011-11-22
  */
 @ExtensionImpl(order = "first")
 public class CompletionContributorForInplaceRename extends CompletionContributor {

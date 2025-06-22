@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.index.io;
 
 import jakarta.annotation.Nonnull;
@@ -22,7 +21,7 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 10, 2007
+ * @since 2007-12-10
  */
 public interface DataIndexer<Key, Value, Data> {
   @Nonnull

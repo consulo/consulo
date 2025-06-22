@@ -21,7 +21,7 @@ import consulo.codeEditor.*;
  * Holds utility methods for soft wraps-related processing.
  *
  * @author Denis Zhdanov
- * @since Aug 11, 2010 11:03:43 AM
+ * @since 2010-08-11
  */
 public class SoftWrapHelper {
 

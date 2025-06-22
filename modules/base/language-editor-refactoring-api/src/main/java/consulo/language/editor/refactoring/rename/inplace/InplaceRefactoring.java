@@ -96,8 +96,8 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: anna
- * Date: 1/11/12
+ * @author anna
+ * @since 2012-01-11
  */
 public abstract class InplaceRefactoring {
     protected static final Logger LOG = Logger.getInstance(InplaceRefactoring.class);

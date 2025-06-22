@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Author: msk
+ * @author msk
  */
 public abstract class RefactoringDialog extends DialogWrapper {
     private Action myRefactorAction;

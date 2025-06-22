@@ -18,8 +18,8 @@ package consulo.language.editor.refactoring.copy;
 import consulo.language.psi.PsiElement;
 
 /**
- * User: anna
- * Date: 11/30/11
+ * @author anna
+ * @since 2011-11-30
  */
 public abstract class CopyHandlerDelegateBase implements CopyHandlerDelegate {
   public abstract boolean canCopy(PsiElement[] elements, boolean fromUpdate);

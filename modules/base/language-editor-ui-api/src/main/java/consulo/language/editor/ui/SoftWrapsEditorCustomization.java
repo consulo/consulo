@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since Aug 20, 2010 4:54:48 PM
+ * @since 2010-08-20
  */
 public class SoftWrapsEditorCustomization extends SimpleEditorCustomization {
 

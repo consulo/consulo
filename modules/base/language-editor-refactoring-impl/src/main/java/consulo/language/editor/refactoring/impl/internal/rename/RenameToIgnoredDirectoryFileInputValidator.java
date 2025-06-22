@@ -28,8 +28,8 @@ import consulo.language.util.ProcessingContext;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: 4/5/11
+ * @author anna
+ * @since 2011-04-05
  */
 @ExtensionImpl(id = "RenameToIgnoredDirectoryFileInputValidator", order = "last")
 public class RenameToIgnoredDirectoryFileInputValidator implements RenameInputValidatorEx {

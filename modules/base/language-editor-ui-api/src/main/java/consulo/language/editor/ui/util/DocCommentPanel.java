@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: dsl
- * Date: 17.06.2002
- * Time: 20:38:33
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.ui.util;
 
 import consulo.language.editor.ui.localize.LanguageEditorRefactoringUILocalize;
@@ -35,6 +26,10 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author dsl
+ * @since 2002-06-17
+ */
 public class DocCommentPanel {
     private RadioButton myRbJavaDocAsIs = null;
     private RadioButton myRbJavaDocMove = null;

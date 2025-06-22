@@ -32,8 +32,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: 12/27/11
+ * @author anna
+ * @since 2011-12-27
  */
 @ExtensionImpl(order = "before hide-hints")
 public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {

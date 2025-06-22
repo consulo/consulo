@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 /**
- * @since msk
+ * @author msk
  */
 public class DesktopFileEditorWithProviderComposite extends DesktopEditorComposite implements FileEditorWithProviderComposite {
   private static final Logger LOG = Logger.getInstance(DesktopFileEditorWithProviderComposite.class);

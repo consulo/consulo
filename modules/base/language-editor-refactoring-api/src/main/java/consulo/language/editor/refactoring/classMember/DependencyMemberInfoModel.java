@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: dsl
- * Date: 09.07.2002
- * Time: 15:03:42
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
@@ -29,6 +20,10 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
+/**
+ * @author dsl
+ * @since 2002-07-09
+ */
 public abstract class DependencyMemberInfoModel<T extends PsiElement, M extends MemberInfoBase<T>> implements MemberInfoModel<T, M> {
   protected MemberDependencyGraph<T, M> myMemberDependencyGraph;
   private final int myProblemLevel;

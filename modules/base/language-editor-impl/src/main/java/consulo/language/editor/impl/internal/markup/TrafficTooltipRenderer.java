@@ -18,7 +18,7 @@ package consulo.language.editor.impl.internal.markup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 
 /**
- * User: cdr
+ * @author cdr
  */
 public interface TrafficTooltipRenderer extends TooltipRenderer {
   void repaintTooltipWindow();

@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.internal.ast;
 
 import consulo.language.util.CharTable;
 import jakarta.annotation.Nonnull;
 
-/*
- * User: max
- * Date: Sep 16, 2006
+/**
+ * @author max
+ * @since 2006-09-16
  */
 public class IdentityCharTable implements CharTable {
   private IdentityCharTable() { }

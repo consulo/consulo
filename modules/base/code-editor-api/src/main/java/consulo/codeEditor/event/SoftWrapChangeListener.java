@@ -19,7 +19,7 @@ package consulo.codeEditor.event;
  * Defines a contract for the callbacks for soft wraps management notifications (addition/removal).
  *
  * @author Denis Zhdanov
- * @since Jul 8, 2010 6:50:17 PM
+ * @since 2010-07-08
  */
 public interface SoftWrapChangeListener {
 

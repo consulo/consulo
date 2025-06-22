@@ -26,8 +26,8 @@ import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 /**
- * User: anna
- * Date: 12/1/11
+ * @author anna
+ * @since 2011-12-01
  */
 public abstract class SafeDeleteProcessorDelegateBase implements SafeDeleteProcessorDelegate {
   @Nullable

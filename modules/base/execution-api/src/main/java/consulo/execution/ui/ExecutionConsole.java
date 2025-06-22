@@ -19,9 +19,9 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.ComponentContainer;
 
 /**
- * @author Eugene Zhuravlev
- * @since Apr 20, 2004
  * @see ConsoleView for default implemntation
+ * @author Eugene Zhuravlev
+ * @since 2004-04-20
  */
 public interface ExecutionConsole extends ComponentContainer {
   String CONSOLE_CONTENT_ID = "ConsoleContent";

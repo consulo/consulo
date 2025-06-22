@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: dsl
- * Date: 08.07.2002
- * Time: 18:22:48
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -36,6 +27,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author dsl
+ * @since 2002-07-08
+ */
 public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extends PsiElement, M extends MemberInfoBase<T>> implements MemberDependencyGraph<T, M> {
   private static final Logger LOG = Logger.getInstance(UsesMemberDependencyGraph.class);
   protected HashSet<T> mySelectedNormal;

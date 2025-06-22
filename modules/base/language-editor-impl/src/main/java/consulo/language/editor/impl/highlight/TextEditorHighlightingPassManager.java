@@ -27,8 +27,8 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 20-Apr-2006
+ * @author anna
+ * @since 2006-04-20
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class TextEditorHighlightingPassManager {

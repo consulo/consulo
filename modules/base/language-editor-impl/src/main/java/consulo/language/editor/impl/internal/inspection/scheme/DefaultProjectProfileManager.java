@@ -43,8 +43,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * User: anna
- * Date: 30-Nov-2005
+ * @author anna
+ * @since 2005-11-30
  */
 public abstract class DefaultProjectProfileManager implements ProjectProfileManager, PersistentStateComponent<Element> {
   protected static final Logger LOG = Logger.getInstance(DefaultProjectProfileManager.class);

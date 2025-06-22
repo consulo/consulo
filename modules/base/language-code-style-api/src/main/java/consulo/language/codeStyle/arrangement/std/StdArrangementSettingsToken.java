@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 /**
  * Represents ArrangementSettingsToken designed for use with standard GUI, i.e. a token that knows its UI role.
  * @author Roman.Shein
- * Date: 19.07.13
+ * @since 2013-07-19
  */
 public class StdArrangementSettingsToken extends ArrangementSettingsToken {
 

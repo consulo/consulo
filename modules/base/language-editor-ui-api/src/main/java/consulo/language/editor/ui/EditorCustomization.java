@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * with all necessary features applied or disabled.
  *
  * @author Denis Zhdanov
- * @since Aug 20, 2010 4:26:04 PM
+ * @since 2010-08-20
  */
 public interface EditorCustomization extends Consumer<EditorEx> {
 
