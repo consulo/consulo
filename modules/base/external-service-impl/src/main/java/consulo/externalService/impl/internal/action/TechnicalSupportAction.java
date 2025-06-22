@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 26.09.2006
- * Time: 19:33:19
- */
 package consulo.externalService.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
@@ -30,6 +23,10 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author yole
+ * @since 2006-09-26
+ */
 @ActionImpl(id = "TechnicalSupport")
 public class TechnicalSupportAction extends DumbAwareAction {
     @RequiredUIAccess

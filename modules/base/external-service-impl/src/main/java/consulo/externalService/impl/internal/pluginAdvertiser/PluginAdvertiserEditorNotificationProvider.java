@@ -49,8 +49,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 /**
- * User: anna
- * Date: 10/11/13
+ * @author anna
+ * @since 2013-10-11
  */
 @ExtensionImpl
 public class PluginAdvertiserEditorNotificationProvider implements EditorNotificationProvider, DumbAware {

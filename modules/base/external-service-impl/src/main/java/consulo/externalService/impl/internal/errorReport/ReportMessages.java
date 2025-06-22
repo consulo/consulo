@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author: Eugene Zhuravlev
- * Date: Mar 18, 2003
- * Time: 1:25:33 PM
- */
 package consulo.externalService.impl.internal.errorReport;
 
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 
+/**
+ * @author Eugene Zhuravlev
+ * @since 2003-03-18
+ */
 public class ReportMessages {
 
   public static final NotificationGroup GROUP =

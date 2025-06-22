@@ -47,7 +47,7 @@ import java.awt.event.FocusListener;
 
 /**
  * @author MYakovlev
- * Date: Jul 1, 2002
+ * @since 2002-07-01
  */
 @Singleton
 @ServiceImpl

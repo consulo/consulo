@@ -25,8 +25,8 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**
- * User: anna
- * Date: 17-Mar-2006
+ * @author anna
+ * @since 2006-03-17
  */
 public class DefaultSearchableConfigurable implements Configurable {
   private final SearchableConfigurable myDelegate;

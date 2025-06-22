@@ -23,8 +23,7 @@ import consulo.language.psi.search.PsiTodoSearchHelper;
 
 /**
  * @author irengrig
- *         Date: 2/21/11
- *         Time: 4:28 PM
+ * @since 2011-02-21
  */
 public class CustomChangelistTodoTreeStructure extends TodoTreeStructure {
   private final PsiTodoSearchHelper mySearchHelper;

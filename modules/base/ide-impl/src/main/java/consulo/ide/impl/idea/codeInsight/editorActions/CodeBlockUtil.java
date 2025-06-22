@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: mike
- * Date: Aug 14, 2002
- * Time: 4:06:30 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.language.editor.action.BraceMatchingUtil;
@@ -42,6 +33,10 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 
+/**
+ * @author mike
+ * @since 2002-08-14
+ */
 public class CodeBlockUtil {
   private CodeBlockUtil() {
   }

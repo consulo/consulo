@@ -1,8 +1,3 @@
-
-/*
- * User: anna
- * Date: 05-Apr-2007
- */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
@@ -10,7 +5,9 @@ import consulo.ide.impl.idea.ide.projectView.impl.GroupByTypeComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 
 /**
+ * @author anna
  * @author Konstantin Bulenkov
+ * @since 2007-04-05
  */
 final class FavoriteComparator extends GroupByTypeComparator {
   public FavoriteComparator() {

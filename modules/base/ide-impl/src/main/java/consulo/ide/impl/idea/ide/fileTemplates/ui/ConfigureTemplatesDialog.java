@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.ui.Size2D;
 
 /**
- * @author: MYakovlev
+ * @author MYakovlev
  * @since 2002-10-18
  */
 public class ConfigureTemplatesDialog extends SingleConfigurableEditor{

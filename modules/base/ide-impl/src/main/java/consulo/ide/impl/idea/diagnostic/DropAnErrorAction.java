@@ -22,11 +22,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Nov 6, 2003
- * Time: 4:05:51 PM
- * To change this template use Options | File Templates.
+ * @author stathik
+ * @since 2003-11-06
  */
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnErrorAction extends DumbAwareAction {

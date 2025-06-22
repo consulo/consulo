@@ -19,7 +19,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: 4/6/11
+ * @since 2011-04-06
  */
 public final class BundledFileTemplate extends FileTemplateBase {
 

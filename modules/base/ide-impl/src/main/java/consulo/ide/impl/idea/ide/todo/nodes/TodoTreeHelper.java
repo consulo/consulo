@@ -37,8 +37,8 @@ import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
- * User: anna
- * Date: May 27, 2005
+ * @author anna
+ * @since 2005-05-27
  */
 public class TodoTreeHelper {
   public static void addPackagesToChildren(final ArrayList<AbstractTreeNode> children, Project project, @Nullable Module module, final TodoTreeBuilder builder) {

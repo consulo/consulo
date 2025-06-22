@@ -34,10 +34,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * @author irengrig
- * Date: 2/24/11
- * Time: 3:38 PM
  * moved from inner class
+ * @author irengrig
+ * @since 2011-02-24
  */
 public class SetTodoFilterAction extends ActionGroup implements DumbAware {
   private final Project myProject;

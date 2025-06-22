@@ -1,7 +1,3 @@
-/*
- * User: anna
- * Date: 29-May-2008
- */
 package consulo.ide.impl.idea.coverage.actions;
 
 import com.intellij.rt.coverage.data.LineCoverage;
@@ -43,6 +39,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author anna
+ * @since 2008-05-29
+ */
 public class ShowCoveringTestsAction extends AnAction {
     private static final Logger LOG = Logger.getInstance(ShowCoveringTestsAction.class);
 

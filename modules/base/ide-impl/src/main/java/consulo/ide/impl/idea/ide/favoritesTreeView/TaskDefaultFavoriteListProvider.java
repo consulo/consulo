@@ -43,10 +43,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 6/7/12
- * Time: 4:33 PM
+ * @author Irina.Chernushina
+ * @since 2012-06-07
  */
 @ExtensionImpl
 public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvider {

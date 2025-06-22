@@ -31,10 +31,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: lene
- * Date: 04.04.11
- * Time: 17:40
+ * @author lene
+ * @since 2011-04-04
  */
 public class ForcedBuildFileAttribute {
   private static final Logger LOG = Logger.getInstance(ForcedBuildFileAttribute.class);

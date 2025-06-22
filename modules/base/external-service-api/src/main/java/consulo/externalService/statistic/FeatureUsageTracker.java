@@ -22,8 +22,8 @@ import consulo.component.ComponentManager;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: Jan 28, 2005
+ * @author anna
+ * @since 2005-01-28
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FeatureUsageTracker {

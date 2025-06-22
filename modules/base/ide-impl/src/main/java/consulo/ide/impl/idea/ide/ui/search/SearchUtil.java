@@ -50,8 +50,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * User: anna
- * Date: 07-Feb-2006
+ * @author anna
+ * @since 2006-02-07
  */
 public class SearchUtil {
   private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");

@@ -23,11 +23,8 @@ import consulo.disposer.Disposer;
 import javax.swing.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jul 21, 2003
- * Time: 10:38:42 PM
- * To change this template use Options | File Templates.
+ * @author max
+ * @since 2003-07-21
  */
 public class ActionMacroConfigurable implements Configurable {
   private ActionMacroConfigurationPanel myPanel;

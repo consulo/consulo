@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Nov 13, 2004
+ * @since 2004-11-13
  */
 public class TestNewErrorViewAction extends TestErrorViewAction{
   protected ErrorTreeView createView(Project project) {

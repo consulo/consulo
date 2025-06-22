@@ -58,7 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author: rvishnyakov
+ * @author rvishnyakov
  */
 public class ManageCodeStyleSchemesDialog extends DialogWrapper {
   private JPanel myContentPane;

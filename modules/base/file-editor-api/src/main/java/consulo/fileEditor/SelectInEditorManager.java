@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author MYakovlev
- * Date: Jul 1, 2002
+ * @since 2002-07-01
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface SelectInEditorManager {

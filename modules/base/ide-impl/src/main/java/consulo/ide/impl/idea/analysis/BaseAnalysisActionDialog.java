@@ -51,8 +51,8 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: anna
- * Date: Jul 6, 2005
+ * @author anna
+ * @since 2005-07-06
  */
 public class BaseAnalysisActionDialog extends DialogWrapper {
   private JPanel myPanel;

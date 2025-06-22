@@ -32,8 +32,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: 03-Jul-2006
+ * @author anna
+ * @since 2006-07-03
  */
 public class EditScopesDialog extends SingleConfigurableEditor {
   private NamedScope mySelectedScope;

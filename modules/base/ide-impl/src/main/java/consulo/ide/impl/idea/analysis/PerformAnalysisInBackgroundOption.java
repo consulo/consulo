@@ -1,14 +1,13 @@
-
-/*
- * User: anna
- * Date: 22-Jan-2007
- */
 package consulo.ide.impl.idea.analysis;
 
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.project.Project;
 
+/**
+ * @author anna
+ * @since 2007-01-22
+ */
 public class PerformAnalysisInBackgroundOption implements PerformInBackgroundOption {
   private final AnalysisUIOptions myUIOptions;
 

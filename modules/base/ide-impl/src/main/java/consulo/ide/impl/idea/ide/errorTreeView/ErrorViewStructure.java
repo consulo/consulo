@@ -42,7 +42,7 @@ import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Nov 12, 2004
+ * @since 2004-11-12
  */
 public class ErrorViewStructure extends AbstractTreeStructure {
   private final ErrorTreeElement myRoot = new MyRootElement();
