@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * User: anna
- * Date: 11/8/11
+ * @author anna
+ * @since 2011-11-08
  */
 public class StartMarkAction extends BasicUndoableAction {
   private static final Map<Project, StartMarkAction> ourCurrentMarks = new HashMap<>();

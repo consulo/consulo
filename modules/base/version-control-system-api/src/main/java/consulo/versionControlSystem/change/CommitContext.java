@@ -19,9 +19,8 @@ import consulo.util.dataholder.UnprotectedUserDataHolder;
 import consulo.util.dataholder.UserDataHolder;
 
 /**
- * User: Irina.Chernushina
- * Date: 9/15/11
- * Time: 1:28 PM
+ * @author Irina.Chernushina
+ * @since 2011-09-15
  */
 public class CommitContext extends UnprotectedUserDataHolder implements UserDataHolder {
   public CommitContext() {

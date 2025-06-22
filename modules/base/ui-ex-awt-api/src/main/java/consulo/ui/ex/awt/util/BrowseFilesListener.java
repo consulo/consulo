@@ -31,7 +31,7 @@ import java.io.File;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 28, 2003
+ * @since 2003-12-28
  */
 public class BrowseFilesListener implements ActionListener {
   public static final FileChooserDescriptor SINGLE_DIRECTORY_DESCRIPTOR = FileChooserDescriptorFactory.createSingleFolderDescriptor();

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 15, 2002
- * Time: 9:58:27 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ui.ex.action.event;
 
 import consulo.annotation.DeprecationInfo;
@@ -32,8 +23,10 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
+ * @author max
  * @author Kirill Kalishev
  * @author Konstantin Bulenkov
+ * @author 2002-05-15
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface AnActionListener {

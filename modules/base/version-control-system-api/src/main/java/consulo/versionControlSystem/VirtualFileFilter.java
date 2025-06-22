@@ -20,9 +20,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: Irina.Chernushina
- * Date: 7/19/12
- * Time: 6:27 PM
+ * @author Irina.Chernushina
+ * @since 2012-07-19
  */
 public abstract class VirtualFileFilter {
   public abstract boolean shouldGoIntoDirectory(@Nonnull final VirtualFile file);

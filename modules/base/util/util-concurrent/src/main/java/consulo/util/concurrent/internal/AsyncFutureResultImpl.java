@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 import java.util.concurrent.*;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public class AsyncFutureResultImpl<V> implements AsyncFutureResult<V> {
   private CompletableFuture<V> myFuture;

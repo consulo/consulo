@@ -19,8 +19,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 
 /**
  * @author irengrig
- *         Date: 3/10/11
- *         Time: 4:14 PM
+ * @since 2011-03-10
  */
 public class VcsUsualLineAnnotationData implements VcsLineAnnotationData {
   private final VcsRevisionNumber[] myData;

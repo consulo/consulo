@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- * Date: 2005-01-19
+ * @since 2005-01-19
  */
 public abstract class RuleAction extends ToggleAction implements DumbAware {
     private final UsageView myView;

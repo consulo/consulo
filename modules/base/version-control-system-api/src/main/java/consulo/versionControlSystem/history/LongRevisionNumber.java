@@ -16,9 +16,8 @@
 package consulo.versionControlSystem.history;
 
 /**
- * User: Irina.Chernushina
- * Date: 10/12/12
- * Time: 12:06 PM
+ * @author Irina.Chernushina
+ * @since 2012-10-12
  */
 public interface LongRevisionNumber {
   long getLongRevisionNumber();

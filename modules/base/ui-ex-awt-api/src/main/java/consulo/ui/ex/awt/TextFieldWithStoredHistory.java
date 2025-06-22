@@ -21,8 +21,8 @@ import consulo.util.lang.StringUtil;
 import java.util.ArrayList;
 
 /**
- * User: anna
- * Date: 16-Dec-2005
+ * @author anna
+ * @since 2005-12-16
  */
 public class TextFieldWithStoredHistory extends TextFieldWithHistory {
   private final String myPropertyName;

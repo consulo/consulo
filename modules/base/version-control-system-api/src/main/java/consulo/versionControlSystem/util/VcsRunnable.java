@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 14.03.2007
- * Time: 14:33:16
- */
 package consulo.versionControlSystem.util;
 
 import consulo.versionControlSystem.VcsException;
 
+/**
+ * @author yole
+ * @since 2007-03-14
+ */
 @FunctionalInterface
 public interface VcsRunnable {
   void run() throws VcsException;

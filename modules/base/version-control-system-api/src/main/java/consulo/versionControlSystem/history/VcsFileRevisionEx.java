@@ -16,13 +16,12 @@
 package consulo.versionControlSystem.history;
 
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.history.VcsFileRevision;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public abstract class VcsFileRevisionEx implements VcsFileRevision {
 

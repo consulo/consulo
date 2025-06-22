@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 05.08.13
+ * @since 2013-08-05
  */
 @ExtensionImpl
 public class InjectedReferencesInspection extends LocalInspectionTool {

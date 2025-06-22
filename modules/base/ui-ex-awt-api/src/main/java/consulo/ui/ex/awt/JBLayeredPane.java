@@ -19,7 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public class JBLayeredPane extends JLayeredPane {
 

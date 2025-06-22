@@ -24,8 +24,7 @@ import java.util.List;
 
 /**
  * @author irengrig
- * Date: 3/15/11
- * Time: 1:32 PM
+ * @since 2011-03-15
  */
 public interface VcsCacheableHistorySessionFactory<Cacheable extends Serializable, T extends VcsAbstractHistorySession> {
   /**

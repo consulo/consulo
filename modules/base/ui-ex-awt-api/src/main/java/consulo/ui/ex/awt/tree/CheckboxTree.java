@@ -21,9 +21,8 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import java.awt.event.KeyEvent;
 
 /**
- * User: lex
- * Date: Sep 18, 2003
- * Time: 5:40:20 PM
+ * @author lex
+ * @since 2003-09-18
  */
 public class CheckboxTree extends CheckboxTreeBase {
 

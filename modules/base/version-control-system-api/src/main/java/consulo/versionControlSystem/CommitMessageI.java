@@ -16,10 +16,8 @@
 package consulo.versionControlSystem;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 9/14/12
- * Time: 11:25 AM
+ * @author Irina.Chernushina
+ * @since 2012-09-14
  */
 public interface CommitMessageI {
   /**

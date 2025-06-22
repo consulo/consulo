@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: valentin
- * Date: 29.01.2004
- * Time: 21:10:56
- */
 package consulo.virtualFileSystem.fileType;
 
 import consulo.util.collection.ArrayFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
+/**
+ * @author valentin
+ * @since 2004-01-29
+ */
 public interface FileTypeIdentifiableByVirtualFile extends FileType {
   public static final FileTypeIdentifiableByVirtualFile[] EMPTY_ARRAY = new FileTypeIdentifiableByVirtualFile[0];
 

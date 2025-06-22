@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 05.12.2006
- * Time: 20:54:32
- */
 package consulo.versionControlSystem.versionBrowser;
 
 import jakarta.annotation.Nullable;
 import javax.swing.*;
 
+/**
+ * @author yole
+ * @since 2006-12-05
+ */
 public interface ChangesBrowserSettingsEditor<T extends ChangeBrowserSettings> {
   JComponent getComponent();
 

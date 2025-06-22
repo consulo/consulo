@@ -28,7 +28,7 @@ import jakarta.inject.Singleton;
 
 /**
  * @author Dmitry Avdeev
- * Date: 3/23/12
+ * @since 2012-03-23
  */
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)

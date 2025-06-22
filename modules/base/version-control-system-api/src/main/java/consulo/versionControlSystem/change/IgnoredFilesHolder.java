@@ -24,8 +24,7 @@ import java.util.Collection;
 
 /**
  * @author irengrig
- * Date: 2/10/11
- * Time: 4:54 PM
+ * @since 2011-02-10
  */
 public interface IgnoredFilesHolder extends FilePathHolder {
   @Deprecated

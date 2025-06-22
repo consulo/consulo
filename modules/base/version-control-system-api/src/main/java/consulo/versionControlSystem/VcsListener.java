@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 28.07.2006
- * Time: 14:48:30
- */
 package consulo.versionControlSystem;
-
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.TopicAPI;
 
 /**
  * Allows to receive notifications about changes in VCS configuration for the project.
+ *
+ * @author yole
+ * @since 2006-07-28
  */
 public interface VcsListener extends VcsMappingListener, PluginVcsMappingListener {
   /**

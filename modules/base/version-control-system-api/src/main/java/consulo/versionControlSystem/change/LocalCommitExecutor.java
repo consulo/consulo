@@ -21,8 +21,8 @@ import consulo.component.extension.ExtensionList;
 import consulo.project.Project;
 
 /**
- * User: anna
- * Date: 2/17/12
+ * @author anna
+ * @since 2012-02-17
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class LocalCommitExecutor implements CommitExecutorWithHelp {

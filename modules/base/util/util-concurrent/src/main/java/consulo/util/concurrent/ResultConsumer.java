@@ -16,7 +16,7 @@
 package consulo.util.concurrent;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public interface ResultConsumer<V> {
   void onSuccess(V value);

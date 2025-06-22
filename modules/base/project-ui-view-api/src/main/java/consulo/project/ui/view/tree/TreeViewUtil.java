@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Oct 6, 2004
+ * @since 2004-10-06
  */
 public class TreeViewUtil {
   private static boolean shouldAbbreviateName(PsiPackage aPackage) {

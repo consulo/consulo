@@ -30,8 +30,7 @@ import java.util.function.Consumer;
 
 /**
  * @author irengrig
- *         Date: 2/28/11
- *         Time: 6:55 PM
+ * @since 2011-02-28
  */
 public class VcsHistoryCache {
   private final Object myLock;

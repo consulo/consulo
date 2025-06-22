@@ -23,8 +23,7 @@ import consulo.util.lang.Comparing;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Sep 17, 2003
- * Time: 7:08:30 PM
+ * @since 2003-09-17
  */
 public final class NamedLibraryElement {
   public static final Key<NamedLibraryElement[]> ARRAY_DATA_KEY = Key.create("namedLibrary.array");

@@ -21,8 +21,8 @@ import consulo.util.xml.serializer.annotation.Tag;
 import java.util.Date;
 
 /**
- * User: evgeny.zakrevsky
- * Date: 12/27/12
+ * @author evgeny.zakrevsky
+ * @since 2012-12-27
  */
 @Tag("workItem")
 public class WorkItem {
