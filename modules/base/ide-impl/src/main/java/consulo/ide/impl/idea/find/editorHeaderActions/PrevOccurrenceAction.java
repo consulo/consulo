@@ -28,7 +28,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public final class PrevOccurrenceAction extends PrevNextOccurrenceAction {
+public class PrevOccurrenceAction extends PrevNextOccurrenceAction {
   public PrevOccurrenceAction() {
     this(true);
   }

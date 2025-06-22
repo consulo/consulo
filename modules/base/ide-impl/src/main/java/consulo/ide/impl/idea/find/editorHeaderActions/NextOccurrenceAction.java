@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
-public final class NextOccurrenceAction extends PrevNextOccurrenceAction {
+public class NextOccurrenceAction extends PrevNextOccurrenceAction {
   public NextOccurrenceAction() {
     this(true);
   }
