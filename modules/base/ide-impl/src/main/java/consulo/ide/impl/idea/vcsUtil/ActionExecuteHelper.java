@@ -16,10 +16,8 @@
 package consulo.ide.impl.idea.vcsUtil;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 7/6/12
- * Time: 7:45 PM
+ * @author Irina.Chernushina
+ * @since 2012-07-06
  */
 public class ActionExecuteHelper extends AbstractActionStateConsumer {
   public boolean isOk() {

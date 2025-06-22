@@ -16,10 +16,8 @@
 package consulo.ide.impl.idea.openapi.diff.impl.patch.apply;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 9/28/11
- * Time: 2:50 PM
+ * @author Irina.Chernushina
+ * @since 2011-09-28
  */
 public interface SequenceDescriptor {
   SequenceDescriptor STUB = new SequenceDescriptor() {

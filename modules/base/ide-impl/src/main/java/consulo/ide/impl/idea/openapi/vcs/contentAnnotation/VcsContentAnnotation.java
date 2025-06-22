@@ -26,10 +26,8 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/3/11
- * Time: 12:50 PM
+ * @author Irina.Chernushina
+ * @since 2011-08-03
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface VcsContentAnnotation {

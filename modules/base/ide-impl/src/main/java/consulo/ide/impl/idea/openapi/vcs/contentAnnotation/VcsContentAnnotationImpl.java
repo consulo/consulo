@@ -36,9 +36,8 @@ import jakarta.annotation.Nullable;
 import java.util.Date;
 
 /**
- * User: Irina.Chernushina
- * Date: 8/3/11
- * Time: 1:04 PM
+ * @author Irina.Chernushina
+ * @since 2011-08-03
  */
 @Singleton
 @ServiceImpl

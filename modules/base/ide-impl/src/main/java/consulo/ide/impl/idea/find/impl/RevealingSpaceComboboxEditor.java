@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Sep 7, 2007
- * Time: 1:45:27 PM
- */
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.codeEditor.Editor;
@@ -30,6 +23,10 @@ import consulo.language.editor.ui.awt.StringComboboxEditor;
 
 import javax.swing.*;
 
+/**
+ * @author cdr
+ * @since 2007-09-07
+ */
 public class RevealingSpaceComboboxEditor extends StringComboboxEditor {
   public RevealingSpaceComboboxEditor(final Project project, ComboBox comboBox) {
     super(project, PlainTextFileType.INSTANCE, comboBox);

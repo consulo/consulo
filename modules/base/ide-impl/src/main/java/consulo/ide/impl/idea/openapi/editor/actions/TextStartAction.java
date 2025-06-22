@@ -25,7 +25,7 @@ import consulo.project.Project;
 
 /**
  * @author max
- * @since May 14, 2002
+ * @since 2002-05-14
  */
 public class TextStartAction extends TextComponentEditorAction {
     public TextStartAction() {

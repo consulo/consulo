@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 17.11.2006
- * Time: 17:36:42
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -34,6 +27,10 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.File;
 
+/**
+ * @author yole
+ * @since 2006-11-17
+ */
 public class PatchFileType implements FileType {
   public static final PatchFileType INSTANCE = new PatchFileType();
 

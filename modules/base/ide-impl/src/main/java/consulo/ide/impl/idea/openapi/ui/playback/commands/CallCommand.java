@@ -25,11 +25,8 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: kirillk
- * Date: 8/3/11
- * Time: 4:08 PM
- * To change this template use File | Settings | File Templates.
+ * @author kirillk
+ * @since 2011-08-03
  */
 public class CallCommand extends AbstractCommand {
 

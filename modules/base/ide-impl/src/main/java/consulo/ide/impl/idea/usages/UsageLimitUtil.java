@@ -27,7 +27,7 @@ import consulo.usage.UsageViewPresentation;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: cdr
+ * @author cdr
  */
 public class UsageLimitUtil {
   public static final int USAGES_LIMIT = 1000;

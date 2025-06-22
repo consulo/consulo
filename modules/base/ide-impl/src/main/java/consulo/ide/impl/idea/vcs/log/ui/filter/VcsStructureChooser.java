@@ -54,8 +54,7 @@ import java.util.*;
 
 /**
  * @author irengrig
- *         Date: 2/3/11
- *         Time: 12:04 PM
+ * @since 2011-02-03
  */
 public class VcsStructureChooser extends DialogWrapper {
   private final static int MAX_FOLDERS = 100;

@@ -15,11 +15,8 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: zajac
- * Date: 05.03.11
- * Time: 10:57
- * To change this template use File | Settings | File Templates.
+ * @author zajac
+ * @since 2011-03-05
  */
 public class SwitchToReplace extends AnAction {
   public SwitchToReplace(@Nonnull JComponent shortcutHolder) {

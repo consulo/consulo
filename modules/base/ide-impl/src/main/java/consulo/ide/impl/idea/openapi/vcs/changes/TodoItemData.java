@@ -19,10 +19,8 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.search.TodoPattern;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 11/29/12
- * Time: 9:19 PM
+ * @author Irina.Chernushina
+ * @since 2012-11-29
  */
 public class TodoItemData {
   private final int myStartOffset;

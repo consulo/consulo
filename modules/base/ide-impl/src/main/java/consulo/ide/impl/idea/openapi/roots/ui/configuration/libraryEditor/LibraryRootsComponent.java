@@ -75,7 +75,7 @@ import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 11, 2004
+ * @since 2004-01-11
  */
 public class LibraryRootsComponent implements Disposable, LibraryEditorComponent {
   static final UrlComparator ourUrlComparator = new UrlComparator();

@@ -25,8 +25,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
-* User: anna
-* Date: 10/29/10
+* @author anna
+* @since 2010-10-29
 */
 public abstract class RenameChangeInfo implements ChangeInfo {
   private final PsiFile myFile;

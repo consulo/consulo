@@ -55,8 +55,7 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Oct 4, 2003
- * Time: 6:54:57 PM
+ * @since 2003-10-04
  */
 public class ContentEntriesEditor extends ModuleElementsEditor {
     private static final Logger LOG = Logger.getInstance(ContentEntriesEditor.class);

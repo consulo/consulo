@@ -35,7 +35,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 5, 2004
+ * @since 2004-01-05
  */
 public class NewModuleAction extends AnAction implements DumbAware {
   public NewModuleAction() {

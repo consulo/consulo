@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 02.11.2006
- * Time: 22:02:55
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.AllIcons;
@@ -35,6 +28,10 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 
+/**
+ * @author yole
+ * @since 2006-11-02
+ */
 public class SetDefaultChangeListAction extends AnAction implements DumbAware {
   public SetDefaultChangeListAction() {
     super(

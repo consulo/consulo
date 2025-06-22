@@ -30,8 +30,8 @@ import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: 30-Nov-2005
+ * @author anna
+ * @since 2005-11-30
  */
 public abstract class InspectionProjectProfileManager extends DefaultProjectProfileManager
         implements SeverityProvider, PersistentStateComponent<Element>, consulo.language.editor.inspection.scheme.InspectionProjectProfileManager {

@@ -32,8 +32,8 @@ import consulo.language.editor.refactoring.event.RefactoringElementListenerProvi
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: Jul 26, 2010
+ * @author anna
+ * @since 2010-07-26
  */
 @ExtensionImpl
 public class RefactoringScopeElementListenerProvider implements RefactoringElementListenerProvider {

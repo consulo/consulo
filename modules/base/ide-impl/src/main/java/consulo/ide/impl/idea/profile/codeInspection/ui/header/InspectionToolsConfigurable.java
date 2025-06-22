@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Anna.Kozlova
- * Date: 31-Jul-2006
- * Time: 17:44:39
- */
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
 import consulo.codeEditor.CodeInsightColors;
@@ -74,6 +67,10 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
+/**
+ * @author Anna.Kozlova
+ * @since 2006-07-31
+ */
 public abstract class InspectionToolsConfigurable implements ErrorsConfigurable, SearchableConfigurable, Configurable.NoScroll {
   private static final Logger LOG = Logger.getInstance(InspectionToolsConfigurable.class);
 

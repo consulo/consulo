@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 21.11.2006
- * Time: 18:38:44
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.versionControlSystem.history.VcsFileRevisionDvcsSpecific;
@@ -42,6 +35,10 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author yole
+ * @since 2006-11-21
+ */
 public class DefaultPatchBaseVersionProvider {
   private static final Logger LOG = Logger.getInstance(DefaultPatchBaseVersionProvider.class);
   private final static Pattern ourTsPattern = Pattern.compile("\\(date ([0-9]+)\\)");

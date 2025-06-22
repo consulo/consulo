@@ -33,8 +33,8 @@ import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: Jan 16, 2005
+ * @author anna
+ * @since 2005-01-16
  */
 public class BackwardDependenciesAction extends BaseAnalysisAction {
   private ScopeChooserCombo myScopeChooserCombo;

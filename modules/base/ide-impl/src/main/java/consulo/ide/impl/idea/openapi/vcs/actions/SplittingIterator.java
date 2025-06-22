@@ -19,8 +19,7 @@ import java.util.Iterator;
 
 /**
 * @author irengrig
-*         Date: 4/27/11
-*         Time: 3:42 PM
+* @since 2011-04-27
 */
 public class SplittingIterator implements Iterator<Integer> {
   private final String myContents;

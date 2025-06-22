@@ -22,11 +22,10 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * @author irengrig
- *         Date: 2/21/11
- *         Time: 12:05 PM
  * if T and S are compared by convertion to Z, we can find where some t should be placed in s list
  *
+ * @author irengrig
+ * @since 2011-02-21
  */
 public class HackSearch<T,S,Z> {
   private final Convertor<T,Z> myTZConvertor;

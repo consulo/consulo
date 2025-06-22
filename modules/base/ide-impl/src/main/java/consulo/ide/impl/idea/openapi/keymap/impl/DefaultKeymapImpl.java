@@ -28,7 +28,7 @@ import java.awt.event.MouseEvent;
 
 /**
  * @author max
- * @since Nov 21, 2003
+ * @since 2003-11-21
  */
 class DefaultKeymapImpl extends KeymapImpl {
     @Override

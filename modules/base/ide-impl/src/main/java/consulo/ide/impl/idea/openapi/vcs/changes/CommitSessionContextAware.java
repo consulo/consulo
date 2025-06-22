@@ -18,10 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.versionControlSystem.change.CommitContext;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 9/19/11
- * Time: 7:04 PM
+ * @author Irina.Chernushina
+ * @since 2011-09-19
  */
 public interface CommitSessionContextAware {
   void setContext(final CommitContext context);

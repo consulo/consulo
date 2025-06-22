@@ -20,10 +20,8 @@ import consulo.ui.ex.awt.Splitter;
 import javax.swing.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 12/3/11
- * Time: 6:13 PM
+ * @author Irina.Chernushina
+ * @since 2011-12-03
  */
 public class PseudoSplitter extends Splitter {
   private boolean myFirstIsFixed;

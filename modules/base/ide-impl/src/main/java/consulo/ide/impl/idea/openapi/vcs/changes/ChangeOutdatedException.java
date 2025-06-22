@@ -16,10 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 7/28/12
- * Time: 4:00 PM
+ * @author Irina.Chernushina
+ * @since 2012-07-28
  */
 public class ChangeOutdatedException extends RuntimeException {
 }

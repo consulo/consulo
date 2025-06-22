@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Anna.Kozlova
- * Date: 31-Aug-2006
- * Time: 19:20:48
- */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.application.util.registry.Registry;
@@ -29,6 +22,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+/**
+ * @author Anna.Kozlova
+ * @since 2006-08-31
+ */
 public class ShortcutTextField extends JTextField {
   private KeyStroke myKeyStroke;
 

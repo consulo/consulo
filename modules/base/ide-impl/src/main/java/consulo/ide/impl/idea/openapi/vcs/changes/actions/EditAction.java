@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 15.12.2006
- * Time: 17:36:42
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,6 +30,10 @@ import consulo.virtualFileSystem.status.FileStatusManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author yole
+ * @since 2006-12-15
+ */
 public class EditAction extends AnAction {
   @Override
   @RequiredUIAccess

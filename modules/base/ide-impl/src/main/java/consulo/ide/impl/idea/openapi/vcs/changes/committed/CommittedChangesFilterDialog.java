@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 30.11.2006
- * Time: 19:39:02
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.project.Project;
@@ -34,6 +27,10 @@ import org.jetbrains.annotations.NonNls;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author yole
+ * @since 2006-11-30
+ */
 public class CommittedChangesFilterDialog extends DialogWrapper {
   private final ChangesBrowserSettingsEditor myPanel;
   private ChangeBrowserSettings mySettings;

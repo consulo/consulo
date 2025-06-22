@@ -22,10 +22,8 @@ import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 11/28/12
- * Time: 3:53 PM
+ * @author Irina.Chernushina
+ * @since 2012-11-28
  */
 public class LimitHistoryCheck {
   private final Project myProject;

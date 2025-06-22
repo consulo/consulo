@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 15.11.2006
- * Time: 20:23:22
- */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
+/**
+ * @author yole
+ * @since 2006-11-15
+ */
 public class PatchSyntaxException extends Exception {
   private final int myLine;
 

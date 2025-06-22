@@ -54,7 +54,7 @@ import java.io.IOException;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Dec 15, 2003
+ * @since 2003-12-15
  */
 @ExtensionImpl
 public class ProjectConfigurableGroup extends ProjectStructureElementConfigurable<Project> implements ProjectConfigurable, ConfigurableWeight, NonDefaultProjectConfigurable {

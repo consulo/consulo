@@ -63,8 +63,7 @@ import static consulo.ui.ex.awt.UIUtil.getWarningIcon;
 
 /**
  * @author irengrig
- *         Date: 2/17/11
- *         Time: 5:54 PM
+ * @since 2011-02-17
  */
 public class TodoCheckinHandler extends CheckinHandler {
   private final Project myProject;

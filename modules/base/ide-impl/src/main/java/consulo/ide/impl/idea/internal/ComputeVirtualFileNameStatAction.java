@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 28-Jun-2007
- */
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
@@ -34,6 +29,10 @@ import gnu.trove.TObjectIntProcedure;
 
 import java.util.*;
 
+/**
+ * @author anna
+ * @since 2007-06-28
+ */
 public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAware {
   public ComputeVirtualFileNameStatAction() {
     super("Compute VF name statistics");

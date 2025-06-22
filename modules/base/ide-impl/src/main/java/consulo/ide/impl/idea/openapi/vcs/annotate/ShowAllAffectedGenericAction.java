@@ -45,8 +45,7 @@ import java.util.List;
 
 /**
  * @author irengrig
- * Date: 3/16/11
- * Time: 2:41 PM
+ * @since 2011-03-16
  */
 public class ShowAllAffectedGenericAction extends AnAction {
 

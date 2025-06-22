@@ -22,11 +22,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: kirillk
- * Date: 8/23/11
- * Time: 10:11 AM
- * To change this template use File | Settings | File Templates.
+ * @author kirillk
+ * @since 2011-08-23
  */
 public class CdCommand extends AbstractCommand {
 

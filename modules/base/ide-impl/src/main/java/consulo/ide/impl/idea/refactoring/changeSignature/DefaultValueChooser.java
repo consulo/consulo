@@ -27,8 +27,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * User: anna
- * Date: Sep 13, 2010
+ * @author anna
+ * @since 2010-09-13
  */
 public class DefaultValueChooser extends DialogWrapper{
   private JRadioButton myLeaveBlankRadioButton;

@@ -21,10 +21,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 9/14/12
- * Time: 11:46 AM
+ * @author Irina.Chernushina
+ * @since 2012-09-14
  */
 public abstract class AbstractDataProviderPanel extends JPanel implements TypeSafeDataProvider {
   public AbstractDataProviderPanel(GridBagLayout layout) {

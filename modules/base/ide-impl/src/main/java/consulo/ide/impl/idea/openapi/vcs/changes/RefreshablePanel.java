@@ -6,8 +6,7 @@ import javax.swing.*;
 
 /**
  * @author irengrig
- *         Date: 8/12/11
- *         Time: 6:47 PM
+ * @since 2011-08-12
  */
 public interface RefreshablePanel<Data> extends Disposable {
   boolean refreshDataSynch();

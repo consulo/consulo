@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 20.12.2006
- * Time: 17:17:50
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
@@ -42,6 +35,10 @@ import java.util.stream.Collectors;
 
 import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView.UNVERSIONED_FILES_DATA_KEY;
 
+/**
+ * @author yole
+ * @since 2006-12-20
+ */
 public class IgnoreUnversionedAction extends AnAction {
     @Nullable
     @Override

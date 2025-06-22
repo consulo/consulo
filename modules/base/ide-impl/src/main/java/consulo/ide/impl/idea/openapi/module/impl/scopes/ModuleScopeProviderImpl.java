@@ -28,7 +28,7 @@ import jakarta.inject.Singleton;
 import jakarta.annotation.Nonnull;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 @Singleton
 @ServiceImpl

@@ -27,8 +27,7 @@ import java.util.List;
 
 /**
  * @author irengrig
- *         Date: 1/28/11
- *         Time: 6:00 PM
+ * @since 2011-01-28
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CheckinHandlersManager {

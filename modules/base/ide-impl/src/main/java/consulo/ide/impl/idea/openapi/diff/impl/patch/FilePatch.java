@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 15.11.2006
- * Time: 17:53:24
- */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
 import consulo.util.lang.StringUtil;
 
+/**
+ * @author yole
+ * @since 2006-11-15
+ */
 public abstract class FilePatch {
   private String myBeforeName;
   private String myAfterName;

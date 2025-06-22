@@ -20,8 +20,8 @@ import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;
 
 /**
- * User: anna
- * Date: 05-Jun-2006
+ * @author anna
+ * @since 2006-06-05
  */
 @Deprecated
 @DeprecationInfo("Use DefaultSdksModel")

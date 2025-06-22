@@ -21,11 +21,8 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import java.util.Date;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/2/11
- * Time: 12:46 AM
- * To change this template use File | Settings | File Templates.
+ * @author Irina.Chernushina
+ * @since 2011-08-02
  */
 public class VcsRevisionDescriptionImpl implements VcsRevisionDescription {
   private final VcsRevisionNumber myNumber;

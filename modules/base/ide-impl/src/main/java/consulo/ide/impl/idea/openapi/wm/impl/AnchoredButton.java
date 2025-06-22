@@ -20,10 +20,8 @@ import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import javax.swing.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/19/11
- * Time: 3:49 PM
+ * @author Irina.Chernushina
+ * @since 2011-08-19
  */
 public abstract class AnchoredButton extends JToggleButton {
   protected AnchoredButton(String text, Icon icon, boolean selected) {

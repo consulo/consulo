@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 9/20/12
+ * @since 2012-09-20
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface KeymapListener {

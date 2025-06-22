@@ -37,10 +37,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 9/9/11
- * Time: 9:55 AM
+ * @author Irina.Chernushina
+ * @since 2011-09-09
  */
 public abstract class TodoForRanges {
   protected final Project myProject;

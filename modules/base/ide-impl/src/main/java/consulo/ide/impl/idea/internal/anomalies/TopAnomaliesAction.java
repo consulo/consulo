@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public class TopAnomaliesAction extends ActionGroup {
   private static final Comparator<Pair<?, Integer>> COMPARATOR = new Comparator<Pair<?, Integer>>() {

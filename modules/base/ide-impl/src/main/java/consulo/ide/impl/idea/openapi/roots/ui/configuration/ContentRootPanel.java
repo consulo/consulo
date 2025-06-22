@@ -35,7 +35,7 @@ import java.io.File;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 19, 2004
+ * @since 2004-01-19
  */
 public class ContentRootPanel extends JPanel {
     protected final ActionCallback myCallback;

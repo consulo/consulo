@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
  * Current interface defines a contract for such a mapper.
  *
  * @author Denis Zhdanov
- * @since Aug 31, 2010 10:23:15 AM
+ * @since 2010-08-31
  */
 public interface SoftWrapDataMapper {
 

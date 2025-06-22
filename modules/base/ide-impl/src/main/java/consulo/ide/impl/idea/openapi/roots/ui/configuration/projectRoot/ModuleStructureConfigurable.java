@@ -73,8 +73,8 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: anna
- * Date: 02-Jun-2006
+ * @author anna
+ * @since 2006-06-02
  */
 @ExtensionImpl
 public class ModuleStructureConfigurable extends BaseStructureConfigurable implements ConfigurableWeight,

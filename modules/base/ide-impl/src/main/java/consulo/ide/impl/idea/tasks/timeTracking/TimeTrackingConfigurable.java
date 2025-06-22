@@ -12,8 +12,8 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**
- * User: Evgeny.Zakrevsky
- * Date: 11/19/12
+ * @author Evgeny.Zakrevsky
+ * @since 2012-11-19
  */
 @ExtensionImpl
 public class TimeTrackingConfigurable implements SearchableConfigurable, Configurable.NoScroll, ProjectConfigurable, NonDefaultProjectConfigurable {

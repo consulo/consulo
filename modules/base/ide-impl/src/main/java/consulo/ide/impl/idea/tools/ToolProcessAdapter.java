@@ -26,7 +26,7 @@ import consulo.project.ui.wm.WindowManager;
 
 /**
  * @author Eugene Zhuravlev
- * @since Mar 30, 2005
+ * @since 2005-03-30
  */
 public class ToolProcessAdapter extends ProcessAdapter {
   private final Project myProject;

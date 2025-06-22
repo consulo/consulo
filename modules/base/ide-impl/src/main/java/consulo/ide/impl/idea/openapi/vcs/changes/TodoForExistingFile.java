@@ -28,10 +28,8 @@ import consulo.language.psi.search.PsiTodoSearchHelper;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 2/28/12
- * Time: 4:48 PM
+ * @author Irina.Chernushina
+ * @since 2012-02-28
  */
 public class TodoForExistingFile extends TodoForRanges {
   private final VirtualFile myFile;

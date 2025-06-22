@@ -27,10 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 2/28/12
- * Time: 6:06 PM
+ * @author Irina.Chernushina
+ * @since 2012-02-28
  */
 public class TodoForBaseRevision extends TodoForRanges {
   private final Getter<Object> myGetter;

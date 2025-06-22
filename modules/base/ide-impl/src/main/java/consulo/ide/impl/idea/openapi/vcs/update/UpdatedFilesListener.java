@@ -22,8 +22,7 @@ import java.util.Set;
 
 /**
  * @author irengrig
- *         Date: 6/9/11
- *         Time: 7:38 PM
+ * @since 2011-06-09
  */
 @TopicAPI(ComponentScope.PROJECT)
 public interface UpdatedFilesListener {

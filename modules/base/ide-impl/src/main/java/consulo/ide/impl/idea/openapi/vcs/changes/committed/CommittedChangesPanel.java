@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 05.12.2006
- * Time: 19:39:22
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.ApplicationManager;
@@ -67,6 +60,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * @author yole
+ * @since 2006-12-05
+ */
 public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance(CommittedChangesPanel.class);
 

@@ -46,7 +46,7 @@ import java.util.Map;
 
 /**
  * @author Vladislav.Soroka
- * @since 3/24/2014
+ * @since 2014-03-24
  */
 public class EditableNotificationMessageElement extends NotificationMessageElement implements EditableMessageElement {
 

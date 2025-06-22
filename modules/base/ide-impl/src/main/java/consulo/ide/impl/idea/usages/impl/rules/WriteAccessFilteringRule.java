@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 17, 2005
+ * @since 2005-01-17
  */
 public class WriteAccessFilteringRule implements UsageFilteringRule{
   @Override

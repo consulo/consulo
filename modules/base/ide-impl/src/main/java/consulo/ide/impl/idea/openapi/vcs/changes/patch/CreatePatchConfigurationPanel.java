@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 14.11.2006
- * Time: 19:04:28
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.application.util.UserHomeFileUtil;
@@ -46,6 +39,10 @@ import javax.swing.*;
 import java.io.File;
 import java.nio.charset.Charset;
 
+/**
+ * @author yole
+ * @since 2006-11-14
+ */
 public class CreatePatchConfigurationPanel {
   private static final int TEXT_FIELD_WIDTH = 70;
 
