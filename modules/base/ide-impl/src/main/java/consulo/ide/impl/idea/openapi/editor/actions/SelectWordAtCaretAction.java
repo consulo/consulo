@@ -32,13 +32,9 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 7:40:40 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-14
  */
 public class SelectWordAtCaretAction extends TextComponentEditorAction implements DumbAware {
     public SelectWordAtCaretAction() {
@@ -68,7 +64,7 @@ public class SelectWordAtCaretAction extends TextComponentEditorAction implement
             }
 
             boolean camel = editor.getSettings().isCamelWords();
-            List<TextRange> ranges = new ArrayList<TextRange>();
+            List<TextRange> ranges = new ArrayList<>();
 
             int textLength = document.getTextLength();
             if (caretOffset == textLength) {
@@ -84,7 +80,7 @@ public class SelectWordAtCaretAction extends TextComponentEditorAction implement
                 return;
             }
 
-            final TextRange selectionRange = new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd());
+            TextRange selectionRange = new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd());
 
             TextRange minimumRange = new TextRange(0, document.getTextLength());
             for (TextRange range : ranges) {
@@ -110,8 +106,8 @@ public class SelectWordAtCaretAction extends TextComponentEditorAction implement
 
         @Override
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-            final IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
-            final SelectionModel selectionModel = editor.getSelectionModel();
+            IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
+            SelectionModel selectionModel = editor.getSelectionModel();
             if (guide != null && !selectionModel.hasSelection() && isWhitespaceAtCaret(editor)) {
                 selectWithGuide(editor, guide);
             }
@@ -121,27 +117,27 @@ public class SelectWordAtCaretAction extends TextComponentEditorAction implement
         }
 
         private static boolean isWhitespaceAtCaret(Editor editor) {
-            final Document doc = editor.getDocument();
+            Document doc = editor.getDocument();
 
-            final int offset = editor.getCaretModel().getOffset();
+            int offset = editor.getCaretModel().getOffset();
             if (offset >= doc.getTextLength()) {
                 return false;
             }
 
-            final char c = doc.getCharsSequence().charAt(offset);
+            char c = doc.getCharsSequence().charAt(offset);
             return c == ' ' || c == '\t' || c == '\n';
         }
 
         private static void selectWithGuide(Editor editor, IndentGuideDescriptor guide) {
-            final Document doc = editor.getDocument();
+            Document doc = editor.getDocument();
             int startOffset = editor.logicalPositionToOffset(new LogicalPosition(guide.startLine, 0));
             int endOffset = guide.endLine >= doc.getLineCount() ? doc.getTextLength() : doc.getLineStartOffset(guide.endLine);
 
-            final VirtualFile file = ((EditorEx) editor).getVirtualFile();
+            VirtualFile file = editor.getVirtualFile();
             if (file != null) {
                 // Make sure selection contains closing matching brace.
 
-                final CharSequence chars = doc.getCharsSequence();
+                CharSequence chars = doc.getCharsSequence();
                 int nonWhitespaceOffset = CharArrayUtil.shiftForward(chars, endOffset, " \t\n");
                 HighlighterIterator iterator = editor.getHighlighter().createIterator(nonWhitespaceOffset);
                 if (BraceMatchingUtil.isRBraceToken(iterator, chars, file.getFileType())) {

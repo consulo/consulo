@@ -19,14 +19,11 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
+import jakarta.annotation.Nonnull;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 6:49:27 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-14
  */
 public class PreviousWordWithSelectionAction extends TextComponentEditorAction {
     public PreviousWordWithSelectionAction() {
@@ -39,7 +36,7 @@ public class PreviousWordWithSelectionAction extends TextComponentEditorAction {
         }
 
         @Override
-        public void execute(Editor editor, DataContext dataContext) {
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretToPreviousWord(editor, true, editor.getSettings().isCamelWords());
         }
     }

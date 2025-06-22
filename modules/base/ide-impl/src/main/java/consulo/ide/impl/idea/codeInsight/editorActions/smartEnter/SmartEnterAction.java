@@ -73,7 +73,7 @@ public class SmartEnterAction extends EditorAction {
                 state.gotoEnd();
             }
 
-            final int caretOffset = editor.getCaretModel().getOffset();
+            int caretOffset = editor.getCaretModel().getOffset();
 
             PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
             if (psiFile == null) {
@@ -87,10 +87,10 @@ public class SmartEnterAction extends EditorAction {
                 return;
             }
 
-            final Language language = PsiUtilBase.getLanguageInEditor(editor, project);
+            Language language = PsiUtilBase.getLanguageInEditor(editor, project);
             boolean processed = false;
             if (language != null) {
-                final List<SmartEnterProcessor> processors = SmartEnterProcessor.forLanguage(language);
+                List<SmartEnterProcessor> processors = SmartEnterProcessor.forLanguage(language);
                 if (!processors.isEmpty()) {
                     for (SmartEnterProcessor processor : processors) {
                         if (processor.process(project, editor, psiFile)) {

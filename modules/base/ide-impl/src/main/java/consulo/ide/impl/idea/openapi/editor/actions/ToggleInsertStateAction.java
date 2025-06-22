@@ -20,14 +20,11 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataContext;
+import jakarta.annotation.Nonnull;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 7:40:40 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-14
  */
 public class ToggleInsertStateAction extends EditorAction {
     public ToggleInsertStateAction() {
@@ -36,7 +33,7 @@ public class ToggleInsertStateAction extends EditorAction {
 
     private static class Handler extends EditorActionHandler {
         @Override
-        public void execute(Editor editor, DataContext dataContext) {
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorEx editorex = (EditorEx) editor;
             editorex.setInsertMode(!editorex.isInsertMode());
         }

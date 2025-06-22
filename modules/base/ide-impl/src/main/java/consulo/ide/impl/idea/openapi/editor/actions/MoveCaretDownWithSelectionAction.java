@@ -24,15 +24,13 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import jakarta.annotation.Nullable;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 9:58:23 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-13
  */
 public class MoveCaretDownWithSelectionAction extends EditorAction {
+    private static final CaretAction OUR_CARET_ACTION = eachCaret -> eachCaret.moveCaretRelatively(0, 1, true, true);
+
     public MoveCaretDownWithSelectionAction() {
         super(new Handler());
     }
@@ -47,19 +45,11 @@ public class MoveCaretDownWithSelectionAction extends EditorAction {
             if (editor.isColumnMode()) {
                 EditorActionUtil.cloneOrRemoveCaret(editor, caret == null ? editor.getCaretModel().getPrimaryCaret() : caret, false);
             }
+            else if (caret == null) {
+                editor.getCaretModel().runForEachCaret(OUR_CARET_ACTION);
+            }
             else {
-                CaretAction caretAction = new CaretAction() {
-                    @Override
-                    public void perform(Caret caret) {
-                        caret.moveCaretRelatively(0, 1, true, true);
-                    }
-                };
-                if (caret == null) {
-                    editor.getCaretModel().runForEachCaret(caretAction);
-                }
-                else {
-                    caretAction.perform(caret);
-                }
+                OUR_CARET_ACTION.perform(caret);
             }
         }
     }

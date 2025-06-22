@@ -1,17 +1,11 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.ScrollingModel;
+import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.RealEditor;
 import consulo.dataContext.DataContext;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

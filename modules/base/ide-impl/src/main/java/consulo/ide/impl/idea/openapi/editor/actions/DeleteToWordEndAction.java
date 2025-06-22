@@ -25,13 +25,9 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.annotation.access.RequiredWriteAction;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 7:18:30 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-14
  */
 public class DeleteToWordEndAction extends TextComponentEditorAction {
     public DeleteToWordEndAction() {
@@ -92,8 +88,8 @@ public class DeleteToWordEndAction extends TextComponentEditorAction {
             maxOffset = document.getLineEndOffset(lineNumber + 1);
         }
         for (; newOffset < maxOffset; newOffset++) {
-            if (EditorActionUtil.isWordEnd(text, newOffset, camelMode) ||
-                EditorActionUtil.isWordStart(text, newOffset, camelMode)) {
+            if (EditorActionUtil.isWordEnd(text, newOffset, camelMode)
+                || EditorActionUtil.isWordStart(text, newOffset, camelMode)) {
                 break;
             }
         }

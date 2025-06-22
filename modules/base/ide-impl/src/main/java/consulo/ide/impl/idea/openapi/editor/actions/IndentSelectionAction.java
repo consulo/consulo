@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -50,8 +51,8 @@ public class IndentSelectionAction extends EditorAction {
             super(true);
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (isEnabled(editor, caret, dataContext)) {
@@ -117,15 +118,8 @@ public class IndentSelectionAction extends EditorAction {
         doIndent(endIndex, startIndex, document, project, editor, blockIndent);
     }
 
-    static void doIndent(
-        final int endIndex,
-        final int startIndex,
-        final Document document,
-        final Project project,
-        final Editor editor,
-        final int blockIndent
-    ) {
-        final int[] caretOffset = {editor.getCaretModel().getOffset()};
+    static void doIndent(int endIndex, int startIndex, Document document, Project project, Editor editor, int blockIndent) {
+        int[] caretOffset = {editor.getCaretModel().getOffset()};
 
         boolean bulkMode = endIndex - startIndex > 50;
         DocumentUtil.executeInBulk(document, bulkMode, () -> {
@@ -152,6 +146,7 @@ public class IndentSelectionAction extends EditorAction {
         editor.getCaretModel().moveToOffset(caretOffset[0]);
     }
 
+    @RequiredReadAction
     static boolean canIndent(Document document, PsiFile file, int line, @Nonnull IndentStrategy indentStrategy) {
         int offset = document.getLineStartOffset(line);
         if (file != null) {

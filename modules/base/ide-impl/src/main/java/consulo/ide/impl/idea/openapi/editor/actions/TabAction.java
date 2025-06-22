@@ -38,13 +38,9 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 9:51:34 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-13
  */
 public class TabAction extends EditorAction {
     public TabAction() {
@@ -87,7 +83,7 @@ public class TabAction extends EditorAction {
 
         CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(project);
 
-        final Document doc = editor.getDocument();
+        Document doc = editor.getDocument();
         CommonCodeStyleSettings.IndentOptions indentOptions = settings.getIndentOptionsByDocument(project, doc);
 
         int tabSize = indentOptions.INDENT_SIZE;

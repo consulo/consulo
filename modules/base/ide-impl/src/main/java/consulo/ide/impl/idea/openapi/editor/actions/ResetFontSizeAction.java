@@ -36,13 +36,12 @@ public class ResetFontSizeAction extends EditorAction {
     private static class MyHandler extends EditorActionHandler {
         @Override
         public void execute(@Nonnull Editor editor, DataContext dataContext) {
-            if (!(editor instanceof EditorEx)) {
+            if (!(editor instanceof EditorEx editorEx)) {
                 return;
             }
             EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
             int fontSize =
                 ConsoleViewUtil.isConsoleViewEditor(editor) ? globalScheme.getConsoleFontSize() : globalScheme.getEditorFontSize();
-            EditorEx editorEx = (EditorEx) editor;
             editorEx.setFontSize(fontSize);
         }
     }

@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 /**
  * @author max
- * @since May 13, 2002
+ * @since 2002-05-13
  */
 public class PasteAction extends EditorAction {
     public static final Key<Supplier<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
@@ -40,8 +40,8 @@ public class PasteAction extends EditorAction {
     }
 
     private static class Handler extends BasePasteHandler {
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             TextRange range = null;
             if (myTransferable != null) {

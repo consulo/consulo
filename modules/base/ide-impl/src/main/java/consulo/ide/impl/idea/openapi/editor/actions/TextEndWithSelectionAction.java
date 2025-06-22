@@ -24,13 +24,9 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 6:29:03 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-14
  */
 public class TextEndWithSelectionAction extends TextComponentEditorAction {
     public TextEndWithSelectionAction() {

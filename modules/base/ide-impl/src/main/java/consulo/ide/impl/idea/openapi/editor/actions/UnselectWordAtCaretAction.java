@@ -20,14 +20,11 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import jakarta.annotation.Nonnull;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 7:40:40 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-14
  */
 public class UnselectWordAtCaretAction extends EditorAction implements DumbAware {
     public UnselectWordAtCaretAction() {
@@ -41,7 +38,7 @@ public class UnselectWordAtCaretAction extends EditorAction implements DumbAware
         }
 
         @Override
-        public void execute(Editor editor, DataContext dataContext) {
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
         }
     }
 }

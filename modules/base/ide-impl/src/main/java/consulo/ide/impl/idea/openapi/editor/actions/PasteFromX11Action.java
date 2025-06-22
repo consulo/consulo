@@ -52,11 +52,11 @@ public class PasteFromX11Action extends EditorAction {
         }
         else {
             boolean rightPlace = true;
-            final InputEvent inputEvent = e.getInputEvent();
+            InputEvent inputEvent = e.getInputEvent();
             if (inputEvent instanceof MouseEvent me) {
                 rightPlace = false;
                 if (editor.getMouseEventArea(me) == EditorMouseEventArea.EDITING_AREA) {
-                    final Component component = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY());
+                    Component component = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY());
                     rightPlace = !(component instanceof JScrollBar);
                 }
             }

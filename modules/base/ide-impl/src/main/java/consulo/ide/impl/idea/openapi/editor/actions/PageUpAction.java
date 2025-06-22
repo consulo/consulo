@@ -20,14 +20,11 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
+import jakarta.annotation.Nonnull;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 3:16:36 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-13
  */
 public class PageUpAction extends EditorAction {
     public static class Handler extends EditorActionHandler {
@@ -36,7 +33,7 @@ public class PageUpAction extends EditorAction {
         }
 
         @Override
-        public void execute(Editor editor, DataContext dataContext) {
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretPageUp(editor, false);
         }
 

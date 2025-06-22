@@ -17,10 +17,9 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 /**
  * @author Denis Zhdanov
- * @since 2/14/13 7:35 PM
+ * @since 2013-02-14
  */
 public class DeleteToWordEndInDifferentHumpsModeAction extends TextComponentEditorAction {
-
   public DeleteToWordEndInDifferentHumpsModeAction() {
     super(new DeleteToWordEndAction.Handler(true));
   }

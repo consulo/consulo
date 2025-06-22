@@ -13,7 +13,6 @@ import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionCon
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyAwareEditorAction;
 import consulo.ide.impl.idea.util.SlowOperations;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.completion.CompletionProcess;
 import consulo.language.editor.completion.CompletionService;
 import consulo.language.editor.completion.lookup.Lookup;
@@ -27,6 +26,7 @@ import consulo.language.editor.template.TemplateSettings;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -48,13 +48,11 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
 
         @Override
         public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-            final LookupEx lookup = LookupManager.getActiveLookup(editor);
+            LookupEx lookup = LookupManager.getActiveLookup(editor);
             assert lookup != null;
 
-            if ((finishingChar == Lookup.NORMAL_SELECT_CHAR || finishingChar == Lookup.REPLACE_SELECT_CHAR) && hasTemplatePrefix(
-                lookup,
-                finishingChar
-            )) {
+            if ((finishingChar == Lookup.NORMAL_SELECT_CHAR || finishingChar == Lookup.REPLACE_SELECT_CHAR)
+                && hasTemplatePrefix(lookup, finishingChar)) {
                 lookup.hideLookup(true);
 
                 ExpandLiveTemplateCustomAction.createExpandTemplateHandler(finishingChar).execute(editor, null, dataContext);
@@ -80,7 +78,6 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
             SlowOperations.allowSlowOperations(() -> lookup.finishLookup(finishingChar));
         }
 
-
         @Override
         public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
             LookupEx lookup = LookupManager.getActiveLookup(editor);
@@ -96,6 +93,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
             if (focusedOnly && lookup.getLookupFocusDegree() == LookupFocusDegree.UNFOCUSED) {
                 return false;
             }
+            //noinspection SimplifiableIfStatement
             if (finishingChar == Lookup.REPLACE_SELECT_CHAR) {
                 return !lookup.getItems().isEmpty();
             }
@@ -116,16 +114,16 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
             return false;
         }
 
-        final PsiFile file = lookup.getPsiFile();
+        PsiFile file = lookup.getPsiFile();
         if (file == null) {
             return false;
         }
 
-        final Editor editor = lookup.getEditor();
-        final int offset = editor.getCaretModel().getOffset();
+        Editor editor = lookup.getEditor();
+        int offset = editor.getCaretModel().getOffset();
         PsiDocumentManager.getInstance(file.getProject()).commitDocument(editor.getDocument());
 
-        final LiveTemplateLookupElement liveTemplateLookup = ContainerUtil.findInstance(lookup.getItems(), LiveTemplateLookupElement.class);
+        LiveTemplateLookupElement liveTemplateLookup = ContainerUtil.findInstance(lookup.getItems(), LiveTemplateLookupElement.class);
         if (liveTemplateLookup == null || !liveTemplateLookup.sudden) {
             // Lookup doesn't contain sudden live templates. It means that
             // - there are no live template with given key:
@@ -140,10 +138,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
                 .allowSlowOperations(() -> TemplateManager.getInstance(file.getProject())
                     .listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.expanding(file, editor)));
             Template template = LiveTemplateCompletionContributor.findFullMatchedApplicableTemplate(editor, offset, templates);
-            if (template != null && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template)) {
-                return true;
-            }
-            return false;
+            return template != null && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template);
         }
 
         return liveTemplateLookup.getTemplateShortcut() == shortcutChar;

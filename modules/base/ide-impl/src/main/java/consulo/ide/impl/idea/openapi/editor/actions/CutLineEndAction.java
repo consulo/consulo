@@ -17,13 +17,9 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.action.EditorAction;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 6:29:03 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-14
  */
 public class CutLineEndAction extends EditorAction {
     public CutLineEndAction() {

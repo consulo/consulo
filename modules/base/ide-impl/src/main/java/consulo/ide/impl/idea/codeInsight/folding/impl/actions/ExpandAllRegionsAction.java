@@ -33,14 +33,14 @@ public class ExpandAllRegionsAction extends EditorAction {
     public ExpandAllRegionsAction() {
         super(new BaseFoldingHandler() {
             @Override
-            public void doExecute(@Nonnull final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
                 Project project = editor.getProject();
                 assert project != null;
                 PsiDocumentManager.getInstance(project).commitAllDocuments();
                 CodeFoldingManager codeFoldingManager = CodeFoldingManager.getInstance(project);
                 codeFoldingManager.updateFoldRegions(editor);
 
-                final List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
+                List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
                 editor.getFoldingModel().runBatchFoldingOperation(() -> {
                     boolean anythingDone = false;
                     for (FoldRegion region : regions) {
@@ -57,7 +57,6 @@ public class ExpandAllRegionsAction extends EditorAction {
                             region.setExpanded(true);
                         }
                     }
-
                 });
             }
         });

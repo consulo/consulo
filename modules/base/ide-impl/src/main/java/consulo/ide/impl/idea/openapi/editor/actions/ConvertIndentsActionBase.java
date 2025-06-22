@@ -40,11 +40,11 @@ public abstract class ConvertIndentsActionBase extends EditorAction {
     }
 
     public static int convertIndentsToTabs(Document document, int tabSize, TextRange textRange) {
-        return processIndents(document, tabSize, textRange, tabIndentBuilder);
+        return processIndents(document, tabSize, textRange, OUR_TAB_INDENT_BUILDER);
     }
 
     public static int convertIndentsToSpaces(Document document, int tabSize, TextRange textRange) {
-        return processIndents(document, tabSize, textRange, spaceIndentBuilder);
+        return processIndents(document, tabSize, textRange, OUR_SPACE_INDENT_BUILDER);
     }
 
     private interface IndentBuilder {
@@ -58,8 +58,8 @@ public abstract class ConvertIndentsActionBase extends EditorAction {
             int endLine = document.getLineNumber(textRange.getEndOffset());
             for (int line = startLine; line <= endLine; line++) {
                 int indent = 0;
-                final int lineStart = document.getLineStartOffset(line);
-                final int lineEnd = document.getLineEndOffset(line);
+                int lineStart = document.getLineStartOffset(line);
+                int lineEnd = document.getLineEndOffset(line);
                 int indentEnd = lineEnd;
                 for (int offset = Math.max(lineStart, textRange.getStartOffset()); offset < lineEnd; offset++) {
                     char c = document.getCharsSequence().charAt(offset);
@@ -87,27 +87,18 @@ public abstract class ConvertIndentsActionBase extends EditorAction {
         return changedLines[0];
     }
 
-    private static IndentBuilder tabIndentBuilder = new IndentBuilder() {
-        @Override
-        public String buildIndent(int length, int tabSize) {
-            return StringUtil.repeatSymbol('\t', length / tabSize) + StringUtil.repeatSymbol(' ', length % tabSize);
-        }
-    };
+    private static final IndentBuilder OUR_TAB_INDENT_BUILDER =
+        (length, tabSize) -> StringUtil.repeatSymbol('\t', length / tabSize) + StringUtil.repeatSymbol(' ', length % tabSize);
 
-    private static IndentBuilder spaceIndentBuilder = new IndentBuilder() {
-        @Override
-        public String buildIndent(int length, int tabSize) {
-            return StringUtil.repeatSymbol(' ', length);
-        }
-    };
+    private static final IndentBuilder OUR_SPACE_INDENT_BUILDER = (length, tabSize) -> StringUtil.repeatSymbol(' ', length);
 
     protected abstract int performAction(Editor editor, TextRange textRange);
 
     private class Handler extends EditorWriteActionHandler {
-        @RequiredWriteAction
         @Override
-        public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
-            final SelectionModel selectionModel = editor.getSelectionModel();
+        @RequiredWriteAction
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            SelectionModel selectionModel = editor.getSelectionModel();
             int changedLines = 0;
             if (selectionModel.hasSelection()) {
                 changedLines = performAction(editor, new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd()));

@@ -40,8 +40,8 @@ abstract class GotoBookmarkActionBase extends EditorAction {
                 return getBookmarkToGo(dataContext, editor) != null;
             }
 
-            private void navigateToBookmark(DataContext dataContext, @Nonnull final Editor editor) {
-                final Bookmark bookmark = getBookmarkToGo(dataContext, editor);
+            private void navigateToBookmark(DataContext dataContext, @Nonnull Editor editor) {
+                Bookmark bookmark = getBookmarkToGo(dataContext, editor);
                 if (bookmark == null) {
                     return;
                 }

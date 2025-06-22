@@ -27,13 +27,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.annotation.access.RequiredWriteAction;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 10:47:00 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-13
  */
 public class UnindentSelectionAction extends EditorAction {
     public UnindentSelectionAction() {
@@ -45,8 +41,8 @@ public class UnindentSelectionAction extends EditorAction {
             super(true);
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             unindentSelection(editor, project);

@@ -35,7 +35,7 @@ public class ExpandRegionAction extends EditorAction {
         });
     }
 
-    private static void expandRegionAtCaret(final Project project, @Nullable final Editor editor) {
+    private static void expandRegionAtCaret(Project project, @Nullable Editor editor) {
         if (editor == null) {
             return;
         }

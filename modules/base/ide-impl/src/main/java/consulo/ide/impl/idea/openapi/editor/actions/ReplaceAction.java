@@ -23,20 +23,18 @@ import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nullable;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jun 18, 2002
- * Time: 5:49:15 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-06-18
  */
 public class ReplaceAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
+        @RequiredUIAccess
         public void execute(Editor editor, DataContext dataContext) {
             Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
             FindUtil.replace(project, editor);

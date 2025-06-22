@@ -26,6 +26,8 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorAction;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
+import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class SelectNextOccurrenceAction extends EditorAction {
@@ -40,7 +42,8 @@ public class SelectNextOccurrenceAction extends EditorAction {
         }
 
         @Override
-        public void doExecute(Editor editor, @Nullable Caret c, DataContext dataContext) {
+        @RequiredUIAccess
+        public void doExecute(@Nonnull Editor editor, @Nullable Caret c, DataContext dataContext) {
             Caret caret = c == null ? editor.getCaretModel().getPrimaryCaret() : c;
             TextRange wordSelectionRange = getSelectionRange(editor, caret);
             boolean notFoundPreviously = getAndResetNotFoundStatus(editor);

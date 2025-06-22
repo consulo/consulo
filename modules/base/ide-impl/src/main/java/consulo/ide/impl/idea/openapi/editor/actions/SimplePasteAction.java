@@ -23,7 +23,7 @@ import consulo.codeEditor.action.EditorAction;
 
 /**
  * @author max
- * @since May 13, 2002
+ * @since 2002-05-13
  */
 public class SimplePasteAction extends EditorAction {
     public SimplePasteAction() {

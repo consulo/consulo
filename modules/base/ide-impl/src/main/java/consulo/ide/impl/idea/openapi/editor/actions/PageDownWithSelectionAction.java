@@ -15,27 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
-import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.dataContext.DataContext;
 import jakarta.annotation.Nullable;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 3:16:36 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-13
  */
 public class PageDownWithSelectionAction extends EditorAction {
     public static class Handler extends EditorActionHandler {
         @Override
-        public void doExecute(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             if (!editor.getCaretModel().supportsMultipleCarets()) {
                 EditorActionUtil.moveCaretPageDown(editor, true);
                 return;
@@ -50,19 +45,12 @@ public class PageDownWithSelectionAction extends EditorAction {
                     currentCaret = editor.getCaretModel().getPrimaryCaret();
                 }
             }
+            else if (caret == null) {
+                editor.getCaretModel().runForEachCaret(eachCaret -> EditorActionUtil.moveCaretPageDown(editor, true));
+            }
             else {
-                if (caret == null) {
-                    editor.getCaretModel().runForEachCaret(new CaretAction() {
-                        @Override
-                        public void perform(Caret caret) {
-                            EditorActionUtil.moveCaretPageDown(editor, true);
-                        }
-                    });
-                }
-                else {
-                    // assuming caret is equal to CaretModel.getCurrentCaret()
-                    EditorActionUtil.moveCaretPageDown(editor, true);
-                }
+                // assuming caret is equal to CaretModel.getCurrentCaret()
+                EditorActionUtil.moveCaretPageDown(editor, true);
             }
         }
     }

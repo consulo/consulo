@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.dataContext.DataContext;
-import consulo.application.ApplicationManager;
-import consulo.document.DocumentRunnable;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.document.DocumentRunnable;
 import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * Stands for emacs <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Other-Kill-Commands.html">kill-ring-save</a> command.
@@ -31,7 +32,7 @@ import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since 4/19/11 6:06 PM
+ * @since 2011-04-19
  */
 public class KillRingSaveAction extends TextComponentEditorAction {
     public KillRingSaveAction() {
@@ -47,7 +48,8 @@ public class KillRingSaveAction extends TextComponentEditorAction {
         }
 
         @Override
-        public void execute(final Editor editor, final DataContext dataContext) {
+        @RequiredUIAccess
+        public void execute(final Editor editor, DataContext dataContext) {
             SelectionModel selectionModel = editor.getSelectionModel();
             if (!selectionModel.hasSelection()) {
                 return;
@@ -60,7 +62,7 @@ public class KillRingSaveAction extends TextComponentEditorAction {
             }
             KillRingUtil.copyToKillRing(editor, start, end, false);
             if (myRemove) {
-                ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
+                Application.get().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
                     @Override
                     public void run() {
                         editor.getDocument().deleteString(start, end);

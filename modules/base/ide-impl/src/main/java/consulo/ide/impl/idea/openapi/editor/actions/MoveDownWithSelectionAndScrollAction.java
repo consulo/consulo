@@ -16,18 +16,15 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
+import jakarta.annotation.Nonnull;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 6:20:22 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-14
  */
 public class MoveDownWithSelectionAndScrollAction extends EditorAction {
     public MoveDownWithSelectionAndScrollAction() {
@@ -36,7 +33,7 @@ public class MoveDownWithSelectionAndScrollAction extends EditorAction {
 
     private static class Handler extends EditorActionHandler {
         @Override
-        public void execute(Editor editor, DataContext dataContext) {
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretRelativelyAndScroll(editor, 0, 1, true);
         }
     }

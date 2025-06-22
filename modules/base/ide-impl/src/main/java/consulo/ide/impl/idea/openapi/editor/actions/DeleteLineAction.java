@@ -38,15 +38,15 @@ public class DeleteLineAction extends TextComponentEditorAction {
     }
 
     private static class Handler extends EditorWriteActionHandler {
-        @RequiredWriteAction
         @Override
-        public void executeWriteAction(final Editor editor, Caret caret, DataContext dataContext) {
+        @RequiredWriteAction
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed("editor.delete.line");
             CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
             CopyPasteManager.getInstance().stopKillRings();
-            final Document document = editor.getDocument();
+            Document document = editor.getDocument();
 
-            final List<Caret> carets = caret == null ? editor.getCaretModel().getAllCarets() : Collections.singletonList(caret);
+            List<Caret> carets = caret == null ? editor.getCaretModel().getAllCarets() : Collections.singletonList(caret);
 
             editor.getCaretModel().runBatchCaretOperation(() -> {
                 int[] caretColumns = new int[carets.size()];

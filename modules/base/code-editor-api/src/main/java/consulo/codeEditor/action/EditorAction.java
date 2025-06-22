@@ -34,14 +34,14 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     private EditorActionHandler myHandler;
     private boolean myHandlersLoaded;
 
-    public EditorActionHandler getHandler() {
-        ensureHandlersLoaded();
-        return myHandler;
-    }
-
     protected EditorAction(EditorActionHandler defaultHandler) {
         myHandler = defaultHandler;
         setEnabledInModalContext(true);
+    }
+
+    public EditorActionHandler getHandler() {
+        ensureHandlersLoaded();
+        return myHandler;
     }
 
     public final EditorActionHandler setupHandler(@Nonnull EditorActionHandler newHandler) {
@@ -53,17 +53,18 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     }
 
     private void ensureHandlersLoaded() {
-        if (!myHandlersLoaded) {
-            myHandlersLoaded = true;
-            final String id = ActionManager.getInstance().getId(this);
-            List<ExtensionEditorActionHandler> extensions = Application.get().getExtensionList(ExtensionEditorActionHandler.class);
-            for (int i = extensions.size() - 1; i >= 0; i--) {
-                final ExtensionEditorActionHandler handler = extensions.get(i);
-                if (handler.getActionId().equals(id)) {
-                    handler.init(myHandler);
-                    myHandler = (EditorActionHandler)handler;
-                    myHandler.setWorksInInjected(isInInjectedContext());
-                }
+        if (myHandlersLoaded) {
+            return;
+        }
+        myHandlersLoaded = true;
+        String id = ActionManager.getInstance().getId(this);
+        List<ExtensionEditorActionHandler> extensions = Application.get().getExtensionList(ExtensionEditorActionHandler.class);
+        for (int i = extensions.size() - 1; i >= 0; i--) {
+            ExtensionEditorActionHandler handler = extensions.get(i);
+            if (handler.getActionId().equals(id)) {
+                handler.init(myHandler);
+                myHandler = (EditorActionHandler)handler;
+                myHandler.setWorksInInjected(isInInjectedContext());
             }
         }
     }
@@ -97,12 +98,12 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    public final void actionPerformed(final Editor editor, @Nonnull final DataContext dataContext) {
+    public final void actionPerformed(Editor editor, @Nonnull DataContext dataContext) {
         if (editor == null) {
             return;
         }
 
-        final EditorActionHandler handler = getHandler();
+        EditorActionHandler handler = getHandler();
         Runnable command = () -> handler.execute(editor, null, getProjectAwareDataContext(editor, dataContext));
 
         if (!handler.executeInCommand(editor, dataContext)) {
@@ -150,9 +151,10 @@ public abstract class EditorAction extends AnAction implements DumbAware {
 
         return new DataContext() {
             @Override
-            public Object getData(@Nonnull Key dataId) {
+            @SuppressWarnings("unchecked")
+            public <T> T getData(@Nonnull Key<T> dataId) {
                 if (Project.KEY == dataId) {
-                    return editor.getProject();
+                    return (T)editor.getProject();
                 }
                 return original.getData(dataId);
             }

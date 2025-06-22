@@ -26,10 +26,9 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 10/24/12 11:10 AM
+ * @since 2012-10-24
  */
 public class MatchBraceAction extends EditorAction {
-
     private static final TIntHashSet OPEN_BRACES = new TIntHashSet(new int[]{'(', '[', '{', '<'});
     private static final TIntHashSet CLOSE_BRACES = new TIntHashSet(new int[]{')', ']', '}', '>'});
 

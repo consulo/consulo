@@ -15,23 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.dataContext.DataContext;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
-import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.application.util.registry.Registry;
-
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.dataContext.DataContext;
 import jakarta.annotation.Nullable;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 5:37:50 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-13
  */
 public class CopyAction extends TextComponentEditorAction {
     public static final String SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY = "editor.skip.copy.and.cut.for.empty.selection";
@@ -42,17 +36,14 @@ public class CopyAction extends TextComponentEditorAction {
 
     private static class Handler extends EditorActionHandler {
         @Override
-        public void doExecute(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             if (!editor.getSelectionModel().hasSelection(true)) {
                 if (Registry.is(SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
                     return;
                 }
-                editor.getCaretModel().runForEachCaret(new CaretAction() {
-                    @Override
-                    public void perform(Caret caret) {
-                        editor.getSelectionModel().selectLineAtCaret();
-                        EditorActionUtil.moveCaretToLineStartIgnoringSoftWraps(editor);
-                    }
+                editor.getCaretModel().runForEachCaret(eachCaret -> {
+                    editor.getSelectionModel().selectLineAtCaret();
+                    EditorActionUtil.moveCaretToLineStartIgnoringSoftWraps(editor);
                 });
             }
             editor.getSelectionModel().copySelectionToClipboard();

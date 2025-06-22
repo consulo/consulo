@@ -32,13 +32,13 @@ public class CollapseAllRegionsAction extends EditorAction {
     public CollapseAllRegionsAction() {
         super(new BaseFoldingHandler() {
             @Override
-            public void doExecute(@Nonnull final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
                 Project project = editor.getProject();
                 assert project != null;
                 PsiDocumentManager.getInstance(project).commitAllDocuments();
                 CodeFoldingManager.getInstance(project).updateFoldRegions(editor);
 
-                final List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
+                List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
                 editor.getFoldingModel().runBatchFoldingOperation(() -> {
                     for (FoldRegion region : regions) {
                         region.setExpanded(false);

@@ -20,13 +20,9 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorActionHandler;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 16, 2002
- * Time: 2:28:05 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-16
  */
 public class ScrollToCenterAction extends InactiveEditorAction {
     public ScrollToCenterAction() {

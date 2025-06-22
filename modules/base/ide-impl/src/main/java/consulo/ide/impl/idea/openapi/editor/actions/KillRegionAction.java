@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since 4/19/11 6:01 PM
+ * @since 2011-04-19
  */
 public class KillRegionAction extends TextComponentEditorAction {
     public KillRegionAction() {

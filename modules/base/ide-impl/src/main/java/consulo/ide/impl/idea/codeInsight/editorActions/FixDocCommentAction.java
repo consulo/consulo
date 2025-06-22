@@ -67,7 +67,7 @@ public class FixDocCommentAction extends EditorAction {
     }
 
     @RequiredUIAccess
-    private static void process(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final Project project, int offset) {
+    private static void process(@Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull Project project, int offset) {
         PsiElement elementAtOffset = file.findElementAt(offset);
         if (elementAtOffset == null || !FileModificationService.getInstance().preparePsiElementForWrite(elementAtOffset)) {
             return;
@@ -83,14 +83,10 @@ public class FixDocCommentAction extends EditorAction {
      * @param editor  target editor
      */
     @RequiredUIAccess
-    public static void generateOrFixComment(
-        @Nonnull final PsiElement element,
-        @Nonnull final Project project,
-        @Nonnull final Editor editor
-    ) {
+    public static void generateOrFixComment(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull Editor editor) {
         Language language = element.getLanguage();
-        final CodeDocumentationProvider docProvider;
-        final DocumentationProvider langDocumentationProvider = LanguageDocumentationProvider.forLanguageComposite(language);
+        CodeDocumentationProvider docProvider;
+        DocumentationProvider langDocumentationProvider = LanguageDocumentationProvider.forLanguageComposite(language);
         if (langDocumentationProvider instanceof CompositeDocumentationProvider compositeDocumentationProvider) {
             docProvider = compositeDocumentationProvider.getFirstCodeDocumentationProvider();
         }
@@ -105,7 +101,7 @@ public class FixDocCommentAction extends EditorAction {
             return;
         }
 
-        final Pair<PsiElement, PsiComment> pair = docProvider.parseContext(element);
+        Pair<PsiElement, PsiComment> pair = docProvider.parseContext(element);
         if (pair == null) {
             return;
         }
@@ -114,12 +110,12 @@ public class FixDocCommentAction extends EditorAction {
         if (!(c instanceof CodeDocumentationAwareCommenter commenter)) {
             return;
         }
-        final Runnable task;
+        Runnable task;
         if (pair.second == null || pair.second.getTextRange().isEmpty()) {
             task = () -> generateComment(pair.first, editor, docProvider, commenter, project);
         }
         else {
-            final DocCommentFixer fixer = DocCommentFixer.forLanguage(language);
+            DocCommentFixer fixer = DocCommentFixer.forLanguage(language);
             if (fixer == null) {
                 return;
             }

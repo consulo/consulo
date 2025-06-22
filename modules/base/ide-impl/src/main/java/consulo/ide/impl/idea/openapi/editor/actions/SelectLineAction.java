@@ -20,13 +20,9 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 22, 2002
- * Time: 10:43:26 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-22
  */
 public class SelectLineAction extends TextComponentEditorAction {
     public SelectLineAction() {

@@ -35,10 +35,10 @@ public class JoinLinesAction extends TextComponentEditorAction {
             super(true);
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-            final Document doc = editor.getDocument();
+            Document doc = editor.getDocument();
 
             LogicalPosition caretPosition = caret.getLogicalPosition();
             int startLine = caretPosition.line;
@@ -53,34 +53,36 @@ public class JoinLinesAction extends TextComponentEditorAction {
 
             int[] caretRestoreOffset = new int[]{-1};
             int lineCount = endLine - startLine;
-            final int line = startLine;
+            int line = startLine;
 
-            DocumentUtil.executeInBulk(doc, lineCount > 1000, () -> {
-                for (int i = 0; i < lineCount; i++) {
-                    if (line >= doc.getLineCount() - 1) {
-                        break;
+            DocumentUtil.executeInBulk(
+                doc,
+                lineCount > 1000,
+                () -> {
+                    for (int i = 0; i < lineCount; i++) {
+                        if (line >= doc.getLineCount() - 1) {
+                            break;
+                        }
+                        CharSequence text = doc.getCharsSequence();
+                        int end = doc.getLineEndOffset(line) + doc.getLineSeparatorLength(line);
+                        int start = end - doc.getLineSeparatorLength(line);
+                        while (start > 0 && (text.charAt(start) == ' ' || text.charAt(start) == '\t')) start--;
+                        if (caretRestoreOffset[0] == -1) {
+                            caretRestoreOffset[0] = start + 1;
+                        }
+                        while (end < doc.getTextLength() && (text.charAt(end) == ' ' || text.charAt(end) == '\t')) end++;
+                        doc.replaceString(start, end, " ");
                     }
-                    CharSequence text = doc.getCharsSequence();
-                    int end = doc.getLineEndOffset(line) + doc.getLineSeparatorLength(line);
-                    int start = end - doc.getLineSeparatorLength(line);
-                    while (start > 0 && (text.charAt(start) == ' ' || text.charAt(start) == '\t')) start--;
-                    if (caretRestoreOffset[0] == -1) {
-                        caretRestoreOffset[0] = start + 1;
-                    }
-                    while (end < doc.getTextLength() && (text.charAt(end) == ' ' || text.charAt(end) == '\t')) end++;
-                    doc.replaceString(start, end, " ");
                 }
-            });
+            );
 
             if (caret.hasSelection()) {
                 caret.moveToOffset(caret.getSelectionEnd());
             }
-            else {
-                if (caretRestoreOffset[0] != -1) {
-                    caret.moveToOffset(caretRestoreOffset[0]);
-                    editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-                    caret.removeSelection();
-                }
+            else if (caretRestoreOffset[0] != -1) {
+                caret.moveToOffset(caretRestoreOffset[0]);
+                editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+                caret.removeSelection();
             }
         }
     }

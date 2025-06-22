@@ -23,12 +23,14 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class FindAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
+        @RequiredUIAccess
         public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
             Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
             FindUtil.find(project, editor);

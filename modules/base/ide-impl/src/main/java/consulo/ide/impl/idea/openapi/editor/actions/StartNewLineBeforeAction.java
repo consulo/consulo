@@ -29,7 +29,7 @@ import consulo.annotation.access.RequiredWriteAction;
 
 /**
  * @author Denis Zhdanov
- * @since 5/19/11 10:42 AM
+ * @since 2011-05-19
  */
 public class StartNewLineBeforeAction extends EditorAction {
     public StartNewLineBeforeAction() {
@@ -46,12 +46,12 @@ public class StartNewLineBeforeAction extends EditorAction {
             return getHandler(IdeActions.ACTION_EDITOR_ENTER).isEnabled(editor, caret, dataContext);
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             editor.getSelectionModel().removeSelection();
             LogicalPosition caretPosition = editor.getCaretModel().getLogicalPosition();
-            final int line = caretPosition.line;
+            int line = caretPosition.line;
             int lineStartOffset = editor.getDocument().getLineStartOffset(line);
             editor.getCaretModel().moveToOffset(lineStartOffset);
             getHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, caret, dataContext);

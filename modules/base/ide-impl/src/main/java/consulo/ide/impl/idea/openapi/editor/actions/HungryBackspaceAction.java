@@ -35,7 +35,7 @@ import jakarta.annotation.Nonnull;
  * (white spaces, tabulations, line feeds) are removed then.
  *
  * @author Denis Zhdanov
- * @since 6/27/12 4:10 PM
+ * @since 2012-06-27
  */
 public class HungryBackspaceAction extends TextComponentEditorAction {
     public HungryBackspaceAction() {
@@ -47,24 +47,24 @@ public class HungryBackspaceAction extends TextComponentEditorAction {
             super(true);
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
-            final Document document = editor.getDocument();
-            final int caretOffset = editor.getCaretModel().getOffset();
+            Document document = editor.getDocument();
+            int caretOffset = editor.getCaretModel().getOffset();
             if (caretOffset < 1) {
                 return;
             }
 
-            final SelectionModel selectionModel = editor.getSelectionModel();
-            final CharSequence text = document.getCharsSequence();
-            final char c = text.charAt(caretOffset - 1);
+            SelectionModel selectionModel = editor.getSelectionModel();
+            CharSequence text = document.getCharsSequence();
+            char c = text.charAt(caretOffset - 1);
             if (!selectionModel.hasSelection() && StringUtil.isWhiteSpace(c)) {
                 int startOffset = CharArrayUtil.shiftBackward(text, caretOffset - 2, "\t \n") + 1;
                 document.deleteString(startOffset, caretOffset);
             }
             else {
-                final EditorActionHandler handler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE);
+                EditorActionHandler handler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE);
                 handler.execute(editor, caret, dataContext);
             }
         }

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.language.editor.CommonDataKeys;
+import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
@@ -23,7 +23,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-/*
+/**
  * @author max
  */
 public class InactiveEditorAction extends EditorAction {
@@ -31,9 +31,9 @@ public class InactiveEditorAction extends EditorAction {
         super(defaultHandler);
     }
 
-    @Override
     @Nullable
-    protected Editor getEditor(@Nonnull final DataContext dataContext) {
-        return dataContext.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
+    @Override
+    protected Editor getEditor(@Nonnull DataContext dataContext) {
+        return dataContext.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
     }
 }

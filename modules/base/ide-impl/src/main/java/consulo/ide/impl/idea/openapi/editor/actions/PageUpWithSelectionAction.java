@@ -25,13 +25,9 @@ import consulo.dataContext.DataContext;
 
 import jakarta.annotation.Nullable;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 3:16:36 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-13
  */
 public class PageUpWithSelectionAction extends EditorAction {
     public static class Handler extends EditorActionHandler {

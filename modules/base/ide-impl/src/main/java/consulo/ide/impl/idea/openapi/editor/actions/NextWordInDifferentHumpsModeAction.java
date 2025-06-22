@@ -19,10 +19,11 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 2/14/13 7:22 PM
+ * @since 2013-02-14
  */
 public class NextWordInDifferentHumpsModeAction extends TextComponentEditorAction {
 
@@ -36,7 +37,7 @@ public class NextWordInDifferentHumpsModeAction extends TextComponentEditorActio
         }
 
         @Override
-        public void execute(Editor editor, DataContext dataContext) {
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretToNextWord(editor, false, !editor.getSettings().isCamelWords());
         }
     }

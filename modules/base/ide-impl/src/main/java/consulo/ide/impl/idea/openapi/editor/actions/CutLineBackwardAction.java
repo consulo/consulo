@@ -28,7 +28,7 @@ import consulo.annotation.access.RequiredWriteAction;
  * with negative argument.
  *
  * @author Denis Zhdanov
- * @since 4/18/11 1:22 PM
+ * @since 2011-04-18
  */
 public class CutLineBackwardAction extends EditorAction {
 
@@ -37,11 +37,10 @@ public class CutLineBackwardAction extends EditorAction {
     }
 
     static class Handler extends EditorWriteActionHandler {
-
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, DataContext dataContext) {
-            final Document document = editor.getDocument();
+            Document document = editor.getDocument();
             int caretOffset = editor.getCaretModel().getOffset();
             if (caretOffset <= 0) {
                 return;
@@ -49,7 +48,7 @@ public class CutLineBackwardAction extends EditorAction {
 
             // The main idea is to kill everything between the current line start and caret and the whole previous line.
 
-            final int caretLine = document.getLineNumber(caretOffset);
+            int caretLine = document.getLineNumber(caretOffset);
             int start;
 
             if (caretLine <= 0) {

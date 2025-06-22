@@ -29,11 +29,11 @@ public class CollapseRegionAction extends EditorAction {
     public CollapseRegionAction() {
         super(new BaseFoldingHandler() {
             @Override
-            public void doExecute(@Nonnull final Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
                 CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(editor.getProject());
                 foldingManager.updateFoldRegions(editor);
 
-                final int line = editor.getCaretModel().getLogicalPosition().line;
+                int line = editor.getCaretModel().getLogicalPosition().line;
 
                 Runnable processor = () -> {
                     FoldRegion region = FoldingUtil.findFoldRegionStartingAtLine(editor, line);

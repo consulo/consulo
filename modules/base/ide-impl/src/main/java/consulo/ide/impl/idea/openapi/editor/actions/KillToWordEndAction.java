@@ -34,7 +34,7 @@ import consulo.annotation.access.RequiredWriteAction;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since 4/19/11 1:58 PM
+ * @since 2011-04-19
  */
 public class KillToWordEndAction extends TextComponentEditorAction {
     public KillToWordEndAction() {
@@ -42,8 +42,8 @@ public class KillToWordEndAction extends TextComponentEditorAction {
     }
 
     private static class Handler extends EditorWriteActionHandler {
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             CaretModel caretModel = editor.getCaretModel();
             int caretOffset = caretModel.getOffset();

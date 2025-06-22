@@ -28,13 +28,9 @@ import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 16, 2002
- * Time: 6:16:33 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
+/**
+ * @author max
+ * @since 2002-05-16
  */
 public class PreviousVariableAction extends EditorAction {
     public PreviousVariableAction() {
@@ -46,7 +42,7 @@ public class PreviousVariableAction extends EditorAction {
         @Override
         @RequiredUIAccess
         protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-            final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+            TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
             assert templateState != null;
             CommandProcessor.getInstance().setCurrentCommandName(CodeInsightLocalize.templatePreviousVariableCommand());
             templateState.previousTab();
@@ -54,7 +50,7 @@ public class PreviousVariableAction extends EditorAction {
 
         @Override
         protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-            final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+            TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
             return templateState != null && !templateState.isFinished();
         }
     }

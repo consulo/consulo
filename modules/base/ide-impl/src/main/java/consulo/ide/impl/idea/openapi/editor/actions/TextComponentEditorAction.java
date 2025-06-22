@@ -37,17 +37,17 @@ public abstract class TextComponentEditorAction extends EditorAction {
 
     @Override
     @Nullable
-    protected Editor getEditor(@Nonnull final DataContext dataContext) {
+    protected Editor getEditor(@Nonnull DataContext dataContext) {
         return getEditorFromContext(dataContext);
     }
 
     @Nullable
     public static Editor getEditorFromContext(@Nonnull DataContext dataContext) {
-        final Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = dataContext.getData(Editor.KEY);
         if (editor != null) {
             return editor;
         }
-        final Object data = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        Object data = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         return data instanceof JTextComponent textComponent
             ? new TextComponentEditorImpl(dataContext.getData(Project.KEY), textComponent) : null;
     }

@@ -44,8 +44,8 @@ public class IncrementalFindAction extends EditorAction {
         }
 
         @Override
-        public void execute(final Editor editor, DataContext dataContext) {
-            final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
+        public void execute(Editor editor, DataContext dataContext) {
+            Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
             if (!editor.isOneLineMode()) {
                 EditorSearchSession search = EditorSearchSession.get(editor);
                 if (search != null) {

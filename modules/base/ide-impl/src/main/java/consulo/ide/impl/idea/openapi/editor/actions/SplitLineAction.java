@@ -56,19 +56,19 @@ public class SplitLineAction extends EditorAction {
                 !((EditorEx) editor).isEmbeddedIntoDialogWrapper();
         }
 
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             CopyPasteManager.getInstance().stopKillRings();
-            final Document document = editor.getDocument();
-            final RangeMarker rangeMarker =
+            Document document = editor.getDocument();
+            RangeMarker rangeMarker =
                 document.createRangeMarker(editor.getCaretModel().getOffset(), editor.getCaretModel().getOffset());
-            final CharSequence chars = document.getCharsSequence();
+            CharSequence chars = document.getCharsSequence();
 
             int offset = editor.getCaretModel().getOffset();
             int lineStart = document.getLineStartOffset(document.getLineNumber(offset));
 
-            final CharSequence beforeCaret = chars.subSequence(lineStart, offset);
+            CharSequence beforeCaret = chars.subSequence(lineStart, offset);
 
             if (CharArrayUtil.containsOnlyWhiteSpaces(beforeCaret)) {
                 String strToInsert = "";
