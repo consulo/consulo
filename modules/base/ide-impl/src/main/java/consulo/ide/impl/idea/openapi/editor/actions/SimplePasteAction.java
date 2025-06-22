@@ -23,20 +23,20 @@ import consulo.codeEditor.action.EditorAction;
 
 /**
  * @author max
- * @since May 13, 2002
+ * @since 2002-05-13
  */
 public class SimplePasteAction extends EditorAction {
-  public SimplePasteAction() {
-    super(new BasePasteHandler());
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    super.update(e);
-    if (ActionPlaces.isPopupPlace(e.getPlace())) {
-      Presentation presentation = e.getPresentation();
-      presentation.setVisible(presentation.isEnabled());
+    public SimplePasteAction() {
+        super(new BasePasteHandler());
     }
-  }
+
+    @RequiredUIAccess
+    @Override
+    public void update(AnActionEvent e) {
+        super.update(e);
+        if (ActionPlaces.isPopupPlace(e.getPlace())) {
+            Presentation presentation = e.getPresentation();
+            presentation.setVisible(presentation.isEnabled());
+        }
+    }
 }

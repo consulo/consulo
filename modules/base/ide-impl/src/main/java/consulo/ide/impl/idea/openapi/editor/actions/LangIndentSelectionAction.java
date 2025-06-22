@@ -25,17 +25,20 @@ import consulo.language.psi.PsiFile;
  * @author peter
  */
 public class LangIndentSelectionAction extends IndentSelectionAction {
+    @Override
+    protected boolean isEnabled(Editor editor, DataContext dataContext) {
+        if (!originalIsEnabled(editor, wantSelection())) {
+            return false;
+        }
+        if (LookupManager.getActiveLookup(editor) != null) {
+            return false;
+        }
 
-  @Override
-  protected boolean isEnabled(Editor editor, DataContext dataContext) {
-    if (!originalIsEnabled(editor, wantSelection())) return false;
-    if (LookupManager.getActiveLookup(editor) != null) return false;
+        PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+        return psiFile == null || !NextPrevParameterAction.hasSutablePolicy(editor, psiFile);
+    }
 
-    PsiFile psiFile = dataContext.getData(PsiFile.KEY);
-    return psiFile == null || !NextPrevParameterAction.hasSutablePolicy(editor, psiFile);
-  }
-
-  protected boolean wantSelection() {
-    return true;
-  }
+    protected boolean wantSelection() {
+        return true;
+    }
 }

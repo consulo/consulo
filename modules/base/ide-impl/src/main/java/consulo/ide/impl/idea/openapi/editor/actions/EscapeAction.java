@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
@@ -22,45 +21,46 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.*;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author max
  */
 public class EscapeAction extends EditorAction {
-  public EscapeAction() {
-    super(new Handler());
-    setInjectedContext(true);
-  }
+    public EscapeAction() {
+        super(new Handler());
+        setInjectedContext(true);
+    }
 
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      if (editor instanceof EditorEx) {
-        EditorEx editorEx = (EditorEx)editor;
-        if (editorEx.isStickySelection()) {
-          editorEx.setStickySelection(false);
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            if (editor instanceof EditorEx) {
+                EditorEx editorEx = (EditorEx) editor;
+                if (editorEx.isStickySelection()) {
+                    editorEx.setStickySelection(false);
+                }
+            }
+            boolean scrollNeeded = editor.getCaretModel().getCaretCount() > 1;
+            retainOldestCaret(editor.getCaretModel());
+            editor.getSelectionModel().removeSelection();
+            if (scrollNeeded) {
+                editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+            }
         }
-      }
-      boolean scrollNeeded = editor.getCaretModel().getCaretCount() > 1;
-      retainOldestCaret(editor.getCaretModel());
-      editor.getSelectionModel().removeSelection();
-      if (scrollNeeded) {
-        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-      }
-    }
 
-    private static void retainOldestCaret(CaretModel caretModel) {
-      while(caretModel.getCaretCount() > 1) {
-        caretModel.removeCaret(caretModel.getPrimaryCaret());
-      }
-    }
+        private static void retainOldestCaret(CaretModel caretModel) {
+            while (caretModel.getCaretCount() > 1) {
+                caretModel.removeCaret(caretModel.getPrimaryCaret());
+            }
+        }
 
-    @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
-      SelectionModel selectionModel = editor.getSelectionModel();
-      CaretModel caretModel = editor.getCaretModel();
-      return selectionModel.hasSelection() || caretModel.getCaretCount() > 1;
+        @Override
+        public boolean isEnabled(Editor editor, DataContext dataContext) {
+            SelectionModel selectionModel = editor.getSelectionModel();
+            CaretModel caretModel = editor.getCaretModel();
+            return selectionModel.hasSelection() || caretModel.getCaretCount() > 1;
+        }
     }
-  }
 }

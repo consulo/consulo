@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.bookmark.Bookmark;
@@ -29,40 +28,48 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 abstract class GotoBookmarkActionBase extends EditorAction {
-  protected GotoBookmarkActionBase(final boolean next) {
-    super(new EditorActionHandler() {
-      @Override
-      public void execute(@Nonnull Editor editor, DataContext dataContext) {
-        navigateToBookmark(dataContext, editor);
-      }
+    protected GotoBookmarkActionBase(final boolean next) {
+        super(new EditorActionHandler() {
+            @Override
+            public void execute(@Nonnull Editor editor, DataContext dataContext) {
+                navigateToBookmark(dataContext, editor);
+            }
 
-      @Override
-      public boolean isEnabled(Editor editor, DataContext dataContext) {
-        return getBookmarkToGo(dataContext, editor) != null;
-      }
+            @Override
+            public boolean isEnabled(Editor editor, DataContext dataContext) {
+                return getBookmarkToGo(dataContext, editor) != null;
+            }
 
-      private void navigateToBookmark(DataContext dataContext, @Nonnull final Editor editor) {
-        final Bookmark bookmark = getBookmarkToGo(dataContext, editor);
-        if (bookmark == null) return;
+            private void navigateToBookmark(DataContext dataContext, @Nonnull Editor editor) {
+                Bookmark bookmark = getBookmarkToGo(dataContext, editor);
+                if (bookmark == null) {
+                    return;
+                }
 
-        int line = bookmark.getLine();
-        if (line >= editor.getDocument().getLineCount()) return;
-        if (line < 0) line = 0;
+                int line = bookmark.getLine();
+                if (line >= editor.getDocument().getLineCount()) {
+                    return;
+                }
+                if (line < 0) {
+                    line = 0;
+                }
 
-        LogicalPosition pos = new LogicalPosition(line, 0);
-        editor.getSelectionModel().removeSelection();
-        editor.getCaretModel().removeSecondaryCarets();
-        editor.getCaretModel().moveToLogicalPosition(pos);
-        editor.getScrollingModel().scrollTo(new LogicalPosition(line, 0), ScrollType.CENTER);
-      }
+                LogicalPosition pos = new LogicalPosition(line, 0);
+                editor.getSelectionModel().removeSelection();
+                editor.getCaretModel().removeSecondaryCarets();
+                editor.getCaretModel().moveToLogicalPosition(pos);
+                editor.getScrollingModel().scrollTo(new LogicalPosition(line, 0), ScrollType.CENTER);
+            }
 
-      @Nullable
-      private Bookmark getBookmarkToGo(DataContext dataContext, Editor editor) {
-        Project project = dataContext.getData(Project.KEY);
-        if (project == null) return null;
-        BookmarkManager manager = BookmarkManager.getInstance(project);
-        return next ? manager.getNextBookmark(editor, true) : manager.getPreviousBookmark(editor, true);
-      }
-    });
-  }
+            @Nullable
+            private Bookmark getBookmarkToGo(DataContext dataContext, Editor editor) {
+                Project project = dataContext.getData(Project.KEY);
+                if (project == null) {
+                    return null;
+                }
+                BookmarkManager manager = BookmarkManager.getInstance(project);
+                return next ? manager.getNextBookmark(editor, true) : manager.getPreviousBookmark(editor, true);
+            }
+        });
+    }
 }

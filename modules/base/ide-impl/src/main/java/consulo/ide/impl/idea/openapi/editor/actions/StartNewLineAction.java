@@ -32,36 +32,36 @@ import consulo.annotation.access.RequiredWriteAction;
  * @author max
  */
 public class StartNewLineAction extends EditorAction {
-  public StartNewLineAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    public Handler() {
-      super(true);
+    public StartNewLineAction() {
+        super(new Handler());
     }
 
-    @Override
-    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-      return getEnterHandler().isEnabled(editor, caret, dataContext);
-    }
+    private static class Handler extends EditorWriteActionHandler {
+        public Handler() {
+            super(true);
+        }
 
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      CopyPasteManager.getInstance().stopKillRings();
-      if (editor.getDocument().getLineCount() != 0) {
-        editor.getSelectionModel().removeSelection();
-        LogicalPosition caretPosition = editor.getCaretModel().getLogicalPosition();
-        int lineEndOffset = editor.getDocument().getLineEndOffset(caretPosition.line);
-        editor.getCaretModel().moveToOffset(lineEndOffset);
-      }
+        @Override
+        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+            return getEnterHandler().isEnabled(editor, caret, dataContext);
+        }
 
-      getEnterHandler().execute(editor, caret, dataContext);
-    }
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+            CopyPasteManager.getInstance().stopKillRings();
+            if (editor.getDocument().getLineCount() != 0) {
+                editor.getSelectionModel().removeSelection();
+                LogicalPosition caretPosition = editor.getCaretModel().getLogicalPosition();
+                int lineEndOffset = editor.getDocument().getLineEndOffset(caretPosition.line);
+                editor.getCaretModel().moveToOffset(lineEndOffset);
+            }
 
-    private static EditorActionHandler getEnterHandler() {
-      return EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
+            getEnterHandler().execute(editor, caret, dataContext);
+        }
+
+        private static EditorActionHandler getEnterHandler() {
+            return EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
+        }
     }
-  }
 }

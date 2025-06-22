@@ -29,21 +29,20 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  */
 public class ResetFontSizeAction extends EditorAction {
-
-  public ResetFontSizeAction() {
-    super(new MyHandler());
-  }
-
-  private static class MyHandler extends EditorActionHandler {
-    @Override
-    public void execute(@Nonnull Editor editor, DataContext dataContext) {
-      if (!(editor instanceof EditorEx)) {
-        return;
-      }
-      EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
-      int fontSize = ConsoleViewUtil.isConsoleViewEditor(editor) ? globalScheme.getConsoleFontSize() : globalScheme.getEditorFontSize();
-      EditorEx editorEx = (EditorEx)editor;
-      editorEx.setFontSize(fontSize);
+    public ResetFontSizeAction() {
+        super(new MyHandler());
     }
-  }
+
+    private static class MyHandler extends EditorActionHandler {
+        @Override
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+            if (!(editor instanceof EditorEx editorEx)) {
+                return;
+            }
+            EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
+            int fontSize =
+                ConsoleViewUtil.isConsoleViewEditor(editor) ? globalScheme.getConsoleFontSize() : globalScheme.getEditorFontSize();
+            editorEx.setFontSize(fontSize);
+        }
+    }
 }

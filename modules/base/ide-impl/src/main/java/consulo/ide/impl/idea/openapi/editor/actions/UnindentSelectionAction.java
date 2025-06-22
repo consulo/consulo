@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 10:47:00 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
@@ -36,55 +27,61 @@ import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.annotation.access.RequiredWriteAction;
 
+/**
+ * @author max
+ * @since 2002-05-13
+ */
 public class UnindentSelectionAction extends EditorAction {
-  public UnindentSelectionAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    public Handler() {
-      super(true);
+    public UnindentSelectionAction() {
+        super(new Handler());
     }
 
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, DataContext dataContext) {
-      Project project = dataContext.getData(Project.KEY);
-      unindentSelection(editor, project);
+    private static class Handler extends EditorWriteActionHandler {
+        public Handler() {
+            super(true);
+        }
+
+        @Override
+        @RequiredWriteAction
+        public void executeWriteAction(Editor editor, DataContext dataContext) {
+            Project project = dataContext.getData(Project.KEY);
+            unindentSelection(editor, project);
+        }
+
+        @Override
+        public boolean isEnabled(Editor editor, DataContext dataContext) {
+            return !editor.isOneLineMode() && !((EditorEx) editor).isEmbeddedIntoDialogWrapper();
+        }
     }
 
-    @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
-      return !editor.isOneLineMode() && !((EditorEx)editor).isEmbeddedIntoDialogWrapper();
-    }
-  }
+    private static void unindentSelection(Editor editor, Project project) {
+        int oldSelectionStart = editor.getSelectionModel().getSelectionStart();
+        int oldSelectionEnd = editor.getSelectionModel().getSelectionEnd();
+        if (!editor.getSelectionModel().hasSelection()) {
+            oldSelectionStart = editor.getCaretModel().getOffset();
+            oldSelectionEnd = oldSelectionStart;
+        }
 
-  private static void unindentSelection(Editor editor, Project project) {
-    int oldSelectionStart = editor.getSelectionModel().getSelectionStart();
-    int oldSelectionEnd = editor.getSelectionModel().getSelectionEnd();
-    if (!editor.getSelectionModel().hasSelection()) {
-      oldSelectionStart = editor.getCaretModel().getOffset();
-      oldSelectionEnd = oldSelectionStart;
-    }
+        Document document = editor.getDocument();
+        int startIndex = document.getLineNumber(oldSelectionStart);
+        if (startIndex == -1) {
+            startIndex = document.getLineCount() - 1;
+        }
+        int endIndex = document.getLineNumber(oldSelectionEnd);
+        if (endIndex > 0 && document.getLineStartOffset(endIndex) == oldSelectionEnd && endIndex > startIndex) {
+            endIndex--;
+        }
+        if (endIndex == -1) {
+            endIndex = document.getLineCount() - 1;
+        }
 
-    Document document = editor.getDocument();
-    int startIndex = document.getLineNumber(oldSelectionStart);
-    if (startIndex == -1) {
-      startIndex = document.getLineCount() - 1;
-    }
-    int endIndex = document.getLineNumber(oldSelectionEnd);
-    if (endIndex > 0 && document.getLineStartOffset(endIndex) == oldSelectionEnd && endIndex > startIndex) {
-      endIndex --;
-    }
-    if (endIndex == -1) {
-      endIndex = document.getLineCount() - 1;
-    }
+        if (startIndex < 0 || endIndex < 0) {
+            return;
+        }
 
-    if (startIndex < 0 || endIndex < 0) return;
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
-
-    int blockIndent = CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).INDENT_SIZE;
-    IndentSelectionAction.doIndent(endIndex, startIndex, document, project, editor, -blockIndent);
-  }
+        int blockIndent = CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).INDENT_SIZE;
+        IndentSelectionAction.doIndent(endIndex, startIndex, document, project, editor, -blockIndent);
+    }
 }

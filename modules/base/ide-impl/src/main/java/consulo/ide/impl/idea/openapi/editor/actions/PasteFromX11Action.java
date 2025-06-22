@@ -36,47 +36,49 @@ import java.awt.event.MouseEvent;
  * @author msk
  */
 public class PasteFromX11Action extends EditorAction {
-  private static final Logger LOG = Logger.getInstance(PasteFromX11Action.class);
+    private static final Logger LOG = Logger.getInstance(PasteFromX11Action.class);
 
-  public PasteFromX11Action() {
-    super(new Handler());
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    Editor editor = e.getData(Editor.KEY);
-    if (editor == null || !Platform.current().os().isXWindow()) {
-      presentation.setEnabled(false);
+    public PasteFromX11Action() {
+        super(new Handler());
     }
-    else {
-      boolean rightPlace = true;
-      final InputEvent inputEvent = e.getInputEvent();
-      if (inputEvent instanceof MouseEvent me) {
-        rightPlace = false;
-        if (editor.getMouseEventArea(me) == EditorMouseEventArea.EDITING_AREA) {
-          final Component component = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY());
-          rightPlace = !(component instanceof JScrollBar);
-        }
-      }
-      presentation.setEnabled(rightPlace);
-    }
-  }
 
-  public static class Handler extends BasePasteHandler {
+    @RequiredUIAccess
     @Override
-    protected Transferable getContentsToPaste(Editor editor, DataContext dataContext) {
-      Clipboard clip = editor.getComponent().getToolkit().getSystemSelection();
-      if (clip == null) return null;
-
-      try {
-        return clip.getContents(null);
-      }
-      catch (Exception e) {
-        LOG.info(e);
-        return null;
-      }
+    public void update(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Editor editor = e.getData(Editor.KEY);
+        if (editor == null || !Platform.current().os().isXWindow()) {
+            presentation.setEnabled(false);
+        }
+        else {
+            boolean rightPlace = true;
+            InputEvent inputEvent = e.getInputEvent();
+            if (inputEvent instanceof MouseEvent me) {
+                rightPlace = false;
+                if (editor.getMouseEventArea(me) == EditorMouseEventArea.EDITING_AREA) {
+                    Component component = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY());
+                    rightPlace = !(component instanceof JScrollBar);
+                }
+            }
+            presentation.setEnabled(rightPlace);
+        }
     }
-  }
+
+    public static class Handler extends BasePasteHandler {
+        @Override
+        protected Transferable getContentsToPaste(Editor editor, DataContext dataContext) {
+            Clipboard clip = editor.getComponent().getToolkit().getSystemSelection();
+            if (clip == null) {
+                return null;
+            }
+
+            try {
+                return clip.getContents(null);
+            }
+            catch (Exception e) {
+                LOG.info(e);
+                return null;
+            }
+        }
+    }
 }

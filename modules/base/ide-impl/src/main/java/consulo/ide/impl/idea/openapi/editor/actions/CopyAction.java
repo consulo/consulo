@@ -13,51 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 5:37:50 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.dataContext.DataContext;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
-import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.application.util.registry.Registry;
-
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.dataContext.DataContext;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ * @since 2002-05-13
+ */
 public class CopyAction extends TextComponentEditorAction {
+    public static final String SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY = "editor.skip.copy.and.cut.for.empty.selection";
 
-  public static final String SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY = "editor.skip.copy.and.cut.for.empty.selection";
-
-  public CopyAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void doExecute(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      if (!editor.getSelectionModel().hasSelection(true)) {
-        if (Registry.is(SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
-          return;
-        }
-        editor.getCaretModel().runForEachCaret(new CaretAction() {
-          @Override
-          public void perform(Caret caret) {
-            editor.getSelectionModel().selectLineAtCaret();
-            EditorActionUtil.moveCaretToLineStartIgnoringSoftWraps(editor);
-          }
-        });
-      }
-      editor.getSelectionModel().copySelectionToClipboard();
+    public CopyAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            if (!editor.getSelectionModel().hasSelection(true)) {
+                if (Registry.is(SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
+                    return;
+                }
+                editor.getCaretModel().runForEachCaret(eachCaret -> {
+                    editor.getSelectionModel().selectLineAtCaret();
+                    EditorActionUtil.moveCaretToLineStartIgnoringSoftWraps(editor);
+                });
+            }
+            editor.getSelectionModel().copySelectionToClipboard();
+        }
+    }
 }

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 14, 2002
- * Time: 6:29:03 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.*;
@@ -30,43 +21,48 @@ import consulo.codeEditor.RealEditor;
 import consulo.dataContext.DataContext;
 
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
+/**
+ * @author max
+ * @since 2002-05-14
+ */
 public class TextEndWithSelectionAction extends TextComponentEditorAction {
-  public TextEndWithSelectionAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      int endOffset = editor.getDocument().getTextLength();
-      List<Caret> carets = editor.getCaretModel().getAllCarets();
-      if (editor.isColumnMode() && editor.getCaretModel().supportsMultipleCarets()) {
-        if (caret == null) { // normally we're always called with null caret
-          caret = carets.get(0) == editor.getCaretModel().getPrimaryCaret() ? carets.get(carets.size() - 1) : carets.get(0);
-        }
-        LogicalPosition leadSelectionPosition = editor.visualToLogicalPosition(caret.getLeadSelectionPosition());
-        LogicalPosition targetPosition = editor.offsetToLogicalPosition(endOffset).leanForward(true);
-        editor.getSelectionModel().setBlockSelection(leadSelectionPosition, targetPosition);
-      }
-      else {
-        if (caret == null) { // normally we're always called with null caret
-          caret = carets.get(0);
-        }
-        int selectionStart = caret.getLeadSelectionOffset();
-        if (editor instanceof RealEditor) {
-          caret.moveToLogicalPosition(editor.offsetToLogicalPosition(endOffset).leanForward(true));
-        }
-        else {
-          caret.moveToOffset(endOffset);
-        }
-        caret.setSelection(selectionStart, endOffset);
-      }
-      ScrollingModel scrollingModel = editor.getScrollingModel();
-      scrollingModel.disableAnimation();
-      scrollingModel.scrollToCaret(ScrollType.CENTER);
-      scrollingModel.enableAnimation();
+    public TextEndWithSelectionAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            int endOffset = editor.getDocument().getTextLength();
+            List<Caret> carets = editor.getCaretModel().getAllCarets();
+            if (editor.isColumnMode() && editor.getCaretModel().supportsMultipleCarets()) {
+                if (caret == null) { // normally we're always called with null caret
+                    caret = carets.get(0) == editor.getCaretModel().getPrimaryCaret() ? carets.get(carets.size() - 1) : carets.get(0);
+                }
+                LogicalPosition leadSelectionPosition = editor.visualToLogicalPosition(caret.getLeadSelectionPosition());
+                LogicalPosition targetPosition = editor.offsetToLogicalPosition(endOffset).leanForward(true);
+                editor.getSelectionModel().setBlockSelection(leadSelectionPosition, targetPosition);
+            }
+            else {
+                if (caret == null) { // normally we're always called with null caret
+                    caret = carets.get(0);
+                }
+                int selectionStart = caret.getLeadSelectionOffset();
+                if (editor instanceof RealEditor) {
+                    caret.moveToLogicalPosition(editor.offsetToLogicalPosition(endOffset).leanForward(true));
+                }
+                else {
+                    caret.moveToOffset(endOffset);
+                }
+                caret.setSelection(selectionStart, endOffset);
+            }
+            ScrollingModel scrollingModel = editor.getScrollingModel();
+            scrollingModel.disableAnimation();
+            scrollingModel.scrollToCaret(ScrollType.CENTER);
+            scrollingModel.enableAnimation();
+        }
+    }
 }

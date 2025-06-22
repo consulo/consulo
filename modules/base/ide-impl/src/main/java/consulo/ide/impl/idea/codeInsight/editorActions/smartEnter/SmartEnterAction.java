@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.editorActions.smartEnter;
 
 import consulo.annotation.access.RequiredWriteAction;
@@ -36,82 +35,82 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
  * @author max
  */
 public class SmartEnterAction extends EditorAction {
-  public SmartEnterAction() {
-    super(new Handler());
-    setInjectedContext(true);
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    public Handler() {
-      super(true);
+    public SmartEnterAction() {
+        super(new Handler());
+        setInjectedContext(true);
     }
 
-    @Override
-    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-      return getEnterHandler().isEnabled(editor, caret, dataContext);
-    }
-
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      Project project = dataContext.getData(Project.KEY);
-      if (project == null || editor.isOneLineMode()) {
-        plainEnter(editor, caret, dataContext);
-        return;
-      }
-
-      LookupManager.getInstance(project).hideActiveLookup();
-
-      TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(editor);
-      if (state != null) {
-        state.gotoEnd();
-      }
-
-      final int caretOffset = editor.getCaretModel().getOffset();
-
-      PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
-      if (psiFile == null) {
-        plainEnter(editor, caret, dataContext);
-        return;
-      }
-
-      if (EnterAfterUnmatchedBraceHandler.isAfterUnmatchedLBrace(editor, caretOffset, psiFile.getFileType())) {
-        EditorActionHandler enterHandler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
-        enterHandler.execute(editor, caret, dataContext);
-        return;
-      }
-
-      final Language language = PsiUtilBase.getLanguageInEditor(editor, project);
-      boolean processed = false;
-      if (language != null) {
-        final List<SmartEnterProcessor> processors = SmartEnterProcessor.forLanguage(language);
-        if (!processors.isEmpty()) {
-          for (SmartEnterProcessor processor : processors) {
-            if (processor.process(project, editor, psiFile)) {
-              processed = true;
-              break;
-            }
-          }
+    private static class Handler extends EditorWriteActionHandler {
+        public Handler() {
+            super(true);
         }
-      }
-      if (!processed) {
-        plainEnter(editor, caret, dataContext);
-      }
+
+        @Override
+        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+            return getEnterHandler().isEnabled(editor, caret, dataContext);
+        }
+
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+            Project project = dataContext.getData(Project.KEY);
+            if (project == null || editor.isOneLineMode()) {
+                plainEnter(editor, caret, dataContext);
+                return;
+            }
+
+            LookupManager.getInstance(project).hideActiveLookup();
+
+            TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(editor);
+            if (state != null) {
+                state.gotoEnd();
+            }
+
+            int caretOffset = editor.getCaretModel().getOffset();
+
+            PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
+            if (psiFile == null) {
+                plainEnter(editor, caret, dataContext);
+                return;
+            }
+
+            if (EnterAfterUnmatchedBraceHandler.isAfterUnmatchedLBrace(editor, caretOffset, psiFile.getFileType())) {
+                EditorActionHandler enterHandler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
+                enterHandler.execute(editor, caret, dataContext);
+                return;
+            }
+
+            Language language = PsiUtilBase.getLanguageInEditor(editor, project);
+            boolean processed = false;
+            if (language != null) {
+                List<SmartEnterProcessor> processors = SmartEnterProcessor.forLanguage(language);
+                if (!processors.isEmpty()) {
+                    for (SmartEnterProcessor processor : processors) {
+                        if (processor.process(project, editor, psiFile)) {
+                            processed = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!processed) {
+                plainEnter(editor, caret, dataContext);
+            }
+        }
     }
-  }
 
-  public static void plainEnter(Editor editor, Caret caret, DataContext dataContext) {
-    getEnterHandler().execute(editor, caret, dataContext);
-  }
+    public static void plainEnter(Editor editor, Caret caret, DataContext dataContext) {
+        getEnterHandler().execute(editor, caret, dataContext);
+    }
 
-  private static EditorActionHandler getEnterHandler() {
-    return EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_START_NEW_LINE);
-  }
+    private static EditorActionHandler getEnterHandler() {
+        return EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_START_NEW_LINE);
+    }
 }
-

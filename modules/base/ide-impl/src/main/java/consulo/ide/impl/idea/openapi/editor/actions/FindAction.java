@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.Caret;
@@ -24,25 +23,27 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class FindAction extends EditorAction {
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
-      FindUtil.find(project, editor);
+    private static class Handler extends EditorActionHandler {
+        @Override
+        @RequiredUIAccess
+        public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
+            FindUtil.find(project, editor);
+        }
+
+        @Override
+        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+            Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
+            return project != null;
+        }
     }
 
-    @Override
-    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-      Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
-      return project != null;
+    public FindAction() {
+        super(new Handler());
     }
-  }
-
-  public FindAction() {
-    super(new Handler());
-  }
 }

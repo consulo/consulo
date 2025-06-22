@@ -21,7 +21,7 @@ import consulo.codeEditor.action.EditorAction;
  * @author Dennis.Ushakov
  */
 public class MoveLineDownAction extends EditorAction {
-  public MoveLineDownAction() {
-    super(new MoveLineHandler(true));
-  }
+    public MoveLineDownAction() {
+        super(new MoveLineHandler(true));
+    }
 }

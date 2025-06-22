@@ -26,39 +26,38 @@ import consulo.annotation.access.RequiredWriteAction;
  * Stands for emacs 'reverse-kill-line' action, i.e.
  * <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Killing-by-Lines.html">'kill-line' action</a>
  * with negative argument.
- * 
+ *
  * @author Denis Zhdanov
- * @since 4/18/11 1:22 PM
+ * @since 2011-04-18
  */
 public class CutLineBackwardAction extends EditorAction {
 
-  public CutLineBackwardAction() {
-    super(new Handler());
-  }
-
-  static class Handler extends EditorWriteActionHandler {
-
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, DataContext dataContext) {
-      final Document document = editor.getDocument();
-      int caretOffset = editor.getCaretModel().getOffset();
-      if (caretOffset <= 0) {
-        return;
-      }
-      
-      // The main idea is to kill everything between the current line start and caret and the whole previous line.
-      
-      final int caretLine = document.getLineNumber(caretOffset);
-      int start;
-      
-      if (caretLine <= 0) {
-        start = 0;
-      }
-      else {
-        start = document.getLineStartOffset(caretLine - 1);
-      }
-      KillRingUtil.cut(editor, start, caretOffset);
+    public CutLineBackwardAction() {
+        super(new Handler());
     }
-  }
+
+    static class Handler extends EditorWriteActionHandler {
+        @Override
+        @RequiredWriteAction
+        public void executeWriteAction(Editor editor, DataContext dataContext) {
+            Document document = editor.getDocument();
+            int caretOffset = editor.getCaretModel().getOffset();
+            if (caretOffset <= 0) {
+                return;
+            }
+
+            // The main idea is to kill everything between the current line start and caret and the whole previous line.
+
+            int caretLine = document.getLineNumber(caretOffset);
+            int start;
+
+            if (caretLine <= 0) {
+                start = 0;
+            }
+            else {
+                start = document.getLineStartOffset(caretLine - 1);
+            }
+            KillRingUtil.cut(editor, start, caretOffset);
+        }
+    }
 }

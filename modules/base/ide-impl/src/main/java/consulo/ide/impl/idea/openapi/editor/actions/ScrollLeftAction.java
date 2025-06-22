@@ -19,20 +19,21 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 5/25/12 9:26 AM
+ * @since 2012-05-25
  */
 public class ScrollLeftAction extends InactiveEditorAction {
-  public ScrollLeftAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      EditorActionUtil.scrollRelatively(editor, 0, -1, false);
+    public ScrollLeftAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+            EditorActionUtil.scrollRelatively(editor, 0, -1, false);
+        }
+    }
 }

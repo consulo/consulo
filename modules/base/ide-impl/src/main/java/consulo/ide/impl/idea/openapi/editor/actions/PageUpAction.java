@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 3:16:36 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.Editor;
@@ -29,26 +20,31 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
+import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ * @since 2002-05-13
+ */
 public class PageUpAction extends EditorAction {
-  public static class Handler extends EditorActionHandler {
-    public Handler() {
-      super(true);
+    public static class Handler extends EditorActionHandler {
+        public Handler() {
+            super(true);
+        }
+
+        @Override
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+            EditorActionUtil.moveCaretPageUp(editor, false);
+        }
+
+        @Override
+        public boolean isEnabled(Editor editor, DataContext dataContext) {
+            return !editor.isOneLineMode();
+        }
     }
 
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      EditorActionUtil.moveCaretPageUp(editor, false);
-    }
+    public PageUpAction() {
+        super(new Handler());
 
-    @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
-      return !editor.isOneLineMode();
     }
-  }
-
-  public PageUpAction() {
-    super(new Handler());
-    
-  }
 }

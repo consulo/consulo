@@ -18,26 +18,23 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import jakarta.annotation.Nonnull;
 
 /**
  * Scrolls to the top of the target editor without changing its caret position.
- * 
+ *
  * @author Denis Zhdanov
- * @since 2/22/11 11:17 AM
+ * @since 2011-02-22
  */
 public class ScrollToTopAction extends InactiveEditorAction {
-
-  public ScrollToTopAction() {
-    super(new MyHandler());
-  }
-  
-  private static class MyHandler extends EditorActionHandler {
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      if (editor == null) {
-        return;
-      }
-      editor.getScrollingModel().scrollVertically(0);
+    public ScrollToTopAction() {
+        super(new MyHandler());
     }
-  }
+
+    private static class MyHandler extends EditorActionHandler {
+        @Override
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+            editor.getScrollingModel().scrollVertically(0);
+        }
+    }
 }

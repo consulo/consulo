@@ -31,22 +31,24 @@ import javax.swing.text.JTextComponent;
  * @author yole
  */
 public abstract class TextComponentEditorAction extends EditorAction {
-  protected TextComponentEditorAction(@Nonnull EditorActionHandler defaultHandler) {
-    super(defaultHandler);
-  }
+    protected TextComponentEditorAction(@Nonnull EditorActionHandler defaultHandler) {
+        super(defaultHandler);
+    }
 
-  @Override
-  @Nullable
-  protected Editor getEditor(@Nonnull final DataContext dataContext) {
-    return getEditorFromContext(dataContext);
-  }
+    @Override
+    @Nullable
+    protected Editor getEditor(@Nonnull DataContext dataContext) {
+        return getEditorFromContext(dataContext);
+    }
 
-  @Nullable
-  public static Editor getEditorFromContext(@Nonnull DataContext dataContext) {
-    final Editor editor = dataContext.getData(Editor.KEY);
-    if (editor != null) return editor;
-    final Object data = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    return data instanceof JTextComponent textComponent
-      ? new TextComponentEditorImpl(dataContext.getData(Project.KEY), textComponent) : null;
-  }
+    @Nullable
+    public static Editor getEditorFromContext(@Nonnull DataContext dataContext) {
+        Editor editor = dataContext.getData(Editor.KEY);
+        if (editor != null) {
+            return editor;
+        }
+        Object data = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        return data instanceof JTextComponent textComponent
+            ? new TextComponentEditorImpl(dataContext.getData(Project.KEY), textComponent) : null;
+    }
 }

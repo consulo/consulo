@@ -22,48 +22,48 @@ import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.EditorEx;
+import jakarta.annotation.Nonnull;
 
 /**
  * Provides functionality similar to the emacs
  * <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Setting-Mark.html">exchange-point-and-mark</a>.
  *
  * @author Denis Zhdanov
- * @since 3/18/12 3:14 PM
+ * @since 2012-03-18
  */
 public class SwapSelectionBoundariesAction extends EditorAction {
-
-  public SwapSelectionBoundariesAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    public Handler() {
-      super(true);
+    public SwapSelectionBoundariesAction() {
+        super(new Handler());
     }
 
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      if (!(editor instanceof EditorEx)) {
-        return;
-      }
-      final SelectionModel selectionModel = editor.getSelectionModel();
-      if (!selectionModel.hasSelection()) {
-        return;
-      }
+    private static class Handler extends EditorActionHandler {
+        public Handler() {
+            super(true);
+        }
 
-      EditorEx editorEx = (EditorEx)editor;
-      final int start = selectionModel.getSelectionStart();
-      final int end = selectionModel.getSelectionEnd();
-      final CaretModel caretModel = editor.getCaretModel();
-      boolean moveToEnd = caretModel.getOffset() == start;
-      editorEx.setStickySelection(false);
-      editorEx.setStickySelection(true);
-      if (moveToEnd) {
-        caretModel.moveToOffset(end);
-      }
-      else {
-        caretModel.moveToOffset(start);
-      }
+        @Override
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+            if (!(editor instanceof EditorEx)) {
+                return;
+            }
+            SelectionModel selectionModel = editor.getSelectionModel();
+            if (!selectionModel.hasSelection()) {
+                return;
+            }
+
+            EditorEx editorEx = (EditorEx) editor;
+            int start = selectionModel.getSelectionStart();
+            int end = selectionModel.getSelectionEnd();
+            CaretModel caretModel = editor.getCaretModel();
+            boolean moveToEnd = caretModel.getOffset() == start;
+            editorEx.setStickySelection(false);
+            editorEx.setStickySelection(true);
+            if (moveToEnd) {
+                caretModel.moveToOffset(end);
+            }
+            else {
+                caretModel.moveToOffset(start);
+            }
+        }
     }
-  }
 }

@@ -22,8 +22,8 @@ import consulo.document.util.TextRange;
  * @author yole
  */
 public class ConvertIndentsToTabsAction extends ConvertIndentsActionBase {
-  @Override
-  protected int performAction(Editor editor, TextRange textRange) {
-    return convertIndentsToTabs(editor.getDocument(), editor.getSettings().getTabSize(editor.getProject()), textRange);
-  }
+    @Override
+    protected int performAction(Editor editor, TextRange textRange) {
+        return convertIndentsToTabs(editor.getDocument(), editor.getSettings().getTabSize(editor.getProject()), textRange);
+    }
 }

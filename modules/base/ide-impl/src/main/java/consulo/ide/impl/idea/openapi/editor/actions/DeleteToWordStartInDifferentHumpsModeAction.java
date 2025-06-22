@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.openapi.editor.actions;
  * @author Denis Zhdanov
  */
 public class DeleteToWordStartInDifferentHumpsModeAction extends TextComponentEditorAction {
-  public DeleteToWordStartInDifferentHumpsModeAction() {
-    super(new DeleteToWordBoundaryHandler(true, true));
-  }
+    public DeleteToWordStartInDifferentHumpsModeAction() {
+        super(new DeleteToWordBoundaryHandler(true, true));
+    }
 }

@@ -21,7 +21,7 @@ import consulo.codeEditor.action.EditorAction;
  * @author Dennis.Ushakov
  */
 public class MoveLineUpAction extends EditorAction {
-  public MoveLineUpAction() {
-    super(new MoveLineHandler(false));
-  }
+    public MoveLineUpAction() {
+        super(new MoveLineHandler(false));
+    }
 }

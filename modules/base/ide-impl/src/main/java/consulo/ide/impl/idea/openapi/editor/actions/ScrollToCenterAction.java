@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 16, 2002
- * Time: 2:28:05 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
@@ -29,15 +20,19 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorActionHandler;
 
+/**
+ * @author max
+ * @since 2002-05-16
+ */
 public class ScrollToCenterAction extends InactiveEditorAction {
-  public ScrollToCenterAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
+    public ScrollToCenterAction() {
+        super(new Handler());
     }
-  }
+
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void execute(Editor editor, DataContext dataContext) {
+            editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
+        }
+    }
 }

@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 public class PreviousBookmarkAction extends GotoBookmarkActionBase {
-  public PreviousBookmarkAction() {
-    super(false);
-  }
+    public PreviousBookmarkAction() {
+        super(false);
+    }
 }

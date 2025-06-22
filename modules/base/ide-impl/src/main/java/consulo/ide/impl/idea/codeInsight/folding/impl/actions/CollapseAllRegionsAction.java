@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.folding.impl.actions;
 
 import consulo.language.editor.folding.CodeFoldingManager;
@@ -30,23 +29,22 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class CollapseAllRegionsAction extends EditorAction {
-  public CollapseAllRegionsAction() {
-    super(new BaseFoldingHandler() {
-      @Override
-      public void doExecute(@Nonnull final Editor editor, @Nullable Caret caret, DataContext dataContext) {
-        Project project = editor.getProject();
-        assert project != null;
-        PsiDocumentManager.getInstance(project).commitAllDocuments();
-        CodeFoldingManager.getInstance(project).updateFoldRegions(editor);
+    public CollapseAllRegionsAction() {
+        super(new BaseFoldingHandler() {
+            @Override
+            public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+                Project project = editor.getProject();
+                assert project != null;
+                PsiDocumentManager.getInstance(project).commitAllDocuments();
+                CodeFoldingManager.getInstance(project).updateFoldRegions(editor);
 
-        final List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
-        editor.getFoldingModel().runBatchFoldingOperation(() -> {
-          for (FoldRegion region : regions) {
-            region.setExpanded(false);
-          }
+                List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
+                editor.getFoldingModel().runBatchFoldingOperation(() -> {
+                    for (FoldRegion region : regions) {
+                        region.setExpanded(false);
+                    }
+                });
+            }
         });
-      }
-    });
-  }
-
+    }
 }

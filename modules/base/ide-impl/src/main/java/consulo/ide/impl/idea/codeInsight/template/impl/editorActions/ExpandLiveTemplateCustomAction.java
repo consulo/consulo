@@ -33,27 +33,27 @@ import jakarta.annotation.Nullable;
  * @author peter
  */
 public class ExpandLiveTemplateCustomAction extends EditorAction {
-  public ExpandLiveTemplateCustomAction() {
-    super(createExpandTemplateHandler(TemplateSettingsImpl.CUSTOM_CHAR));
-    setInjectedContext(true);
-  }
+    public ExpandLiveTemplateCustomAction() {
+        super(createExpandTemplateHandler(TemplateSettingsImpl.CUSTOM_CHAR));
+        setInjectedContext(true);
+    }
 
-  public static EditorWriteActionHandler createExpandTemplateHandler(final char shortcutChar) {
-    return new EditorWriteActionHandler(true) {
-      @RequiredWriteAction
-      @Override
-      public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-        Project project = editor.getProject();
-        assert project != null;
-        TemplateManager.getInstance(project).startTemplate(editor, shortcutChar);
-      }
+    public static EditorWriteActionHandler createExpandTemplateHandler(final char shortcutChar) {
+        return new EditorWriteActionHandler(true) {
+            @Override
+            @RequiredWriteAction
+            public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+                Project project = editor.getProject();
+                assert project != null;
+                TemplateManager.getInstance(project).startTemplate(editor, shortcutChar);
+            }
 
-      @Override
-      protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-        Project project = editor.getProject();
-        return project != null &&
-               ((TemplateManagerImpl)TemplateManager.getInstance(project)).prepareTemplate(editor, shortcutChar, null) != null;
-      }
-    };
-  }
+            @Override
+            protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+                Project project = editor.getProject();
+                return project != null &&
+                    ((TemplateManagerImpl) TemplateManager.getInstance(project)).prepareTemplate(editor, shortcutChar, null) != null;
+            }
+        };
+    }
 }

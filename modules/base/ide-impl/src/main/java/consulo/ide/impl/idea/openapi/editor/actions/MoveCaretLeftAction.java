@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 9:58:23 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.action.EditorAction;
 
+/**
+ * @author max
+ * @since 2002-05-13
+ */
 public class MoveCaretLeftAction extends EditorAction {
-  public MoveCaretLeftAction() {
-    super(new MoveCaretLeftOrRightHandler(MoveCaretLeftOrRightHandler.Direction.LEFT));
-  }
+    public MoveCaretLeftAction() {
+        super(new MoveCaretLeftOrRightHandler(MoveCaretLeftOrRightHandler.Direction.LEFT));
+    }
 }

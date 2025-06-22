@@ -19,25 +19,25 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 2/14/13 7:27 PM
+ * @since 2013-02-14
  */
-public class PreviousWordInDifferentHumpsModeWithSelectionAction  extends TextComponentEditorAction {
-
-  public PreviousWordInDifferentHumpsModeWithSelectionAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    public Handler() {
-      super(true);
+public class PreviousWordInDifferentHumpsModeWithSelectionAction extends TextComponentEditorAction {
+    public PreviousWordInDifferentHumpsModeWithSelectionAction() {
+        super(new Handler());
     }
 
-    @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      EditorActionUtil.moveCaretToPreviousWord(editor, true, !editor.getSettings().isCamelWords());
+    private static class Handler extends EditorActionHandler {
+        public Handler() {
+            super(true);
+        }
+
+        @Override
+        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+            EditorActionUtil.moveCaretToPreviousWord(editor, true, !editor.getSettings().isCamelWords());
+        }
     }
-  }
 }
