@@ -189,7 +189,14 @@ public class DesktopUIInternalImpl extends UIInternal {
         if (original instanceof DesktopAWTImage resizableImage) {
             return resizableImage.copyWithNewSize(width, height);
         }
+        return original;
+    }
 
+    @Override
+    public Image _ImageEffects_resize(Image original, float scale) {
+        if (original instanceof DesktopAWTImage resizableImage) {
+            return resizableImage.copyWithNewScale(scale);
+        }
         return original;
     }
 

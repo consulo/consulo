@@ -23,16 +23,22 @@ import jakarta.annotation.Nonnull;
  * @since 26.05.2024
  */
 public interface DesktopAWTImage extends Image {
-  @Nonnull
-  DesktopAWTImage copyWithNewSize(int width, int height);
+    @Nonnull
+    DesktopAWTImage copyWithNewSize(int width, int height);
 
-  @Nonnull
-  DesktopAWTImage copyWithForceLibraryId(String libraryId);
-
-  static Image copyWithForceLibraryId(@Nonnull Image image, String forceLibraryId) {
-    if (image instanceof DesktopAWTImage awt) {
-      return awt.copyWithForceLibraryId(forceLibraryId);
+    default DesktopAWTImage copyWithNewScale(float scale) {
+        int width = (int) Math.ceil(getWidth() * scale);
+        int height = (int) Math.ceil(getHeight() * scale);
+        return copyWithNewSize(width, height);
     }
-    return image;
-  }
+
+    @Nonnull
+    DesktopAWTImage copyWithForceLibraryId(String libraryId);
+
+    static Image copyWithForceLibraryId(@Nonnull Image image, String forceLibraryId) {
+        if (image instanceof DesktopAWTImage awt) {
+            return awt.copyWithForceLibraryId(forceLibraryId);
+        }
+        return image;
+    }
 }
