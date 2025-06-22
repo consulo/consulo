@@ -23,8 +23,8 @@ import consulo.ui.image.Image;
 
 
 /**
- * User: anna
- * Date: Mar 15, 2005
+ * @author anna
+ * @since 2005-03-15
  */
 public class InspectionSeverityGroupNode extends InspectionTreeNode {
 

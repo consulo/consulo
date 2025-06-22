@@ -28,8 +28,8 @@ import jakarta.annotation.Nullable;
 import java.io.IOException;
 
 /**
- * User: anna
- * Date: 15-Feb-2006
+ * @author anna
+ * @since 2006-02-15
  */
 public interface ModifiableModel extends Profile {
 

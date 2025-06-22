@@ -26,11 +26,8 @@ import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ik
- * Date: 02.04.2003
- * Time: 12:22:03
- * To change this template use Options | File Templates.
+ * @author ik
+ * @since 2003-04-02
  */
 public class PsiMultiReference implements PsiPolyVariantReference {
   public static final Comparator<PsiReference> COMPARATOR = new Comparator<PsiReference>() {

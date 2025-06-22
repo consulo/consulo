@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
- * @since 5/29/2014
+ * @since 2014-05-29
  */
 public class ImportSpec {
   @Nonnull

@@ -48,8 +48,8 @@ import org.jdom.Element;
 import java.util.LinkedHashSet;
 
 /**
- * User: anna
- * Date: 21-Feb-2006
+ * @author anna
+ * @since 2006-02-21
  */
 public class RunInspectionIntention implements IntentionAction, HighPriorityAction, SyntheticIntentionAction {
   private final String myShortName;

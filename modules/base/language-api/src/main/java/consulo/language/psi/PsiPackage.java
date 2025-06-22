@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 7:50/20.05.13
+ * @since 2013-05-20
  */
 public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElement, PsiCheckedRenameElement, NavigationItem {
   public static final PsiPackage[] EMPTY_ARRAY = new PsiPackage[0];

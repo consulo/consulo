@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ik
- * Date: 28.01.2003
- * Time: 19:24:33
- * To change this template use Options | File Templates.
+ * @author ik
+ * @since 2003-01-28
  */
 public class NotFilter
         implements ElementFilter {

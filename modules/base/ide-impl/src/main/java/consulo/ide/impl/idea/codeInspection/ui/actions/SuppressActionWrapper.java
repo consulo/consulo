@@ -1,7 +1,3 @@
-/*
- * User: anna
- * Date: 29-Jan-2007
- */
 package consulo.ide.impl.idea.codeInspection.ui.actions;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -43,6 +39,10 @@ import javax.swing.tree.TreePath;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author anna
+ * @since 2007-01-29
+ */
 public class SuppressActionWrapper extends ActionGroup implements CompactActionGroup {
     private final Project myProject;
     private final InspectionManagerImpl myManager;

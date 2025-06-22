@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.stub;
 
 import consulo.util.lang.StringUtil;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 16, 2008
+ * @since 2008-01-16
  */
 public final class IdIndexEntry {
   private final int myWordHashCode;

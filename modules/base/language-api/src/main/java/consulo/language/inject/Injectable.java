@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 01.08.13
+ * @since 2013-08-01
  */
 public abstract class Injectable implements Comparable<Injectable> {
 

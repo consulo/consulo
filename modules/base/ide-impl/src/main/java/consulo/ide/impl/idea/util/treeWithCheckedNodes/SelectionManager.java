@@ -29,11 +29,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author irengrig
- *         Date: 2/7/11
- *         Time: 10:43 AM
- *
  * see {@link SelectedState}
+ *
+ * @author irengrig
+ * @since 2011-02-07
  */
 public class SelectionManager {
   private final SelectedState<VirtualFile> myState;

@@ -26,7 +26,7 @@ import javax.swing.*;
 
 /**
  * @author zajac
- * @since 5:34 AM 5/9/12
+ * @since 2012-05-09
  */
 public interface DetailView extends UserDataHolder {
 

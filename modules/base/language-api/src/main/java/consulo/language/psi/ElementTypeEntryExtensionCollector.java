@@ -27,7 +27,7 @@ import java.util.function.Predicate;
  * TODO rewrite using ExtensionCacheKey
  *
  * @author VISTALL
- * @since 1:53/02.04.13
+ * @since 2013-04-02
  */
 public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType>> {
   @Nonnull

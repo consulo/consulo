@@ -32,8 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author irengrig
- *         Date: 4/7/11
- *         Time: 2:46 PM
+ * @since 2011-04-07
  */
 public class SeparatePiecesRunner extends GeneralRunner {
   private final AtomicReference<TaskWrapper> myCurrentWrapper;

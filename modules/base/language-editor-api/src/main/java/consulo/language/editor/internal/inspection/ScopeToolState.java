@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 20-Apr-2009
- */
 package consulo.language.editor.internal.inspection;
 
 import consulo.configurable.ConfigurationException;
@@ -40,6 +35,10 @@ import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author anna
+ * @since 2009-04-20
+ */
 public class ScopeToolState {
   private NamedScope myScope;
   @Nonnull

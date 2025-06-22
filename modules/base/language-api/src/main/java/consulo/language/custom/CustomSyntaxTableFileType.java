@@ -19,7 +19,7 @@ import consulo.language.internal.custom.SyntaxTable;
 import consulo.virtualFileSystem.fileType.FileType;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public interface CustomSyntaxTableFileType extends FileType {
   SyntaxTable getSyntaxTable();

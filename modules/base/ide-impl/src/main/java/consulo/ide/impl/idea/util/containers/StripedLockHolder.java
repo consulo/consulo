@@ -20,7 +20,7 @@ import jakarta.annotation.Nonnull;
 import java.lang.reflect.Array;
 
 /**
- * User: cdr
+ * @author cdr
  */
 public abstract class StripedLockHolder<T> {
   private static final int NUM_LOCKS = 256;

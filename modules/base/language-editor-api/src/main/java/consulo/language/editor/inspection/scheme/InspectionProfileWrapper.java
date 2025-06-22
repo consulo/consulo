@@ -30,8 +30,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * User: anna
- * Date: 15-Feb-2006
+ * @author anna
+ * @since 2006-02-15
  */
 public class InspectionProfileWrapper {
   private static final Logger LOG = Logger.getInstance(InspectionProfileWrapper.class);

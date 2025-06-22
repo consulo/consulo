@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public abstract class SerializationManagerEx extends SerializationManager {
 

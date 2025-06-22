@@ -34,9 +34,8 @@ import javax.swing.text.Document;
 import java.awt.*;
 
 /**
- * User: kirillk
- * Date: 8/4/11
- * Time: 7:52 PM
+ * @author kirillk
+ * @since 2011-08-04
  */
 @ExtensionImpl
 public class ActionTracer implements UiDebuggerExtension, AnActionListener {

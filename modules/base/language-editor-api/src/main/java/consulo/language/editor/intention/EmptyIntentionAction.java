@@ -25,8 +25,8 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: May 11, 2005
+ * @author anna
+ * @since 2005-05-11
  */
 public final class EmptyIntentionAction extends AbstractEmptyIntentionAction implements SyntheticIntentionAction, LowPriorityAction, Iconable {
   private final String myName;

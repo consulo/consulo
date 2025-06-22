@@ -19,8 +19,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 /**
- * User: anna
- * Date: 28-Dec-2005
+ * @author anna
+ * @since 2005-12-28
  */
 public interface SmartRefElementPointer {
 

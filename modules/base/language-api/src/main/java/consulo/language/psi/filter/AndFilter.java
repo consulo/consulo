@@ -23,11 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ik
- * Date: 28.01.2003
- * Time: 19:11:46
- * To change this template use Options | File Templates.
+ * @author ik
+ * @since 2003-01-28
  */
 public class AndFilter implements ElementFilter {
   private final List<ElementFilter> myFilters = new ArrayList<ElementFilter>();

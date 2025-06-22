@@ -51,8 +51,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 21-Feb-2006
+ * @author anna
+ * @since 2006-02-21
  */
 public class CleanupInspectionIntention implements IntentionAction, HighPriorityAction, SyntheticIntentionAction {
     private final static Logger LOG = Logger.getInstance(CleanupInspectionIntention.class);

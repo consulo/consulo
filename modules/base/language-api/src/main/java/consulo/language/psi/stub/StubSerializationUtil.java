@@ -16,7 +16,7 @@
 package consulo.language.psi.stub;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public abstract class StubSerializationUtil {
   private StubSerializationUtil() {}

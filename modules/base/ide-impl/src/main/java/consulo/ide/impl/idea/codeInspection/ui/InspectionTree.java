@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Nov 4, 2001
- * Time: 5:19:35 PM
- */
 package consulo.ide.impl.idea.codeInspection.ui;
 
 import consulo.language.editor.inspection.CommonProblemDescriptor;
@@ -57,6 +50,10 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
 
+/**
+ * @author max
+ * @since 2001-11-04
+ */
 public class InspectionTree extends Tree {
   private final HashSet<Object> myExpandedUserObjects;
   @Nonnull

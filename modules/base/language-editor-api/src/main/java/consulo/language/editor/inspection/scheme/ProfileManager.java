@@ -21,8 +21,8 @@ import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
- * User: anna
- * Date: 09-Dec-2005
+ * @author anna
+ * @since 2005-12-09
  *
  * TODO [VISTALL] move all methods to InspectionProfileManager and drop
  */

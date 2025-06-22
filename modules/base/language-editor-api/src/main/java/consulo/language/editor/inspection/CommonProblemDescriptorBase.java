@@ -8,8 +8,8 @@ import jakarta.annotation.Nullable;
 import java.util.function.Function;
 
 /**
- * User: anna
- * Date: 04-Jan-2006
+ * @author anna
+ * @since 2006-01-04
  */
 public class CommonProblemDescriptorBase implements CommonProblemDescriptor {
   private final QuickFix[] myFixes;

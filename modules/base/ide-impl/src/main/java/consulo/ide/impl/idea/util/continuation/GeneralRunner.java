@@ -25,10 +25,9 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
-* @author irengrig
-*         Date: 4/7/11
-*         Time: 2:44 PM
-*/
+ * @author irengrig
+ * @since 2011-04-07
+ */
 abstract class GeneralRunner implements ContinuationContext {
   protected final Project myProject;
   protected final boolean myCancellable;

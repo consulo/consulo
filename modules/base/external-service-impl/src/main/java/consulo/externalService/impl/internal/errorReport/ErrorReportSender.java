@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 
 /**
  * @author stathik
- * @since 8:57:19 PM May 22, 2003
+ * @since 2003-05-22
  */
 public class ErrorReportSender {
   private static final Logger LOG = Logger.getInstance(ErrorReportSender.class);

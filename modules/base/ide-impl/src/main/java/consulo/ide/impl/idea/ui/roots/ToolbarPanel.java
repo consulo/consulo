@@ -26,7 +26,7 @@ import java.awt.*;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 22, 2004
+ * @since 2004-01-22
  */
 public class ToolbarPanel extends JPanel{
   public ToolbarPanel(JComponent contentComponent, ActionGroup actions) {

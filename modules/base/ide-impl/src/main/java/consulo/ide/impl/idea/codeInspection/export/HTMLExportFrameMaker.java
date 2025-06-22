@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 21, 2002
- * Time: 1:16:43 AM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.codeInspection.export;
 
 import consulo.application.Application;
@@ -34,6 +25,10 @@ import org.jetbrains.annotations.NonNls;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author max
+ * @since 2002-01-21
+ */
 public class HTMLExportFrameMaker {
   private final String myRootFolder;
   private final Project myProject;

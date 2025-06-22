@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * Defines interface of text/color descriptors operated by color schemes.
  *
  * @author Denis Zhdanov
- * @since 1/19/12 1:10 PM
+ * @since 2012-01-19
  */
 public interface ColorAndFontDescriptors {
     /**

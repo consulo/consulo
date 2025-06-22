@@ -24,8 +24,7 @@ import java.util.Map;
 
 /**
  * @author irengrig
- *         Date: 2/28/11
- *         Time: 3:41 PM
+ * @since 2011-02-28
  */
 public class QueueProcessorRemovePartner<Key, Task> {
   private final Map<Key, Task> myMap;

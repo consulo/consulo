@@ -31,7 +31,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author anna
- * Date: 17-Jan-2008
+ * @since 2008-01-17
  */
 public class ProjectRootsUtil {
   public static boolean isSourceRoot(final PsiDirectory psiDirectory) {

@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 11-Jan-2006
+ * @author anna
+ * @since 2006-01-11
  */
 public class InvokeQuickFixAction extends AnAction {
   private final InspectionResultsView myView;

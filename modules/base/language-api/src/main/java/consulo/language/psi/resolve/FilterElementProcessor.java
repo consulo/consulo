@@ -24,11 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ik
- * Date: 10.06.2003
- * Time: 14:33:56
- * To change this template use Options | File Templates.
+ * @author ik
+ * @since 2003-06-10
  */
 public class FilterElementProcessor implements PsiElementProcessor{
   private final List<PsiElement> myResults;

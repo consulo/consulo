@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public abstract class StubProcessingHelperBase {
   private static final Logger LOG = Logger.getInstance(StubProcessingHelperBase.class);

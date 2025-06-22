@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
  * This class holds those markers and utility method for working with them.
  *
  * @author Denis Zhdanov
- * @since 5/2/12 12:57 PM
+ * @since 2012-05-02
  */
 public class StoragePathMacros {
   /**

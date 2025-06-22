@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 18-Dec-2007
- */
 package consulo.language.editor.inspection.reference;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author anna
+ * @since 2007-12-18
+ */
 public class RefVisitor {
   public void visitElement(@Nonnull RefEntity elem) {}
 

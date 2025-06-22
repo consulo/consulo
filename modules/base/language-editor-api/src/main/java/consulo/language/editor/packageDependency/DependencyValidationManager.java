@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: anna
- * Date: Mar 2, 2005
+ * @author anna
+ * @since 2005-02-02
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class DependencyValidationManager extends NamedScopesHolder {

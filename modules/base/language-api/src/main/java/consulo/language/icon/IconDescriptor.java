@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 0:07/19.07.13
+ * @since 2013-07-19
  */
 public class IconDescriptor {
   private Image[] myLayerIcons = Image.EMPTY_ARRAY;

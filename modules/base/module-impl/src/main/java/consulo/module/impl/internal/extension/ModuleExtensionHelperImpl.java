@@ -39,7 +39,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 8:00/12.11.13
+ * @since 2013-11-12
  */
 @Singleton
 @ServiceImpl

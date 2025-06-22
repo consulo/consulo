@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 6/9/18
+ * @since 2018-06-09
  */
 public interface ColorBox extends ValueComponent<ColorValue> {
   @Nonnull

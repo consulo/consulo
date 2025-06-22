@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 0:25/19.07.13
+ * @since 2013-07-19
  */
 public final class IconDescriptorUpdaters {
   private static final Supplier<Image> ourVisibilityIconPlaceholder =

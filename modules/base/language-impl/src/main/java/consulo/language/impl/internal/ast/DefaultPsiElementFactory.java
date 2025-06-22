@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 1:38/02.04.13
+ * @since 2013-04-02
  */
 @ExtensionImpl(order = "last")
 public class DefaultPsiElementFactory implements PsiElementFactory {

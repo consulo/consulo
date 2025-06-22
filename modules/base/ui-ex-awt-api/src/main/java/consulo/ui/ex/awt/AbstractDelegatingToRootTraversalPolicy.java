@@ -19,7 +19,7 @@ import java.awt.*;
 
 /**
  * @author Denis Zhdanov
- * @since 1/14/13 3:03 PM
+ * @since 2013-01-14
  */
 public class AbstractDelegatingToRootTraversalPolicy extends FocusTraversalPolicy {
 

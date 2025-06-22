@@ -33,8 +33,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author angus
- * Date: 4/20/11
- * Time: 9:27 PM
+ * @since 2011-04-20
  */
 public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionClassHolder, IntentionActionDelegate {
   private final IntentionAction myAction;

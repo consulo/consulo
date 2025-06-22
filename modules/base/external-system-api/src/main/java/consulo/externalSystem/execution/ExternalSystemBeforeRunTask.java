@@ -25,7 +25,7 @@ import org.jdom.Element;
 
 /**
  * @author Vladislav.Soroka
- * @since 5/30/2014
+ * @since 2014-05-30
  */
 public class ExternalSystemBeforeRunTask extends BeforeRunTask<ExternalSystemBeforeRunTask> {
 

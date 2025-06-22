@@ -23,8 +23,8 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 10/27/11
+ * @author anna
+ * @since 2011-10-27
  */
 public interface BatchQuickFix<D extends CommonProblemDescriptor> {
   /**

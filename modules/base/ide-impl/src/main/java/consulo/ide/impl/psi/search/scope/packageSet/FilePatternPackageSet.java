@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 15-Jan-2008
- */
 package consulo.ide.impl.psi.search.scope.packageSet;
 
 import consulo.content.scope.PatternBasedPackageSet;
@@ -38,6 +33,10 @@ import jakarta.annotation.Nonnull;
 
 import java.util.regex.Pattern;
 
+/**
+ * @author anna
+ * @since 2008-01-15
+ */
 public class FilePatternPackageSet extends PatternBasedPackageSet {
   @NonNls public static final String SCOPE_FILE = "file";
   private Pattern myModulePattern;

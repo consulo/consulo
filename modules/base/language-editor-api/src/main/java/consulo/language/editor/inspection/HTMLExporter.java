@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 20, 2002
- * Time: 9:50:29 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.inspection;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -40,6 +31,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author max
+ * @since 2002-01-20
+ */
 public class HTMLExporter {
   private final String myRootFolder;
   private int myFileCounter;

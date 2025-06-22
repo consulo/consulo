@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 06.11.2007
- * Time: 19:49:57
- */
 package consulo.language.editor.highlight;
 
 import consulo.annotation.component.ComponentScope;
@@ -32,6 +25,9 @@ import jakarta.annotation.Nullable;
 
 /**
  * Syntax highlight provider for per file. For highlight per language use {@link SyntaxHighlighterFactory}
+ *
+ * @author yole
+ * @since 2007-11-06
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SyntaxHighlighterProvider {

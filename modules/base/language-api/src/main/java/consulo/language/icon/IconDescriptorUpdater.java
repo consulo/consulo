@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 0:20/19.07.13
+ * @since 2013-07-19
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface IconDescriptorUpdater {

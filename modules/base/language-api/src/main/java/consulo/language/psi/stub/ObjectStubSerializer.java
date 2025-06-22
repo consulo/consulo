@@ -15,14 +15,12 @@
  */
 package consulo.language.psi.stub;
 
-import consulo.language.psi.stub.Stub;
-
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 8/2/12
+ * @since 2012-08-02
  */
 public interface ObjectStubSerializer<T extends Stub, P extends Stub> {
   @Nonnull

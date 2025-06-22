@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 02-Mar-2010
- */
 package consulo.language.editor.documentation;
 
 import consulo.language.psi.PsiElement;
@@ -26,6 +21,10 @@ import consulo.project.Project;
 import jakarta.annotation.Nullable;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2010-03-02
+ */
 public interface ExternalDocumentationProvider {
   @Nullable
   String fetchExternalDocumentation(final Project project, PsiElement element, final List<String> docUrls);

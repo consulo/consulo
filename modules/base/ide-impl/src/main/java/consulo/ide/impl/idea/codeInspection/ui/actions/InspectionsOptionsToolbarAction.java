@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * User: anna
- * Date: 11-Jan-2006
+ * @author anna
+ * @since 2006-01-11
  */
 public class InspectionsOptionsToolbarAction extends AnAction {
   private final InspectionResultsView myView;

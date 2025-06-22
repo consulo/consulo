@@ -22,10 +22,8 @@ import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/22/11
- * Time: 2:54 PM
+ * @author Irina.Chernushina
+ * @since 2011-08-22
  */
 public abstract class HideableDetailsUnderSeparator extends AbstractTitledSeparatorWithIcon {
   public HideableDetailsUnderSeparator(@Nonnull Image icon,

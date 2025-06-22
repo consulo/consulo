@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 05-Jan-2007
- */
 package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
 import consulo.ide.impl.idea.codeInspection.InspectionApplication;
@@ -35,6 +30,10 @@ import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nullable;
 import java.util.*;
 
+/**
+ * @author anna
+ * @since 2007-01-05
+ */
 public class OfflineViewParseUtil {
   private static final Logger LOGGER = Logger.getInstance(OfflineViewParseUtil.class);
 

@@ -29,9 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: Maxim.Mossienko
- * Date: 16.09.2009
- * Time: 20:35:06
+ * @author Maxim.Mossienko
+ * @since 2009-09-16
  */
 public class GlobalInspectionUtil {
   private static final String LOC_MARKER = " #loc";

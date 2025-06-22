@@ -13,16 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 25-Jan-2008
- */
 package consulo.language.editor.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
@@ -32,6 +26,10 @@ import jakarta.annotation.Nullable;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * @author anna
+ * @since 2008-01-25
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PrintOption {
   @Nullable

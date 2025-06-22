@@ -18,7 +18,7 @@ package consulo.language;
 import consulo.util.dataholder.UserDataHolderBase;
 
 /**
-* User: Maxim.Mossienko
-* Date: 18.06.2010
-*/
+ * @author Maxim.Mossienko
+ * @since 2010-06-18
+ */
 public abstract class CommenterDataHolder extends UserDataHolderBase {}

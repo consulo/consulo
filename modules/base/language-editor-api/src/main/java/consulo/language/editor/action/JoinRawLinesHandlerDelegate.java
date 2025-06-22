@@ -20,9 +20,9 @@ import consulo.language.psi.PsiFile;
 
 /**
  * A delegate which is called when "Join lines" is selected.
- * <br/>
- * User: dcheryasov
- * Date: 1/25/11 8:30 PM
+ *
+ * @author dcheryasov
+ * @since 2011-01-25
  */
 public interface JoinRawLinesHandlerDelegate extends JoinLinesHandlerDelegate {
   /**

@@ -68,8 +68,8 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * User: anna
- * Date: 11-Jan-2006
+ * @author anna
+ * @since 2006-01-11
  */
 public class ExportHTMLAction extends AnAction implements DumbAware {
   private final InspectionResultsView myView;

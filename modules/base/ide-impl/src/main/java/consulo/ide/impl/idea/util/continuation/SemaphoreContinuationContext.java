@@ -19,8 +19,7 @@ import consulo.application.util.Semaphore;
 
 /**
  * @author irengrig
- *         Date: 6/28/11
- *         Time: 3:23 PM
+ * @since 2011-06-28
  */
 public class SemaphoreContinuationContext implements ContinuationPause {
   private final Semaphore mySemaphore;

@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 01.08.13
+ * @since 2013-08-01
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ReferenceInjector extends Injectable {

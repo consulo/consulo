@@ -26,7 +26,7 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public interface StatusBarWidget extends Disposable {
     @Nonnull

@@ -33,12 +33,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RGBImageFilter;
 
 /**
+ * <p>If image is from library - use method from library class.</p>
+ *
+ * <p>In other ways, we will return not cached image.</p>
+ *
  * @author VISTALL
- * @since 6/22/18
- * <p>
- * If image is from library - use method from library class.
- * <p>
- * In other ways, we will return not cached image
+ * @since 2018-06-22
  */
 public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, DesktopAWTImage {
     public static DesktopAWTImage of(@Nonnull Image original) {

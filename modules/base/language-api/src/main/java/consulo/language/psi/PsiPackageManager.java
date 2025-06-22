@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 7:56/20.05.13
+ * @since 2013-05-20
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class PsiPackageManager {

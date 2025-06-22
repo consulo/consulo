@@ -23,11 +23,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ksafonov
- * Date: 22.03.2010
- * Time: 16:43:12
- * To change this template use File | Settings | File Templates.
+ * @author ksafonov
+ * @since 2010-03-22
  */
 public abstract class DistinctRootsCollection<T> implements Collection<T> {
   private final Collection<T> myCollection = new ArrayList<T>();

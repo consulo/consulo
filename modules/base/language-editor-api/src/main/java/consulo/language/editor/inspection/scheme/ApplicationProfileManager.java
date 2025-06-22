@@ -21,8 +21,8 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.disposer.Disposable;
 
 /**
- * User: anna
- * Date: 29-Nov-2005
+ * @author anna
+ * @since 2005-11-29
  */
 public abstract class ApplicationProfileManager implements ProfileManager {
   public abstract Profile createProfile();

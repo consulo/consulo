@@ -41,8 +41,8 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
- * User: anna
- * Date: Feb 7, 2005
+ * @author anna
+ * @since 2005-02-07
  */
 public class EditInspectionToolsSettingsAction implements IntentionAction, Iconable, HighPriorityAction, SyntheticIntentionAction {
   private final String myShortName;

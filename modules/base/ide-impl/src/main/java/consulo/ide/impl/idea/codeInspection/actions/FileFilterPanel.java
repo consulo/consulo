@@ -33,7 +33,7 @@ import java.util.function.Predicate;
 
 /**
  * @author Dmitry Avdeev
- * Date: 2011-10-11
+ * @since 2011-10-11
  */
 class FileFilterPanel {
     private JCheckBox myUseFileMask;

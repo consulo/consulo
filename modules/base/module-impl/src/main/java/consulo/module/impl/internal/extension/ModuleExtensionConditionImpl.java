@@ -25,7 +25,7 @@ import consulo.util.collection.ArrayUtil;
 
 /**
  * @author VISTALL
- * @since 2:26/10.09.13
+ * @since 2013-09-10
  */
 public class ModuleExtensionConditionImpl implements ModuleExtensionCondition {
   private String[] myExtensionIds;

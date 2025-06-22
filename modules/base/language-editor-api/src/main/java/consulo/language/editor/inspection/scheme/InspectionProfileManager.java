@@ -34,8 +34,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 29-Nov-2005
+ * @author anna
+ * @since 2005-11-29
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class InspectionProfileManager extends ApplicationProfileManager implements SeverityProvider {

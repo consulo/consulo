@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public interface CustomStatusBarWidget extends StatusBarWidget {
     @Nonnull

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 20, 2002
- * Time: 10:11:39 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.codeInspection.util;
 
 import consulo.language.editor.inspection.reference.RefEntity;
@@ -29,6 +20,10 @@ import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
+/**
+ * @author max
+ * @since 2002-01-20
+ */
 public class RefEntityAlphabeticalComparator implements Comparator<RefEntity> {
 
   @Override

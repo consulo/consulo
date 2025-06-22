@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 10-Jan-2007
- */
 package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
@@ -45,6 +40,10 @@ import javax.swing.tree.TreePath;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * @author anna
+ * @since 2007-01-10
+ */
 public class OfflineInspectionRVContentProvider extends InspectionRVContentProvider {
   private final Map<String, Map<String, Set<OfflineProblemDescriptor>>> myContent;
 

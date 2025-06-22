@@ -18,8 +18,8 @@ package consulo.language.editor.inspection.scheme;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: 30-Nov-2005
+ * @author anna
+ * @since 2005-11-30
  */
 public interface ProjectProfileManager extends ProfileManager {
   public abstract String getProfileName();

@@ -54,7 +54,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public class PlatformIdTableBuilding {
   public static final Key<EditorHighlighter> EDITOR_HIGHLIGHTER = Key.create("Editor");

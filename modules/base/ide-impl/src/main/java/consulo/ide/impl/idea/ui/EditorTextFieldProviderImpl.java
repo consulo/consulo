@@ -40,7 +40,7 @@ import java.util.function.Consumer;
  * {@link EditorCustomization customizations} if necessary.
  *
  * @author Denis Zhdanov
- * @since Aug 20, 2010 3:21:03 PM
+ * @since 2010-08-20
  */
 @Singleton
 @ServiceImpl

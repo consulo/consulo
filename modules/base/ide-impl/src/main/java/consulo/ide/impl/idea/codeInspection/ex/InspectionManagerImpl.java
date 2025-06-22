@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Author: max
- * Date: Oct 9, 2001
- * Time: 8:43:17 PM
- */
-
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.annotation.component.ServiceImpl;
@@ -53,6 +46,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
+/**
+ * @author max
+ * @since 2001-10-09
+ */
 @Singleton
 @ServiceImpl
 public class InspectionManagerImpl extends InspectionManagerBase {

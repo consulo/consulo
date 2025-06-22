@@ -21,11 +21,8 @@ import consulo.language.psi.filter.ElementFilter;
 import consulo.language.psi.filter.FilterPositionUtil;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ik
- * Date: 06.02.2003
- * Time: 19:03:05
- * To change this template use Options | File Templates.
+ * @author ik
+ * @since 2003-02-06
  */
 public class LeftNeighbour extends PositionElementFilter {
   public LeftNeighbour(){}
