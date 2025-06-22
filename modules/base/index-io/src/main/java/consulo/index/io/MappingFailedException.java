@@ -17,7 +17,7 @@ package consulo.index.io;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: 11/24/10
+ * @since 2010-11-24
  */
 public class MappingFailedException extends RuntimeException{
   public MappingFailedException(String message) {

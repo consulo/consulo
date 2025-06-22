@@ -36,8 +36,8 @@ import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
- * User: anna
- * Date: 11/9/11
+ * @author anna
+ * @since 2011-11-09
  */
 @ExtensionImpl(id = "member", order = "after variable")
 public class MemberInplaceRenameHandler extends VariableInplaceRenameHandler {

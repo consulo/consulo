@@ -42,7 +42,7 @@ import java.util.List;
 
 /**
  * @author stathik
- * @since Mar 28, 2003
+ * @since 2003-03-28
  */
 public class RepositoryHelper {
     @Nonnull

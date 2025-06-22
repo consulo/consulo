@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
  * {@link SoftWrap} implementation that is built around {@link TextChangeImpl}.
  *
  * @author Denis Zhdanov
- * @since Sep 1, 2010 2:39:06 PM
+ * @since 2010-09-01
  */
 public class SoftWrapImpl implements SoftWrap {
 

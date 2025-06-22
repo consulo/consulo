@@ -22,7 +22,7 @@ import jakarta.annotation.Nullable;
 import java.util.Objects;
 
 /**
- * User: cdr
+ * @author cdr
  */
 public class PackageEntry {
     private final String myPackageName;

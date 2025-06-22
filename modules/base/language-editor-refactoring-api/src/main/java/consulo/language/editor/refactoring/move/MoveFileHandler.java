@@ -32,8 +32,7 @@ import java.util.Map;
 
 /**
  * @author Maxim.Mossienko
- * Date: Sep 18, 2008
- * Time: 3:40:48 PM
+ * @since 2008-09-18
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class MoveFileHandler {

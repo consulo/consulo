@@ -24,9 +24,8 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
- * User: ik
- * Date: 01.04.2003
- * Time: 16:52:28
+ * @author ik
+ * @since 2003-04-01
  */
 public interface ProviderBinding<T> {
   class ProviderInfo<T, Context> {

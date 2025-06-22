@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: mike
- * Date: Aug 23, 2002
- * Time: 8:15:58 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.impl.internal.intention;
 
 import consulo.annotation.component.ComponentScope;
@@ -49,6 +40,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.regex.Pattern;
 
+/**
+ * @author mike
+ * @since 2002-08-23
+ */
 @Singleton
 @State(name = "IntentionManagerSettings", storages = @Storage("intentionSettings.xml"))
 @ServiceAPI(ComponentScope.APPLICATION)

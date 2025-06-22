@@ -44,7 +44,7 @@ import java.util.function.Supplier;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 16, 2008
+ * @since 2008-01-16
  */
 @Singleton
 @ServiceImpl

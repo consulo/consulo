@@ -31,8 +31,7 @@ import java.util.List;
 
 /**
  * @author Alexey Chmutov
- *         Date: Jul 3, 2009
- *         Time: 2:47:10 PM
+ * @since 2009-07-03
  */
 class BlockUtil {
   private BlockUtil() {

@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * (see {@link com.intellij.psi.codeStyle.arrangement.match.StdArrangementEntryMatcher.StdMatcherBuilderImpl}).
  *
  * @author Roman.Shein
- * Date: 31.07.13
+ * @since 2013-07-31
  */
 public class StdArrangementTokenType {
   @Nonnull

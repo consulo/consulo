@@ -27,9 +27,8 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: ik
- * Date: 09.12.2003
- * Time: 14:10:35
+ * @author ik
+ * @since 2003-12-09
  */
 @ExtensionImpl
 public class PlainFileManipulator extends AbstractElementManipulator<PsiPlainTextFile> {

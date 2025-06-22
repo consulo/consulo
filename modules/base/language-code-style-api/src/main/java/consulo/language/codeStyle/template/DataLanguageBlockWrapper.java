@@ -32,8 +32,7 @@ import java.util.Map;
 
 /**
  * @author Alexey Chmutov
- *         Date: Jun 30, 2009
- *         Time: 7:18:37 PM
+ * @since 2009-06-30
  */
 public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithParent {
   private final Block myOriginal;

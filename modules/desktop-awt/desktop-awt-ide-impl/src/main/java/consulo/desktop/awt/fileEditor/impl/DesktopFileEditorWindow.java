@@ -66,7 +66,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
 
 /**
- * @since msk
+ * @author msk
  */
 public class DesktopFileEditorWindow extends FileEditorWindowBase implements FileEditorWindow {
     private static final Logger LOG = Logger.getInstance(DesktopFileEditorWindow.class);

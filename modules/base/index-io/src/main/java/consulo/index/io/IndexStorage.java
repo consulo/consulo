@@ -22,7 +22,7 @@ import java.io.IOException;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 10, 2007
+ * @since 2007-12-10
  */
 public interface IndexStorage<Key, Value> extends Flushable {
 

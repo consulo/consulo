@@ -29,7 +29,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public class ComboboxEditorTextField extends EditorTextField {
     public ComboboxEditorTextField(@Nonnull String text, Project project, FileType fileType) {

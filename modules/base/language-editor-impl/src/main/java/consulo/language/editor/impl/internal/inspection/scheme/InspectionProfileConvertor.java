@@ -39,8 +39,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * User: anna
- * Date: Dec 20, 2004
+ * @author anna
+ * @since 2004-12-20
  */
 public class InspectionProfileConvertor {
   private final HashMap<String, HighlightDisplayLevel> myDisplayLevelMap = new HashMap<String, HighlightDisplayLevel>();

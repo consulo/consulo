@@ -27,7 +27,7 @@ import static consulo.language.editor.util.PsiUtilBase.getLanguageInEditor;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since Sep 14, 2010 2:56:04 PM
+ * @since 2010-09-14
  */
 public class FormatConstants {
 

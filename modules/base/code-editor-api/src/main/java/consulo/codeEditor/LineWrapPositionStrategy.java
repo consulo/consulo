@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
  * such virtual wrap.
  *
  * @author Denis Zhdanov
- * @since Aug 25, 2010 11:14:29 AM
+ * @since 2010-08-25
  */
 public interface LineWrapPositionStrategy {
 

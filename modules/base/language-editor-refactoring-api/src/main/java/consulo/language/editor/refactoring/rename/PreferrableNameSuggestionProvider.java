@@ -16,8 +16,8 @@
 package consulo.language.editor.refactoring.rename;
 
 /**
- * User: anna
- * Date: 2/8/12
+ * @author anna
+ * @since 2012-02-08
  */
 public abstract class PreferrableNameSuggestionProvider implements NameSuggestionProvider {
   public boolean shouldCheckOthers() {

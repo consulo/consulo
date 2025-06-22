@@ -33,7 +33,7 @@ import java.util.function.Supplier;
  * represent target unicode symbol. We draw an arrow manually then (platform-independent approach).
  *
  * @author Denis Zhdanov
- * @since Jul 2, 2010 11:31:36 AM
+ * @since 2010-07-02
  */
 public class ArrowSoftWrapPainter implements SoftWrapPainter {
 

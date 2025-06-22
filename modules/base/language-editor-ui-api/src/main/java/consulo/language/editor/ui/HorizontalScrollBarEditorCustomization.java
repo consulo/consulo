@@ -21,8 +21,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
- *         Date: 12/6/10
- *         Time: 10:18 AM
+ * @since 2010-12-06
  */
 public class HorizontalScrollBarEditorCustomization extends SimpleEditorCustomization {
 

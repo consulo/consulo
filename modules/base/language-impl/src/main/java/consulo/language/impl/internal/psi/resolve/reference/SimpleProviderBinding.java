@@ -29,9 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: ik
- * Date: 01.04.2003
- * Time: 16:52:28
+ * @author ik
+ * @since 2003-04-01
  */
 public class SimpleProviderBinding<Provider> implements ProviderBinding<Provider> {
   private final List<ProviderInfo<Provider, ElementPattern>> myProviderPairs = Lists.newLockFreeCopyOnWriteList();

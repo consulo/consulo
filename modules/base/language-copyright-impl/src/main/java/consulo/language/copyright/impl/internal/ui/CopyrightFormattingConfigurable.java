@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 04-Dec-2008
- */
 package consulo.language.copyright.impl.internal.ui;
 
 import consulo.configurable.Configurable;
@@ -39,6 +34,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2008-12-04
+ */
 public class CopyrightFormattingConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll {
   private final Project myProject;
   private TemplateCommentPanel myPanel;
