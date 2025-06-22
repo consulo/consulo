@@ -16,31 +16,19 @@
 package consulo.ide.impl.actionSystem;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
-import consulo.annotation.component.ActionRefAnchor;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author VISTALL
- * @since 21.06.2025
+ * @since 2025-06-22
  */
 @ActionImpl(
-        id = "TouchBarEditorSearch",
-        parents = {
-                @ActionParentRef(value = @ActionRef(id = "TouchBar"), anchor = ActionRefAnchor.FIRST)
-        },
+        id = "TouchBarEditorSearch_ctrl",
         children = {
-                @ActionRef(type = TouchBarToggleMatchCase.class),
-                @ActionRef(type = TouchBarToggleWholeWordsOnlyAction.class),
-                @ActionRef(type = TouchBarToggleRegexAction.class),
-                @ActionRef(type = AnSeparator.class),
                 @ActionRef(type = TouchBarPrevOccurrenceAction.class),
-                @ActionRef(type = TouchBarNextOccurrenceAction.class),
-                @ActionRef(type = TouchBarEditorSearchCtrlActionGroup.class)
+                @ActionRef(type = TouchBarNextOccurrenceAction.class)
         }
 )
-public class TouchBarEditorSearchActionGroup extends DefaultActionGroup implements DumbAware {
+public class TouchBarEditorSearchCtrlActionGroup extends DefaultActionGroup {
 }
