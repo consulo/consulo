@@ -23,8 +23,9 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.ui.PluginTab;
 import consulo.externalService.localize.ExternalServiceLocalize;
-import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -39,41 +40,48 @@ import java.util.Set;
  * @since 2003-11-29
  */
 public class PluginInstallUtil {
-    private static final String POSTPONE = "&Postpone";
-
     private PluginInstallUtil() {
     }
 
     @Messages.YesNoResult
+    @RequiredUIAccess
     public static int showShutDownIDEADialog() {
         return showShutDownIDEADialog(ExternalServiceLocalize.titlePluginsChanged().get());
     }
 
     @Messages.YesNoResult
-    private static int showShutDownIDEADialog(final String title) {
-        String message = ExternalServiceLocalize.messageIdeaShutdownRequired(Application.get().getName()).get();
+    @RequiredUIAccess
+    private static int showShutDownIDEADialog(String title) {
         return Messages.showYesNoDialog(
-            message,
+            ExternalServiceLocalize.messageIdeaShutdownRequired(Application.get().getName()).get(),
             title,
-            "Shut Down",
-            POSTPONE,
+            ExternalServiceLocalize.actionShutdownText().get(),
+            ExternalServiceLocalize.actionPostponeText().get(),
             Messages.getQuestionIcon()
         );
     }
 
     @Messages.YesNoResult
+    @RequiredUIAccess
     public static int showRestartIDEADialog() {
         return showRestartIDEADialog(ExternalServiceLocalize.titlePluginsChanged().get());
     }
 
     @Messages.YesNoResult
-    private static int showRestartIDEADialog(final String title) {
-        LocalizeValue message = ExternalServiceLocalize.messageIdeaRestartRequired(Application.get().getName());
-        return Messages.showYesNoDialog(message.get(), title, "Restart", POSTPONE, Messages.getQuestionIcon());
+    @RequiredUIAccess
+    private static int showRestartIDEADialog(String title) {
+        return Messages.showYesNoDialog(
+            ExternalServiceLocalize.messageIdeaRestartRequired(Application.get().getName()).get(),
+            title,
+            ExternalServiceLocalize.actionRestartText().get(),
+            ExternalServiceLocalize.actionPostponeText().get(),
+            UIUtil.getQuestionIcon()
+        );
     }
 
+    @RequiredUIAccess
     public static void shutdownOrRestartApp(String title) {
-        final ApplicationEx app = (ApplicationEx) Application.get();
+        ApplicationEx app = (ApplicationEx) Application.get();
         int response = app.isRestartCapable() ? showRestartIDEADialog(title) : showShutDownIDEADialog(title);
         if (response == Messages.YES) {
             app.restart(true);
@@ -82,12 +90,12 @@ public class PluginInstallUtil {
 
     @Nonnull
     public static Set<PluginDescriptor> getPluginsForInstall(List<PluginDescriptor> pluginsToInstall, List<PluginDescriptor> allPlugins) {
-        final List<PluginId> pluginIds = new ArrayList<>();
+        List<PluginId> pluginIds = new ArrayList<>();
         for (PluginDescriptor pluginNode : pluginsToInstall) {
             pluginIds.add(pluginNode.getPluginId());
         }
 
-        final Set<PluginDescriptor> toInstallAll = new LinkedHashSet<>();
+        Set<PluginDescriptor> toInstallAll = new LinkedHashSet<>();
 
         for (PluginDescriptor toInstall : pluginsToInstall) {
             Set<PluginNode> depends = new LinkedHashSet<>();
