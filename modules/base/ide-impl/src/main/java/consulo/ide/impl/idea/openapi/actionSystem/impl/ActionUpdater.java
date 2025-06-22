@@ -233,7 +233,7 @@ public class ActionUpdater {
         ourExecutor.execute(() -> {
             while (future.state() == Future.State.RUNNING) {
                 try {
-                    boolean success = ProgressIndicatorUtils.runWithWriteActionPriority(() -> {
+                    ProgressManager.getInstance().runProcess(() -> {
                         List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
 
                         ActionUpdateEdtExecutor.computeOnEdt(() -> {
@@ -242,9 +242,9 @@ public class ActionUpdater {
                             return null;
                         });
                     }, new SensitiveProgressWrapper(indicator));
-                    if (!success) {
-                        ProgressIndicatorUtils.yieldToPendingWriteActions();
-                    }
+                }
+                catch (ProcessCanceledException e) {
+                    future.cancel(false);
                 }
                 catch (Throwable e) {
                     future.completeExceptionally(e);
