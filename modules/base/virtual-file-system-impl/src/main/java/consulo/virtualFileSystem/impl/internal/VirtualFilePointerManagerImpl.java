@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.event.AsyncFileListener.ChangeApplier;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.impl.RawArchiveFileSystem;
+import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
 import consulo.virtualFileSystem.impl.internal.entry.VirtualFileSystemEntry;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.virtualFileSystem.internal.VirtualFilePointerContainerImpl;
@@ -150,7 +150,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
             // search in archive file systems because they might be changed too when the LFS is changed
             for (Map.Entry<VirtualFileSystem, Map<VirtualFilePointerListener, FilePointerPartNode>> entry : myRoots.entrySet()) {
                 VirtualFileSystem rootFS = entry.getKey();
-                if (rootFS instanceof RawArchiveFileSystem) {
+                if (rootFS instanceof BaseArchiveFileSystem) {
                     addRelevantPointers(parent, childNameId, out, addSubdirectoryPointers, rootFS);
                 }
             }
@@ -240,7 +240,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
             if (cleanPath != path) {
                 url = VirtualFileManager.constructUrl(
                     protocol,
-                    cleanPath + (fileSystem instanceof RawArchiveFileSystem ? RawArchiveFileSystem.ARCHIVE_SEPARATOR : "")
+                    cleanPath + (fileSystem instanceof BaseArchiveFileSystem ? BaseArchiveFileSystem.ARCHIVE_SEPARATOR : "")
                 );
                 path = cleanPath;
             }
@@ -256,7 +256,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
                     path = FileUtil.toCanonicalPath(path);
                     url = VirtualFileManager.constructUrl(
                         protocol,
-                        path + (fileSystem instanceof RawArchiveFileSystem ? RawArchiveFileSystem.ARCHIVE_SEPARATOR : "")
+                        path + (fileSystem instanceof BaseArchiveFileSystem ? BaseArchiveFileSystem.ARCHIVE_SEPARATOR : "")
                     );
                 }
             }

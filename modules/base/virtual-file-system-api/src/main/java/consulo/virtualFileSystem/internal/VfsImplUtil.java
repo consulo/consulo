@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.impl.internal;
+package consulo.virtualFileSystem.internal;
 
 import consulo.application.Application;
 import consulo.logging.Logger;
@@ -25,9 +25,8 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.impl.ArchiveFileSystemBase;
-import consulo.virtualFileSystem.impl.ArchiveHandler;
-import consulo.virtualFileSystem.impl.RawArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveHandler;
+import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -190,33 +189,33 @@ public class VfsImplUtil {
 
     private static final AtomicBoolean ourSubscribed = new AtomicBoolean(false);
     private static final Object ourLock = new Object();
-    private static final Map<String, Pair<RawArchiveFileSystem, ArchiveHandler>> ourHandlers = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
+    private static final Map<String, Pair<BaseArchiveFileSystem, ArchiveHandler>> ourHandlers = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
     private static final Map<String, Set<String>> ourDominatorsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
 
     @Nonnull
-    public static <T extends ArchiveHandler> T getHandler(
-        @Nonnull RawArchiveFileSystem vfs,
+    public static <T extends ArchiveHandler, S extends BaseArchiveFileSystem> T getHandler(
+        @Nonnull S vfs,
         @Nonnull VirtualFile entryFile,
-        @Nonnull BiFunction<String, ArchiveFileSystemBase, T> producer
+        @Nonnull BiFunction<String, S, T> producer
     ) {
         String localPath = vfs.extractLocalPath(vfs.extractRootPath(entryFile.getPath()));
         return getHandler(vfs, localPath, producer);
     }
 
     @Nonnull
-    public static <T extends ArchiveHandler> T getHandler(
-        @Nonnull RawArchiveFileSystem vfs,
+    public static <T extends ArchiveHandler, S extends BaseArchiveFileSystem> T getHandler(
+        @Nonnull S vfs,
         @Nonnull String localPath,
-        @Nonnull BiFunction<String, ArchiveFileSystemBase, T> producer
+        @Nonnull BiFunction<String, S, T> producer
     ) {
         checkSubscription();
 
         ArchiveHandler handler;
 
         synchronized (ourLock) {
-            Pair<RawArchiveFileSystem, ArchiveHandler> record = ourHandlers.get(localPath);
+            Pair<BaseArchiveFileSystem, ArchiveHandler> record = ourHandlers.get(localPath);
             if (record == null) {
-                handler = producer.apply(localPath, (ArchiveFileSystemBase) vfs);
+                handler = producer.apply(localPath, vfs);
                 record = Pair.create(vfs, handler);
                 ourHandlers.put(localPath, record);
 
@@ -300,7 +299,7 @@ public class VfsImplUtil {
 
         @Nullable
         static InvalidationState invalidate(@Nullable InvalidationState state, String path) {
-            Pair<RawArchiveFileSystem, ArchiveHandler> handlerPair = ourHandlers.remove(path);
+            Pair<BaseArchiveFileSystem, ArchiveHandler> handlerPair = ourHandlers.remove(path);
             if (handlerPair != null) {
                 handlerPair.second.dispose();
                 forEachDirectoryComponent(path, containingDirectoryPath -> {
@@ -319,7 +318,7 @@ public class VfsImplUtil {
             return state;
         }
 
-        private void registerPathToRefresh(String path, RawArchiveFileSystem vfs) {
+        private void registerPathToRefresh(String path, BaseArchiveFileSystem vfs) {
             NewVirtualFile root = ManagingFS.getInstance().findRoot(vfs.composeRootPath(path), vfs);
             if (root != null) {
                 if (myRootsToRefresh == null) {

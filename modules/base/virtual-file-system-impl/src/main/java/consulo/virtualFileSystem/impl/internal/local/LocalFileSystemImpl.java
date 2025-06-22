@@ -27,7 +27,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.impl.internal.VfsImplUtil;
+import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

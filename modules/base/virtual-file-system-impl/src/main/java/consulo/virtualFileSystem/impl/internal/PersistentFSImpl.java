@@ -19,15 +19,12 @@ import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.encoding.Utf8BomOptionProvider;
 import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.impl.RawArchiveFileSystem;
+import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
 import consulo.virtualFileSystem.impl.internal.entry.*;
 import consulo.virtualFileSystem.impl.internal.local.NativeFileWatcherImpl;
-import consulo.virtualFileSystem.internal.FileSystemUtil;
+import consulo.virtualFileSystem.internal.*;
 import consulo.virtualFileSystem.impl.internal.util.FileImplUtil;
 import consulo.virtualFileSystem.impl.internal.zip.ZipHandler;
-import consulo.virtualFileSystem.internal.FakeVirtualFile;
-import consulo.virtualFileSystem.internal.NameId;
-import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -1301,7 +1298,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
 
         CharSequence rootName;
         String rootPath;
-        if (fs instanceof RawArchiveFileSystem afs) {
+        if (fs instanceof BaseArchiveFileSystem afs) {
             VirtualFile localFile = afs.findLocalByRootPath(path);
             if (localFile == null) {
                 return null;

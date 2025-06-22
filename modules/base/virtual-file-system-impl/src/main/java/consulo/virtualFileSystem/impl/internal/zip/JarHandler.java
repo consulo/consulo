@@ -32,8 +32,8 @@ import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.archive.ArchiveFile;
-import consulo.virtualFileSystem.impl.ArchiveFileSystemBase;
-import consulo.virtualFileSystem.impl.ArchiveHandler;
+import consulo.virtualFileSystem.impl.internal.ArchiveFileSystemViaArchiveFile;
+import consulo.virtualFileSystem.archive.ArchiveHandler;
 import consulo.virtualFileSystem.impl.internal.FSRecords;
 import consulo.virtualFileSystem.internal.FlushingDaemon;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
@@ -58,10 +58,10 @@ public class JarHandler extends ZipHandler {
   private static final String JARS_FOLDER = "archives";
   private static final int FS_TIME_RESOLUTION = 2000;
 
-  private final ArchiveFileSystemBase myFileSystem;
+  private final ArchiveFileSystemViaArchiveFile myFileSystem;
   private volatile File myFileWithMirrorResolved;
 
-  public JarHandler(@Nonnull String path, @Nonnull ArchiveFileSystemBase fileSystem) {
+  public JarHandler(@Nonnull String path, @Nonnull ArchiveFileSystemViaArchiveFile fileSystem) {
     super(path);
     myFileSystem = fileSystem;
   }

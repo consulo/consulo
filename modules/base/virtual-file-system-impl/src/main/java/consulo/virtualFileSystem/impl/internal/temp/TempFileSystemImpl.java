@@ -24,7 +24,7 @@ import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.impl.internal.FSRecords;
 import consulo.virtualFileSystem.internal.FakeVirtualFile;
-import consulo.virtualFileSystem.impl.internal.VfsImplUtil;
+import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

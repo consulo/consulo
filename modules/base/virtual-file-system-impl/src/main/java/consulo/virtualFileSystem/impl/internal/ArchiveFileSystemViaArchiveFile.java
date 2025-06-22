@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.impl;
+package consulo.virtualFileSystem.impl.internal;
 
 import consulo.platform.Platform;
 import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import consulo.virtualFileSystem.impl.internal.VfsImplUtil;
+import consulo.virtualFileSystem.archive.ArchiveHandler;
+import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
 import consulo.virtualFileSystem.impl.internal.zip.JarHandler;
+import consulo.virtualFileSystem.internal.VfsImplUtil;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,14 +37,12 @@ import java.util.Set;
 /**
  * @author VISTALL
  * @since 06-Aug-16
- * <p>
- * Base class for archive file types
  */
-public abstract class ArchiveFileSystemBase extends RawArchiveFileSystem implements ArchiveFileSystem, VirtualFilePointerCapableFileSystem {
+public abstract class ArchiveFileSystemViaArchiveFile extends BaseArchiveFileSystem implements ArchiveFileSystem, VirtualFilePointerCapableFileSystem {
     private final Set<String> myNoCopyJarPaths;
     private final String myProtocol;
 
-    protected ArchiveFileSystemBase(@Nonnull String protocol) {
+    protected ArchiveFileSystemViaArchiveFile(@Nonnull String protocol) {
         myProtocol = protocol;
         boolean noCopy = SystemProperties.getBooleanProperty("idea.jars.nocopy", !Platform.current().os().isWindows());
         myNoCopyJarPaths = noCopy ? null : Sets.newConcurrentHashSet(FileUtil.PATH_HASHING_STRATEGY);
@@ -79,68 +77,7 @@ public abstract class ArchiveFileSystemBase extends RawArchiveFileSystem impleme
 
     @Nonnull
     @Override
-    public String extractPresentableUrl(@Nonnull String path) {
-        return super.extractPresentableUrl(StringUtil.trimEnd(path, URLUtil.ARCHIVE_SEPARATOR));
-    }
-
-    @Override
-    public String normalize(@Nonnull String path) {
-        final int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
-        if (jarSeparatorIndex > 0) {
-            final String root = path.substring(0, jarSeparatorIndex);
-            return FileUtil.normalize(root, Platform.current().os().isWindows()) + path.substring(jarSeparatorIndex);
-        }
-        return super.normalize(path);
-    }
-
-    @Nonnull
-    @Override
-    public String extractRootPath(@Nonnull String path) {
-        final int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
-        assert jarSeparatorIndex >= 0 : "Path passed to ArchiveFileSystem must have archive separator '!/': " + path;
-        return path.substring(0, jarSeparatorIndex + URLUtil.ARCHIVE_SEPARATOR.length());
-    }
-
-    @Nonnull
-    @Override
-    public String extractLocalPath(@Nonnull String rootPath) {
-        return StringUtil.trimEnd(rootPath, URLUtil.ARCHIVE_SEPARATOR);
-    }
-
-    @Nonnull
-    @Override
-    public String composeRootPath(@Nonnull String localPath) {
-        return localPath + URLUtil.ARCHIVE_SEPARATOR;
-    }
-
-    @Nonnull
-    @Override
     public ArchiveHandler getHandler(@Nonnull VirtualFile entryFile) {
         return VfsImplUtil.getHandler(this, entryFile, JarHandler::new);
-    }
-
-    @Nullable
-    @Override
-    public VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile) {
-        return getVirtualFileForJar(entryVFile);
-    }
-
-    @Nullable
-    @Override
-    public VirtualFile findLocalVirtualFileByPath(@Nonnull String path) {
-        if (!path.contains(URLUtil.ARCHIVE_SEPARATOR)) {
-            path += URLUtil.ARCHIVE_SEPARATOR;
-        }
-        return findFileByPath(path);
-    }
-
-    @Nullable
-    public VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryFile) {
-        return entryFile == null ? null : getLocalByEntry(entryFile);
-    }
-
-    @Nullable
-    public VirtualFile getJarRootForLocalFile(@Nonnull VirtualFile file) {
-        return getRootByLocal(file);
     }
 }

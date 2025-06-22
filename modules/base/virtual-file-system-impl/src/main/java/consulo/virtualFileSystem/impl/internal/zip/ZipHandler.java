@@ -24,7 +24,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.archive.ArchiveEntry;
 import consulo.virtualFileSystem.archive.ArchiveFile;
-import consulo.virtualFileSystem.impl.ArchiveHandler;
+import consulo.virtualFileSystem.archive.ArchiveHandler;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

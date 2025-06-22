@@ -11,7 +11,7 @@ import consulo.util.io.*;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.impl.internal.VfsImplUtil;
+import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
 import consulo.virtualFileSystem.impl.internal.util.FileImplUtil;
 import consulo.virtualFileSystem.internal.DiskQueryRelay;

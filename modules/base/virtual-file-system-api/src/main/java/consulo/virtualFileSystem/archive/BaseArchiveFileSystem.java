@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.impl;
+package consulo.virtualFileSystem.archive;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.platform.Platform;
 import consulo.util.dataholder.Key;
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.FileAttributes;
+import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.impl.internal.VfsImplUtil;
+import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
@@ -37,14 +38,9 @@ import java.io.OutputStream;
 import java.util.function.Function;
 
 /**
- * Common interface of archive-based file systems (jar://, phar:// etc).
- *
- * @since 138.100
- * <p>
- * Only for internal use. For plugin implementation please use {@link ArchiveFileSystemBase}
+ * Common implementation of {@link ArchiveFileSystem}
  */
-@Deprecated
-public abstract class RawArchiveFileSystem extends NewVirtualFileSystem {
+public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem implements ArchiveFileSystem {
     @Deprecated
     @DeprecationInfo("Use URLUtil#ARCHIVE_SEPARATOR")
     public static final String ARCHIVE_SEPARATOR = URLUtil.ARCHIVE_SEPARATOR;
@@ -52,9 +48,9 @@ public abstract class RawArchiveFileSystem extends NewVirtualFileSystem {
     private static final Key<VirtualFile> LOCAL_FILE = Key.create("vfs.archive.local.file");
 
     private final Function<VirtualFile, FileAttributes> myAttrGetter =
-        ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).getAttributes(getRelativePath(file)));
+            ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).getAttributes(getRelativePath(file)));
     private final Function<VirtualFile, String[]> myChildrenGetter =
-        ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).list(getRelativePath(file)));
+            ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).list(getRelativePath(file)));
 
     /**
      * Returns a root entry of an archive hosted by a given local file
@@ -110,13 +106,66 @@ public abstract class RawArchiveFileSystem extends NewVirtualFileSystem {
      * Strips any separator chars from a root path (obtained via {@link #extractRootPath(String)}) to obtain a path to a local file.
      */
     @Nonnull
-    public abstract String extractLocalPath(@Nonnull String rootPath);
+    public String extractLocalPath(@Nonnull String rootPath) {
+        return StringUtil.trimEnd(rootPath, URLUtil.ARCHIVE_SEPARATOR);
+    }
 
     /**
      * A reverse to {@link #extractLocalPath(String)} - i.e. dresses a local file path to make it a suitable root path for this filesystem.
      */
     @Nonnull
-    public abstract String composeRootPath(@Nonnull String localPath);
+    public String composeRootPath(@Nonnull String localPath) {
+        return localPath + URLUtil.ARCHIVE_SEPARATOR;
+    }
+
+    @Override
+    @Nullable
+    public VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile) {
+        return getVirtualFileForJar(entryVFile);
+    }
+
+    @Override
+    @Nullable
+    public VirtualFile findLocalVirtualFileByPath(@Nonnull String path) {
+        if (!path.contains(URLUtil.ARCHIVE_SEPARATOR)) {
+            path += URLUtil.ARCHIVE_SEPARATOR;
+        }
+        return findFileByPath(path);
+    }
+
+    @Nullable
+    public VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryFile) {
+        return entryFile == null ? null : getLocalByEntry(entryFile);
+    }
+
+    @Nullable
+    public VirtualFile getJarRootForLocalFile(@Nonnull VirtualFile file) {
+        return getRootByLocal(file);
+    }
+
+    @Nonnull
+    @Override
+    public String extractPresentableUrl(@Nonnull String path) {
+        return super.extractPresentableUrl(StringUtil.trimEnd(path, URLUtil.ARCHIVE_SEPARATOR));
+    }
+
+    @Override
+    public String normalize(@Nonnull String path) {
+        int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
+        if (jarSeparatorIndex > 0) {
+            String root = path.substring(0, jarSeparatorIndex);
+            return FileUtil.normalize(root, Platform.current().os().isWindows()) + path.substring(jarSeparatorIndex);
+        }
+        return super.normalize(path);
+    }
+
+    @Nonnull
+    @Override
+    public String extractRootPath(@Nonnull String path) {
+        int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
+        assert jarSeparatorIndex >= 0 : "Path passed to ArchiveFileSystem must have archive separator '!/': " + path;
+        return path.substring(0, jarSeparatorIndex + URLUtil.ARCHIVE_SEPARATOR.length());
+    }
 
     @Nonnull
     public abstract ArchiveHandler getHandler(@Nonnull VirtualFile entryFile);
@@ -131,10 +180,10 @@ public abstract class RawArchiveFileSystem extends NewVirtualFileSystem {
     @Nonnull
     @Override
     public VirtualFile copyFile(
-        Object requestor,
-        @Nonnull VirtualFile file,
-        @Nonnull VirtualFile newParent,
-        @Nonnull String copyName
+            Object requestor,
+            @Nonnull VirtualFile file,
+            @Nonnull VirtualFile newParent,
+            @Nonnull String copyName
     ) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
     }
@@ -189,8 +238,7 @@ public abstract class RawArchiveFileSystem extends NewVirtualFileSystem {
     public boolean exists(@Nonnull VirtualFile file) {
         if (file.getParent() == null) {
             return getLocalByEntry(file) != null;
-        }
-        else {
+        } else {
             return getAttributes(file) != null;
         }
     }
@@ -216,8 +264,7 @@ public abstract class RawArchiveFileSystem extends NewVirtualFileSystem {
             if (host != null) {
                 return host.getTimeStamp();
             }
-        }
-        else {
+        } else {
             FileAttributes attributes = getAttributes(file);
             if (attributes != null) {
                 return attributes.lastModified;
@@ -233,8 +280,7 @@ public abstract class RawArchiveFileSystem extends NewVirtualFileSystem {
             if (host != null) {
                 return host.getLength();
             }
-        }
-        else {
+        } else {
             FileAttributes attributes = getAttributes(file);
             if (attributes != null) {
                 return attributes.length;

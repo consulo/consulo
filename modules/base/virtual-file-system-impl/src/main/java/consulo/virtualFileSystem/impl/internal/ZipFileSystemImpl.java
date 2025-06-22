@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.archive.ArchiveFile;
-import consulo.virtualFileSystem.impl.ArchiveFileSystemBase;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import consulo.virtualFileSystem.archive.ZipArchiveFileType;
@@ -31,7 +30,7 @@ import java.io.IOException;
  * @since 16:43/14.07.13
  */
 @ExtensionImpl
-public class ZipFileSystemImpl extends ArchiveFileSystemBase implements VirtualFileSystemWithMacroSupport {
+public class ZipFileSystemImpl extends ArchiveFileSystemViaArchiveFile implements VirtualFileSystemWithMacroSupport {
   public ZipFileSystemImpl() {
     super(ZipArchiveFileType.PROTOCOL);
   }

@@ -24,7 +24,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.impl.RawArchiveFileSystem;
+import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
 import consulo.virtualFileSystem.impl.internal.entry.VirtualFileSystemEntry;
 import consulo.virtualFileSystem.impl.internal.util.FileImplUtil;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
@@ -463,7 +463,7 @@ class FilePointerPartNode {
     // for "file://a/b/c.txt" return "a/b", for "jar://a/b/j.jar!/c.txt" return "/a/b/j.jar"
     private static VirtualFile getParentThroughJars(@Nonnull VirtualFile file, @Nonnull VirtualFileSystem fs) {
         VirtualFile parent = file.getParent();
-        if (parent == null && fs instanceof RawArchiveFileSystem archiveFileSystem) {
+        if (parent == null && fs instanceof BaseArchiveFileSystem archiveFileSystem) {
             VirtualFile local = archiveFileSystem.getLocalByEntry(file);
             if (local != null) {
                 parent = local.getParent();
@@ -496,7 +496,7 @@ class FilePointerPartNode {
             if (currentFile == NEVER_TRIED_TO_FIND) {
                 if (fsRoot == null) {
                     String rootPath = ContainerUtil.getLastItem(names);
-                    fsRoot = ManagingFS.getInstance().findRoot(rootPath, fs instanceof RawArchiveFileSystem ? LocalFileSystem.getInstance() : fs);
+                    fsRoot = ManagingFS.getInstance().findRoot(rootPath, fs instanceof BaseArchiveFileSystem ? LocalFileSystem.getInstance() : fs);
                     if (fsRoot != null && !fsRoot.getName().equals(rootPath)) {
                         // ignore really weird root names, like "/" under windows
                         fsRoot = null;
@@ -512,7 +512,7 @@ class FilePointerPartNode {
 
             currentNode.children = ArrayUtil.insert(currentNode.children, -index - 1, child);
             currentNode = child;
-            if (i != 0 && fs instanceof RawArchiveFileSystem archiveFileSystem && currentFile != null && !currentFile.isDirectory()) {
+            if (i != 0 && fs instanceof BaseArchiveFileSystem archiveFileSystem && currentFile != null && !currentFile.isDirectory()) {
                 currentFile = archiveFileSystem.getRootByLocal(currentFile);
             }
         }
@@ -533,7 +533,7 @@ class FilePointerPartNode {
             if (startIndex == 0) {
                 break;
             }
-            int skipSeparator = StringUtil.endsWith(path, 0, startIndex, RawArchiveFileSystem.ARCHIVE_SEPARATOR) ? 2 : 1;
+            int skipSeparator = StringUtil.endsWith(path, 0, startIndex, BaseArchiveFileSystem.ARCHIVE_SEPARATOR) ? 2 : 1;
             end = startIndex - skipSeparator;
             if (end == 0 && path.charAt(0) == '/') {
                 end = 1; // here's this weird ROOT file in temp system
@@ -553,7 +553,7 @@ class FilePointerPartNode {
         for (int i = names.size() - 2; i >= startIndex; i--) {
             String name = names.get(i);
             file = file.findChild(name);
-            if (fs instanceof RawArchiveFileSystem archiveFileSystem && file != null && !file.isDirectory() && file.getFileSystem() != fs) {
+            if (fs instanceof BaseArchiveFileSystem archiveFileSystem && file != null && !file.isDirectory() && file.getFileSystem() != fs) {
                 file = archiveFileSystem.getRootByLocal(file);
             }
             if (file == null) {

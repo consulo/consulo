@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystemProvider;
-import consulo.virtualFileSystem.impl.ArchiveFileSystemBase;
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
@@ -27,8 +26,8 @@ import java.io.IOException;
  * @author VISTALL
  * @since 10-Aug-22
  */
-@SuppressWarnings("ExtensionImplIsNotAnnotatedInspection")
-public class ArchiveFileSystemByProvider extends ArchiveFileSystemBase implements VirtualFileSystemWithMacroSupport {
+@SuppressWarnings("ExtensionImplIsNotAnnotated")
+public class ArchiveFileSystemByProvider extends ArchiveFileSystemViaArchiveFile implements VirtualFileSystemWithMacroSupport {
   private final ArchiveFileSystemProvider myProvider;
 
   public ArchiveFileSystemByProvider(ArchiveFileSystemProvider provider) {

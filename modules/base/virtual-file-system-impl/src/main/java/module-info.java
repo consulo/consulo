@@ -17,9 +17,6 @@ module consulo.virtual.file.system.impl {
 
     requires gnu.trove;
 
-    // TODO remove in future - need for java plugin
-    exports consulo.virtualFileSystem.impl;
-
     // FIXME used by AtomicFieldUpdater - maybe replace it?
     opens consulo.virtualFileSystem.impl.internal.entry to consulo.util.concurrent;
 }
