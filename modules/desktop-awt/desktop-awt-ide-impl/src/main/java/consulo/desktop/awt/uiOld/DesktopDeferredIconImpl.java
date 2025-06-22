@@ -448,4 +448,9 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   public String toString() {
     return "Deferred. Base=" + myScaledDelegateIcon;
   }
+
+  @Nonnull
+  public Image getDelegateIcon() {
+    return myDelegateIcon;
+  }
 }

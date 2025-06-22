@@ -29,6 +29,8 @@ import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTSVGImageReference;
 import consulo.desktop.awt.ui.impl.layout.*;
 import consulo.desktop.awt.ui.impl.style.DesktopStyleManagerImpl;
 import consulo.desktop.awt.ui.impl.textBox.*;
+import consulo.desktop.awt.uiOld.DesktopDeferredIconImpl;
+import consulo.desktop.awt.uiOld.DesktopIconDeferrerImpl;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
@@ -189,6 +191,11 @@ public class DesktopUIInternalImpl extends UIInternal {
         if (original instanceof DesktopAWTImage resizableImage) {
             return resizableImage.copyWithNewSize(width, height);
         }
+
+        if (original instanceof DesktopDeferredIconImpl deferredIcon) {
+            Image image = deferredIcon.evaluateImage();
+            return _ImageEffects_resize(image, width, height);
+        }
         return original;
     }
 
@@ -196,6 +203,11 @@ public class DesktopUIInternalImpl extends UIInternal {
     public Image _ImageEffects_resize(Image original, float scale) {
         if (original instanceof DesktopAWTImage resizableImage) {
             return resizableImage.copyWithNewScale(scale);
+        }
+
+        if (original instanceof DesktopDeferredIconImpl deferredIcon) {
+            Image image = deferredIcon.evaluateImage();
+            return _ImageEffects_resize(image, scale);
         }
         return original;
     }
