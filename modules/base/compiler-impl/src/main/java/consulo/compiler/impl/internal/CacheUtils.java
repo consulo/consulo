@@ -31,8 +31,7 @@ import java.util.function.Function;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Aug 18, 2003
- * Time: 6:32:32 PM
+ * @since 2003-08-18
  */
 public class CacheUtils {
   private static final Logger LOG = Logger.getInstance(CacheUtils.class);

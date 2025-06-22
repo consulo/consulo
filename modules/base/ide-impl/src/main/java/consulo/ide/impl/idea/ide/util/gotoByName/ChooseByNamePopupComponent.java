@@ -20,8 +20,8 @@ import consulo.ui.ModalityState;
 import java.util.List;
 
 /**
- * User: anna
- * Date: Jan 26, 2005
+ * @author anna
+ * @since 2005-01-26
  */
 public interface ChooseByNamePopupComponent {
   void invoke(Callback callback, ModalityState modalityState, boolean allowMultipleSelection);

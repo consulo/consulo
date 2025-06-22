@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Nov 12, 2004
+ * @since 2004-11-12
  */
 public class GroupingElement extends ErrorTreeElement {
   private final String[] myText;

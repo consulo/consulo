@@ -27,10 +27,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 6/7/12
- * Time: 12:41 PM
+ * @author Irina.Chernushina
+ * @since 2012-06-07
  */
 public abstract class ProjectViewNodeWithChildrenList<T> extends ProjectViewNode<T> {
   protected final List<AbstractTreeNode> myChildren;

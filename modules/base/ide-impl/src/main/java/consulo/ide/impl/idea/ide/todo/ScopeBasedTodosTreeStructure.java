@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 27-Jul-2007
- */
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.ide.impl.idea.ide.todo.nodes.ToDoRootNode;
@@ -28,6 +23,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.content.scope.SearchScope;
 
+/**
+ * @author anna
+ * @since 2007-07-27
+ */
 public class ScopeBasedTodosTreeStructure extends TodoTreeStructure {
   private final ScopeChooserCombo myScopes;
 

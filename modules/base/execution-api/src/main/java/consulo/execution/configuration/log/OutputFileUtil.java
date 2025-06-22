@@ -45,8 +45,8 @@ import java.io.PrintStream;
 import java.util.function.Supplier;
 
 /**
- * User: anna
- * Date: 10/20/11
+ * @author anna
+ * @since 2011-10-20
  */
 public class OutputFileUtil {
   private static final String CONSOLE_OUTPUT_FILE_MESSAGE = "Console output is saving to: ";

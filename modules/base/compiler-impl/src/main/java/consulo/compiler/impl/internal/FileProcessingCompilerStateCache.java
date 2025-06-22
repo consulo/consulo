@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author: Eugene Zhuravlev
- * Date: Apr 1, 2003
- * Time: 1:17:50 PM
- */
 package consulo.compiler.impl.internal;
 
 import consulo.compiler.ValidityState;
@@ -30,6 +24,10 @@ import jakarta.annotation.Nullable;
 import java.io.*;
 import java.util.Collection;
 
+/**
+ * @author Eugene Zhuravlev
+ * @since 2003-04-01
+ */
 public class FileProcessingCompilerStateCache {
   private static final Logger LOG = Logger.getInstance(FileProcessingCompilerStateCache.class);
   private final StateCache<MyState> myCache;

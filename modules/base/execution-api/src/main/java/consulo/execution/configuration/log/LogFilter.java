@@ -26,8 +26,8 @@ import org.jdom.Element;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: 22-Mar-2006
+ * @author anna
+ * @since 2006-03-22
  */
 public class LogFilter implements JDOMExternalizable {
   public String myName;

@@ -30,8 +30,8 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 /**
- * User: anna
- * Date: 10/19/11
+ * @author anna
+ * @since 2011-10-19
  */
 public class TrackRunningTestUtil {
   private TrackRunningTestUtil() {

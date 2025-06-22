@@ -23,8 +23,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
-* User: anna
-*/
+ * @author anna
+ */
 public class CustomisedActionGroup extends ActionGroup {
   private boolean myForceUpdate;
   private final ActionGroup myGroup;

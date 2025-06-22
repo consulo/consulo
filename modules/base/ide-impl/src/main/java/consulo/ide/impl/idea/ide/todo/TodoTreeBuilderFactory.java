@@ -21,8 +21,7 @@ import javax.swing.*;
 
 /**
  * @author irengrig
- *         Date: 2/24/11
- *         Time: 10:51 AM
+ * @since 2011-02-24
  */
 public interface TodoTreeBuilderFactory {
   TodoTreeBuilder createTreeBuilder(JTree tree, Project project);

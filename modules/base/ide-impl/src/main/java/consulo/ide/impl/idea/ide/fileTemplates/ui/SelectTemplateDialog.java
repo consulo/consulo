@@ -32,10 +32,9 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
-/*
- * @author: MYakovlev
- * Date: Aug 22, 2002
- * Time: 1:31:43 PM
+/**
+ * @author MYakovlev
+ * @since 2002-08-22
  */
 public class SelectTemplateDialog extends DialogWrapper {
   private JComboBox myCbxTemplates;

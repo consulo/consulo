@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author: Eugene Zhuravlev
- * Date: Jul 10, 2003
- * Time: 4:51:25 PM
- */
 package consulo.compiler;
 
+/**
+ * @author Eugene Zhuravlev
+ * @since 2003-07-10
+ */
 public class CacheCorruptedException extends Exception {
   public CacheCorruptedException(String message) {
     super((message == null || message.length() == 0) ? CompilerBundle.message("error.dependency.info.on.disk.corrupted") : message);

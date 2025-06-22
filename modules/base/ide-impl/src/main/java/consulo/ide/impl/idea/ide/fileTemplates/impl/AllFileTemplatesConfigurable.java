@@ -50,8 +50,8 @@ import java.util.*;
 
 import static consulo.fileTemplate.FileTemplateManager.*;
 
-/*
- * @author: MYakovlev
+/**
+ * @author MYakovlev
  * @since 2022-07-26
  */
 @ExtensionImpl

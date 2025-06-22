@@ -25,14 +25,13 @@ import consulo.ui.ex.tree.AlphaComparator;
 import consulo.ui.ex.tree.IndexComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
- * @author: Roman Chernyatchik
+ * @author Roman Chernyatchik
  */
 public abstract class AbstractTestTreeBuilder extends AbstractTreeBuilder {
   public AbstractTestTreeBuilder(

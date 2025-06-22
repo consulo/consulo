@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 @ExtensionImpl
 public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvider<Object>

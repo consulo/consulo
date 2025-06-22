@@ -20,11 +20,8 @@ import consulo.project.Project;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jul 22, 2003
- * Time: 3:30:56 PM
- * To change this template use Options | File Templates.
+ * @author max
+ * @since 2003-07-22
  */
 public class EditMacrosDialog extends SingleConfigurableEditor {
   public EditMacrosDialog(@Nullable Project project) {

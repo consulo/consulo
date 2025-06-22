@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 07-Nov-2008
- */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.dataContext.DataContext;
@@ -27,6 +22,10 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopupFactory;
 
+/**
+ * @author anna
+ * @since 2008-11-07
+ */
 public class PopupHectorAction extends AnAction {
 
   @Override

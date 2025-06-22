@@ -40,7 +40,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 /**
- * User: anna
+ * @author anna
  */
 public class InstalledPluginsTab extends PluginTab {
     @RequiredUIAccess

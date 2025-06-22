@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * User: ksafonov
+ * @author ksafonov
  */
 @Singleton
 @ServiceImpl

@@ -32,8 +32,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * User: anna
- * Date: 01-Jul-2006
+ * @author anna
+ * @since 2006-07-01
  */
 public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
   private NamedScope myScope;

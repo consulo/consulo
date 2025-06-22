@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Feb 10, 2004
+ * @since 2004-02-10
  */
 @ExtensionImpl
 public class ProjectFileDirectoryRule implements GetDataRule<VirtualFile> {

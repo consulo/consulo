@@ -27,7 +27,7 @@ import java.util.Properties;
 
 /**
  * @author MYakovlev
- * Date: Jul 24, 2002
+ * @since 2002-07-24
  */
 public interface FileTemplate extends Cloneable {
   FileTemplate[] EMPTY_ARRAY = new FileTemplate[0];

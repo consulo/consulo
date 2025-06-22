@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 27-Jul-2007
- */
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.application.ui.util.TodoPanelSettings;
@@ -34,6 +29,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author anna
+ * @since 2007-07-27
+ */
 public class ScopeBasedTodosPanel extends TodoPanel {
   private static final String SELECTED_SCOPE = "TODO_SCOPE";
   private final Alarm myAlarm;

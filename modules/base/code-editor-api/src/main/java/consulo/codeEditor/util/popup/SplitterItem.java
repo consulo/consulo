@@ -21,11 +21,8 @@ import consulo.ui.ex.ColoredTextContainer;
 import javax.swing.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: zajac
- * Date: 11.05.12
- * Time: 21:55
- * To change this template use File | Settings | File Templates.
+ * @author zajac
+ * @since 2012-05-11
  */
 public class SplitterItem extends ItemWrapper {
 

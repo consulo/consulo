@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Nov 12, 2004
+ * @since 2004-11-12
  */
 public class NavigatableMessageElement extends ErrorTreeElement {
   private final GroupingElement myParent;

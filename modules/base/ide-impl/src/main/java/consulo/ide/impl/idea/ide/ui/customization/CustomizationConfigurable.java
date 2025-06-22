@@ -26,8 +26,8 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**
- * User: anna
- * Date: Mar 17, 2005
+ * @author anna
+ * @since 2005-03-17
  */
 @ExtensionImpl
 public class CustomizationConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {

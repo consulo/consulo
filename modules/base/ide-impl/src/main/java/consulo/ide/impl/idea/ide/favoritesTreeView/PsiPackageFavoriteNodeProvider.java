@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 21-Jan-2008
- */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -51,6 +46,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author anna
+ * @since 2008-01-21
+ */
 @ExtensionImpl
 public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   @Override

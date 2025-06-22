@@ -41,12 +41,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
-* Created with IntelliJ IDEA.
-* User: zajac
-* Date: 5/6/12
-* Time: 2:06 AM
-* To change this template use File | Settings | File Templates.
-*/
+ * @author zajac
+ * @since 2012-05-06
+ */
 public class BookmarkItem extends ItemWrapper {
   private final Bookmark myBookmark;
 

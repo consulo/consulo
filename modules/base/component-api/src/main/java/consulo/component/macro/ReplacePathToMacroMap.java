@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Eugene Zhuravlev
- * Date: Dec 6, 2004
  * @see PathMacrosImpl#addMacroReplacements(ReplacePathToMacroMap)
  * @see PathMacroManager
  */

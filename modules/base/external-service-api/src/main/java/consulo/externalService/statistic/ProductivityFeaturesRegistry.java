@@ -23,8 +23,8 @@ import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
- * User: anna
- * Date: Feb 3, 2005
+ * @author anna
+ * @since 2005-02-03
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProductivityFeaturesRegistry {

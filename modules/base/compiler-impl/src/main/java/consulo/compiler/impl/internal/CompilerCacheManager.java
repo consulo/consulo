@@ -42,7 +42,7 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- * Date: May 4, 2008
+ * @since 2008-05-04
  */
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)

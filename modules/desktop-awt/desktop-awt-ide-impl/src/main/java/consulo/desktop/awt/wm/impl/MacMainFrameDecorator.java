@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static consulo.application.util.mac.foundation.Foundation.invoke;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettingsListener {
   private static final Logger LOG = Logger.getInstance(MacMainFrameDecorator.class);

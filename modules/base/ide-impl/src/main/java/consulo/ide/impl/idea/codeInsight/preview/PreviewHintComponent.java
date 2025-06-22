@@ -20,8 +20,8 @@ import org.jetbrains.annotations.TestOnly;
 import jakarta.annotation.Nullable;
 
 /**
- * User: zolotov
- * Date: 6/5/13
+ * @author zolotov
+ * @since 2013-06-05
  */
 public interface PreviewHintComponent {
   @TestOnly

@@ -31,8 +31,8 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
- * User: anna
- * Date: Feb 15, 2005
+ * @author anna
+ * @since 2005-02-15
  */
 public class FavoritesTreeNodeDescriptor extends PresentableNodeDescriptor<AbstractTreeNode> {
   public static final FavoritesTreeNodeDescriptor[] EMPTY_ARRAY = new FavoritesTreeNodeDescriptor[0];

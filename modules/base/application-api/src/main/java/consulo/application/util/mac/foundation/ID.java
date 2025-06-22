@@ -20,7 +20,7 @@ import com.sun.jna.NativeLong;
 /**
  * Could be an address in memory (if pointer to a class or method) or a value (like 0 or 1)
  *
- * User: spLeaner
+ * @author spLeaner
  */
 public class ID extends NativeLong {
 

@@ -43,7 +43,7 @@ import java.util.concurrent.ExecutorService;
 
 /**
  * @author Eugene Zhuravlev
- * Date: 2012-09-18
+ * @since 2012-09-18
  */
 @Singleton
 @ServiceImpl

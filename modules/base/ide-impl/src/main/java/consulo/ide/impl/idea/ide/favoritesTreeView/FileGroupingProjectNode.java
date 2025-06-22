@@ -28,10 +28,8 @@ import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 6/8/12
- * Time: 12:23 PM
+ * @author Irina.Chernushina
+ * @since 2012-06-08
  */
 public class FileGroupingProjectNode extends ProjectViewNodeWithChildrenList<File> {
   private VirtualFile myVirtualFile;

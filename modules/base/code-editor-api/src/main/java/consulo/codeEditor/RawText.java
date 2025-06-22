@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Sep 5, 2006
- * Time: 9:31:06 PM
- */
 package consulo.codeEditor;
 
 import jakarta.annotation.Nullable;
@@ -29,6 +22,10 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ * @author max
+ * @since 2006-09-05
+ */
 public class RawText implements Cloneable, Serializable {
   public static DataFlavor ourFlavor;
   public String rawText;

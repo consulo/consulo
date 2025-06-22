@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 @ExtensionImpl
 public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider<Bookmark> implements BookmarksListener {

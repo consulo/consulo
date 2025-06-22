@@ -20,8 +20,8 @@ import consulo.externalService.statistic.InvocationCounter;
 import java.util.Calendar;
 
 /**
- * User: anna
- * Date: 7/5/12
+ * @author anna
+ * @since 2012-07-05
  */
 public class CumulativeStatistics implements InvocationCounter {
     public int invocations = 0;

@@ -32,8 +32,8 @@ import consulo.ui.ex.awt.MasterDetailsStateService;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: 27-Jan-2006
+ * @author anna
+ * @since 2006-01-27
  */
 public class EditScopesAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(EditScopesAction.class);

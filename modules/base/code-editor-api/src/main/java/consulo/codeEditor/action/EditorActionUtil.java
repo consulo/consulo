@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jun 6, 2002
- * Time: 4:54:58 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.codeEditor.action;
 
 import consulo.codeEditor.*;
@@ -42,6 +33,10 @@ import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * @author max
+ * @since 2002-06-06
+ */
 public class EditorActionUtil {
   public static final Object EDIT_COMMAND_GROUP = Key.create("EditGroup");
   public static final Object DELETE_COMMAND_GROUP = Key.create("DeleteGroup");

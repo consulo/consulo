@@ -110,8 +110,8 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * User: anna
- * Date: 25-Jan-2006
+ * @author anna
+ * @since 2006-01-25
  */
 public class ScopeTreeViewPanel extends JPanel implements Disposable {
   private static final Logger LOG = Logger.getInstance(ScopeTreeViewPanel.class);

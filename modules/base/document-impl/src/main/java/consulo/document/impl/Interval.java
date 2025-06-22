@@ -16,7 +16,7 @@
 package consulo.document.impl;
 
 /**
- * User: cdr
+ * @author cdr
  */
 public interface Interval {
   int intervalStart();

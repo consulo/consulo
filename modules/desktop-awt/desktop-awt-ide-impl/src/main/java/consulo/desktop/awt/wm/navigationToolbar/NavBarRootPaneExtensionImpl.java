@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 12-Nov-2007
- */
 package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -47,7 +42,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * @author anna
  * @author Konstantin Bulenkov
+ * @since 2007-11-12
  */
 @ExtensionImpl
 public class NavBarRootPaneExtensionImpl implements NavBarRootPaneExtension, IdeRootPaneNorthExtensionWithDecorator {

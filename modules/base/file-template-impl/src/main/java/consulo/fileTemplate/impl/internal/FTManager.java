@@ -34,7 +34,7 @@ import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: 3/22/11
+ * @since 2011-03-22
  */
 public class FTManager {
   private static final Logger LOG = Logger.getInstance(FTManager.class);

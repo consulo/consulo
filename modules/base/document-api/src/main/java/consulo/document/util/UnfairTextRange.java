@@ -20,7 +20,7 @@ package consulo.document.util;
  * Please use with caution.
  *
  * @author Dmitry Avdeev
- *         Date: 30.08.13
+ * @since 2013-08-30
  */
 public class UnfairTextRange extends TextRange {
 

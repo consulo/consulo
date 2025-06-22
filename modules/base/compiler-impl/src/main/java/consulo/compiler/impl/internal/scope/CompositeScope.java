@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author: Eugene Zhuravlev
- * Date: Feb 5, 2003
- * Time: 4:17:58 PM
- */
 package consulo.compiler.impl.internal.scope;
 
 import consulo.compiler.scope.CompileScope;
@@ -33,6 +27,10 @@ import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
+/**
+ * @author Eugene Zhuravlev
+ * @since 2003-02-05
+ */
 public class CompositeScope extends ExportableUserDataHolderBase implements CompileScope {
   private final List<CompileScope> myScopes = new ArrayList<>();
 

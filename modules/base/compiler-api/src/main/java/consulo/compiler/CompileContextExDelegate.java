@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 4, 2007
+ * @since 2007-12-04
  */
 public class CompileContextExDelegate implements CompileContextEx {
   private final CompileContextEx myDelegate;

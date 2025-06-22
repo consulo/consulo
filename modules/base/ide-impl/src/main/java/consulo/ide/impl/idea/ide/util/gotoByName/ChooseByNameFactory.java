@@ -22,8 +22,8 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: Jan 26, 2005
+ * @author anna
+ * @since 2005-01-26
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ChooseByNameFactory {

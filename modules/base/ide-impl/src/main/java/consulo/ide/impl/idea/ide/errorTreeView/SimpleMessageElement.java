@@ -21,7 +21,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Nov 12, 2004
+ * @since 2004-11-12
  */
 public class SimpleMessageElement extends ErrorTreeElement{
   private final String[] myMessage;

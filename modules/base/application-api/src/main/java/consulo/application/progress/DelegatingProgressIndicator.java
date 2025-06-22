@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jul 12, 2007
+ * @since 2007-07-12
  */
 public class DelegatingProgressIndicator implements WrappedProgressIndicator, StandardProgressIndicator {
   private final ProgressIndicator myIndicator;

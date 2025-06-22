@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- * Date: 2/21/12
+ * @since 2012-02-21
  */
 public interface ExportableUserDataHolder extends UserDataHolder {
   @Nonnull
