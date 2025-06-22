@@ -54,7 +54,7 @@ import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
 import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyListener;
@@ -3676,7 +3676,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 ActionPlaces.MAIN_MENU,
                 DataManager.getInstance().getDataContext(e.getComponent())
             );
-            if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
+            if (ActionImplUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
                 return false;
             }
         }

@@ -22,7 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -91,10 +91,10 @@ public class ActionMenuItemEngine {
                         false),
                         myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers(), true, false);
                 final AnAction menuItemAction = myAction.getAction();
-                if (ActionUtil.lastUpdateAndCheckDumb(menuItemAction, event, false)) {
+                if (ActionImplUtil.lastUpdateAndCheckDumb(menuItemAction, event, false)) {
                     ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
                     actionManager.fireBeforeActionPerformed(menuItemAction, myContext, event);
-                    ActionUtil.performActionDumbAware(menuItemAction, event);
+                    ActionImplUtil.performActionDumbAware(menuItemAction, event);
                     actionManager.queueActionPerformedEvent(menuItemAction, myContext, event);
                 }
             });

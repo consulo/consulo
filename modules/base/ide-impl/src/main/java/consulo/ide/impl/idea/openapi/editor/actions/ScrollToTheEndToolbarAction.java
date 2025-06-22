@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.application.AllIcons;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
@@ -45,7 +46,16 @@ public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAwa
   @Override
   public boolean isSelected(@Nonnull AnActionEvent e) {
     Document document = myEditor.getDocument();
-    return document.getLineCount() == 0 || document.getLineNumber(myEditor.getCaretModel().getOffset()) == document.getLineCount() - 1;
+      if (document.getLineCount() == 0) {
+          return true;
+      }
+
+      int offset = ReadAction.compute(() -> myEditor.getCaretModel().getOffset());
+
+      if (document.getLineNumber(offset) == document.getLineCount() - 1) {
+          return true;
+      }
+      return false;
   }
 
   @Override

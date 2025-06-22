@@ -37,7 +37,7 @@ import consulo.diff.merge.MergeTool;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.dataContext.BaseDataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -162,7 +162,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     private void destroyViewer() {
         Disposer.dispose(myViewer);
 
-        ActionUtil.clearActions(myMainPanel);
+        ActionImplUtil.clearActions(myMainPanel);
 
         myContentPanel.setContent(null);
         myToolbarPanel.setContent(null);

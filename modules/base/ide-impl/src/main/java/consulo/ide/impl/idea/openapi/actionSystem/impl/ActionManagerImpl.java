@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
 import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.OverridingAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.util.ReflectionUtil;
@@ -1258,7 +1258,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Override
     public boolean performDumbAwareUpdate(@Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed) {
-        return ActionUtil.performDumbAwareUpdate(action, e, beforeActionPerformed);
+        return ActionImplUtil.performDumbAwareUpdate(action, e, beforeActionPerformed);
     }
 
     //@Override
@@ -1438,13 +1438,13 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
             AnActionEvent event = new AnActionEvent(inputEvent, context, place != null ? place : ActionPlaces.UNKNOWN, presentation, this, inputEvent.getModifiersEx());
 
-            ActionUtil.performDumbAwareUpdate(action, event, false);
+            ActionImplUtil.performDumbAwareUpdate(action, event, false);
             if (!event.getPresentation().isEnabled()) {
                 result.setRejected();
                 return;
             }
 
-            ActionUtil.lastUpdateAndCheckDumb(action, event, false);
+            ActionImplUtil.lastUpdateAndCheckDumb(action, event, false);
             if (!event.getPresentation().isEnabled()) {
                 result.setRejected();
                 return;
@@ -1470,7 +1470,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                 }
             }, AWTEvent.WINDOW_EVENT_MASK, eventListenerDisposable);
 
-            ActionUtil.performActionDumbAware(action, event);
+            ActionImplUtil.performActionDumbAware(action, event);
             result.setDone();
             queueActionPerformedEvent(action, context, event);
         }), IdeaModalityState.defaultModalityState());

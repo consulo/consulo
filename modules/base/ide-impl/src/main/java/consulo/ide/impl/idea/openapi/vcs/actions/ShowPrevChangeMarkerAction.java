@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 import consulo.ide.impl.idea.openapi.vcs.ex.Range;
@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.vcs.ex.Range;
 public class ShowPrevChangeMarkerAction extends ShowChangeMarkerAction {
   public ShowPrevChangeMarkerAction(final Range range, final LineStatusTracker lineStatusTracker, final Editor editor) {
     super(range, lineStatusTracker, editor);
-    ActionUtil.copyFrom(this, "VcsShowPrevChangeMarker");
+    ActionImplUtil.copyFrom(this, "VcsShowPrevChangeMarker");
   }
 
   public ShowPrevChangeMarkerAction() {

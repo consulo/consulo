@@ -59,7 +59,7 @@ import consulo.diff.util.*;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -1189,7 +1189,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             public IgnoreSelectedChangesSideAction(@Nonnull Side side, boolean shortcut) {
                 super(shortcut);
                 mySide = side;
-                ActionUtil.copyFrom(this, mySide.select("Diff.IgnoreLeftSide", "Diff.IgnoreRightSide"));
+                ActionImplUtil.copyFrom(this, mySide.select("Diff.IgnoreLeftSide", "Diff.IgnoreRightSide"));
             }
 
             @Nonnull
@@ -1255,7 +1255,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             public ApplySelectedChangesAction(@Nonnull Side side, boolean shortcut) {
                 super(shortcut);
                 mySide = side;
-                ActionUtil.copyFrom(this, mySide.select("Diff.ApplyLeftSide", "Diff.ApplyRightSide"));
+                ActionImplUtil.copyFrom(this, mySide.select("Diff.ApplyLeftSide", "Diff.ApplyRightSide"));
             }
 
             @Nonnull
@@ -1325,7 +1325,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
             public ApplyNonConflictsAction(@Nonnull ThreeSide side) {
                 String id = side.select("Diff.ApplyNonConflicts.Left", "Diff.ApplyNonConflicts", "Diff.ApplyNonConflicts.Right");
-                ActionUtil.copyFrom(this, id);
+                ActionImplUtil.copyFrom(this, id);
                 mySide = side;
             }
 

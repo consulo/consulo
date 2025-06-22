@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -23,9 +22,8 @@ import jakarta.annotation.Nonnull;
  * @since 27/06/2023
  */
 public interface PresentationFactory {
-  @RequiredUIAccess
+    @Nonnull
   Presentation getPresentation(@Nonnull AnAction action);
 
-  @RequiredUIAccess
   void reset();
 }

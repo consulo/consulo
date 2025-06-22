@@ -61,9 +61,9 @@ public class ExecutorAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     @Override
-    public void update(@Nonnull final AnActionEvent e) {
-        final Presentation presentation = e.getPresentation();
-        final Project project = e.getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Project project = e.getData(Project.KEY);
 
         if (project == null || project.isDisposed()) {
             presentation.setEnabledAndVisible(false);
@@ -80,14 +80,14 @@ public class ExecutorAction extends AnAction implements DumbAware {
             return;
         }
 
-        final RunnerAndConfigurationSettings selectedConfiguration = getConfiguration(project);
+        RunnerAndConfigurationSettings selectedConfiguration = getConfiguration(project);
         boolean enabled;
 
         LocalizeValue text;
         if (selectedConfiguration != null) {
             presentation.setIcon(getInformativeIcon(project, myExecutor, selectedConfiguration));
 
-            final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(myExecutor.getId(), selectedConfiguration.getConfiguration());
+            ProgramRunner runner = RunnerRegistry.getInstance().getRunner(myExecutor.getId(), selectedConfiguration.getConfiguration());
 
             ExecutionTarget target = ExecutionTargetManager.getActiveTarget(project);
             enabled = ExecutionTargetManager.canRun(selectedConfiguration, target)
@@ -125,7 +125,7 @@ public class ExecutorAction extends AnAction implements DumbAware {
     public static Image getInformativeIcon(Project project,
                                            Executor executor,
                                            RunnerAndConfigurationSettings selectedConfiguration) {
-        final ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
+        ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
 
         List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(s -> s == selectedConfiguration);
         runningDescriptors = ContainerUtil.filter(runningDescriptors, descriptor -> {
@@ -149,14 +149,14 @@ public class ExecutorAction extends AnAction implements DumbAware {
     }
 
     @Nullable
-    private RunnerAndConfigurationSettings getConfiguration(@Nonnull final Project project) {
+    private RunnerAndConfigurationSettings getConfiguration(@Nonnull Project project) {
         return RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         if (project == null || project.isDisposed()) {
             return;
         }

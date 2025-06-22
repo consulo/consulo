@@ -15,8 +15,9 @@
  */
 package consulo.execution.debug.impl.internal.ui;
 
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -82,7 +83,7 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
-        presentation.setText(XDebuggerBundle.message("xdebugger.evaluate.language.hint"));
+        presentation.setTextValue(XDebuggerLocalize.xdebuggerEvaluateLanguageHint());
 
         Language language = myLanguageGetter.get();
         LanguageFileType associatedFileType = language == null ? null : language.getAssociatedFileType();
@@ -92,7 +93,7 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
             presentation.setIcon(associatedFileType.getIcon());
         }
 
-        Collection<Language> languages = myLanguagesGetter.get();
+        Collection<Language> languages = ReadAction.compute(myLanguagesGetter::get);
 
         presentation.setVisible(languages.size() > 1);
     }

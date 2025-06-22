@@ -17,18 +17,17 @@ package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.util.PausesStat;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.util.TextWithMnemonic;
@@ -48,13 +47,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class ActionUtil {
-    private static final Logger LOG = Logger.getInstance(ActionUtil.class);
+public class ActionImplUtil {
+    private static final Logger LOG = Logger.getInstance(ActionImplUtil.class);
     private static final String WAS_ENABLED_BEFORE_DUMB = "WAS_ENABLED_BEFORE_DUMB";
     public static final String WOULD_BE_ENABLED_IF_NOT_DUMB_MODE = "WOULD_BE_ENABLED_IF_NOT_DUMB_MODE";
     private static final String WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE = "WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE";
 
-    private ActionUtil() {
+    private ActionImplUtil() {
     }
 
     public static boolean recursiveContainsAction(@Nonnull ActionGroup group, @Nonnull AnAction action) {
@@ -96,13 +95,13 @@ public class ActionUtil {
     public static void showDumbModeWarning(@Nonnull AnActionEvent... events) {
         Project project = null;
         List<String> actionNames = new ArrayList<>();
-        for (final AnActionEvent event : events) {
-            final String s = event.getPresentation().getText();
+        for (AnActionEvent event : events) {
+            String s = event.getPresentation().getText();
             if (StringUtil.isNotEmpty(s)) {
                 actionNames.add(s);
             }
 
-            final Project _project = event.getData(Project.KEY);
+            Project _project = event.getData(Project.KEY);
             if (_project != null && project == null) {
                 project = _project;
             }
@@ -118,7 +117,7 @@ public class ActionUtil {
     @Nonnull
     private static String getActionUnavailableMessage(@Nonnull List<String> actionNames) {
         String message;
-        final String beAvailableUntil = " available while " + Application.get().getName() + " is updating indices";
+        String beAvailableUntil = " available while " + Application.get().getName() + " is updating indices";
         if (actionNames.isEmpty()) {
             message = "This action is not" + beAvailableUntil;
         }
@@ -133,10 +132,8 @@ public class ActionUtil {
 
     @Nonnull
     public static String getUnavailableMessage(@Nonnull String action, boolean plural) {
-        return action + (plural ? " are" : " is") + " not available while " + ApplicationNamesInfo.getInstance().getProductName() + " is updating indices";
+        return action + (plural ? " are" : " is") + " not available while " + Application.get().getName() + " is updating indices";
     }
-
-    private static int insidePerformDumbAwareUpdate;
 
     /**
      * @param action                action
@@ -152,21 +149,18 @@ public class ActionUtil {
         @Nonnull AnActionEvent e,
         boolean beforeActionPerformed
     ) {
-        final Presentation presentation = e.getPresentation();
-        final Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
-        final boolean dumbMode = isDumbMode(e.getData(Project.KEY));
+        Presentation presentation = e.getPresentation();
+        Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
+        boolean dumbMode = isDumbMode(e.getData(Project.KEY));
         if (wasEnabledBefore != null && !dumbMode) {
             presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, null);
             presentation.setEnabled(wasEnabledBefore);
             presentation.setVisible(true);
         }
-        final boolean enabledBeforeUpdate = presentation.isEnabled();
+        boolean enabledBeforeUpdate = presentation.isEnabled();
 
-        final boolean notAllowed = dumbMode && !action.isDumbAware();
+        boolean notAllowed = dumbMode && !action.isDumbAware();
 
-        if (insidePerformDumbAwareUpdate++ == 0) {
-            ActionPauses.STAT.started();
-        }
         try {
             if (beforeActionPerformed) {
                 action.beforeActionPerformedUpdate(e);
@@ -184,9 +178,6 @@ public class ActionUtil {
             throw e1;
         }
         finally {
-            if (--insidePerformDumbAwareUpdate == 0) {
-                ActionPauses.STAT.finished(presentation.getTextValue().get() + " action update (" + action.getClass() + ")");
-            }
             if (notAllowed) {
                 if (wasEnabledBefore == null) {
                     presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, enabledBeforeUpdate);
@@ -196,10 +187,6 @@ public class ActionUtil {
         }
 
         return false;
-    }
-
-    public static class ActionPauses {
-        public static final PausesStat STAT = new PausesStat("AnAction.update()");
     }
 
     /**
@@ -222,7 +209,7 @@ public class ActionUtil {
     public static boolean lastUpdateAndCheckDumb(AnAction action, AnActionEvent e, boolean visibilityMatters) {
         performDumbAwareUpdate(action, e, true);
 
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project != null && DumbService.getInstance(project).isDumb() && !action.isDumbAware()) {
             if (Boolean.FALSE.equals(e.getPresentation().getClientProperty(WOULD_BE_ENABLED_IF_NOT_DUMB_MODE))) {
                 return false;
@@ -246,7 +233,7 @@ public class ActionUtil {
     }
 
     public static void performActionDumbAwareWithCallbacks(@Nonnull AnAction action, @Nonnull AnActionEvent e, @Nonnull DataContext context) {
-        final ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+        ActionManagerEx manager = ActionManagerEx.getInstanceEx();
         manager.fireBeforeActionPerformed(action, context, e);
         performActionDumbAware(action, e);
         manager.fireAfterActionPerformed(action, context, e);
@@ -271,11 +258,11 @@ public class ActionUtil {
     }
 
     public static void copyRegisteredShortcuts(@Nonnull JComponent to, @Nonnull JComponent from) {
-        consulo.ui.ex.action.util.ActionUtil.copyRegisteredShortcuts(to, from);
+        ActionUtil.copyRegisteredShortcuts(to, from);
     }
 
     public static void registerForEveryKeyboardShortcut(@Nonnull JComponent component, @Nonnull ActionListener action, @Nonnull ShortcutSet shortcuts) {
-        consulo.ui.ex.action.util.ActionUtil.registerForEveryKeyboardShortcut(component, action, shortcuts);
+        ActionUtil.registerForEveryKeyboardShortcut(component, action, shortcuts);
     }
 
     /**
@@ -284,7 +271,7 @@ public class ActionUtil {
      * @param actionId action id
      */
     public static AnAction copyFrom(@Nonnull AnAction action, @Nonnull String actionId) {
-        return consulo.ui.ex.action.util.ActionUtil.copyFrom(action, actionId);
+        return ActionUtil.copyFrom(action, actionId);
     }
 
     /**
@@ -294,14 +281,14 @@ public class ActionUtil {
      * @param actionId action id to merge from
      */
     public static AnAction mergeFrom(@Nonnull AnAction action, @Nonnull String actionId) {
-        return consulo.ui.ex.action.util.ActionUtil.mergeFrom(action, actionId);
+        return ActionUtil.mergeFrom(action, actionId);
     }
 
     public static void invokeAction(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull String place, @Nullable InputEvent inputEvent, @Nullable Runnable onDone) {
         Presentation presentation = action.getTemplatePresentation().clone();
         AnActionEvent event = new AnActionEvent(inputEvent, dataContext, place, presentation, ActionManager.getInstance(), 0);
         performDumbAwareUpdate(action, event, true);
-        final ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+        ActionManagerEx manager = ActionManagerEx.getInstanceEx();
         if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
             manager.fireBeforeActionPerformed(action, dataContext, event);
             performActionDumbAware(action, event);

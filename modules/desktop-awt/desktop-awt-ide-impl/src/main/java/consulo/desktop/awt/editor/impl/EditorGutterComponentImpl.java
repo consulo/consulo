@@ -34,7 +34,7 @@ import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.ide.impl.idea.codeInsight.daemon.NonHideableIconGutterMark;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
@@ -2165,7 +2165,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         AnActionEvent actionEvent = AnActionEvent.createFromAnAction(action, e, place, context);
         action.update(actionEvent);
         if (actionEvent.getPresentation().isEnabledAndVisible()) {
-            ActionUtil.performActionDumbAwareWithCallbacks(action, actionEvent, context);
+            ActionImplUtil.performActionDumbAwareWithCallbacks(action, actionEvent, context);
         }
     }
 

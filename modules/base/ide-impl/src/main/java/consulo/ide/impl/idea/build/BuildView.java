@@ -22,7 +22,7 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
 import consulo.ide.impl.idea.execution.actions.StopProcessAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
@@ -324,7 +324,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
         IdeLocalize.actionDumbawareCopyrightprofilespanelDescriptionStop().get(),
         myBuildDescriptor.getProcessHandler()
       );
-      ActionUtil.copyFrom(stopAction, IdeActions.ACTION_STOP_PROGRAM);
+      ActionImplUtil.copyFrom(stopAction, IdeActions.ACTION_STOP_PROGRAM);
       stopAction.registerCustomShortcutSet(stopAction.getShortcutSet(), this);
     }
 

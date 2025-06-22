@@ -18,7 +18,7 @@ package consulo.desktop.awt.action.toolbar;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.action.DesktopActionPopupMenuImpl;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;
@@ -190,7 +190,7 @@ public class ActionToolbarButtonEngine {
 
     private void performAction(MouseEvent e) {
         AnActionEvent event = AnActionEvent.createFromInputEvent(e, myPlace, myPresentation, myGetDataContext.get(), false, true);
-        if (!ActionUtil.lastUpdateAndCheckDumb(myIdeAction, event, false)) {
+        if (!ActionImplUtil.lastUpdateAndCheckDumb(myIdeAction, event, false)) {
             return;
         }
 
@@ -222,7 +222,7 @@ public class ActionToolbarButtonEngine {
             myPresentation.addPropertyChangeListener(myPresentationListener = this::presentationPropertyChanded);
         }
         AnActionEvent e = AnActionEvent.createFromInputEvent(null, myPlace, myPresentation, myGetDataContext.get(), false, true);
-        ActionUtil.performDumbAwareUpdate(myIdeAction, e, false);
+        ActionImplUtil.performDumbAwareUpdate(myIdeAction, e, false);
         updateToolTipText();
         updateIcon();
     }
@@ -257,7 +257,7 @@ public class ActionToolbarButtonEngine {
 
         }
         else {
-            ActionUtil.performActionDumbAware(myIdeAction, event);
+            ActionImplUtil.performActionDumbAware(myIdeAction, event);
         }
     }
 

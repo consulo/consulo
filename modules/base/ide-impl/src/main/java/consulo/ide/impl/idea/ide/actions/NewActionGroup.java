@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ui.ex.action.*;
 
 import jakarta.annotation.Nonnull;
@@ -55,17 +55,17 @@ public class NewActionGroup extends ActionGroup {
     public static boolean isActionInNewPopupMenu(@Nonnull AnAction action) {
         ActionManager actionManager = ActionManager.getInstance();
         ActionGroup fileGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
-        if (!ActionUtil.anyActionFromGroupMatches(fileGroup, false, child -> child instanceof NewActionGroup)) {
+        if (!ActionImplUtil.anyActionFromGroupMatches(fileGroup, false, child -> child instanceof NewActionGroup)) {
             return false;
         }
 
         AnAction newProjectOrModuleGroup = ActionManager.getInstance().getAction(PROJECT_OR_MODULE_GROUP_ID);
         if (newProjectOrModuleGroup instanceof ActionGroup actionGroup
-            && ActionUtil.anyActionFromGroupMatches(actionGroup, false, Predicate.isEqual(action))) {
+            && ActionImplUtil.anyActionFromGroupMatches(actionGroup, false, Predicate.isEqual(action))) {
             return true;
         }
 
         ActionGroup newGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_NEW);
-        return ActionUtil.anyActionFromGroupMatches(newGroup, false, Predicate.isEqual(action));
+        return ActionImplUtil.anyActionFromGroupMatches(newGroup, false, Predicate.isEqual(action));
     }
 }

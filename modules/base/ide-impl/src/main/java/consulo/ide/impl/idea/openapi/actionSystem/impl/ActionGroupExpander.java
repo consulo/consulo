@@ -19,10 +19,10 @@ import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.*;
-import consulo.util.concurrent.CancellablePromise;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -48,11 +48,12 @@ public class ActionGroupExpander {
     ).expandActionGroup(group, group instanceof CompactActionGroup);
   }
 
-  public static CancellablePromise<List<AnAction>> expandActionGroupAsync(boolean isInModalContext,
-                                                                          @Nonnull ActionGroup group,
-                                                                          PresentationFactory presentationFactory,
-                                                                          @Nonnull DataContext context,
-                                                                          String place) {
+  @Nonnull
+  public static CompletableFuture<List<AnAction>> expandActionGroupAsync(boolean isInModalContext,
+                                                                         @Nonnull ActionGroup group,
+                                                                         PresentationFactory presentationFactory,
+                                                                         @Nonnull DataContext context,
+                                                                         String place) {
     if (!(context instanceof AsyncDataContext)) context = DataManager.getInstance().createAsyncDataContext(context);
     return new ActionUpdater(ActionManager.getInstance(), isInModalContext, presentationFactory, context, place, false, false)
       .expandActionGroupAsync(group, group instanceof CompactActionGroup);

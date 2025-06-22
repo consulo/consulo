@@ -44,7 +44,7 @@ import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.diff.DiffDrawUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.CompositeShortcutSet;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchRequest;
@@ -685,7 +685,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
     private class ApplyNonConflictsAction extends DumbAwareAction {
         public ApplyNonConflictsAction() {
-            ActionUtil.copyFrom(this, "Diff.ApplyNonConflicts");
+            ActionImplUtil.copyFrom(this, "Diff.ApplyNonConflicts");
         }
 
         @Override

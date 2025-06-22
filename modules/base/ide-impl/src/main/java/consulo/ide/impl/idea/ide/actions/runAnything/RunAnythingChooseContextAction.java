@@ -23,7 +23,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.ui.popup.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.localize.IdeLocalize;
@@ -168,8 +168,8 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                     PopupFactoryImpl.ActionItem actionItem,
                     boolean isSelected
                 ) {
-                    AnActionEvent event = ActionUtil.createEmptyEvent();
-                    ActionUtil.performDumbAwareUpdate(actionItem.getAction(), event, false);
+                    AnActionEvent event = ActionImplUtil.createEmptyEvent();
+                    ActionImplUtil.performDumbAwareUpdate(actionItem.getAction(), event, false);
 
                     String description = event.getPresentation().getDescription();
                     if (description != null) {

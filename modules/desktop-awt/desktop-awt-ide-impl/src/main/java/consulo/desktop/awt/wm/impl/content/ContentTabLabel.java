@@ -7,7 +7,7 @@ import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -127,9 +127,9 @@ class ContentTabLabel extends BaseLabel {
                 DataContext dataContext = DataManager.getInstance().getDataContext(ContentTabLabel.this);
                 for (AnAction action : myLayout.myDoubleClickActions) {
                     AnActionEvent event = AnActionEvent.createFromInputEvent(e, ActionPlaces.UNKNOWN, null, dataContext);
-                    if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
+                    if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
                         ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(action, dataContext, event);
-                        ActionUtil.performActionDumbAware(action, event);
+                        ActionImplUtil.performActionDumbAware(action, event);
                     }
                 }
             }

@@ -6,7 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingActionItem;
 import consulo.ide.runAnything.RunAnythingItem;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.runAnything.RunAnythingProviderBase;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -45,7 +45,7 @@ public abstract class RunAnythingAnActionProvider<V extends AnAction> extends Ru
     private static void performAction(@Nonnull AnAction action, @Nonnull DataContext dataContext) {
         AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, dataContext);
 
-        ActionUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
+        ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
     }
 
     @Nullable

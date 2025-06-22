@@ -33,7 +33,7 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
@@ -127,7 +127,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 public void mouseClicked(MouseEvent me) {
                     DataContext context = getDataContext();
                     AnActionEvent event = AnActionEvent.createFromInputEvent(me, place, presentation, context, false, true);
-                    if (!ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
+                    if (!ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
                         return;
                     }
 

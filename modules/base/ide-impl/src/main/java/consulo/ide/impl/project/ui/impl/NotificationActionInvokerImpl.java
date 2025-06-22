@@ -16,7 +16,7 @@
 package consulo.ide.impl.project.ui.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.project.ui.internal.NotificationActionInvoker;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -31,8 +31,8 @@ import jakarta.inject.Singleton;
 public class NotificationActionInvokerImpl implements NotificationActionInvoker {
   @Override
   public void invoke(AnAction action, AnActionEvent event) {
-    if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
-      ActionUtil.performActionDumbAware(action, event);
+    if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
+      ActionImplUtil.performActionDumbAware(action, event);
     }
   }
 }

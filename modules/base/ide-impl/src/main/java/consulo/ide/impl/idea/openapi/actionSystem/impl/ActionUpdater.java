@@ -15,7 +15,7 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
@@ -24,9 +24,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.collection.*;
-import consulo.util.concurrent.AsyncPromise;
-import consulo.util.concurrent.CancellablePromise;
-import consulo.util.concurrent.Promise;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
@@ -38,8 +35,10 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.PaintEvent;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -85,7 +84,7 @@ public class ActionUpdater {
         myRealUpdateStrategy = new UpdateStrategy(
             action -> {
                 // clone the presentation to avoid partially changing the cached one if update is interrupted
-                Presentation presentation = ActionUpdateEdtExecutor.computeOnEdt(() -> myFactory.getPresentation(action).clone());
+                Presentation presentation = myFactory.getPresentation(action).clone();
                 presentation.setEnabledAndVisible(true);
                 Supplier<Boolean> doUpdate = () -> doUpdate(myModalContext, action, createActionEvent(action, presentation));
                 boolean success = callAction(action, "update", doUpdate);
@@ -214,27 +213,32 @@ public class ActionUpdater {
         }
     }
 
-    public CancellablePromise<List<AnAction>> expandActionGroupAsync(ActionGroup group, boolean hideDisabled) {
-        AsyncPromise<List<AnAction>> promise = new AsyncPromise<>();
+    @Nonnull
+    public CompletableFuture<List<AnAction>> expandActionGroupAsync(ActionGroup group, boolean hideDisabled) {
+        CompletableFuture<List<AnAction>> future = new CompletableFuture<>();
         ProgressIndicator indicator = new EmptyProgressIndicator();
-        promise.onError(__ -> {
-            indicator.cancel();
-            ActionUpdateEdtExecutor.computeOnEdt(() -> {
-                applyPresentationChanges();
-                return null;
-            });
+
+        future.whenComplete((anActions, throwable) -> {
+            if (throwable != null) {
+                indicator.cancel();
+                ActionUpdateEdtExecutor.computeOnEdt(() -> {
+                    applyPresentationChanges();
+                    return null;
+                });
+            }
         });
 
-        cancelAndRestartOnUserActivity(promise, indicator);
+        cancelAndRestartOnUserActivity(future, indicator);
 
         ourExecutor.execute(() -> {
-            while (promise.getState() == Promise.State.PENDING) {
+            while (future.state() == Future.State.RUNNING) {
                 try {
-                    boolean success = ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> {
+                    boolean success = ProgressIndicatorUtils.runWithWriteActionPriority(() -> {
                         List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
+
                         ActionUpdateEdtExecutor.computeOnEdt(() -> {
                             applyPresentationChanges();
-                            promise.setResult(result);
+                            future.complete(result);
                             return null;
                         });
                     }, new SensitiveProgressWrapper(indicator));
@@ -243,14 +247,14 @@ public class ActionUpdater {
                     }
                 }
                 catch (Throwable e) {
-                    promise.setError(e);
+                    future.completeExceptionally(e);
                 }
             }
         });
-        return promise;
+        return future;
     }
 
-    private static void cancelAndRestartOnUserActivity(Promise<?> promise, ProgressIndicator indicator) {
+    private static void cancelAndRestartOnUserActivity(CompletableFuture<?> future, ProgressIndicator indicator) {
         Disposable disposable = Disposable.newDisposable("Action Update");
         IdeEventQueueProxy.getInstance().addPostprocessor(e -> {
             if (e instanceof ComponentEvent && !(e instanceof PaintEvent) && (e.getID() & AWTEvent.MOUSE_MOTION_EVENT_MASK) == 0) {
@@ -258,7 +262,7 @@ public class ActionUpdater {
             }
             return false;
         }, disposable);
-        promise.onProcessed(__ -> Disposer.dispose(disposable));
+        future.whenComplete((o, throwable) -> Disposer.dispose(disposable));
     }
 
     private List<AnAction> doExpandActionGroup(ActionGroup group, boolean hideDisabled, UpdateStrategy strategy) {
@@ -517,7 +521,7 @@ public class ActionUpdater {
         long startTime = System.currentTimeMillis();
         boolean result;
         try {
-            result = !ActionUtil.performDumbAwareUpdate(action, e, false);
+            result = !ActionImplUtil.performDumbAwareUpdate(action, e, false);
         }
         catch (ProcessCanceledException ex) {
             throw ex;

@@ -1215,7 +1215,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @Override
     @RequiredUIAccess
     public Editor getSelectedTextEditor(boolean requiredUIThread) {
-        if (!requiredUIThread) {
+        if (requiredUIThread) {
             assertDispatchThread();
         }
 

@@ -29,7 +29,7 @@ import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -200,7 +200,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
 
             DefaultActionGroup sourceActionGroup = new DefaultActionGroup();
             EditSourceAction edit = new EditSourceAction();
-            ActionUtil.copyFrom(edit, "EditSource");
+            ActionImplUtil.copyFrom(edit, "EditSource");
             sourceActionGroup.add(edit);
             DefaultActionGroup filteringActionsGroup = BuildTreeFilters.createFilteringActionsGroup(this);
             DefaultActionGroup navigationActionGroup = new DefaultActionGroup();

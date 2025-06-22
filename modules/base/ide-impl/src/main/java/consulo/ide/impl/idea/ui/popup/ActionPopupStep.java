@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ui.popup;
 
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
@@ -261,8 +261,8 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
             modifiers
         );
         event.setInjectedContext(action.isInInjectedContext());
-        if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
-            ActionUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
+        if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
+            ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
         }
     }
 

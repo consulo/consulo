@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.TextCopyProvider;
 import consulo.ide.impl.idea.ide.actions.exclusion.ExclusionHandler;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.usages.UsageDataUtil;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
@@ -959,8 +959,8 @@ public class UsageViewImpl implements UsageViewEx {
         for (UsageGroupingRuleProvider provider : providers) {
             ContainerUtil.addAll(list, provider.createGroupingActions(this));
         }
-        ActionUtil.sortAlphabetically(list);
-        ActionUtil.moveActionTo(list, "Module", "Flatten Modules", true);
+        ActionImplUtil.sortAlphabetically(list);
+        ActionImplUtil.moveActionTo(list, "Module", "Flatten Modules", true);
         return list.toArray(AnAction.EMPTY_ARRAY);
     }
 

@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.progress.ProgressWindowListener;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -17,18 +18,16 @@ import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.application.impl.internal.progress.ProgressWindowListener;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.StringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
@@ -38,6 +37,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
@@ -343,7 +343,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                 );
             }
 
-            if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
+            if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
                 if (action instanceof ActionGroup actionGroup && !actionGroup.canBePerformed(context)) {
                     ListPopup popup = JBPopupFactory.getInstance()
                         .createActionGroupPopup(event.getPresentation().getText(), actionGroup, context, false, callback, -1);
@@ -358,7 +358,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                 else {
                     ActionManagerEx manager = ActionManagerEx.getInstanceEx();
                     manager.fireBeforeActionPerformed(action, context, event);
-                    ActionUtil.performActionDumbAware(action, event);
+                    ActionImplUtil.performActionDumbAware(action, event);
                     if (callback != null) {
                         callback.run();
                     }

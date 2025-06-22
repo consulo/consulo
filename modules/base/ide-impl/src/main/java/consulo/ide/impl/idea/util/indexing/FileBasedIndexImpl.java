@@ -28,7 +28,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
@@ -818,7 +818,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
 
         boolean dumbModeAccessRestricted = ourDumbModeAccessTypeStack.get().isEmpty();
-        if (dumbModeAccessRestricted && ActionUtil.isDumbMode(project)) {
+        if (dumbModeAccessRestricted && ActionImplUtil.isDumbMode(project)) {
             handleDumbMode(project);
         }
 

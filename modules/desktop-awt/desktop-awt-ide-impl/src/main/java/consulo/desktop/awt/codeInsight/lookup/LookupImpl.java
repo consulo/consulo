@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.*;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.CollectConsumer;
@@ -915,7 +915,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         @Nonnull AnActionEvent actionEvent
     ) {
         AnAction action = ActionManager.getInstance().getAction(actionID);
-        DumbAwareAction.create(e -> ActionUtil.performActionDumbAware(
+        DumbAwareAction.create(e -> ActionImplUtil.performActionDumbAware(
                 delegateActionSupplier == null ? action : delegateActionSupplier.get(),
                 actionEvent
             ))

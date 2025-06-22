@@ -7,17 +7,17 @@ import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.action.*;
-import consulo.util.concurrent.CancellablePromise;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.Timer;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 final class TBPanelActionGroup extends TBPanel {
     private static final boolean USE_CACHED_PRESENTATIONS = Boolean.getBoolean("touchbar.actions.use.cached.presentations");
@@ -33,7 +33,7 @@ final class TBPanelActionGroup extends TBPanel {
     private final @Nullable Customizer myCustomizer;
 
     private final @Nonnull Updater myUpdateTimer = new Updater();
-    private CancellablePromise<List<AnAction>> myLastUpdate;
+    private CompletableFuture<List<AnAction>> myLastUpdate;
     private long myLastUpdateNs = 0;
     private long myStartShowNs = 0;
 
@@ -127,7 +127,7 @@ final class TBPanelActionGroup extends TBPanel {
 
             final boolean result;
             try {
-                result = !ActionUtil.performDumbAwareUpdate(action, event, false);
+                result = !ActionImplUtil.performDumbAwareUpdate(action, event, false);
             }
             catch (Throwable exc) {
                 continue;
@@ -155,7 +155,7 @@ final class TBPanelActionGroup extends TBPanel {
     synchronized void stopUpdateTimer() {
         myUpdateTimer.stop();
         if (myLastUpdate != null) {
-            myLastUpdate.cancel();
+            myLastUpdate.cancel(false);
             myLastUpdate = null;
         }
     }
@@ -437,9 +437,15 @@ final class TBPanelActionGroup extends TBPanel {
         // NOTE: some of buttons (from dialogs for example) has custom component (used in _performAction, as event source (i.e. DataContext))
         // but here we expand actions with current-focus-component (theoretically it can cause that some actions will be updated incorrectly)
         DataContext dataContext = DataManager.getInstance().createAsyncDataContext(DataManager.getInstance().getDataContext(Helpers.getCurrentFocusComponent()));
-        if (myLastUpdate != null) myLastUpdate.cancel();
+        if (myLastUpdate != null) myLastUpdate.cancel(false);
         myLastUpdate = ActionGroupExpander.expandActionGroupAsync(false, myActionGroup, myFactory, dataContext, ActionPlaces.TOUCHBAR_GENERAL);
-        myLastUpdate.onSuccess(actions -> _applyPresentationChanges(actions)).onProcessed(__ -> myLastUpdate = null);
+        myLastUpdate = myLastUpdate.whenComplete((result, throwable) -> {
+            if (result != null) {
+                _applyPresentationChanges(result);
+            }
+            myLastUpdate = null;
+        });
+
         if (myStats != null) {
             myStats.incrementCounter(StatsCounters.totalUpdateDurationNs, System.nanoTime() - timeNs);
         }

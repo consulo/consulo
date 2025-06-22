@@ -10,7 +10,7 @@ import consulo.codeEditor.VisualPosition;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
@@ -272,7 +272,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
                 0
             );
             actionEvent.setInjectedContext(action.isInInjectedContext());
-            ActionUtil.performDumbAwareUpdate(action, actionEvent, false);
+            ActionImplUtil.performDumbAwareUpdate(action, actionEvent, false);
             return presentation;
         }
 

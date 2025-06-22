@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
 import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
 import consulo.project.Project;
@@ -36,7 +36,7 @@ import java.util.Arrays;
  */
 public class RollbackDialogAction extends AnAction implements DumbAware {
   public RollbackDialogAction() {
-    ActionUtil.copyFrom(this, IdeActions.CHANGES_VIEW_ROLLBACK);
+    ActionImplUtil.copyFrom(this, IdeActions.CHANGES_VIEW_ROLLBACK);
   }
 
   @Override

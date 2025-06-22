@@ -32,7 +32,7 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.*;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -243,7 +243,7 @@ public class RecentProjectPanel {
   private AnAction performSelectedAction(@Nonnull InputEvent event, AnAction selection) {
     String actionPlace = UIUtil.uiParents(myList, true).filter(FlatWelcomeFrame.class).isEmpty() ? ActionPlaces.POPUP : ActionPlaces.WELCOME_SCREEN;
     AnActionEvent actionEvent = AnActionEvent.createFromInputEvent(event, actionPlace, selection.getTemplatePresentation(), DataManager.getInstance().getDataContext(myList), false, false);
-    ActionUtil.performActionDumbAwareWithCallbacks(selection, actionEvent, actionEvent.getDataContext());
+    ActionImplUtil.performActionDumbAwareWithCallbacks(selection, actionEvent, actionEvent.getDataContext());
     return selection;
   }
 

@@ -24,7 +24,7 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -36,7 +36,7 @@ import jakarta.annotation.Nullable;
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
   public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull Range range, @Nullable Editor editor) {
     super(lineStatusTracker, range);
-    ActionUtil.copyFrom(this, "ChangesView.Diff");
+    ActionImplUtil.copyFrom(this, "ChangesView.Diff");
   }
 
   @Override

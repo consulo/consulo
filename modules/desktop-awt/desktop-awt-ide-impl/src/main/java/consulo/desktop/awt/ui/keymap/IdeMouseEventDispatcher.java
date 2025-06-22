@@ -20,7 +20,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.FocusManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.MouseShortcutPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
@@ -88,7 +88,7 @@ public final class IdeMouseEventDispatcher {
         // here we try to find "local" shortcuts
         for (; component != null; component = component.getParent()) {
             if (component instanceof JComponent) {
-                for (AnAction action : ActionUtil.getActions((JComponent) component)) {
+                for (AnAction action : ActionImplUtil.getActions((JComponent) component)) {
                     for (Shortcut shortcut : action.getShortcutSet().getShortcuts()) {
                         if (mouseShortcut.equals(shortcut) && !myActions.contains(action)) {
                             myActions.add(action);
@@ -257,7 +257,7 @@ public final class IdeMouseEventDispatcher {
             AnActionEvent actionEvent = new AnActionEvent(e, dataContext, ActionPlaces.MOUSE_SHORTCUT, presentation, ActionManager.getInstance(), modifiers);
             action.beforeActionPerformedUpdate(actionEvent);
 
-            if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
+            if (ActionImplUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
                 actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
                 final Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
 
@@ -265,7 +265,7 @@ public final class IdeMouseEventDispatcher {
                     continue;
                 }
 
-                ActionUtil.performActionDumbAware(action, actionEvent);
+                ActionImplUtil.performActionDumbAware(action, actionEvent);
                 actionManager.fireAfterActionPerformed(action, dataContext, actionEvent);
                 e.consume();
             }

@@ -30,7 +30,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
@@ -625,7 +625,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                     .showInBestPositionFor(ctx);
             }
             else {
-                ActionUtil.performActionDumbAware(action, actionEvent);
+                ActionImplUtil.performActionDumbAware(action, actionEvent);
             }
 
             if (Registry.is("actionSystem.fixLostTyping")) {
@@ -649,11 +649,11 @@ public final class IdeKeyEventDispatcher implements Disposable {
                 processor.createEvent(e, myContext.getDataContext(), ActionPlaces.MAIN_MENU, presentation, ActionManager.getInstance());
 
             try (AccessToken ignored = ProhibitAWTEvents.start("update")) {
-                ActionUtil.performDumbAwareUpdate(action, actionEvent, true);
+                ActionImplUtil.performDumbAwareUpdate(action, actionEvent, true);
             }
 
             if (dumb && !action.isDumbAware()) {
-                if (!Boolean.FALSE.equals(presentation.getClientProperty(ActionUtil.WOULD_BE_ENABLED_IF_NOT_DUMB_MODE))) {
+                if (!Boolean.FALSE.equals(presentation.getClientProperty(ActionImplUtil.WOULD_BE_ENABLED_IF_NOT_DUMB_MODE))) {
                     nonDumbAwareAction.add(actionEvent);
                 }
                 continue;
@@ -695,7 +695,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                     return;
                 }
 
-                ActionUtil.showDumbModeWarning(actionEvents);
+                ActionImplUtil.showDumbModeWarning(actionEvents);
             });
         }
     }
@@ -721,7 +721,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
             if (!(component instanceof JComponent jComponent)) {
                 continue;
             }
-            List<AnAction> listOfActions = ActionUtil.getActions(jComponent);
+            List<AnAction> listOfActions = ActionImplUtil.getActions(jComponent);
             if (listOfActions.isEmpty()) {
                 continue;
             }
@@ -923,8 +923,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
                 ActionManager.getInstance(),
                 0
             );
-            if (ActionUtil.lastUpdateAndCheckDumb(action, event, true)) {
-                ActionUtil.performActionDumbAware(action, event);
+            if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, true)) {
+                ActionImplUtil.performActionDumbAware(action, event);
             }
         }
 
@@ -944,7 +944,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                         AnActionEvent event =
                             new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), 0);
 
-                        ActionUtil.performDumbAwareUpdate(action, event, true);
+                        ActionImplUtil.performDumbAwareUpdate(action, event, true);
                         return presentation.isEnabled() && presentation.isVisible();
                     }
                 )

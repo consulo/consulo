@@ -6,7 +6,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
@@ -18,7 +18,7 @@ public abstract class PrevNextOccurrenceAction extends DumbAwareAction implement
 
   PrevNextOccurrenceAction(@Nonnull String templateActionId, boolean search) {
     mySearch = search;
-    ActionUtil.copyFrom(this, templateActionId);
+    ActionImplUtil.copyFrom(this, templateActionId);
   }
 
   @Override

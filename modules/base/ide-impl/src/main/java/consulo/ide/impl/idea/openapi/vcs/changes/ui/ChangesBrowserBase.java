@@ -21,7 +21,7 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
 import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
@@ -396,7 +396,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements ChangesBro
         showDiff();
       }
     };
-    ActionUtil.copyFrom(myDiffAction, "ChangesView.Diff");
+    ActionImplUtil.copyFrom(myDiffAction, "ChangesView.Diff");
     myDiffAction.registerCustomShortcutSet(myViewer, null);
     toolBarGroup.add(myDiffAction);
   }

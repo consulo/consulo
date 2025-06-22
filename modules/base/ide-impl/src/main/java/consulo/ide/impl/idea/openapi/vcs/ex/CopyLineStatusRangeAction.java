@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.ex;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ui.ex.awt.CopyPasteManager;
 
 import java.awt.datatransfer.StringSelection;
@@ -28,7 +28,7 @@ import java.awt.datatransfer.StringSelection;
 public class CopyLineStatusRangeAction extends BaseLineStatusRangeAction {
   CopyLineStatusRangeAction(final LineStatusTracker lineStatusTracker, final Range range) {
     super(lineStatusTracker, range);
-    ActionUtil.copyFrom(this, IdeActions.ACTION_COPY);
+    ActionImplUtil.copyFrom(this, IdeActions.ACTION_COPY);
   }
 
   @Override

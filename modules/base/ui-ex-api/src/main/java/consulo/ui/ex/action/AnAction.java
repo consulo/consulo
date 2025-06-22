@@ -25,7 +25,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -280,7 +279,6 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @param e Carries information on the invocation place and data available
      */
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
     }
 
@@ -290,7 +288,6 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @param e Carries information on the invocation place and data available
      */
-    @RequiredUIAccess
     public void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
         boolean worksInInjected = isInInjectedContext();
         e.setInjectedContext(worksInInjected);
@@ -388,7 +385,7 @@ public abstract class AnAction implements PossiblyDumbAware {
      */
     @Nonnull
     public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
+        return ActionUpdateThread.BGT;
     }
 
     /**

@@ -21,7 +21,7 @@ import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.ui.console.ConsoleExecuteAction;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.language.LanguageConsoleView;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.action.AnAction;
@@ -61,7 +61,7 @@ public final class UseConsoleInputAction extends ToggleAction implements DumbAwa
     daemonCodeAnalyzer.restart(file);
     ApplicationPropertiesComponent.getInstance().setValue(processInputStateKey, useProcessStdIn);
 
-    List<AnAction> actions = ActionUtil.getActions(consoleView.getConsoleEditor().getComponent());
+    List<AnAction> actions = ActionImplUtil.getActions(consoleView.getConsoleEditor().getComponent());
     ConsoleExecuteAction action = ContainerUtil.findInstance(actions, ConsoleExecuteAction.class);
     action.getExecuteActionHandler().setUseProcessStdIn(!state);
   }

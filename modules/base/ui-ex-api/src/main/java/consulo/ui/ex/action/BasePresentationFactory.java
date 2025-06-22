@@ -15,22 +15,17 @@
  */
 package consulo.ui.ex.action;
 
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Maps;
 import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
 public class BasePresentationFactory implements PresentationFactory {
-  // Presentation can leak icon which can leak consulo.ide.impl.idea.ui.DeferredIconImpl.myEvaluator which can leak enclosing class instance which can leak Project
-  private final Map<AnAction, Presentation> myAction2Presentation = Maps.newWeakKeySoftValueHashMap();
+  private final Map<AnAction, Presentation> myAction2Presentation = Maps.newConcurrentWeakKeySoftValueHashMap();
 
-  @RequiredUIAccess
   @Override
   @Nonnull
   public final Presentation getPresentation(@Nonnull AnAction action){
-    UIAccess.assertIsUIThread();
     Presentation presentation = myAction2Presentation.get(action);
     if (presentation == null || !action.isDefaultIcon()){
       Presentation templatePresentation = action.getTemplatePresentation();
@@ -50,10 +45,8 @@ public class BasePresentationFactory implements PresentationFactory {
   protected void processPresentation(Presentation presentation) {
   }
 
-  @RequiredUIAccess
   @Override
   public void reset() {
-    UIAccess.assertIsUIThread();
     myAction2Presentation.clear();
   }
 }

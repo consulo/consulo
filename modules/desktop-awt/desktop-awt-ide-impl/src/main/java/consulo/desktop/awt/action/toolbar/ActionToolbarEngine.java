@@ -26,7 +26,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.util.concurrent.CancellablePromise;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -57,7 +56,7 @@ public abstract class ActionToolbarEngine {
 
     private List<? extends AnAction> myVisibleActions = List.of();
 
-    private CancellablePromise<java.util.List<AnAction>> myLastUpdate;
+    private CompletableFuture<List<AnAction>> myLastUpdate;
 
     public ActionToolbarEngine(@Nonnull String place,
                                @Nonnull ActionGroup actionGroup,
@@ -101,11 +100,17 @@ public abstract class ActionToolbarEngine {
                 true);
         if (async) {
             if (myLastUpdate != null) {
-                myLastUpdate.cancel();
+                myLastUpdate.cancel(false);
             }
 
             myLastUpdate = updater.expandActionGroupAsync(myActionGroup, false);
-            myLastUpdate.onSuccess(actions -> actionsUpdated(forced, actions)).onProcessed(__ -> myLastUpdate = null);
+            myLastUpdate.whenComplete((result, throwable) -> {
+                if (result != null) {
+                    actionsUpdated(forced, result);
+                }
+
+                myLastUpdate = null;
+            });
         }
         else {
             actionsUpdated(forced, updater.expandActionGroupWithTimeout(myActionGroup, false));
@@ -168,17 +173,17 @@ public abstract class ActionToolbarEngine {
     public void removeNotify() {
         ActionToolbarsHolder.remove(myActionToolbar);
 
-        CancellablePromise<List<AnAction>> lastUpdate = myLastUpdate;
+        CompletableFuture<List<AnAction>> lastUpdate = myLastUpdate;
         if (lastUpdate != null) {
-            lastUpdate.cancel();
+            lastUpdate.cancel(false);
         }
     }
 
     private void cancelCurrentUpdate() {
-        CancellablePromise<List<AnAction>> lastUpdate = myLastUpdate;
+        CompletableFuture<List<AnAction>> lastUpdate = myLastUpdate;
         myLastUpdate = null;
         if (lastUpdate != null) {
-            lastUpdate.cancel();
+            lastUpdate.cancel(false);
         }
     }
 

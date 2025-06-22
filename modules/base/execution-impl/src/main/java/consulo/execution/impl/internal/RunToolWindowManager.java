@@ -103,15 +103,19 @@ public class RunToolWindowManager {
     }
 
     @Nullable
-    @RequiredUIAccess
-    public ContentManager get(@Nonnull String toolWindowId) {
+    public ContentManager get(@Nonnull String toolWindowId, boolean createIfNeed) {
         // if project started disposing, return null
         if (myProject.getDisposeState().get() != ThreeState.NO) {
             return null;
         }
 
-        UIAccess.assertIsUIThread();
-        return myToolwindowIdToContentManagerMap.computeIfAbsent(toolWindowId, this::createToolWindow);
+        if (createIfNeed) {
+            //noinspection RequiredXAction
+            UIAccess.assertIsUIThread();
+            return myToolwindowIdToContentManagerMap.computeIfAbsent(toolWindowId, this::createToolWindow);
+        } else {
+            return myToolwindowIdToContentManagerMap.get(toolWindowId);
+        }
     }
 
     @RequiredUIAccess

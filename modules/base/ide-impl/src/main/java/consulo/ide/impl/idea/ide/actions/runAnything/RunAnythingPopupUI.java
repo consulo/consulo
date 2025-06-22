@@ -18,7 +18,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingCompletio
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGeneralGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.ui.RunAnythingScrollingUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.internal.RunAnythingCache;
@@ -385,7 +385,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         }
 
         AnActionEvent event = AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, dataContext);
-        ActionUtil.performDumbAwareUpdate(myChooseContextAction, event, false);
+        ActionImplUtil.performDumbAwareUpdate(myChooseContextAction, event, false);
     }
 
     @Override

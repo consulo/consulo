@@ -24,7 +24,7 @@ import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
@@ -332,7 +332,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         Presentation presentation = new Presentation();
         presentation.copyFrom(anAction.getTemplatePresentation());
         AnActionEvent event = AnActionEvent.createFromDataContext(ActionPlaces.ACTION_SEARCH, presentation, dataContext);
-        ActionUtil.performDumbAwareUpdate(anAction, event, false);
+        ActionImplUtil.performDumbAwareUpdate(anAction, event, false);
         return event;
     }
 

@@ -34,7 +34,7 @@ import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.disposer.Disposable;
 import consulo.externalService.statistic.UsageTrigger;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ToggleActionButton;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -495,7 +495,7 @@ public class TextDiffViewerUtil {
         }
 
         public void install(@Nonnull List<? extends EditorEx> editors, @Nonnull JComponent component) {
-            ActionUtil.recursiveRegisterShortcutSet(new DefaultActionGroup(myEditorPopupActions), component, null);
+            ActionImplUtil.recursiveRegisterShortcutSet(new DefaultActionGroup(myEditorPopupActions), component, null);
 
             EditorPopupHandler handler =
                 new ContextMenuPopupHandler.Simple(myEditorPopupActions.isEmpty() ? null : new DefaultActionGroup(myEditorPopupActions));

@@ -19,7 +19,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.vcs.actions.ShowNextChangeMarkerAction;
 import consulo.ide.impl.idea.openapi.vcs.actions.ShowPrevChangeMarkerAction;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -89,7 +89,7 @@ public class LineStatusTrackerDrawing {
       registerAction(showDiff, editorComponent);
       registerAction(copyRange, editorComponent);
 
-      final List<AnAction> actionList = ActionUtil.getActions(editorComponent);
+      final List<AnAction> actionList = ActionImplUtil.getActions(editorComponent);
       Disposer.register(parentDisposable, () -> {
         actionList.remove(localShowPrevAction);
         actionList.remove(localShowNextAction);
