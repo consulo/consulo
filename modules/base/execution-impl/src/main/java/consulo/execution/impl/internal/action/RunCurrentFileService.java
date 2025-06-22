@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
+import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.dataContext.DataContext;
@@ -137,7 +138,7 @@ public class RunCurrentFileService {
         VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
         if (files.length == 1) {
             // There's only one visible editor, let's use the file from this editor, even if the editor is not in focus.
-            PsiFile psiFile = PsiManager.getInstance(project).findFile(files[0]);
+            PsiFile psiFile = ReadAction.compute(() -> PsiManager.getInstance(project).findFile(files[0]));
             if (psiFile == null) {
                 LocalizeValue tooltip = ExecutionLocalize.runButtonOnToolbarTooltipCurrentFileNotRunnable();
                 return RunCurrentFileActionStatus.createDisabled(tooltip, executor.getIcon());
@@ -146,13 +147,13 @@ public class RunCurrentFileService {
             return getRunCurrentFileActionStatus(executor, psiFile, resetCache, e);
         }
 
-        Editor editor = e.getData(CommonDataKeys.EDITOR);
+        Editor editor = e.getData(Editor.KEY);
         if (editor == null) {
             LocalizeValue tooltip = ExecutionLocalize.runButtonOnToolbarTooltipCurrentFileNoFocusedEditor();
             return RunCurrentFileActionStatus.createDisabled(tooltip, executor.getIcon());
         }
 
-        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        PsiFile psiFile = ReadAction.compute(() -> PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument()));
         VirtualFile vFile = psiFile != null ? psiFile.getVirtualFile() : null;
         if (psiFile == null || vFile == null || !ArrayUtil.contains(vFile, files)) {
             // This is probably a special editor, like Python Console, which we don't want to use for the 'Run Current File' feature.
