@@ -39,117 +39,122 @@ import java.util.Set;
  * @since 2003-11-29
  */
 public class PluginInstallUtil {
-  private static final String POSTPONE = "&Postpone";
+    private static final String POSTPONE = "&Postpone";
 
-  private PluginInstallUtil() {
-  }
-
-  @Messages.YesNoResult
-  public static int showShutDownIDEADialog() {
-    return showShutDownIDEADialog(ExternalServiceLocalize.titlePluginsChanged().get());
-  }
-
-  @Messages.YesNoResult
-  private static int showShutDownIDEADialog(final String title) {
-    String message = ExternalServiceLocalize.messageIdeaShutdownRequired(Application.get().getName()).get();
-    return Messages.showYesNoDialog(
-      message,
-      title,
-      "Shut Down",
-      POSTPONE,
-      Messages.getQuestionIcon()
-    );
-  }
-
-  @Messages.YesNoResult
-  public static int showRestartIDEADialog() {
-    return showRestartIDEADialog(ExternalServiceLocalize.titlePluginsChanged().get());
-  }
-
-  @Messages.YesNoResult
-  private static int showRestartIDEADialog(final String title) {
-    LocalizeValue message = ExternalServiceLocalize.messageIdeaRestartRequired(Application.get().getName());
-    return Messages.showYesNoDialog(message.get(), title, "Restart", POSTPONE, Messages.getQuestionIcon());
-  }
-
-  public static void shutdownOrRestartApp(String title) {
-    final ApplicationEx app = (ApplicationEx)Application.get();
-    int response = app.isRestartCapable() ? showRestartIDEADialog(title) : showShutDownIDEADialog(title);
-    if (response == Messages.YES) app.restart(true);
-  }
-
-  @Nonnull
-  public static Set<PluginDescriptor> getPluginsForInstall(List<PluginDescriptor> pluginsToInstall, List<PluginDescriptor> allPlugins) {
-    final List<PluginId> pluginIds = new ArrayList<>();
-    for (PluginDescriptor pluginNode : pluginsToInstall) {
-      pluginIds.add(pluginNode.getPluginId());
+    private PluginInstallUtil() {
     }
 
-    final Set<PluginDescriptor> toInstallAll = new LinkedHashSet<>();
-
-    for (PluginDescriptor toInstall : pluginsToInstall) {
-      Set<PluginNode> depends = new LinkedHashSet<>();
-      collectDepends(toInstall, pluginIds, depends, allPlugins);
-
-      toInstallAll.addAll(depends);
-      toInstallAll.add(toInstall);
+    @Messages.YesNoResult
+    public static int showShutDownIDEADialog() {
+        return showShutDownIDEADialog(ExternalServiceLocalize.titlePluginsChanged().get());
     }
 
-    if(toInstallAll.isEmpty()) {
-      throw new IllegalArgumentException("No plugins for install");
+    @Messages.YesNoResult
+    private static int showShutDownIDEADialog(final String title) {
+        String message = ExternalServiceLocalize.messageIdeaShutdownRequired(Application.get().getName()).get();
+        return Messages.showYesNoDialog(
+            message,
+            title,
+            "Shut Down",
+            POSTPONE,
+            Messages.getQuestionIcon()
+        );
     }
-    return toInstallAll;
-  }
 
-  private static void collectDepends(@Nonnull PluginDescriptor toInstall,
-                                     @Nonnull List<PluginId> toInstallOthers,
-                                     @Nonnull Set<PluginNode> depends,
-                                     @Nonnull List<PluginDescriptor> repoPlugins) {
-    PluginId[] dependentPluginIds = toInstall.getDependentPluginIds();
-    InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
-
-    for (PluginId dependentPluginId : dependentPluginIds) {
-
-      if (PluginManager.findPlugin(dependentPluginId) != null || toInstallOthers.contains(dependentPluginId)) {
-        // ignore installed or installing plugins
-        continue;
-      }
-
-      if (pluginsState.getInstalledPlugins().contains(dependentPluginId)) {
-        // downloaded plugin
-        continue;
-      }
-
-      PluginNode dependInRepo = (PluginNode)findDescriptionInRepo(dependentPluginId, repoPlugins);
-      if (dependInRepo != null) {
-        depends.add(dependInRepo);
-
-        collectDepends(dependInRepo, toInstallOthers, depends, repoPlugins);
-      }
+    @Messages.YesNoResult
+    public static int showRestartIDEADialog() {
+        return showRestartIDEADialog(ExternalServiceLocalize.titlePluginsChanged().get());
     }
-  }
 
-  @Nullable
-  private static PluginDescriptor findDescriptionInRepo(PluginId depPluginId, List<PluginDescriptor> allPlugins) {
-    for (PluginDescriptor plugin : allPlugins) {
-      if (plugin.getPluginId().equals(depPluginId)) {
-        return plugin;
-      }
+    @Messages.YesNoResult
+    private static int showRestartIDEADialog(final String title) {
+        LocalizeValue message = ExternalServiceLocalize.messageIdeaRestartRequired(Application.get().getName());
+        return Messages.showYesNoDialog(message.get(), title, "Restart", POSTPONE, Messages.getQuestionIcon());
     }
-    return null;
-  }
 
-  public static void prepareToUninstall(PluginId pluginId) throws IOException {
-    if (PluginManager.findPlugin(pluginId) != null) {
-      // add command to delete the 'action script' file
-      PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
-      if (pluginDescriptor != null) {
-        StartupActionScriptManager.ActionCommand deleteOld = new StartupActionScriptManager.DeleteCommand(pluginDescriptor.getPath());
-        StartupActionScriptManager.addActionCommand(deleteOld);
-      }
-      else {
-        PluginTab.LOG.error("Plugin not found: " + pluginId);
-      }
+    public static void shutdownOrRestartApp(String title) {
+        final ApplicationEx app = (ApplicationEx) Application.get();
+        int response = app.isRestartCapable() ? showRestartIDEADialog(title) : showShutDownIDEADialog(title);
+        if (response == Messages.YES) {
+            app.restart(true);
+        }
     }
-  }
+
+    @Nonnull
+    public static Set<PluginDescriptor> getPluginsForInstall(List<PluginDescriptor> pluginsToInstall, List<PluginDescriptor> allPlugins) {
+        final List<PluginId> pluginIds = new ArrayList<>();
+        for (PluginDescriptor pluginNode : pluginsToInstall) {
+            pluginIds.add(pluginNode.getPluginId());
+        }
+
+        final Set<PluginDescriptor> toInstallAll = new LinkedHashSet<>();
+
+        for (PluginDescriptor toInstall : pluginsToInstall) {
+            Set<PluginNode> depends = new LinkedHashSet<>();
+            collectDepends(toInstall, pluginIds, depends, allPlugins);
+
+            toInstallAll.addAll(depends);
+            toInstallAll.add(toInstall);
+        }
+
+        if (toInstallAll.isEmpty()) {
+            throw new IllegalArgumentException("No plugins for install");
+        }
+        return toInstallAll;
+    }
+
+    private static void collectDepends(
+        @Nonnull PluginDescriptor toInstall,
+        @Nonnull List<PluginId> toInstallOthers,
+        @Nonnull Set<PluginNode> depends,
+        @Nonnull List<PluginDescriptor> repoPlugins
+    ) {
+        PluginId[] dependentPluginIds = toInstall.getDependentPluginIds();
+        InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
+
+        for (PluginId dependentPluginId : dependentPluginIds) {
+
+            if (PluginManager.findPlugin(dependentPluginId) != null || toInstallOthers.contains(dependentPluginId)) {
+                // ignore installed or installing plugins
+                continue;
+            }
+
+            if (pluginsState.getInstalledPlugins().contains(dependentPluginId)) {
+                // downloaded plugin
+                continue;
+            }
+
+            PluginNode dependInRepo = (PluginNode) findDescriptionInRepo(dependentPluginId, repoPlugins);
+            if (dependInRepo != null) {
+                depends.add(dependInRepo);
+
+                collectDepends(dependInRepo, toInstallOthers, depends, repoPlugins);
+            }
+        }
+    }
+
+    @Nullable
+    private static PluginDescriptor findDescriptionInRepo(PluginId depPluginId, List<PluginDescriptor> allPlugins) {
+        for (PluginDescriptor plugin : allPlugins) {
+            if (plugin.getPluginId().equals(depPluginId)) {
+                return plugin;
+            }
+        }
+        return null;
+    }
+
+    public static void prepareToUninstall(PluginId pluginId) throws IOException {
+        if (PluginManager.findPlugin(pluginId) != null) {
+            // add command to delete the 'action script' file
+            PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
+            if (pluginDescriptor != null) {
+                StartupActionScriptManager.ActionCommand deleteOld =
+                    new StartupActionScriptManager.DeleteCommand(pluginDescriptor.getPath());
+                StartupActionScriptManager.addActionCommand(deleteOld);
+            }
+            else {
+                PluginTab.LOG.error("Plugin not found: " + pluginId);
+            }
+        }
+    }
 }
