@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  */
 public interface PresentationFactory {
     @Nonnull
-  Presentation getPresentation(@Nonnull AnAction action);
+    Presentation getPresentation(@Nonnull AnAction action);
 
-  void reset();
+    void reset();
 }

@@ -21,32 +21,32 @@ import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 public class BasePresentationFactory implements PresentationFactory {
-  private final Map<AnAction, Presentation> myAction2Presentation = Maps.newConcurrentWeakKeySoftValueHashMap();
+    private final Map<AnAction, Presentation> myAction2Presentation = Maps.newConcurrentWeakKeySoftValueHashMap();
 
-  @Override
-  @Nonnull
-  public final Presentation getPresentation(@Nonnull AnAction action){
-    Presentation presentation = myAction2Presentation.get(action);
-    if (presentation == null || !action.isDefaultIcon()){
-      Presentation templatePresentation = action.getTemplatePresentation();
-      if (presentation == null) {
-        presentation = templatePresentation.clone();
-        myAction2Presentation.put(action, presentation);
-      }
-      if (!action.isDefaultIcon()) {
-        presentation.setIcon(templatePresentation.getIcon());
-        presentation.setDisabledIcon(templatePresentation.getDisabledIcon());
-      }
-      processPresentation(presentation);
+    @Override
+    @Nonnull
+    public final Presentation getPresentation(@Nonnull AnAction action) {
+        Presentation presentation = myAction2Presentation.get(action);
+        if (presentation == null || !action.isDefaultIcon()) {
+            Presentation templatePresentation = action.getTemplatePresentation();
+            if (presentation == null) {
+                presentation = templatePresentation.clone();
+                myAction2Presentation.put(action, presentation);
+            }
+            if (!action.isDefaultIcon()) {
+                presentation.setIcon(templatePresentation.getIcon());
+                presentation.setDisabledIcon(templatePresentation.getDisabledIcon());
+            }
+            processPresentation(presentation);
+        }
+        return presentation;
     }
-    return presentation;
-  }
 
-  protected void processPresentation(Presentation presentation) {
-  }
+    protected void processPresentation(Presentation presentation) {
+    }
 
-  @Override
-  public void reset() {
-    myAction2Presentation.clear();
-  }
+    @Override
+    public void reset() {
+        myAction2Presentation.clear();
+    }
 }

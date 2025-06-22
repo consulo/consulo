@@ -3,7 +3,6 @@ package consulo.desktop.awt.action.toolbar;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
@@ -25,7 +24,6 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.WeakReference;
-import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -42,7 +40,7 @@ public class ToolbarNotifier implements Activatable {
     private final Application myApplication;
 
     @Nonnull
-    private final Consumer<Boolean> myUpdateActionsNotifier;
+    private final Runnable myUpdateActionsNotifier;
 
     @SuppressWarnings("FieldCanBeLocal") // do not inline creating - it will removed from memory due WeakTimerListener
     private MyTimerListener myTimerListener = new MyTimerListener();
@@ -53,7 +51,7 @@ public class ToolbarNotifier implements Activatable {
                            @Nonnull KeymapManager keymapManager,
                            @Nonnull ActionManager actionManager,
                            @Nonnull JComponent component,
-                           @Nonnull Consumer<Boolean> updateActionsNotifier) {
+                           @Nonnull Runnable updateActionsNotifier) {
         myApplication = application;
         myUpdateActionsNotifier = updateActionsNotifier;
         myActionManager = (ActionManagerEx) actionManager;
@@ -87,14 +85,14 @@ public class ToolbarNotifier implements Activatable {
         myKeymapManager.removeKeymapManagerListener(myKeymapManagerListener);
     }
 
-    public void updateActions(boolean now, final boolean forced) {
-        final Runnable updateRunnable = new MyUpdateRunnable(this, forced);
+    public void updateActions(boolean now) {
+        Runnable updateRunnable = new MyUpdateRunnable(this);
 
         if (now) {
             updateRunnable.run();
         }
         else {
-            final IdeFocusManager fm = ApplicationIdeFocusManager.getInstance();
+            IdeFocusManager fm = ApplicationIdeFocusManager.getInstance();
 
             if (myApplication.isDispatchThread() && myComponent.isShowing()) {
                 fm.doWhenFocusSettlesDown(updateRunnable);
@@ -105,9 +103,9 @@ public class ToolbarNotifier implements Activatable {
         }
     }
 
-    protected void updateActionsImpl(boolean forced) {
+    protected void updateActionsImpl() {
         if (myApplication.getDisposeState().get() == ThreeState.NO) {
-            myUpdateActionsNotifier.accept(forced);
+            myUpdateActionsNotifier.run();
         }
     }
 
@@ -150,21 +148,17 @@ public class ToolbarNotifier implements Activatable {
                 return;
             }
 
-            updateActions(false, false);
+            updateActions(false);
         }
     }
 
     private static class MyUpdateRunnable implements Runnable {
-        private final boolean myForced;
-
         @Nonnull
         private final WeakReference<ToolbarNotifier> myUpdaterRef;
         private final int myHash;
 
-        MyUpdateRunnable(@Nonnull ToolbarNotifier updater, boolean forced) {
-            myForced = forced;
+        MyUpdateRunnable(@Nonnull ToolbarNotifier updater) {
             myHash = updater.hashCode();
-
             myUpdaterRef = new WeakReference<>(updater);
         }
 
@@ -179,7 +173,7 @@ public class ToolbarNotifier implements Activatable {
                 return;
             }
 
-            updater.updateActionsImpl(myForced);
+            updater.updateActionsImpl();
         }
 
         @Override

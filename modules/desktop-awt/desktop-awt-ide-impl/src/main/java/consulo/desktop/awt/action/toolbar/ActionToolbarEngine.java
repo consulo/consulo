@@ -86,10 +86,9 @@ public abstract class ActionToolbarEngine {
         return myPlace;
     }
 
-    private void updateActionsImpl(boolean forced) {
+    private void updateActionsImpl() {
         DataContext dataContext = getDataContext();
-        boolean async =
-            myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
+        boolean async = myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
         ActionUpdater updater =
             new ActionUpdater(myActionManager,
                 LaterInvocator.isInModalContext(),
@@ -106,20 +105,20 @@ public abstract class ActionToolbarEngine {
             myLastUpdate = updater.expandActionGroupAsync(myActionGroup, false);
             myLastUpdate.whenComplete((result, throwable) -> {
                 if (result != null) {
-                    actionsUpdated(forced, result);
+                    actionsUpdated(result);
                 }
 
                 myLastUpdate = null;
             });
         }
         else {
-            actionsUpdated(forced, updater.expandActionGroupWithTimeout(myActionGroup, false));
+            actionsUpdated(updater.expandActionGroupWithTimeout(myActionGroup, false));
             myAlreadyUpdated = true;
         }
     }
 
-    private void actionsUpdated(boolean forced, @Nonnull List<? extends AnAction> newVisibleActions) {
-        if (forced || !newVisibleActions.equals(myVisibleActions)) {
+    private void actionsUpdated(@Nonnull List<? extends AnAction> newVisibleActions) {
+        if (!newVisibleActions.equals(myVisibleActions)) {
             boolean shouldRebuildUI = newVisibleActions.isEmpty() || myVisibleActions.isEmpty();
             myVisibleActions = newVisibleActions;
 
@@ -127,7 +126,6 @@ public abstract class ActionToolbarEngine {
         }
     }
 
-    @RequiredUIAccess
     public Presentation getPresentation(@Nonnull AnAction action) {
         return myPresentationFactory.getPresentation(action);
     }
@@ -150,13 +148,12 @@ public abstract class ActionToolbarEngine {
     @RequiredUIAccess
     public void updateActionsImmediately() {
         UIAccess.assertIsUIThread();
-        myUpdater.updateActions(true, false);
+        myUpdater.updateActions(true);
     }
 
     @RequiredUIAccess
     public CompletableFuture<?> updateActionsAsync() {
         updateActionsImmediately();
-
         return CompletableFuture.completedFuture(null);
     }
 

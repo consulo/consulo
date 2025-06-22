@@ -44,17 +44,14 @@ public class ActionToolbarsHolder {
         }
     }
 
-    @RequiredUIAccess
     public static void add(ActionToolbar toolbarEx) {
         ourToolbars.add(toolbarEx);
     }
 
-    @RequiredUIAccess
     public static void remove(ActionToolbar toolbarEx) {
         ourToolbars.remove(toolbarEx);
     }
 
-    @RequiredUIAccess
     public static boolean contains(ActionToolbar toolbar) {
         return ourToolbars.contains(toolbar);
     }
