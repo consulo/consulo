@@ -16,8 +16,8 @@
 package consulo.execution.configuration.ui;
 
 /**
- * User: anna
- * Date: Mar 14, 2005
+ * @author anna
+ * @since 2005-03-14
  */
 public interface CheckableRunConfigurationEditor<Settings> {
   //override this method to provide light check

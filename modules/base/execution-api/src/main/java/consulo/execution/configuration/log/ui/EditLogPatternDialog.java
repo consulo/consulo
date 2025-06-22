@@ -28,8 +28,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 
 /**
- * User: anna
- * Date: 05-Feb-2006
+ * @author anna
+ * @since 2006-02-05
  */
 public class EditLogPatternDialog extends DialogWrapper {
 

@@ -19,8 +19,7 @@ import java.awt.*;
 
 /**
  * @author irengrig
- *         Date: 7/7/11
- *         Time: 5:27 PM
+ * @since 2011-07-07
  */
 public interface LineSeparatorRenderer {
   void drawLine(final Graphics g, final int x1, final int x2, final int y);

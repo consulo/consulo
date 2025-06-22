@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 06-Apr-2007
- */
 package consulo.content.internal.scope;
 
 import consulo.annotation.component.ComponentScope;
@@ -31,6 +26,10 @@ import jakarta.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * @author anna
+ * @since 2007-04-06
+ */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface CustomScopesProvider {
   ExtensionPointName<CustomScopesProvider> CUSTOM_SCOPES_PROVIDER = ExtensionPointName.create(CustomScopesProvider.class);

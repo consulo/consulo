@@ -13,15 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Oct 22, 2006
- * Time: 9:49:16 PM
- */
 package consulo.annotation.component;
-
 
 /**
  * {@link MessageBus Message buses} may be organised into {@link MessageBus#getParent() hierarchies}. That allows to provide
@@ -29,9 +21,11 @@ package consulo.annotation.component;
  * particular message bus may be dispatched to subscribers of the same topic within another message buses.
  * <p/>
  * Current enum holds available broadcasting options.
+ *
+ * @author max
+ * @since 2006-10-22
  */
 public enum TopicBroadcastDirection {
-
   /**
    * The message is dispatched to all subscribers of the target topic registered within the child message buses.
    * <p/>

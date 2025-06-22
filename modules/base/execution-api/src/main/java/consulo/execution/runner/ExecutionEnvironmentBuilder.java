@@ -30,7 +30,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public final class ExecutionEnvironmentBuilder {
   @Nonnull

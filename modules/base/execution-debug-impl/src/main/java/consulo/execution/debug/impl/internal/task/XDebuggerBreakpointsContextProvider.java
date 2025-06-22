@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
- * Date: 7/12/13
+ * @since 2013-07-12
  */
 @ExtensionImpl
 public class XDebuggerBreakpointsContextProvider extends WorkingContextProvider {

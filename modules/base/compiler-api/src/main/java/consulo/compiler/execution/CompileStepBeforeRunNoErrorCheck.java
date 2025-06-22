@@ -36,7 +36,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 @ExtensionImpl(id = "compileBeforeRunNoErrorCheck", order = "after compileBeforeRun")
 public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {

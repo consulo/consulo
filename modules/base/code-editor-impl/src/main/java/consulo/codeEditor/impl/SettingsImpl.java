@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jun 19, 2002
- * Time: 3:19:05 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.codeEditor.impl;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -44,6 +35,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author max
+ * @since 2002-06-19
+ */
 public class SettingsImpl implements EditorSettings {
     @Nullable
     protected final EditorEx myEditor;

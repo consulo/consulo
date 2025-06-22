@@ -47,10 +47,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-/*
- * @author: Eugene Zhuravlev
- * Date: Jan 17, 2003
- * Time: 3:48:26 PM
+/**
+ * @author Eugene Zhuravlev
+ * @since 2003-01-17
  */
 @ExtensionImpl(id = "resourceCompiler")
 public class ResourceCompilerImpl implements ResourceCompiler {

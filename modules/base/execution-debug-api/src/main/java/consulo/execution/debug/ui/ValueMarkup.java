@@ -22,7 +22,7 @@ import java.awt.*;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 27, 2007
+ * @since 2007-01-27
  */
 public class ValueMarkup {
   private final String myText;

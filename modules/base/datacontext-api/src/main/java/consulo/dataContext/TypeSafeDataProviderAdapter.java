@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 25.10.2006
- * Time: 17:24:41
- */
 package consulo.dataContext;
 
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author yole
+ * @since 2006-10-25
+ */
 public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
   private final TypeSafeDataProvider myProvider;
   private Key<?> myLastKey = null;

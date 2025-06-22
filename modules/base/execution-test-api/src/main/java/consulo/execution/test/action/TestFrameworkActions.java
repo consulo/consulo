@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 25-May-2007
- */
 package consulo.execution.test.action;
 
 import consulo.component.util.config.AbstractProperty;
@@ -27,6 +22,10 @@ import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkPropertyListener;
 import consulo.execution.test.TestFrameworkRunningModel;
 
+/**
+ * @author anna
+ * @since 2007-05-25
+ */
 public class TestFrameworkActions {
   public static void installFilterAction(final TestFrameworkRunningModel model) {
     final TestConsoleProperties properties = model.getProperties();

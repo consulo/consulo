@@ -15,11 +15,9 @@
  */
 package consulo.compiler;
 
-import org.jetbrains.annotations.NonNls;
-
 /**
  * @author Eugene Zhuravlev
- *         Date: 11/24/11
+ * @since 2011-11-24
  */
 public class ExitStatus {
   private final String myName;

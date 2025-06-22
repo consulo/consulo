@@ -17,7 +17,7 @@ package consulo.compiler;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: 11/24/11
+ * @since 2011-11-24
  */
 public class ExitException extends Exception {
   private final ExitStatus myStatus;

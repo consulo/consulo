@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author: Eugene Zhuravlev
- * Date: Jan 22, 2003
- * Time: 2:25:31 PM
- */
 package consulo.compiler.impl.internal;
 
 import consulo.application.internal.AbstractProgressIndicatorExBase;
@@ -47,6 +41,10 @@ import java.util.UUID;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Eugene Zhuravlev
+ * @since 2003-01-22
+ */
 public class CompilerTask extends Task.Backgroundable {
   private static final String APP_ICON_ID = "compiler";
 

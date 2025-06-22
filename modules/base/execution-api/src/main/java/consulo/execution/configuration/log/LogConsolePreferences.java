@@ -45,8 +45,8 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 /**
- * User: anna
- * Date: 06-Feb-2006
+ * @author anna
+ * @since 2006-02-06
  */
 @Singleton
 @State(name = "LogFilters", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})

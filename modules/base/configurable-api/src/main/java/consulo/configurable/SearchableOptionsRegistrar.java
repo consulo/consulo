@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * User: anna
- * Date: 13-Feb-2006
+ * @author anna
+ * @since 2006-02-13
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class SearchableOptionsRegistrar {

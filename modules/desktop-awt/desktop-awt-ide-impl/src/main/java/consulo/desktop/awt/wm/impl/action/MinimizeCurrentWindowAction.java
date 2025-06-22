@@ -34,7 +34,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 @ActionImpl(id = "MinimizeCurrentWindow", parents = @ActionParentRef(value = @ActionRef(id = "WindowMenu"), anchor = ActionRefAnchor.FIRST))
 public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {

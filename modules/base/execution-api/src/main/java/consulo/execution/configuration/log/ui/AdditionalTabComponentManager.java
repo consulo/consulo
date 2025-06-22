@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Anna.Kozlova
- * Date: 04-Sep-2006
- * Time: 18:30:23
- */
 package consulo.execution.configuration.log.ui;
 
+/**
+ * @author Anna.Kozlova
+ * @since 2006-09-04
+ */
 public interface AdditionalTabComponentManager {
   void addAdditionalTabComponent(AdditionalTabComponent component, final String id);
 

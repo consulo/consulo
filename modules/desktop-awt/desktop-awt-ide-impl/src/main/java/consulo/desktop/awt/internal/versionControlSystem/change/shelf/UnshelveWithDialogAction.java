@@ -36,8 +36,7 @@ import java.util.Collections;
 
 /**
  * @author irengrig
- * Date: 2/25/11
- * Time: 5:50 PM
+ * @since 2011-02-25
  */
 @ActionImpl(id = "ShelveChanges.UnshelveWithDialog")
 public class UnshelveWithDialogAction extends AnAction {

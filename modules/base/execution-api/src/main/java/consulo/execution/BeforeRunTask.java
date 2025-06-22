@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: May 18, 2009
+ * @since 2009-05-18
  */
 public abstract class BeforeRunTask<T extends BeforeRunTask> implements Cloneable {
   @Nonnull

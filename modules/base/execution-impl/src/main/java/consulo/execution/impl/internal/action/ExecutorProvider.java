@@ -18,7 +18,7 @@ package consulo.execution.impl.internal.action;
 import consulo.execution.executor.Executor;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public interface ExecutorProvider {
   Executor getExecutor();

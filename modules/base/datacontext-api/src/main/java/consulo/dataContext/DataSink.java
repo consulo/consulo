@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 23.10.2006
- * Time: 18:40:56
- */
 package consulo.dataContext;
 
 import consulo.util.dataholder.Key;
 
+/**
+ * @author yole
+ * @since 2006-10-23
+ */
 public interface DataSink {
   <T> void put(Key<T> key, T data);
 }

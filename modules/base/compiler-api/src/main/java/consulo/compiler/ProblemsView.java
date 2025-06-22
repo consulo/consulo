@@ -35,7 +35,7 @@ import java.util.StringTokenizer;
 
 /**
  * @author Eugene Zhuravlev
- * Date: 9/18/12
+ * @since 2012-09-18
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ProblemsView {

@@ -20,7 +20,7 @@ import consulo.execution.configuration.ui.SettingsEditorConfigurable;
 
 /**
  * @author Dmitry Avdeev
- * Date: 10/6/11
+ * @since 2011-10-06
  */
 public class TemplateConfigurable extends SettingsEditorConfigurable<RunnerAndConfigurationSettings> {
     private final RunnerAndConfigurationSettings myTemplate;
