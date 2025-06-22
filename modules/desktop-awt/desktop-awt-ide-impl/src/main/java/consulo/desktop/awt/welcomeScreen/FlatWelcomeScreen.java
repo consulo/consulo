@@ -29,6 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -141,7 +142,9 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
             PlatformIconGroup.welcomeHelp())
         );
 
-        return (JComponent) TargetAWT.to(layout);
+        JComponent component = (JComponent) TargetAWT.to(layout);
+        TouchBarController.getInstance().setActions(component, quickStart);
+        return component;
     }
 
     public Consumer<List<NotificationType>> getEventListener() {
