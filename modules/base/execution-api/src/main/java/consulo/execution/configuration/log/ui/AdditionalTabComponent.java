@@ -25,8 +25,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * User: anna
- * Date: 22-Mar-2006
+ * @author anna
+ * @since 2006-03-22
  */
 public abstract class AdditionalTabComponent extends JPanel implements ComponentContainer, ComponentWithActions {
   protected AdditionalTabComponent(LayoutManager layout) {

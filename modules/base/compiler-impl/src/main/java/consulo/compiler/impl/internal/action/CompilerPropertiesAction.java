@@ -26,7 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author Eugene Zhuravlev
- * Date: 9/12/12
+ * @since 2012-09-12
  */
 public class CompilerPropertiesAction extends AnAction {
   public CompilerPropertiesAction() {

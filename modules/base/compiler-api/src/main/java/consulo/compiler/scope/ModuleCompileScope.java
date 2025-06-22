@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author: Eugene Zhuravlev
- * Date: Jan 20, 2003
- * Time: 5:34:19 PM
- */
 package consulo.compiler.scope;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -42,6 +36,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
+/**
+ * @author Eugene Zhuravlev
+ * @since 2003-01-20
+ */
 public class ModuleCompileScope extends FileIndexCompileScope {
   private final Project myProject;
   private final Set<Module> myScopeModules;

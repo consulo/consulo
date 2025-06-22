@@ -22,7 +22,7 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.project.Project;
 
 /**
- * User: ksafonov
+ * @author ksafonov
  */
 public class XCompareWithClipboardAction extends XFetchValueActionBase {
     @Override

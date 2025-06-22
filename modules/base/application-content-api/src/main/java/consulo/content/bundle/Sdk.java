@@ -28,7 +28,7 @@ import java.nio.file.Path;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Sep 23, 2004
+ * @since 2004-09-23
  */
 public interface Sdk extends UserDataHolder, Named {
   public static final Sdk[] EMPTY_ARRAY = new Sdk[0];

@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
 
 /**
 * @author Eugene Zhuravlev
-*         Date: 9/12/12
+* @since 2012-09-12
 */
 public abstract class ExcludeFromCompileAction extends AnAction {
   private final Project myProject;

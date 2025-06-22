@@ -66,11 +66,9 @@ import java.util.Arrays;
  * OF SUCH DAMAGE.
  *
  * @author Mikael Grev
- *         Date: 2004-aug-02
- *         Time: 11:31:11
+ * @since 2004-08-02
  * @version 2.2
  */
-
 public class mxBase64 {
   private static final char[] CA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 

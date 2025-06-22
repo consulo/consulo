@@ -24,8 +24,7 @@ import javax.swing.*;
 
 /**
  * @author MYakovlev
- * Date: Oct 29, 2002
- * Time: 8:47:43 PM
+ * @since 2002-10-29
  */
 public class DocumentationUtil {
 

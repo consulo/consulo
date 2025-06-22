@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 04.08.2006
- * Time: 17:57:31
- */
 package consulo.execution.ui.console;
 
 import consulo.annotation.component.ComponentScope;
@@ -31,7 +24,9 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 /**
+ * @author yole
  * @author dyoma
+ * @since 2006-08-04
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TextConsoleBuilderFactory {

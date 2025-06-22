@@ -27,8 +27,8 @@ import java.io.*;
 import java.nio.charset.Charset;
 
 /**
- * User: anna
- * Date: Apr 19, 2005
+ * @author anna
+ * @since 2005-04-19
  */
 public abstract class LogConsoleImpl extends LogConsoleBase {
   private final String myPath;

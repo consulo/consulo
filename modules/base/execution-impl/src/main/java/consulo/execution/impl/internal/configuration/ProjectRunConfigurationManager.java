@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * User: anna
- * Date: 28-Mar-2006
+ * @author anna
+ * @since 2006-03-28
  */
 @State(name = "ProjectRunConfigurationManager", storages = {
         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/runConfigurations/", stateSplitter = ProjectRunConfigurationManager.RunConfigurationStateSplitter.class)})

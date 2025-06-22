@@ -20,7 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 7/21/11
+ * @since 2011-07-21
  */
 public interface StartupProgress extends Disposable {
 

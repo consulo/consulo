@@ -43,8 +43,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: anna
- * Date: Apr 22, 2005
+ * @author anna
+ * @since 2005-04-22
  */
 public class LogConfigurationPanel<T extends RunConfigurationBase> extends SettingsEditor<T> {
   private final TableView<LogFileOptions> myFilesTable;

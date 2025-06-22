@@ -66,7 +66,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<AWTEvent>, DataProvider {
     private static final Key<String> WIDGET_ID = Key.create("STATUS_BAR_WIDGET_ID");

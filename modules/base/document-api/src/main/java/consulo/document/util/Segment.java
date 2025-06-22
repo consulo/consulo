@@ -18,7 +18,7 @@ package consulo.document.util;
 import java.util.Comparator;
 
 /**
- * User: cdr
+ * @author cdr
  */
 public interface Segment {
   Segment[] EMPTY_ARRAY = new Segment[0];

@@ -23,8 +23,7 @@ import java.io.File;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Oct 16
- * @author 2003
+ * @since 2003-10-16
  */
 public class FileProcessingCompilerAdapter {
   private final CompileContext myCompileContext;

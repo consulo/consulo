@@ -28,11 +28,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: zajac
- * Date: 4/4/12
- * Time: 5:51 PM
- * To change this template use File | Settings | File Templates.
+ * @author zajac
+ * @since 2012-04-04
  */
 public class BreakpointEditor {
   public JPanel getMainPanel() {

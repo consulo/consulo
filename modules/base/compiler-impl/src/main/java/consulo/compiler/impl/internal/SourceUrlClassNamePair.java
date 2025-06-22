@@ -19,7 +19,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jun 21, 2006
+ * @since 2006-06-21
  */
 public class SourceUrlClassNamePair {
   private final String mySourceUrl;

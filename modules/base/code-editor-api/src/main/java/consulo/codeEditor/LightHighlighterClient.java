@@ -19,9 +19,8 @@ import consulo.document.Document;
 import consulo.project.Project;
 
 /**
- * User: Irina.Chernushina
- * Date: 9/8/11
- * Time: 12:18 PM
+ * @author Irina.Chernushina
+ * @since 2011-09-08
  */
 public class LightHighlighterClient implements HighlighterClient {
   private final Project myProject;

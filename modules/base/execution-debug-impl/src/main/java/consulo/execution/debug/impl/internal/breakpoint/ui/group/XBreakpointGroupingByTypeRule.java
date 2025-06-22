@@ -23,11 +23,8 @@ import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
- * Created with IntelliJ IDEA.
- * User: zajac
- * Date: 23.05.12
- * Time: 15:57
- * To change this template use File | Settings | File Templates.
+ * @author zajac
+ * @since 2012-05-23
  */
 public class XBreakpointGroupingByTypeRule<B> extends XBreakpointGroupingRule<B, XBreakpointTypeGroup> {
 

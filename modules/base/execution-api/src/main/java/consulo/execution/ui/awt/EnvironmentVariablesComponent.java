@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 14-May-2007
- */
 package consulo.execution.ui.awt;
 
 import consulo.execution.configuration.EnvironmentVariablesData;
@@ -34,6 +29,10 @@ import javax.swing.event.ChangeListener;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * @author anna
+ * @since 2007-05-14
+ */
 public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> implements UserActivityProviderComponent {
   private static final String ENVS = "envs";
   public static final String ENV = "env";

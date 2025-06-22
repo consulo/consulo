@@ -23,7 +23,7 @@ import consulo.platform.Platform;
 import jakarta.inject.Singleton;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 @Singleton
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)

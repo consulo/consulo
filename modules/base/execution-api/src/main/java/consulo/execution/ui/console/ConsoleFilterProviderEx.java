@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 20-Aug-2007
- */
 package consulo.execution.ui.console;
 
 import consulo.content.scope.SearchScope;
@@ -25,6 +20,10 @@ import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author anna
+ * @since 2007-08-20
+ */
 public interface ConsoleFilterProviderEx extends ConsoleFilterProvider {
   Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull SearchScope scope);
 }

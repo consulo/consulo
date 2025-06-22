@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 18, 2003
+ * @since 2003-12-18
  */
 public abstract class FileIndexCompileScope extends ExportableUserDataHolderBase implements CompileScope {
 

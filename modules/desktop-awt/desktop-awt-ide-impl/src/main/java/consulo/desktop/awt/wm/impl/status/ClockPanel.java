@@ -31,7 +31,7 @@ import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.util.Calendar.*;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public class ClockPanel extends JComponent {
   private static final int TOP = 1 << 0 | 1 << 2 | 1 << 3 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9;

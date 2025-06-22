@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 public abstract class AbstractFavoritesListProvider<T> implements FavoritesListProvider {
   public static final int BOOKMARKS_WEIGHT = 100;

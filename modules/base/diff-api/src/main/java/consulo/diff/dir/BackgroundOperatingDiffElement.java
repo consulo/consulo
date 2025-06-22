@@ -19,7 +19,7 @@ import consulo.util.lang.ref.Ref;
 
 /**
  * @author lene
- *         Date: 18.10.11
+ * @since 2011-10-18
  */
 public interface BackgroundOperatingDiffElement {
 

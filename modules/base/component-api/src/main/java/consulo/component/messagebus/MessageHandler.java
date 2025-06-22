@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Nov 1, 2006
- * Time: 11:49:58 PM
- */
 package consulo.component.messagebus;
 
 import java.lang.reflect.Method;
 
 /**
  * Defines contract for generic messages subscriber processor.
+ *
+ * @author max
+ * @since 2006-11-01
  */
 @FunctionalInterface
 public interface MessageHandler {

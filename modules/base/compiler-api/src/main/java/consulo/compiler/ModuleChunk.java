@@ -39,7 +39,7 @@ import java.util.function.Supplier;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Sep 29, 2004
+ * @since 2004-09-29
  */
 public class ModuleChunk extends Chunk<Module> {
   private final CompileContextEx myContext;

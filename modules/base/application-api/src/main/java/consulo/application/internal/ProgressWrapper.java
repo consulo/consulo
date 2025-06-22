@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Sep 26, 2007
- * Time: 1:56:28 PM
- */
 package consulo.application.internal;
 
 import consulo.application.progress.ProgressIndicator;
@@ -30,6 +23,10 @@ import org.jetbrains.annotations.Contract;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author cdr
+ * @since 2007-09-26
+ */
 public class ProgressWrapper extends AbstractProgressIndicatorBase implements WrappedProgressIndicator, StandardProgressIndicator {
   private final ProgressIndicator myOriginal;
   private final boolean myCheckCanceledForMe;

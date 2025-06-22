@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.LinkListener;
 
 /**
- * User: anna
+ * @author anna
  */
 public abstract class TextFieldAction extends LinkLabel implements LinkListener {
   public TextFieldAction() {

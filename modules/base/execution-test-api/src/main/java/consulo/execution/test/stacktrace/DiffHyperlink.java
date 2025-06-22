@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 15-Aug-2007
- */
 package consulo.execution.test.stacktrace;
 
 import consulo.dataContext.DataContext;
@@ -37,6 +32,10 @@ import jakarta.annotation.Nullable;
 
 import java.io.File;
 
+/**
+ * @author anna
+ * @since 2007-08-15
+ */
 public class DiffHyperlink implements Printable {
   private static final String NEW_LINE = "\n";
   private static final Logger LOG = Logger.getInstance(DiffHyperlink.class);

@@ -25,7 +25,7 @@ import javax.swing.*;
 
 /**
  * @author lene
- *         Date: 23.04.12
+ * @since 2012-04-23
  */
 public class SetNoOperation extends AnAction {
   @Override

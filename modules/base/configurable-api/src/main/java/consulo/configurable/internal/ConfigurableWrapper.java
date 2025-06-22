@@ -28,7 +28,7 @@ import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev
- * Date: 9/17/12
+ * @since 2012-09-17
  */
 public class ConfigurableWrapper implements SearchableConfigurable {
   public static ConfigurableWrapper wrapConfigurable(Configurable configurable) {

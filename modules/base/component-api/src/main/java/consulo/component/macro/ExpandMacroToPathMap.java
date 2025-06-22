@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Dec 6, 2004
+ * @since 2004-12-06
  */
 public class ExpandMacroToPathMap extends PathMacroMap {
   private final Map<String, String> myPlainMap = new LinkedHashMap<>();

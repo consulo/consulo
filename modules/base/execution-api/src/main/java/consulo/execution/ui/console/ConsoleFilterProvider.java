@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 20-Aug-2007
- */
 package consulo.execution.ui.console;
 
 import consulo.annotation.component.ComponentScope;
@@ -28,6 +23,9 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @see ConsoleFilterProviderEx for additional API
+ *
+ * @author anna
+ * @since 2007-08-20
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConsoleFilterProvider {
