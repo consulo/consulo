@@ -53,7 +53,7 @@ import java.util.List;
 
 /**
  * @author Vladislav.Soroka
- * @since 5/30/2014
+ * @since 2014-05-30
  */
 public abstract class ExternalSystemBeforeRunTaskProvider extends BeforeRunTaskProvider<ExternalSystemBeforeRunTask> {
 

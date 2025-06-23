@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Mar 28, 2008
+ * @since 2008-03-28
  */
 public interface FileContent extends UserDataHolder {
   @Nonnull

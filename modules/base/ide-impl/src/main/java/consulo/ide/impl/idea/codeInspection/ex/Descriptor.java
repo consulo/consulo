@@ -31,8 +31,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: Dec 8, 2004
+ * @author anna
+ * @since 2004-12-08
  */
 public class Descriptor {
   private final String myText;

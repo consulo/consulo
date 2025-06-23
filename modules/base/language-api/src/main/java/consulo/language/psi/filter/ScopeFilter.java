@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.position.PositionElementFilter;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ik
- * Date: 30.01.2003
- * Time: 13:38:10
- * To change this template use Options | File Templates.
+ * @author ik
+ * @since 2003-01-30
  */
 public class ScopeFilter extends PositionElementFilter {
   public ScopeFilter(){}

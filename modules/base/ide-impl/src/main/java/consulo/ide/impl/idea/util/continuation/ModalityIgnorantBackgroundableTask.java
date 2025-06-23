@@ -28,10 +28,8 @@ import javax.swing.*;
 import java.util.function.Consumer;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/19/11
- * Time: 12:14 PM
+ * @author Irina.Chernushina
+ * @since 2011-08-19
  */
 public abstract class ModalityIgnorantBackgroundableTask extends Task.Backgroundable {
   private final static Logger LOG = Logger.getInstance(ModalityIgnorantBackgroundableTask.class);

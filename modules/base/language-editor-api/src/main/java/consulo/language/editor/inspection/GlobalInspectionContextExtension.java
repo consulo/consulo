@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 19-Dec-2007
- */
 package consulo.language.editor.inspection;
 
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
@@ -27,6 +22,10 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2007-12-19
+ */
 public interface GlobalInspectionContextExtension<T> {
   @Nonnull
   Key<T> getID();

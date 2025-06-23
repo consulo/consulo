@@ -19,8 +19,7 @@ import java.util.function.Consumer;
 
 /**
  * @author irengrig
- *         Date: 4/7/11
- *         Time: 7:25 PM
+ * @since 2011-04-07
  */
 public class ContinuationFinalTasksInserter {
   private final ContinuationContext myContext;

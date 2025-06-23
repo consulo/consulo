@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 07-Aug-2008
- */
 package consulo.language.editor.inspection;
 
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author anna
+ * @since 2008-08-07
+ */
 public class LocalInspectionToolSession extends UserDataHolderBase {
   private final PsiFile myFile;
   private final int myStartOffset;

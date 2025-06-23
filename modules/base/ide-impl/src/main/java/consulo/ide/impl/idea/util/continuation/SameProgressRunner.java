@@ -28,8 +28,7 @@ import consulo.application.util.Semaphore;
 
 /**
  * @author irengrig
- *         Date: 4/7/11
- *         Time: 2:54 PM
+ * @since 2011-04-07
  */
 public class SameProgressRunner extends GeneralRunner {
   private final Thread myInitThread;

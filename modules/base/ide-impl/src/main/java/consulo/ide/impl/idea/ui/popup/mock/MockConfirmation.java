@@ -22,8 +22,8 @@ import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
- * User: Sergey.Vasiliev
- * Date: Nov 21, 2004
+ * @author Sergey.Vasiliev
+ * @since 2004-11-21
  */
 public class MockConfirmation extends ListPopupImpl {
   String myOnYesText;

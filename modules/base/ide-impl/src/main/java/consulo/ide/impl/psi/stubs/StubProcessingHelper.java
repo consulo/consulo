@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public final class StubProcessingHelper extends StubProcessingHelperBase {
   private final ThreadLocal<Set<VirtualFile>> myFilesHavingProblems = new ThreadLocal<>();

@@ -5,8 +5,8 @@ import consulo.module.Module;
 import consulo.ui.image.Image;
 
 /**
- * User: anna
- * Date: 09-Jan-2006
+ * @author anna
+ * @since 2006-01-09
  */
 public class InspectionModuleNode extends InspectionTreeNode{
   private final Module myModule;

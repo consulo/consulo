@@ -22,8 +22,8 @@ import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
- * User: anna
- * Date: Feb 13, 2005
+ * @author anna
+ * @since 2005-02-13
  */
 public class CycleFinder<Node> {
   private final Graph<Node> myGraph;

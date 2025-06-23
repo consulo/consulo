@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 01-Feb-2008
- */
 package consulo.language.editor.internal;
 
 import consulo.document.util.TextRange;
@@ -28,6 +23,10 @@ import consulo.logging.Logger;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author anna
+ * @since 2008-02-01
+ */
 public class DefaultImplementationTextSelectioner implements ImplementationTextSelectioner {
   private static final Logger LOG = Logger.getInstance(DefaultImplementationTextSelectioner.class);
 

@@ -43,7 +43,7 @@ import java.awt.*;
 
 /**
  * @author zajac
- * @since 6.05.2012
+ * @since 2012-05-06
  */
 public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder {
     private final Project myProject;

@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 09-Jan-2007
- */
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.application.AllIcons;
@@ -70,6 +65,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author anna
+ * @since 2007-01-09
+ */
 public class ViewOfflineResultsAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(ViewOfflineResultsAction.class);
   @NonNls

@@ -22,13 +22,12 @@ import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
- * @author irengrig
- *         Date: 2/7/11
- *         Time: 10:40 AM
- *
  * We can have only limited number of nodes selected in a tree;
  * and children of selected nodes (any level) cannot change their state
  * used together with {@link SelectionManager}
+ *
+ * @author irengrig
+ * @since 2011-02-07
  */
 public class SelectedState<T> {
   private final Set<T> mySelected;

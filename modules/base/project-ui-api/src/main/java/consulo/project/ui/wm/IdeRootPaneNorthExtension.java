@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 12-Nov-2007
- */
 package consulo.project.ui.wm;
 
 import consulo.annotation.component.ComponentScope;
@@ -27,6 +22,10 @@ import consulo.disposer.Disposable;
 
 import javax.swing.*;
 
+/**
+ * @author anna
+ * @since 2007-11-12
+ */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface IdeRootPaneNorthExtension extends Disposable {
     Class<? extends IdeRootPaneNorthExtension> getApiClass();

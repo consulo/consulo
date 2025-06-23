@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Nov 28, 2006
+ * @since 2006-11-28
  */
 class ObjectCacheBase {
 

@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 10-Jan-2007
- */
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.ide.impl.idea.codeInspection.ui.*;
@@ -37,6 +32,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * @author anna
+ * @since 2007-01-10
+ */
 public class InspectionRVContentProviderImpl extends InspectionRVContentProvider {
   public InspectionRVContentProviderImpl(final Project project) {
     super(project);

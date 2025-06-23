@@ -21,7 +21,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 5/14/13 12:49 PM
+ * @since 2013-05-14
  */
 public interface ExternalSystemConfigurableAware {
 

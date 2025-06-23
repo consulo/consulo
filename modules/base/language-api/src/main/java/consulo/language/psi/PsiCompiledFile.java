@@ -17,7 +17,7 @@ package consulo.language.psi;
 
 /**
  * @author Evgeny Gerashchenko
- * @since 3/1/12
+ * @since 2012-03-01
  */
 public interface PsiCompiledFile extends PsiFile, PsiCompiledElement {
   PsiFile getDecompiledPsiFile();

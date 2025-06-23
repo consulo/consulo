@@ -20,7 +20,7 @@ import consulo.annotation.component.TopicAPI;
 import jakarta.annotation.Nullable;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 // FIXME [VISTALL] this topic is App&Project level
 @TopicAPI(ComponentScope.APPLICATION)

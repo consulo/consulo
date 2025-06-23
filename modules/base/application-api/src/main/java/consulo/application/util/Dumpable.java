@@ -19,7 +19,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 4/9/12 2:10 PM
+ * @since 2012-04-09
  */
 public interface Dumpable {
 

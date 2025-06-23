@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Aug 6, 2007
- * Time: 3:09:55 PM
- */
 package consulo.ide.impl.idea.codeInspection;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -65,6 +58,10 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author cdr
+ * @since 2007-08-06
+ */
 @ExtensionImpl
 public class LossyEncodingInspection extends LocalInspectionTool {
   private static final Logger LOG = Logger.getInstance(LossyEncodingInspection.class);

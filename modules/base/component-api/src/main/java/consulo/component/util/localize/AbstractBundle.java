@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * </pre>
  *
  * @author Denis Zhdanov
- * @since 8/1/11 2:37 PM
+ * @since 2011-08-01
  */
 @Deprecated
 @DeprecationInfo("Migrate to new localize")

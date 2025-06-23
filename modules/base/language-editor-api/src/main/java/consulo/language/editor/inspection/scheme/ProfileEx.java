@@ -27,8 +27,8 @@ import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: 01-Dec-2005
+ * @author anna
+ * @since 2005-12-01
  */
 @Deprecated
 public abstract class ProfileEx implements Profile {

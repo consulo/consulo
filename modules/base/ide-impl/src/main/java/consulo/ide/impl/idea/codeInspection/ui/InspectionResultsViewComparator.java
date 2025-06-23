@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Nov 23, 2001
- * Time: 10:31:03 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.ide.impl.idea.codeInspection.ui;
 
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
@@ -45,6 +36,10 @@ import consulo.logging.Logger;
 
 import java.util.Comparator;
 
+/**
+ * @author max
+ * @since 2001-11-23
+ */
 public class InspectionResultsViewComparator implements Comparator {
   private static final Logger LOG = Logger.getInstance(InspectionResultsViewComparator.class);
 

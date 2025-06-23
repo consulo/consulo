@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 08-Jan-2007
- */
 package consulo.language.editor.inspection;
 
 import consulo.annotation.DeprecationInfo;
@@ -27,6 +22,10 @@ import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
+/**
+ * @author anna
+ * @since 2007-01-08
+ */
 public abstract class HTMLComposer {
   public abstract void appendElementReference(StringBuffer buf, RefElement refElement, String linkText, @NonNls String frameName);
 

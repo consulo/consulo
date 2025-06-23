@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 05-Jan-2007
- */
 package consulo.ide.impl.idea.codeInspection.offline;
 
 import consulo.language.editor.inspection.reference.RefElement;
@@ -31,6 +26,10 @@ import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2007-01-05
+ */
 public class OfflineProblemDescriptor {
   public String myType;
   public String myFQName;

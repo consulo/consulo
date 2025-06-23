@@ -38,7 +38,7 @@ import java.net.URL;
 
 /**
  * @author Dmitry Avdeev
- * Date: 9/28/11
+ * @since 2011-09-28
  */
 public abstract class InspectionToolWrapper<T extends InspectionTool> {
     private static final Logger LOG = Logger.getInstance(InspectionToolWrapper.class);

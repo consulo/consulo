@@ -24,10 +24,8 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: alexander.chernikov
- * Date: Mar 23, 2010
- * Time: 7:01:01 PM
+ * @author alexander.chernikov
+ * @since 2010-03-23
  */
 public class UiScriptFileType implements FileType {
   private static UiScriptFileType myInstance;

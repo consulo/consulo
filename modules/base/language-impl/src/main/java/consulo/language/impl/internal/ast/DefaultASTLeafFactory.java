@@ -33,7 +33,7 @@ import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
- * @since 2:22/02.04.13
+ * @since 2013-04-02
  */
 @ExtensionImpl(order = "last")
 public class DefaultASTLeafFactory implements ASTLeafFactory {

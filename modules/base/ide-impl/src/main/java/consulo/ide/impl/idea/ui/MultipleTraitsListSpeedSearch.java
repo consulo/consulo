@@ -25,10 +25,8 @@ import javax.swing.*;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 12/14/12
- * Time: 1:56 PM
+ * @author Irina.Chernushina
+ * @since 2012-12-14
  */
 public class MultipleTraitsListSpeedSearch extends MultipleTraitsSpeedSearch<JList> {
   public MultipleTraitsListSpeedSearch(JList component, @Nonnull List<PairConvertor<Object, String, Boolean>> convertors) {

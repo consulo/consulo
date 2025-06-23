@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.TreeSet;
 
 /**
- * User: anna
- * Date: Dec 18, 2004
+ * @author anna
+ * @since 2004-12-18
  */
 @Tag("profile-state")
 public class VisibleTreeState{

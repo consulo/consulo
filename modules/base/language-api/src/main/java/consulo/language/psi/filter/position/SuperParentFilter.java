@@ -20,11 +20,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ik
- * Date: 11.02.2003
- * Time: 13:54:33
- * To change this template use Options | File Templates.
+ * @author ik
+ * @since 2003-02-11
  */
 public class SuperParentFilter extends PositionElementFilter {
   public SuperParentFilter(ElementFilter filter){

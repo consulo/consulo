@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 8/1/11 2:44 PM
+ * @since 2011-08-01
  */
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use ExternalSystemLocalize")

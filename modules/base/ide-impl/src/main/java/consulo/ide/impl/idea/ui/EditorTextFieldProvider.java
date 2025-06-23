@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  * Defines common contract for building {@link EditorTextField} with necessary combinations of features.
  *
  * @author Denis Zhdanov
- * @since Aug 18, 2010 1:37:55 PM
+ * @since 2010-08-18
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface EditorTextFieldProvider {

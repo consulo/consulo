@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.stub.todo;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 20, 2008
+ * @since 2008-01-20
  */
 public class TodoIndexEntry {
   private final String pattern;

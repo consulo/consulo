@@ -26,9 +26,8 @@ import consulo.language.util.ProcessingContext;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: ik
- * Date: 27.03.2003
- * Time: 17:13:45
+ * @author ik
+ * @since 2003-03-27
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ReferenceProvidersRegistry {

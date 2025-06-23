@@ -19,8 +19,8 @@ import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**
- * User: anna
- * Date: 11-Nov-2005
+ * @author anna
+ * @since 2005-11-11
  */
 public interface PopupOwner {
   @Nullable

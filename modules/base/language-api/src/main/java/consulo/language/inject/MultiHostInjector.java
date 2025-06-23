@@ -13,18 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Sep 10, 2007
- * Time: 1:58:39 PM
- */
 package consulo.language.inject;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
@@ -32,6 +24,9 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @see PsiLanguageInjectionHost
+ *
+ * @author cdr
+ * @since 2007-09-10
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface MultiHostInjector {

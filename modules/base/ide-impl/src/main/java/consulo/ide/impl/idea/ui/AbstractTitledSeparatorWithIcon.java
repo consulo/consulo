@@ -29,10 +29,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/22/11
- * Time: 1:28 PM
+ * @author Irina.Chernushina
+ * @since 2011-08-22
  */
 public abstract class AbstractTitledSeparatorWithIcon extends JPanel {
   protected RefreshablePanel myDetailsComponent;

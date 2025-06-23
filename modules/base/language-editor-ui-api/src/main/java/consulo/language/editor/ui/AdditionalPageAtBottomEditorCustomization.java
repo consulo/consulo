@@ -21,7 +21,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 1/21/11 4:06 PM
+ * @since 2011-01-21
  */
 public class AdditionalPageAtBottomEditorCustomization extends SimpleEditorCustomization {
 

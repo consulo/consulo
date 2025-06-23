@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 05-Jan-2007
- */
 package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
 import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
@@ -27,6 +22,10 @@ import consulo.ide.impl.idea.codeInspection.ui.RefElementNode;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author anna
+ * @since 2007-01-05
+ */
 public class OfflineRefElementNode extends RefElementNode {
   public OfflineRefElementNode(@Nonnull OfflineProblemDescriptor descriptor, @Nonnull InspectionToolPresentation presentation) {
     super(descriptor, presentation);

@@ -19,10 +19,8 @@ package consulo.language.parser;
 import consulo.language.ast.IElementType;
 
 /**
- * Created by IntelliJ IDEA.
- * User: dmitry.cheryasov
- * Date: 06.04.2008
- * Time: 23:41:56
+ * @author dmitry.cheryasov
+ * @since 2008-04-06
  */
 public interface ITokenTypeRemapper {
     /**

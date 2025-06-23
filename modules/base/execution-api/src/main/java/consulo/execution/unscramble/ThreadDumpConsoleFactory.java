@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * @author Irina.Chernushina
- * @since 7/13/13
+ * @since 2013-07-13
  */
 public class ThreadDumpConsoleFactory implements AnalyzeStacktraceUtil.ConsoleFactory {
   private final Project myProject;

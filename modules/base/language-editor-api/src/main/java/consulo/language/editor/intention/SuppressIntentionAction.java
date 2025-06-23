@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 24-Dec-2007
- */
 package consulo.language.editor.intention;
 
 import consulo.codeEditor.CaretModel;
@@ -33,6 +28,10 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author anna
+ * @since 2007-12-24
+ */
 public abstract class SuppressIntentionAction implements Iconable, SyntheticIntentionAction {
   private String myText = "";
   public static SuppressIntentionAction[] EMPTY_ARRAY = new SuppressIntentionAction[0];

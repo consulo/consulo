@@ -17,7 +17,7 @@ package consulo.externalService.impl.internal.repository;
 
 /**
  * @author stathik
- * @since 2:56:46 PM Aug 5, 2003
+ * @since 2003-08-05
  */
 public class AuthorizationFailedException extends RuntimeException {
 }

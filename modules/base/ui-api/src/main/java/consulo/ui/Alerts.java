@@ -24,7 +24,7 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 6/9/18
+ * @since 2018-06-09
  */
 public final class Alerts {
   private static final Object ourStableNull = new Object();

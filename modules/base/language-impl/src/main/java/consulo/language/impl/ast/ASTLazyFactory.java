@@ -27,7 +27,7 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 2:10/02.04.13
+ * @since 2013-04-02
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ASTLazyFactory extends Predicate<IElementType> {

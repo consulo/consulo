@@ -17,7 +17,7 @@ package consulo.language.psi.stub;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 8/31/12
+ * @since 2012-08-31
  */
 public class SerializerNotFoundException extends Exception {
   public SerializerNotFoundException(String message) {

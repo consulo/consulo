@@ -25,10 +25,8 @@ import javax.swing.*;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 12/13/12
- * Time: 8:02 PM
+ * @author Irina.Chernushina
+ * @since 2012-12-13
  */
 public abstract class MultipleTraitsSpeedSearch<Comp extends JComponent> extends SpeedSearchBase<Comp> {
   protected final List<PairConvertor<Object, String, Boolean>> myOrderedConvertors;

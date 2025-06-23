@@ -23,10 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
-* @author irengrig
-*         Date: 4/7/11
-*         Time: 6:43 PM
-*/
+ * @author irengrig
+ * @since 2011-04-07
+ */
 public class GatheringContinuationContext implements ContinuationContext {
   private final List<TaskDescriptor> myList;
 

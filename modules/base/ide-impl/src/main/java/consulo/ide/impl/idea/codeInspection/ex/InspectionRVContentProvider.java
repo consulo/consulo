@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 10-Jan-2007
- */
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.application.ApplicationManager;
@@ -40,6 +35,10 @@ import javax.swing.tree.TreeNode;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * @author anna
+ * @since 2007-01-10
+ */
 public abstract class InspectionRVContentProvider {
   private static final Logger LOG = Logger.getInstance(InspectionRVContentProvider.class);
   private final Project myProject;

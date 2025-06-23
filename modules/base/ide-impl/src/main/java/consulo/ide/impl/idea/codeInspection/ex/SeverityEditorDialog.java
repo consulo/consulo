@@ -59,8 +59,8 @@ import java.util.*;
 import static consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl.SeverityBasedTextAttributes;
 
 /**
- * User: anna
- * Date: 24-Feb-2006
+ * @author anna
+ * @since 2006-02-24
  */
 public class SeverityEditorDialog extends DialogWrapper {
   private final JPanel myPanel;

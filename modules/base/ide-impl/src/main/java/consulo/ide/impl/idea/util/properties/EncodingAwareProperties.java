@@ -24,8 +24,7 @@ import java.io.IOException;
 
 /**
  * @author MYakovlev
- * Date: Oct 29, 2002
- * Time: 8:47:43 PM
+ * @since 2002-10-29
  */
 public class EncodingAwareProperties extends java.util.Properties{
   public void load(File file, String encoding) throws IOException{

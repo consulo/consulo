@@ -20,7 +20,7 @@ import consulo.language.content.ProductionResourceContentFolderTypeProvider;
 
 /**
  * @author VISTALL
- * @since 9:54/31.05.13
+ * @since 2013-05-31
  */
 @ExtensionImpl
 public class ProductionResourceModuleOutputElementType extends ModuleOutputElementTypeBase {

@@ -24,8 +24,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
- *         Date: 2/24/11
- *         Time: 10:08 AM
+ * @since 2011-02-24
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class PsiTodoSearchHelper {

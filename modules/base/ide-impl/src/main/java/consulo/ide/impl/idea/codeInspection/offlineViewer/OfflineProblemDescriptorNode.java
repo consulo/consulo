@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 09-Jan-2007
- */
 package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
@@ -45,6 +40,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author anna
+ * @since 2007-01-09
+ */
 public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
   public OfflineProblemDescriptorNode(@Nonnull OfflineProblemDescriptor descriptor,
                                       @Nonnull LocalInspectionToolWrapper toolWrapper,

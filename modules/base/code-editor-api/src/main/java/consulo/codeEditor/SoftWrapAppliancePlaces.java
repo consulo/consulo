@@ -22,7 +22,7 @@ package consulo.codeEditor;
  * to use soft wraps at console editor but avoid using them at the main editor etc.
  *
  * @author Denis Zhdanov
- * @since 9/30/10 7:32 PM
+ * @since 2010-09-30
  */
 public enum SoftWrapAppliancePlaces {
   MAIN_EDITOR, CONSOLE, PREVIEW

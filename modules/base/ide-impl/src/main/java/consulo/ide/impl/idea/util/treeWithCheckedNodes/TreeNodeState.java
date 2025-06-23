@@ -17,8 +17,7 @@ package consulo.ide.impl.idea.util.treeWithCheckedNodes;
 
 /**
  * @author irengrig
- *         Date: 2/4/11
- *         Time: 3:36 PM
+ * @since 2011-02-04
  */
 public enum TreeNodeState {
   SELECTED,CLEAR,HAVE_SELECTED_ABOVE,HAVE_SELECTED_BELOW

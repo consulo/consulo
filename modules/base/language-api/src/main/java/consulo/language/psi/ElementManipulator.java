@@ -29,11 +29,10 @@ import jakarta.annotation.Nullable;
 import java.util.function.Function;
 
 /**
- * User: ik
- * Date: 03.04.2003
- * Time: 11:22:05
- *
  * @see AbstractElementManipulator
+ *
+ * @author ik
+ * @since 2003-04-03
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ElementManipulator<T extends PsiElement> {

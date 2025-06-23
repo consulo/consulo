@@ -15,12 +15,9 @@
  */
 package consulo.language.psi;
 
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiFileSystemItem;
-
 /**
- * User: anna
- * Date: 7/15/13
+ * @author anna
+ * @since 2013-07-15
  */
 public interface PackagePrefixFileSystemItem extends PsiFileSystemItem {
   PsiDirectory getDirectory();

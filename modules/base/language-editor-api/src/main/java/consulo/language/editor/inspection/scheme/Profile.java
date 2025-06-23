@@ -20,8 +20,8 @@ import consulo.component.util.pointer.Named;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: anna
- * Date: 20-Nov-2005
+ * @author anna
+ * @since 2005-11-20
  *
  * TODO [VISTALL] move all methods to InspectionProfile and drop
  */

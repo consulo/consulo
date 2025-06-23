@@ -26,7 +26,7 @@ import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 7:57/12.11.13
+ * @since 2013-11-12
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ModuleExtensionHelper {

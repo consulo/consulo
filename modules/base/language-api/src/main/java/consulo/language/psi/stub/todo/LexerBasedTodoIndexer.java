@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 20, 2008
+ * @since 2008-01-20
  */
 public abstract class LexerBasedTodoIndexer implements VersionedTodoIndexer, IdAndToDoScannerBasedOnFilterLexer {
   @Override

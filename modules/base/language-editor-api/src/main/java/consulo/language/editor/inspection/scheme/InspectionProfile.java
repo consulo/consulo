@@ -32,8 +32,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * User: anna
- * Date: Dec 7, 2004
+ * @author anna
+ * @since 2004-12-07
  */
 public interface InspectionProfile extends Profile {
 

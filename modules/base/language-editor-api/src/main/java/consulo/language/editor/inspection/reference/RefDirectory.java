@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 20-Dec-2007
- */
 package consulo.language.editor.inspection.reference;
 
+/**
+ * @author anna
+ * @since 2007-12-20
+ */
 public interface RefDirectory extends RefElement {
 }

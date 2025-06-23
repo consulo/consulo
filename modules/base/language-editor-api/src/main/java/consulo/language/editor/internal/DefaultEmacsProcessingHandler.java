@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 4/11/11 2:36 PM
+ * @since 2011-04-11
  */
 public class DefaultEmacsProcessingHandler implements EmacsProcessingHandler {
 

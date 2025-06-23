@@ -18,10 +18,8 @@ package consulo.ide.impl.idea.util;
 import java.util.function.BiFunction;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/22/12
- * Time: 5:26 PM
+ * @author Irina.Chernushina
+ * @since 2012-08-22
  */
 @FunctionalInterface
 public interface PairConvertor<First, Second, Result> extends BiFunction<First, Second, Result> {

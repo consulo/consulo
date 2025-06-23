@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 0:28/19.07.13
+ * @since 2013-07-19
  */
 @ExtensionImpl(id = "default", order = "last")
 public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {

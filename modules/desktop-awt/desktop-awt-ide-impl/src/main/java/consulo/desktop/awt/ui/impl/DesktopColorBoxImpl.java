@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 6/9/18
+ * @since 2018-06-09
  */
 class DesktopColorBoxImpl extends SwingComponentDelegate<DesktopColorBoxImpl.MyColorPanel> implements ColorBox {
   class MyColorPanel extends ColorPanel implements FromSwingComponentWrapper {

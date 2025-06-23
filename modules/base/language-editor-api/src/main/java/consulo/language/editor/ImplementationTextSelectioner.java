@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 01-Feb-2008
- */
 package consulo.language.editor;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -36,6 +31,10 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author anna
+ * @since 2008-02-01
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImplementationTextSelectioner extends LanguageExtension {
     ExtensionPointCacheKey<ImplementationTextSelectioner, ByLanguageValue<ImplementationTextSelectioner>> KEY =

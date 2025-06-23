@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Feb 6, 2008
+ * @since 2008-02-06
  */
 public class IdDataConsumer {
   private final IntIntMap myResult = IntMaps.newIntIntHashMap();

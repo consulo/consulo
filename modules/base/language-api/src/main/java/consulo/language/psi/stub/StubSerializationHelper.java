@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public class StubSerializationHelper {
   private static final Logger LOG = Logger.getInstance(StubSerializationHelper.class);

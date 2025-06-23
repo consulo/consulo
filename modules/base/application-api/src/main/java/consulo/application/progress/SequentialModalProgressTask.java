@@ -27,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
  * Allows to execute {@link SequentialTask} under modal progress.
  * 
  * @author Denis Zhdanov
- * @since 9/27/11 2:52 PM
+ * @since 2011-09-27
  */
 public class SequentialModalProgressTask extends Task.Modal {
   private static final Logger LOG = Logger.getInstance(SequentialModalProgressTask.class);

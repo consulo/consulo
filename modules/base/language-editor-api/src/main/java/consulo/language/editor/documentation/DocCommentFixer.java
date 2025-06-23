@@ -32,7 +32,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
- * @since 9/20/12 8:37 PM
+ * @since 2012-09-20
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DocCommentFixer extends LanguageExtension {

@@ -20,7 +20,7 @@ import jakarta.annotation.Nonnull;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * User: cdr
+ * @author cdr
  */
 public final class StripedReentrantLocks extends StripedLockHolder<ReentrantLock> {
   private StripedReentrantLocks() {

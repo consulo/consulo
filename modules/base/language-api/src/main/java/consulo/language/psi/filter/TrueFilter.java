@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ik
- * Date: 03.02.2003
- * Time: 17:31:05
- * To change this template use Options | File Templates.
+ * @author ik
+ * @since 2003-02-03
  */
 public class TrueFilter implements ElementFilter {
 

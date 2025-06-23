@@ -19,7 +19,7 @@ package consulo.codeEditor;
  * Extends {@link ScrollingModel} with more implementation-specific functionality.
  *
  * @author Denis Zhdanov
- * @since 1/18/11 10:30 AM
+ * @since 2011-01-18
  */
 public interface ScrollingModelEx extends ScrollingModel {
 

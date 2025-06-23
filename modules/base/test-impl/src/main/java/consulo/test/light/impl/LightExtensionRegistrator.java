@@ -20,7 +20,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 3/12/19
+ * @since 2019-03-12
  */
 public abstract class LightExtensionRegistrator {
   public void registerServices(@Nonnull InjectingContainerBuilder builder) {
