@@ -68,8 +68,8 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: anna
- * Date: Feb 10, 2005
+ * @author anna
+ * @since 2005-02-10
  */
 public class ModulesDependenciesPanel extends JPanel implements ModuleRootListener, Disposable {
   @NonNls private static final String DIRECTION = "FORWARD_ANALIZER";

@@ -41,10 +41,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/2/11
- * Time: 1:22 PM
+ * @author Irina.Chernushina
+ * @since 2011-08-02
  */
 public class ShowBaseRevisionAction extends AbstractVcsAction {
   @Override

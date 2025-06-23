@@ -18,11 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs;
 import consulo.ui.ex.SimpleTextAttributes;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/3/11
- * Time: 12:56 PM
- * To change this template use File | Settings | File Templates.
+ * @author Irina.Chernushina
+ * @since 2011-08-03
  */
 public class RichTextItem {
   private final String myText;

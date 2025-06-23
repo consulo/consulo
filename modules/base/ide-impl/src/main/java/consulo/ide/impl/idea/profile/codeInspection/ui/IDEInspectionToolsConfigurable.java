@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 17-Apr-2009
- */
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
@@ -25,6 +20,10 @@ import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 
+/**
+ * @author anna
+ * @since 2009-04-17
+ */
 public class IDEInspectionToolsConfigurable extends InspectionToolsConfigurable {
 
   public IDEInspectionToolsConfigurable(InspectionProjectProfileManager projectProfileManager, InspectionProfileManager profileManager) {

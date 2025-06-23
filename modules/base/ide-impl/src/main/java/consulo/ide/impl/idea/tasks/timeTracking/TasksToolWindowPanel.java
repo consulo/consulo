@@ -29,8 +29,8 @@ import java.awt.*;
 import java.util.Comparator;
 
 /**
- * User: evgeny.zakrevsky
- * Date: 11/8/12
+ * @author evgeny.zakrevsky
+ * @since 2012-11-08
  */
 public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Disposable {
 

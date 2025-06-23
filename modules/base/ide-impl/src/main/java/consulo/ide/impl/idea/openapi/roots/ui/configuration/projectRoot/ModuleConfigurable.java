@@ -49,8 +49,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * User: anna
- * Date: 04-Jun-2006
+ * @author anna
+ * @since 2006-06-04
  */
 public class ModuleConfigurable extends ProjectStructureElementConfigurable<Module> {
     private final Module myModule;

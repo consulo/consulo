@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 28-Jun-2007
- */
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
@@ -42,6 +37,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author anna
+ * @since 2007-06-28
+ */
 public class DumpIntentionsAction extends AnAction implements DumbAware {
   public DumpIntentionsAction() {
     super("Dump Intentions");

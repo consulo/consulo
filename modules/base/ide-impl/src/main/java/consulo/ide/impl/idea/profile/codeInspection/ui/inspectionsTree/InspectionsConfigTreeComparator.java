@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 14-May-2009
- */
 package consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
 
 import consulo.ide.impl.idea.profile.codeInspection.ui.ToolDescriptors;
 
 import java.util.Comparator;
 
+/**
+ * @author anna
+ * @since 2009-05-14
+ */
 public class InspectionsConfigTreeComparator implements Comparator<InspectionConfigTreeNode> {
   @Override
   public int compare(InspectionConfigTreeNode o1, InspectionConfigTreeNode o2) {

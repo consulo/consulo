@@ -38,8 +38,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
- *         Date: 3/17/11
- *         Time: 7:51 PM
+ * @since 2011-03-17
  */
 public class VcsAnnotationCachedProxy implements AnnotationProvider {
   private final VcsHistoryCache myCache;

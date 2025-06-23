@@ -41,7 +41,7 @@ import java.util.List;
 
 /**
  * @author lene
- *         Date: 06.08.12
+ * @since 2012-08-06
  */
 @ExtensionImpl
 public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {

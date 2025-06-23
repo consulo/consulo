@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 23.11.2006
- * Time: 19:06:26
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.document.Document;
@@ -52,6 +45,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * @author yole
+ * @since 2006-11-23
+ */
 public class ShelvedChange {
   private static final Logger LOG = Logger.getInstance(ShelvedChange.class);
 

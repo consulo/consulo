@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.event.*;
 
 /**
- * User: anna
+ * @author anna
  */
 public class KeyboardComboSwitcher {
 

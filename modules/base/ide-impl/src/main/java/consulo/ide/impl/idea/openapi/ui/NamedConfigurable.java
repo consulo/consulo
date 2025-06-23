@@ -32,8 +32,8 @@ import javax.swing.event.DocumentEvent;
 import java.awt.*;
 
 /**
- * User: anna
- * Date: 26-May-2006
+ * @author anna
+ * @since 2006-05-26
  */
 public abstract class NamedConfigurable<T> implements Configurable, MasterDetailsConfigurable<T> {
   private JTextField myNameField;

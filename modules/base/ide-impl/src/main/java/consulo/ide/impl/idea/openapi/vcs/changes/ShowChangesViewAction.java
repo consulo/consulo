@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 18.08.2006
- * Time: 16:35:20
- */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.ui.ex.action.Presentation;
@@ -30,6 +23,10 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
+/**
+ * @author yole
+ * @since 2006-08-18
+ */
 public class ShowChangesViewAction extends AbstractVcsAction {
   protected void actionPerformed(VcsContext e) {
     if (e.getProject() == null) return;

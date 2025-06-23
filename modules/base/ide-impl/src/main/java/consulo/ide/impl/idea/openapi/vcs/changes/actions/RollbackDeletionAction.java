@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 02.11.2006
- * Time: 22:07:51
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.component.ProcessCanceledException;
@@ -38,6 +31,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author yole
+ * @since 2006-11-02
+ */
 public class RollbackDeletionAction extends AbstractMissingFilesAction {
   protected List<VcsException> processFiles(final AbstractVcs vcs, final List<FilePath> files) {
     RollbackEnvironment environment = vcs.getRollbackEnvironment();

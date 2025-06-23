@@ -19,11 +19,8 @@ import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.util.concurrent.ActionCallback;
 
 /**
- * Created by IntelliJ IDEA.
- * User: kirillk
- * Date: 8/17/11
- * Time: 1:12 PM
- * To change this template use File | Settings | File Templates.
+ * @author kirillk
+ * @since 2011-08-17
  */
 public class PrintCommand extends AbstractCommand {
 

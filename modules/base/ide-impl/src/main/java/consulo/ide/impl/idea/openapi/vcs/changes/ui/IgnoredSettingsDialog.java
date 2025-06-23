@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 20.12.2006
- * Time: 19:39:53
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.HelpManager;
@@ -32,6 +25,10 @@ import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 
+/**
+ * @author yole
+ * @since 2006-12-20
+ */
 public class IgnoredSettingsDialog extends DialogWrapper {
   private final IgnoredSettingsPanel myPanel;
 

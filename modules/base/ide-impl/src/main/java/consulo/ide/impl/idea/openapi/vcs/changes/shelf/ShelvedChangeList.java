@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 24.11.2006
- * Time: 20:20:04
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.component.persist.scheme.ExternalInfo;
@@ -42,6 +35,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author yole
+ * @since 2006-11-24
+ */
 public class ShelvedChangeList implements JDOMExternalizable, ExternalizableScheme {
   private static final Logger LOG = Logger.getInstance(ShelvedChangeList.class);
 

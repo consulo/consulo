@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 20.12.2006
- * Time: 19:39:53
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.configurable.Configurable;
@@ -45,6 +38,10 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author yole
+ * @since 2006-12-20
+ */
 public class IgnoredSettingsPanel implements SearchableConfigurable, Configurable.NoScroll {
   private JBList myList;
   private JPanel myPanel;

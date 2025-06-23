@@ -27,8 +27,8 @@ import consulo.ui.image.Image;
 import java.util.Set;
 
 /**
- * User: anna
- * Date: 24-Jan-2006
+ * @author anna
+ * @since 2006-01-24
  */
 public class ModuleGroupNode extends PackageDependenciesNode {
   private final ModuleGroup myModuleGroup;

@@ -38,8 +38,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * User: anna
- * Date: Feb 10, 2005
+ * @author anna
+ * @since 2005-02-10
  */
 @Singleton
 @State(name = "DependenciesAnalyzeManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})

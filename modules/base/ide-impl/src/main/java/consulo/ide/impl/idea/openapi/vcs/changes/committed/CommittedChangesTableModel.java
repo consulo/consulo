@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 03.10.2006
- * Time: 18:54:43
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.versionControlSystem.ChangeListColumn;
@@ -32,6 +25,10 @@ import javax.swing.*;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * @author yole
+ * @since 2006-10-03
+ */
 public class CommittedChangesTableModel extends ListTableModel<CommittedChangeList> {
   private final boolean myAsynchLoad;
   private static final ChangeListColumn[] ourDefaultColumns = new ChangeListColumn[] { ChangeListColumn.DATE, ChangeListColumn.NAME };

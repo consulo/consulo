@@ -28,8 +28,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
- * User: anna
- * Date: 2/24/12
+ * @author anna
+ * @since 2012-02-24
  */
 public class DumpDirectoryInfoAction extends AnAction {
   public static final Logger LOG = Logger.getInstance(DumpDirectoryInfoAction.class);

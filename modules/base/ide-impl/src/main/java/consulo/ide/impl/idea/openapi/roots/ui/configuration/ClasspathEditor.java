@@ -29,8 +29,7 @@ import javax.swing.*;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Oct 4, 2003
- *         Time: 6:54:57 PM
+ * @since 2003-10-04
  */
 public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootListener {
   private ClasspathPanelImpl myPanel;

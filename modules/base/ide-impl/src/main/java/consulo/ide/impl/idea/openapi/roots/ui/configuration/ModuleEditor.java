@@ -53,8 +53,7 @@ import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Oct 4, 2003
- * Time: 6:29:56 PM
+ * @since 2003-10-04
  */
 public abstract class ModuleEditor implements Disposable {
   public static final String SELECTED_EDITOR_NAME = "selectedEditor";

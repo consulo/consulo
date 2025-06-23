@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * Action that toggles <code>'show soft wraps at editor'</code> option and is expected to be used at various menus.
  *
  * @author Denis Zhdanov
- * @since Aug 19, 2010 3:15:26 PM
+ * @since 2010-08-19
  */
 public class ToggleUseSoftWrapsMenuAction extends AbstractToggleUseSoftWrapsAction {
 

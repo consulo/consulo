@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
  * {@link ToggleUseSoftWrapsMenuAction} extension that doesn't suppress configured icon (if any).
  *
  * @author Denis Zhdanov
- * @since Aug 19, 2010 5:07:08 PM
+ * @since 2010-08-19
  */
 public class ToggleUseSoftWrapsToolbarAction extends AbstractToggleUseSoftWrapsAction {
 

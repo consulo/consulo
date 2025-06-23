@@ -43,8 +43,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 /**
- * User: anna
- * Date: 13-Apr-2006
+ * @author anna
+ * @since 2006-04-13
  */
 @ExtensionImpl
 public class QuickListsPanel implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin, ApplicationConfigurable {

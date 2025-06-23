@@ -32,8 +32,8 @@ import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
- * User: anna
- * Date: Apr 18, 2005
+ * @author anna
+ * @since 2005-04-18
  */
 public class MoveEditorToOppositeTabGroupAction extends AnAction implements DumbAware {
 

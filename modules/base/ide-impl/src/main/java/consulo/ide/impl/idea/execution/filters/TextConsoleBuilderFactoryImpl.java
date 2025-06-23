@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 04.08.2006
- * Time: 17:57:56
- */
 package consulo.ide.impl.idea.execution.filters;
 
 import consulo.annotation.component.ServiceImpl;
@@ -32,7 +25,9 @@ import jakarta.inject.Singleton;
 import jakarta.annotation.Nonnull;
 
 /**
+ * @author yole
  * @author dyoma
+ * @since 2006-08-04
  */
 @Singleton
 @ServiceImpl

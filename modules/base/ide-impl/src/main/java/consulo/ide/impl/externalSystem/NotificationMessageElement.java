@@ -42,7 +42,7 @@ import java.awt.*;
 
 /**
  * @author Vladislav.Soroka
- * @since 3/24/2014
+ * @since 2014-03-24
  */
 public class NotificationMessageElement extends NavigatableMessageElement {
   public static final String MSG_STYLE = "messageStyle";

@@ -24,10 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 4/25/12
- * Time: 4:53 PM
+ * @author Irina.Chernushina
+ * @since 2012-04-25
  */
 public class TabbedRefreshablePanel implements RefreshablePanel {
   private final JBTabbedPane myPane;

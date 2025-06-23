@@ -28,11 +28,8 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 
 /**
- * Created by IntelliJ IDEA.
- * User: zajac
- * Date: 05.03.11
- * Time: 10:40
- * To change this template use File | Settings | File Templates.
+ * @author zajac
+ * @since 2011-03-05
  */
 public class RestorePreviousSettingsAction extends AnAction implements ShortcutProvider, DumbAware {
   @Override

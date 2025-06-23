@@ -12,8 +12,7 @@ import org.jetbrains.annotations.NonNls;
 
 /**
  * @author irengrig
- * Date: 5/20/11
- * Time: 12:33 PM
+ * @since 2011-05-20
  */
 public class ReadonlyStatusIsVisibleActivationCheck {
   @NonNls

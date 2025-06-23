@@ -48,7 +48,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Mar 30, 2005
+ * @since 2005-03-30
  */
 public class ToolRunProfile implements ModuleRunProfile {
   private static final Logger LOG = Logger.getInstance(ToolRunProfile.class);

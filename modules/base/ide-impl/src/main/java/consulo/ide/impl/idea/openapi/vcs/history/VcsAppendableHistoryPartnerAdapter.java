@@ -22,8 +22,7 @@ import consulo.versionControlSystem.history.VcsFileRevision;
 
 /**
  * @author irengrig
- *         Date: 7/13/11
- *         Time: 5:52 PM
+ * @since 2011-07-13
  */
 public class VcsAppendableHistoryPartnerAdapter implements VcsAppendableHistorySessionPartner {
   private VcsAbstractHistorySession mySession;

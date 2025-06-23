@@ -35,8 +35,8 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
- * User: anna
- * Date: 02-Jun-2006
+ * @author anna
+ * @since 2006-06-02
  */
 public class LibraryConfigurable extends ProjectStructureElementConfigurable<Library> {
   private LibraryRootsComponent myLibraryEditorComponent;

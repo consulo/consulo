@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 16-Jan-2008
- */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -44,6 +39,10 @@ import org.jetbrains.annotations.NonNls;
 
 import java.util.Set;
 
+/**
+ * @author anna
+ * @since 2008-01-16
+ */
 @ExtensionImpl(id = ProjectPatternProvider.FILE, order = "last")
 public class ProjectPatternProvider extends PatternDialectProvider {
 

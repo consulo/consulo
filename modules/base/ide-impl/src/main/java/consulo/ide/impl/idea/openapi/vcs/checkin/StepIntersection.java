@@ -26,11 +26,10 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author irengrig
- *         Date: 2/18/11
- *         Time: 12:04 AM
+ * keeps state (position in areas) between invocations
  *
- *         keeps state (position in areas) between invocations
+ * @author irengrig
+ * @since 2011-02-18
  */
 public class StepIntersection<Data, Area> {
   private final Convertor<Data,TextRange> myDataConvertor;

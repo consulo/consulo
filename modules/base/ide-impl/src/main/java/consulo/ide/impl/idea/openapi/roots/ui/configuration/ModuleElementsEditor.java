@@ -34,8 +34,7 @@ import javax.swing.*;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Oct 4, 2003
- * Time: 7:24:37 PM
+ * @since 2003-10-04
  */
 public abstract class ModuleElementsEditor implements ModuleConfigurationEditor {
   protected final Project myProject;

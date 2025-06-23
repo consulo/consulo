@@ -31,7 +31,7 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
- * User: ksafonov
+ * @author ksafonov
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ProjectStructureValidator {

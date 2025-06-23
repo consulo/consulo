@@ -25,10 +25,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.RepositoryLocation;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 4/23/12
- * Time: 4:53 PM
+ * @author Irina.Chernushina
+ * @since 2012-04-23
  */
 public class ClearCommittedAction extends AnAction implements DumbAware {
   public ClearCommittedAction() {

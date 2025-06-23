@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 31.07.2006
- * Time: 13:24:17
- */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ServiceImpl;
@@ -64,6 +57,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * @author yole
+ * @since 2006-07-31
+ */
 @Singleton
 @ServiceImpl
 public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disposable {

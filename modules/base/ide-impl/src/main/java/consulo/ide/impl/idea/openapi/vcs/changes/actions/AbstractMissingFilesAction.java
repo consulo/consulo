@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 02.11.2006
- * Time: 22:09:59
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,8 +33,11 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author yole
+ * @since 2006-11-02
+ */
 public abstract class AbstractMissingFilesAction extends AnAction implements DumbAware {
-
   @Override
   @RequiredUIAccess
   public void update(AnActionEvent e) {

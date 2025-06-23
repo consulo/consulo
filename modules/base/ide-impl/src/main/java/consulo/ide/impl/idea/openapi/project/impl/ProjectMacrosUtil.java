@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 25-Sep-2007
- */
 package consulo.ide.impl.idea.openapi.project.impl;
 
 import consulo.application.Application;
@@ -34,6 +29,10 @@ import consulo.util.lang.StringUtil;
 
 import java.util.*;
 
+/**
+ * @author anna
+ * @since 2007-09-25
+ */
 public class ProjectMacrosUtil {
   private static final Logger LOG = Logger.getInstance(ProjectMacrosUtil.class);
 

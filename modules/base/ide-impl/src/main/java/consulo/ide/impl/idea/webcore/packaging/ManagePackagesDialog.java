@@ -50,9 +50,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 /**
- * User: catherine
- * <p/>
  * UI for installing python packages
+ *
+ * @author catherine
  */
 public class ManagePackagesDialog extends DialogWrapper {
     private static final Logger LOG = Logger.getInstance(ManagePackagesDialog.class);

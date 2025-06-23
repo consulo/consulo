@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 02.11.2006
- * Time: 22:12:19
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -59,6 +52,10 @@ import java.util.*;
 import static consulo.ui.ex.awt.Messages.getQuestionIcon;
 import static consulo.ui.ex.awt.Messages.showYesNoDialog;
 
+/**
+ * @author yole
+ * @since 2006-11-02
+ */
 public class RollbackAction extends AnAction implements DumbAware {
   public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);

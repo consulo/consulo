@@ -53,7 +53,7 @@ import java.util.Set;
 
 /**
  * @author MYakovlev
- * @since Aug 15, 2002
+ * @since 2002-08-15
  */
 public abstract class BaseSdkEditor implements UnnamedConfigurable {
     private static final Logger LOG = Logger.getInstance(BaseSdkEditor.class);

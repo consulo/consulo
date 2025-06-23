@@ -27,9 +27,8 @@ import consulo.util.lang.ThreeState;
 import jakarta.annotation.Nullable;
 
 /**
- * User: Irina.Chernushina
- * Date: 8/8/11
- * Time: 8:14 PM
+ * @author Irina.Chernushina
+ * @since 2011-08-08
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ContentAnnotationCache {

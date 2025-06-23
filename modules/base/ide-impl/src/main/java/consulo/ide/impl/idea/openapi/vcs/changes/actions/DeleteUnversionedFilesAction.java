@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 02.11.2006
- * Time: 22:14:56
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,6 +21,10 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.util.IconUtil;
 
+/**
+ * @author yole
+ * @since 2006-11-02
+ */
 public class DeleteUnversionedFilesAction extends AnAction {
   public DeleteUnversionedFilesAction() {
     super("Delete", "Delete", IconUtil.getRemoveIcon());

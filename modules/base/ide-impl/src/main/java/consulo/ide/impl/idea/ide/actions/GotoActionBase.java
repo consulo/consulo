@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since msk
+ * @author msk
  */
 public abstract class GotoActionBase extends AnAction {
     private static final Logger LOG = Logger.getInstance(GotoActionBase.class);
