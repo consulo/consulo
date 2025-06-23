@@ -22,6 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.HorizontalLayout;
@@ -225,11 +226,10 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         myEngine.updateActionsImmediately();
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
-    public CompletableFuture<?> updateActionsAsync() {
-        return myEngine.updateActionsAsync();
+    public CompletableFuture<List<? extends AnAction>> updateActionsAsync(@Nonnull UIAccess uiAccess) {
+        return myEngine.updateActionsAsync(uiAccess);
     }
 
     @Override
@@ -255,7 +255,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
     }
 
     @Override
-    public void setTargetComponent(final JComponent component) {
+    public void setTargetComponent(JComponent component) {
         if (myTargetComponent == null) {
             putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
         }
@@ -265,7 +265,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         if (myTargetComponent != component) {
             myTargetComponent = component;
             if (isShowing()) {
-                updateActionsImmediately();
+                updateActionsAsync(UIAccess.current());
             }
         }
     }

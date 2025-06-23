@@ -56,7 +56,8 @@ public abstract class ActionToolbarEngine {
 
     private List<? extends AnAction> myVisibleActions = List.of();
 
-    private CompletableFuture<List<AnAction>> myLastUpdate;
+    @Nonnull
+    private CompletableFuture<List<? extends AnAction>> myLastUpdate = CompletableFuture.completedFuture(List.of());
 
     public ActionToolbarEngine(@Nonnull String place,
                                @Nonnull ActionGroup actionGroup,
@@ -70,7 +71,17 @@ public abstract class ActionToolbarEngine {
         myActionToolbar = actionToolbar;
         myActionManager = actionManager;
 
-        myUpdater = new ToolbarNotifier(application, keymapManager, actionManager, component, this::updateActionsImpl);
+        myUpdater = new ToolbarNotifier(application, keymapManager, actionManager, component, new ActionUpdateProxy() {
+            @Override
+            public void update() {
+                updateActionsImpl();
+            }
+
+            @Override
+            public CompletableFuture<List<? extends AnAction>> updateAsync(@Nonnull UIAccess uiAccess) {
+                return ActionToolbarEngine.this.updateAsync(uiAccess);
+            }
+        });
     }
 
     protected abstract DataContext getDataContext();
@@ -86,6 +97,31 @@ public abstract class ActionToolbarEngine {
         return myPlace;
     }
 
+    @Nonnull
+    private CompletableFuture<List<? extends AnAction>> updateAsync(@Nonnull UIAccess uiAccess) {
+        DataContext dataContext = getDataContext();
+        boolean async = myAlreadyUpdated && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
+        ActionUpdater updater = new ActionUpdater(myActionManager,
+            LaterInvocator.isInModalContext(),
+            myPresentationFactory,
+            async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
+            myPlace,
+            false,
+            true
+        );
+
+        myLastUpdate.cancel(false);
+
+        myLastUpdate = updater.expandActionGroupAsync(myActionGroup, false);
+        myLastUpdate.whenComplete((result, throwable) -> {
+            if (result != null) {
+                actionsUpdated(result);
+            }
+        });
+        return myLastUpdate;
+    }
+
+    @Deprecated
     private void updateActionsImpl() {
         DataContext dataContext = getDataContext();
         boolean async = myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
@@ -98,17 +134,13 @@ public abstract class ActionToolbarEngine {
                 false,
                 true);
         if (async) {
-            if (myLastUpdate != null) {
-                myLastUpdate.cancel(false);
-            }
+            myLastUpdate.cancel(false);
 
             myLastUpdate = updater.expandActionGroupAsync(myActionGroup, false);
             myLastUpdate.whenComplete((result, throwable) -> {
                 if (result != null) {
                     actionsUpdated(result);
                 }
-
-                myLastUpdate = null;
             });
         }
         else {
@@ -142,19 +174,20 @@ public abstract class ActionToolbarEngine {
 
         myPresentationFactory.reset();
         myVisibleActions = List.of();
+        myLastUpdate = CompletableFuture.completedFuture(List.of());
         removeAll();
     }
 
     @RequiredUIAccess
+    @Deprecated
     public void updateActionsImmediately() {
         UIAccess.assertIsUIThread();
         myUpdater.updateActions(true);
     }
 
-    @RequiredUIAccess
-    public CompletableFuture<?> updateActionsAsync() {
-        updateActionsImmediately();
-        return CompletableFuture.completedFuture(null);
+    @Nonnull
+    public CompletableFuture<List<? extends AnAction>> updateActionsAsync(@Nonnull UIAccess uiAccess) {
+        return myUpdater.updateActionsAsync(uiAccess);
     }
 
     @RequiredUIAccess
@@ -163,25 +196,24 @@ public abstract class ActionToolbarEngine {
 
         // should update action right on the showing, otherwise toolbar may not be displayed at all,
         // since by default all updates are postponed until frame gets focused.
-        updateActionsImmediately();
+        updateActionsAsync(UIAccess.current());
     }
 
     @RequiredUIAccess
     public void removeNotify() {
         ActionToolbarsHolder.remove(myActionToolbar);
 
-        CompletableFuture<List<AnAction>> lastUpdate = myLastUpdate;
-        if (lastUpdate != null) {
-            lastUpdate.cancel(false);
-        }
+        CompletableFuture<List<? extends AnAction>> lastUpdate = myLastUpdate;
+        lastUpdate.cancel(false);
+
+        myLastUpdate = CompletableFuture.completedFuture(List.of());
     }
 
     private void cancelCurrentUpdate() {
-        CompletableFuture<List<AnAction>> lastUpdate = myLastUpdate;
-        myLastUpdate = null;
-        if (lastUpdate != null) {
-            lastUpdate.cancel(false);
-        }
+        CompletableFuture<List<? extends AnAction>> lastUpdate = myLastUpdate;
+        lastUpdate.cancel(false);
+
+        myLastUpdate = CompletableFuture.completedFuture(myVisibleActions);
     }
 
     @Nonnull

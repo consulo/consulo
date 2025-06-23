@@ -33,7 +33,7 @@ final class TBPanelActionGroup extends TBPanel {
     private final @Nullable Customizer myCustomizer;
 
     private final @Nonnull Updater myUpdateTimer = new Updater();
-    private CompletableFuture<List<AnAction>> myLastUpdate;
+    private CompletableFuture<List<? extends AnAction>> myLastUpdate;
     private long myLastUpdateNs = 0;
     private long myStartShowNs = 0;
 
@@ -323,7 +323,7 @@ final class TBPanelActionGroup extends TBPanel {
 
     // returns AnAction that caused auto-close
     // (some of AutoClose-actions was disabled or hidden)
-    private AnAction _checkAutoClose(@Nonnull List<AnAction> actions) {
+    private AnAction _checkAutoClose(@Nonnull List<? extends AnAction> actions) {
         if (IS_AUTOCLOSE_DISABLED
             || myAutoCloseActions == null
             || myAutoCloseActions.isEmpty()
@@ -348,7 +348,7 @@ final class TBPanelActionGroup extends TBPanel {
         return null;
     }
 
-    private void _applyPresentationChanges(List<AnAction> actions) {
+    private void _applyPresentationChanges(List<? extends AnAction> actions) {
         final long startNs = System.nanoTime();
 
         if (actions == null) {

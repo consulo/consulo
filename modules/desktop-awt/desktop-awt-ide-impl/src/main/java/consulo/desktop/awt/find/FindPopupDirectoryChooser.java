@@ -32,13 +32,14 @@ import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ui.ex.awt.internal.ComboBoxStyle;
 import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
+import consulo.ui.ex.awt.internal.ComboBoxStyle;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -132,7 +133,7 @@ public class FindPopupDirectoryChooser {
 
         toolbar.setTargetComponent(myDirectoryComboBox);
 
-        toolbar.updateActionsAsync();
+        toolbar.updateActionsAsync(UIAccess.current());
 
         toolbar.getComponent().setBorder(JBCurrentTheme.comboBoxSubBorder(true));
 

@@ -40,7 +40,7 @@ public interface RunnerContentUi extends ContentUI, CellTransform.Facade, ViewCo
     }
 
     @Nullable
-    Content findContent(final String key);
+    Content findContent(String key);
 
     void restore(@Nonnull Content content);
 
@@ -49,9 +49,9 @@ public interface RunnerContentUi extends ContentUI, CellTransform.Facade, ViewCo
 
     boolean isHorizontalToolbar();
 
-    void setHorizontalToolbar(final boolean state);
+    void setHorizontalToolbar(boolean state);
 
-    void updateTabsUI(final boolean validateNow);
+    void updateTabsUI(boolean validateNow);
 
     RunnerLayout getLayoutSettings();
 }

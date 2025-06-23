@@ -214,8 +214,8 @@ public class ActionUpdater {
     }
 
     @Nonnull
-    public CompletableFuture<List<AnAction>> expandActionGroupAsync(ActionGroup group, boolean hideDisabled) {
-        CompletableFuture<List<AnAction>> future = new CompletableFuture<>();
+    public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(ActionGroup group, boolean hideDisabled) {
+        CompletableFuture<List<? extends AnAction>> future = new CompletableFuture<>();
         ProgressIndicator indicator = new EmptyProgressIndicator();
 
         future.whenComplete((anActions, throwable) -> {

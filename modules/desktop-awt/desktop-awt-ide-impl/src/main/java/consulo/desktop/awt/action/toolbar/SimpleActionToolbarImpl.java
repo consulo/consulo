@@ -11,6 +11,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -289,11 +290,10 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         myEngine.updateActionsImmediately();
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
-    public CompletableFuture<?> updateActionsAsync() {
-        return myEngine.updateActionsAsync();
+    public CompletableFuture<List<? extends AnAction>> updateActionsAsync(@Nonnull UIAccess uiAccess) {
+        return myEngine.updateActionsAsync(uiAccess);
     }
 
     @Override

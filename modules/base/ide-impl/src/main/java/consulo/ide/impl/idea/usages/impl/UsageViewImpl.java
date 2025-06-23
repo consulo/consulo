@@ -191,7 +191,7 @@ public class UsageViewImpl implements UsageViewEx {
         myUsageSearcherFactory = usageSearcherFactory;
         myProject = project;
 
-        myButtonPanel = new ButtonPanel();
+        myButtonPanel = new ButtonPanel(project);
 
         myModel = new UsageViewTreeModelBuilder(myPresentation, targets);
         myRoot = (GroupNode)myModel.getRoot();
@@ -2124,11 +2124,13 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     private final class ButtonPanel extends JPanel {
+        private final Project myProject;
         private ActionToolbar myActionToolbar;
         private DefaultActionGroup myActionGroup;
 
-        private ButtonPanel() {
+        private ButtonPanel(Project project) {
             super(new FlowLayout(FlowLayout.LEFT, 6, 0));
+            myProject = project;
 
             getProject().getMessageBus().connect(UsageViewImpl.this).subscribe(DumbModeListener.class, new DumbModeListener() {
                 @Override
@@ -2156,13 +2158,12 @@ public class UsageViewImpl implements UsageViewEx {
 
             myActionGroup.add(action);
 
-            myActionToolbar.updateActionsImmediately();
+            myActionToolbar.updateActionsAsync(UIAccess.current());
         }
 
-        @RequiredUIAccess
         void update() {
             if (myActionToolbar != null) {
-                myActionToolbar.updateActionsImmediately();
+                myActionToolbar.updateActionsAsync(myProject.getUIAccess());
             }
             myNeedUpdateButtons = false;
         }

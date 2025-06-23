@@ -17,6 +17,7 @@ package consulo.ide.impl.actionSystem.impl;
 
 import consulo.dataContext.DataContext;
 import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
@@ -90,11 +91,10 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
 
     }
 
-    @RequiredUIAccess
     @Nonnull
     @Override
-    public CompletableFuture<?> updateActionsAsync() {
-        return CompletableFuture.completedFuture(null);
+    public CompletableFuture<List<? extends AnAction>> updateActionsAsync(@Nonnull UIAccess uiAccess) {
+        return CompletableFuture.completedFuture(List.of());
     }
 
     @Override

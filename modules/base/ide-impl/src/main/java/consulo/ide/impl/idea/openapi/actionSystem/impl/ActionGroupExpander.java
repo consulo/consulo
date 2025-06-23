@@ -49,7 +49,7 @@ public class ActionGroupExpander {
   }
 
   @Nonnull
-  public static CompletableFuture<List<AnAction>> expandActionGroupAsync(boolean isInModalContext,
+  public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(boolean isInModalContext,
                                                                          @Nonnull ActionGroup group,
                                                                          PresentationFactory presentationFactory,
                                                                          @Nonnull DataContext context,

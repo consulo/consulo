@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.undoRedo.UndoManager;
 import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.ProjectUndoManager;
@@ -28,6 +29,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Couple;
+import jakarta.annotation.Nonnull;
 
 public abstract class UndoRedoAction extends DumbAwareAction {
     public UndoRedoAction() {
@@ -41,6 +43,12 @@ public abstract class UndoRedoAction extends DumbAwareAction {
         FileEditor editor = e.getData(FileEditor.KEY);
         UndoManager undoManager = getUndoManager(editor, dataContext);
         perform(editor, undoManager);
+    }
+
+    @Nonnull
+    @Override
+    public ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.EDT;
     }
 
     @Override

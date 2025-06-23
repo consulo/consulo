@@ -25,6 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -190,7 +191,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             }
         };
         popupToolbar.setLayoutPolicy(NOWRAP_LAYOUT_POLICY);
-        popupToolbar.updateActionsImmediately();
+        popupToolbar.updateActionsAsync(UIAccess.current());
 
         Point location;
         if (orientation == SwingConstants.HORIZONTAL) {
@@ -211,7 +212,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
             .setCancelCallback(() -> {
                 boolean toClose = myActionManager.isActionPopupStackEmpty();
                 if (toClose) {
-                    myEngine.updateActionsAsync();
+                    myEngine.updateActionsAsync(UIAccess.current());
                 }
                 return toClose;
             })
@@ -288,7 +289,7 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         }
         // cancel() already called Disposer.dispose()
         myPopup = null;
-        myEngine.updateActionsAsync();
+        myEngine.updateActionsAsync(UIAccess.current());
     }
 
     abstract static class PopupToolbar extends AdvancedActionToolbarImpl implements AnActionListener, DataProvider, Disposable {

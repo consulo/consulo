@@ -17,6 +17,7 @@ package consulo.webBrowser.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiDocumentManager;
@@ -118,9 +119,9 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
         if (editor != null) {
             Project project = editor.getProject();
             if (project != null && project.isInitialized()) {
-                PsiFile psiFile = context.getData(PsiFile.KEY);
+                PsiFile psiFile = ReadAction.compute(() -> context.getData(PsiFile.KEY));
                 if (psiFile == null) {
-                    psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                    psiFile = ReadAction.compute(() -> PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument()));
                 }
                 if (psiFile != null) {
                     return new OpenInBrowserRequest(psiFile) {

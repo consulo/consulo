@@ -7,8 +7,10 @@ import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.TimerListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -24,6 +26,8 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Konstantin Bulenkov
@@ -40,7 +44,7 @@ public class ToolbarNotifier implements Activatable {
     private final Application myApplication;
 
     @Nonnull
-    private final Runnable myUpdateActionsNotifier;
+    private final ActionUpdateProxy myUpdateActionsNotifier;
 
     @SuppressWarnings("FieldCanBeLocal") // do not inline creating - it will removed from memory due WeakTimerListener
     private MyTimerListener myTimerListener = new MyTimerListener();
@@ -51,7 +55,7 @@ public class ToolbarNotifier implements Activatable {
                            @Nonnull KeymapManager keymapManager,
                            @Nonnull ActionManager actionManager,
                            @Nonnull JComponent component,
-                           @Nonnull Runnable updateActionsNotifier) {
+                           @Nonnull ActionUpdateProxy updateActionsNotifier) {
         myApplication = application;
         myUpdateActionsNotifier = updateActionsNotifier;
         myActionManager = (ActionManagerEx) actionManager;
@@ -85,6 +89,19 @@ public class ToolbarNotifier implements Activatable {
         myKeymapManager.removeKeymapManagerListener(myKeymapManagerListener);
     }
 
+    @Nonnull
+    public CompletableFuture<List<? extends AnAction>> updateActionsAsync(@Nonnull UIAccess uiAccess) {
+        if (!myComponent.isVisible()) {
+            return CompletableFuture.completedFuture(List.of());
+        }
+
+        if (myApplication.getDisposeState().get() != ThreeState.NO) {
+            return CompletableFuture.completedFuture(List.of());
+        }
+
+        return myUpdateActionsNotifier.updateAsync(uiAccess);
+    }
+
     public void updateActions(boolean now) {
         Runnable updateRunnable = new MyUpdateRunnable(this);
 
@@ -105,7 +122,7 @@ public class ToolbarNotifier implements Activatable {
 
     protected void updateActionsImpl() {
         if (myApplication.getDisposeState().get() == ThreeState.NO) {
-            myUpdateActionsNotifier.run();
+            myUpdateActionsNotifier.update();
         }
     }
 
