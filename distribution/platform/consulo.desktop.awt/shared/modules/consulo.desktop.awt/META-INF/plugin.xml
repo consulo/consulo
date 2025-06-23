@@ -32,8 +32,6 @@
             <action id="ShowGotItMessage" internal="true" class="consulo.ide.impl.actions.ShowGotItMessageAction" text="Show GotItMessage"/>
             <action id="ValidationTest" internal="true" class="consulo.ide.impl.idea.internal.validation.TestDialogWithValidationAction"
                     text="Validation Dialog Test"/>
-            <action id="MacMessagesTest" internal="true" class="consulo.ide.impl.idea.internal.validation.TestMacMessagesAction"
-                    text="Test Mac Messages"/>
             <action id="TreeExpandAll" internal="true" class="consulo.ide.impl.idea.internal.tree.ExpandAll" text="Expand Tree"/>
             <action id="UIDefaults" internal="true" class="consulo.ide.impl.idea.ui.ShowUIDefaultsAction" text="LaF Defaults"/>
             <separator/>
@@ -66,8 +64,6 @@
             <action id="TestModalTask" internal="true" class="consulo.ide.impl.idea.internal.TestModalTaskAction" />
             <action id="LaggingMode" internal="true" class="consulo.ide.impl.idea.internal.ToggleLaggingModeAction" text="Lagging mode"/>
             <separator/>
-
-            <reference ref="Internal.UI"/>
 
             <group id="TopAnomalies" internal="true" class="consulo.ide.impl.idea.internal.anomalies.TopAnomaliesAction"
                    text="Top Anomalies"
