@@ -20,6 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.HelpManager;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
@@ -1371,11 +1372,10 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
         @Nonnull
         @Override
-        @RequiredUIAccess
         public PsiDirectory[] getDirectories() {
             AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             if (viewPane != null) {
-                return viewPane.getSelectedDirectories();
+                return ReadAction.compute(() -> viewPane.getSelectedDirectories());
             }
 
             return PsiDirectory.EMPTY_ARRAY;
