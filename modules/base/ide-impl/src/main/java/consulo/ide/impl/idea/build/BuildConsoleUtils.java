@@ -63,10 +63,10 @@ public final class BuildConsoleUtils {
       });
     }
 
-    Notification notification = group.buildWarning()
+    Notification notification = group.newWarn()
       .title(LocalizeValue.localizeTODO(buildIssue.getTitle()))
       .content(LocalizeValue.localizeTODO(buildIssue.getDescription()))
-      .listener(new NotificationListener.Adapter() {
+      .hyperlinkListener(new NotificationListener.Adapter() {
         @Override
         @RequiredUIAccess
         protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {

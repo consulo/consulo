@@ -412,7 +412,7 @@ public class ReplaceInProjectManager {
 
     @Deprecated
     public static void reportNumberReplacedOccurrences(Project project, int occurrences) {
-            }
+    }
 
     public boolean replaceUsage(
         @Nonnull final Usage usage,

@@ -53,7 +53,7 @@ public class FindInPathAction extends AnAction implements DumbAware {
   }
 
   static void showNotAvailableMessage(AnActionEvent e, Project project) {
-    NOTIFICATION_GROUP.buildWarning()
+    NOTIFICATION_GROUP.newWarn()
         .content(LocalizeValue.localizeTODO("'" + e.getPresentation().getText() + "' is not available while search is in progress"))
         .notify(project);
   }

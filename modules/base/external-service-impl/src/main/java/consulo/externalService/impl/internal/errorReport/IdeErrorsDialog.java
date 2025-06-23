@@ -134,7 +134,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
                     myDevelopers[0] = DevelopersLoader.fetchDevelopers(indicator);
                 }
                 catch (IOException e) {
-                    ReportMessages.GROUP.buildWarning()
+                    ReportMessages.GROUP.newWarn()
                         .title(LocalizeValue.localizeTODO("Communication error"))
                         .content(LocalizeValue.localizeTODO("Unable to load developers list from server."))
                         .notify(null);

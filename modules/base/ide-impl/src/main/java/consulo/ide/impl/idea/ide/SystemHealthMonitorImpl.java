@@ -36,9 +36,6 @@ import consulo.platform.Platform;
 import consulo.project.ui.internal.NotificationsConfiguration;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
@@ -81,7 +78,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
         checkEARuntime();
 
         SystemHealthMonitor.Reporter reporter = (notificationText, actionText, actionListener) -> myApplication.invokeLater(
-            () -> GROUP.buildWarning()
+            () -> GROUP.newWarn()
                 .content(LocalizeValue.localizeTODO(notificationText))
                 .important()
                 .addAction(LocalizeValue.localizeTODO(actionText), actionListener)
@@ -156,10 +153,10 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
 
         Application app = Application.get();
         app.invokeLater(
-            () -> GROUP.buildWarning()
+            () -> GROUP.newWarn()
                 .content(message)
                 .important()
-                .listener(new NotificationListener.Adapter() {
+                .hyperlinkListener(new NotificationListener.Adapter() {
                     @Override
                     protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
                         adapter.hyperlinkActivated(e);
@@ -237,7 +234,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
                                         restart(timeout);
                                     }
                                     else {
-                                        GROUP.buildNotification(NotificationType.ERROR)
+                                        GROUP.newOfType(NotificationType.ERROR)
                                             .title(message)
                                             .content(LocalizeValue.of(file.getPath()))
                                             .whenExpired(() -> {

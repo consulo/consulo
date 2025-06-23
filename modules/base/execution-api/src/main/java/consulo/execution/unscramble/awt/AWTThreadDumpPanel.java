@@ -283,7 +283,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
             }
             CopyPasteManager.getInstance().setContents(new StringSelection(buf.toString()));
 
-            ExecutionNotificationGroupHolder.ANALYZE_THREAD_DUMP.buildInfo()
+            ExecutionNotificationGroupHolder.ANALYZE_THREAD_DUMP.newInfo()
                 .content(LocalizeValue.localizeTODO("Full thread dump was successfully copied to clipboard"))
                 .notify(myProject);
         }

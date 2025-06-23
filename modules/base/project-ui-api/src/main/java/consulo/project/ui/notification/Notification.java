@@ -37,6 +37,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.function.Functions;
 import consulo.util.lang.ref.SoftReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -50,37 +51,44 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Notification bean class contains <b>title:</b>subtitle, content (plain text or HTML) and actions.
- * <br><br>
- * The notifications, generally, are shown in the balloons that appear on the screen when the corresponding events take place.<br>
- * Notification balloon is of two types: two or three lines.<br>
- * Two lines: title and content line; title and actions; content line and actions; contents on two lines.<br>
- * Three lines: title and content line and actions; contents on two lines and actions; contents on three lines or more; etc.
- * <br><br>
- * Warning: be careful not to use the links in HTML content, use {@link #addAction(AnAction)}
+ * <p>Notification bean class contains <b>title:</b>subtitle, content (plain text or HTML) and actions.</p>
+ *
+ * <p>The notifications, generally, are shown in the balloons that appear on the screen when the corresponding events take place.</p>
+ *
+ * <p>Notification balloon is of two types: two or three lines.</p>
+ *
+ * <p>Two lines: title and content line; title and actions; content line and actions; contents on two lines.</p>
+ *
+ * <p>Three lines: title and content line and actions; contents on two lines and actions; contents on three lines or more; etc.</p>
+ *
+ * <p>Warning: be careful not to use the links in HTML content, use {@link #addAction(AnAction)}</p>
+ *
+ * <p>Construct new notifications starting from {@link NotificationGroup}:</p>
+ *
+ * <code>GROUP.newError()
+ *     .title(...)
+ *     .content(...)
+ *     .icon(...)
+ *     .addAction(...)
+ *     .notify(project);
+ * </code>
  *
  * @author spleaner
  * @author Alexander Lobas
+ * @author UNV
+ *
+ * @see NotificationGroup#newError()
+ * @see NotificationGroup#newWarn ()
+ * @see NotificationGroup#newInfo()
+ * @see NotificationGroup#newOfType (NotificationType)
  */
 public class Notification {
-    private static final class ActionAdder implements Function<Notification, AnAction> {
-        private final AnAction action;
-
-        public ActionAdder(AnAction action) {
-            this.action = action;
-        }
-
-        @Override
-        public AnAction apply(Notification ignore) {
-            return action;
-        }
-    }
-
     public static final class Builder {
         @Nonnull
-        private final NotificationGroup myGroup;
+        final NotificationGroup myGroup;
         @Nonnull
-        private final NotificationType myType;
+        final NotificationType myType;
+
         @Nonnull
         private LocalizeValue myTitle = LocalizeValue.empty();
         @Nonnull
@@ -104,39 +112,71 @@ public class Notification {
         }
 
         public Builder icon(@Nonnull Image icon) {
+            if (myIcon != null) {
+                throw new IllegalArgumentException("Icon is already initialized");
+            }
             myIcon = icon;
             return this;
         }
 
+        public Builder optionalIcon(@Nullable Image icon) {
+            return icon != null ? icon(icon) : this;
+        }
+
         public Builder title(@Nonnull LocalizeValue title) {
+            if (myTitle != LocalizeValue.empty()) {
+                throw new IllegalArgumentException("Title is already initialized");
+            }
             myTitle = title;
             return this;
         }
 
         public Builder subtitle(@Nonnull LocalizeValue subtitle) {
+            if (mySubtitle != LocalizeValue.empty()) {
+                throw new IllegalArgumentException("Subtitle is already initialized");
+            }
             mySubtitle = subtitle;
             return this;
         }
 
         public Builder content(@Nonnull LocalizeValue content) {
+            if (myContent != LocalizeValue.empty()) {
+                throw new IllegalArgumentException("Content is already initialized");
+            }
             myContent = content;
             return this;
         }
 
-        public Builder listener(@Nonnull @RequiredUIAccess NotificationListener listener) {
+        public Builder important() {
+            return important(true);
+        }
+
+        public Builder notImportant() {
+            return important(false);
+        }
+
+        public Builder important(boolean important) {
+            if (myImportant != null) {
+                throw new IllegalStateException("Flag 'important' is already initialized");
+            }
+            myImportant = important;
+            return this;
+        }
+
+        public Builder hyperlinkListener(@Nonnull @RequiredUIAccess NotificationListener listener) {
             if (myListener != null) {
-                throw new IllegalArgumentException("Only one listener is allowed");
+                throw new IllegalArgumentException("Only one hyperlink listener is allowed");
             }
             myListener = listener;
             return this;
         }
 
-        public Builder optionalListener(@Nullable NotificationListener listener) {
-            return listener != null ? listener(listener) : this;
+        public Builder optionalHyperlinkListener(@Nullable NotificationListener listener) {
+            return listener != null ? hyperlinkListener(listener) : this;
         }
 
         public Builder addAction(@Nonnull AnAction action) {
-            return addAction(new ActionAdder(action));
+            return addAction(Functions.constant(action));
         }
 
         public Builder addAction(@Nonnull LocalizeValue text, @RequiredUIAccess @Nonnull Runnable runnable) {
@@ -192,37 +232,42 @@ public class Notification {
         }
 
         public Builder whenExpired(@Nonnull Runnable whenExpired) {
+            if (myWhenExpired != null) {
+                throw new IllegalStateException("Only one expiration listener is allowed");
+            }
             myWhenExpired = whenExpired;
-            return this;
-        }
-
-        public Builder important() {
-            return important(true);
-        }
-
-        public Builder notImportant() {
-            return important(false);
-        }
-
-        public Builder important(boolean important) {
-            myImportant = important;
             return this;
         }
 
         public Notification create() {
             Notification notification = new Notification(myGroup, myIcon, myTitle, mySubtitle, myContent, myType, myListener);
+            postInit(notification);
+            return notification;
+        }
+
+        protected void init(Notification notification) {
+            notification.setIcon(myIcon);
+            notification.setTitle(myTitle);
+            notification.setSubtitle(mySubtitle);
+            notification.setContent(myContent);
+            postInit(notification);
+        }
+
+        private void postInit(Notification notification) {
+            if (myImportant != null) {
+                notification.setImportant(myImportant);
+            }
+            if (myListener != null) {
+                notification.setListener(myListener);
+            }
             if (myActionAdders != null) {
                 for (Function<Notification, AnAction> actionAdder : myActionAdders) {
                     notification.addAction(actionAdder.apply(notification));
                 }
             }
-            if (myImportant != null) {
-                notification.setImportant(myImportant);
-            }
             if (myWhenExpired != null) {
                 notification.whenExpired(myWhenExpired);
             }
-            return notification;
         }
 
         public void notify(@Nullable Project project) {
@@ -249,11 +294,11 @@ public class Notification {
     private final NotificationType myType;
 
     @Nonnull
-    private LocalizeValue myTitle;
+    private LocalizeValue myTitle = LocalizeValue.empty();
     @Nonnull
-    private LocalizeValue mySubtitle;
+    private LocalizeValue mySubtitle = LocalizeValue.empty();
     @Nonnull
-    private LocalizeValue myContent;
+    private LocalizeValue myContent = LocalizeValue.empty();
     private NotificationListener myListener;
     private String myDropDownText;
     private List<AnAction> myActions;
@@ -263,38 +308,11 @@ public class Notification {
     private Runnable myWhenExpired;
     private Boolean myImportant;
     private WeakReference<Balloon> myBalloonRef;
-    private final long myTimestamp;
+    private final long myTimestamp = System.currentTimeMillis();
 
     /**
      * @param group    notification group
-     * @param title    notification title
-     * @param content  notification content
-     * @param type     notification type
-     * @param listener notification lifecycle listener
-     */
-    @Deprecated
-    @DeprecationInfo("Use NotificationGroup#buildError/buildWarning/buildInfo/buildNotification()...create()")
-    public Notification(
-        @Nonnull NotificationGroup group,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue content,
-        @Nonnull NotificationType type,
-        @Nullable @RequiredUIAccess NotificationListener listener
-    ) {
-        myGroupId = group.getId();
-        myTitle = title;
-        myContent = content;
-        myType = type;
-        myListener = listener;
-        myTimestamp = System.currentTimeMillis();
-
-        assertHasTitleOrContent();
-        id = calculateId(this);
-    }
-
-    /**
-     * @param group    notification grouo
-     * @param icon     notification icon, if <b>null</b> used icon from type
+     * @param icon     notification icon, if {@code null} uses icon from type
      * @param title    notification title
      * @param subtitle notification subtitle
      * @param content  notification content
@@ -315,7 +333,6 @@ public class Notification {
         myContent = content;
         myType = type;
         myListener = listener;
-        myTimestamp = System.currentTimeMillis();
 
         myIcon = icon;
         mySubtitle = subtitle;
@@ -324,15 +341,37 @@ public class Notification {
         id = calculateId(this);
     }
 
-    @Deprecated
-    @DeprecationInfo("Use NotificationGroup#buildError/buildWarning/buildInfo/buildNotification()...create()")
-    public Notification(@Nonnull NotificationGroup group, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
-        this(group, title, content, type, null);
+    /**
+     * @param notificationBuilder notification builder
+     */
+    protected Notification(@Nonnull Builder notificationBuilder) {
+        myGroupId = notificationBuilder.myGroup.getId();
+        myType = notificationBuilder.myType;
+        notificationBuilder.init(this);
+
+        assertHasTitleOrContent();
+        id = calculateId(this);
     }
 
     /**
-     * @param group    notification grouo
-     * @param icon     notification icon, if <b>null</b> used icon from type
+     * @param group   notification group
+     * @param title   notification title
+     * @param content notification content
+     * @param type    notification type
+     */
+    @Deprecated
+    @DeprecationInfo("Use NotificationGroup#newError/newWarning/newInfo/newOfType()...create()")
+    public Notification(@Nonnull NotificationGroup group, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
+        this(
+            group.newOfType(type)
+                .title(LocalizeValue.of(title))
+                .content(LocalizeValue.of(content))
+        );
+    }
+
+    /**
+     * @param group    notification group
+     * @param icon     notification icon, if {@code null} uses icon from type
      * @param title    notification title
      * @param subtitle notification subtitle
      * @param content  notification content
@@ -340,7 +379,7 @@ public class Notification {
      * @param listener notification lifecycle listener
      */
     @Deprecated
-    @DeprecationInfo("Use NotificationGroup#buildError/buildWarning/buildInfo/buildNotification()...create()")
+    @DeprecationInfo("Use NotificationGroup#newError/newWarning/newInfo/newOfType()...create()")
     public Notification(
         @Nonnull NotificationGroup group,
         @Nullable Image icon,
@@ -350,18 +389,14 @@ public class Notification {
         @Nonnull NotificationType type,
         @Nullable NotificationListener listener
     ) {
-        myGroupId = group.getId();
-        myTitle = LocalizeValue.ofNullable(title);
-        myContent = LocalizeValue.ofNullable(content);
-        myType = type;
-        myListener = listener;
-        myTimestamp = System.currentTimeMillis();
-
-        myIcon = icon;
-        mySubtitle = LocalizeValue.ofNullable(subtitle);
-
-        assertHasTitleOrContent();
-        id = calculateId(this);
+        this(
+            group.newOfType(type)
+                .optionalIcon(icon)
+                .title(LocalizeValue.ofNullable(title))
+                .subtitle(LocalizeValue.ofNullable(subtitle))
+                .content(LocalizeValue.ofNullable(content))
+                .optionalHyperlinkListener(listener)
+        );
     }
 
     /**
@@ -372,7 +407,7 @@ public class Notification {
      * @param listener notification lifecycle listener
      */
     @Deprecated
-    @DeprecationInfo("Use NotificationGroup#buildError/buildWarning/buildInfo/buildNotification()...create()")
+    @DeprecationInfo("Use NotificationGroup#newError/newWarning/newInfo/newOfType()...create()")
     public Notification(
         @Nonnull NotificationGroup group,
         @Nonnull String title,
@@ -380,15 +415,12 @@ public class Notification {
         @Nonnull NotificationType type,
         @Nullable @RequiredUIAccess NotificationListener listener
     ) {
-        myGroupId = group.getId();
-        myTitle = LocalizeValue.ofNullable(title);
-        myContent = LocalizeValue.ofNullable(content);
-        myType = type;
-        myListener = listener;
-        myTimestamp = System.currentTimeMillis();
-
-        assertHasTitleOrContent();
-        id = calculateId(this);
+        this(
+            group.newOfType(type)
+                .title(LocalizeValue.of(title))
+                .content(LocalizeValue.of(content))
+                .optionalHyperlinkListener(listener)
+        );
     }
 
     /**
@@ -445,6 +477,7 @@ public class Notification {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @Nonnull
+    @SuppressWarnings("deprecation")
     public Notification setTitle(@Nullable String title, @Nullable String subtitle) {
         return setTitle(title).setSubtitle(subtitle);
     }

@@ -62,10 +62,10 @@ public class VcsNotifier {
       title = "";
     }
     // if both title and message were empty, then it is a problem in the calling code => Notifications engine assertion will notify.
-    return notificationGroup.newNotification(type)
+    return notificationGroup.newOfType(type)
         .title(LocalizeValue.localizeTODO(title))
         .content(LocalizeValue.localizeTODO(message))
-        .optionalListener(listener)
+        .optionalHyperlinkListener(listener)
         .create();
   }
 

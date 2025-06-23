@@ -63,7 +63,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
   @Override
   public void errorOccurred(@Nonnull String errorMessage) {
     try {
-      XDebuggerUIConstants.NOTIFICATION_GROUP.buildError()
+      XDebuggerUIConstants.NOTIFICATION_GROUP.newError()
         .content(XDebuggerLocalize.loadValueTaskError(errorMessage))
         .notify(myProject);
     }

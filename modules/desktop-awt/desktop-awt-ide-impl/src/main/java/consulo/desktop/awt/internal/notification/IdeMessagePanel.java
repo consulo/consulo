@@ -201,7 +201,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     }
 
     private void showErrorNotification(@Nonnull Project project) {
-        Notification notification = ReportMessages.GROUP.buildError()
+        Notification notification = ReportMessages.GROUP.newError()
             .icon(PlatformIconGroup.ideFatalerror())
             .title(ExternalServiceLocalize.errorNewNotificationTitle())
             .addClosingAction(ExternalServiceLocalize.errorNewNotificationLink(), () -> openErrorsDialog(null))

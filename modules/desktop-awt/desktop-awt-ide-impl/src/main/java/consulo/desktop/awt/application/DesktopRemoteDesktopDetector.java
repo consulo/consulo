@@ -73,7 +73,7 @@ public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
             // We postpone notification to avoid recursive initialization of RemoteDesktopDetector
             // (in case it's initialized by request from consulo.desktop.awt.internal.notification.EventLog)
             Application.get().invokeLater(
-                () -> NOTIFICATION_GROUP.buildNotification(NotificationType.INFORMATION)
+                () -> NOTIFICATION_GROUP.newOfType(NotificationType.INFORMATION)
                     .title(ApplicationLocalize.remoteDesktopDetectedTitle())
                     .content(ApplicationLocalize.remoteDesktopDetectedMessage())
                     .notify(null)

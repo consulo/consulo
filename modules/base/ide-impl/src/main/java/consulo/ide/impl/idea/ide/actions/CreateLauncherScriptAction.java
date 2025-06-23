@@ -134,7 +134,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
             String message = e.getMessage();
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);
-                Notifications.SYSTEM_MESSAGES_GROUP.buildError()
+                Notifications.SYSTEM_MESSAGES_GROUP.newError()
                     .title(LocalizeValue.localizeTODO("Failed to create launcher script"))
                     .content(LocalizeValue.localizeTODO(message))
                     .notify(project);

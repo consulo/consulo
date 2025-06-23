@@ -42,18 +42,13 @@ import consulo.logging.internal.LogMessageEx;
 import consulo.logging.internal.SubmittedReportInfo;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationAction;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Set;
@@ -155,7 +150,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                     text.append("<br/>").append(ExternalServiceLocalize.errorReportGratitude().get());
                 }
 
-                ReportMessages.GROUP.buildNotification(
+                ReportMessages.GROUP.newOfType(
                         reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
                             ? NotificationType.ERROR
                             : NotificationType.INFORMATION
@@ -163,7 +158,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                     .title(ExternalServiceLocalize.errorReportTitle())
                     .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(text)))
                     .notImportant()
-                    .optionalListener(url != null ? new NotificationListener.UrlOpeningListener(true) : null)
+                    .optionalHyperlinkListener(url != null ? new NotificationListener.UrlOpeningListener(true) : null)
                     .notify(project);
             });
         }, e -> application.invokeLater(() -> {
@@ -181,7 +176,7 @@ public class ITNReporter extends ErrorReportSubmitter {
             if (e instanceof UpdateAvailableException) {
                 callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
 
-                ReportMessages.GROUP.buildInfo()
+                ReportMessages.GROUP.newInfo()
                     .title(ExternalServiceLocalize.errorReportTitle())
                     .content(ExternalServiceLocalize.errorReportUpdateRequiredMessage())
                     .notImportant()

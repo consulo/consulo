@@ -18,7 +18,7 @@ public class CloudNotifier {
     public void showMessage(String message, NotificationType messageType) {
         // TODO this is invalid due group must be registered before !
         NotificationGroup.balloonGroup(myNotificationDisplayId)
-            .buildNotification(messageType)
+            .newOfType(messageType)
             .content(LocalizeValue.localizeTODO(message))
             .notify(null);
     }

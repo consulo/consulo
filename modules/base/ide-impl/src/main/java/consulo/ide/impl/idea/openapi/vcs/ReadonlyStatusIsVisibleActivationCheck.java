@@ -13,7 +13,7 @@ import consulo.project.ui.notification.NotificationGroup;
 public class ReadonlyStatusIsVisibleActivationCheck {
   public static void check(Project project, String vcsName, NotificationGroup vcsNotificationGroup) {
     if (Platform.current().os().isUnix() && "root".equals(System.getenv("USER"))) {
-      vcsNotificationGroup.buildWarning()
+      vcsNotificationGroup.newWarn()
           .title(LocalizeValue.localizeTODO(vcsName + ": can not see read-only status"))
           .content(LocalizeValue.localizeTODO(
             "You are logged as <b>root</b>, that's why:<br><br>- " +

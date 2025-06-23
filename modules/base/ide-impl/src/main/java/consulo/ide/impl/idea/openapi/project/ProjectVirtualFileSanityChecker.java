@@ -55,10 +55,10 @@ public class ProjectVirtualFileSanityChecker implements BackgroundStartupActivit
             LOG.info(path + " case-sensitivity: expected=" + expected + " actual=" + actual);
             if (actual != expected) {
                 int prefix = expected ? 1 : 0;  // IDE=true -> FS=false -> prefix='in'
-                Notifications.SYSTEM_MESSAGES_GROUP.buildWarning()
+                Notifications.SYSTEM_MESSAGES_GROUP.newWarn()
                     .title(ApplicationLocalize.fsCaseSensitivityMismatchTitle())
                     .content(ApplicationLocalize.fsCaseSensitivityMismatchMessage(prefix))
-                    .listener(NotificationListener.URL_OPENING_LISTENER)
+                    .hyperlinkListener(NotificationListener.URL_OPENING_LISTENER)
                     .notify(project);
             }
 

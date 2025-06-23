@@ -102,10 +102,10 @@ public class VcsBalloonProblemNotifier implements Runnable {
         sb.append("<br/><a href=\"").append(name).append("\">").append(name).append("</a>");
       }
 
-      notification = NOTIFICATION_GROUP.newNotification(myMessageType)
+      notification = NOTIFICATION_GROUP.newOfType(myMessageType)
         .title(LocalizeValue.localizeTODO(myMessageType.name()))
         .content(LocalizeValue.localizeTODO(sb.toString()))
-        .listener((thisNotification, event) -> {
+        .hyperlinkListener((thisNotification, event) -> {
           if (HyperlinkEvent.EventType.ACTIVATED.equals(event.getEventType())) {
             if (myNotificationListener.length == 1) {
               myNotificationListener[0].run();
@@ -127,7 +127,7 @@ public class VcsBalloonProblemNotifier implements Runnable {
         .create();
     }
     else {
-      notification = NOTIFICATION_GROUP.newNotification(myMessageType)
+      notification = NOTIFICATION_GROUP.newOfType(myMessageType)
         .content(LocalizeValue.localizeTODO(myMessage))
         .create();
     }

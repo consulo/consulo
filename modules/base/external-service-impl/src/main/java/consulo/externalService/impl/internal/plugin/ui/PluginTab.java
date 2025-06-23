@@ -349,7 +349,7 @@ public abstract class PluginTab implements Disposable {
         PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup.newInfo()
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(message)))
-            .listener((notification, event) -> {
+            .hyperlinkListener((notification, event) -> {
                 notification.expire();
                 if (restartCapable) {
                     app.restart(true);

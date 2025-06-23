@@ -16,8 +16,8 @@
 package consulo.desktop.util.windows.defender;
 
 import consulo.ide.impl.idea.ide.SystemHealthMonitorImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.internal.NotificationFullContent;
 
 import jakarta.annotation.Nonnull;
@@ -30,8 +30,8 @@ import java.util.Collection;
 public class WindowsDefenderNotification extends Notification implements NotificationFullContent {
   private final Collection<Path> myPaths;
 
-  public WindowsDefenderNotification(String text, Collection<Path> paths) {
-     super(SystemHealthMonitorImpl.GROUP, "", text, NotificationType.WARNING);
+  public WindowsDefenderNotification(@Nonnull LocalizeValue text, Collection<Path> paths) {
+    super(SystemHealthMonitorImpl.GROUP.newWarn().content(text));
     myPaths = paths;
   }
 

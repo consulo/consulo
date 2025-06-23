@@ -134,7 +134,7 @@ public class TestsUIUtil {
       toolWindowManager.notifyByBalloon(testRunDebugId, type.toUI(), balloonText);
     }
 
-    NOTIFICATION_GROUP.newNotification(type)
+    NOTIFICATION_GROUP.newOfType(type)
         .content(LocalizeValue.localizeTODO(balloonText))
         .notify(project);
     SystemNotifications.getInstance().notify("TestRunner", title, text);

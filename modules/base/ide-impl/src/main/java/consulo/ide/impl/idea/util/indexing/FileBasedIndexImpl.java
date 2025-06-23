@@ -2571,7 +2571,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                     currentVersionCorrupted ? "Indices to be rebuilt after corruption:" : "Indices to be built:"
                 );
                 if (rebuildNotification != null && !myApplication.isHeadlessEnvironment() && Registry.is("ide.showIndexRebuildMessage")) {
-                    NOTIFICATIONS.buildInfo()
+                    NOTIFICATIONS.newInfo()
                         .title(IndexingLocalize.indexRebuildNotificationTitle())
                         .content(LocalizeValue.localizeTODO(rebuildNotification))
                         .notify(null);

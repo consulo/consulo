@@ -205,7 +205,7 @@ public class BuildArtifactAction extends DumbAwareAction {
             indicator.checkCanceled();
             File file = pair.getFirst();
             if (!FileUtil.delete(file)) {
-              NOTIFICATION_GROUP.buildError()
+              NOTIFICATION_GROUP.newError()
                   .title(LocalizeValue.localizeTODO("Cannot clean '" + pair.getSecond().getName() + "' artifact"))
                   .content(LocalizeValue.localizeTODO("cannot delete '" + file.getAbsolutePath() + "'"))
                   .notify((Project)myProject);

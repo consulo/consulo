@@ -45,7 +45,6 @@ import consulo.ui.Alert;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
@@ -166,7 +165,7 @@ public class PlatformOrPluginUpdateChecker {
         switch (type) {
             case NO_UPDATE:
                 if (showResults) {
-                    NOTIFICATION_GROUP.buildInfo()
+                    NOTIFICATION_GROUP.newInfo()
                         .title(ExternalServiceLocalize.updateAvailableGroup())
                         .content(ExternalServiceLocalize.updateThereAreNoUpdates())
                         .notify(project);
@@ -181,7 +180,7 @@ public class PlatformOrPluginUpdateChecker {
                     new PlatformOrPluginDialog(project, targetsForUpdate, null, null, false).showAsync();
                 }
                 else {
-                    NOTIFICATION_GROUP.buildInfo()
+                    NOTIFICATION_GROUP.newInfo()
                         .title(ExternalServiceLocalize.updateAvailableGroup())
                         .content(ExternalServiceLocalize.updateAvailable())
                         .addAction(

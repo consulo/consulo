@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.ex.awt.UIUtil;
@@ -185,8 +186,13 @@ public abstract class GenericNotifierImpl<T, Key> {
                              @Nonnull String content,
                              @Nonnull NotificationType type,
                              @Nullable NotificationListener listener,
-                             @Nonnull final T obj) {
-      super(group, title, content, type, listener);
+                             @Nonnull T obj) {
+      super(
+          group.newOfType(type)
+              .title(LocalizeValue.localizeTODO(title))
+              .content(LocalizeValue.localizeTODO(content))
+              .optionalHyperlinkListener(listener)
+      );
       myObj = obj;
     }
 

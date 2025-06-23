@@ -75,10 +75,10 @@ public class VirtualFileSystemInternalHelperImpl implements VirtualFileSystemInt
     public void notifyAboutSlowFileWatcher(@Nonnull LocalizeValue cause) {
         Application application = Application.get();
         application.invokeLater(
-            () -> FileWatcherNotificationGroupContributor.NOTIFICATION_GROUP.newWarning()
+            () -> FileWatcherNotificationGroupContributor.NOTIFICATION_GROUP.newWarn()
                 .title(ApplicationLocalize.watcherSlowSync())
                 .content(cause)
-                .listener(NotificationListener.URL_OPENING_LISTENER)
+                .hyperlinkListener(NotificationListener.URL_OPENING_LISTENER)
                 .notify(null),
             application.getNoneModalityState()
         );

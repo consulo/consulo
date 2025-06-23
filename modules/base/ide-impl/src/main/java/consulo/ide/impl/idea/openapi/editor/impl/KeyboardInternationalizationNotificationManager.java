@@ -73,7 +73,7 @@ public class KeyboardInternationalizationNotificationManager {
                 KeyboardSettingsExternalizable.getDisplayLanguageNameForComponent(recentFocusedWindow) + " language." +
                 " You can change this option in the settings of " + productName + " <a href='settings'>more...</a></html>"
         ))
-        .optionalListener(listener)
+        .optionalHyperlinkListener(listener)
         .create();
   }
 

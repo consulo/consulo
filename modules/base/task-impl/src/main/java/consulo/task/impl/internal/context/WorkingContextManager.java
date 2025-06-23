@@ -154,7 +154,7 @@ public class WorkingContextManager {
             JBZipFile zipFile = null;
             try {
                 zipFile = new JBZipFile(file);
-                TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP.buildError()
+                TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP.newError()
                     .title(LocalizeValue.localizeTODO("Context Data Corrupted"))
                     .content(LocalizeValue.localizeTODO(
                         "Context information history for " + myProject.getName() + " was corrupted.\n" +

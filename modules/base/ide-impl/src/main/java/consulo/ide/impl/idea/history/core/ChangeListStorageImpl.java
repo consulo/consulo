@@ -128,10 +128,10 @@ public class ChangeListStorageImpl implements ChangeListStorage {
                              "<br>" +
                              "Please attach log files from <a href=\"file\">" + logFile + "</a><br>" +
                              "to the <a href=\"url\">YouTrack issue</a>";*/
-    Notifications.SYSTEM_MESSAGES_GROUP.buildError()
+    Notifications.SYSTEM_MESSAGES_GROUP.newError()
       .title(LocalizeValue.localizeTODO("Local History is broken"))
       .content(LocalizeValue.localizeTODO(message /*+ createIssuePart*/))
-      .listener((notification, event) -> {
+      .hyperlinkListener((notification, event) -> {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           if ("url".equals(event.getDescription())) {
             BrowserUtil.browse("http://youtrack.jetbrains.net/issue/IDEA-71270");

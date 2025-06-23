@@ -365,7 +365,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
               boolean tokenOK = !args.isEmpty() && myToken.equals(args.get(0));
               if (!tokenOK) {
                 log(new UnsupportedOperationException("unauthorized request: " + command));
-                Notifications.SYSTEM_MESSAGES_GROUP.newWarning()
+                Notifications.SYSTEM_MESSAGES_GROUP.newWarn()
                     .title(IdeLocalize.activationAuthTitle())
                     .content(IdeLocalize.activationAuthMessage())
                     .notify(null);

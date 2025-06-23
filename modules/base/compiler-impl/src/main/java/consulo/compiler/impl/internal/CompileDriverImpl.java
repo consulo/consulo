@@ -623,7 +623,7 @@ public class CompileDriverImpl implements CompileDriver {
                             .notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage);
                     }
                     CompilerManager.NOTIFICATION_GROUP
-                        .buildNotification(messageType)
+                        .newOfType(messageType)
                         .content(LocalizeValue.localizeTODO(statusMessage))
                         .notify(myProject);
                     if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {

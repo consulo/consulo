@@ -146,13 +146,13 @@ public class StatisticsSendManager implements Disposable {
     String fullProductName = Application.get().getName().get();
     String companyName = ApplicationInfo.getInstance().getCompanyName();
 
-    return group.buildInfo()
+    return group.newInfo()
         .title(LocalizeValue.localizeTODO("Help improve " + fullProductName + " by sending anonymous usage statistics to " + companyName))
         .content(LocalizeValue.localizeTODO(
             "<html>Please click <a href='allow'>I agree</a> if you want to help make " + fullProductName +
                 " better or <a href='decline'>I don't agree</a> otherwise. <a href='settings'>more...</a></html>"
         ))
-        .optionalListener(listener)
+        .optionalHyperlinkListener(listener)
         .create();
   }
 }

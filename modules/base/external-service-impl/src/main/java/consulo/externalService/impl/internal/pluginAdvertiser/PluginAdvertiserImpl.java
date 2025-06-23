@@ -32,8 +32,6 @@ import consulo.project.Project;
 import consulo.project.internal.UnknownFeaturesCollector;
 import consulo.project.ui.notification.*;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -120,7 +118,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
             return;
         }
 
-        ourGroup.buildInfo()
+        ourGroup.newInfo()
             .content(LocalizeValue.localizeTODO("Features covered by non-installed plugins are detected."))
             .addClosingAction(
                 LocalizeValue.localizeTODO("Install plugins..."),

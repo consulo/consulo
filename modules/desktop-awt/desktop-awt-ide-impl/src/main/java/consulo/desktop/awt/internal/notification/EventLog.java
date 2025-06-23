@@ -49,7 +49,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -184,9 +183,9 @@ public class EventLog {
                 isLongLine(actions) ? "<br>" : "&nbsp;"
             ) + "</p>";
 
-            Notification n = Notifications.SYSTEM_MESSAGES_GROUP.buildInfo()
+            Notification n = Notifications.SYSTEM_MESSAGES_GROUP.newInfo()
                 .content(LocalizeValue.of("."))
-                .listener(
+                .hyperlinkListener(
                     (n1, event) ->
                         Notification.fire(notification, notification.getActions().get(Integer.parseInt(event.getDescription())))
                 )

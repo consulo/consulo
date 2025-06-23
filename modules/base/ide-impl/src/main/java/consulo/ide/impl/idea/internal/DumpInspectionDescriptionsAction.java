@@ -140,7 +140,7 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
   }
 
   private static void doNotify(String message) {
-    Notifications.SYSTEM_MESSAGES_GROUP.buildInfo()
+    Notifications.SYSTEM_MESSAGES_GROUP.newInfo()
         .title(LocalizeValue.localizeTODO("Inspection descriptions dumped"))
         .content(LocalizeValue.ofNullable(message))
         .notify(null);

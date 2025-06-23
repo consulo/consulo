@@ -229,7 +229,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
       return host.getProcessList();
     }
     catch (ExecutionException e) {
-      GROUP.newWarning()
+      GROUP.newWarn()
           .title(XDebuggerLocalize.xdebuggerAttachActionItemsErrorTitle())
           .content(XDebuggerLocalize.xdebuggerAttachActionItemsErrorMessage())
           .notify(null);

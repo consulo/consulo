@@ -134,7 +134,7 @@ public final class NotificationGroup {
         return myDisplayName;
     }
 
-    public Notification.Builder newNotification(@Nonnull NotificationType type) {
+    public Notification.Builder newOfType(@Nonnull NotificationType type) {
         return new Notification.Builder(this, type);
     }
 
@@ -142,7 +142,7 @@ public final class NotificationGroup {
         return new Notification.Builder(this, NotificationType.ERROR);
     }
 
-    public Notification.Builder newWarning() {
+    public Notification.Builder newWarn() {
         return new Notification.Builder(this, NotificationType.WARNING);
     }
 
@@ -151,16 +151,16 @@ public final class NotificationGroup {
     }
 
     @Deprecated
-    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
+    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(@Nonnull String content, @Nonnull NotificationType type) {
-        return newNotification(type)
+        return newOfType(type)
             .content(LocalizeValue.of(content))
             .create();
     }
 
     @Deprecated
-    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
+    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(
         @Nonnull String title,
@@ -168,29 +168,29 @@ public final class NotificationGroup {
         @Nonnull NotificationType type,
         @Nullable NotificationListener listener
     ) {
-        return newNotification(type)
+        return newOfType(type)
             .title(LocalizeValue.of(title))
             .content(LocalizeValue.of(content))
-            .optionalListener(listener)
+            .optionalHyperlinkListener(listener)
             .create();
     }
 
     @Deprecated
-    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
+    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification() {
         return newInfo().create();
     }
 
     @Deprecated
-    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
+    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(@Nonnull NotificationType type) {
-        return newNotification(type).create();
+        return newOfType(type).create();
     }
 
     @Deprecated
-    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
+    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(
         @Nullable String title,
@@ -198,7 +198,7 @@ public final class NotificationGroup {
         @Nullable String content,
         @Nonnull NotificationType type
     ) {
-        return newNotification(type)
+        return newOfType(type)
             .title(LocalizeValue.ofNullable(title))
             .subtitle(LocalizeValue.ofNullable(subtitle))
             .subtitle(LocalizeValue.ofNullable(content))
@@ -206,7 +206,7 @@ public final class NotificationGroup {
     }
 
     @Deprecated
-    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
+    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(
         @Nullable String title,
@@ -215,11 +215,11 @@ public final class NotificationGroup {
         @Nonnull NotificationType type,
         @Nullable NotificationListener listener
     ) {
-        return newNotification(type)
+        return newOfType(type)
             .title(LocalizeValue.ofNullable(title))
             .subtitle(LocalizeValue.ofNullable(subtitle))
             .subtitle(LocalizeValue.ofNullable(content))
-            .optionalListener(listener)
+            .optionalHyperlinkListener(listener)
             .create();
     }
 

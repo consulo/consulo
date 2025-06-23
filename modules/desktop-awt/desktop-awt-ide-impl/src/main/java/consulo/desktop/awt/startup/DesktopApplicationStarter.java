@@ -317,10 +317,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         if (pluginErrors != null) {
             for (CompositeMessage pluginError : pluginErrors) {
-                PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup.buildError()
+                PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup.newError()
                     .title(IdeLocalize.titlePluginNotificationTitle())
                     .content(LocalizeValue.localizeTODO(pluginError.toString()))
-                    .listener(new NotificationListener() {
+                    .hyperlinkListener(new NotificationListener() {
                         @Override
                         @RequiredUIAccess
                         public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {

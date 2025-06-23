@@ -835,10 +835,10 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     if (!StringUtil.isEmpty(details)) {
       content = "<p>" + details + "</p>" + content;
     }
-    TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP.newWarning()
+    TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP.newWarn()
       .title(LocalizeValue.localizeTODO("Cannot connect to " + repository.getUrl()))
       .content(LocalizeValue.localizeTODO(content))
-      .listener((notification, event) -> {
+      .hyperlinkListener((notification, event) -> {
         Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, TaskRepositoriesConfigurable.class);
         notification.expire();
       })

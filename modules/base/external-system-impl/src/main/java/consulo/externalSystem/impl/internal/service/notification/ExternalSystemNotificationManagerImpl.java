@@ -159,10 +159,10 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
                 return;
             }
 
-            Notification notification = group.newNotification(notificationData.getNotificationCategory().getNotificationType())
+            Notification notification = group.newOfType(notificationData.getNotificationCategory().getNotificationType())
                 .title(LocalizeValue.localizeTODO(notificationData.getTitle()))
                 .content(LocalizeValue.localizeTODO(notificationData.getMessage()))
-                .listener(notificationData.getListener())
+                .hyperlinkListener(notificationData.getListener())
                 .create();
 
             myNotifications.add(notification);

@@ -1008,9 +1008,9 @@ public class XDebugSessionImpl implements XDebugSession {
         @Nonnull NotificationType type,
         @Nullable HyperlinkListener listener
     ) {
-        NOTIFICATION_GROUP.buildNotification(consulo.project.ui.notification.NotificationType.from(type))
+        NOTIFICATION_GROUP.newOfType(consulo.project.ui.notification.NotificationType.from(type))
             .content(LocalizeValue.localizeTODO(message))
-            .optionalListener(listener == null ? null : (notification, event) -> {
+            .optionalHyperlinkListener(listener == null ? null : (notification, event) -> {
                 if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     listener.hyperlinkUpdate(event);
                 }

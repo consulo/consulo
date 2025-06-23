@@ -18,12 +18,12 @@ package consulo.project.impl.internal;
 import consulo.application.ApplicationManager;
 import consulo.application.macro.PathMacros;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.UnknownMacroNotification;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,15 +40,20 @@ public class ProjectStorageUtil {
     private final List<String> myFileNames;
 
     private UnableToSaveProjectNotification(@Nonnull final Project project, final Collection<File> readOnlyFiles) {
-      super(ProjectNotificationGroups.Project, "Could not save project!", buildMessage(), NotificationType.ERROR, (notification, event) -> {
-        final UnableToSaveProjectNotification unableToSaveProjectNotification = (UnableToSaveProjectNotification)notification;
-        final Project _project = unableToSaveProjectNotification.getProject();
-        notification.expire();
+      super(
+        ProjectNotificationGroups.Project.newError()
+          .title(LocalizeValue.localizeTODO("Could not save project!"))
+          .content(LocalizeValue.localizeTODO(buildMessage()))
+          .hyperlinkListener((notification, event) -> {
+            UnableToSaveProjectNotification unableToSaveProjectNotification = (UnableToSaveProjectNotification)notification;
+            Project _project = unableToSaveProjectNotification.getProject();
+            notification.expire();
 
-        if (_project != null && !_project.isDisposed()) {
-          _project.save();
-        }
-      });
+            if (_project != null && !_project.isDisposed()) {
+              _project.save();
+            }
+          })
+      );
 
       myProject = project;
       myFileNames = ContainerUtil.map(readOnlyFiles, File::getPath);

@@ -633,7 +633,7 @@ public abstract class AbstractLayoutCodeProcessor {
     void handleFileTooBigException(Logger logger, FilesTooBigForDiffException e, @Nonnull PsiFile file) {
         logger.info("Error while calculating changed ranges for: " + file.getVirtualFile(), e);
         if (!Application.get().isUnitTestMode()) {
-            ReformatChangedTextTooBigNotificationGroup.buildInfo()
+            ReformatChangedTextTooBigNotificationGroup.newInfo()
                 .title(ApplicationLocalize.reformatChangedTextFileTooBigNotificationTitle())
                 .content(ApplicationLocalize.reformatChangedTextFileTooBigNotificationText(file.getName()))
                 .notify(file.getProject());

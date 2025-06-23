@@ -448,7 +448,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             int allFiles = getUpdatedFilesCount();
 
             if (someSessionWasCancelled) {
-                return STANDARD_NOTIFICATION.newWarning()
+                return STANDARD_NOTIFICATION.newWarn()
                     .title(LocalizeValue.localizeTODO("Project Partially Updated"))
                     .content(LocalizeValue.localizeTODO(allFiles + " " + pluralize("file", allFiles) + " updated"))
                     .create();
@@ -557,7 +557,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
                 final boolean noMerged = myUpdatedFiles.getGroupById(FileGroup.MERGED_WITH_CONFLICT_ID).isEmpty();
                 if (myUpdatedFiles.isEmpty() && myGroupedExceptions.isEmpty()) {
                     if (someSessionWasCancelled) {
-                        STANDARD_NOTIFICATION.newWarning()
+                        STANDARD_NOTIFICATION.newWarn()
                             .content(VcsLocalize.progressTextUpdatingCanceled())
                             .notify(myProject);
                     }

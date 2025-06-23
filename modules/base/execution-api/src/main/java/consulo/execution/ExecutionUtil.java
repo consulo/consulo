@@ -119,7 +119,7 @@ public class ExecutionUtil {
       ExecutionNotificationGroupHolder.BASE.newError()
           .title(title)
           .content(LocalizeValue.localizeTODO(finalDescription))
-          .optionalListener(finalListener == null ? null : (notification, event) -> finalListener.hyperlinkUpdate(event))
+          .optionalHyperlinkListener(finalListener == null ? null : (notification, event) -> finalListener.hyperlinkUpdate(event))
           .notify(project);
     });
   }

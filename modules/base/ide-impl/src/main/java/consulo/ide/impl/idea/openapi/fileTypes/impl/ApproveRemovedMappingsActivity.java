@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextFileType;
 import consulo.localize.LocalizeValue;
@@ -16,8 +16,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.event.HyperlinkEvent;
 import java.util.List;
 
@@ -37,17 +37,17 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
         for (RemovedMappingTracker.RemovedMapping mapping : list) {
           final FileNameMatcher matcher = mapping.getFileNameMatcher();
           final FileType fileType = FileTypeManager.getInstance().findFileTypeByName(mapping.getFileTypeName());
-          GROUP.newWarning()
+          GROUP.newWarn()
               .title(LocalizeValue.localizeTODO("File type recognized"))
               .content(LocalizeValue.localizeTODO(
                   "File extension " + matcher.getPresentableString() + " was reassigned to " + fileType.getName() +
                       " <a href='revert'>Revert</a>"
               ))
-              .listener(new NotificationListener.Adapter() {
+              .hyperlinkListener(new NotificationListener.Adapter() {
                 @Override
                 @RequiredUIAccess
                 protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
-                  ApplicationManager.getApplication().runWriteAction(() -> {
+                  Application.get().runWriteAction(() -> {
                     FileTypeManager.getInstance().associate(PlainTextFileType.INSTANCE, matcher);
                     removedMappings.add(matcher, fileType.getName(), true);
                   });
@@ -55,7 +55,7 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
                 }
               })
               .notify(project);
-          ApplicationManager.getApplication().runWriteAction(() -> FileTypeManager.getInstance().associate(fileType, matcher));
+          Application.get().runWriteAction(() -> FileTypeManager.getInstance().associate(fileType, matcher));
         }
       });
     }

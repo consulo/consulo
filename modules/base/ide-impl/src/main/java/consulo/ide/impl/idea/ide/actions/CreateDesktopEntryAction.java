@@ -105,7 +105,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
             install(entry, globalEntry);
             indicator.setFraction(indicator.getFraction() + step);
 
-            Notifications.SYSTEM_MESSAGES_GROUP.buildInfo()
+            Notifications.SYSTEM_MESSAGES_GROUP.newInfo()
                 .title(LocalizeValue.localizeTODO("Desktop entry created"))
                 .content(ApplicationLocalize.desktopEntrySuccess(Application.get().getName()))
                 .notify(null);
@@ -114,7 +114,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
             String message = e.getMessage();
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);
-                Notifications.SYSTEM_MESSAGES_GROUP.buildError()
+                Notifications.SYSTEM_MESSAGES_GROUP.newError()
                     .title(LocalizeValue.localizeTODO("Failed to create desktop entry"))
                     .content(LocalizeValue.localizeTODO(message))
                     .notify(project);

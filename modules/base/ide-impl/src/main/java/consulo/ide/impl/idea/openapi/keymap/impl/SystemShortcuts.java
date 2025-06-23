@@ -268,7 +268,7 @@ public final class SystemShortcuts {
         AnAction act = ActionManager.getInstance().getAction(actionId);
         String actText = act == null ? actionId : act.getTemplateText();
 
-        Notification.Builder notificationBuilder = SYSTEM_SHORTCUTS_CONFLICTS_GROUP.newWarning()
+        Notification.Builder notificationBuilder = SYSTEM_SHORTCUTS_CONFLICTS_GROUP.newWarn()
             .title(LocalizeValue.localizeTODO("Shortcuts conflicts"))
             .content(LocalizeValue.localizeTODO(
                 "The " + actText +

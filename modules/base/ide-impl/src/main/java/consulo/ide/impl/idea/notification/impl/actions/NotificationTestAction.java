@@ -189,11 +189,11 @@ public class NotificationTestAction extends AnAction implements DumbAware {
         if (myToolwindow) {
           displayId = TEST_TOOLWINDOW_GROUP;
         }
-        Notification.Builder builder = displayId.newNotification(myType)
+        Notification.Builder builder = displayId.newOfType(myType)
             .title(LocalizeValue.ofNullable(myTitle))
             .subtitle(LocalizeValue.ofNullable(mySubtitle))
             .content(LocalizeValue.localizeTODO(myContent == null ? "" : StringUtil.join(myContent, "\n")))
-            .optionalListener(getListener());
+            .optionalHyperlinkListener(getListener());
         if (myActions != null) {
           for (String action : myActions) {
             builder.addAction(new MyAnAction(action));

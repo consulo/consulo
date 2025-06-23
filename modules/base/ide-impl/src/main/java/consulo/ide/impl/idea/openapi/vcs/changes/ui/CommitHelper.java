@@ -229,7 +229,7 @@ public class CommitHelper {
         }
         NotificationType notificationType = resolveNotificationType(processor);
         VcsBalloonProblemNotifier.NOTIFICATION_GROUP
-            .newNotification(notificationType)
+            .newOfType(notificationType)
             .content(LocalizeValue.of(content.toString()))
             .notify(myProject);
         return text;

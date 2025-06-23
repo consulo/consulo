@@ -104,7 +104,7 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
                 .content(LocalizeValue.localizeTODO(
                     ProjectLocalize.errorMessageConfigurationCannotLoad() + " " + invalidElements + " <a href=\"\">Details...</a>"
                 ))
-                .listener((notification, event) -> {
+                .hyperlinkListener((notification, event) -> {
                     List<ConfigurationErrorDescription> validDescriptions = ContainerUtil.findAll(descriptions, ConfigurationErrorDescription::isValid);
                     RemoveInvalidElementsDialog.showDialog(myProject, CommonLocalize.titleError().get(), type, invalidElements, validDescriptions);
 

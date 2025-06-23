@@ -15,6 +15,7 @@
  */
 package consulo.project.ui.internal;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
@@ -36,7 +37,12 @@ public class UnknownMacroNotification extends Notification {
                                   @Nonnull NotificationType type,
                                   @Nullable NotificationListener listener,
                                   @Nonnull Collection<String> macros) {
-    super(group, title, content, type, listener);
+    super(
+        group.newOfType(type)
+            .title(LocalizeValue.localizeTODO(title))
+            .content(LocalizeValue.localizeTODO(content))
+            .optionalHyperlinkListener(listener)
+    );
 
     myMacros = macros;
   }
