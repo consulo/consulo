@@ -47,7 +47,6 @@ public class ActionUpdater {
     private static final Logger LOG = Logger.getInstance(ActionUpdater.class);
     private static final Executor ourExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("Action Updater", 2);
 
-    private final boolean myModalContext;
     private final PresentationFactory myFactory;
     private final DataContext myDataContext;
     private final String myPlace;
@@ -66,7 +65,6 @@ public class ActionUpdater {
 
     public ActionUpdater(
         ActionManager actionManager,
-        boolean isInModalContext,
         PresentationFactory presentationFactory,
         DataContext dataContext,
         String place,
@@ -75,7 +73,6 @@ public class ActionUpdater {
     ) {
         myProject = dataContext.getData(Project.KEY);
         myActionManager = actionManager;
-        myModalContext = isInModalContext;
         myFactory = presentationFactory;
         myDataContext = dataContext;
         myPlace = place;
@@ -86,7 +83,7 @@ public class ActionUpdater {
                 // clone the presentation to avoid partially changing the cached one if update is interrupted
                 Presentation presentation = myFactory.getPresentation(action).clone();
                 presentation.setEnabledAndVisible(true);
-                Supplier<Boolean> doUpdate = () -> doUpdate(myModalContext, action, createActionEvent(action, presentation));
+                Supplier<Boolean> doUpdate = () -> doUpdate(action, createActionEvent(action, presentation));
                 boolean success = callAction(action, "update", doUpdate);
                 return success ? presentation : null;
             },
@@ -513,7 +510,7 @@ public class ActionUpdater {
     }
 
     // returns false if exception was thrown and handled
-    boolean doUpdate(boolean isInModalContext, AnAction action, AnActionEvent e) {
+    boolean doUpdate(AnAction action, AnActionEvent e) {
         if (Application.get().isDisposed()) {
             return false;
         }

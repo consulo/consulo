@@ -147,6 +147,8 @@ public interface ActionToolbar {
     @Nonnull
     CompletableFuture<List<? extends AnAction>> updateActionsAsync(@Nonnull UIAccess uiAccess);
 
+    @Deprecated
+    @DeprecationInfo("Need get it from update future, due result updated in async mode")
     boolean hasVisibleActions();
 
     /**

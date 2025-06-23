@@ -29,6 +29,7 @@ import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
@@ -92,7 +93,7 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
             ActionToolbar toolbar = ActionToolbarFactory.getInstance()
                 .createActionToolbar("XDebuggerExpressionEditor", builder.build(), ActionToolbar.Style.INPLACE);
             toolbar.setTargetComponent(myEditorTextField);
-            toolbar.updateActionsImmediately();
+            toolbar.updateActionsAsync(UIAccess.current());
 
             myEditorTextField.setSuffixComponent(toolbar.getComponent());
         }

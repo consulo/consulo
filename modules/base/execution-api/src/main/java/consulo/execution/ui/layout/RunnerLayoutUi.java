@@ -17,16 +17,16 @@
 package consulo.execution.ui.layout;
 
 import consulo.disposer.Disposable;
-import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.ComponentWithActions;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.ActionCallback;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 public interface RunnerLayoutUi  {
@@ -77,7 +77,7 @@ public interface RunnerLayoutUi  {
 
   boolean isDisposed();
 
-  void updateActionsNow();
+  void updateActionsNow(UIAccess uiAccess);
 
   @Nonnull
   Content[] getContents();

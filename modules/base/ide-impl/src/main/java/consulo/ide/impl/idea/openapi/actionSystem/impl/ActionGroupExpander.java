@@ -39,8 +39,7 @@ public class ActionGroupExpander {
                                                  @Nonnull DataContext context,
                                                  String place) {
     return new ActionUpdater(ActionManager.getInstance(),
-                             isInModalContext,
-                             presentationFactory,
+        presentationFactory,
                              context,
                              place,
                              false,
@@ -55,7 +54,7 @@ public class ActionGroupExpander {
                                                                          @Nonnull DataContext context,
                                                                          String place) {
     if (!(context instanceof AsyncDataContext)) context = DataManager.getInstance().createAsyncDataContext(context);
-    return new ActionUpdater(ActionManager.getInstance(), isInModalContext, presentationFactory, context, place, false, false)
+    return new ActionUpdater(ActionManager.getInstance(), presentationFactory, context, place, false, false)
       .expandActionGroupAsync(group, group instanceof CompactActionGroup);
   }
 
@@ -66,8 +65,7 @@ public class ActionGroupExpander {
                                                             String place,
                                                             int timeoutMs) {
     return new ActionUpdater(ActionManager.getInstance(),
-                             isInModalContext,
-                             presentationFactory,
+        presentationFactory,
                              context,
                              place,
                              false,

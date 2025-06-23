@@ -28,6 +28,7 @@ import consulo.language.editor.ui.awt.EditorComboBoxEditor;
 import consulo.language.editor.ui.awt.EditorComboBoxRenderer;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
@@ -78,6 +79,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
         return myComponent;
     }
 
+    @Override
     @Nullable
     public Editor getEditor() {
         return myEditor.getEditorTextField().getEditor();
@@ -185,7 +187,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
                 ActionToolbar toolbar = ActionToolbarFactory.getInstance()
                     .createActionToolbar("XDebuggerExpressionComboBox", builder.build(), ActionToolbar.Style.INPLACE);
                 toolbar.setTargetComponent(null);
-                toolbar.updateActionsImmediately();
+                toolbar.updateActionsAsync(UIAccess.current());
 
                 myDelegate.getEditorComponent().setSuffixComponent(toolbar.getComponent());
             }

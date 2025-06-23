@@ -26,6 +26,7 @@ import consulo.execution.internal.layout.RunnerLayoutUiImpl;
 import consulo.execution.ui.layout.*;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.ComponentWithActions;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -86,15 +87,15 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
 
     @Nonnull
     @Override
-    public LayoutStateDefaults initFocusContent(@Nonnull final String id, @Nonnull final String condition) {
+    public LayoutStateDefaults initFocusContent(@Nonnull String id, @Nonnull String condition) {
         return initFocusContent(id, condition, new LayoutAttractionPolicy.FocusOnce());
     }
 
     @Nonnull
     @Override
-    public LayoutStateDefaults initFocusContent(@Nonnull final String id,
-                                                @Nonnull final String condition,
-                                                @Nonnull final LayoutAttractionPolicy policy) {
+    public LayoutStateDefaults initFocusContent(@Nonnull String id,
+                                                @Nonnull String condition,
+                                                @Nonnull LayoutAttractionPolicy policy) {
         getLayout().setDefaultToFocus(id, condition, policy);
         return this;
     }
@@ -116,7 +117,7 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
                               int defaultTabId,
                               @Nonnull PlaceInGrid defaultPlace,
                               boolean defaultIsMinimized) {
-        final String id = content.getUserData(CONTENT_TYPE);
+        String id = content.getUserData(CONTENT_TYPE);
 
         assert id != null : "Content id is missing, use RunnerLayoutUi to create content instances";
 
@@ -140,12 +141,12 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
 
     @Override
     @Nonnull
-    public Content createContent(@Nonnull final String contentId,
-                                 @Nonnull final ComponentWithActions withActions,
-                                 @Nonnull final String displayName,
-                                 @Nullable final Image icon,
-                                 @Nullable final JComponent toFocus) {
-        final Content content = getContentFactory().createContent(withActions.getComponent(), displayName, false);
+    public Content createContent(@Nonnull String contentId,
+                                 @Nonnull ComponentWithActions withActions,
+                                 @Nonnull String displayName,
+                                 @Nullable Image icon,
+                                 @Nullable JComponent toFocus) {
+        Content content = getContentFactory().createContent(withActions.getComponent(), displayName, false);
         content.putUserData(CONTENT_TYPE, contentId);
         content.putUserData(ViewImpl.ID, contentId);
         content.setIcon(icon);
@@ -176,8 +177,8 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    public void updateActionsNow() {
-        myContentUI.updateActionsImmediately();
+    public void updateActionsNow(UIAccess uiAccess) {
+        myContentUI.updateActionsImmediately(uiAccess);
     }
 
     @Override
@@ -197,13 +198,13 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
 
     @Nonnull
     @Override
-    public ActionCallback selectAndFocus(@Nullable final Content content, boolean requestFocus, final boolean forced) {
+    public ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, boolean forced) {
         return selectAndFocus(content, requestFocus, forced, false);
     }
 
     @Nonnull
     @Override
-    public ActionCallback selectAndFocus(@Nullable final Content content, boolean requestFocus, final boolean forced, boolean implicit) {
+    public ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, boolean forced, boolean implicit) {
         if (content == null) {
             return ActionCallback.REJECTED;
         }
@@ -215,40 +216,40 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     private boolean shouldRequestFocus() {
-        final Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         return focused != null && SwingUtilities.isDescendingFrom(focused, getContentManager().getComponent());
     }
 
     @Override
-    public boolean removeContent(@Nullable Content content, final boolean dispose) {
+    public boolean removeContent(@Nullable Content content, boolean dispose) {
         return content != null && getContentManager().removeContent(content, dispose);
     }
 
     @Override
-    public boolean isToFocus(@Nonnull final Content content, @Nonnull final String condition) {
-        final String id = content.getUserData(ViewImpl.ID);
+    public boolean isToFocus(@Nonnull Content content, @Nonnull String condition) {
+        String id = content.getUserData(ViewImpl.ID);
         return getLayout().isToFocus(id, condition);
     }
 
     @Nonnull
     @Override
-    public LayoutViewOptions setToFocus(@Nullable final Content content, @Nonnull final String condition) {
+    public LayoutViewOptions setToFocus(@Nullable Content content, @Nonnull String condition) {
         getLayout().setToFocus(content != null ? content.getUserData(ViewImpl.ID) : null, condition);
         return this;
     }
 
     @Override
-    public void attractBy(@Nonnull final String condition) {
+    public void attractBy(@Nonnull String condition) {
         myContentUI.attractByCondition(condition, true);
     }
 
     @Override
-    public void clearAttractionBy(@Nonnull final String condition) {
+    public void clearAttractionBy(@Nonnull String condition) {
         myContentUI.clearAttractionByCondition(condition, true);
     }
 
-    public void removeContent(@Nonnull String id, final boolean dispose) {
-        final Content content = findContent(id);
+    public void removeContent(@Nonnull String id, boolean dispose) {
+        Content content = findContent(id);
         if (content != null) {
             getContentManager().removeContent(content, dispose);
         }
@@ -262,7 +263,7 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     @Nonnull
     @Override
     public AnAction[] getLayoutActionsList() {
-        final ActionGroup group = (ActionGroup) getLayoutActions();
+        ActionGroup group = (ActionGroup) getLayoutActions();
         return group.getChildren(null);
     }
 
@@ -275,33 +276,33 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
 
     @Nonnull
     @Override
-    public LayoutViewOptions setLeftToolbar(@Nonnull final ActionGroup leftToolbar, @Nonnull final String place) {
+    public LayoutViewOptions setLeftToolbar(@Nonnull ActionGroup leftToolbar, @Nonnull String place) {
         myContentUI.setLeftToolbar(leftToolbar, place);
         return this;
     }
 
     @Override
     @Nullable
-    public Content findContent(@Nonnull final String key) {
+    public Content findContent(@Nonnull String key) {
         return myContentUI.findContent(key);
     }
 
     @Nonnull
     @Override
-    public RunnerLayoutUi addListener(@Nonnull final ContentManagerListener listener, @Nonnull final Disposable parent) {
-        final ContentManager mgr = getContentManager();
+    public RunnerLayoutUi addListener(@Nonnull ContentManagerListener listener, @Nonnull Disposable parent) {
+        ContentManager mgr = getContentManager();
         mgr.addContentManagerListener(listener);
         Disposer.register(parent, () -> mgr.removeContentManagerListener(listener));
         return this;
     }
 
     @Override
-    public void removeListener(@Nonnull final ContentManagerListener listener) {
+    public void removeListener(@Nonnull ContentManagerListener listener) {
         getContentManager().removeContentManagerListener(listener);
     }
 
     @Override
-    public void setBouncing(@Nonnull final Content content, final boolean activate) {
+    public void setBouncing(@Nonnull Content content, boolean activate) {
         myContentUI.processBounce(content, activate);
     }
 
@@ -313,7 +314,7 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
 
     @Override
     @Nonnull
-    public LayoutViewOptions setMinimizeActionEnabled(final boolean enabled) {
+    public LayoutViewOptions setMinimizeActionEnabled(boolean enabled) {
         myContentUI.setMinimizeActionEnabled(enabled);
         return this;
     }
@@ -325,21 +326,21 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
 
     @Override
     @Nonnull
-    public LayoutViewOptions setMoveToGridActionEnabled(final boolean enabled) {
+    public LayoutViewOptions setMoveToGridActionEnabled(boolean enabled) {
         myContentUI.setMovetoGridActionEnabled(enabled);
         return this;
     }
 
     @Override
     @Nonnull
-    public LayoutViewOptions setAttractionPolicy(@Nonnull final String contentId, final LayoutAttractionPolicy policy) {
+    public LayoutViewOptions setAttractionPolicy(@Nonnull String contentId, LayoutAttractionPolicy policy) {
         myContentUI.setPolicy(contentId, policy);
         return this;
     }
 
     @Nonnull
     @Override
-    public LayoutViewOptions setConditionAttractionPolicy(@Nonnull final String condition, final LayoutAttractionPolicy policy) {
+    public LayoutViewOptions setConditionAttractionPolicy(@Nonnull String condition, LayoutAttractionPolicy policy) {
         myContentUI.setConditionPolicy(condition, policy);
         return this;
     }
@@ -358,7 +359,7 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
 
     @Nonnull
     @Override
-    public LayoutViewOptions setAdditionalFocusActions(@Nonnull final ActionGroup group) {
+    public LayoutViewOptions setAdditionalFocusActions(@Nonnull ActionGroup group) {
         myContentUI.setAdditionalFocusActions(group);
         return this;
     }
@@ -371,7 +372,7 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     @Nonnull
     @Override
     public AnAction[] getSettingsActionsList() {
-        final ActionGroup group = (ActionGroup) getSettingsActions();
+        ActionGroup group = (ActionGroup) getSettingsActions();
         return group.getChildren(null);
     }
 

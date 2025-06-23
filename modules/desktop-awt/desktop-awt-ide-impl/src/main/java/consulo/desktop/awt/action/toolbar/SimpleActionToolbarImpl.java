@@ -312,7 +312,7 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         if (myTargetComponent != component) {
             myTargetComponent = component;
             if (isShowing()) {
-                updateActionsImmediately();
+                updateActionsAsync(UIAccess.current());
             }
         }
     }

@@ -16,7 +16,6 @@
 package consulo.desktop.awt.action.toolbar;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -102,7 +101,6 @@ public abstract class ActionToolbarEngine {
         DataContext dataContext = getDataContext();
         boolean async = myAlreadyUpdated && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
         ActionUpdater updater = new ActionUpdater(myActionManager,
-            LaterInvocator.isInModalContext(),
             myPresentationFactory,
             async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
             myPlace,
@@ -127,7 +125,6 @@ public abstract class ActionToolbarEngine {
         boolean async = myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
         ActionUpdater updater =
             new ActionUpdater(myActionManager,
-                LaterInvocator.isInModalContext(),
                 myPresentationFactory,
                 async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
                 myPlace,

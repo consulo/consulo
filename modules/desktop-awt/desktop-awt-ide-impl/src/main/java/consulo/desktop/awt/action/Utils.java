@@ -43,7 +43,7 @@ public class Utils {
         boolean checked = group instanceof CheckedActionGroup;
 
         ActionUpdater updater =
-            new ActionUpdater(ActionManager.getInstance(), isInModalContext, presentationFactory, context, place, true, false);
+            new ActionUpdater(ActionManager.getInstance(), presentationFactory, context, place, true, false);
         List<AnAction> list =
             DO_FULL_EXPAND ? updater.expandActionGroupFull(group, group instanceof CompactActionGroup) : updater.expandActionGroupWithTimeout(
                 group,

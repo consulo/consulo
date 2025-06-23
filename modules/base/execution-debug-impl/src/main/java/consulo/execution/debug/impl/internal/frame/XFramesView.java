@@ -128,7 +128,7 @@ public class XFramesView extends XDebugView {
             .createActionToolbar(XFrameThreadsComboBoxGroup.ID, tailGroup, ActionToolbar.Style.INPLACE);
 
         toolbar.setTargetComponent(myMainPanel);
-        toolbar.updateActionsImmediately();
+        toolbar.updateActionsAsync(UIAccess.current());
 
         myThreadComboBox.putClientProperty("JComboBox.trailingComponent", toolbar.getComponent());
 

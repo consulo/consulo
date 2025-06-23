@@ -1340,9 +1340,9 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return (ActionGroup) myActionManager.getAction(LAYOUT);
     }
 
-    public void updateActionsImmediately() {
-        if (myToolbar.getTargetComponent() instanceof ActionToolbar) {
-            ((ActionToolbar) myToolbar.getTargetComponent()).updateActionsImmediately();
+    public void updateActionsImmediately(UIAccess uiAccess) {
+        if (myToolbar.getTargetComponent() instanceof ActionToolbar toolbar) {
+            toolbar.updateActionsAsync(uiAccess);
         }
     }
 
