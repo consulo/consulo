@@ -15,20 +15,20 @@
  */
 package consulo.ui.ex.awt.tree;
 
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class LoadingNode extends DefaultMutableTreeNode {
-  public LoadingNode() {
-    this(getText());
-  }
+    public LoadingNode() {
+        this(getText());
+    }
 
-  public static String getText() {
-    return UIBundle.message("treenode.loading");
-  }
+    public static String getText() {
+        return UILocalize.treenodeLoading().get();
+    }
 
-  public LoadingNode(String text) {
-    super(text);
-  }
+    public LoadingNode(String text) {
+        super(text);
+    }
 }

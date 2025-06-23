@@ -19,9 +19,9 @@ autoscroll.to.source.action.name:
 big.text.control.window.title:
     text: Text
 button.add.class:
-    text: Add Class...
+    text: Add Class…
 button.add.pattern:
-    text: Add Pattern...
+    text: Add Pattern…
 button.remove:
     text: '&Remove'
 cannot.save.files.dialog.ignore.changes:
@@ -63,11 +63,11 @@ create.new.folder.enter.new.folder.name.prompt.text:
 create.new.folder.folder.name.cannot.be.empty.error.message:
     text: Folder name cannot be empty
 crumbs.calculating.tooltip:
-    text: Calculating...
+    text: Calculating…
 delete.dialog.title:
     text: Delete
 downloading.file.change.http.proxy.settings:
-    text: Change HTTP &Proxy Settings...
+    text: Change HTTP &Proxy Settings…
 downloading.file.try.again.button:
     text: Tr&y Again
 error.dialog.title:
@@ -344,6 +344,8 @@ tree.view.collapse.all.action.name:
     text: Collapse All
 tree.view.expand.all.action.name:
     text: Expand All
+treenode.loading:
+    text: loading…
 welcome.screen.disabled.plugins.description:
     text: (disabled)
 welcome.screen.documentation.action.group.name:
@@ -363,7 +365,7 @@ welcome.screen.plugins.panel.bundled.plugins.label:
 welcome.screen.plugins.panel.learn.more.link:
     text: <html><body><u>...</u></body></html>
 welcome.screen.plugins.panel.learn.more.tooltip.text:
-    text: Learn more...
+    text: Learn more…
 welcome.screen.plugins.panel.manager.link:
     text: <html><body><u>Open Plugin Manager</u></body></html>
 welcome.screen.plugins.panel.my.plugins.label:
