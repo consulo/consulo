@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.Application;
@@ -229,7 +228,10 @@ public class CommitHelper {
             content.append(s);
         }
         NotificationType notificationType = resolveNotificationType(processor);
-        VcsBalloonProblemNotifier.NOTIFICATION_GROUP.createNotification(content.toString(), notificationType).notify(myProject);
+        VcsBalloonProblemNotifier.NOTIFICATION_GROUP
+            .newNotification(notificationType)
+            .content(LocalizeValue.of(content.toString()))
+            .notify(myProject);
         return text;
     }
 

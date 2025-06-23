@@ -23,7 +23,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
-import consulo.util.collection.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -32,8 +31,6 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -108,26 +105,19 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
             install(entry, globalEntry);
             indicator.setFraction(indicator.getFraction() + step);
 
-            Notifications.Bus.notify(new Notification(
-                Notifications.SYSTEM_MESSAGES_GROUP,
-                "Desktop entry created",
-                ApplicationLocalize.desktopEntrySuccess(Application.get().getName()).get(),
-                NotificationType.INFORMATION
-            ));
+            Notifications.SYSTEM_MESSAGES_GROUP.buildInfo()
+                .title(LocalizeValue.localizeTODO("Desktop entry created"))
+                .content(ApplicationLocalize.desktopEntrySuccess(Application.get().getName()))
+                .notify(null);
         }
         catch (Exception e) {
             String message = e.getMessage();
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);
-                Notifications.Bus.notify(
-                    new Notification(
-                        Notifications.SYSTEM_MESSAGES_GROUP,
-                        "Failed to create desktop entry",
-                        message,
-                        NotificationType.ERROR
-                    ),
-                    project
-                );
+                Notifications.SYSTEM_MESSAGES_GROUP.buildError()
+                    .title(LocalizeValue.localizeTODO("Failed to create desktop entry"))
+                    .content(LocalizeValue.localizeTODO(message))
+                    .notify(project);
             }
             else {
                 LOG.error(e);

@@ -22,9 +22,9 @@ import consulo.execution.unscramble.AnalyzeStacktraceUtil;
 import consulo.execution.unscramble.ThreadDumpPanel;
 import consulo.execution.unscramble.ThreadOperation;
 import consulo.execution.unscramble.ThreadState;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ui.notification.NotificationType;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -283,8 +283,8 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
             }
             CopyPasteManager.getInstance().setContents(new StringSelection(buf.toString()));
 
-            ExecutionNotificationGroupHolder.ANALYZE_THREAD_DUMP
-                .createNotification("Full thread dump was successfully copied to clipboard", NotificationType.INFORMATION)
+            ExecutionNotificationGroupHolder.ANALYZE_THREAD_DUMP.buildInfo()
+                .content(LocalizeValue.localizeTODO("Full thread dump was successfully copied to clipboard"))
                 .notify(myProject);
         }
     }

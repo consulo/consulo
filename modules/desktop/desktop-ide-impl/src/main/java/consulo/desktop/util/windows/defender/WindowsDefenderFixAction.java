@@ -23,7 +23,6 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -70,12 +69,10 @@ public class WindowsDefenderFixAction extends NotificationAction {
                 notification.expire();
                 Application.get().executeOnPooledThread(() -> {
                     if (WindowsDefenderChecker.getInstance().runExcludePathsCommand(e.getData(Project.KEY), myPaths)) {
-                        UIUtil.invokeLaterIfNeeded(() -> Notifications.Bus.notifyAndHide(new Notification(
-                                SystemHealthMonitorImpl.GROUP,
-                                "",
-                                ExternalServiceLocalize.virusScanningFixSuccessNotification().get(),
-                                NotificationType.INFORMATION
-                            ),
+                        UIUtil.invokeLaterIfNeeded(() -> Notifications.Bus.notifyAndHide(
+                            SystemHealthMonitorImpl.GROUP.buildInfo()
+                                .content(ExternalServiceLocalize.virusScanningFixSuccessNotification())
+                                .create(),
                             e.getData(Project.KEY)
                         ));
                     }

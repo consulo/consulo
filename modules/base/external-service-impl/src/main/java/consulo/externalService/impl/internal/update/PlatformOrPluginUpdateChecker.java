@@ -166,12 +166,10 @@ public class PlatformOrPluginUpdateChecker {
         switch (type) {
             case NO_UPDATE:
                 if (showResults) {
-                    NOTIFICATION_GROUP.createNotification(
-                        ExternalServiceLocalize.updateAvailableGroup().get(),
-                        ExternalServiceLocalize.updateThereAreNoUpdates().get(),
-                        NotificationType.INFORMATION,
-                        null
-                    ).notify(project);
+                    NOTIFICATION_GROUP.buildInfo()
+                        .title(ExternalServiceLocalize.updateAvailableGroup())
+                        .content(ExternalServiceLocalize.updateThereAreNoUpdates())
+                        .notify(project);
                 }
                 break;
             case RESTART_REQUIRED:
@@ -183,20 +181,14 @@ public class PlatformOrPluginUpdateChecker {
                     new PlatformOrPluginDialog(project, targetsForUpdate, null, null, false).showAsync();
                 }
                 else {
-                    Notification notification = NOTIFICATION_GROUP.createNotification(
-                        ExternalServiceLocalize.updateAvailableGroup().get(),
-                        ExternalServiceLocalize.updateAvailable().get(),
-                        NotificationType.INFORMATION,
-                        null
-                    );
-                    notification.addAction(new NotificationAction(ExternalServiceLocalize.updateViewUpdates()) {
-                        @RequiredUIAccess
-                        @Override
-                        public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-                            new PlatformOrPluginDialog(project, targetsForUpdate, null, null, false).showAsync();
-                        }
-                    });
-                    notification.notify(project);
+                    NOTIFICATION_GROUP.buildInfo()
+                        .title(ExternalServiceLocalize.updateAvailableGroup())
+                        .content(ExternalServiceLocalize.updateAvailable())
+                        .addAction(
+                            ExternalServiceLocalize.updateViewUpdates(),
+                            () -> new PlatformOrPluginDialog(project, targetsForUpdate, null, null, false).showAsync()
+                        )
+                        .notify(project);
                 }
                 break;
         }

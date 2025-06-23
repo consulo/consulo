@@ -26,12 +26,12 @@ import consulo.externalService.impl.internal.PermanentInstallationID;
 import consulo.externalService.impl.internal.WebServiceApi;
 import consulo.externalService.impl.internal.WebServiceApiSender;
 import consulo.externalService.impl.internal.repository.api.StatisticsBean;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
@@ -142,15 +142,17 @@ public class StatisticsSendManager implements Disposable {
   }
 
   // FIXME [VISTALL] at current moment we not show this notification
-  public Notification createNotification(@Nonnull final NotificationGroup group, @Nullable NotificationListener listener) {
-    final String fullProductName = Application.get().getName().get();
-    final String companyName = ApplicationInfo.getInstance().getCompanyName();
+  public Notification createNotification(@Nonnull NotificationGroup group, @Nullable NotificationListener listener) {
+    String fullProductName = Application.get().getName().get();
+    String companyName = ApplicationInfo.getInstance().getCompanyName();
 
-    String text = "<html>Please click <a href='allow'>I agree</a> if you want to help make " + fullProductName +
-                  " better or <a href='decline'>I don't agree</a> otherwise. <a href='settings'>more...</a></html>";
-
-    String title = "Help improve " + fullProductName + " by sending anonymous usage statistics to " + companyName;
-
-    return new Notification(group, title, text, NotificationType.INFORMATION, listener);
+    return group.buildInfo()
+        .title(LocalizeValue.localizeTODO("Help improve " + fullProductName + " by sending anonymous usage statistics to " + companyName))
+        .content(LocalizeValue.localizeTODO(
+            "<html>Please click <a href='allow'>I agree</a> if you want to help make " + fullProductName +
+                " better or <a href='decline'>I don't agree</a> otherwise. <a href='settings'>more...</a></html>"
+        ))
+        .optionalListener(listener)
+        .create();
   }
 }

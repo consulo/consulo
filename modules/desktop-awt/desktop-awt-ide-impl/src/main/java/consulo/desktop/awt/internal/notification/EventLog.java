@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.desktop.awt.internal.notification;
 
 import consulo.annotation.component.ComponentScope;
@@ -28,10 +27,10 @@ import consulo.document.impl.DocumentImpl;
 import consulo.document.util.TextRange;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.notification.event.NotificationListener;
@@ -184,14 +183,14 @@ public class EventLog {
                 },
                 isLongLine(actions) ? "<br>" : "&nbsp;"
             ) + "</p>";
-            Notification n = new Notification(
-                Notifications.SYSTEM_MESSAGES_GROUP,
-                "",
-                ".",
-                NotificationType.INFORMATION,
-                (n1, event) ->
-                    Notification.fire(notification, notification.getActions().get(Integer.parseInt(event.getDescription())))
-            );
+
+            Notification n = Notifications.SYSTEM_MESSAGES_GROUP.buildInfo()
+                .content(LocalizeValue.of("."))
+                .listener(
+                    (n1, event) ->
+                        Notification.fire(notification, notification.getActions().get(Integer.parseInt(event.getDescription())))
+                )
+                .create();
             if (title.length() > 0 || content.length() > 0) {
                 lineSeparators.add(logDoc.createRangeMarker(TextRange.from(logDoc.getTextLength(), 0)));
             }

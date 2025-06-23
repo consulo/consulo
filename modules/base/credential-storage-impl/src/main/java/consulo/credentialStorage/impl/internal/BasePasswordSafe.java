@@ -213,18 +213,17 @@ public abstract class BasePasswordSafe implements PasswordSafe {
             return new InMemoryCredentialStore();
         }
 
-        Consumer<LocalizeValue> showError = (title) -> {
-            PasswordSafeNotificationGroupContributor.notify(title,
-                CredentialStorageLocalize.notificationContentInMemoryStorage(),
-                NotificationAction.createExpiring(
-                    CredentialStorageLocalize.notificationContentPasswordSettingsAction(),
-                    (e, ignored) -> {
-                        Project project = e.getData(Project.KEY);
-                        Application.get().getInstance(ShowConfigurableService.class).showAndSelect(project, PasswordSafeConfigurable.class);
-                    }
-                )
-            );
-        };
+        Consumer<LocalizeValue> showError = (title) -> PasswordSafeNotificationGroupContributor.GROUP.buildError()
+            .title(title)
+            .content(CredentialStorageLocalize.notificationContentInMemoryStorage())
+            .addClosingAction(
+                CredentialStorageLocalize.notificationContentPasswordSettingsAction(),
+                e -> {
+                    Project project = e.getData(Project.KEY);
+                    Application.get().getInstance(ShowConfigurableService.class).showAndSelect(project, PasswordSafeConfigurable.class);
+                }
+            )
+            .notify(null);
 
         if (CredentialStoreManager.getInstance().isSupported(settings.getProviderType())) {
             if (settings.getProviderType() == ProviderType.KEEPASS) {

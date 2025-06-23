@@ -18,11 +18,11 @@ package consulo.versionControlSystem.ui;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.util.NamedRunnable;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.versionControlSystem.VcsToolWindow;
 
 import jakarta.annotation.Nonnull;
@@ -101,15 +101,17 @@ public class VcsBalloonProblemNotifier implements Runnable {
         final String name = runnable.toString();
         sb.append("<br/><a href=\"").append(name).append("\">").append(name).append("</a>");
       }
-      notification = NOTIFICATION_GROUP.createNotification(myMessageType.name(), sb.toString(), myMessageType, new NotificationListener() {
-        @Override
-        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+
+      notification = NOTIFICATION_GROUP.newNotification(myMessageType)
+        .title(LocalizeValue.localizeTODO(myMessageType.name()))
+        .content(LocalizeValue.localizeTODO(sb.toString()))
+        .listener((thisNotification, event) -> {
           if (HyperlinkEvent.EventType.ACTIVATED.equals(event.getEventType())) {
             if (myNotificationListener.length == 1) {
               myNotificationListener[0].run();
             }
             else {
-              final String description = event.getDescription();
+              String description = event.getDescription();
               if (description != null) {
                 for (NamedRunnable runnable : myNotificationListener) {
                   if (description.equals(runnable.toString())) {
@@ -119,13 +121,15 @@ public class VcsBalloonProblemNotifier implements Runnable {
                 }
               }
             }
-            notification.expire();
+            thisNotification.expire();
           }
-        }
-      });
+        })
+        .create();
     }
     else {
-      notification = NOTIFICATION_GROUP.createNotification(myMessage, myMessageType);
+      notification = NOTIFICATION_GROUP.newNotification(myMessageType)
+        .content(LocalizeValue.localizeTODO(myMessage))
+        .create();
     }
     notification.notify(myProject.isDefault() ? null : myProject);
   }

@@ -148,9 +148,10 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
         private DetectionDisabledNotification(Project project) {
             super(
                 NOTIFICATION_GROUP,
-                ApplicationLocalize.codeStyleIndentDetectorNotificationContent().get(),
-                "",
-                NotificationType.INFORMATION
+                ApplicationLocalize.codeStyleIndentDetectorNotificationContent(),
+                LocalizeValue.empty(),
+                NotificationType.INFORMATION,
+                null
             );
             addAction(new ReEnableDetection(project, this));
             addAction(new ShowIndentDetectionOptionAction(ApplicationLocalize.codeStyleIndentProviderNotificationSettings()));

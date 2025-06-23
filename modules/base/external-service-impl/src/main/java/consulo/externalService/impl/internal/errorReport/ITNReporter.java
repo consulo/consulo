@@ -34,6 +34,7 @@ import consulo.externalService.impl.internal.repository.api.ErrorReportBean;
 import consulo.externalService.impl.internal.update.CheckForUpdateAction;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.internal.AbstractMessage;
 import consulo.logging.internal.IdeaLoggingEvent;
@@ -154,15 +155,15 @@ public class ITNReporter extends ErrorReportSubmitter {
                     text.append("<br/>").append(ExternalServiceLocalize.errorReportGratitude().get());
                 }
 
-                NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED ? NotificationType.ERROR : NotificationType.INFORMATION;
-                NotificationListener listener = url != null ? new NotificationListener.UrlOpeningListener(true) : null;
-                ReportMessages.GROUP.createNotification(
-                        ExternalServiceLocalize.errorReportTitle().get(),
-                        XmlStringUtil.wrapInHtml(text),
-                        type,
-                        listener
+                ReportMessages.GROUP.buildNotification(
+                        reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
+                            ? NotificationType.ERROR
+                            : NotificationType.INFORMATION
                     )
-                    .setImportant(false)
+                    .title(ExternalServiceLocalize.errorReportTitle())
+                    .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(text)))
+                    .notImportant()
+                    .optionalListener(url != null ? new NotificationListener.UrlOpeningListener(true) : null)
                     .notify(project);
             });
         }, e -> application.invokeLater(() -> {
@@ -176,23 +177,20 @@ public class ITNReporter extends ErrorReportSubmitter {
             else {
                 msg = ExternalServiceLocalize.errorReportSendingFailure().get();
             }
+
             if (e instanceof UpdateAvailableException) {
                 callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
 
-                Notification notification = ReportMessages.GROUP.createNotification(
-                    ExternalServiceLocalize.errorReportUpdateRequiredMessage().get(),
-                    NotificationType.INFORMATION
-                );
-                notification.setTitle(ExternalServiceLocalize.errorReportTitle().get());
-                notification.setImportant(false);
-                notification.addAction(new NotificationAction(ActionLocalize.actionCheckforupdateText()) {
-                    @RequiredUIAccess
-                    @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-                        CheckForUpdateAction.actionPerformed(e.getData(Project.KEY), UpdateSettings.getInstance(), UIAccess.current());
-                    }
-                });
-                notification.notify(project);
+                ReportMessages.GROUP.buildInfo()
+                    .title(ExternalServiceLocalize.errorReportTitle())
+                    .content(ExternalServiceLocalize.errorReportUpdateRequiredMessage())
+                    .notImportant()
+                    .addAction(
+                        ActionLocalize.actionCheckforupdateText(),
+                        evt ->
+                            CheckForUpdateAction.actionPerformed(evt.getData(Project.KEY), UpdateSettings.getInstance(), UIAccess.current())
+                    )
+                    .notify(project);
             }
             else if (showYesNoDialog(parentComponent, project, msg, ExternalServiceLocalize.errorReportTitle().get(), Messages.getErrorIcon()) != 0) {
                 callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));

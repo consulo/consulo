@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.task.impl.internal.context;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.container.boot.ContainerPathManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.task.Task;
 import consulo.task.context.WorkingContextProvider;
 import consulo.task.impl.internal.TaskManagerNotificationGroupContributor;
@@ -157,16 +154,13 @@ public class WorkingContextManager {
             JBZipFile zipFile = null;
             try {
                 zipFile = new JBZipFile(file);
-                Notifications.Bus.notify(
-                    new Notification(
-                        TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP,
-                        "Context Data Corrupted",
+                TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP.buildError()
+                    .title(LocalizeValue.localizeTODO("Context Data Corrupted"))
+                    .content(LocalizeValue.localizeTODO(
                         "Context information history for " + myProject.getName() + " was corrupted.\n" +
-                            "The history was replaced with empty one.",
-                        NotificationType.ERROR
-                    ),
-                    myProject
-                );
+                            "The history was replaced with empty one."
+                    ))
+                    .notify(myProject);
             }
             catch (IOException e1) {
                 LOG.error("Can't repair form context data corruption", e1);

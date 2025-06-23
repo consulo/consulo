@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -64,11 +63,12 @@ public class AnalyzeDependenciesOnSpecifiedTargetHandler extends DependenciesHan
         }
       }
     }
-    final String source = StringUtil.decapitalize(builders.get(0).getScope().getDisplayName());
-    final String target = StringUtil.decapitalize(myTargetScope.getDisplayName());
-    final String message = AnalysisScopeLocalize.noDependenciesFoundMessage(source, target).get();
+    String source = StringUtil.decapitalize(builders.get(0).getScope().getDisplayName());
+    String target = StringUtil.decapitalize(myTargetScope.getDisplayName());
     NotificationGroup.toolWindowGroup("Dependencies", ToolWindowId.DEPENDENCIES, true)
-      .createNotification(message, NotificationType.INFORMATION).notify(myProject);
+        .buildInfo()
+        .content(AnalysisScopeLocalize.noDependenciesFoundMessage(source, target))
+        .notify(myProject);
     return false;
   }
 

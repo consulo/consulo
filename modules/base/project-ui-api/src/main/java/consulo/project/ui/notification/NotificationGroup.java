@@ -18,7 +18,6 @@ package consulo.project.ui.notification;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.event.NotificationListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -135,11 +134,33 @@ public final class NotificationGroup {
         return myDisplayName;
     }
 
-    @Nonnull
-    public Notification createNotification(@Nonnull String content, @Nonnull NotificationType type) {
-        return createNotification("", content, type, null);
+    public Notification.Builder newNotification(@Nonnull NotificationType type) {
+        return new Notification.Builder(this, type);
     }
 
+    public Notification.Builder newError() {
+        return new Notification.Builder(this, NotificationType.ERROR);
+    }
+
+    public Notification.Builder newWarning() {
+        return new Notification.Builder(this, NotificationType.WARNING);
+    }
+
+    public Notification.Builder newInfo() {
+        return new Notification.Builder(this, NotificationType.INFORMATION);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
+    @Nonnull
+    public Notification createNotification(@Nonnull String content, @Nonnull NotificationType type) {
+        return newNotification(type)
+            .content(LocalizeValue.of(content))
+            .create();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
     @Nonnull
     public Notification createNotification(
         @Nonnull String title,
@@ -147,19 +168,29 @@ public final class NotificationGroup {
         @Nonnull NotificationType type,
         @Nullable NotificationListener listener
     ) {
-        return new Notification(this, title, content, type, listener);
+        return newNotification(type)
+            .title(LocalizeValue.of(title))
+            .content(LocalizeValue.of(content))
+            .optionalListener(listener)
+            .create();
     }
 
+    @Deprecated
+    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
     @Nonnull
     public Notification createNotification() {
-        return createNotification(NotificationType.INFORMATION);
+        return newInfo().create();
     }
 
+    @Deprecated
+    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
     @Nonnull
     public Notification createNotification(@Nonnull NotificationType type) {
-        return createNotification(null, null, null, type, null);
+        return newNotification(type).create();
     }
 
+    @Deprecated
+    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
     @Nonnull
     public Notification createNotification(
         @Nullable String title,
@@ -167,9 +198,15 @@ public final class NotificationGroup {
         @Nullable String content,
         @Nonnull NotificationType type
     ) {
-        return createNotification(title, subtitle, content, type, null);
+        return newNotification(type)
+            .title(LocalizeValue.ofNullable(title))
+            .subtitle(LocalizeValue.ofNullable(subtitle))
+            .subtitle(LocalizeValue.ofNullable(content))
+            .create();
     }
 
+    @Deprecated
+    @DeprecationInfo("Use buildError/buildWarning/buildInfo/buildNotification()...create()")
     @Nonnull
     public Notification createNotification(
         @Nullable String title,
@@ -178,7 +215,12 @@ public final class NotificationGroup {
         @Nonnull NotificationType type,
         @Nullable NotificationListener listener
     ) {
-        return new Notification(this, null, title, subtitle, content, type, listener);
+        return newNotification(type)
+            .title(LocalizeValue.ofNullable(title))
+            .subtitle(LocalizeValue.ofNullable(subtitle))
+            .subtitle(LocalizeValue.ofNullable(content))
+            .optionalListener(listener)
+            .create();
     }
 
     @Nonnull

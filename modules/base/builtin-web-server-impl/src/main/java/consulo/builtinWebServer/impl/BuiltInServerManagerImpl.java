@@ -16,7 +16,6 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.util.io.NetUtil;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
@@ -113,10 +112,11 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
             }
             catch (Throwable e) {
                 LOG.info(e);
-                NOTIFICATION_GROUP.createNotification(
-                    BuiltInServerLocalize.notificationContentCannotStartInternalHttpServerAndAskForRestart0(myApplication.getName()).get(),
-                    NotificationType.ERROR
-                ).notify(null);
+                NOTIFICATION_GROUP.newError()
+                    .content(BuiltInServerLocalize.notificationContentCannotStartInternalHttpServerAndAskForRestart0(
+                        myApplication.getName()
+                    ))
+                    .notify(null);
                 return;
             }
 

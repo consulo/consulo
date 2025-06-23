@@ -5,14 +5,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextFileType;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -37,19 +37,24 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
         for (RemovedMappingTracker.RemovedMapping mapping : list) {
           final FileNameMatcher matcher = mapping.getFileNameMatcher();
           final FileType fileType = FileTypeManager.getInstance().findFileTypeByName(mapping.getFileTypeName());
-          Notification notification =
-                  new Notification(GROUP, "File type recognized", "File extension " + matcher.getPresentableString() + " was reassigned to " + fileType.getName() + " <a href='revert'>Revert</a>",
-                                   NotificationType.WARNING, new NotificationListener.Adapter() {
-                    @Override
-                    protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
-                      ApplicationManager.getApplication().runWriteAction(() -> {
-                        FileTypeManager.getInstance().associate(PlainTextFileType.INSTANCE, matcher);
-                        removedMappings.add(matcher, fileType.getName(), true);
-                      });
-                      notification.expire();
-                    }
+          GROUP.newWarning()
+              .title(LocalizeValue.localizeTODO("File type recognized"))
+              .content(LocalizeValue.localizeTODO(
+                  "File extension " + matcher.getPresentableString() + " was reassigned to " + fileType.getName() +
+                      " <a href='revert'>Revert</a>"
+              ))
+              .listener(new NotificationListener.Adapter() {
+                @Override
+                @RequiredUIAccess
+                protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+                  ApplicationManager.getApplication().runWriteAction(() -> {
+                    FileTypeManager.getInstance().associate(PlainTextFileType.INSTANCE, matcher);
+                    removedMappings.add(matcher, fileType.getName(), true);
                   });
-          Notifications.Bus.notify(notification, project);
+                  notification.expire();
+                }
+              })
+              .notify(project);
           ApplicationManager.getApplication().runWriteAction(() -> FileTypeManager.getInstance().associate(fileType, matcher));
         }
       });

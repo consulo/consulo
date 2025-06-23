@@ -33,15 +33,12 @@ import consulo.process.ProcessHandler;
 import consulo.process.ProcessNotCreatedException;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.ui.style.StandardColors;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -119,10 +116,11 @@ public class ExecutionUtil {
       else {
         Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "");
       }
-      NotificationListener notificationListener =
-        finalListener == null ? null : (notification, event) -> finalListener.hyperlinkUpdate(event);
-      ExecutionNotificationGroupHolder.BASE
-        .createNotification(title.get(), finalDescription, NotificationType.ERROR, notificationListener).notify(project);
+      ExecutionNotificationGroupHolder.BASE.newError()
+          .title(title)
+          .content(LocalizeValue.localizeTODO(finalDescription))
+          .optionalListener(finalListener == null ? null : (notification, event) -> finalListener.hyperlinkUpdate(event))
+          .notify(project);
     });
   }
 

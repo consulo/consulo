@@ -25,8 +25,6 @@ import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
@@ -367,12 +365,10 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
               boolean tokenOK = !args.isEmpty() && myToken.equals(args.get(0));
               if (!tokenOK) {
                 log(new UnsupportedOperationException("unauthorized request: " + command));
-                Notifications.Bus.notify(new Notification(
-                  Notifications.SYSTEM_MESSAGES_GROUP,
-                  IdeLocalize.activationAuthTitle().get(),
-                  IdeLocalize.activationAuthMessage().get(),
-                  NotificationType.WARNING
-                ));
+                Notifications.SYSTEM_MESSAGES_GROUP.newWarning()
+                    .title(IdeLocalize.activationAuthTitle())
+                    .content(IdeLocalize.activationAuthMessage())
+                    .notify(null);
               }
               else {
                 Consumer<CommandLineArgs> listener = myActivateListener.get();

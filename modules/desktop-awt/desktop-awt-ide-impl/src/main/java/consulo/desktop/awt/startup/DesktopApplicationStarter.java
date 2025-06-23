@@ -62,15 +62,11 @@ import consulo.project.Project;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.touchBar.TouchBarController;
-import consulo.ui.ex.internal.TouchBarControllerInternal;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
@@ -321,15 +317,12 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         if (pluginErrors != null) {
             for (CompositeMessage pluginError : pluginErrors) {
-                LocalizeValue message = IdeLocalize.titlePluginNotificationTitle();
-                Notifications.Bus.notify(new Notification(
-                    PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup,
-                    message.get(),
-                    pluginError.toString(),
-                    NotificationType.ERROR,
-                    new NotificationListener() {
-                        @RequiredUIAccess
+                PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup.buildError()
+                    .title(IdeLocalize.titlePluginNotificationTitle())
+                    .content(LocalizeValue.localizeTODO(pluginError.toString()))
+                    .listener(new NotificationListener() {
                         @Override
+                        @RequiredUIAccess
                         public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
                             notification.expire();
 
@@ -343,8 +336,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                                 );
                             }
                         }
-                    }
-                ));
+                    })
+                    .notify(null);
             }
         }
     }

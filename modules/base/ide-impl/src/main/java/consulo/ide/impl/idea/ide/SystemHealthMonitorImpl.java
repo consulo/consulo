@@ -50,7 +50,6 @@ import consulo.util.lang.TimeoutUtil;
 import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -81,21 +80,13 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
     public void preload(@Nonnull ProgressIndicator indicator) {
         checkEARuntime();
 
-        SystemHealthMonitor.Reporter reporter = (notificationText, actionText, actionListener) -> {
-            myApplication.invokeLater(() -> {
-                Notification notification = GROUP.createNotification(notificationText, NotificationType.WARNING);
-                notification.addAction(new DumbAwareAction(actionText) {
-                    @RequiredUIAccess
-                    @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
-                        notification.expire();
-                        actionListener.run();
-                    }
-                });
-                notification.setImportant(true);
-                Notifications.Bus.notify(notification);
-            });
-        };
+        SystemHealthMonitor.Reporter reporter = (notificationText, actionText, actionListener) -> myApplication.invokeLater(
+            () -> GROUP.buildWarning()
+                .content(LocalizeValue.localizeTODO(notificationText))
+                .important()
+                .addAction(LocalizeValue.localizeTODO(actionText), actionListener)
+                .notify(null)
+        );
 
         myApplication.getExtensionPoint(SystemHealthMonitor.class).forEach(it -> it.check(reporter));
 
@@ -164,30 +155,22 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
         }
 
         Application app = Application.get();
-        app.invokeLater(() -> {
-            Notification notification = GROUP.createNotification(
-                "",
-                message.get(),
-                NotificationType.WARNING,
-                new NotificationListener.Adapter() {
+        app.invokeLater(
+            () -> GROUP.buildWarning()
+                .content(message)
+                .important()
+                .listener(new NotificationListener.Adapter() {
                     @Override
                     protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
                         adapter.hyperlinkActivated(e);
                     }
-                }
-            );
-
-            notification.addAction(new DumbAwareAction("Do not show again") {
-                @RequiredUIAccess
-                @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
-                    myProperties.setValue("ignore." + adapter.key, "true");
-                    notification.expire();
-                }
-            });
-            notification.setImportant(true);
-            Notifications.Bus.notify(notification);
-        });
+                })
+                .addClosingAction(
+                    LocalizeValue.localizeTODO("Do not show again"),
+                    () -> myProperties.setValue("ignore." + adapter.key, "true")
+                )
+                .notify(null)
+        );
     }
 
     private static void startDiskSpaceMonitoring() {
@@ -254,7 +237,9 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
                                         restart(timeout);
                                     }
                                     else {
-                                        GROUP.createNotification(message.get(), file.getPath(), NotificationType.ERROR, null)
+                                        GROUP.buildNotification(NotificationType.ERROR)
+                                            .title(message)
+                                            .content(LocalizeValue.of(file.getPath()))
                                             .whenExpired(() -> {
                                                 reported.compareAndSet(true, false);
                                                 restart(timeout);

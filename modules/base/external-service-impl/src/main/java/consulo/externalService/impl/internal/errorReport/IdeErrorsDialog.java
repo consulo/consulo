@@ -38,13 +38,13 @@ import consulo.dataContext.DataManager;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.localize.ExternalServiceLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.*;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -134,12 +134,10 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
                     myDevelopers[0] = DevelopersLoader.fetchDevelopers(indicator);
                 }
                 catch (IOException e) {
-                    ReportMessages.GROUP.createNotification(
-                        "Communication error",
-                        "Unable to load developers list from server.",
-                        NotificationType.WARNING,
-                        null
-                    ).notify(null);
+                    ReportMessages.GROUP.buildWarning()
+                        .title(LocalizeValue.localizeTODO("Communication error"))
+                        .content(LocalizeValue.localizeTODO("Unable to load developers list from server."))
+                        .notify(null);
                 }
             }
 

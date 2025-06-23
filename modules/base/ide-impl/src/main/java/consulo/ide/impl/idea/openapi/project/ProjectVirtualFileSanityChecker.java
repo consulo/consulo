@@ -18,13 +18,10 @@ package consulo.ide.impl.idea.openapi.project;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.container.boot.ContainerPathManager;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
@@ -58,18 +55,11 @@ public class ProjectVirtualFileSanityChecker implements BackgroundStartupActivit
             LOG.info(path + " case-sensitivity: expected=" + expected + " actual=" + actual);
             if (actual != expected) {
                 int prefix = expected ? 1 : 0;  // IDE=true -> FS=false -> prefix='in'
-                LocalizeValue title = ApplicationLocalize.fsCaseSensitivityMismatchTitle();
-                LocalizeValue text = ApplicationLocalize.fsCaseSensitivityMismatchMessage(prefix);
-                Notifications.Bus.notify(
-                    new Notification(
-                        Notifications.SYSTEM_MESSAGES_GROUP,
-                        title.get(),
-                        text.get(),
-                        NotificationType.WARNING,
-                        NotificationListener.URL_OPENING_LISTENER
-                    ),
-                    project
-                );
+                Notifications.SYSTEM_MESSAGES_GROUP.buildWarning()
+                    .title(ApplicationLocalize.fsCaseSensitivityMismatchTitle())
+                    .content(ApplicationLocalize.fsCaseSensitivityMismatchMessage(prefix))
+                    .listener(NotificationListener.URL_OPENING_LISTENER)
+                    .notify(project);
             }
 
             //ProjectFsStatsCollector.caseSensitivity(myProject, actual);

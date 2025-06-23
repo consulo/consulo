@@ -14,12 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.find.actions;
 
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -54,8 +53,9 @@ public class FindInPathAction extends AnAction implements DumbAware {
   }
 
   static void showNotAvailableMessage(AnActionEvent e, Project project) {
-    final String message = "'" + e.getPresentation().getText() + "' is not available while search is in progress";
-    NOTIFICATION_GROUP.createNotification(message, NotificationType.WARNING).notify(project);
+    NOTIFICATION_GROUP.buildWarning()
+        .content(LocalizeValue.localizeTODO("'" + e.getPresentation().getText() + "' is not available while search is in progress"))
+        .notify(project);
   }
 
   @Override

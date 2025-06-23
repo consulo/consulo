@@ -120,29 +120,21 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
             return;
         }
 
-        Notification notification =
-            ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
-        notification.addAction(new NotificationAction(LocalizeValue.localizeTODO("Install plugins...")) {
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-                notification.expire();
-
-                new PluginsAdvertiserDialog(myProject, allDescriptors, new ArrayList<>(ids)).showAsync();
-            }
-        });
-        notification.addAction(new NotificationAction(LocalizeValue.localizeTODO("Ignore")) {
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-                notification.expire();
-
-                for (ExtensionPreview feature : previews) {
-                    collectorSuggester.ignoreFeature(feature);
+        ourGroup.buildInfo()
+            .content(LocalizeValue.localizeTODO("Features covered by non-installed plugins are detected."))
+            .addClosingAction(
+                LocalizeValue.localizeTODO("Install plugins..."),
+                () -> new PluginsAdvertiserDialog(myProject, allDescriptors, new ArrayList<>(ids)).showAsync()
+            )
+            .addClosingAction(
+                LocalizeValue.localizeTODO("Ignore"),
+                () -> {
+                    for (ExtensionPreview feature : previews) {
+                        collectorSuggester.ignoreFeature(feature);
+                    }
                 }
-            }
-        });
-        notification.notify(myProject);
+            )
+            .notify(myProject);
     }
 
 

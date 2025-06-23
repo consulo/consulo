@@ -33,9 +33,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.content.GeneratedSourcesFilter;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
@@ -635,14 +633,10 @@ public abstract class AbstractLayoutCodeProcessor {
     void handleFileTooBigException(Logger logger, FilesTooBigForDiffException e, @Nonnull PsiFile file) {
         logger.info("Error while calculating changed ranges for: " + file.getVirtualFile(), e);
         if (!Application.get().isUnitTestMode()) {
-            Notification notification = new Notification(
-                ReformatChangedTextTooBigNotificationGroup,
-                ApplicationLocalize
-                    .reformatChangedTextFileTooBigNotificationTitle().get(),
-                ApplicationLocalize.reformatChangedTextFileTooBigNotificationText(file.getName()).get(),
-                NotificationType.INFORMATION
-            );
-            notification.notify(file.getProject());
+            ReformatChangedTextTooBigNotificationGroup.buildInfo()
+                .title(ApplicationLocalize.reformatChangedTextFileTooBigNotificationTitle())
+                .content(ApplicationLocalize.reformatChangedTextFileTooBigNotificationText(file.getName()))
+                .notify(file.getProject());
         }
     }
 

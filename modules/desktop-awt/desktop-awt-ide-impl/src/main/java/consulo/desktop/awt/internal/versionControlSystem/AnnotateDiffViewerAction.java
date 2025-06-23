@@ -40,6 +40,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
@@ -47,7 +48,6 @@ import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.RelativePoint;
@@ -207,10 +207,10 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
           VcsException exception = loader.getException();
           if (exception != null) {
-            Notification notification = VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.createNotification("Can't Load Annotations",
-                                                                                                    exception.getMessage(),
-                                                                                                    NotificationType.ERROR,
-                                                                                                    null);
+            Notification notification = VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.buildError()
+              .title(LocalizeValue.localizeTODO("Can't Load Annotations"))
+              .content(LocalizeValue.of(exception.getMessage()))
+              .create();
             showNotification(viewer, notification);
             LOG.warn(exception);
             return;

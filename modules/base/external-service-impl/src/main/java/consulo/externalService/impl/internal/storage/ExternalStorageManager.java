@@ -233,7 +233,10 @@ public class ExternalStorageManager {
                         }
                     }
 
-                    new Notification(ExternalStorageManager.GROUP, "External Storage", "Local configuration refreshed", NotificationType.INFORMATION).notify(project);
+                    ExternalStorageManager.GROUP.buildInfo()
+                        .title(LocalizeValue.localizeTODO("External Storage"))
+                        .content(LocalizeValue.localizeTODO("Local configuration refreshed"))
+                        .notify(project);
                 });
             });
         }

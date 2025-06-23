@@ -14,10 +14,7 @@ import consulo.logging.Logger;
 import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -232,12 +229,10 @@ public abstract class AttachToProcessActionBase extends AnAction {
       return host.getProcessList();
     }
     catch (ExecutionException e) {
-      Notifications.Bus.notify(new Notification(
-        GROUP,
-        XDebuggerLocalize.xdebuggerAttachActionItemsErrorTitle().get(),
-        XDebuggerLocalize.xdebuggerAttachActionItemsErrorMessage().get(),
-        NotificationType.WARNING
-      ));
+      GROUP.newWarning()
+          .title(XDebuggerLocalize.xdebuggerAttachActionItemsErrorTitle())
+          .content(XDebuggerLocalize.xdebuggerAttachActionItemsErrorMessage())
+          .notify(null);
       LOG.warn("Error while getting attach items", e);
 
       return Collections.emptyList();

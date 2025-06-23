@@ -15,9 +15,11 @@
  */
 package consulo.project.ui.notification;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.NotificationActionInvoker;
@@ -26,14 +28,15 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
+import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SoftReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -43,6 +46,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Notification bean class contains <b>title:</b>subtitle, content (plain text or HTML) and actions.
@@ -58,6 +63,173 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Alexander Lobas
  */
 public class Notification {
+    private static final class ActionAdder implements Function<Notification, AnAction> {
+        private final AnAction action;
+
+        public ActionAdder(AnAction action) {
+            this.action = action;
+        }
+
+        @Override
+        public AnAction apply(Notification ignore) {
+            return action;
+        }
+    }
+
+    public static final class Builder {
+        @Nonnull
+        private final NotificationGroup myGroup;
+        @Nonnull
+        private final NotificationType myType;
+        @Nonnull
+        private LocalizeValue myTitle = LocalizeValue.empty();
+        @Nonnull
+        private LocalizeValue mySubtitle = LocalizeValue.empty();
+        @Nonnull
+        private LocalizeValue myContent = LocalizeValue.empty();
+        @Nullable
+        private Image myIcon = null;
+        @Nullable
+        private Boolean myImportant = null;
+        @Nullable
+        private NotificationListener myListener = null;
+        @Nullable
+        private List<Function<Notification, AnAction>> myActionAdders = null;
+        @Nullable
+        private Runnable myWhenExpired = null;
+
+        Builder(@Nonnull NotificationGroup group, @Nonnull NotificationType type) {
+            myGroup = group;
+            myType = type;
+        }
+
+        public Builder icon(@Nonnull Image icon) {
+            myIcon = icon;
+            return this;
+        }
+
+        public Builder title(@Nonnull LocalizeValue title) {
+            myTitle = title;
+            return this;
+        }
+
+        public Builder subtitle(@Nonnull LocalizeValue subtitle) {
+            mySubtitle = subtitle;
+            return this;
+        }
+
+        public Builder content(@Nonnull LocalizeValue content) {
+            myContent = content;
+            return this;
+        }
+
+        public Builder listener(@Nonnull @RequiredUIAccess NotificationListener listener) {
+            if (myListener != null) {
+                throw new IllegalArgumentException("Only one listener is allowed");
+            }
+            myListener = listener;
+            return this;
+        }
+
+        public Builder optionalListener(@Nullable NotificationListener listener) {
+            return listener != null ? listener(listener) : this;
+        }
+
+        public Builder addAction(@Nonnull AnAction action) {
+            return addAction(new ActionAdder(action));
+        }
+
+        public Builder addAction(@Nonnull LocalizeValue text, @RequiredUIAccess @Nonnull Runnable runnable) {
+            return addAction(new DumbAwareAction(text) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent event) {
+                    runnable.run();
+                }
+            });
+        }
+
+        public Builder addAction(@Nonnull LocalizeValue text, @RequiredUIAccess @Nonnull Consumer<AnActionEvent> consumer) {
+            return addAction(new DumbAwareAction(text) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent event) {
+                    consumer.accept(event);
+                }
+            });
+        }
+
+        public Builder addClosingAction(@Nonnull LocalizeValue text, @RequiredUIAccess @Nonnull Consumer<AnActionEvent> consumer) {
+            return addAction(notification -> new DumbAwareAction(text) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent event) {
+                    notification.expire();
+                    consumer.accept(event);
+                }
+            });
+        }
+
+        public Builder addClosingAction(@Nonnull LocalizeValue text, @RequiredUIAccess @Nonnull Runnable runnable) {
+            return addAction(notification -> new DumbAwareAction(text) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent e) {
+                    notification.expire();
+                    runnable.run();
+                }
+            });
+        }
+
+        private Builder addAction(@Nonnull Function<Notification, AnAction> actionAdder) {
+            if (myActionAdders == null) {
+                myActionAdders = new SmartList<>(actionAdder);
+            }
+            else {
+                myActionAdders.add(actionAdder);
+            }
+            return this;
+        }
+
+        public Builder whenExpired(@Nonnull Runnable whenExpired) {
+            myWhenExpired = whenExpired;
+            return this;
+        }
+
+        public Builder important() {
+            return important(true);
+        }
+
+        public Builder notImportant() {
+            return important(false);
+        }
+
+        public Builder important(boolean important) {
+            myImportant = important;
+            return this;
+        }
+
+        public Notification create() {
+            Notification notification = new Notification(myGroup, myIcon, myTitle, mySubtitle, myContent, myType, myListener);
+            if (myActionAdders != null) {
+                for (Function<Notification, AnAction> actionAdder : myActionAdders) {
+                    notification.addAction(actionAdder.apply(notification));
+                }
+            }
+            if (myImportant != null) {
+                notification.setImportant(myImportant);
+            }
+            if (myWhenExpired != null) {
+                notification.whenExpired(myWhenExpired);
+            }
+            return notification;
+        }
+
+        public void notify(@Nullable Project project) {
+            create().notify(project);
+        }
+    }
+
     private static final Logger LOG = Logger.getInstance(Notification.class);
     private static final Key<Notification> KEY = Key.create(Notification.class);
 
@@ -76,9 +248,12 @@ public class Notification {
     private Image myIcon;
     private final NotificationType myType;
 
-    private String myTitle;
-    private String mySubtitle;
-    private String myContent;
+    @Nonnull
+    private LocalizeValue myTitle;
+    @Nonnull
+    private LocalizeValue mySubtitle;
+    @Nonnull
+    private LocalizeValue myContent;
     private NotificationListener myListener;
     private String myDropDownText;
     private List<AnAction> myActions;
@@ -90,6 +265,67 @@ public class Notification {
     private WeakReference<Balloon> myBalloonRef;
     private final long myTimestamp;
 
+    /**
+     * @param group    notification group
+     * @param title    notification title
+     * @param content  notification content
+     * @param type     notification type
+     * @param listener notification lifecycle listener
+     */
+    @Deprecated
+    @DeprecationInfo("Use NotificationGroup#buildError/buildWarning/buildInfo/buildNotification()...create()")
+    public Notification(
+        @Nonnull NotificationGroup group,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue content,
+        @Nonnull NotificationType type,
+        @Nullable @RequiredUIAccess NotificationListener listener
+    ) {
+        myGroupId = group.getId();
+        myTitle = title;
+        myContent = content;
+        myType = type;
+        myListener = listener;
+        myTimestamp = System.currentTimeMillis();
+
+        assertHasTitleOrContent();
+        id = calculateId(this);
+    }
+
+    /**
+     * @param group    notification grouo
+     * @param icon     notification icon, if <b>null</b> used icon from type
+     * @param title    notification title
+     * @param subtitle notification subtitle
+     * @param content  notification content
+     * @param type     notification type
+     * @param listener notification lifecycle listener
+     */
+    private Notification(
+        @Nonnull NotificationGroup group,
+        @Nullable Image icon,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue subtitle,
+        @Nonnull LocalizeValue content,
+        @Nonnull NotificationType type,
+        @Nullable NotificationListener listener
+    ) {
+        myGroupId = group.getId();
+        myTitle = title;
+        myContent = content;
+        myType = type;
+        myListener = listener;
+        myTimestamp = System.currentTimeMillis();
+
+        myIcon = icon;
+        mySubtitle = subtitle;
+
+        assertHasTitleOrContent();
+        id = calculateId(this);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use NotificationGroup#buildError/buildWarning/buildInfo/buildNotification()...create()")
     public Notification(@Nonnull NotificationGroup group, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
         this(group, title, content, type, null);
     }
@@ -103,6 +339,8 @@ public class Notification {
      * @param type     notification type
      * @param listener notification lifecycle listener
      */
+    @Deprecated
+    @DeprecationInfo("Use NotificationGroup#buildError/buildWarning/buildInfo/buildNotification()...create()")
     public Notification(
         @Nonnull NotificationGroup group,
         @Nullable Image icon,
@@ -113,14 +351,14 @@ public class Notification {
         @Nullable NotificationListener listener
     ) {
         myGroupId = group.getId();
-        myTitle = StringUtil.notNullize(title);
-        myContent = StringUtil.notNullize(content);
+        myTitle = LocalizeValue.ofNullable(title);
+        myContent = LocalizeValue.ofNullable(content);
         myType = type;
         myListener = listener;
         myTimestamp = System.currentTimeMillis();
 
         myIcon = icon;
-        mySubtitle = subtitle;
+        mySubtitle = LocalizeValue.ofNullable(subtitle);
 
         assertHasTitleOrContent();
         id = calculateId(this);
@@ -133,6 +371,8 @@ public class Notification {
      * @param type     notification type
      * @param listener notification lifecycle listener
      */
+    @Deprecated
+    @DeprecationInfo("Use NotificationGroup#buildError/buildWarning/buildInfo/buildNotification()...create()")
     public Notification(
         @Nonnull NotificationGroup group,
         @Nonnull String title,
@@ -141,8 +381,8 @@ public class Notification {
         @Nullable @RequiredUIAccess NotificationListener listener
     ) {
         myGroupId = group.getId();
-        myTitle = title;
-        myContent = content;
+        myTitle = LocalizeValue.ofNullable(title);
+        myContent = LocalizeValue.ofNullable(content);
         myType = type;
         myListener = listener;
         myTimestamp = System.currentTimeMillis();
@@ -175,20 +415,35 @@ public class Notification {
     }
 
     public boolean hasTitle() {
-        return !StringUtil.isEmptyOrSpaces(myTitle) || !StringUtil.isEmptyOrSpaces(mySubtitle);
+        return myTitle != LocalizeValue.empty() || mySubtitle != LocalizeValue.empty();
     }
 
     @Nonnull
     public String getTitle() {
-        return myTitle;
+        return myTitle.get();
     }
 
     @Nonnull
-    public Notification setTitle(@Nullable String title) {
-        myTitle = StringUtil.notNullize(title);
+    public Notification setTitle(@Nonnull LocalizeValue title) {
+        myTitle = title;
         return this;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @Nonnull
+    public Notification setTitle(@Nullable String title) {
+        myTitle = LocalizeValue.ofNullable(title);
+        return this;
+    }
+
+    @Nonnull
+    public Notification setTitle(@Nonnull LocalizeValue title, @Nonnull LocalizeValue subtitle) {
+        return setTitle(title).setSubtitle(subtitle);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     @Nonnull
     public Notification setTitle(@Nullable String title, @Nullable String subtitle) {
         return setTitle(title).setSubtitle(subtitle);
@@ -196,27 +451,43 @@ public class Notification {
 
     @Nullable
     public String getSubtitle() {
-        return mySubtitle;
+        return mySubtitle.get();
     }
 
     @Nonnull
-    public Notification setSubtitle(@Nullable String subtitle) {
+    public Notification setSubtitle(@Nonnull LocalizeValue subtitle) {
         mySubtitle = subtitle;
         return this;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @Nonnull
+    public Notification setSubtitle(@Nullable String subtitle) {
+        mySubtitle = LocalizeValue.ofNullable(subtitle);
+        return this;
+    }
+
     public boolean hasContent() {
-        return !StringUtil.isEmptyOrSpaces(myContent);
+        return myContent != LocalizeValue.empty();
     }
 
     @Nonnull
     public String getContent() {
-        return myContent;
+        return myContent.get();
     }
 
     @Nonnull
+    public Notification setContent(@Nonnull LocalizeValue content) {
+        myContent = content;
+        return this;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @Nonnull
     public Notification setContent(@Nullable String content) {
-        myContent = StringUtil.notNullize(content);
+        myContent = LocalizeValue.ofNullable(content);
         return this;
     }
 

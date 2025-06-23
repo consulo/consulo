@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.module.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.localize.LocalizeValue;
 import consulo.module.ConfigurationErrorDescription;
 import consulo.module.ConfigurationErrorType;
 import consulo.module.ProjectLoadingErrorsNotifier;
@@ -25,9 +25,6 @@ import consulo.project.Project;
 import consulo.project.impl.internal.ProjectNotificationGroups;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
@@ -100,15 +97,20 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
                 continue;
             }
 
-            final String invalidElements = getInvalidElementsString(type, descriptions);
-            final String errorText = ProjectLocalize.errorMessageConfigurationCannotLoad() + " " + invalidElements + " <a href=\"\">Details...</a>";
+            String invalidElements = getInvalidElementsString(type, descriptions);
 
-            Notifications.Bus.notify(new Notification(ProjectNotificationGroups.Project, "Error Loading Project", errorText, NotificationType.ERROR, (notification, event) -> {
-                final List<ConfigurationErrorDescription> validDescriptions = ContainerUtil.findAll(descriptions, ConfigurationErrorDescription::isValid);
-                RemoveInvalidElementsDialog.showDialog(myProject, CommonLocalize.titleError().get(), type, invalidElements, validDescriptions);
+            ProjectNotificationGroups.Project.newError()
+                .title(LocalizeValue.localizeTODO("Error Loading Project"))
+                .content(LocalizeValue.localizeTODO(
+                    ProjectLocalize.errorMessageConfigurationCannotLoad() + " " + invalidElements + " <a href=\"\">Details...</a>"
+                ))
+                .listener((notification, event) -> {
+                    List<ConfigurationErrorDescription> validDescriptions = ContainerUtil.findAll(descriptions, ConfigurationErrorDescription::isValid);
+                    RemoveInvalidElementsDialog.showDialog(myProject, CommonLocalize.titleError().get(), type, invalidElements, validDescriptions);
 
-                notification.expire();
-            }), myProject);
+                    notification.expire();
+                })
+                .notify(myProject);
         }
 
     }
