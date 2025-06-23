@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Vladislav.Kaznacheev
- * Date: Jul 4, 2007
- * Time: 3:59:52 PM
- */
 package consulo.ui.ex.keymap;
 
 import consulo.annotation.component.ComponentScope;
@@ -31,6 +24,10 @@ import consulo.ui.ex.action.AnAction;
 import jakarta.annotation.Nullable;
 import java.util.function.Predicate;
 
+/**
+ * @author Vladislav.Kaznacheev
+ * @since 2007-07-04
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface KeymapExtension {
   ExtensionPointName<KeymapExtension> EXTENSION_POINT_NAME = ExtensionPointName.create(KeymapExtension.class);

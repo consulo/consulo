@@ -22,8 +22,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author irengrig
- * Date: 3/17/11
- * Time: 4:58 PM
+ * @since 2011-03-17
  */
 public interface VcsCacheableAnnotationProvider {
   VcsAnnotation createCacheable(final FileAnnotation fileAnnotation);

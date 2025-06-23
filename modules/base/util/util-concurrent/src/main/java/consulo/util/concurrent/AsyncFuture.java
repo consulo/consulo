@@ -19,7 +19,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public interface AsyncFuture<V> extends Future<V> {
   void addConsumer(Executor executor, ResultConsumer<V> consumer);

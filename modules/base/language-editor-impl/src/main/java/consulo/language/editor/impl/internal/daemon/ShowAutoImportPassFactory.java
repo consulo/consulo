@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Alexey
- * Date: 25.11.2006
- * Time: 15:39:27
- */
 package consulo.language.editor.impl.internal.daemon;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -35,7 +28,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
+ * @author Alexey
  * @author cdr
+ * @since 2006-11-25
  */
 @ExtensionImpl
 public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFactory {

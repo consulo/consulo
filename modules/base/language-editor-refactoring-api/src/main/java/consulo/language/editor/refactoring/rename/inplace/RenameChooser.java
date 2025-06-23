@@ -41,8 +41,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * User: anna
- * Date: 1/11/12
+ * @author anna
+ * @since 2012-01-11
  */
 abstract class RenameChooser {
   private static final String CODE_OCCURRENCES = "Rename code occurrences";

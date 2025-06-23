@@ -22,7 +22,7 @@ import consulo.platform.Platform;
 import java.awt.*;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public class MacUIUtil {
     private static Cursor INVERTED_TEXT_CURSOR;

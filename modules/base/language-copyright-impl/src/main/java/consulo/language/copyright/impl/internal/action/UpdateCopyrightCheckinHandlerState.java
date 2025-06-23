@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 08-Dec-2008
- */
-
 package consulo.language.copyright.impl.internal.action;
 
 import consulo.annotation.component.ComponentScope;
@@ -32,6 +26,10 @@ import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
+/**
+ * @author anna
+ * @since 2008-12-08
+ */
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl

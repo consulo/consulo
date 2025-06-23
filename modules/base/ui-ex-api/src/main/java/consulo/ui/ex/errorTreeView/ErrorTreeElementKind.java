@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Nov 12, 2004
+ * @since 2004-11-12
  */
 public enum ErrorTreeElementKind {
   INFO("INFO", UIBundle.message("errortree.information")),

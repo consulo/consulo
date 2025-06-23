@@ -19,9 +19,8 @@ import jakarta.annotation.Nullable;
 import java.util.Date;
 
 /**
- * User: Irina.Chernushina
- * Date: 9/14/11
- * Time: 5:57 PM
+ * @author Irina.Chernushina
+ * @since 2011-09-14
  */
 public interface VcsFileRevisionDvcsSpecific {
   @Nullable

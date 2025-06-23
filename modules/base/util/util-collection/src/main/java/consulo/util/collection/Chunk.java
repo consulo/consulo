@@ -20,7 +20,7 @@ import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Sep 27, 2004
+ * @since 2004-09-27
  */
 public class Chunk<Node> {
   private final Set<Node> myNodes;

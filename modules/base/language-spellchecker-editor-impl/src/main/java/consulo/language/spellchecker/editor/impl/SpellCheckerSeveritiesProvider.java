@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 17-Jun-2009
- */
 package consulo.language.spellchecker.editor.impl;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -34,6 +29,10 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * @author anna
+ * @since 2009-06-17
+ */
 @ExtensionImpl
 public class SpellCheckerSeveritiesProvider extends SeveritiesProvider {
   private static final TextAttributesKey TYPO_KEY = TextAttributesKey.createTextAttributesKey("TYPO");

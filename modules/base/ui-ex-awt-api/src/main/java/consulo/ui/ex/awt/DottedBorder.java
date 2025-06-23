@@ -19,8 +19,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 /**
- * User: anna
- * Date: 08-Nov-2005
+ * @author anna
+ * @since 2005-11-08
  */
 public class DottedBorder implements Border {
   private final int myTop, myBottom, myLeft, myRight;

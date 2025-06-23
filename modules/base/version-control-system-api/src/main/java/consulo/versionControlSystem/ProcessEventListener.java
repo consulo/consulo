@@ -18,10 +18,8 @@ package consulo.versionControlSystem;
 import java.util.EventListener;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 1/25/12
- * Time: 3:47 PM
+ * @author Irina.Chernushina
+ * @since 2012-01-25
  */
 public interface ProcessEventListener extends EventListener {
   /**

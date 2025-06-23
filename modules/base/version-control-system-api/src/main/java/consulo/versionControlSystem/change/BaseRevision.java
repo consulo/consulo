@@ -20,10 +20,8 @@ import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 11/19/12
- * Time: 4:39 PM
+ * @author Irina.Chernushina
+ * @since 2012-11-19
  */
 public class BaseRevision {
   private final FilePath myPath;

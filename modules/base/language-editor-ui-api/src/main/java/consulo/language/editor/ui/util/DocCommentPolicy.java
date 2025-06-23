@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: dsl
- * Date: 30.05.2002
- * Time: 19:24:56
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.ui.util;
 
 import consulo.language.psi.PsiComment;
 import consulo.language.util.IncorrectOperationException;
 
+/**
+ * @author dsl
+ * @since 2002-05-30
+ */
 public class DocCommentPolicy<T extends PsiComment> {
   public static final int ASIS = 0;
   public static final int MOVE = 1;

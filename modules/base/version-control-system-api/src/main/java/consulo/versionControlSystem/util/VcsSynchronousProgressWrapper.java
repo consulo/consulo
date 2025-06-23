@@ -24,8 +24,7 @@ import consulo.versionControlSystem.VcsException;
 
 /**
  * @author irengrig
- *         Date: 3/16/11
- *         Time: 3:22 PM
+ * @since 2011-03-16
  */
 public class VcsSynchronousProgressWrapper {
   private VcsSynchronousProgressWrapper() {

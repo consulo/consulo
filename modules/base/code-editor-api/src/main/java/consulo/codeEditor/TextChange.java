@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * Implementations of this interface are not obliged to be thread-safe.
  *
  * @author Denis Zhdanov
- * @since May 31, 2010 12:26:51 PM
+ * @since 2010-05-31
  */
 public interface TextChange {
 

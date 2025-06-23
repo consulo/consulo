@@ -25,9 +25,9 @@ import consulo.language.ast.TokenSet;
  * <b>Note:</b> this class doesn't provide custom realization for {@link #hashCode()} and {@link #equals(Object)} at the moment.
  * Feel free to add them as necessary.
  *
- * @author Denis Zhdanov
  * @see AlignmentInColumnsHelper
- * @since May 24, 2010 3:17:40 PM
+ * @author Denis Zhdanov
+ * @since 2010-05-24
  */
 public class AlignmentInColumnsConfig {
   private final TokenSet myStopMultilineCheckElementTypes;

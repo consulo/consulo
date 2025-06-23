@@ -18,7 +18,7 @@ package consulo.util.concurrent;
 import consulo.util.concurrent.internal.AsyncFutureResultImpl;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public class AsyncFutureFactory {
   private static final AsyncFutureFactory ourInstance = new AsyncFutureFactory();

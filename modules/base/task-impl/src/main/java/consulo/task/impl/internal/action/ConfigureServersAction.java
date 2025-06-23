@@ -12,7 +12,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: Evgeny Zakrevsky
+ * @author Evgeny Zakrevsky
  */
 @ActionImpl(id = "tasks.configure.servers")
 public class ConfigureServersAction extends BaseTaskAction {

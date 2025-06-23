@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.index.io;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Dec 20, 2007
+ * @since 2007-12-20
  */
 public class StorageException extends Exception {
   public StorageException(final String message) {

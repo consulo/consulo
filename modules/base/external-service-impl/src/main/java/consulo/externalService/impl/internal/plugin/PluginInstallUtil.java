@@ -36,7 +36,7 @@ import java.util.Set;
 
 /**
  * @author stathik
- * @since Nov 29, 2003
+ * @since 2003-11-29
  */
 public class PluginInstallUtil {
   private static final String POSTPONE = "&Postpone";

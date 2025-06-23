@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
- * @since Dec 6, 2004
+ * @author 2004-10-06
  */
 public abstract class PathMacroMap {
   private static final Logger LOG = Logger.getInstance(PathMacroMap.class);

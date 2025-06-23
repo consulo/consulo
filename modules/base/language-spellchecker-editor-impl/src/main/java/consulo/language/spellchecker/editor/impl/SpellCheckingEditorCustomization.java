@@ -38,7 +38,7 @@ import java.util.function.Function;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since Aug 20, 2010 3:54:42 PM
+ * @since 2010-08-20
  */
 public class SpellCheckingEditorCustomization implements Consumer<EditorEx> {
   private final String mySpellcheckerEngineId;

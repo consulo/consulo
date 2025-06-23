@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 23-Jan-2008
- */
 package consulo.project.ui.view.tree;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -41,6 +36,10 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.*;
 
+/**
+ * @author anna
+ * @since 2008-01-23
+ */
 public class BaseProjectViewDirectoryHelper {
   private static final Logger LOGGER = Logger.getInstance(BaseProjectViewDirectoryHelper.class);
 

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: dsl
- * Date: 06.05.2002
- * Time: 14:03:43
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.refactoring.impl.internal.action;
 
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
@@ -30,6 +21,10 @@ import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author dsl
+ * @since 2002-05-06
+ */
 public class IntroduceParameterAction extends BasePlatformRefactoringAction {
   @Override
   protected boolean isAvailableInEditorOnly() {

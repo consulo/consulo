@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author stathik
- * @since Dec 25, 2003
+ * @since 2003-10-25
  */
 public abstract class PluginTab implements Disposable {
     public static final Key<PluginTab> KEY = Key.of(PluginTab.class);

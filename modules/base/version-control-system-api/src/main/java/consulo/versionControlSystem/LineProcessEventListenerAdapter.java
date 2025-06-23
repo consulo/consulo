@@ -18,10 +18,8 @@ package consulo.versionControlSystem;
 import consulo.util.dataholder.Key;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 2/25/13
- * Time: 5:47 PM
+ * @author Irina.Chernushina
+ * @since 2013-02-25
  */
 public class LineProcessEventListenerAdapter implements LineProcessEventListener {
   @Override

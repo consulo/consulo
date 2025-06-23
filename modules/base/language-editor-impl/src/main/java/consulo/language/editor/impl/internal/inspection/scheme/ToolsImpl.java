@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 15-Apr-2009
- */
 package consulo.language.editor.impl.internal.inspection.scheme;
 
 import consulo.content.internal.scope.AllScopeHolder;
@@ -46,6 +41,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author anna
+ * @since 2009-04-15
+ */
 public class ToolsImpl implements Tools {
   public static final String ENABLED_BY_DEFAULT_ATTRIBUTE = "enabled_by_default";
   public static final String ENABLED_ATTRIBUTE = "enabled";

@@ -33,8 +33,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
 /**
- * User: anna
- * Date: 11/29/11
+ * @author anna
+ * @since 2011-11-29
  */
 class MacGestureAdapter extends GestureAdapterWrapper {
   double magnification;

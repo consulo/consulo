@@ -22,7 +22,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public class AsyncUtil {
   private static final AsyncFuture<Boolean> TRUE = createConst(true);

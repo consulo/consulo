@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Jul 26, 2007
- * Time: 3:52:05 PM
- */
 package consulo.util.concurrent;
 
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
@@ -32,6 +25,9 @@ import java.lang.reflect.Modifier;
  * Utility class similar to {@link java.util.concurrent.atomic.AtomicReferenceFieldUpdater} except:
  * - removed access check in getAndSet() hot path for performance
  * - new methods "forFieldXXX" added that search by field type instead of field name, which is useful in scrambled classes
+ *
+ * @author cdr
+ * @since 2007-07-26
  */
 public class AtomicFieldUpdater<T,V> {
   private static final UnsafeDelegate unsafe = UnsafeDelegate.get();

@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
  * Default {@link TextChange} implementation with mutable state.
  *
  * @author Denis Zhdanov
- * @since Jul 7, 2010 5:24:06 PM
+ * @since 2010-07-07
  */
 public class TextChangeImpl implements TextChange {
 

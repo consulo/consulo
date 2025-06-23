@@ -16,7 +16,7 @@
 package consulo.util.concurrent;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public class DefaultResultConsumer<V> implements ResultConsumer<V> {
   private final AsyncFutureResult<V> myResult;

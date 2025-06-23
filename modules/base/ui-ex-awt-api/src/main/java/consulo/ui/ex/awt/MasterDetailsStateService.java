@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 26-Jun-2008
- */
 package consulo.ui.ex.awt;
 
 import consulo.annotation.component.ComponentScope;
@@ -41,6 +36,10 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.*;
 
+/**
+ * @author anna
+ * @since 2008-06-26
+ */
 @Singleton
 @State(name = "masterDetails", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 @ServiceAPI(ComponentScope.PROJECT)

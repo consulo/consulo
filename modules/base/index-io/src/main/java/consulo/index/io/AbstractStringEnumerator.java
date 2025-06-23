@@ -20,7 +20,7 @@ import consulo.index.io.data.DataEnumerator;
 import java.io.Closeable;
 
 /**
- * Author: dmitrylomov
+ * @author dmitrylomov
  */
 public interface AbstractStringEnumerator extends Closeable, Forceable, DataEnumerator<String> {
 

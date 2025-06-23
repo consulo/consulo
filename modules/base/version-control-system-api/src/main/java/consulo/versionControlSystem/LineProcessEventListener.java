@@ -19,9 +19,8 @@ import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 
 /**
- * User: Irina.Chernushina
- * Date: 1/25/12
- * Time: 5:08 PM
+ * @author Irina.Chernushina
+ * @since 2012-01-25
  */
 public interface LineProcessEventListener extends ProcessEventListener {
   /**

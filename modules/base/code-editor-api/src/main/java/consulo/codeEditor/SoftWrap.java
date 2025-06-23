@@ -20,7 +20,7 @@ package consulo.codeEditor;
  * but is used exclusively during document representation.
  *
  * @author Denis Zhdanov
- * @since Aug 30, 2010 6:07:00 PM
+ * @since 2010-08-30
  */
 public interface SoftWrap extends TextChange {
 

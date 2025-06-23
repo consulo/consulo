@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 27.11.2006
- * Time: 20:22:50
- */
 package consulo.versionControlSystem;
 
 import consulo.application.util.DateFormatUtil;
@@ -30,6 +23,10 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nullable;
 import java.util.Comparator;
 
+/**
+ * @author yole
+ * @since 2006-11-27
+ */
 public abstract class ChangeListColumn<T extends ChangeList> {
   public abstract String getTitle();
   public abstract Object getValue(T changeList);

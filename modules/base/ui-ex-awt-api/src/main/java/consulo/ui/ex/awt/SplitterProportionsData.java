@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Anna.Kozlova
- * Date: 19-Sep-2006
- * Time: 12:02:30
- */
 package consulo.ui.ex.awt;
 
 import consulo.util.xml.serializer.JDOMExternalizable;
@@ -27,6 +20,10 @@ import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 
+/**
+ * @author Anna.Kozlova
+ * @since 2006-09-19
+ */
 public interface SplitterProportionsData extends JDOMExternalizable {
 
   void saveSplitterProportions(Component root);

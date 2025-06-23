@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Nov 16, 2001
- * Time: 12:50:45 AM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package consulo.language.editor.impl.inspection.reference;
 
 import consulo.application.Application;
@@ -29,6 +20,10 @@ import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.reference.RefProject;
 import consulo.ui.image.Image;
 
+/**
+ * @author max
+ * @since 2001-11-16
+ */
 public class RefProjectImpl extends RefEntityImpl implements RefProject {
   public RefProjectImpl(RefManager refManager) {
     super(refManager.getProject().getName(), refManager);

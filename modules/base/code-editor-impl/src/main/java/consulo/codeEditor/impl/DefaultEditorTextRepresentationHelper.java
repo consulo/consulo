@@ -29,7 +29,7 @@ import java.awt.font.FontRenderContext;
  * font settings are changed in editor.
  *
  * @author Denis Zhdanov
- * @since Jul 27, 2010 4:06:27 PM
+ * @since 2010-07-27
  */
 public class DefaultEditorTextRepresentationHelper implements EditorTextRepresentationHelper {
 

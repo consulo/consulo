@@ -34,8 +34,7 @@ import static consulo.language.codeStyle.template.BlockUtil.filterBlocksByRange;
 
 /**
  * @author Alexey Chmutov
- *         Date: Jun 26, 2009
- *         Time: 4:07:09 PM
+ * @since 2009-06-26
  */
 public abstract class TemplateLanguageFormattingModelBuilder implements DelegatingFormattingModelBuilder, TemplateLanguageBlockFactory {
 

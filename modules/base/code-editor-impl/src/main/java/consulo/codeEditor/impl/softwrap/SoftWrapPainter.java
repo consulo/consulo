@@ -33,7 +33,7 @@ import java.awt.*;
  * Implementations of this interface are not obliged to be thread-safe.
  *
  * @author Denis Zhdanov
- * @since Jul 1, 2010 5:02:37 PM
+ * @since 2010-07-01
  */
 public interface SoftWrapPainter {
 

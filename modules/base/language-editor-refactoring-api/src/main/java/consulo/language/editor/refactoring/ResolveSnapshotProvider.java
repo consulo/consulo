@@ -30,9 +30,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: Maxim.Mossienko
- * Date: 29.07.2009
- * Time: 14:00:17
+ * @author Maxim.Mossienko
+ * @since 2009-07-29
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ResolveSnapshotProvider implements LanguageExtension {

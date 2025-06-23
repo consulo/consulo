@@ -19,10 +19,9 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 
 /**
-* User: Irina.Chernushina
-* Date: 8/8/11
-* Time: 7:01 PM
-*/
+ * @author Irina.Chernushina
+ * @since 2011-08-08
+ */
 public class HistoryCacheBaseKey {
   private final FilePath myFilePath;
   private final VcsKey myVcsKey;

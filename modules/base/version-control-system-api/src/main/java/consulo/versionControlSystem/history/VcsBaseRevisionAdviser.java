@@ -23,8 +23,7 @@ import java.util.function.Predicate;
 
 /**
  * @author irengrig
- *         Date: 6/6/11
- *         Time: 5:28 PM
+ * @since 2011-06-06
  */
 public interface VcsBaseRevisionAdviser {
   /**
