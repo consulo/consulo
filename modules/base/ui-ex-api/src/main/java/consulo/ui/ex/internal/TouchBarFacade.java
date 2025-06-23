@@ -18,6 +18,7 @@ package consulo.ui.ex.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.popup.JBPopup;
 import jakarta.annotation.Nonnull;
@@ -33,6 +34,12 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TouchBarFacade {
+    @Nonnull
+    String getId();
+
+    @Nonnull
+    LocalizeValue getDisplayName();
+
     boolean isAvailable();
 
     boolean isEnabled();

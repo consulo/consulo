@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.os.mac.internal.touchBar;
+package consulo.ui.ex.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.platform.Platform;
 import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.internal.TouchBarFacade;
 import consulo.ui.ex.popup.JBPopup;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -32,64 +29,60 @@ import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 21.06.2025.
+ * @since 2025-06-23
  */
-@ExtensionImpl
-public class MacTouchBarFacade implements TouchBarFacade {
+@ExtensionImpl(order = "last")
+public class NoneTouchBarFacade implements TouchBarFacade {
     @Nonnull
     @Override
     public String getId() {
-        return "macTouchBar";
+        return "none";
     }
 
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Mac Touch Bar");
+        return LocalizeValue.localizeTODO("<none>");
     }
 
     @Override
     public boolean isAvailable() {
-        return Platform.current().os().isMac();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return TouchbarSupport.isEnabled();
+        return true;
     }
 
     @Override
     public void initialize() {
-        TouchbarSupport.onApplicationLoaded();
+
     }
 
     @Override
-    public void setButtonActions(@Nonnull JComponent component,
-                                 Collection<? extends JButton> buttons,
-                                 Collection<? extends JButton> principal,
-                                 JButton defaultButton,
-                                 @Nullable ActionGroup extraActions) {
-        Touchbar.setButtonActions(component, buttons, principal, defaultButton,  extraActions);
+    public void setButtonActions(@Nonnull JComponent component, Collection<? extends JButton> buttons, Collection<? extends JButton> principal, JButton defaultButton, @Nullable ActionGroup extraActions) {
+
     }
 
     @Nullable
     @Override
     public Disposable showWindowActions(@Nonnull Component contentPane) {
-        return TouchbarSupport.showWindowActions(contentPane);
+        return null;
     }
 
     @Override
     public void onUpdateEditorHeader(@Nonnull Object editor, JComponent header) {
-        TouchbarSupport.onUpdateEditorHeader((Editor) editor);
+
     }
 
     @Override
     public void showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent) {
-        TouchbarSupport.showPopupItems(popup, popupComponent);
+
     }
 
     @Override
     public void setActions(@Nonnull JComponent component, @Nullable ActionGroup group) {
-        Touchbar.setActions(component, group);
+
     }
 }
