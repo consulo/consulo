@@ -20,6 +20,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
@@ -42,6 +43,7 @@ public interface IdeView {
    *
    * @return the list of directories, or an empty array if nothing is selected.
    */
+  @Nonnull
   PsiDirectory[] getDirectories();
 
   /**
