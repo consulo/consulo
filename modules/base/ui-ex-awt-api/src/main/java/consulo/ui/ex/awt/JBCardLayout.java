@@ -31,7 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * User: Vassiliy.Kudryashov
+ * @author Vassiliy.Kudryashov
  */
 @Deprecated
 @DeprecationInfo("Use consulo.ui.layout.SwipeLayout from Consulo UI")

@@ -29,7 +29,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public final class SpeedSearchUtil {
 

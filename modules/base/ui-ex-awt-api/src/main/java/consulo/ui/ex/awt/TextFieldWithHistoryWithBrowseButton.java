@@ -22,7 +22,7 @@ import consulo.fileChooser.FileChooserFactory;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
+ * @author anna
  */
 public class TextFieldWithHistoryWithBrowseButton extends ComponentWithBrowseButton<TextFieldWithHistory> {
   public TextFieldWithHistoryWithBrowseButton() {

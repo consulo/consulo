@@ -21,11 +21,10 @@ import consulo.versionControlSystem.change.CommitContext;
 import jakarta.annotation.Nullable;
 
 /**
- * @author irengrig
- *         Date: 1/28/11
- *         Time: 3:09 PM
+ * just interface for checkin handlers creation
  *
- *         just interface for checkin handlers creation
+ * @author irengrig
+ * @since 2011-01-28
  */
 public interface BaseCheckinHandlerFactory {
   /**

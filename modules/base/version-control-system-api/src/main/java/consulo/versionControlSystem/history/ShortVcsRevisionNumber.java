@@ -16,7 +16,7 @@
 package consulo.versionControlSystem.history;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public interface ShortVcsRevisionNumber extends VcsRevisionNumber {
 

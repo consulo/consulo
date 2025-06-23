@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 20.10.2006
- * Time: 17:18:38
- */
 package consulo.versionControlSystem.change.commited;
 
 import consulo.versionControlSystem.AbstractVcs;
@@ -31,6 +24,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * @author yole
+ * @since 2006-10-20
+ */
 public class CommittedChangeListImpl implements CommittedChangeList {
   private final String myCommitterName;
   private final Date myCommitDate;

@@ -24,8 +24,8 @@ import java.lang.reflect.Method;
 
 /**
  * Use this editor if you wish your combobox editor to look good on Macs.
- * <p>
- * User: spLeaner
+ *
+ * @author spLeaner
  */
 public class FixedComboBoxEditor implements ComboBoxEditor {
     private JTextField myField;

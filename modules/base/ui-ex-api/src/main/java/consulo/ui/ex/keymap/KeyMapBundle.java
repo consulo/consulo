@@ -23,9 +23,8 @@ import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
- * User: Sergey.Grigorchuk
- * Date: 01.09.2005
- * Time: 17:13:10
+ * @author Sergey.Grigorchuk
+ * @since 2005-09-01
  */
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use KeyMapLocalize")

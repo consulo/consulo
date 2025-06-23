@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Aug 30, 2002
- */
 package consulo.ui.ex.tree;
 
 import java.util.Comparator;
 
+/**
+ * @author cdr
+ * @since 2002-08-30
+ */
 public class IndexComparator implements Comparator<NodeDescriptor> {
   public static final IndexComparator INSTANCE = new IndexComparator();
 

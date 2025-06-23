@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 20.12.2006
- * Time: 15:24:28
- */
 package consulo.versionControlSystem.change;
 
 import consulo.project.Project;
@@ -35,6 +28,10 @@ import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.regex.Matcher;
 
+/**
+ * @author yole
+ * @since 2006-12-20
+ */
 public class IgnoredFileBean {
   private final String myPath;
   private final String myFilenameIfFile;

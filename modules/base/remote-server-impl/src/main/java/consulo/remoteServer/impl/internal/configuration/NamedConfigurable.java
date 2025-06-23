@@ -36,8 +36,8 @@ import javax.swing.event.DocumentEvent;
 import java.awt.*;
 
 /**
- * User: anna
- * Date: 26-May-2006
+ * @author anna
+ * @since 2006-05-26
  */
 @Deprecated
 @DeprecationInfo("AWT copy - for fix dependency issues - use new UI API")

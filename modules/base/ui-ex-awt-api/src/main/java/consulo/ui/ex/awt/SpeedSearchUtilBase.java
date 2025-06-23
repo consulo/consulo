@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public class SpeedSearchUtilBase {
 

@@ -19,10 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 1/25/12
- * Time: 5:03 PM
+ * @author Irina.Chernushina
+ * @since 2012-01-25
  */
 public class LineHandlerHelper {
   /**

@@ -24,8 +24,7 @@ import java.util.Map;
 
 /**
  * @author irengrig
- *         Date: 3/10/11
- *         Time: 4:22 PM
+ * @since 2011-03-10
  */
 public class VcsAnnotation {
   private final FilePath myFilePath;

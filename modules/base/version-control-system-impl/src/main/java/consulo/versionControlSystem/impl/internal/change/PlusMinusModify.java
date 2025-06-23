@@ -16,10 +16,8 @@
 package consulo.versionControlSystem.impl.internal.change;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 11/19/12
- * Time: 6:50 PM
+ * @author Irina.Chernushina
+ * @since 2012-11-19
  */
 public interface PlusMinusModify<T> extends PlusMinus<T> {
   void modify(T was, T become);

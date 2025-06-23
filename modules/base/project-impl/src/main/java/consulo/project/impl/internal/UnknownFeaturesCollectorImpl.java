@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * User: anna
+ * @author anna
  */
 @Singleton
 @ServiceImpl

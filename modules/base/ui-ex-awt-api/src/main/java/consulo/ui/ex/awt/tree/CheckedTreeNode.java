@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ui.ex.awt.tree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- * User: lex
- * Date: Sep 20, 2003
- * Time: 5:14:07 PM
+ * @author lex
+ * @since 2003-09-20
  */
 public class CheckedTreeNode extends DefaultMutableTreeNode {
   protected boolean isChecked = true;

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.function.IntFunction;
 
 /**
- * Author: msk
+ * @author msk
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public class ArrayUtil {

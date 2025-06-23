@@ -23,10 +23,8 @@ import consulo.project.Project;
 import java.util.function.Consumer;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 11/8/12
- * Time: 1:29 PM
+ * @author Irina.Chernushina
+ * @since 2012-11-08
  */
 @Deprecated
 public class MessageBusUtil {

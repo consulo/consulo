@@ -23,7 +23,7 @@ import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Aug 29, 2005
+ * @since 2005-08-29
  */
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use ActionLocalize")

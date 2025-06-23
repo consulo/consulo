@@ -18,8 +18,8 @@ package consulo.ui.ex.popup;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 
 /**
- * User: anna
- * Date: 12/19/12
+ * @author anna
+ * @since 2012-12-19
  */
 public abstract class PopupUpdateProcessorBase extends JBPopupAdapter {
   public abstract void updatePopup(Object lookupItemObject);

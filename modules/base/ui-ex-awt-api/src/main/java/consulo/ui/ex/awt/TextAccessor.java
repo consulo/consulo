@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Alexey
- * Date: 03.04.2005
- * Time: 17:07:38
- */
 package consulo.ui.ex.awt;
 
+/**
+ * @author Alexey
+ * @since 2005-04-03
+ */
 public interface TextAccessor {
   void setText(String text);
 

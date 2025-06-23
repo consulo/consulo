@@ -21,9 +21,8 @@ import consulo.versionControlSystem.VcsKey;
 import jakarta.annotation.Nonnull;
 
 /**
-* User: Irina.Chernushina
-* Date: 8/8/11
-* Time: 7:01 PM
+* @author Irina.Chernushina
+* @since 2011-08-08
 */
 public class HistoryCacheWithRevisionKey extends HistoryCacheBaseKey {
   private final VcsRevisionNumber myRevisionNumber;

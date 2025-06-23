@@ -3,8 +3,8 @@ package consulo.task.event;
 import consulo.task.LocalTask;
 
 /**
- * User: evgeny.zakrevsky
- * Date: 11/8/12
+ * @author evgeny.zakrevsky
+ * @since 2012-11-08
  */
 public class TaskListenerAdapter implements TaskListener {
   @Override

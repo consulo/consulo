@@ -20,10 +20,10 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import jakarta.annotation.Nullable;
 
 /**
- * @author irengrig
- * Date: 3/10/11
- * Time: 4:09 PM
  * Common for all vcs annotation presentation
+ *
+ * @author irengrig
+ * @since 2011-03-10
  */
 public interface VcsLineAnnotationData {
   int getNumLines();

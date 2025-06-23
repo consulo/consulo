@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: valentin
- * Date: 29.01.2004
- * Time: 21:10:56
- */
 package consulo.virtualFileSystem.fileType;
 
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author valentin
+ * @since 2004-01-29
+ */
 public abstract class FakeFileType implements FileTypeIdentifiableByVirtualFile {
 
   @Override

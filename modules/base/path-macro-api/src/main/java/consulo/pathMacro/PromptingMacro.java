@@ -21,7 +21,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: 12/9/11
+ * @since 2011-12-09
  */
 public abstract class PromptingMacro extends Macro {
   @Override

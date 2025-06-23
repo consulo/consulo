@@ -19,9 +19,8 @@ import jakarta.annotation.Nullable;
 import java.util.Date;
 
 /**
- * User: Irina.Chernushina
- * Date: 8/2/11
- * Time: 12:38 AM
+ * @author Irina.Chernushina
+ * @since 2011-08-02
  */
 public interface VcsRevisionDescription {
   VcsRevisionNumber getRevisionNumber();

@@ -22,8 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Sep 17, 2003
- * Time: 7:08:03 PM
+ * @since 2003-09-17
  */
 public final class LibraryGroupElement {
   public static final Key<LibraryGroupElement[]> ARRAY_DATA_KEY = Key.create("libraryGroup.array");

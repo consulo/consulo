@@ -16,9 +16,8 @@
 package consulo.versionControlSystem.change;
 
 /**
- * User: Irina.Chernushina
- * Date: 2/14/12
- * Time: 4:31 PM
+ * @author Irina.Chernushina
+ * @since 2012-02-14
  */
 public class MergeTexts {
   private final String myLeft;

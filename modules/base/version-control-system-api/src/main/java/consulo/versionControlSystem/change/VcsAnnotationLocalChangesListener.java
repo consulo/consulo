@@ -19,9 +19,8 @@ import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
- * User: Irina.Chernushina
- * Date: 11/20/12
- * Time: 3:09 PM
+ * @author Irina.Chernushina
+ * @since 2012-11-20
  */
 public interface VcsAnnotationLocalChangesListener {
   // annotations for already committed revisions should not register with this method - they are not subject to refresh
