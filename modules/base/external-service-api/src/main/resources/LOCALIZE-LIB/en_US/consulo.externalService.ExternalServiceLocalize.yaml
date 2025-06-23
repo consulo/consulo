@@ -1,7 +1,13 @@
 action.download.and.install.plugin:
     text: Download and Install
-action.restart.text:
+action.postpone.text:
+    text: Postpone
+action.restart.app.text:
     text: Restart {0}
+action.restart.text:
+    text: Restart
+action.shutdown.text:
+    text: Shut Down
 action.uninstall.plugin:
     text: Uninstall
 action.update.platform.and.plugins.text:
