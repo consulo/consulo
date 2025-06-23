@@ -25,10 +25,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 11/28/12
- * Time: 2:41 PM
+ * @author Irina.Chernushina
+ * @since 2012-11-28
  */
 public abstract class VcsCheckBoxWithSpinnerConfigurable {
   protected final Project myProject;

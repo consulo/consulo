@@ -37,8 +37,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * User: anna
- * Date: Jan 16, 2005
+ * @author anna
+ * @since 2005-01-16
  */
 public class BackwardDependenciesBuilder extends DependenciesBuilder {
   private final AnalysisScope myForwardScope;

@@ -37,8 +37,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * User: anna
- * Date: Feb 9, 2005
+ * @author anna
+ * @since 2005-02-09
  */
 public class ShowModuleDependenciesAction extends AnAction {
   @Override

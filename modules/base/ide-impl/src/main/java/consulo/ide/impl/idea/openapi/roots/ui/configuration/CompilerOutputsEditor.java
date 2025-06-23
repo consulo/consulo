@@ -50,10 +50,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-/*
- * User: Anna.Kozlova
- * Date: 28-Jun-2006
- * Time: 19:03:32
+/**
+ * @author Anna.Kozlova
+ * @since 2006-06-28
  */
 public class CompilerOutputsEditor extends ModuleElementsEditor {
     private RadioButton myInheritCompilerOutput;

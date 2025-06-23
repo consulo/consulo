@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 16-Jan-2008
- */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
+/**
+ * @author anna
+ * @since 2008-01-16
+ */
 public class TreeModel extends DefaultTreeModel {
   private int myMarkedFileCount;
   private int myTotalFileCount;

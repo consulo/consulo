@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: Anna.Kozlova
- * Date: 16-Jul-2006
- * Time: 17:27:18
- */
 package consulo.ide.impl.idea.openapi.ui;
 
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
@@ -27,6 +20,10 @@ import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Anna.Kozlova
+ * @since 2006-07-16
+ */
 public class PanelWithText extends JPanel {
   private final JLabel myLabel = new JLabel();
 

@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 28-Jun-2007
- */
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.internal.ApplicationManagerEx;
@@ -38,6 +33,10 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * @author anna
+ * @since 2007-06-28
+ */
 public class LoadAllContentsAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(LoadAllContentsAction.class);
   public LoadAllContentsAction() {

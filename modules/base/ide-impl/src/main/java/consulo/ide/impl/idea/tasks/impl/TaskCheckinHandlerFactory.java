@@ -35,7 +35,7 @@ import java.util.Date;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 12/29/11
+ * @since 2011-12-29
  */
 @ExtensionImpl
 public class TaskCheckinHandlerFactory extends CheckinHandlerFactory {

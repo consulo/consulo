@@ -28,7 +28,7 @@ import java.util.Collection;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 4, 2004
+ * @since 2004-12-04
  */
 public class UndefinedMacrosConfigurable implements Configurable{
   private PathMacroListEditor myEditor;

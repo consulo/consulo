@@ -21,8 +21,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
- *         Date: 7/12/11
- *         Time: 1:15 PM
+ * @since 2011-07-12
  */
 public class TestPatchEP implements PatchEP {
   private final static String ourName = "consulo.ide.impl.idea.openapi.diff.impl.patch.formove.TestPatchEP";

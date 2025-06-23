@@ -26,7 +26,7 @@ import javax.swing.*;
 
 /**
  * @author Eugene Zhuravlev
- * @since Oct 14, 2003
+ * @since 2003-10-14
  */
 public class ToggleFolderStateAction extends ContentEntryEditingAction {
   private final ContentEntryTreeEditor myEntryTreeEditor;

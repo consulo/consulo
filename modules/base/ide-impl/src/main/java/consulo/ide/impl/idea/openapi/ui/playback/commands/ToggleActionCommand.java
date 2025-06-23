@@ -27,11 +27,8 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 
 /**
- * Created by IntelliJ IDEA.
- * User: kirillk
- * Date: 8/23/11
- * Time: 2:07 PM
- * To change this template use File | Settings | File Templates.
+ * @author kirillk
+ * @since 2011-08-23
  */
 public class ToggleActionCommand extends AbstractCommand {
   

@@ -38,7 +38,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public class ConfigurationErrorsComponent extends JPanel {
   @NonNls private static final String FIX_ACTION_NAME = "FIX";

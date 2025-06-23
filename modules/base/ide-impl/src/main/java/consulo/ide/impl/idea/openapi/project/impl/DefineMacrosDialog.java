@@ -32,7 +32,7 @@ import java.io.File;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 3, 2004
+ * @since 2004-12-03
  */
 public class DefineMacrosDialog extends DialogWrapper{
   public static final int MACRO_NAME = 0;

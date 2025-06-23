@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 30.11.2006
- * Time: 18:12:47
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.ApplicationManager;
@@ -40,6 +33,10 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
+/**
+ * @author yole
+ * @since 2006-11-30
+ */
 public class CommittedChangesViewManager implements ChangesViewContentProvider {
   private final ProjectLevelVcsManager myVcsManager;
   private final MessageBus myBus;

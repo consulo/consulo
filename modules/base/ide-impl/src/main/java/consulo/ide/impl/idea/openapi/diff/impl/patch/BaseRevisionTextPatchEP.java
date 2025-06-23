@@ -35,10 +35,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 9/15/11
- * Time: 1:20 PM
+ * @author Irina.Chernushina
+ * @since 2011-09-15
  */
 @ExtensionImpl
 public class BaseRevisionTextPatchEP implements PatchEP {

@@ -29,7 +29,7 @@ import java.awt.*;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jun 2, 2005
+ * @since 2005-06-02
  */
 public class ChangelistMoveOfferDialog extends OptionsDialog {
   private final VcsConfiguration myConfig;

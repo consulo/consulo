@@ -30,8 +30,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * User: evgeny.zakrevsky
- * Date: 12/26/12
+ * @author evgeny.zakrevsky
+ * @since 2012-12-26
  */
 public class SendTimeTrackingInformationDialog extends DialogWrapper {
   private final static Logger LOG = Logger.getInstance("#consulo.ide.impl.idea.tasks.timeTracking.TasksToolWindowPanel");

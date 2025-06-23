@@ -25,8 +25,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
- *         Date: 2/17/11
- *         Time: 7:05 PM
+ * @since 2011-02-17
  */
 @ExtensionImpl(id = "todo", order = "after code-analysis")
 public class TodoCheckinHandlerFactory extends CheckinHandlerFactory {

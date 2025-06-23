@@ -28,7 +28,7 @@ import jakarta.inject.Singleton;
 
 /**
  * @author Irina.Chernushina
- * @since 3.08.2011
+ * @since 2011-08-03
  */
 @Singleton
 @State(name = "VcsContentAnnotationSettings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})

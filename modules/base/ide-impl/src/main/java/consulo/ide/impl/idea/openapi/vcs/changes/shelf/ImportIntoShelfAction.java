@@ -37,8 +37,7 @@ import java.util.List;
 
 /**
  * @author irengrig
- * Date: 2/25/11
- * Time: 2:23 PM
+ * @since 2011-02-25
  */
 public class ImportIntoShelfAction extends DumbAwareAction {
   public ImportIntoShelfAction() {

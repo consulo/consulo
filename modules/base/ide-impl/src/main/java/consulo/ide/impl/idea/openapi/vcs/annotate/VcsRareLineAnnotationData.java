@@ -23,8 +23,7 @@ import java.util.Map;
 
 /**
  * @author irengrig
- *         Date: 3/10/11
- *         Time: 4:17 PM
+ * @since 2011-03-10
  */
 public class VcsRareLineAnnotationData implements VcsLineAnnotationData {
   private final Map<Integer, VcsRevisionNumber> myMap;

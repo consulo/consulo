@@ -39,8 +39,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * User: anna
- * Date: 30-Nov-2005
+ * @author anna
+ * @since 2005-11-30
  */
 @State(name = "InspectionProjectProfileManager", storages = {
         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/inspectionProfiles/", stateSplitter = InspectionProjectProfileManagerImpl.ProfileStateSplitter.class)})

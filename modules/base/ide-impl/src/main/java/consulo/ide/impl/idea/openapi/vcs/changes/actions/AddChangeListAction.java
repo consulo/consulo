@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 02.11.2006
- * Time: 21:56:19
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -35,6 +28,10 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
+/**
+ * @author yole
+ * @since 2006-11-02
+ */
 public class AddChangeListAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
     Project project = e.getData(Project.KEY);

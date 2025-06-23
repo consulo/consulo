@@ -39,10 +39,8 @@ import java.io.File;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 11/20/12
- * Time: 11:31 AM
+ * @author Irina.Chernushina
+ * @since 2012-11-20
  */
 public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnnotationLocalChangesListener {
   private final ZipperUpdater myUpdater;

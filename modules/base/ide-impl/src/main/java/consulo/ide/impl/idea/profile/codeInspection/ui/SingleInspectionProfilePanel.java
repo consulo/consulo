@@ -89,8 +89,8 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: anna
- * Date: 31-May-2006
+ * @author anna
+ * @since 2006-05-31
  */
 public class SingleInspectionProfilePanel extends JPanel {
   private static final Logger LOG = Logger.getInstance(SingleInspectionProfilePanel.class);

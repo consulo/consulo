@@ -25,7 +25,7 @@ import consulo.document.internal.PrioritizedDocumentListener;
  * in terms of logical lines affected by it.
  *
  * @author Denis Zhdanov
- * @since Jul 7, 2010 4:24:52 PM
+ * @since 2010-07-07
  */
 public abstract class LineOrientedDocumentChangeAdapter implements PrioritizedDocumentListener {
 

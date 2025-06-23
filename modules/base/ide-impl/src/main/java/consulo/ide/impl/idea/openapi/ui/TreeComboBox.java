@@ -39,7 +39,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public class TreeComboBox extends ComboBoxWithWidePopup {
   private static final int INDENT = UIUtil.getTreeLeftChildIndent();

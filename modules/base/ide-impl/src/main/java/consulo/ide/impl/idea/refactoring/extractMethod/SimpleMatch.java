@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
-* User: ktisha
-*/
+ * @author ktisha
+ */
 public class SimpleMatch {
   PsiElement myStartElement;
   PsiElement myEndElement;

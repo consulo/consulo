@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * User: anna
- * Date: Jan 16, 2005
+ * @author anna
+ * @since 2005-01-16
  */
 public class BackwardDependenciesHandler extends DependenciesHandlerBase {
   private final AnalysisScope myScopeOfInterest;

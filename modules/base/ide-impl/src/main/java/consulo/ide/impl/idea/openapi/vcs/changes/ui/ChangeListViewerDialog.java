@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 20.07.2006
- * Time: 21:07:50
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.CommonBundle;
@@ -58,7 +51,9 @@ import java.util.Collections;
 import java.util.Date;
 
 /**
+ * @author yole
  * @author max
+ * @since 2006-07-20
  */
 public class ChangeListViewerDialog extends DialogWrapper implements DataProvider {
   private Project myProject;

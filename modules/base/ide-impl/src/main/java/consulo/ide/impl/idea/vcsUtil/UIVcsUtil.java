@@ -24,8 +24,7 @@ import java.awt.*;
 
 /**
  * @author irengrig
- *         Date: 7/1/11
- *         Time: 2:49 PM
+ * @since 2011-07-01
  */
 public class UIVcsUtil {
   private UIVcsUtil() {

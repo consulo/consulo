@@ -21,7 +21,7 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 public abstract class ConfigurationError implements Comparable<ConfigurationError> {
   private final String myPlainTextTitle;

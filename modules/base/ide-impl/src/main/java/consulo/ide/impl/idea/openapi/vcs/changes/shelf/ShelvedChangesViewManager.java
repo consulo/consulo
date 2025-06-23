@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 23.11.2006
- * Time: 15:11:11
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.annotation.component.ComponentScope;
@@ -93,6 +86,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author yole
+ * @since 2006-11-23
+ */
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl

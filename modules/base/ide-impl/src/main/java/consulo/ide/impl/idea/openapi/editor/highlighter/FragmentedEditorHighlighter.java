@@ -32,10 +32,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 9/8/11
- * Time: 12:52 PM
+ * @author Irina.Chernushina
+ * @since 2011-09-08
  */
 public class FragmentedEditorHighlighter implements EditorHighlighter {
   private final TreeMap<Integer, Element> myPieces;

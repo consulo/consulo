@@ -19,8 +19,7 @@ import consulo.versionControlSystem.VcsBundle;
 
 /**
  * @author irengrig
- *         Date: 2/25/11
- *         Time: 5:23 PM
+ * @since 2011-02-25
  */
 public enum ApplyPatchMode {
   APPLY(VcsBundle.message("patch.apply.dialog.title"), true),

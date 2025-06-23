@@ -32,8 +32,7 @@ import java.io.File;
 
 /**
  * @author irengrig
- *         Date: 7/8/11
- *         Time: 12:21 PM
+ * @since 2011-07-08
  */
 public class VirtualFileListCellRenderer extends ColoredListCellRenderer {
   private final FileStatusManager myFileStatusManager;

@@ -61,8 +61,7 @@ import java.util.*;
 
 /**
  * @author irengrig
- *         Date: 2/18/11
- *         Time: 5:16 PM
+ * @since 2011-02-18
  */
 public class TodoCheckinHandlerWorker {
   private final static Logger LOG = Logger.getInstance(TodoCheckinHandlerWorker.class);

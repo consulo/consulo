@@ -28,7 +28,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * User: spLeaner
+ * @author spLeaner
  */
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
 public interface ConfigurationErrors {

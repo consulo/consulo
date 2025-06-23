@@ -35,10 +35,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
-* User: Irina.Chernushina
-* Date: 8/8/11
-* Time: 8:26 PM
-*/
+ * @author Irina.Chernushina
+ * @since 2011-08-08
+ */
 @Singleton
 @ServiceImpl
 public class ContentAnnotationCacheImpl implements ContentAnnotationCache {

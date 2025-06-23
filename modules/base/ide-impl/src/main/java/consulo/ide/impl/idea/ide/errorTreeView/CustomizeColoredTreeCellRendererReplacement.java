@@ -23,7 +23,7 @@ import java.awt.*;
 
 /**
  * @author Vladislav.Soroka
- * @since 3/25/14
+ * @since 2014-03-25
  */
 public abstract class CustomizeColoredTreeCellRendererReplacement extends CustomizeColoredTreeCellRenderer {
   @Override

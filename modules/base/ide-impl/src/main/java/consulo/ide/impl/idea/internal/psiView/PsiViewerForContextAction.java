@@ -11,10 +11,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nadya.Zabrodina
- * Date: 7/4/11
- * Time: 4:16 PM
+ * @author Nadya.Zabrodina
+ * @since 2011-07-04
  */
 public class PsiViewerForContextAction extends AnAction implements DumbAware {
   @Override

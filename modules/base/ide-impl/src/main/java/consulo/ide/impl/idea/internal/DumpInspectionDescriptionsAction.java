@@ -42,7 +42,7 @@ import java.util.TreeSet;
 
 /**
  * @author stathik
- * Date: Nov 6, 2003
+ * @since 2003-11-06
  */
 public class DumpInspectionDescriptionsAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(DumpInspectionDescriptionsAction.class);

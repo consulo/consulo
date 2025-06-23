@@ -18,10 +18,8 @@ package consulo.ide.impl.idea.vcsUtil;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 7/6/12
- * Time: 7:43 PM
+ * @author Irina.Chernushina
+ * @since 2012-07-06
  */
 public class ActionUpdateHelper extends AbstractActionStateConsumer {
   public void apply(final AnActionEvent e) {

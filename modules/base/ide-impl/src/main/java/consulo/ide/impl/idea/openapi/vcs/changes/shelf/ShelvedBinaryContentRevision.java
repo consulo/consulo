@@ -28,10 +28,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 12/17/12
- * Time: 3:59 PM
+ * @author Irina.Chernushina
+ * @since 2012-12-17
  */
 public class ShelvedBinaryContentRevision implements BinaryContentRevision {
   private final FilePath myPath;

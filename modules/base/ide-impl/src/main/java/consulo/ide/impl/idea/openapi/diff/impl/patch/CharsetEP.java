@@ -31,10 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 10/17/11
- * Time: 7:35 PM
+ * @author Irina.Chernushina
+ * @since 2011-10-17
  */
 @ExtensionImpl
 public class CharsetEP implements PatchEP {

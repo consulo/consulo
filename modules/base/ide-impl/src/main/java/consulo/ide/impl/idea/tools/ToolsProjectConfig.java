@@ -29,7 +29,7 @@ import jakarta.inject.Singleton;
 
 /**
  * @author lene
- * Date: 06.08.12
+ * @since 2012-08-06
  */
 @Singleton
 @State(name = "ToolsProjectConfig", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})

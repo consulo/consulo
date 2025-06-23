@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 14-May-2009
- */
 package consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
 
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
@@ -37,6 +32,10 @@ import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 
+/**
+ * @author anna
+ * @since 2009-05-14
+ */
 public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer {
   protected abstract String getFilter();
 

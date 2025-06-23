@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Jul 5, 2007
- * Time: 7:32:49 PM
- */
 package consulo.ide.impl.idea.find.actions;
 
 import consulo.project.Project;
@@ -37,6 +30,10 @@ import consulo.language.icon.IconDescriptorUpdaters;
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
+/**
+ * @author cdr
+ * @since 2007-07-05
+ */
 public class UsageListCellRenderer extends ColoredListCellRenderer {
   private final Project myProject;
 

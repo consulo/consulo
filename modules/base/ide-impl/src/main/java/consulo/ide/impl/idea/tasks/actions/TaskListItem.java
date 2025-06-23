@@ -24,7 +24,7 @@ import consulo.ui.image.ImageEffects;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 9/6/12
+ * @since 2012-09-06
  */
 abstract class TaskListItem {
 

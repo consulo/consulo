@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 17-Apr-2009
- */
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -32,6 +27,10 @@ import jakarta.inject.Inject;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author anna
+ * @since 2009-04-17
+ */
 @ExtensionImpl
 public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigurable implements ProjectConfigurable {
   @Inject

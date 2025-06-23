@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 23.11.2006
- * Time: 13:40:27
- */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.application.CommonBundle;
@@ -38,6 +31,10 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 
+/**
+ * @author yole
+ * @since 2006-11-23
+ */
 public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
   private static final Logger LOG = Logger.getInstance(ShelveChangesCommitExecutor.class);
 

@@ -28,7 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * User: cdr
+ * @author cdr
  */
 public class UsageDataUtil {
   @Nullable

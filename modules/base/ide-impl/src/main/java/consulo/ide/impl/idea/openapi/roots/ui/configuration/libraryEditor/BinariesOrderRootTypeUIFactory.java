@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 26-Dec-2007
- */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -31,6 +26,10 @@ import consulo.project.ProjectBundle;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author anna
+ * @since 2007-12-26
+ */
 @ExtensionImpl
 public class BinariesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 

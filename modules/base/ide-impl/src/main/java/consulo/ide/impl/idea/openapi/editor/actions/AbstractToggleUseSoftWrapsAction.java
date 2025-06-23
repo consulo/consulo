@@ -31,7 +31,7 @@ import jakarta.annotation.Nullable;
  * Provides common functionality for <code>'toggle soft wraps usage'</code> actions.
  *
  * @author Denis Zhdanov
- * @since Aug 23, 2010 11:33:35 AM
+ * @since 2010-08-23
  */
 public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction implements DumbAware {
 

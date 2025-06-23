@@ -35,10 +35,9 @@ import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
- * User: anna
- * Date: 04-Jun-2006
+ * @author anna
+ * @since 2006-06-04
  */
-
 public class LibrariesModifiableModel implements LibraryTableBase.ModifiableModelEx {
   //todo[nik] remove LibraryImpl#equals method instead of using identity maps
   private final Map<Library, ExistingLibraryEditor> myLibrary2EditorMap = Maps.newHashMap(ContainerUtil.identityStrategy());

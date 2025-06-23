@@ -29,8 +29,8 @@ import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
- * User: anna
- * Date: Jan 19, 2005
+ * @author anna
+ * @since 2005-01-19
  */
 public abstract class DependenciesBuilder {
   private Project myProject;

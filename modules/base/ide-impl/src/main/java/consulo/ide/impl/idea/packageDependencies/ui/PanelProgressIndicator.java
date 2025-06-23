@@ -27,11 +27,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-/*
- * Created by IntelliJ IDEA.
- * User: Anna.Kozlova
- * Date: 13-Jul-2006
- * Time: 21:36:14
+/**
+ * @author Anna.Kozlova
+ * @since 2006-07-13
  */
 public class PanelProgressIndicator extends ProgressIndicatorBase {
   private final MyProgressPanel myProgressPanel;

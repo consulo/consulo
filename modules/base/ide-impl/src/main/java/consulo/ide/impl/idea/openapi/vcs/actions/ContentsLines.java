@@ -23,8 +23,7 @@ import java.util.List;
 
 /**
 * @author irengrig
-*         Date: 4/27/11
-*         Time: 3:42 PM
+* @since 2011-04-27
 */
 public class ContentsLines {
   private final static Logger LOG = Logger.getInstance(ContentsLines.class);

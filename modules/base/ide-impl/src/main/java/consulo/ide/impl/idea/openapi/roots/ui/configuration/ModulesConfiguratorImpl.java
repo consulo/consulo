@@ -68,7 +68,7 @@ import java.util.function.Supplier;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Dec 15, 2003
+ * @since 2003-12-15
  */
 public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEditor.ChangeListener, Disposable {
     private static final Logger LOG = Logger.getInstance(ModulesConfiguratorImpl.class);
