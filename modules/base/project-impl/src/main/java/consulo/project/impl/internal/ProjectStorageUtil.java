@@ -39,7 +39,7 @@ public class ProjectStorageUtil {
     private Project myProject;
     private final List<String> myFileNames;
 
-    private UnableToSaveProjectNotification(@Nonnull final Project project, final Collection<File> readOnlyFiles) {
+    private UnableToSaveProjectNotification(@Nonnull Project project, Collection<File> readOnlyFiles) {
       super(
         ProjectNotificationGroups.Project.newError()
           .title(LocalizeValue.localizeTODO("Could not save project!"))

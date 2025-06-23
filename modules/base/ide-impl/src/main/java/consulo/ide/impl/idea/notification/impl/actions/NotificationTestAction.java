@@ -192,7 +192,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
         Notification.Builder builder = displayId.newOfType(myType)
             .title(LocalizeValue.ofNullable(myTitle))
             .subtitle(LocalizeValue.ofNullable(mySubtitle))
-            .content(LocalizeValue.localizeTODO(myContent == null ? "" : StringUtil.join(myContent, "\n")))
+            .content(LocalizeValue.ofNullable(StringUtil.join(myContent, "\n")))
             .optionalHyperlinkListener(getListener());
         if (myActions != null) {
           for (String action : myActions) {

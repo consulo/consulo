@@ -90,8 +90,15 @@ public class IdeStorageNotificationService implements StorageNotificationService
                          "and " +
                          productName +
                          " cannot restore those paths.";
-        new UnknownMacroNotification(ProjectNotificationGroups.Project, "Load error: undefined path variables", content, consulo.project.ui.notification.NotificationType.ERROR,
-                                     (notification, event) -> ProjectStorageUtil.checkUnknownMacros((ProjectEx)project, true), macros).notify((Project)project);
+        new UnknownMacroNotification(
+            ProjectNotificationGroups.Project.newError()
+                .title(LocalizeValue.localizeTODO("Load error: undefined path variables"))
+                .content(LocalizeValue.localizeTODO(content))
+                .optionalHyperlinkListener(
+                    (notification, event) -> ProjectStorageUtil.checkUnknownMacros((ProjectEx)project, true)
+                ),
+            macros
+        ).notify((Project)project);
       }
     });
   }

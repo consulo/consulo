@@ -104,7 +104,11 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
       UiInspectorNotification[] existing = NotificationsManager.getNotificationsManager().getNotificationsOfType(UiInspectorNotification.class, null);
       if (existing.length == 0) {
-        Notifications.Bus.notify(new UiInspectorNotification(), null);
+        new UiInspectorNotification(
+          Notifications.SYSTEM_MESSAGES_GROUP.newInfo()
+            .title(LocalizeValue.localizeTODO("UI Inspector"))
+            .content(LocalizeValue.localizeTODO("Control-Alt-Click to view component info!"))
+        ).notify(null);
       }
     }
     else {
@@ -117,12 +121,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static class UiInspectorNotification extends Notification {
-    private UiInspectorNotification() {
-      super(
-        Notifications.SYSTEM_MESSAGES_GROUP.newInfo()
-          .title(LocalizeValue.localizeTODO("UI Inspector"))
-          .content(LocalizeValue.localizeTODO("Control-Alt-Click to view component info!"))
-      );
+    private UiInspectorNotification(Notification.Builder notificationBuilder) {
+      super(notificationBuilder);
     }
   }
 
