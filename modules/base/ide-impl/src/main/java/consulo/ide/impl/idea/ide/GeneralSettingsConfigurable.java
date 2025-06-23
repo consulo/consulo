@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.execution.ProcessCloseConfirmation;
@@ -77,7 +78,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         private VerticalLayout myRootLayout;
 
         @RequiredUIAccess
-        public MyComponent() {
+        public MyComponent(@Nonnull Application application) {
             myRootLayout = VerticalLayout.create(0);
 
             VerticalLayout startupOrShutdownLayout = VerticalLayout.create();
@@ -162,11 +163,11 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
             VerticalLayout fileDialogsLayout = VerticalLayout.create();
 
             ComboBox.Builder<FileOperateDialogProvider> fileChooseDialogBox = ComboBox.<FileOperateDialogProvider>builder();
-            for (FileChooseDialogProvider fileChooseDialogProvider : FileChooseDialogProvider.EP_NAME.getExtensionList()) {
+            application.getExtensionPoint(FileChooseDialogProvider.class).forEach(fileChooseDialogProvider -> {
                 if (fileChooseDialogProvider.isAvailable()) {
                     fileChooseDialogBox.add(fileChooseDialogProvider, fileChooseDialogProvider.getName());
                 }
-            }
+            });
 
             fileDialogsLayout.add(LabeledBuilder.sided(
                 LocalizeValue.localizeTODO("File/Path Choose Dialog Type"),
@@ -174,11 +175,11 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
             ));
 
             ComboBox.Builder<FileOperateDialogProvider> fileSaveDialogBox = ComboBox.<FileOperateDialogProvider>builder();
-            for (FileSaveDialogProvider fileSaveDialogProvider : FileSaveDialogProvider.EP_NAME.getExtensionList()) {
+            application.getExtensionPoint(FileSaveDialogProvider.class).forEach(fileSaveDialogProvider -> {
                 if (fileSaveDialogProvider.isAvailable()) {
                     fileSaveDialogBox.add(fileSaveDialogProvider, fileSaveDialogProvider.getName());
                 }
-            }
+            });
 
             fileDialogsLayout.add(LabeledBuilder.sided(
                 LocalizeValue.localizeTODO("File Save Dialog Type"),
@@ -195,23 +196,26 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         }
     }
 
+    private final Application myApplication;
     private final Provider<GeneralSettings> myGeneralSettings;
     private final Provider<FileOperateDialogSettings> myFileOperateDialogSettings;
 
     @Inject
     public GeneralSettingsConfigurable(
+        Application application,
         Provider<GeneralSettings> generalSettings,
         Provider<FileOperateDialogSettings> fileOperateDialogSettings
     ) {
         myGeneralSettings = generalSettings;
         myFileOperateDialogSettings = fileOperateDialogSettings;
+        myApplication = application;
     }
 
     @RequiredUIAccess
     @Nonnull
     @Override
     protected MyComponent createPanel(@Nonnull Disposable uiDisposable) {
-        return new MyComponent();
+        return new MyComponent(myApplication);
     }
 
     @RequiredUIAccess
@@ -398,6 +402,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         }
     }
 
+    @Nonnull
     @Override
     public String getDisplayName() {
         return "System";
