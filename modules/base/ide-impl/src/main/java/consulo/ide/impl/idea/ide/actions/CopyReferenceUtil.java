@@ -92,15 +92,6 @@ public final class CopyReferenceUtil {
         return adjustedElement != null ? adjustedElement : element;
     }
 
-    static void setStatusBarText(Project project, @Nonnull LocalizeValue message) {
-        if (project != null) {
-            StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(project);
-            if (statusBar != null) {
-                statusBar.setInfo(message.get());
-            }
-        }
-    }
-
     @Nullable
     static String getQualifiedNameFromProviders(@Nullable PsiElement element) {
         return QualifiedNameProviderUtil.getQualifiedNameDumbAware(element);

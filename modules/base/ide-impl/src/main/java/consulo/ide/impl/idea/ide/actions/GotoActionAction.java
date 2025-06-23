@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
@@ -118,9 +117,6 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                             if (text != null && myDropdownPopup != null) {
                                 myDropdownPopup.setAdText(text, SwingConstants.LEFT);
                             }
-
-                            String description = getValueDescription(value);
-                            ActionMenuUtil.showDescriptionInStatusBar(true, myList, description);
                         }
 
                         @Nullable
@@ -158,18 +154,6 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                             return getAdText();
                         }
                     });
-                    myList.addMouseMotionListener(new MouseMotionAdapter() {
-                        @Override
-                        public void mouseMoved(MouseEvent e) {
-                            int index = myList.locationToIndex(e.getPoint());
-                            if (index == -1) {
-                                return;
-                            }
-                            Object value = myList.getModel().getElementAt(index);
-                            String description = getValueDescription(value);
-                            ActionMenuUtil.showDescriptionInStatusBar(true, myList, description);
-                        }
-                    });
                 }
 
                 @Nullable
@@ -203,8 +187,6 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                 public void setDisposed(boolean disposedFlag) {
                     super.setDisposed(disposedFlag);
                     Disposer.dispose(disposable);
-
-                    ActionMenuUtil.showDescriptionInStatusBar(true, myList, null);
 
                     for (ListSelectionListener listener : myList.getListSelectionListeners()) {
                         myList.removeListSelectionListener(listener);

@@ -232,9 +232,6 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         boolean isPreview = isPreviewUsages(usages) || !computeUnloadedModulesFromUseScope(descriptor).isEmpty();
         if (!isPreview) {
             isPreview = !ensureElementsWritable(usages, descriptor) || UsageViewUtil.hasReadOnlyUsages(usages);
-            if (isPreview) {
-                StatusBarUtil.setStatusBarInfo(myProject, RefactoringLocalize.readonlyOccurencesFound().get());
-            }
         }
         if (isPreview) {
             for (UsageInfo usage : usages) {
@@ -590,16 +587,6 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         }
         finally {
             action.finish();
-        }
-
-        int count = writableUsageInfos.length;
-        if (count > 0) {
-            StatusBarUtil.setStatusBarInfo(myProject, RefactoringLocalize.statusbarRefactoringResult(count).get());
-        }
-        else {
-            if (!isPreviewUsages(writableUsageInfos)) {
-                StatusBarUtil.setStatusBarInfo(myProject, RefactoringLocalize.statusbarNousages().get());
-            }
         }
     }
 

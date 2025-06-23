@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Trinity;
@@ -38,7 +37,6 @@ import java.util.*;
 public class LogModel implements Disposable {
     private final List<Notification> myNotifications = new ArrayList<>();
     private final Map<Notification, Long> myStamps = Collections.synchronizedMap(new WeakHashMap<Notification, Long>());
-    private Trinity<Notification, String, Long> myStatusMessage;
     @Nonnull
     private final Application myApplication;
     @Nullable
@@ -60,7 +58,6 @@ public class LogModel implements Disposable {
             }
         }
         myStamps.put(notification, stamp);
-        setStatusMessage(notification, stamp);
         fireModelChanged();
     }
 
@@ -78,35 +75,12 @@ public class LogModel implements Disposable {
         return result;
     }
 
-    void setStatusMessage(@Nullable Notification statusMessage, long stamp) {
-        synchronized (myNotifications) {
-            if (myStatusMessage != null && myStatusMessage.first == statusMessage) {
-                return;
-            }
-            if (myStatusMessage == null && statusMessage == null) {
-                return;
-            }
-
-            myStatusMessage =
-                statusMessage == null ? null : Trinity.create(statusMessage, EventLog.formatForLog(statusMessage, "").status, stamp);
-        }
-        StatusBar.Info.set("", myProject, EventLog.LOG_REQUESTOR);
-    }
-
-    @Nullable
-    Trinity<Notification, String, Long> getStatusMessage() {
-        synchronized (myNotifications) {
-            return myStatusMessage;
-        }
-    }
-
     void logShown() {
         for (Notification notification : getNotifications()) {
             if (!notification.isImportant()) {
                 removeNotification(notification);
             }
         }
-        setStatusToImportant();
     }
 
     public ArrayList<Notification> getNotifications() {
@@ -129,26 +103,7 @@ public class LogModel implements Disposable {
         if (handler != null) {
             UIUtil.invokeLaterIfNeeded(handler);
         }
-
-        Trinity<Notification, String, Long> oldStatus = getStatusMessage();
-        if (oldStatus != null && notification == oldStatus.first) {
-            setStatusToImportant();
-        }
         fireModelChanged();
-    }
-
-    private void setStatusToImportant() {
-        ArrayList<Notification> notifications = getNotifications();
-        Collections.reverse(notifications);
-        Notification message = ContainerUtil.find(notifications, Notification::isImportant);
-        if (message == null) {
-            setStatusMessage(message, 0);
-        }
-        else {
-            Long notificationTime = getNotificationTime(message);
-            assert notificationTime != null;
-            setStatusMessage(message, notificationTime);
-        }
     }
 
     @Nullable

@@ -11,7 +11,6 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
@@ -252,8 +251,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
                 if (actionItem == null) {
                     return;
                 }
-                Presentation presentation = updateActionItem(actionItem);
-                ActionMenuUtil.showDescriptionInStatusBar(true, myComponent, presentation.getDescription());
+                updateActionItem(actionItem);
             });
         }
 
@@ -352,7 +350,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             if (myDisposeCallback != null) {
                 myDisposeCallback.run();
             }
-            ActionMenuUtil.showDescriptionInStatusBar(true, myComponent, null);
             super.dispose();
         }
 

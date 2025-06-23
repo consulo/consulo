@@ -15,62 +15,55 @@
  */
 package consulo.execution.process;
 
-import consulo.application.ApplicationManager;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.process.localize.ProcessLocalize;
 import consulo.project.Project;
-import consulo.project.ui.wm.StatusBar;
 import consulo.util.dataholder.Key;
 
 /**
  * @author dyoma
  */
-public class ProcessTerminatedListener extends ProcessAdapter {
+public class ProcessTerminatedListener implements ProcessListener {
   private static final Key<ProcessTerminatedListener> KEY = Key.create("processTerminatedListener");
   private final String myProcessFinishedMessage;
   private final Project myProject;
   protected static final String EXIT_CODE_ENTRY = "$EXIT_CODE$";
   protected static final String EXIT_CODE_REGEX = "\\$EXIT_CODE\\$";
 
-  private ProcessTerminatedListener(final Project project, final String processFinishedMessage) {
+  private ProcessTerminatedListener(Project project, String processFinishedMessage) {
     myProject = project;
     myProcessFinishedMessage = processFinishedMessage;
   }
 
-  public static void attach(final ProcessHandler processHandler, Project project, final String message) {
-    final ProcessTerminatedListener previousListener = processHandler.getUserData(KEY);
+  public static void attach(ProcessHandler processHandler, Project project, String message) {
+    ProcessTerminatedListener previousListener = processHandler.getUserData(KEY);
     if (previousListener != null) {
       processHandler.removeProcessListener(previousListener);
       if (project == null) project = previousListener.myProject;
     }
 
-    final ProcessTerminatedListener listener = new ProcessTerminatedListener(project, message);
+    ProcessTerminatedListener listener = new ProcessTerminatedListener(project, message);
     processHandler.addProcessListener(listener);
     processHandler.putUserData(KEY, listener);
   }
 
-  public static void attach(final ProcessHandler processHandler, final Project project) {
+  public static void attach(ProcessHandler processHandler, Project project) {
     String message = ProcessLocalize.finishedWithExitCodeTextMessage(EXIT_CODE_ENTRY).get();
     attach(processHandler, project, "\n" + message + "\n");
   }
 
-  public static void attach(final ProcessHandler processHandler) {
+  public static void attach(ProcessHandler processHandler) {
     attach(processHandler, null);
   }
 
+  @Override
   public void processTerminated(ProcessEvent event) {
-    final ProcessHandler processHandler = event.getProcessHandler();
+    ProcessHandler processHandler = event.getProcessHandler();
     processHandler.removeProcessListener(this);
-    final String message = myProcessFinishedMessage.replaceAll(EXIT_CODE_REGEX, String.valueOf(event.getExitCode()));
+    String message = myProcessFinishedMessage.replaceAll(EXIT_CODE_REGEX, String.valueOf(event.getExitCode()));
     processHandler.notifyTextAvailable(message, ProcessOutputTypes.SYSTEM);
-    if (myProject != null) {
-      ApplicationManager.getApplication().invokeLater(() -> {
-        if (myProject.isDisposed()) return;
-        StatusBar.Info.set(message, myProject);
-      });
-    }
   }
 }

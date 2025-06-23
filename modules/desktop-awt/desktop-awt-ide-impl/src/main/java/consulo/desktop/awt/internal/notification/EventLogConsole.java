@@ -531,7 +531,6 @@ class EventLogConsole {
                 notification.expire();
                 model.removeNotification(notification);
             }
-            model.setStatusMessage(null, 0);
         }
     }
 }

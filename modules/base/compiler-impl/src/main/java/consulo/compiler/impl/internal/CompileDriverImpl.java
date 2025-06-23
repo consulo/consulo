@@ -61,9 +61,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -440,7 +438,6 @@ public class CompileDriverImpl implements CompileDriver {
         boolean isUnitTestMode = application.isUnitTestMode();
         CompilerTask compileTask = new CompilerTask(myProject, contentName.get(), true, isCompilationStartedAutomatically(scope));
 
-        StatusBar.Info.set("", myProject, "Compiler");
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
         FileDocumentManager.getInstance().saveAllDocuments();
 
@@ -1191,7 +1188,6 @@ public class CompileDriverImpl implements CompileDriver {
         }
         finally {
             progressIndicator.popState();
-            WindowManager.getInstance().getStatusBar(myProject).setInfo("");
         }
         return true;
     }

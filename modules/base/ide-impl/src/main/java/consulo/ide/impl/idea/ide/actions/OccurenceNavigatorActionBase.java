@@ -16,25 +16,22 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.localize.IdeLocalize;
-import consulo.ui.ex.OccurenceNavigator;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
-import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.navigation.Navigatable;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
 import consulo.project.ui.wm.ContentManagerUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -61,15 +58,11 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         if (occurenceInfo == null) {
             return;
         }
+
         Navigatable descriptor = occurenceInfo.getNavigateable();
         if (descriptor != null && descriptor.canNavigate()) {
             descriptor.navigate(false);
         }
-        if (occurenceInfo.getOccurenceNumber() == -1 || occurenceInfo.getOccurencesCount() == -1) {
-            return;
-        }
-        WindowManager.getInstance().getStatusBar(project)
-            .setInfo(IdeLocalize.messageOccurrenceNOfM(occurenceInfo.getOccurenceNumber(), occurenceInfo.getOccurencesCount()).get());
     }
 
     @Override

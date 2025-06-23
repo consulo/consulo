@@ -20,7 +20,6 @@ import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
-import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
@@ -58,7 +57,6 @@ public class CopyPathProvider extends DumbAwareAction {
         if (project != null) {
             String copy = getQualifiedName(project, elements, editor, customDataContext);
             CopyPasteManager.getInstance().setContents(new StringSelection(copy));
-            CopyReferenceUtil.setStatusBarText(project, IdeLocalize.messagePathToFqnHasBeenCopied(copy));
 
             CopyReferenceUtil.highlight(editor, project, elements);
         }

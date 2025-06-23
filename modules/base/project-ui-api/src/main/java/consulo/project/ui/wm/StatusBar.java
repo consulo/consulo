@@ -16,11 +16,8 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.Application;
-import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.project.startup.StartupManager;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.image.Image;
@@ -37,36 +34,8 @@ import java.util.function.Predicate;
 /**
  * @author spleaner
  */
-public interface StatusBar extends StatusBarInfo, Disposable {
+public interface StatusBar extends Disposable {
     Key<StatusBar> KEY = Key.create(StatusBar.class);
-
-    abstract class Info implements StatusBarInfo {
-        private Info() {
-        }
-
-        public static void set(@Nullable String text, @Nullable Project project) {
-            set(text, project, null);
-        }
-
-        public static void set(@Nullable String text, @Nullable Project project, @Nullable String requestor) {
-            if (project != null) {
-                if (project.isDisposed()) {
-                    return;
-                }
-                if (!project.isInitialized()) {
-                    StartupManager.getInstance(project).runWhenProjectIsInitialized(
-                        (p, ui) -> p.getMessageBus()
-                            .syncPublisher(StatusBarInfo.class)
-                            .setInfo(text, requestor)
-                    );
-                    return;
-                }
-            }
-
-            MessageBus bus = project == null ? Application.get().getMessageBus() : project.getMessageBus();
-            bus.syncPublisher(StatusBarInfo.class).setInfo(text, requestor);
-        }
-    }
 
     void updateWidget(@Nonnull String id);
 
@@ -87,9 +56,6 @@ public interface StatusBar extends StatusBarInfo, Disposable {
 
     @Nullable
     Project getProject();
-
-    @Nullable
-    String getInfo();
 
     @Nonnull
     default consulo.ui.Component getUIComponent() {

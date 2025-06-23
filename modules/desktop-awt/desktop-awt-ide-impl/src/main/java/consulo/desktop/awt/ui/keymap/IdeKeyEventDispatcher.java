@@ -110,8 +110,6 @@ public final class IdeKeyEventDispatcher implements Disposable {
     private final Runnable mySecondStrokeTimeoutRunnable = () -> {
         if (myState == KeyState.STATE_WAIT_FOR_SECOND_KEYSTROKE) {
             resetState();
-            DataContext dataContext = myContext.getDataContext();
-            StatusBar.Info.set(null, dataContext == null ? null : dataContext.getData(Project.KEY));
         }
     };
 
@@ -331,8 +329,6 @@ public final class IdeKeyEventDispatcher implements Disposable {
         if (KeyEvent.KEY_RELEASED == e.getID()) {
             myFirstKeyStroke = null;
             setState(KeyState.STATE_INIT);
-            Project project = myContext.getDataContext().getData(Project.KEY);
-            StatusBar.Info.set(null, project);
             return false;
         }
 
@@ -350,12 +346,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
         }
 
         // finally user had managed to enter the second keystroke, so let it be processed
-        Project project = myContext.getDataContext().getData(Project.KEY);
-        StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(project);
         if (processAction(e, myActionProcessor)) {
-            if (statusBar != null) {
-                statusBar.setInfo(null);
-            }
             return true;
         }
         else {
@@ -441,23 +432,6 @@ public final class IdeKeyEventDispatcher implements Disposable {
             myFirstKeyStroke = keyStroke;
             ArrayList<Pair<AnAction, KeyStroke>> secondKeyStrokes = getSecondKeystrokeActions();
 
-            Project project = dataContext.getData(Project.KEY);
-            StringBuilder message = new StringBuilder();
-            message.append(KeyMapLocalize.prefixKeyPressedMessage());
-            message.append(' ');
-            for (int i = 0; i < secondKeyStrokes.size(); i++) {
-                Pair<AnAction, KeyStroke> pair = secondKeyStrokes.get(i);
-                if (i > 0) {
-                    message.append(", ");
-                }
-                message.append(pair.getFirst().getTemplatePresentation().getText());
-                message.append(" (");
-                message.append(KeymapUtil.getKeystrokeText(pair.getSecond()));
-                message.append(")");
-            }
-
-            StatusBar.Info.set(message.toString(), project);
-
             mySecondStrokeTimeout.cancel(false);
             mySecondStrokeTimeout = Application.get()
                 .getLastUIAccess()
@@ -475,7 +449,6 @@ public final class IdeKeyEventDispatcher implements Disposable {
                     mySecondKeystrokePopupTimeout = Application.get().getLastUIAccess().getScheduler().schedule(
                         () -> {
                             if (myState == KeyState.STATE_WAIT_FOR_SECOND_KEYSTROKE) {
-                                StatusBar.Info.set(null, oldContext.getData(Project.KEY));
                                 new SecondaryKeystrokePopup(
                                     myFirstKeyStroke,
                                     secondKeyStrokes,

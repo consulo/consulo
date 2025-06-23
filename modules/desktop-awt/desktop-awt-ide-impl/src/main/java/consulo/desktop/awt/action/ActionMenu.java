@@ -23,7 +23,6 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.action.menu.ActionMenuItem;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.IdeFrame;
@@ -38,7 +37,6 @@ import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.util.TextWithMnemonic;
-import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
@@ -49,8 +47,6 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class ActionMenu extends JMenu {
     private final String myPlace;
@@ -217,12 +213,6 @@ public final class ActionMenu extends JMenu {
                 setDisabledIcon(TargetAWT.to(icon == null ? null : ImageEffects.grayed(icon)));
             }
         }
-    }
-
-    @Override
-    public void menuSelectionChanged(boolean isIncluded) {
-        super.menuSelectionChanged(isIncluded);
-        ActionMenuUtil.showDescriptionInStatusBar(isIncluded, this, myPresentation.getDescription());
     }
 
     private class MenuListenerImpl implements MenuListener {

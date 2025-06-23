@@ -105,7 +105,6 @@ public class CopyReferenceAction extends DumbAwareAction {
         String copy = getQualifiedName(editor, elements);
         if (copy != null) {
             CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(copy));
-            setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(copy));
         }
         else if (editor != null && project != null) {
             Document document = editor.getDocument();
@@ -113,7 +112,6 @@ public class CopyReferenceAction extends DumbAwareAction {
             if (file != null) {
                 String toCopy = QualifiedNameProviderUtil.getFileFqn(file) + ":" + (editor.getCaretModel().getLogicalPosition().line + 1);
                 CopyPasteManager.getInstance().setContents(new StringSelection(toCopy));
-                setStatusBarText(project, LanguageLocalize.statusBarTextReferenceHasBeenCopied(toCopy));
             }
             return;
         }
@@ -132,8 +130,6 @@ public class CopyReferenceAction extends DumbAwareAction {
     private static boolean doCopy(List<? extends PsiElement> elements, @Nullable Project project) {
         String toCopy = CopyReferenceUtil.doCopy(elements, null);
         CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(toCopy));
-        setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(toCopy));
-
         return true;
     }
 

@@ -82,8 +82,6 @@ public class NotificationProjectTracker implements Disposable {
 
     @Override
     public void dispose() {
-        myEventLog.myModel.setStatusMessage(null, 0);
-        StatusBar.Info.set("", null, EventLog.LOG_REQUESTOR);
     }
 
     protected void printNotification(Notification notification) {

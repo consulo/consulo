@@ -165,20 +165,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
                 PackageDependenciesNode selectedNode = (PackageDependenciesNode)path.getLastPathComponent();
                 traverseToLeaves(selectedNode, denyRules, allowRules);
             }
-            if (denyRules.length() + allowRules.length() > 0) {
-                StatusBar.Info.set(
-                    AnalysisScopeBundle.message(
-                        "status.bar.rule.violation.message",
-                        ((denyRules.length() == 0 || allowRules.length() == 0) ? 1 : 2),
-                        (denyRules.length() > 0 ? denyRules.toString() + (allowRules.length() > 0 ? "; " : "") : " ") +
-                            (allowRules.length() > 0 ? allowRules.toString() : " ")
-                    ),
-                    myProject
-                );
-            }
-            else {
-                StatusBar.Info.set(AnalysisScopeLocalize.statusBarNoRuleViolationMessage().get(), myProject);
-            }
         });
 
         myRightTree.getSelectionModel().addTreeSelectionListener(e -> SwingUtilities.invokeLater(new Runnable() {

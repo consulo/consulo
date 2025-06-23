@@ -137,7 +137,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
         DaemonProgressIndicator.setDebug(LOG.isDebugEnabled());
 
         assert !myInitialized : "Double Initializing";
-        Disposer.register(this, new StatusBarUpdater(project));
 
         myInitialized = true;
         myDisposed = false;

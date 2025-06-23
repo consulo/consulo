@@ -65,10 +65,6 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
                 dirtyScopeManager.fileDirty(f);
             }
         }
-        StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-        if (statusBar != null) {
-            statusBar.setInfo(IdeBundle.message("action.sync.completed.successfully"));
-        }
     }
 
     @Nonnull

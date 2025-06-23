@@ -642,8 +642,6 @@ public class FindUsagesManager {
     ) {
         initLastSearchElement(findUsagesOptions, primaryElements, secondaryElements);
 
-        clearStatusBar();
-
         FileEditorLocation currentLocation = fileEditor.getCurrentLocation();
 
         PsiElement2UsageTargetAdapter[] primaryTargets = PsiElement2UsageTargetAdapter.convert(primaryElements);
@@ -672,10 +670,6 @@ public class FindUsagesManager {
         String elementType = UsageViewUtil.getType(psiElement);
         String elementName = UsageViewUtil.getShortName(psiElement);
         return FindLocalize.findUsagesOfElement_typeElement_nameNotFoundMessage(elementType, elementName);
-    }
-
-    private void clearStatusBar() {
-        StatusBar.Info.set("", myProject);
     }
 
     @Nonnull
@@ -707,9 +701,6 @@ public class FindUsagesManager {
     private void showHintOrStatusBarMessage(@Nonnull LocalizeValue message, FileEditor fileEditor) {
         if (fileEditor instanceof TextEditor textEditor) {
             showEditorHint(message, textEditor.getEditor());
-        }
-        else {
-            StatusBar.Info.set(message.get(), myProject);
         }
     }
 

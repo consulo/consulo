@@ -182,24 +182,16 @@ public class ActionMacroManager implements Disposable {
             each.generateTo(script);
         }
 
-        final PlaybackRunner runner = new PlaybackRunner(script.toString(), new PlaybackRunner.StatusCallback.Edt() {
+        PlaybackRunner runner = new PlaybackRunner(script.toString(), new PlaybackRunner.StatusCallback.Edt() {
 
             @Override
             public void messageEdt(PlaybackContext context, String text, Type type) {
-                if (type == Type.message || type == Type.error) {
-                    if (context != null) {
-                        frame.getStatusBar().setInfo("Line " + context.getCurrentLine() + ": " + text);
-                    }
-                    else {
-                        frame.getStatusBar().setInfo(text);
-                    }
-                }
             }
         }, Registry.is("actionSystem.playback.useDirectActionCall"), true, Registry.is("actionSystem.playback.useTypingTargets"));
 
         myIsPlaying = true;
 
-        runner.run().doWhenDone(() -> frame.getStatusBar().setInfo("Script execution finished")).doWhenProcessed(() -> myIsPlaying = false);
+        runner.run().doWhenProcessed(() -> myIsPlaying = false);
     }
 
     public boolean isRecording() {

@@ -48,7 +48,6 @@ import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageTargetUtil;
@@ -129,8 +128,6 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
       writeUsages
     );
     if (!clearHighlights) {
-      WindowManager.getInstance().getStatusBar(editor.getProject()).setInfo(statusText);
-
       HighlightHandlerBase.setupFindModel(editor.getProject()); // enable f3 navigation
     }
     if (hintText != null) {
@@ -478,7 +475,6 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         ? CodeInsightLocalize.statusBarHighlightedUsagesNotFoundMessage(elementName)
         : LocalizeValue.localizeTODO(CodeInsightBundle.message("status.bar.highlighted.usages.not.found.no.target.message", elementName));
     }
-    WindowManager.getInstance().getStatusBar(project).setInfo(message.get());
   }
 
   private static String getElementName(PsiElement element) {

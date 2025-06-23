@@ -24,17 +24,13 @@ import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.usage.localize.UsageLocalize;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -221,13 +217,6 @@ public class UsageViewUtil {
     public static boolean reportNonRegularUsages(UsageInfo[] usages, Project project) {
         boolean inGeneratedCode = hasUsagesInGeneratedCode(usages, project);
         if (hasNonCodeUsages(usages) || inGeneratedCode) {
-            StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-            if (statusBar != null) {
-                LocalizeValue status = inGeneratedCode
-                    ? UsageLocalize.occurrencesFoundInCommentsStringsNonJavaFilesAndGeneratedCode()
-                    : UsageLocalize.occurrencesFoundInCommentsStringsAndNonJavaFiles();
-                statusBar.setInfo(status.get());
-            }
             return true;
         }
         return false;

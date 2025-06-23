@@ -98,8 +98,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   private UnifiedInfoAndProgressPanel myInfoAndProgressPanel;
 
-  private String myInfoText;
-
   @RequiredUIAccess
   public UnifiedStatusBarImpl(Application application, @Nullable StatusBar master) {
     myApplication = application;
@@ -121,25 +119,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     myComponent.addUserDataProvider(StatusBar.KEY, () -> this);
 
     myComponent.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
-  }
-
-  @Override
-  public void setInfo(@Nullable String text) {
-    myInfoText = text;
-
-    myApplication.getLastUIAccess().give(() -> {
-      myInfoAndProgressPanel.setStatusText(StringUtil.notNullize(text));
-    });
-  }
-
-  @Override
-  public void setInfo(@Nullable String text, @Nullable String requestor) {
-    myInfoText = text;
-  }
-
-  @Override
-  public String getInfo() {
-    return myInfoText;
   }
 
   private void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull final Position pos) {

@@ -337,20 +337,6 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
     }
 
     @Override
-    public void setInfo(@Nullable final String s) {
-        setInfo(s, null);
-    }
-
-    @Override
-    public void setInfo(@Nullable final String s, @Nullable final String requestor) {
-    }
-
-    @Override
-    public String getInfo() {
-        return null;
-    }
-
-    @Override
     public void addProgress(@Nonnull ProgressIndicator indicator, @Nonnull TaskInfo info) {
         this.<InfoAndProgressPanel>findWidget(widget -> widget instanceof InfoAndProgressPanel).ifPresent(widget -> {
             widget.addProgress(indicator, info);

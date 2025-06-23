@@ -31,8 +31,6 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.MessageDialogBuilder;
@@ -412,13 +410,8 @@ public class ReplaceInProjectManager {
         replaceContext.getUsageView().excludeUsages(new Usage[]{usage});
     }
 
+    @Deprecated
     public static void reportNumberReplacedOccurrences(Project project, int occurrences) {
-        if (occurrences != 0) {
-            final StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-            if (statusBar != null) {
-                statusBar.setInfo(FindLocalize.zeroOccurrencesReplaced(occurrences).get());
-            }
-        }
     }
 
     public boolean replaceUsage(

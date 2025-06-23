@@ -511,7 +511,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     public void initialize() {
         if (myRootPane != null) {
             myRootPane.installNorthComponents(myProject, myTitlelessDecorator);
-            myProject.getMessageBus().connect().subscribe(StatusBarInfo.class, myRootPane.getStatusBar());
         }
 
         installPopupForStatusBar();

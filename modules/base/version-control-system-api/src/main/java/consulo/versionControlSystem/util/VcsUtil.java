@@ -22,7 +22,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.document.FileDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.wm.StatusBar;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -49,7 +48,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -73,7 +71,7 @@ public class VcsUtil {
 
     private static int computeLoadedFileSize() {
         int result = RawFileLoader.getInstance().getFileLengthToCacheThreshold();
-        final String userLimitKb = System.getProperty(MAX_VCS_LOADED_SIZE_KB);
+        String userLimitKb = System.getProperty(MAX_VCS_LOADED_SIZE_KB);
         try {
             return userLimitKb != null ? Math.min(Integer.parseInt(userLimitKb) * 1024, result) : result;
         }
@@ -82,16 +80,16 @@ public class VcsUtil {
         }
     }
 
-    public static void markFileAsDirty(final Project project, final VirtualFile file) {
+    public static void markFileAsDirty(Project project, VirtualFile file) {
         VcsDirtyScopeManager.getInstance(project).fileDirty(file);
     }
 
-    public static void markFileAsDirty(final Project project, final FilePath path) {
+    public static void markFileAsDirty(Project project, FilePath path) {
         VcsDirtyScopeManager.getInstance(project).fileDirty(path);
     }
 
-    public static void markFileAsDirty(final Project project, final String path) {
-        final FilePath filePath = VcsContextFactory.getInstance().createFilePathOn(new File(path));
+    public static void markFileAsDirty(Project project, String path) {
+        FilePath filePath = VcsContextFactory.getInstance().createFilePathOn(new File(path));
         markFileAsDirty(project, filePath);
     }
 
@@ -213,31 +211,31 @@ public class VcsUtil {
     }
 
     @RequiredUIAccess
-    public static void refreshFiles(final FilePath[] roots, final Runnable runnable) {
+    public static void refreshFiles(FilePath[] roots, Runnable runnable) {
         UIAccess.assertIsUIThread();
         refreshFiles(collectFilesToRefresh(roots), runnable);
     }
 
     @RequiredUIAccess
-    public static void refreshFiles(final File[] roots, final Runnable runnable) {
+    public static void refreshFiles(File[] roots, Runnable runnable) {
         UIAccess.assertIsUIThread();
         refreshFiles(collectFilesToRefresh(roots), runnable);
     }
 
-    private static File[] collectFilesToRefresh(final FilePath[] roots) {
-        final File[] result = new File[roots.length];
+    private static File[] collectFilesToRefresh(FilePath[] roots) {
+        File[] result = new File[roots.length];
         for (int i = 0; i < roots.length; i++) {
             result[i] = roots[i].getIOFile();
         }
         return result;
     }
 
-    private static void refreshFiles(final List<VirtualFile> filesToRefresh, final Runnable runnable) {
+    private static void refreshFiles(List<VirtualFile> filesToRefresh, Runnable runnable) {
         RefreshQueue.getInstance().refresh(true, true, runnable, filesToRefresh);
     }
 
-    private static List<VirtualFile> collectFilesToRefresh(final File[] roots) {
-        final ArrayList<VirtualFile> result = new ArrayList<>();
+    private static List<VirtualFile> collectFilesToRefresh(File[] roots) {
+        ArrayList<VirtualFile> result = new ArrayList<>();
         for (File root : roots) {
             VirtualFile vFile = findFileFor(root);
             if (vFile != null) {
@@ -251,10 +249,10 @@ public class VcsUtil {
     }
 
     @Nullable
-    private static VirtualFile findFileFor(final File root) {
+    private static VirtualFile findFileFor(File root) {
         File current = root;
         while (current != null) {
-            final VirtualFile vFile = LocalFileSystem.getInstance().findFileByIoFile(root);
+            VirtualFile vFile = LocalFileSystem.getInstance().findFileByIoFile(root);
             if (vFile != null) {
                 return vFile;
             }
@@ -287,11 +285,11 @@ public class VcsUtil {
     }
 
     @Nullable
-    public static VirtualFile getVirtualFileWithRefresh(final File file) {
+    public static VirtualFile getVirtualFileWithRefresh(File file) {
         if (file == null) {
             return null;
         }
-        final LocalFileSystem lfs = LocalFileSystem.getInstance();
+        LocalFileSystem lfs = LocalFileSystem.getInstance();
         VirtualFile result = lfs.findFileByIoFile(file);
         if (result == null) {
             result = lfs.refreshAndFindFileByIoFile(file);
@@ -357,23 +355,6 @@ public class VcsUtil {
     @Nonnull
     public static FilePath getFilePath(@Nonnull VirtualFile parent, @Nonnull String fileName, boolean isDirectory) {
         return VcsContextFactory.getInstance().createFilePath(parent, fileName, isDirectory);
-    }
-
-    /**
-     * Shows message in the status bar.
-     *
-     * @param project Current project component
-     * @param message information message
-     */
-    public static void showStatusMessage(final Project project, final String message) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (project.isOpen()) {
-                    StatusBar.Info.set(message, project);
-                }
-            }
-        });
     }
 
     /**
@@ -625,9 +606,9 @@ public class VcsUtil {
     }
 
     public static boolean isPathRemote(String path) {
-        final int idx = path.indexOf("://");
+        int idx = path.indexOf("://");
         if (idx == -1) {
-            final int idx2 = path.indexOf(":\\\\");
+            int idx2 = path.indexOf(":\\\\");
             if (idx2 == -1) {
                 return false;
             }
@@ -636,7 +617,7 @@ public class VcsUtil {
         return idx > 0;
     }
 
-    public static String getPathForProgressPresentation(@Nonnull final File file) {
+    public static String getPathForProgressPresentation(@Nonnull File file) {
         return file.getName() + " (" + file.getParent() + ")";
     }
 

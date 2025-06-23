@@ -25,8 +25,6 @@ import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.project.Project;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -46,10 +44,6 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
             HighlightManagerImpl highlightManager = (HighlightManagerImpl) HighlightManager.getInstance(project);
             if (highlightManager != null
                 && highlightManager.hideHighlights(editor, HighlightManager.HIDE_BY_ESCAPE | HighlightManager.HIDE_BY_ANY_KEY)) {
-                StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-                if (statusBar != null) {
-                    statusBar.setInfo("");
-                }
 
                 FindManager findManager = FindManager.getInstance(project);
                 if (findManager != null) {

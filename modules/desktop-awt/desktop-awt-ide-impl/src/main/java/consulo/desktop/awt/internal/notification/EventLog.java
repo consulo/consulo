@@ -144,11 +144,6 @@ public class EventLog {
         NotificationProjectTracker.getInstance(project).clearNMore(groups);
     }
 
-    @Nullable
-    public static Trinity<Notification, String, Long> getStatusMessage(@Nullable Project project) {
-        return getLogModel(project).getStatusMessage();
-    }
-
     public static LogEntry formatForLog(@Nonnull Notification notification, String indent) {
         DocumentImpl logDoc = new DocumentImpl("", true);
         AtomicBoolean showMore = new AtomicBoolean(false);

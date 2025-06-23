@@ -15,14 +15,12 @@
  */
 package consulo.ide.impl.idea.tools;
 
+import consulo.application.ApplicationManager;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
-import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import consulo.project.internal.ProjectManagerEx;
+import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WindowManager;
 
 /**
  * @author Eugene Zhuravlev
@@ -41,31 +39,13 @@ public class ToolProcessAdapter extends ProcessAdapter {
 
   @Override
   public void processTerminated(ProcessEvent event) {
-    final String message = ToolsBundle.message("tools.completed.message", myName, event.getExitCode());
-
     if (mySynchronizeAfterExecution) {
       ApplicationManager.getApplication().runReadAction(new Runnable() {
         @Override
         public void run() {
-          VirtualFileManager.getInstance().asyncRefresh(new Runnable() {
-            @Override
-            public void run() {
-              if (ProjectManagerEx.getInstanceEx().isProjectOpened(myProject)) {
-                StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
-                if (statusBar != null) {
-                  statusBar.setInfo(message);
-                }
-              }
-            }
-          });
+          VirtualFileManager.getInstance().asyncRefresh(EmptyRunnable.getInstance());
         }
       });
-    }
-    if (ProjectManagerEx.getInstanceEx().isProjectOpened(myProject)) {
-      StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
-      if (statusBar != null) {
-        statusBar.setInfo(message);
-      }
     }
   }
 }

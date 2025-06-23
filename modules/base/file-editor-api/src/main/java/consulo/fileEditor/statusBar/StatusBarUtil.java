@@ -89,13 +89,6 @@ public class StatusBarUtil {
     return null;
   }
 
-  public static void setStatusBarInfo(@Nonnull Project project, @Nonnull @Nls String message) {
-    final StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-    if (statusBar != null) {
-      statusBar.setInfo(message);
-    }
-  }
-
   private static boolean ensureValidEditorFile(@Nonnull Editor editor, @Nullable FileEditor fileEditor) {
     Document document = editor.getDocument();
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);

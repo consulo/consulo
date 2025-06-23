@@ -29,7 +29,6 @@ import consulo.ide.impl.idea.ide.actions.SearchEverywhereClassifier;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.SearchEverywhereConfiguration;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
@@ -599,7 +598,6 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             private void indexChanged(int index) {
                 if (index != currentDescriptionIndex) {
                     currentDescriptionIndex = index;
-                    showDescriptionForIndex(index);
                 }
             }
         };
@@ -658,8 +656,6 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             if (selectedValue != null && myHint != null && myHint.isVisible()) {
                 updateHint(selectedValue);
             }
-
-            showDescriptionForIndex(myResultsList.getSelectedIndex());
         });
 
         MessageBusConnection projectBusConnection = myProject.getMessageBus().connect(this);
@@ -695,16 +691,6 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
                 }
             }
         });
-    }
-
-    private void showDescriptionForIndex(int index) {
-        if (index >= 0 && !myListModel.isMoreElement(index)) {
-            SearchEverywhereContributor<Object> contributor = myListModel.getContributorForIndex(index);
-            Object data = contributor.getDataForItem(myListModel.getElementAt(index), SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION);
-            if (data instanceof String stringData) {
-                ActionMenuUtil.showDescriptionInStatusBar(true, myResultsList, stringData);
-            }
-        }
     }
 
     private void registerAction(String actionID, Supplier<? extends AnAction> actionSupplier) {
@@ -896,7 +882,6 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
     @RequiredUIAccess
     private void closePopup() {
-        ActionMenuUtil.showDescriptionInStatusBar(true, myResultsList, null);
         stopSearching();
         searchFinishedHandler.run();
     }

@@ -9,15 +9,13 @@ import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.internal.ArtifactBySourceFileFinder;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.document.FileDocumentManager;
-import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
-import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.lang.Clock;
+import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SyncDateFormat;
 import consulo.virtualFileSystem.VirtualFile;
@@ -93,19 +91,6 @@ public class PackageFileAction extends AnAction {
     FileDocumentManager.getInstance().saveAllDocuments();
     final List<VirtualFile> files = getFilesToPackage(event, project);
     Artifact[] allArtifacts = ArtifactManager.getInstance(project).getArtifacts();
-    PackageFileWorker.startPackagingFiles(project, files, allArtifacts, () -> setStatusText(project, files));
-  }
-
-  private static void setStatusText(Project project, List<VirtualFile> files) {
-    if (!files.isEmpty()) {
-      StringBuilder fileNames = new StringBuilder();
-      for (VirtualFile file : files) {
-        if (fileNames.length() != 0) fileNames.append(", ");
-        fileNames.append("'").append(file.getName()).append("'");
-      }
-      String time = TIME_FORMAT.format(Clock.getTime());
-      final LocalizeValue statusText = CompilerLocalize.statusTextFileHasBeenPackaged(files.size(), fileNames, time);
-      WindowManager.getInstance().getStatusBar(project).setInfo(statusText.get());
-    }
+    PackageFileWorker.startPackagingFiles(project, files, allArtifacts, EmptyRunnable.getInstance());
   }
 }
