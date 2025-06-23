@@ -15,15 +15,16 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.internal.MacMessages;
-import consulo.util.lang.ObjectUtil;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@Deprecated
+@DeprecationInfo("Use Alert/Alerts class from ui-api")
+@SuppressWarnings("ALL")
 public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
   protected final String myMessage;
   protected final String myTitle;
@@ -98,14 +99,8 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
     public int show() {
       String yesText = ObjectUtil.chooseNotNull(myYesText, Messages.YES_BUTTON);
       String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
-      try {
-        if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
-          return MacMessages.getInstance().showYesNoDialog(myTitle, myMessage, yesText, noText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
-        }
-      } catch (Exception ignored) {}
 
       return Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText}, 0, myIcon, myDoNotAskOption) == 0 ? Messages.YES : Messages.NO;
-
     }
 
     public boolean isYes() {
@@ -135,16 +130,9 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
       String yesText = ObjectUtil.chooseNotNull(myYesText, Messages.YES_BUTTON);
       String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
       String cancelText = ObjectUtil.chooseNotNull(myCancelText, Messages.CANCEL_BUTTON);
-      try {
-        if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
-          return MacMessages.getInstance().showYesNoCancelDialog(myTitle, myMessage, yesText, noText, cancelText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
-        }
-      }
-      catch (Exception ignored) {}
 
       int buttonNumber = Messages.showDialog(myProject, myMessage, myTitle, new String[]{yesText, noText, cancelText}, 0, myIcon, myDoNotAskOption);
       return buttonNumber == 0 ? Messages.YES : buttonNumber == 1 ? Messages.NO : Messages.CANCEL;
-
     }
   }
 }

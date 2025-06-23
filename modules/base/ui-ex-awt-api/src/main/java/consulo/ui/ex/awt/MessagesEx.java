@@ -29,6 +29,7 @@ import javax.swing.*;
 
 @Deprecated
 @DeprecationInfo("Use Alert/Alerts class from ui-api")
+@SuppressWarnings("ALL")
 public class MessagesEx extends Messages {
 
   public static MessageInfo fileIsReadOnly(Project project, String filePath) {
