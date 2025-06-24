@@ -30,7 +30,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
 
     protected final Project myProject;
     protected TextBoxWithExtensions mySearchField;
-    protected JPanel suggestionsPanel;
+    protected JPanel mySuggestionsPanel;
     protected JBList<Object> myResultsList;
     protected JBPopup myHint;
     protected Runnable searchFinishedHandler = () -> {
@@ -80,8 +80,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         mySearchField.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 4);
 
         (TargetAWT.to(mySearchField)).setFocusTraversalKeysEnabled(false);
-        suggestionsPanel = createSuggestionsPanel();
-
+        mySuggestionsPanel = createSuggestionsPanel();
         myResultsList.setFocusable(false);
         myResultsList.setCellRenderer(createCellRenderer());
 
@@ -108,7 +107,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         topPanel.addMouseMotionListener(moveListener);
 
         addToTop(topPanel);
-        addToCenter(suggestionsPanel);
+        addToCenter(mySuggestionsPanel);
 
         MnemonicHelper.init(this);
     }
@@ -204,7 +203,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     private Dimension calcPrefSize(ViewType viewType) {
         Dimension size = super.getPreferredSize();
         if (viewType == ViewType.SHORT) {
-            size.height -= suggestionsPanel.getPreferredSize().height;
+            size.height -= mySuggestionsPanel.getPreferredSize().height;
         }
         return size;
     }
