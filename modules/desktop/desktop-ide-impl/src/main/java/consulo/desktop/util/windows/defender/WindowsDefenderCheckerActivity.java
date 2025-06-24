@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.eap.EarlyAccessProgramManager;
-import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
+import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
@@ -76,9 +76,10 @@ public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity
     if (checkResult.status == WindowsDefenderChecker.RealtimeScanningStatus.SCANNING_ENABLED && ContainerUtil.any(checkResult.pathStatus, (it) -> !it.getValue())) {
       List<Path> nonExcludedPaths = checkResult.pathStatus.entrySet().stream().filter(it -> !it.getValue()).map(Map.Entry::getKey).collect(Collectors.toList());
 
-      WindowsDefenderNotification notification =
-              new WindowsDefenderNotification(DiagnosticBundle.message("virus.scanning.warn.message", Application.get().getName(), StringUtil
-                .join(nonExcludedPaths, "<br/>")), nonExcludedPaths);
+      WindowsDefenderNotification notification = new WindowsDefenderNotification(
+          ExternalServiceLocalize.virusScanningWarnMessage(Application.get().getName(), StringUtil.join(nonExcludedPaths, "<br/>")),
+          nonExcludedPaths
+      );
 
       notification.setImportant(true);
       notification.setCollapseActionsDirection(Notification.CollapseActionsDirection.KEEP_LEFTMOST);

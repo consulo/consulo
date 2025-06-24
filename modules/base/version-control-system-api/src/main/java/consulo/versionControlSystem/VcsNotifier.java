@@ -18,15 +18,15 @@ package consulo.versionControlSystem;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.lang.StringUtil;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -62,7 +62,11 @@ public class VcsNotifier {
       title = "";
     }
     // if both title and message were empty, then it is a problem in the calling code => Notifications engine assertion will notify.
-    return notificationGroup.createNotification(title, message, type, listener);
+    return notificationGroup.newOfType(type)
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .create();
   }
 
   @Nonnull

@@ -17,15 +17,14 @@ package consulo.desktop.awt.application;
 
 import com.sun.jna.platform.win32.User32;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationBundle;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -73,9 +72,12 @@ public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
           if (myRemoteDesktopConnected) {
             // We postpone notification to avoid recursive initialization of RemoteDesktopDetector
             // (in case it's initialized by request from consulo.desktop.awt.internal.notification.EventLog)
-            ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus
-                    .notify(NOTIFICATION_GROUP.createNotification(ApplicationBundle.message("remote.desktop.detected.message"), NotificationType.INFORMATION)
-                                    .setTitle(ApplicationBundle.message("remote.desktop.detected.title"))));
+            Application.get().invokeLater(
+                () -> NOTIFICATION_GROUP.newOfType(NotificationType.INFORMATION)
+                    .title(ApplicationLocalize.remoteDesktopDetectedTitle())
+                    .content(ApplicationLocalize.remoteDesktopDetectedMessage())
+                    .notify(null)
+            );
           }
         }
       }

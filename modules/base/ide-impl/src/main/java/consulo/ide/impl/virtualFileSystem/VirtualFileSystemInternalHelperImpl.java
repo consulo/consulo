@@ -26,8 +26,6 @@ import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.localize.LocalizeValue;
 import consulo.process.io.ProcessIOExecutorService;
 import consulo.project.Project;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
@@ -75,13 +73,14 @@ public class VirtualFileSystemInternalHelperImpl implements VirtualFileSystemInt
 
     @Override
     public void notifyAboutSlowFileWatcher(@Nonnull LocalizeValue cause) {
-        String title = ApplicationLocalize.watcherSlowSync().get();
         Application application = Application.get();
-        application.invokeLater(() -> {
-            Notifications.Bus.notify(FileWatcherNotificationGroupContributor.NOTIFICATION_GROUP.createNotification(title,
-                cause.get(),
-                NotificationType.WARNING,
-                NotificationListener.URL_OPENING_LISTENER));
-        }, application.getNoneModalityState());
+        application.invokeLater(
+            () -> FileWatcherNotificationGroupContributor.NOTIFICATION_GROUP.newWarn()
+                .title(ApplicationLocalize.watcherSlowSync())
+                .content(cause)
+                .hyperlinkListener(NotificationListener.URL_OPENING_LISTENER)
+                .notify(null),
+            application.getNoneModalityState()
+        );
     }
 }

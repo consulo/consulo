@@ -147,10 +147,9 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
             message = LocalizeValue.join(message, LocalizeValue.of("\n"), CredentialStorageLocalize.notificationContentNativeKeychainUnavailableLinuxAddition());
         }
 
-        PasswordSafeNotificationGroupContributor.notify(
-            CredentialStorageLocalize.notificationTitleNativeKeychainUnavailable(),
-            message,
-            null
-        );
+        PasswordSafeNotificationGroupContributor.GROUP.newError()
+            .title(CredentialStorageLocalize.notificationTitleNativeKeychainUnavailable())
+            .content(message)
+            .notify(null);
     }
 }

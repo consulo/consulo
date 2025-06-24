@@ -147,45 +147,20 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     private static final class DetectionDisabledNotification extends Notification {
         private DetectionDisabledNotification(Project project) {
             super(
-                NOTIFICATION_GROUP,
-                ApplicationLocalize.codeStyleIndentDetectorNotificationContent().get(),
-                "",
-                NotificationType.INFORMATION
+                NOTIFICATION_GROUP.newInfo()
+                    .title(ApplicationLocalize.codeStyleIndentDetectorNotificationContent())
+                    .addClosingAction(
+                        ApplicationLocalize.codeStyleIndentProviderNotificationReEnable(),
+                        () -> {
+                            CodeStyle.getSettings(project).AUTODETECT_INDENTS = true;
+                            notifyIndentOptionsChanged(project, null);
+                        }
+                    )
+                    .addClosingAction(
+                        ApplicationLocalize.codeStyleIndentProviderNotificationSettings(),
+                        () -> CodeStyleInternalHelper.getInstance().showDetectIndentSettings(project)
+                    )
             );
-            addAction(new ReEnableDetection(project, this));
-            addAction(new ShowIndentDetectionOptionAction(ApplicationLocalize.codeStyleIndentProviderNotificationSettings()));
-        }
-    }
-
-    private static final class ShowIndentDetectionOptionAction extends DumbAwareAction {
-        private ShowIndentDetectionOptionAction(@Nonnull LocalizeValue text) {
-            super(text);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-            Project data = e.getData(Project.KEY);
-            CodeStyleInternalHelper.getInstance().showDetectIndentSettings(data);
-        }
-    }
-
-    private static final class ReEnableDetection extends DumbAwareAction {
-        private final Project myProject;
-        private final Notification myNotification;
-
-        private ReEnableDetection(@Nonnull Project project, Notification notification) {
-            super(ApplicationLocalize.codeStyleIndentProviderNotificationReEnable());
-            myProject = project;
-            myNotification = notification;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-            CodeStyle.getSettings(myProject).AUTODETECT_INDENTS = true;
-            notifyIndentOptionsChanged(myProject, null);
-            myNotification.expire();
         }
     }
 

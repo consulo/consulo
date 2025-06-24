@@ -37,10 +37,8 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
@@ -233,7 +231,10 @@ public class ExternalStorageManager {
                         }
                     }
 
-                    new Notification(ExternalStorageManager.GROUP, "External Storage", "Local configuration refreshed", NotificationType.INFORMATION).notify(project);
+                    ExternalStorageManager.GROUP.newInfo()
+                        .title(LocalizeValue.localizeTODO("External Storage"))
+                        .content(LocalizeValue.localizeTODO("Local configuration refreshed"))
+                        .notify(project);
                 });
             });
         }

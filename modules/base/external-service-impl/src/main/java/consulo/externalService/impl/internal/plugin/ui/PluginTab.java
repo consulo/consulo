@@ -33,7 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.project.Project;
-import consulo.project.ui.notification.NotificationType;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -133,7 +133,7 @@ public abstract class PluginTab implements Disposable {
             ActionGroup.newImmutableBuilder().add(group).build(),
             true);
         toolbar.setTargetComponent(myRoot);
-        toolbar.updateActionsAsync();
+        toolbar.updateActionsAsync(UIAccess.current());
 
         JComponent component = toolbar.getComponent();
 
@@ -338,19 +338,18 @@ public abstract class PluginTab implements Disposable {
         );
     }
 
-    public static void notifyPluginsWereUpdated(final String title, final Project project) {
-        final ApplicationEx app = (ApplicationEx) Application.get();
-        final LocalizeValue appName = app.getName();
-        final boolean restartCapable = app.isRestartCapable();
+    public static void notifyPluginsWereUpdated(String title, Project project) {
+        ApplicationEx app = (ApplicationEx) Application.get();
+        LocalizeValue appName = app.getName();
+        boolean restartCapable = app.isRestartCapable();
         String message = restartCapable
             ? ExternalServiceLocalize.messageIdeaRestartRequired(appName).get()
             : ExternalServiceLocalize.messageIdeaShutdownRequired(appName).get();
         message += "<br><a href=" + (restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown") + "</a>";
-        PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup.createNotification(
-            title,
-            XmlStringUtil.wrapInHtml(message),
-            NotificationType.INFORMATION,
-            (notification, event) -> {
+        PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup.newInfo()
+            .title(LocalizeValue.localizeTODO(title))
+            .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(message)))
+            .hyperlinkListener((notification, event) -> {
                 notification.expire();
                 if (restartCapable) {
                     app.restart(true);
@@ -358,8 +357,8 @@ public abstract class PluginTab implements Disposable {
                 else {
                     app.exit(true, true);
                 }
-            }
-        ).notify(project);
+            })
+            .notify(project);
     }
 
     public class MyPluginsFilter extends FilterComponent {

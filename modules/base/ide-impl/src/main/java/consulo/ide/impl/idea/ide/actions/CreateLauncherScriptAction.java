@@ -26,8 +26,6 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -136,15 +134,10 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
             String message = e.getMessage();
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);
-                Notifications.Bus.notify(
-                    new Notification(
-                        Notifications.SYSTEM_MESSAGES_GROUP,
-                        "Failed to create launcher script",
-                        message,
-                        NotificationType.ERROR
-                    ),
-                    project
-                );
+                Notifications.SYSTEM_MESSAGES_GROUP.newError()
+                    .title(LocalizeValue.localizeTODO("Failed to create launcher script"))
+                    .content(LocalizeValue.localizeTODO(message))
+                    .notify(project);
             }
             else {
                 LOG.error(e);

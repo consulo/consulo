@@ -21,6 +21,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
@@ -133,7 +134,9 @@ public class TestsUIUtil {
       toolWindowManager.notifyByBalloon(testRunDebugId, type.toUI(), balloonText);
     }
 
-    NOTIFICATION_GROUP.createNotification(balloonText, type).notify(project);
+    NOTIFICATION_GROUP.newOfType(type)
+        .content(LocalizeValue.localizeTODO(balloonText))
+        .notify(project);
     SystemNotifications.getInstance().notify("TestRunner", title, text);
   }
 

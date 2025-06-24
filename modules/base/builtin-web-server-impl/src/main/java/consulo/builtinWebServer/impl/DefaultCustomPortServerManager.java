@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.builtinWebServer.custom.CustomPortServerManagerBase;
 import consulo.builtinWebServer.localize.BuiltInServerLocalize;
-import consulo.project.ui.notification.NotificationType;
 import jakarta.inject.Inject;
 
 @ExtensionImpl
@@ -33,10 +32,10 @@ public final class DefaultCustomPortServerManager extends CustomPortServerManage
 
     @Override
     public void cannotBind(Exception e, int port) {
-        BuiltInServerManagerImpl.NOTIFICATION_GROUP.createNotification(
-            BuiltInServerLocalize.notificationContentCannotStartBuiltInHttpServerOnCustomPort(port, myApplication.getName()).get(),
-            NotificationType.ERROR
-        ).notify(null);
+        BuiltInServerManagerImpl.NOTIFICATION_GROUP
+            .newError()
+            .content(BuiltInServerLocalize.notificationContentCannotStartBuiltInHttpServerOnCustomPort(port, myApplication.getName()))
+            .notify(null);
     }
 
     @Override

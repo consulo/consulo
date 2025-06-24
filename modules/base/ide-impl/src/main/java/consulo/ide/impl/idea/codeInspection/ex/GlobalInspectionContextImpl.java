@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -78,7 +77,6 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -368,10 +366,9 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
             if (myView != null) {
                 if (!myView.update() && !getUIOptions().SHOW_ONLY_DIFF) {
-                    NOTIFICATION_GROUP.createNotification(
-                        InspectionLocalize.inspectionNoProblemsMessage().get(),
-                        NotificationType.INFORMATION
-                    ).notify(getProject());
+                    NOTIFICATION_GROUP.newInfo()
+                        .content(InspectionLocalize.inspectionNoProblemsMessage())
+                        .notify(getProject());
                     close(true);
                 }
                 else {
@@ -1011,10 +1008,9 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         if (results.isEmpty()) {
             UIUtil.invokeLaterIfNeeded(() -> {
                 if (commandName != null) {
-                    NOTIFICATION_GROUP.createNotification(
-                        InspectionLocalize.inspectionNoProblemsMessage().get(),
-                        NotificationType.INFORMATION
-                    ).notify(getProject());
+                    NOTIFICATION_GROUP.newInfo()
+                        .content(InspectionLocalize.inspectionNoProblemsMessage())
+                        .notify(getProject());
                 }
                 if (postRunnable != null) {
                     postRunnable.run();

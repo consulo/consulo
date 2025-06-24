@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.notification.impl.actions;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
@@ -184,24 +185,21 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
     public Notification getNotification() {
       if (myNotification == null) {
-        Image icon = null;
-
         NotificationGroup displayId = mySticky ? TEST_STICKY_GROUP : TEST_GROUP;
         if (myToolwindow) {
           displayId = TEST_TOOLWINDOW_GROUP;
         }
-        String content = myContent == null ? "" : StringUtil.join(myContent, "\n");
-        if (icon == null) {
-          myNotification = new Notification(displayId, StringUtil.notNullize(myTitle), content, myType, getListener());
-        }
-        else {
-          myNotification = new Notification(displayId, icon, myTitle, mySubtitle, content, myType, getListener());
-        }
+        Notification.Builder builder = displayId.newOfType(myType)
+            .title(LocalizeValue.ofNullable(myTitle))
+            .subtitle(LocalizeValue.ofNullable(mySubtitle))
+            .content(LocalizeValue.localizeTODO(myContent == null ? "" : StringUtil.join(myContent, "\n")))
+            .optionalHyperlinkListener(getListener());
         if (myActions != null) {
           for (String action : myActions) {
-            myNotification.addAction(new MyAnAction(action));
+            builder.addAction(new MyAnAction(action));
           }
         }
+        myNotification = builder.create();
       }
       return myNotification;
     }
@@ -259,6 +257,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
       if (MessageDialogBuilder.yesNo("VcsBranchMappingChangedNotification Listener", event.getDescription() + "      Expire?").isYes()) {
         myNotification.expire();
@@ -281,7 +280,8 @@ public class NotificationTestAction extends AnAction implements DumbAware {
       }
 
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         Notification.get(e);
         if (MessageDialogBuilder.yesNo("AnAction", getTemplatePresentation().getText() + "      Expire?").isYes()) {
           myNotification.expire();

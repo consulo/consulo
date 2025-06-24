@@ -9,6 +9,7 @@ import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
@@ -17,7 +18,6 @@ import consulo.process.util.CapturingProcessUtil;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -267,52 +267,44 @@ public final class SystemShortcuts {
     ) {
         AnAction act = ActionManager.getInstance().getAction(actionId);
         String actText = act == null ? actionId : act.getTemplateText();
-        String message = "The " + actText +
-            " shortcut conflicts with macOS shortcut" +
-            (macOsShortcutAction == null ? "" : " '" + macOsShortcutAction + "'") +
-            ". Modify this shortcut or change macOS system settings.";
-        Notification notification =
-            SYSTEM_SHORTCUTS_CONFLICTS_GROUP.createNotification("Shortcuts conflicts", message, NotificationType.WARNING, null);
 
-        AnAction configureShortcut = DumbAwareAction.create(
-            "Modify shortcut",
-            e -> {
-                Component component = e.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-                if (component == null) {
-                    Window[] frames = Window.getWindows();
-                    component = frames == null || frames.length == 0 ? null : frames[0];
+        Notification.Builder notificationBuilder = SYSTEM_SHORTCUTS_CONFLICTS_GROUP.newWarn()
+            .title(LocalizeValue.localizeTODO("Shortcuts conflicts"))
+            .content(LocalizeValue.localizeTODO(
+                "The " + actText +
+                    " shortcut conflicts with macOS shortcut" +
+                    (macOsShortcutAction == null ? "" : " '" + macOsShortcutAction + "'") +
+                    ". Modify this shortcut or change macOS system settings."
+            ))
+            .addClosingAction(
+                LocalizeValue.localizeTODO("Modify shortcut"),
+                e -> {
+                    Component component = e.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT);
                     if (component == null) {
-                        LOG.error("can't show KeyboardShortcutDialog (parent component wasn't found)");
-                        return;
+                        Window[] frames = Window.getWindows();
+                        component = frames == null || frames.length == 0 ? null : frames[0];
+                        if (component == null) {
+                            LOG.error("can't show KeyboardShortcutDialog (parent component wasn't found)");
+                            return;
+                        }
                     }
+
+                    KeymapPanel.addKeyboardShortcut(
+                        actionId,
+                        ActionShortcutRestrictions.getInstance().getForActionId(actionId),
+                        keymap,
+                        component,
+                        conflicted,
+                        SystemShortcuts.this
+                    );
                 }
-
-                KeymapPanel.addKeyboardShortcut(
-                    actionId,
-                    ActionShortcutRestrictions.getInstance().getForActionId(actionId),
-                    keymap,
-                    component,
-                    conflicted,
-                    SystemShortcuts.this
-                );
-                notification.expire();
-            }
-        );
-        notification.addAction(configureShortcut);
-
-        AnAction muteAction = DumbAwareAction.create(
-            "Don't show again",
-            e -> {
-                myMutedConflicts.addMutedAction(actionId);
-                notification.expire();
-            }
-        );
-        notification.addAction(muteAction);
+            )
+            .addAction(LocalizeValue.localizeTODO("Don't show again"), () -> myMutedConflicts.addMutedAction(actionId));
 
         if (Platform.current().os().isMac()) {
-            AnAction changeSystemSettings = DumbAwareAction.create(
-                "Change system settings",
-                e -> Application.get().executeOnPooledThread(() -> {
+            notificationBuilder.addAction(
+                LocalizeValue.localizeTODO("Change system settings"),
+                () -> Application.get().executeOnPooledThread(() -> {
                     GeneralCommandLine cmdLine = new GeneralCommandLine(
                         "osascript",
                         "-e",
@@ -336,11 +328,10 @@ public final class SystemShortcuts {
                     }
                 })
             );
-            notification.addAction(changeSystemSettings);
         }
 
         myNotifiedActions.add(actionId);
-        notification.notify(null);
+        notificationBuilder.notify(null);
     }
 
     private static Class ourShkClass;

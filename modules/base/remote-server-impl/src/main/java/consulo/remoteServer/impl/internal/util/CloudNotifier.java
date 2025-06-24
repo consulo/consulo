@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.remoteServer.impl.internal.util;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 
@@ -16,8 +17,9 @@ public class CloudNotifier {
 
     public void showMessage(String message, NotificationType messageType) {
         // TODO this is invalid due group must be registered before !
-        NotificationGroup group = NotificationGroup.balloonGroup(myNotificationDisplayId);
-
-        group.createNotification(message, messageType).notify(null);
+        NotificationGroup.balloonGroup(myNotificationDisplayId)
+            .newOfType(messageType)
+            .content(LocalizeValue.localizeTODO(message))
+            .notify(null);
     }
 }

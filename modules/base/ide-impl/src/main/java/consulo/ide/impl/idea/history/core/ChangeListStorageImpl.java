@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.history.core;
 
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.history.core.changes.ChangeSet;
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
+import consulo.localize.LocalizeValue;
 import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.util.io.FileUtil;
 import consulo.index.io.storage.AbstractStorage;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
@@ -126,30 +124,24 @@ public class ChangeListStorageImpl implements ChangeListStorage {
 
 
   public static void notifyUser(String message) {
-    final File logFile = ContainerPathManager.get().getLogPath();
     /*String createIssuePart = "<br>" +
                              "<br>" +
                              "Please attach log files from <a href=\"file\">" + logFile + "</a><br>" +
                              "to the <a href=\"url\">YouTrack issue</a>";*/
-    Notifications.Bus.notify(
-      new Notification(
-        Notifications.SYSTEM_MESSAGES_GROUP,
-        "Local History is broken",
-        message /*+ createIssuePart*/,
-        NotificationType.ERROR,
-        (notification, event) -> {
-          if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            if ("url".equals(event.getDescription())) {
-              BrowserUtil.browse("http://youtrack.jetbrains.net/issue/IDEA-71270");
-            }
-            else {
-              ShowFilePathAction.openFile(logFile);
-            }
+    Notifications.SYSTEM_MESSAGES_GROUP.newError()
+      .title(LocalizeValue.localizeTODO("Local History is broken"))
+      .content(LocalizeValue.localizeTODO(message /*+ createIssuePart*/))
+      .hyperlinkListener((notification, event) -> {
+        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+          if ("url".equals(event.getDescription())) {
+            BrowserUtil.browse("http://youtrack.jetbrains.net/issue/IDEA-71270");
+          }
+          else {
+            ShowFilePathAction.openFile(ContainerPathManager.get().getLogPath());
           }
         }
-      ),
-      null
-    );
+      })
+      .notify(null);
   }
 
   @Override

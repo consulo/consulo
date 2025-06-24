@@ -32,10 +32,7 @@ import consulo.ide.impl.idea.util.PathUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.util.io.zip.JBZipEntry;
@@ -86,10 +83,10 @@ public class PackageFileWorker {
                 packageFile(file, project, artifacts);
               }
               catch (IOException e) {
-                String message = CompilerLocalize.messageTectPackageFileIoError(e.toString()).get();
-                Notifications.Bus.notify(
-                  new Notification(ARTIFACT_PACKAGING_GROUP, "Cannot package file", message, NotificationType.ERROR)
-                );
+                ARTIFACT_PACKAGING_GROUP.newError()
+                  .title(LocalizeValue.localizeTODO("Cannot package file"))
+                  .content(CompilerLocalize.messageTectPackageFileIoError(e.toString()))
+                  .notify(null);
               }
             });
             callback.setDone();

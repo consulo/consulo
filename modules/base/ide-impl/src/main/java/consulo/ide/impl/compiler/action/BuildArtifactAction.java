@@ -27,10 +27,10 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -205,8 +205,10 @@ public class BuildArtifactAction extends DumbAwareAction {
             indicator.checkCanceled();
             File file = pair.getFirst();
             if (!FileUtil.delete(file)) {
-              NOTIFICATION_GROUP.createNotification("Cannot clean '" + pair.getSecond().getName() + "' artifact", "cannot delete '" + file.getAbsolutePath() + "'", NotificationType.ERROR, null)
-                      .notify((Project)myProject);
+              NOTIFICATION_GROUP.newError()
+                  .title(LocalizeValue.localizeTODO("Cannot clean '" + pair.getSecond().getName() + "' artifact"))
+                  .content(LocalizeValue.localizeTODO("cannot delete '" + file.getAbsolutePath() + "'"))
+                  .notify((Project)myProject);
             }
             else {
               deleted.add(file);

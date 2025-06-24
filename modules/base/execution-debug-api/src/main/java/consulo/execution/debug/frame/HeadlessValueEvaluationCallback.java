@@ -19,9 +19,9 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
 import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.project.Project;
-import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 
@@ -63,8 +63,9 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
   @Override
   public void errorOccurred(@Nonnull String errorMessage) {
     try {
-      String message = XDebuggerBundle.message("load.value.task.error", errorMessage);
-      XDebuggerUIConstants.NOTIFICATION_GROUP.createNotification(message, NotificationType.ERROR).notify(myProject);
+      XDebuggerUIConstants.NOTIFICATION_GROUP.newError()
+        .content(XDebuggerLocalize.loadValueTaskError(errorMessage))
+        .notify(myProject);
     }
     finally {
       evaluationComplete(errorMessage);

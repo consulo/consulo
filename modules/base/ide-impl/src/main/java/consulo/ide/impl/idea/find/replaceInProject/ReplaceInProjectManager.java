@@ -27,10 +27,10 @@ import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ide.impl.idea.util.AdapterProcessor;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.MessageDialogBuilder;
@@ -556,7 +556,9 @@ public class ReplaceInProjectManager {
             return true;
         }
         if (!success) {
-            NOTIFICATION_GROUP.createNotification("One or more malformed replacement strings", NotificationType.ERROR).notify(myProject);
+            NOTIFICATION_GROUP.newError()
+                .content(LocalizeValue.localizeTODO("One or more malformed replacement strings"))
+                .notify(myProject);
         }
         return false;
     }
