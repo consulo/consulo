@@ -133,7 +133,7 @@ public abstract class PluginTab implements Disposable {
             ActionGroup.newImmutableBuilder().add(group).build(),
             true);
         toolbar.setTargetComponent(myRoot);
-        toolbar.updateActionsAsync(UIAccess.current());
+        toolbar.updateActionsAsync();
 
         JComponent component = toolbar.getComponent();
 
