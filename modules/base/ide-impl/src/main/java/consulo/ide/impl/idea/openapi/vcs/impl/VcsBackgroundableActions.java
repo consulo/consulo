@@ -25,11 +25,11 @@ public enum VcsBackgroundableActions {
   HISTORY_FOR_SELECTION,
   COMMITTED_CHANGES_DETAILS;
 
-  public static Object keyFrom(final FilePath filePath) {
+  public static Object keyFrom(FilePath filePath) {
     return filePath.getPath();
   }
 
-  public static String keyFrom(final VirtualFile vf) {
+  public static String keyFrom(VirtualFile vf) {
     return vf.getPath();
   }
 }
