@@ -1142,7 +1142,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         super.addNotify();
         Application application = Application.get();
         application.invokeLater(() -> ScrollingUtil.ensureSelectionExists(myResultsPreviewTable), application.getAnyModalityState());
-        myScopeSelectionToolbar.updateActionsImmediately();
+        myScopeSelectionToolbar.updateActionsAsync();
     }
 
     @Override
@@ -1752,7 +1752,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             if (state) {
                 mySelectedScope = myScope;
-                myScopeSelectionToolbar.updateActionsImmediately();
+                myScopeSelectionToolbar.updateActionsAsync();
                 updateScopeDetailsPanel();
                 scheduleResultsUpdate();
             }

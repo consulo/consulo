@@ -539,7 +539,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
                     onScopeSelected(selectedValue);
                     ActionToolbar toolbar = UIUtil.uiParents(component, true).filter(ActionToolbar.class).first();
                     if (toolbar != null) {
-                        toolbar.updateActionsImmediately();
+                        toolbar.updateActionsAsync();
                     }
                     return FINAL_CHOICE;
                 }

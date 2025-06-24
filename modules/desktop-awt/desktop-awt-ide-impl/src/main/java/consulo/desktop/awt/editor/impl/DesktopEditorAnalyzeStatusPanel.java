@@ -124,6 +124,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
             mouseListener = new MouseAdapter() {
                 @Override
+                @RequiredUIAccess
                 public void mouseClicked(MouseEvent me) {
                     DataContext context = getDataContext();
                     AnActionEvent event = AnActionEvent.createFromInputEvent(me, place, presentation, context, false, true);
@@ -142,7 +143,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
                         ActionToolbar toolbar = getActionToolbar();
                         if (toolbar != null) {
-                            toolbar.updateActionsImmediately();
+                            toolbar.updateActionsAsync();
                         }
                     }
                 }
@@ -369,7 +370,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("AnalyzeStatusPanel", new WrapperGroup(actions), true);
                 toolbar.setTargetComponent(myContent);
                 toolbar.setMiniMode(true);
-                toolbar.updateActionsImmediately();
+                toolbar.updateActionsAsync();
 
                 JComponent component = toolbar.getComponent();
 
@@ -503,7 +504,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
     }
 
-    private class WrapperGroup extends ActionGroup implements DumbAware, HintManagerImpl.ActionToIgnore {
+    private class WrapperGroup extends DumbAwareActionGroup implements  HintManagerImpl.ActionToIgnore {
         private final ActionGroup[] myActions;
 
         public WrapperGroup(@Nonnull List<? extends AnAction> actions) {

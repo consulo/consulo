@@ -228,7 +228,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         myActionGroupWest.addAll(actions);
 
         if (myToolbarWest != null) {
-            myToolbarWest.updateActionsImmediately();
+            myToolbarWest.updateActionsAsync();
         }
     }
 
@@ -237,7 +237,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         myActionGroup.addAll(actions);
 
         if (myToolbar != null) {
-            myToolbar.updateActionsImmediately();
+            myToolbar.updateActionsAsync();
         }
     }
 
