@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.root;
 
 import consulo.application.ApplicationManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
@@ -89,9 +90,9 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
   protected abstract boolean initOrNotifyError(@Nonnull final VirtualFile projectDir);
 
   protected void notifyAddedRoots(Collection<VirtualFile> roots) {
-    VcsNotifier notifier = VcsNotifier.getInstance(myProject);
-    notifier
-            .notifySuccess("", String.format("Added %s %s: %s", myVcs.getName(), StringUtil.pluralize("root", roots.size()), joinRootsPaths(roots)));
+    VcsNotifier.NOTIFICATION_GROUP_ID.newInfo()
+        .content(LocalizeValue.localizeTODO(String.format("Added %s %s: %s", myVcs.getName(), StringUtil.pluralize("root", roots.size()), joinRootsPaths(roots))))
+        .notify(myProject);
   }
 
   private void addVcsRoots(@Nonnull Collection<VirtualFile> roots) {

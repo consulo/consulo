@@ -22,6 +22,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.logging.Logger;
@@ -123,7 +124,9 @@ public class VcsCherryPickManager {
     }
 
     public void showError(@Nonnull String message) {
-      VcsNotifier.getInstance((Project)myProject).notifyWeakError(message);
+      VcsNotifier.NOTIFICATION_GROUP_ID.newError()
+          .content(LocalizeValue.localizeTODO(message))
+          .notify((Project)myProject);
       LOG.warn(message);
     }
 

@@ -8,6 +8,7 @@ import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.registry.Registry;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.platform.base.localize.ActionLocalize;
@@ -31,8 +32,6 @@ import java.util.*;
 import java.util.function.Function;
 
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemDependentName;
-import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_INVALID;
-import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_REGISTERED;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.*;
 import static consulo.ui.ex.awt.UIUtil.BR;
 import static consulo.util.lang.StringUtil.escapeXmlEntities;
@@ -140,13 +139,23 @@ public final class VcsRootProblemNotifier {
       notificationActions = new NotificationAction[]{enableIntegration, getConfigureNotificationAction(), ignoreAction};
     }
 
+    Notification.Builder builder;
+    if (invalidRoots.isEmpty()) {
+      builder = VcsNotifier.STANDARD_NOTIFICATION.newInfo();
+      for (NotificationAction action : notificationActions) {
+        builder.addAction(action);
+      }
+    }
+    else {
+      builder = VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.newError()
+        .addAction(getConfigureNotificationAction());
+    }
+    builder.title(LocalizeValue.localizeTODO(title))
+      .content(LocalizeValue.localizeTODO(description));
+
     synchronized (NOTIFICATION_LOCK) {
       expireNotification();
-      VcsNotifier notifier = VcsNotifier.getInstance(myProject);
-
-      myNotification = invalidRoots.isEmpty()
-                       ? notifier.notifyMinorInfo(ROOTS_REGISTERED, title, description, notificationActions)
-                       : notifier.notifyError(ROOTS_INVALID, title, description, getConfigureNotificationAction());
+      myNotification = builder.notifyAndGet(myProject);
     }
   }
 

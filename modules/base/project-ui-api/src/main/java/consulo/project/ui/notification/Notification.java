@@ -102,7 +102,7 @@ public class Notification {
         @Nullable
         private NotificationListener myListener = null;
         @Nullable
-        private List<Function<Notification, AnAction>> myActionAdders = null;
+        private List<Function<Notification, ? extends AnAction>> myActionAdders = null;
         @Nullable
         private Runnable myWhenExpired = null;
 
@@ -221,7 +221,7 @@ public class Notification {
             });
         }
 
-        private Builder addAction(@Nonnull Function<Notification, AnAction> actionAdder) {
+        public Builder addAction(@Nonnull Function<Notification, ? extends AnAction> actionAdder) {
             if (myActionAdders == null) {
                 myActionAdders = new SmartList<>(actionAdder);
             }
@@ -261,7 +261,7 @@ public class Notification {
                 notification.setListener(myListener);
             }
             if (myActionAdders != null) {
-                for (Function<Notification, AnAction> actionAdder : myActionAdders) {
+                for (Function<Notification, ? extends AnAction> actionAdder : myActionAdders) {
                     notification.addAction(actionAdder.apply(notification));
                 }
             }
@@ -272,6 +272,12 @@ public class Notification {
 
         public void notify(@Nullable Project project) {
             create().notify(project);
+        }
+
+        public Notification notifyAndGet(@Nullable Project project) {
+            Notification notification = create();
+            notification.notify(project);
+            return notification;
         }
     }
 

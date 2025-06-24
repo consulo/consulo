@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -69,125 +70,246 @@ public class VcsNotifier {
         .create();
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notify(@Nonnull NotificationGroup notificationGroup, @Nonnull String title, @Nonnull String message, @Nonnull NotificationType type, @Nullable NotificationListener listener) {
-    Notification notification = createNotification(notificationGroup, title, message, type, listener);
-    notification.notify(myProject);
-    return notification;
+    return notificationGroup.newOfType(type)
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
   @Nonnull
   public Notification notify(@Nonnull Notification notification) {
     notification.notify(myProject);
     return notification;
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyError(@Nullable String displayId, @Nonnull String title, @Nonnull String message, @Nonnull NotificationAction... actions) {
-    return notifyError(title, message, null).addActions(actions);
+    return IMPORTANT_ERROR_NOTIFICATION.newError()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyError(@Nonnull String title, @Nonnull String message) {
-    return notifyError(title, message, null);
+    return IMPORTANT_ERROR_NOTIFICATION.newError()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyError(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
-    return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.ERROR, listener);
+    return IMPORTANT_ERROR_NOTIFICATION.newError()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyWeakError(@Nonnull String message) {
-    return notify(NOTIFICATION_GROUP_ID, "", message, NotificationType.ERROR, null);
+    return NOTIFICATION_GROUP_ID.newError()
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifySuccess(@Nonnull String message) {
-    return notifySuccess("", message);
+    return NOTIFICATION_GROUP_ID.newInfo()
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifySuccess(@Nonnull String title, @Nonnull String message) {
-    return notifySuccess(title, message, null);
+    return NOTIFICATION_GROUP_ID.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifySuccess(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
-    return notify(NOTIFICATION_GROUP_ID, title, message, NotificationType.INFORMATION, listener);
+    return NOTIFICATION_GROUP_ID.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyImportantInfo(@Nonnull String title, @Nonnull String message) {
-    return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.INFORMATION, null);
+    return IMPORTANT_ERROR_NOTIFICATION.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyImportantInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
-    return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.INFORMATION, listener);
+    return IMPORTANT_ERROR_NOTIFICATION.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyInfo(@Nonnull String message) {
-    return notifyInfo("", message);
+    return NOTIFICATION_GROUP_ID.newInfo()
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyInfo(@Nonnull String title, @Nonnull String message) {
-    return notifyInfo(title, message, null);
+    return NOTIFICATION_GROUP_ID.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
-    return notify(NOTIFICATION_GROUP_ID, title, message, NotificationType.INFORMATION, listener);
+    return NOTIFICATION_GROUP_ID.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyMinorWarning(@Nonnull String title, @Nonnull String message) {
-    return notifyMinorWarning(title, message, null);
+    return STANDARD_NOTIFICATION.newWarn()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyMinorWarning(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
-    return notify(STANDARD_NOTIFICATION, title, message, NotificationType.WARNING, listener);
+    return STANDARD_NOTIFICATION.newWarn()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyWarning(@Nonnull String title, @Nonnull String message) {
-    return notifyWarning(title, message, null);
+    return NOTIFICATION_GROUP_ID.newWarn()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyWarning(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
-    return notify(NOTIFICATION_GROUP_ID, title, message, NotificationType.WARNING, listener);
+    return NOTIFICATION_GROUP_ID.newWarn()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyImportantWarning(@Nonnull String title, @Nonnull String message) {
-    return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.WARNING, null);
+    return IMPORTANT_ERROR_NOTIFICATION.newWarn()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyImportantWarning(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
-    return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.WARNING, listener);
+    return IMPORTANT_ERROR_NOTIFICATION.newWarn()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyMinorInfo(@Nonnull String title, @Nonnull String message) {
-    return notifyMinorInfo(title, message, null);
+    return STANDARD_NOTIFICATION.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyMinorInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
-    return notify(STANDARD_NOTIFICATION, title, message, NotificationType.INFORMATION, listener);
+    return STANDARD_NOTIFICATION.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .optionalHyperlinkListener(listener)
+        .notifyAndGet(myProject);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   @Nonnull
   public Notification notifyMinorInfo(@Nullable String displayId, @Nonnull String title, @Nonnull String message, @Nonnull NotificationAction... actions) {
-    return notify(STANDARD_NOTIFICATION, title, message, NotificationType.INFORMATION, null).addActions(actions);
+    return STANDARD_NOTIFICATION.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject)
+        .addActions(actions);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
   public Notification logInfo(@Nonnull String title, @Nonnull String message) {
-    return notify(SILENT_NOTIFICATION, title, message, NotificationType.INFORMATION, null);
+    return SILENT_NOTIFICATION.newInfo()
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(message))
+        .notifyAndGet(myProject);
   }
 }
