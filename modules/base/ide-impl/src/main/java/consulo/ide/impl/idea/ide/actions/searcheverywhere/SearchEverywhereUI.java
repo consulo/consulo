@@ -345,7 +345,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     @RequiredUIAccess
     protected JComponent createSettingsPanel() {
         ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
-        actionGroup.add(new ActionGroup() {
+        actionGroup.add(new DumbAwareActionGroup() {
             @Nonnull
             @Override
             public AnAction[] getChildren(@Nullable AnActionEvent e) {

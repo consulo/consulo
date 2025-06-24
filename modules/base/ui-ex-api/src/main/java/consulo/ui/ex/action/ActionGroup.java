@@ -2,7 +2,6 @@
 package consulo.ui.ex.action;
 
 import consulo.annotation.component.ActionAPI;
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -14,7 +13,9 @@ import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.Nls;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents a group of actions.
@@ -76,7 +77,7 @@ public abstract class ActionGroup extends AnAction {
         public abstract ActionGroup build();
     }
 
-    private static class ImmutableActionGroup extends ActionGroup implements DumbAware {
+    private static class ImmutableActionGroup extends DumbAwareActionGroup {
         private final AnAction[] myChildren;
         private final boolean myPopup;
 
@@ -121,7 +122,7 @@ public abstract class ActionGroup extends AnAction {
     private boolean myPopup;
     private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
 
-    public static final ActionGroup EMPTY_GROUP = new ActionGroup() {
+    public static final ActionGroup EMPTY_GROUP = new DumbAwareActionGroup() {
         @Nonnull
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
