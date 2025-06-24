@@ -15,12 +15,10 @@
  */
 package consulo.desktop.util.windows.defender;
 
-import consulo.ide.impl.idea.ide.SystemHealthMonitorImpl;
-import consulo.localize.LocalizeValue;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.internal.NotificationFullContent;
-
+import consulo.project.ui.notification.Notification;
 import jakarta.annotation.Nonnull;
+
 import java.nio.file.Path;
 import java.util.Collection;
 
@@ -28,15 +26,15 @@ import java.util.Collection;
  * from kotlin
  */
 public class WindowsDefenderNotification extends Notification implements NotificationFullContent {
-  private final Collection<Path> myPaths;
+    private final Collection<Path> myPaths;
 
-  public WindowsDefenderNotification(@Nonnull LocalizeValue text, Collection<Path> paths) {
-    super(SystemHealthMonitorImpl.GROUP.newWarn().content(text));
-    myPaths = paths;
-  }
+    public WindowsDefenderNotification(@Nonnull Notification.Builder notificationBuilder, Collection<Path> paths) {
+        super(notificationBuilder);
+        myPaths = paths;
+    }
 
-  @Nonnull
-  public Collection<Path> getPaths() {
-    return myPaths;
-  }
+    @Nonnull
+    public Collection<Path> getPaths() {
+        return myPaths;
+    }
 }

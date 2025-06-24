@@ -15,39 +15,23 @@
  */
 package consulo.project.ui.internal;
 
-import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.event.NotificationListener;
-
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 /**
  * @author spleaner
  */
 public class UnknownMacroNotification extends Notification {
-  private final Collection<String> myMacros;
+    private final Collection<String> myMacros;
 
-  public UnknownMacroNotification(@Nonnull NotificationGroup group,
-                                  @Nonnull String title,
-                                  @Nonnull String content,
-                                  @Nonnull NotificationType type,
-                                  @Nullable NotificationListener listener,
-                                  @Nonnull Collection<String> macros) {
-    super(
-        group.newOfType(type)
-            .title(LocalizeValue.localizeTODO(title))
-            .content(LocalizeValue.localizeTODO(content))
-            .optionalHyperlinkListener(listener)
-    );
+    public UnknownMacroNotification(@Nonnull Notification.Builder notificationBuilder, @Nonnull Collection<String> macros) {
+        super(notificationBuilder);
+        myMacros = macros;
+    }
 
-    myMacros = macros;
-  }
-
-  public Collection<String> getMacros() {
-    return myMacros;
-  }
+    public Collection<String> getMacros() {
+        return myMacros;
+    }
 }

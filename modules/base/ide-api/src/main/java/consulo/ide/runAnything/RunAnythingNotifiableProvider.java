@@ -5,17 +5,11 @@ import consulo.dataContext.DataContext;
 import consulo.ide.internal.RunAnythingNotificationGroupContributor;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -84,29 +78,26 @@ public abstract class RunAnythingNotifiableProvider<V> extends RunAnythingProvid
      * Builder class used to configure and build notifications.
      */
     protected class NotificationBuilder {
-        private final DataContext dataContext;
-        private final V value;
-        private final List<ActionData> actions = new ArrayList<>();
-
-        private LocalizeValue title = LocalizeValue.empty();
-        private LocalizeValue subtitle = LocalizeValue.empty();
-        private LocalizeValue content = LocalizeValue.empty();
+        protected Notification.Builder myBuilder;
+        private final DataContext myDataContext;
+        private final V myValue;
 
         public NotificationBuilder(DataContext dataContext, V value) {
-            this.dataContext = dataContext;
-            this.value = value;
+            myBuilder = RunAnythingNotificationGroupContributor.GROUP.newInfo();
+            this.myDataContext = dataContext;
+            this.myValue = value;
         }
 
-        public void setTitle(LocalizeValue title) {
-            this.title = title;
+        public void setTitle(@Nonnull LocalizeValue title) {
+            myBuilder.title(title);
         }
 
-        public void setSubtitle(LocalizeValue subtitle) {
-            this.subtitle = subtitle;
+        public void setSubtitle(@Nonnull LocalizeValue subtitle) {
+            myBuilder.subtitle(subtitle);
         }
 
-        public void setContent(LocalizeValue content) {
-            this.content = content;
+        public void setContent(@Nonnull LocalizeValue content) {
+            myBuilder.content(content);
         }
 
         /**
@@ -116,28 +107,11 @@ public abstract class RunAnythingNotifiableProvider<V> extends RunAnythingProvid
          * @param perform the action to be executed when selected.
          */
         public void action(LocalizeValue name, Runnable perform) {
-            actions.add(new ActionData(name, perform));
+            myBuilder.addClosingAction(name, perform);
         }
 
         public Notification build() {
-            Notification notification = RunAnythingNotificationGroupContributor.GROUP.newInfo()
-                .icon(PlatformIconGroup.actionsRun_anything())
-                .title(title)
-                .subtitle(subtitle)
-                .content(content)
-                .create();
-            for (ActionData actionData : actions) {
-                AnAction action = new AnAction(actionData.name) {
-                    @Override
-                    @RequiredUIAccess
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
-                        actionData.perform.run();
-                        notification.expire();
-                    }
-                };
-                notification.addAction(action);
-            }
-            return notification;
+            return myBuilder.create();
         }
     }
 
@@ -150,21 +124,19 @@ public abstract class RunAnythingNotifiableProvider<V> extends RunAnythingProvid
     }
 
     /**
-     * Data holder for action information.
-     */
-    private static record ActionData(LocalizeValue name, Runnable perform) {
-    }
-
-    /**
      * In the initialization, we register a default notification for ERROR status.
      * Note that {@code getCommand(V)} is assumed to be defined (likely in the parent class).
      */
     public RunAnythingNotifiableProvider() {
         // Register a configurator for the ERROR status notifications.
-        notification(ExecutionStatus.ERROR, builder -> {
-            builder.setTitle(IdeLocalize.runAnythingNotificationWarningTitle());
-            // getCommand(builder.value) must be defined in RunAnythingProviderBase.
-            builder.setContent(IdeLocalize.runAnythingNotificationWarningContent(getCommand(builder.value)));
-        });
+        notification(
+            ExecutionStatus.ERROR,
+            builder -> {
+                // getCommand(builder.value) must be defined in RunAnythingProviderBase.
+                builder.myBuilder
+                    .title(IdeLocalize.runAnythingNotificationWarningTitle())
+                    .content(IdeLocalize.runAnythingNotificationWarningContent(getCommand(builder.myValue)));
+            }
+        );
     }
 }

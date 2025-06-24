@@ -232,7 +232,6 @@ public abstract class ExecutableValidator {
   }
 
   public class ExecutableNotValidNotification extends Notification {
-
     public ExecutableNotValidNotification() {
       this(myNotificationErrorDescription);
     }
