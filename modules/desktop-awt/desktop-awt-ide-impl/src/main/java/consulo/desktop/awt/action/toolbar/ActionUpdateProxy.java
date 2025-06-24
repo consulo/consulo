@@ -15,9 +15,8 @@
  */
 package consulo.desktop.awt.action.toolbar;
 
-import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -29,5 +28,6 @@ import java.util.concurrent.CompletableFuture;
 public interface ActionUpdateProxy {
     void update();
 
-    CompletableFuture<List<? extends AnAction>> updateAsync(@Nonnull UIAccess uiAccess);
+    @RequiredUIAccess
+    CompletableFuture<List<? extends AnAction>> updateAsync();
 }

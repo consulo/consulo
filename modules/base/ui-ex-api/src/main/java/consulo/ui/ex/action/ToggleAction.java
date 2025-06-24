@@ -20,16 +20,16 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text) {
+    public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) String text) {
         super(text);
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public ToggleAction(
-        @Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text,
-        @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) final String description,
-        @Nullable final Image icon
+        @Nullable @Nls(capitalization = Nls.Capitalization.Title) String text,
+        @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
+        @Nullable Image icon
     ) {
         super(text, description, icon);
     }
@@ -38,7 +38,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
         super(text);
     }
 
-    public ToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable final Image icon) {
+    public ToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -49,9 +49,9 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
     @Override
     @RequiredUIAccess
     public final void actionPerformed(@Nonnull final AnActionEvent e) {
-        final boolean state = !isSelected(e);
+        boolean state = !isSelected(e);
         setSelected(e, state);
-        final Presentation presentation = e.getPresentation();
+        Presentation presentation = e.getPresentation();
         Toggleable.setSelected(presentation, state);
     }
 
@@ -72,11 +72,12 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
     public abstract void setSelected(@Nonnull AnActionEvent e, boolean state);
 
     @Override
-    @RequiredUIAccess
-    public void update(@Nonnull final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         boolean selected = isSelected(e);
-        final Presentation presentation = e.getPresentation();
+        Presentation presentation = e.getPresentation();
+
         Toggleable.setSelected(presentation, selected);
+
         if (e.isFromContextMenu()) {
             //force to show check marks instead of toggled icons in context menu
             presentation.setIcon(null);

@@ -76,9 +76,10 @@ public abstract class ActionToolbarEngine {
                 updateActionsImpl();
             }
 
+            @RequiredUIAccess
             @Override
-            public CompletableFuture<List<? extends AnAction>> updateAsync(@Nonnull UIAccess uiAccess) {
-                return ActionToolbarEngine.this.updateAsync(uiAccess);
+            public CompletableFuture<List<? extends AnAction>> updateAsync() {
+                return ActionToolbarEngine.this.updateAsync();
             }
         });
     }
@@ -97,7 +98,8 @@ public abstract class ActionToolbarEngine {
     }
 
     @Nonnull
-    private CompletableFuture<List<? extends AnAction>> updateAsync(@Nonnull UIAccess uiAccess) {
+    @RequiredUIAccess
+    private CompletableFuture<List<? extends AnAction>> updateAsync() {
         DataContext dataContext = getDataContext();
         boolean async = myAlreadyUpdated && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
         ActionUpdater updater = new ActionUpdater(myActionManager,
@@ -183,8 +185,9 @@ public abstract class ActionToolbarEngine {
     }
 
     @Nonnull
-    public CompletableFuture<List<? extends AnAction>> updateActionsAsync(@Nonnull UIAccess uiAccess) {
-        return myUpdater.updateActionsAsync(uiAccess);
+    @RequiredUIAccess
+    public CompletableFuture<List<? extends AnAction>> updateActionsAsync() {
+        return myUpdater.updateActionsAsync();
     }
 
     @RequiredUIAccess
@@ -193,7 +196,7 @@ public abstract class ActionToolbarEngine {
 
         // should update action right on the showing, otherwise toolbar may not be displayed at all,
         // since by default all updates are postponed until frame gets focused.
-        updateActionsAsync(UIAccess.current());
+        updateActionsAsync();
     }
 
     @RequiredUIAccess

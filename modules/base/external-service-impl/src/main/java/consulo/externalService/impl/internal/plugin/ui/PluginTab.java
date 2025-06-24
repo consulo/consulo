@@ -34,7 +34,6 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -134,7 +133,7 @@ public abstract class PluginTab implements Disposable {
             ActionGroup.newImmutableBuilder().add(group).build(),
             true);
         toolbar.setTargetComponent(myRoot);
-        toolbar.updateActionsAsync(UIAccess.current());
+        toolbar.updateActionsAsync();
 
         JComponent component = toolbar.getComponent();
 

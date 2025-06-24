@@ -2158,12 +2158,12 @@ public class UsageViewImpl implements UsageViewEx {
 
             myActionGroup.add(action);
 
-            myActionToolbar.updateActionsAsync(UIAccess.current());
+            myActionToolbar.updateActionsAsync();
         }
 
         void update() {
             if (myActionToolbar != null) {
-                myActionToolbar.updateActionsAsync(myProject.getUIAccess());
+                myActionToolbar.updateActionsAsync();
             }
             myNeedUpdateButtons = false;
         }

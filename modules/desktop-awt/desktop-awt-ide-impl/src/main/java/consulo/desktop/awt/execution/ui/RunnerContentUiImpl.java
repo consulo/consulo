@@ -1342,7 +1342,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
 
     public void updateActionsImmediately(UIAccess uiAccess) {
         if (myToolbar.getTargetComponent() instanceof ActionToolbar toolbar) {
-            toolbar.updateActionsAsync(uiAccess);
+            toolbar.updateActionsAsync();
         }
     }
 

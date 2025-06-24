@@ -66,7 +66,7 @@ public class ActionPanel extends NonOpaquePanel {
     public CompletableFuture<Boolean> updateAsync(@Nonnull UIAccess uiAccess) {
         List<? extends AnAction> oldVisibleActions = myVisibleActions;
 
-        return myActionToolbar.updateActionsAsync(uiAccess).handle((actions, throwable) -> {
+        return myActionToolbar.updateActionsAsync().handle((actions, throwable) -> {
             if (actions == null) {
                 return false;
             }

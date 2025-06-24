@@ -7,7 +7,7 @@ import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
 import consulo.ui.ModalityState;
-import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -90,7 +90,8 @@ public class ToolbarNotifier implements Activatable {
     }
 
     @Nonnull
-    public CompletableFuture<List<? extends AnAction>> updateActionsAsync(@Nonnull UIAccess uiAccess) {
+    @RequiredUIAccess
+    public CompletableFuture<List<? extends AnAction>> updateActionsAsync() {
         if (!myComponent.isVisible()) {
             return CompletableFuture.completedFuture(List.of());
         }
@@ -99,7 +100,7 @@ public class ToolbarNotifier implements Activatable {
             return CompletableFuture.completedFuture(List.of());
         }
 
-        return myUpdateActionsNotifier.updateAsync(uiAccess);
+        return myUpdateActionsNotifier.updateAsync();
     }
 
     public void updateActions(boolean now) {

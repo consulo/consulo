@@ -20,7 +20,6 @@ import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Size2D;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -137,7 +136,7 @@ public interface ActionToolbar {
     /**
      * Forces update of the all actions in the toolbars. Actions, however, normally updated automatially every 500msec.
      *
-     * @see #updateActionsAsync(UIAccess)
+     * @see #updateActionsAsync()
      */
     @Deprecated
     @DeprecationInfo("use #updateActionsAsync(UIAccess)")
@@ -145,7 +144,8 @@ public interface ActionToolbar {
     void updateActionsImmediately();
 
     @Nonnull
-    CompletableFuture<List<? extends AnAction>> updateActionsAsync(@Nonnull UIAccess uiAccess);
+    @RequiredUIAccess
+    CompletableFuture<List<? extends AnAction>> updateActionsAsync();
 
     @Deprecated
     @DeprecationInfo("Need get it from update future, due result updated in async mode")

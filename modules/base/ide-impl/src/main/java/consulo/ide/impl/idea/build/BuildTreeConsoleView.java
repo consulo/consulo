@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.build;
 
 import consulo.application.Application;
 import consulo.application.HelpManager;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.util.DateFormatUtil;
@@ -1340,7 +1341,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
             }
             Document document = editor.getDocument();
             return document.getLineCount() == 0
-                || document.getLineNumber(editor.getCaretModel().getOffset()) == document.getLineCount() - 1;
+                || document.getLineNumber(ReadAction.compute(() -> editor.getCaretModel().getOffset())) == document.getLineCount() - 1;
         }
 
         @Override

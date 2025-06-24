@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.internal;
 
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionToolbar;
@@ -34,7 +33,7 @@ public class ActionToolbarsHolder {
     @RequiredUIAccess
     public static void updateAllToolbarsImmediately() {
         for (ActionToolbar toolbar : new ArrayList<>(ourToolbars)) {
-            toolbar.updateActionsAsync(UIAccess.current());
+            toolbar.updateActionsAsync();
 
             ((ActionToolbarEx) toolbar).forEachButton(b -> {
                 if (b instanceof ActionButton button) {
