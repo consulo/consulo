@@ -35,7 +35,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
@@ -448,21 +447,18 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         private Notification prepareNotification(@Nonnull UpdateInfoTreeImpl tree, boolean someSessionWasCancelled) {
             int allFiles = getUpdatedFilesCount();
 
-            String title;
-            String content;
-            NotificationType type;
             if (someSessionWasCancelled) {
-                title = "Project Partially Updated";
-                content = allFiles + " " + pluralize("file", allFiles) + " updated";
-                type = NotificationType.WARNING;
+                return STANDARD_NOTIFICATION.newWarn()
+                    .title(LocalizeValue.localizeTODO("Project Partially Updated"))
+                    .content(LocalizeValue.localizeTODO(allFiles + " " + pluralize("file", allFiles) + " updated"))
+                    .create();
             }
             else {
-                title = allFiles + " Project " + pluralize("File", allFiles) + " Updated";
-                content = notNullize(prepareScopeUpdatedText(tree));
-                type = NotificationType.INFORMATION;
+                return STANDARD_NOTIFICATION.newInfo()
+                    .title(LocalizeValue.localizeTODO(allFiles + " Project " + pluralize("File", allFiles) + " Updated"))
+                    .content(LocalizeValue.ofNullable(prepareScopeUpdatedText(tree)))
+                    .create();
             }
-
-            return STANDARD_NOTIFICATION.createNotification(title, content, type, null);
         }
 
         private int getUpdatedFilesCount() {
@@ -560,17 +556,16 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
 
                 final boolean noMerged = myUpdatedFiles.getGroupById(FileGroup.MERGED_WITH_CONFLICT_ID).isEmpty();
                 if (myUpdatedFiles.isEmpty() && myGroupedExceptions.isEmpty()) {
-                    NotificationType type;
-                    String content;
                     if (someSessionWasCancelled) {
-                        content = VcsLocalize.progressTextUpdatingCanceled().get();
-                        type = NotificationType.WARNING;
+                        STANDARD_NOTIFICATION.newWarn()
+                            .content(VcsLocalize.progressTextUpdatingCanceled())
+                            .notify(myProject);
                     }
                     else {
-                        content = getAllFilesAreUpToDateMessage(myRoots);
-                        type = NotificationType.INFORMATION;
+                        STANDARD_NOTIFICATION.newInfo()
+                            .content(LocalizeValue.localizeTODO(getAllFilesAreUpToDateMessage(myRoots)))
+                            .notify(myProject);
                     }
-                    VcsNotifier.getInstance(myProject).notify(STANDARD_NOTIFICATION.createNotification(content, type));
                 }
                 else if (!myUpdatedFiles.isEmpty()) {
                     final UpdateInfoTreeImpl tree = showUpdateTree(continueChainFinal && updateSuccess && noMerged, someSessionWasCancelled);

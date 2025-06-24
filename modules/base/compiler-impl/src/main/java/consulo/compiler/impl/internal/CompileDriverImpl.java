@@ -622,7 +622,10 @@ public class CompileDriverImpl implements CompileDriver {
                         ToolWindowManager.getInstance(myProject)
                             .notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage);
                     }
-                    CompilerManager.NOTIFICATION_GROUP.createNotification(statusMessage, messageType).notify(myProject);
+                    CompilerManager.NOTIFICATION_GROUP
+                        .newOfType(messageType)
+                        .content(LocalizeValue.localizeTODO(statusMessage))
+                        .notify(myProject);
                     if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {
                         compileContext.addMessage(CompilerMessageCategory.INFORMATION, statusMessage, null, -1, -1);
                     }

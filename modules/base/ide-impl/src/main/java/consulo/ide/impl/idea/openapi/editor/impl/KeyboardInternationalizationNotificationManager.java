@@ -61,18 +61,20 @@ public class KeyboardInternationalizationNotificationManager {
   }
 
   public static Notification createNotification(@Nonnull final NotificationGroup group, @Nullable NotificationListener listener) {
-    final LocalizeValue productName = Application.get().getName();
+    LocalizeValue productName = Application.get().getName();
 
     Window recentFocusedWindow = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
 
-    String text = "<html>We have found out that you are using a non-english keyboard layout." +
-      " You can <a href='enable'>enable</a> smart layout support for " +
-      KeyboardSettingsExternalizable.getDisplayLanguageNameForComponent(recentFocusedWindow) + " language." +
-      " You can change this option in the settings of " + productName + " <a href='settings'>more...</a></html>";
-
-    String title = "Enable smart keyboard internalization for " + productName + ".";
-
-    return new Notification(group, title, text, NotificationType.INFORMATION, listener);
+    return group.newInfo()
+        .title(LocalizeValue.localizeTODO("Enable smart keyboard internalization for " + productName + "."))
+        .content(LocalizeValue.localizeTODO(
+            "<html>We have found out that you are using a non-english keyboard layout." +
+                " You can <a href='enable'>enable</a> smart layout support for " +
+                KeyboardSettingsExternalizable.getDisplayLanguageNameForComponent(recentFocusedWindow) + " language." +
+                " You can change this option in the settings of " + productName + " <a href='settings'>more...</a></html>"
+        ))
+        .optionalHyperlinkListener(listener)
+        .create();
   }
 
   private static class MyNotificationListener implements NotificationListener {

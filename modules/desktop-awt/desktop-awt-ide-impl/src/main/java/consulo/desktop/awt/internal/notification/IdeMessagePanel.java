@@ -8,17 +8,13 @@ import consulo.disposer.Disposer;
 import consulo.externalService.impl.internal.errorReport.IdeErrorsDialog;
 import consulo.externalService.impl.internal.errorReport.ReportMessages;
 import consulo.externalService.localize.ExternalServiceLocalize;
-import consulo.localize.LocalizeValue;
 import consulo.logging.internal.LogMessage;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationAction;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.*;
 import consulo.ui.UIAccessScheduler;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.NonOpaquePanel;
@@ -205,17 +201,11 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     }
 
     private void showErrorNotification(@Nonnull Project project) {
-        LocalizeValue title = ExternalServiceLocalize.errorNewNotificationTitle();
-        Notification notification =
-            new Notification(ReportMessages.GROUP, PlatformIconGroup.ideFatalerror(), title.get(), null, null, NotificationType.ERROR, null);
-        notification.addAction(new NotificationAction(ExternalServiceLocalize.errorNewNotificationLink()) {
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-                notification.expire();
-                openErrorsDialog(null);
-            }
-        });
+        Notification notification = ReportMessages.GROUP.newError()
+            .icon(PlatformIconGroup.ideFatalerror())
+            .title(ExternalServiceLocalize.errorNewNotificationTitle())
+            .addClosingAction(ExternalServiceLocalize.errorNewNotificationLink(), () -> openErrorsDialog(null))
+            .create();
 
         BalloonLayout layout = myFrame.getBalloonLayout();
         assert layout != null : myFrame;

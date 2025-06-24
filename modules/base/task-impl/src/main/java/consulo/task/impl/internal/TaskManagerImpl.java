@@ -30,11 +30,10 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.disposer.Disposable;
 import consulo.http.HttpRequests;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.proxy.EventDispatcher;
 import consulo.task.*;
 import consulo.task.event.TaskListener;
@@ -836,12 +835,14 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     if (!StringUtil.isEmpty(details)) {
       content = "<p>" + details + "</p>" + content;
     }
-    NotificationGroup group = TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP;
-    group.createNotification("Cannot connect to " + repository.getUrl(), content, NotificationType.WARNING, (notification, event) -> {
-
-      Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, TaskRepositoriesConfigurable.class);
-      notification.expire();
-    }).notify(myProject);
+    TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP.newWarn()
+      .title(LocalizeValue.localizeTODO("Cannot connect to " + repository.getUrl()))
+      .content(LocalizeValue.localizeTODO(content))
+      .hyperlinkListener((notification, event) -> {
+        Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, TaskRepositoriesConfigurable.class);
+        notification.expire();
+      })
+      .notify(myProject);
   }
 
   @Override

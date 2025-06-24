@@ -8,7 +8,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -16,6 +15,7 @@ import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -86,7 +86,7 @@ public abstract class RunAnythingNotifiableProvider<V> extends RunAnythingProvid
     protected class NotificationBuilder {
         private final DataContext dataContext;
         private final V value;
-        private final ArrayList<ActionData> actions = new ArrayList<>();
+        private final List<ActionData> actions = new ArrayList<>();
 
         private LocalizeValue title = LocalizeValue.empty();
         private LocalizeValue subtitle = LocalizeValue.empty();
@@ -120,13 +120,16 @@ public abstract class RunAnythingNotifiableProvider<V> extends RunAnythingProvid
         }
 
         public Notification build() {
-            Notification notification = RunAnythingNotificationGroupContributor.GROUP.createNotification(content.get(), NotificationType.INFORMATION)
-                .setIcon(PlatformIconGroup.actionsRun_anything())
-                .setTitle(title.get(), subtitle.get());
+            Notification notification = RunAnythingNotificationGroupContributor.GROUP.newInfo()
+                .icon(PlatformIconGroup.actionsRun_anything())
+                .title(title)
+                .subtitle(subtitle)
+                .content(content)
+                .create();
             for (ActionData actionData : actions) {
                 AnAction action = new AnAction(actionData.name) {
-                    @RequiredUIAccess
                     @Override
+                    @RequiredUIAccess
                     public void actionPerformed(@Nonnull AnActionEvent e) {
                         actionData.perform.run();
                         notification.expire();

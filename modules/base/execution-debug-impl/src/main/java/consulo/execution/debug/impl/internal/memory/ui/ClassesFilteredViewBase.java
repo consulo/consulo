@@ -18,8 +18,8 @@ import consulo.execution.debug.memory.TrackerForNewInstancesBase;
 import consulo.execution.debug.memory.TypeInfo;
 import consulo.execution.debug.memory.event.MemoryViewManagerListener;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -182,12 +182,12 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
 
 
     protected void handleClassSelection(@Nullable TypeInfo ref) {
-        final XDebugSession debugSession = XDebuggerManager.getInstance(myProject).getCurrentSession();
+        XDebugSession debugSession = XDebuggerManager.getInstance(myProject).getCurrentSession();
         if (ref != null && debugSession != null && debugSession.isSuspended()) {
             if (!ref.canGetInstanceInfo()) {
-                XDebuggerUIConstants.NOTIFICATION_GROUP
-                    .createNotification(XDebuggerBundle.message("memory.unable.to.get.instances.of.class", ref.name()),
-                        NotificationType.INFORMATION).notify(debugSession.getProject());
+                XDebuggerUIConstants.NOTIFICATION_GROUP.newInfo()
+                    .content(LocalizeValue.of(XDebuggerBundle.message("memory.unable.to.get.instances.of.class", ref.name())))
+                    .notify(debugSession.getProject());
                 return;
             }
 

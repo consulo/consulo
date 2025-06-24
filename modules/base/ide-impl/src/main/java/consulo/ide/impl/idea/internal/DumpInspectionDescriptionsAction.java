@@ -20,9 +20,8 @@ import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -140,7 +139,10 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
     }
   }
 
-  private static void doNotify(final String message) {
-    Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "Inspection descriptions dumped", message, NotificationType.INFORMATION));
+  private static void doNotify(String message) {
+    Notifications.SYSTEM_MESSAGES_GROUP.newInfo()
+        .title(LocalizeValue.localizeTODO("Inspection descriptions dumped"))
+        .content(LocalizeValue.ofNullable(message))
+        .notify(null);
   }
 }

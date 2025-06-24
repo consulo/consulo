@@ -62,12 +62,12 @@ import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.*;
 import consulo.language.psi.stub.gist.GistManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.*;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
@@ -2571,12 +2571,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                     currentVersionCorrupted ? "Indices to be rebuilt after corruption:" : "Indices to be built:"
                 );
                 if (rebuildNotification != null && !myApplication.isHeadlessEnvironment() && Registry.is("ide.showIndexRebuildMessage")) {
-                    NOTIFICATIONS.createNotification(
-                            IndexingLocalize.indexRebuildNotificationTitle().get(),
-                            rebuildNotification,
-                            NotificationType.INFORMATION,
-                            null
-                        )
+                    NOTIFICATIONS.newInfo()
+                        .title(IndexingLocalize.indexRebuildNotificationTitle())
+                        .content(LocalizeValue.localizeTODO(rebuildNotification))
                         .notify(null);
                 }
 

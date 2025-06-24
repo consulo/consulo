@@ -9,6 +9,7 @@ import consulo.dataContext.DataProvider;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -16,7 +17,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.util.lang.StringUtil;
@@ -62,19 +62,23 @@ public final class BuildConsoleUtils {
         quickFix.runQuickFix(project, buildView == null ? consoleView : buildView);
       });
     }
-    NotificationListener listener = new NotificationListener.Adapter() {
-      @Override
-      protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-        if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
 
-        final NotificationListener notificationListener = listenerMap.get(event.getDescription());
-        if (notificationListener != null) {
-          notificationListener.hyperlinkUpdate(notification, event);
+    Notification notification = group.newWarn()
+      .title(LocalizeValue.localizeTODO(buildIssue.getTitle()))
+      .content(LocalizeValue.localizeTODO(buildIssue.getDescription()))
+      .hyperlinkListener(new NotificationListener.Adapter() {
+        @Override
+        @RequiredUIAccess
+        protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+          if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
+
+          NotificationListener notificationListener = listenerMap.get(event.getDescription());
+          if (notificationListener != null) {
+            notificationListener.hyperlinkUpdate(notification, event);
+          }
         }
-      }
-    };
-
-    Notification notification = new Notification(group, buildIssue.getTitle(), buildIssue.getDescription(), NotificationType.WARNING, listener);
+      })
+      .create();
     print(consoleView, notification, buildIssue.getDescription());
   }
 

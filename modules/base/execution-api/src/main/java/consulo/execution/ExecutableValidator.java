@@ -18,6 +18,7 @@ package consulo.execution;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.execution.internal.ExecutionNotificationGroupHolder;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessUtil;
@@ -241,12 +242,16 @@ public abstract class ExecutableValidator {
     }
 
     public ExecutableNotValidNotification(@Nonnull String preparedDescription, @Nonnull NotificationType type) {
-      super(ExecutionNotificationGroupHolder.EXTERNAL, "", preparedDescription, type, new NotificationListener.Adapter() {
-        @Override
-        protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-          showSettingsAndExpireIfFixed(notification);
-        }
-      });
+      super(
+        ExecutionNotificationGroupHolder.EXTERNAL.newOfType(type)
+          .content(LocalizeValue.localizeTODO(preparedDescription))
+          .hyperlinkListener(new NotificationListener.Adapter() {
+            @Override
+            protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+              showSettingsAndExpireIfFixed(notification);
+            }
+          })
+      );
     }
   }
 }

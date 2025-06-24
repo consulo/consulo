@@ -51,13 +51,13 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.OpenFileHyperlinkInfo;
 import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.NotificationType;
@@ -1008,18 +1008,14 @@ public class XDebugSessionImpl implements XDebugSession {
         @Nonnull NotificationType type,
         @Nullable HyperlinkListener listener
     ) {
-        NotificationListener notificationListener = listener == null ? null : (notification, event) -> {
-            if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                listener.hyperlinkUpdate(event);
-            }
-        };
-
-        NOTIFICATION_GROUP.createNotification(
-            "",
-            message,
-            consulo.project.ui.notification.NotificationType.from(type),
-            notificationListener
-        ).notify(myProject);
+        NOTIFICATION_GROUP.newOfType(consulo.project.ui.notification.NotificationType.from(type))
+            .content(LocalizeValue.localizeTODO(message))
+            .optionalHyperlinkListener(listener == null ? null : (notification, event) -> {
+                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    listener.hyperlinkUpdate(event);
+                }
+            })
+            .notify(myProject);
     }
 
     private class MyBreakpointListener implements XBreakpointListener<XBreakpoint<?>> {

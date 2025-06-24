@@ -30,7 +30,6 @@ import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
@@ -604,8 +603,9 @@ public class PatchApplier<BinaryType extends FilePatch> {
             showError(project, VcsLocalize.patchApplyPartiallyApplied().get(), false);
         }
         else if (ApplyPatchStatus.SUCCESS.equals(status)) {
-            final LocalizeValue message = VcsLocalize.patchApplySuccessAppliedText();
-            VcsBalloonProblemNotifier.NOTIFICATION_GROUP.createNotification(message.get(), NotificationType.INFORMATION).notify(project);
+            VcsBalloonProblemNotifier.NOTIFICATION_GROUP.newInfo()
+                .content(VcsLocalize.patchApplySuccessAppliedText())
+                .notify(project);
         }
     }
 

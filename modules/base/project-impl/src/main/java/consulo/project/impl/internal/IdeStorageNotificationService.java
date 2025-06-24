@@ -20,11 +20,11 @@ import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.store.internal.StorageNotificationService;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.UnknownMacroNotification;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.ui.NotificationType;
@@ -58,7 +58,10 @@ public class IdeStorageNotificationService implements StorageNotificationService
 
   @Override
   public void notify(@Nonnull NotificationType notificationType, @Nonnull String title, @Nonnull String text, @Nullable ComponentManager project) {
-    new Notification(Notifications.SYSTEM_MESSAGES_GROUP, title, text, consulo.project.ui.notification.NotificationType.from(notificationType)).notify(ObjectUtil.tryCast(project, Project.class));
+    Notifications.SYSTEM_MESSAGES_GROUP.newOfType(consulo.project.ui.notification.NotificationType.from(notificationType))
+        .title(LocalizeValue.localizeTODO(title))
+        .content(LocalizeValue.localizeTODO(text))
+        .notify(ObjectUtil.tryCast(project, Project.class));
   }
 
   @Override
