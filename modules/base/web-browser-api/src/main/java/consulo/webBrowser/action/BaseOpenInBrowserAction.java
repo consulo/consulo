@@ -71,7 +71,6 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     protected abstract WebBrowser getBrowser(@Nonnull AnActionEvent event);
 
     @Override
-    @RequiredUIAccess
     public final void update(@Nonnull AnActionEvent e) {
         WebBrowser browser = getBrowser(e);
         if (browser == null) {
@@ -113,7 +112,6 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     }
 
     @Nullable
-    @RequiredReadAction
     public static OpenInBrowserRequest createRequest(@Nonnull DataContext context) {
         final Editor editor = context.getData(Editor.KEY);
         if (editor != null) {
@@ -141,11 +139,11 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
             }
         }
         else {
-            PsiFile psiFile = context.getData(PsiFile.KEY);
+            PsiFile psiFile = ReadAction.compute(() -> context.getData(PsiFile.KEY));
             VirtualFile virtualFile = context.getData(VirtualFile.KEY);
             Project project = context.getData(Project.KEY);
             if (virtualFile != null && !virtualFile.isDirectory() && virtualFile.isValid() && project != null && project.isInitialized()) {
-                psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+                psiFile = ReadAction.compute(() -> PsiManager.getInstance(project).findFile(virtualFile));
             }
 
             if (psiFile != null) {
