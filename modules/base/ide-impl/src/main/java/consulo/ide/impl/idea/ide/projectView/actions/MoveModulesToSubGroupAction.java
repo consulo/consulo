@@ -44,6 +44,11 @@ public class MoveModulesToSubGroupAction extends MoveModulesToGroupAction {
 
     @Override
     @RequiredUIAccess
+    public void update(AnActionEvent e) {
+    }
+
+    @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
