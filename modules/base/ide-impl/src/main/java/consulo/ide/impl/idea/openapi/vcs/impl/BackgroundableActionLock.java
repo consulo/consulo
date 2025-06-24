@@ -52,17 +52,14 @@ public class BackgroundableActionLock {
     return new BackgroundableActionLock(project, keys);
   }
 
-  @RequiredUIAccess
   public static boolean isLocked(@Nonnull Project project, @Nonnull Object... keys) {
     return getManager(project).isBackgroundTaskRunning(keys);
   }
 
-  @RequiredUIAccess
   public static void lock(@Nonnull Project project, @Nonnull Object... keys) {
     getManager(project).startBackgroundTask(keys);
   }
 
-  @RequiredUIAccess
   public static void unlock(@Nonnull Project project, @Nonnull Object... keys) {
     getManager(project).stopBackgroundTask(keys);
   }

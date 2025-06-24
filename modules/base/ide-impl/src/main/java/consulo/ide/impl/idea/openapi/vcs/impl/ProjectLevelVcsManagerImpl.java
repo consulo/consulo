@@ -33,27 +33,21 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
-import consulo.ui.UIAccess;
-import consulo.versionControlSystem.util.VcsRootIterator;
-import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
-import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.VcsAnnotationLocalChangesListenerImpl;
 import consulo.ide.impl.idea.openapi.vcs.checkout.CompositeCheckoutListener;
-import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.MappingsToRoots;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.OptionsAndConfirmations;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.ProjectLevelVcsManagerSerialization;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTreeImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.content.ContentUtilEx;
-import consulo.versionControlSystem.ui.ViewUpdateInfoNotification;
 import consulo.language.content.FileIndexFacade;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
@@ -61,7 +55,9 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
@@ -72,12 +68,16 @@ import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.history.VcsHistoryCache;
-import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
+import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.root.VcsRootSettings;
+import consulo.versionControlSystem.ui.ViewUpdateInfoNotification;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
+import consulo.versionControlSystem.util.VcsRootIterator;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -143,22 +143,20 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   private volatile int myBackgroundOperationCounter;
 
-  private final Set<ActionKey> myBackgroundRunningTasks = new HashSet<>();
+  private final Set<ActionKey> myBackgroundRunningTasks = ConcurrentHashMap.newKeySet();
 
   private final List<VcsConsoleLine> myPendingOutput = new ArrayList<>();
 
   private final VcsHistoryCache myVcsHistoryCache;
   private final ContentRevisionCache myContentRevisionCache;
   private final FileIndexFacade myExcludedIndex;
-  private final VcsFileListenerContextHelper myVcsFileListenerContextHelper;
   private final VcsAnnotationLocalChangesListenerImpl myAnnotationLocalChangesListener;
 
   @Inject
   public ProjectLevelVcsManagerImpl(Project project,
-                                    final FileStatusManager manager,
-                                    final FileIndexFacade excludedFileIndex,
-                                    DefaultVcsRootPolicy defaultVcsRootPolicy,
-                                    VcsFileListenerContextHelper vcsFileListenerContextHelper) {
+                                    FileStatusManager manager,
+                                    FileIndexFacade excludedFileIndex,
+                                    DefaultVcsRootPolicy defaultVcsRootPolicy) {
     myProject = project;
     mySerialization = new ProjectLevelVcsManagerSerialization();
     myOptionsAndConfirmations = new OptionsAndConfirmations();
@@ -169,7 +167,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     myVcsHistoryCache = new VcsHistoryCache();
     myContentRevisionCache = new ContentRevisionCache();
-    myVcsFileListenerContextHelper = vcsFileListenerContextHelper;
     VcsListener vcsListener = () -> {
       myVcsHistoryCache.clear();
       myContentRevisionCache.clearAll();
@@ -782,30 +779,23 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
    * @deprecated {@link BackgroundableActionLock}
    */
   @Deprecated
-  @RequiredUIAccess
   public BackgroundableActionEnabledHandler getBackgroundableActionHandler(final VcsBackgroundableActions action) {
-    UIAccess.assertIsUIThread();
     return new BackgroundableActionEnabledHandler(myProject, action);
   }
 
-  @RequiredUIAccess
   boolean isBackgroundTaskRunning(@Nonnull Object... keys) {
-    UIAccess.assertIsUIThread();
     return myBackgroundRunningTasks.contains(new ActionKey(keys));
   }
 
-  @RequiredUIAccess
   void startBackgroundTask(@Nonnull Object... keys) {
-    UIAccess.assertIsUIThread();
     LOG.assertTrue(myBackgroundRunningTasks.add(new ActionKey(keys)));
   }
 
-  @RequiredUIAccess
   void stopBackgroundTask(@Nonnull Object... keys) {
-    UIAccess.assertIsUIThread();
     LOG.assertTrue(myBackgroundRunningTasks.remove(new ActionKey(keys)));
   }
 
+  @Override
   public void addInitializationRequest(final VcsInitObject vcsInitObject, final Runnable runnable) {
     VcsInitialization.getInstance(myProject).add(vcsInitObject, runnable);
   }
