@@ -358,7 +358,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         Balloon balloon = JBPopupFactory.getInstance()
             .createHtmlTextBalloonBuilder(
                 htmlBody.replace("\n", "<br>"),
-                icon != null ? icon : type.getDefaultIcon(),
+                icon,
                 type.getPopupBackground(),
                 listener
             )
