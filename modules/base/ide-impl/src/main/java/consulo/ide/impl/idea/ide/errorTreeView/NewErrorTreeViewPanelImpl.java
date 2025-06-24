@@ -622,7 +622,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
       if (canControlProcess()) {
         stopProcess();
       }
-      myToolbar.updateActionsImmediately();
+      myToolbar.updateActionsAsync();
     }
 
     @RequiredUIAccess

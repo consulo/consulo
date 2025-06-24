@@ -400,7 +400,7 @@ public class ImplementationViewComponent extends JPanel {
         updateLabels();
         updateCombo();
         updateEditorText();
-        myToolbar.updateActionsImmediately();
+        myToolbar.updateActionsAsync();
     }
 
     private void updateCombo() {

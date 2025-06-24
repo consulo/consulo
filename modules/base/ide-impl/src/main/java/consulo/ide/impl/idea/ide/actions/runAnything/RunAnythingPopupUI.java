@@ -983,7 +983,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("run.anything.toolbar", actionGroup, true);
         toolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
         toolbar.setTargetComponent(this);
-        toolbar.updateActionsImmediately();
+        toolbar.updateActionsAsync();
         JComponent toolbarComponent = toolbar.getComponent();
         toolbarComponent.setOpaque(false);
         res.add(toolbarComponent);

@@ -183,7 +183,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             return;
         }
         mySelectedTab.everywhereAction.setEverywhere(!mySelectedTab.everywhereAction.isEverywhere());
-        myToolbar.updateActionsImmediately();
+        myToolbar.updateActionsAsync();
     }
 
     @RequiredUIAccess
@@ -196,7 +196,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             return;
         }
         mySelectedTab.everywhereAction.setEverywhere(everywhere);
-        myToolbar.updateActionsImmediately();
+        myToolbar.updateActionsAsync();
     }
 
     private boolean isEverywhere() {
@@ -252,7 +252,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             myResultsList.setCellRenderer(cellRenderer);
         }
         if (myToolbar != null) {
-            myToolbar.updateActionsImmediately();
+            myToolbar.updateActionsAsync();
         }
         repaint();
         rebuildList();
@@ -360,7 +360,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         myToolbar = ActionManager.getInstance().createActionToolbar("search.everywhere.toolbar", actionGroup.build(), true);
         myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
         myToolbar.setTargetComponent(null);
-        myToolbar.updateActionsImmediately();
+        myToolbar.updateActionsAsync();
         JComponent toolbarComponent = myToolbar.getComponent();
         toolbarComponent.setOpaque(false);
         toolbarComponent.setBorder(JBUI.Borders.empty(2, 18, 2, 9));
@@ -425,7 +425,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
             this.contributor = contributor;
             @RequiredUIAccess
             Runnable onChanged = () -> {
-                myToolbar.updateActionsImmediately();
+                myToolbar.updateActionsAsync();
                 rebuildList();
             };
             if (contributor == null) {

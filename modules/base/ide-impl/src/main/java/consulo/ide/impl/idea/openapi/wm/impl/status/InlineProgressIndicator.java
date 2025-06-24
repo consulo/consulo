@@ -72,7 +72,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         ActionGroup group = ActionGroup.newImmutableBuilder().addAll(actions).build();
         myToolbar = ActionManager.getInstance().createActionToolbar("InlineProgressBar", group, true);
         myToolbar.setTargetComponent(myComponent);
-        myToolbar.updateActionsImmediately();
+        myToolbar.updateActionsAsync();
         myToolbar.setMiniMode(true);
 
         JComponent toolbar = myToolbar.getComponent();
@@ -185,7 +185,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
             myProgress.setEnabled(true);
         }
 
-        myToolbar.updateActionsImmediately();
+        myToolbar.updateActionsAsync();
     }
 
     protected boolean isPaintingIndeterminate() {
