@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.dvcs.actions;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -144,8 +145,12 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
           changes = getDiffChanges(project, file, compare);
         }
         catch (VcsException e) {
-          VcsNotifier.getInstance(project).notifyImportantWarning("Couldn't compare with branch", String.format(
-                  "Couldn't compare " + DvcsUtil.fileOrFolder(file) + " [%s] with branch [%s];\n %s", file, compare, e.getMessage()));
+          VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.newWarn()
+              .title(LocalizeValue.localizeTODO("Couldn't compare with branch"))
+              .content(LocalizeValue.localizeTODO(String.format(
+                  "Couldn't compare " + DvcsUtil.fileOrFolder(file) + " [%s] with branch [%s];\n %s", file, compare, e.getMessage())
+              ))
+              .notify(project);
         }
       }
 

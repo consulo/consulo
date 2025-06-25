@@ -19,6 +19,7 @@ import consulo.ide.impl.idea.dvcs.ui.BranchActionGroupPopup;
 import consulo.ide.impl.idea.dvcs.ui.LightActionGroup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
@@ -102,25 +103,29 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     }
 
     private void notifyAboutSyncedBranches() {
-        String description = "You have several " +
-            myVcs.getDisplayName() +
-            " roots in the project and they all are checked out at the same branch. " +
-            "We've enabled synchronous branch control for the project. <br/>" +
-            "If you wish to control branches in different roots separately, " +
-            "you may <a href='settings'>disable</a> the setting.";
-        NotificationListener listener = new NotificationListener() {
-            @Override
-            @RequiredUIAccess
-            public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    ShowSettingsUtil.getInstance().showSettingsDialog(myProject, myVcs.getDisplayName());
-                    if (myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) {
-                        notification.expire();
+        VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.newInfo()
+            .title(LocalizeValue.localizeTODO("Synchronous branch control enabled"))
+            .content(LocalizeValue.localizeTODO(
+                "You have several " +
+                    myVcs.getDisplayName() +
+                    " roots in the project and they all are checked out at the same branch. " +
+                    "We've enabled synchronous branch control for the project. <br/>" +
+                    "If you wish to control branches in different roots separately, " +
+                    "you may <a href='settings'>disable</a> the setting."
+            ))
+            .hyperlinkListener(new NotificationListener() {
+                @Override
+                @RequiredUIAccess
+                public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+                    if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                        ShowSettingsUtil.getInstance().showSettingsDialog(myProject, myVcs.getDisplayName());
+                        if (myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) {
+                            notification.expire();
+                        }
                     }
                 }
-            }
-        };
-        VcsNotifier.getInstance(myProject).notifyImportantInfo("Synchronous branch control enabled", description, listener);
+            })
+            .notify(myProject);
     }
 
     @Nonnull

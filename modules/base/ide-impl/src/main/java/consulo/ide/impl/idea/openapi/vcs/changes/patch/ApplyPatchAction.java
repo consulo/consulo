@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -139,11 +140,15 @@ public class ApplyPatchAction extends DumbAwareAction {
         VirtualFile vFile = VfsUtil.findFileByIoFile(file, true);
         String patchPath = file.getPath();
         if (vFile == null) {
-            VcsNotifier.getInstance(project).notifyWeakError("Can't find patch file " + patchPath);
+            VcsNotifier.NOTIFICATION_GROUP_ID.newError()
+                .content(LocalizeValue.localizeTODO("Can't find patch file " + patchPath))
+                .notify(project);
             return false;
         }
         if (!isPatchFile(file)) {
-            VcsNotifier.getInstance(project).notifyWeakError("Selected file " + patchPath + " is not patch type file ");
+            VcsNotifier.NOTIFICATION_GROUP_ID.newError()
+                .content(LocalizeValue.localizeTODO("Selected file " + patchPath + " is not patch type file "))
+                .notify(project);
             return false;
         }
 

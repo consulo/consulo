@@ -444,20 +444,18 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         }
 
         @Nonnull
-        private Notification prepareNotification(@Nonnull UpdateInfoTreeImpl tree, boolean someSessionWasCancelled) {
+        private Notification.Builder prepareNotification(@Nonnull UpdateInfoTreeImpl tree, boolean someSessionWasCancelled) {
             int allFiles = getUpdatedFilesCount();
 
             if (someSessionWasCancelled) {
                 return STANDARD_NOTIFICATION.newWarn()
                     .title(LocalizeValue.localizeTODO("Project Partially Updated"))
-                    .content(LocalizeValue.localizeTODO(allFiles + " " + pluralize("file", allFiles) + " updated"))
-                    .create();
+                    .content(LocalizeValue.localizeTODO(allFiles + " " + pluralize("file", allFiles) + " updated"));
             }
             else {
                 return STANDARD_NOTIFICATION.newInfo()
                     .title(LocalizeValue.localizeTODO(allFiles + " Project " + pluralize("File", allFiles) + " Updated"))
-                    .content(LocalizeValue.ofNullable(prepareScopeUpdatedText(tree)))
-                    .create();
+                    .content(LocalizeValue.ofNullable(prepareScopeUpdatedText(tree)));
             }
         }
 
@@ -532,64 +530,74 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
 
             final boolean updateSuccess = !someSessionWasCancelled && myGroupedExceptions.isEmpty();
 
-            WaitForProgressToShow.runOrInvokeLaterAboveProgress(() -> {
-                if (myProject.isDisposed()) {
-                    storeReloadManager.unblockReloadingProjectOnExternalChanges();
-                    return;
-                }
-
-                if (!myGroupedExceptions.isEmpty()) {
-                    if (continueChainFinal) {
-                        gatherContextInterruptedMessages();
+            WaitForProgressToShow.runOrInvokeLaterAboveProgress(
+                () -> {
+                    if (myProject.isDisposed()) {
+                        storeReloadManager.unblockReloadingProjectOnExternalChanges();
+                        return;
                     }
-                    AbstractVcsHelper.getInstance(myProject).showErrors(
-                        myGroupedExceptions,
-                        VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText())
-                    );
-                }
-                else if (someSessionWasCancelled) {
-                    ProgressManager.progress(VcsLocalize.progressTextUpdatingCanceled());
-                }
-                else {
-                    ProgressManager.progress(VcsLocalize.progressTextUpdatingDone());
-                }
 
-                final boolean noMerged = myUpdatedFiles.getGroupById(FileGroup.MERGED_WITH_CONFLICT_ID).isEmpty();
-                if (myUpdatedFiles.isEmpty() && myGroupedExceptions.isEmpty()) {
-                    if (someSessionWasCancelled) {
+                    if (!myGroupedExceptions.isEmpty()) {
+                        if (continueChainFinal) {
+                            gatherContextInterruptedMessages();
+                        }
+                        AbstractVcsHelper.getInstance(myProject).showErrors(
+                            myGroupedExceptions,
+                            VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText())
+                        );
+                    }
+                    else if (someSessionWasCancelled) {
+                        ProgressManager.progress(VcsLocalize.progressTextUpdatingCanceled());
+                    }
+                    else {
+                        ProgressManager.progress(VcsLocalize.progressTextUpdatingDone());
+                    }
+
+                    final boolean noMerged = myUpdatedFiles.getGroupById(FileGroup.MERGED_WITH_CONFLICT_ID).isEmpty();
+                    if (myUpdatedFiles.isEmpty() && myGroupedExceptions.isEmpty()) {
+                        if (someSessionWasCancelled) {
                         STANDARD_NOTIFICATION.newWarn()
-                            .content(VcsLocalize.progressTextUpdatingCanceled())
+                                .content(VcsLocalize.progressTextUpdatingCanceled())
+                                .notify(myProject);
+                        }
+                        else {
+                            STANDARD_NOTIFICATION.newInfo()
+                                .content(LocalizeValue.localizeTODO(getAllFilesAreUpToDateMessage(myRoots)))
+                                .notify(myProject);
+                        }
+                    }
+                    else if (!myUpdatedFiles.isEmpty()) {
+                        final UpdateInfoTreeImpl tree =
+                            showUpdateTree(continueChainFinal && updateSuccess && noMerged, someSessionWasCancelled);
+                        final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
+                        cache.processUpdatedFiles(myUpdatedFiles, tree::setChangeLists);
+
+                        prepareNotification(tree, someSessionWasCancelled)
+                            .addAction(notification -> new ViewUpdateInfoNotification(
+                                myProject,
+                                tree,
+                                LocalizeValue.localizeTODO("View"),
+                                notification
+                            ))
                             .notify(myProject);
                     }
-                    else {
-                        STANDARD_NOTIFICATION.newInfo()
-                            .content(LocalizeValue.localizeTODO(getAllFilesAreUpToDateMessage(myRoots)))
-                            .notify(myProject);
-                    }
-                }
-                else if (!myUpdatedFiles.isEmpty()) {
-                    final UpdateInfoTreeImpl tree = showUpdateTree(continueChainFinal && updateSuccess && noMerged, someSessionWasCancelled);
-                    final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
-                    cache.processUpdatedFiles(myUpdatedFiles, tree::setChangeLists);
 
-                    Notification notification = prepareNotification(tree, someSessionWasCancelled);
-                    notification.addAction(new ViewUpdateInfoNotification(myProject, tree, LocalizeValue.localizeTODO("View"), notification));
-                    VcsNotifier.getInstance(myProject).notify(notification);
-                }
+                    storeReloadManager.unblockReloadingProjectOnExternalChanges();
 
-                storeReloadManager.unblockReloadingProjectOnExternalChanges();
-
-                if (continueChainFinal && updateSuccess) {
-                    if (!noMerged) {
-                        showContextInterruptedError();
+                    if (continueChainFinal && updateSuccess) {
+                        if (!noMerged) {
+                            showContextInterruptedError();
+                        }
+                        else {
+                            // trigger next update; for CVS when updating from several branches simultaneously
+                            reset();
+                            ProgressManager.getInstance().run(this);
+                        }
                     }
-                    else {
-                        // trigger next update; for CVS when updating from several branches simultaneously
-                        reset();
-                        ProgressManager.getInstance().run(this);
-                    }
-                }
-            }, null, myProject);
+                },
+                null,
+                myProject
+            );
         }
 
 

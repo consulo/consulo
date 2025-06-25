@@ -30,32 +30,40 @@ import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import jakarta.annotation.Nonnull;
 
 public class ViewUpdateInfoNotification extends NotificationAction {
-  @Nonnull
-  private final Project myProject;
-  @Nonnull
-  private final UpdateInfoTree myTree;
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final UpdateInfoTree myTree;
 
-  public ViewUpdateInfoNotification(@Nonnull Project project,
-                                    @Nonnull UpdateInfoTree updateInfoTree,
-                                    @Nonnull LocalizeValue actionText,
-                                    @Nonnull Notification notification) {
-    super(actionText);
-    myProject = project;
-    myTree = updateInfoTree;
-    Disposer.register(updateInfoTree, notification::expire);
-  }
+    public ViewUpdateInfoNotification(
+        @Nonnull Project project,
+        @Nonnull UpdateInfoTree updateInfoTree,
+        @Nonnull LocalizeValue actionText,
+        @Nonnull Notification notification
+    ) {
+        super(actionText);
+        myProject = project;
+        myTree = updateInfoTree;
+        Disposer.register(updateInfoTree, notification::expire);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-    focusUpdateInfoTree(myProject, myTree);
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+        focusUpdateInfoTree(myProject, myTree);
+    }
 
-  @RequiredUIAccess
-  public static void focusUpdateInfoTree(@Nonnull Project project, @Nonnull UpdateInfoTree updateInfoTree) {
-    ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS).activate(() -> {
-      ContentManager contentManager = ProjectLevelVcsManagerEx.getInstanceEx(project).getContentManager();
-      if (contentManager != null) ContentUtilEx.selectContent(contentManager, updateInfoTree.getComponent(), true);
-    }, true, true);
-  }
+    @RequiredUIAccess
+    public static void focusUpdateInfoTree(@Nonnull Project project, @Nonnull UpdateInfoTree updateInfoTree) {
+        ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS).activate(
+            () -> {
+                ContentManager contentManager = ProjectLevelVcsManagerEx.getInstanceEx(project).getContentManager();
+                if (contentManager != null) {
+                    ContentUtilEx.selectContent(contentManager, updateInfoTree.getComponent(), true);
+                }
+            },
+            true,
+            true
+        );
+    }
 }

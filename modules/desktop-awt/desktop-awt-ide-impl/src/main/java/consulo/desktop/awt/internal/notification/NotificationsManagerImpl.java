@@ -164,10 +164,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
         NotificationDisplayType type = settings.getDisplayType();
         String toolWindowId = NotificationsConfigurationImpl.getInstanceImpl().getToolWindowId(groupId);
-        if (type == NotificationDisplayType.TOOL_WINDOW && (toolWindowId == null || project == null || !ToolWindowManager.getInstance(
-                project)
-            .canShowNotification(
-                toolWindowId))) {
+        if (type == NotificationDisplayType.TOOL_WINDOW
+            && (toolWindowId == null || project == null || !ToolWindowManager.getInstance(project)
+            .canShowNotification(toolWindowId))) {
             type = NotificationDisplayType.BALLOON;
         }
 
@@ -215,11 +214,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
                 }
 
                 IdeFrame ideFrame = findIdeFrameForBalloon(project);
-                if (ideFrame != null) {
-                    BalloonLayout layout = ideFrame.getBalloonLayout();
-                    if (layout != null) {
-                        ((BalloonLayoutEx) layout).remove(notification);
-                    }
+                if (ideFrame != null && ideFrame.getBalloonLayout() instanceof BalloonLayoutEx layoutEx) {
+                    layoutEx.remove(notification);
                 }
 
                 //noinspection SSBasedInspection
@@ -922,18 +918,19 @@ public class NotificationsManagerImpl extends NotificationsManager {
         JPanel mergePanel = new NonOpaquePanel(layout) {
             @Override
             protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
                 super.paintComponent(g);
                 g.setColor(new JBColor(0xE3E3E3, 0x3A3C3D));
-                ((Graphics2D) g).fill(new Rectangle2D.Double(1.5, 1, getWidth() - 2.5, getHeight() - 2));
+                g2d.fill(new Rectangle2D.Double(1.5, 1, getWidth() - 2.5, getHeight() - 2));
                 g.setColor(new JBColor(0xDBDBDB, 0x353738));
                 if (Platform.current().os().isMac()) {
-                    ((Graphics2D) g).draw(new Rectangle2D.Double(2, 0, getWidth() - 3.5, 0.5));
+                    g2d.draw(new Rectangle2D.Double(2, 0, getWidth() - 3.5, 0.5));
                 }
                 else if (Platform.current().os().isWindows()) {
-                    ((Graphics2D) g).draw(new Rectangle2D.Double(1.5, 0, getWidth() - 3, 0.5));
+                    g2d.draw(new Rectangle2D.Double(1.5, 0, getWidth() - 3, 0.5));
                 }
                 else {
-                    ((Graphics2D) g).draw(new Rectangle2D.Double(1.5, 0, getWidth() - 2.5, 0.5));
+                    g2d.draw(new Rectangle2D.Double(1.5, 0, getWidth() - 2.5, 0.5));
                 }
             }
         };
