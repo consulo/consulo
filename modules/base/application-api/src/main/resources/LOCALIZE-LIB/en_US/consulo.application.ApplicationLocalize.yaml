@@ -654,6 +654,58 @@ configurable.breadcrumbs:
     text: Breadcrumbs
 configure.breadcrumbs.colors:
     text: Manage colors
+date.format.a.few.moments.ago:
+    text: moments ago
+date.format.in.a.few.moments:
+    text: in a few moments
+date.format.in.n.days:
+    text: in {0,choice, 0#zero days|1#one day|2#{0,number} days}
+date.format.in.n.hours:
+    text: in {0,choice, 0#zero hours|1#one hour|2#{0,number} hours}
+date.format.in.n.minutes:
+    text: in {0,choice, 0#zero minutes|1#one minute|2#{0,number} minutes}
+date.format.in.n.months:
+    text: in {0,choice, 0#zero months|1#one month|2#{0,number} months}
+date.format.in.n.weeks:
+    text: in {0,choice, 0#zero weeks|1#one week|2#{0,number} weeks}
+date.format.in.n.years:
+    text: in {0,choice, 0#zero years|1#one year|2#{0,number} years}
+date.format.less.than.a.minute:
+    text: less than a minute
+date.format.minutes.ago:
+    text: '{0,choice, 0#Moments|1#A minute|2#{0,number} minutes|60#1 hour} ago'
+date.format.n.days:
+    text: '{0,choice, 0#zero days|1#one day|2#{0,number} days}'
+date.format.n.days.ago:
+    text: '{0,choice, 0#zero days|1#one day|2#{0,number} days} ago'
+date.format.n.hours:
+    text: '{0,choice, 0#zero hours|1#one hour|2#{0,number} hours}'
+date.format.n.hours.ago:
+    text: '{0,choice, 0#zero hours|1#one hour|2#{0,number} hours} ago'
+date.format.n.minutes:
+    text: '{0,choice, 0#zero minutes|1#one minute|2#{0,number} minutes}'
+date.format.n.minutes.ago:
+    text: '{0,choice, 0#zero minutes|1#one minute|2#{0,number} minutes} ago'
+date.format.n.months:
+    text: '{0,choice, 0#zero months|1#one month|2#{0,number} months}'
+date.format.n.months.ago:
+    text: '{0,choice, 0#zero months|1#one month|2#{0,number} months} ago'
+date.format.n.weeks:
+    text: '{0,choice, 0#zero weeks|1#one week|2#{0,number} weeks}'
+date.format.n.weeks.ago:
+    text: '{0,choice, 0#zero weeks|1#one week|2#{0,number} weeks} ago'
+date.format.n.years:
+    text: '{0,choice, 0#zero years|1#one year|2#{0,number} years}'
+date.format.n.years.ago:
+    text: '{0,choice, 0#zero years|1#one year|2#{0,number} years} ago'
+date.format.right.now:
+    text: right now
+date.format.today:
+    text: Today
+date.format.yesterday:
+    text: Yesterday
+date.frequency:
+    text: Once {0}
 desktop.entry.checking:
     text: Checking...
 desktop.entry.icon.missing:

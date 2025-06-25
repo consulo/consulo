@@ -15,8 +15,9 @@
  */
 package consulo.application.util;
 
-import consulo.application.CommonBundle;
 import consulo.application.internal.dateTime.DateTimeFormatCache;
+import consulo.application.localize.ApplicationLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.Clock;
 import consulo.util.lang.SyncDateFormat;
 import jakarta.annotation.Nonnull;
@@ -161,14 +162,14 @@ public class DateFormatUtil {
         if (formatTime) {
             long delta = currentTime - time;
             if (delta <= HOUR && delta >= 0) {
-                return CommonBundle.message("date.format.minutes.ago", (int) Math.rint(delta / (double) MINUTE));
+                return ApplicationLocalize.dateFormatMinutesAgo((int) Math.rint(delta / (double) MINUTE)).get();
             }
         }
 
         DateTimeFormatCache cache = DateTimeFormatCache.getInstance();
         boolean isToday = currentYear == year && currentDayOfYear == dayOfYear;
         if (isToday) {
-            String result = CommonBundle.message("date.format.today");
+            String result = ApplicationLocalize.dateFormatToday().get();
             return formatTime ? result + " " + cache.TIME_FORMAT.format(time) : result;
         }
 
@@ -177,7 +178,7 @@ public class DateFormatUtil {
         boolean isYesterday = isYesterdayOnPreviousYear || (currentYear == year && currentDayOfYear == dayOfYear + 1);
 
         if (isYesterday) {
-            String result = CommonBundle.message("date.format.yesterday");
+            String result = ApplicationLocalize.dateFormatYesterday().get();
             return formatTime ? result + " " + cache.TIME_FORMAT.format(time) : result;
         }
 
@@ -198,39 +199,33 @@ public class DateFormatUtil {
         }
 
         if (buf.length() == 0) {
-            return CommonBundle.message("date.format.less.than.a.minute");
+            return ApplicationLocalize.dateFormatLessThanAMinute().get();
         }
         return buf.toString().trim();
     }
 
     @SuppressWarnings("Duplicates")
-    private static String composeDurationMessage(final Period period, final int n) {
-        switch (period) {
-            case DAY:
-                return CommonBundle.message("date.format.n.days", n);
-            case MINUTE:
-                return CommonBundle.message("date.format.n.minutes", n);
-            case HOUR:
-                return CommonBundle.message("date.format.n.hours", n);
-            case MONTH:
-                return CommonBundle.message("date.format.n.months", n);
-            case WEEK:
-                return CommonBundle.message("date.format.n.weeks", n);
-            default:
-                return CommonBundle.message("date.format.n.years", n);
-        }
+    private static LocalizeValue composeDurationMessage(Period period, int n) {
+        return switch (period) {
+            case MINUTE -> ApplicationLocalize.dateFormatNMinutes(n);
+            case HOUR -> ApplicationLocalize.dateFormatNHours(n);
+            case DAY -> ApplicationLocalize.dateFormatNDays(n);
+            case WEEK -> ApplicationLocalize.dateFormatNWeeks(n);
+            case MONTH -> ApplicationLocalize.dateFormatNMonths(n);
+            case YEAR -> ApplicationLocalize.dateFormatNYears(n);
+        };
     }
 
     @Nonnull
     public static String formatFrequency(long time) {
-        return CommonBundle.message("date.frequency", formatBetweenDates(time, 0));
+        return ApplicationLocalize.dateFrequency(formatBetweenDates(time, 0)).get();
     }
 
     @Nonnull
     public static String formatBetweenDates(long d1, long d2) {
         long delta = Math.abs(d1 - d2);
         if (delta == 0) {
-            return CommonBundle.message("date.format.right.now");
+            return ApplicationLocalize.dateFormatRightNow().get();
         }
 
         int n = -1;
@@ -245,19 +240,15 @@ public class DateFormatUtil {
 
         if (d2 > d1) {
             if (n <= 0) {
-                return CommonBundle.message("date.format.a.few.moments.ago");
+                return ApplicationLocalize.dateFormatAFewMomentsAgo().get();
             }
-            else {
-                return someTimeAgoMessage(PERIODS[i], n);
-            }
+            return someTimeAgoMessage(PERIODS[i], n).get();
         }
         else if (d2 < d1) {
             if (n <= 0) {
-                return CommonBundle.message("date.format.in.a.few.moments");
+                return ApplicationLocalize.dateFormatInAFewMoments().get();
             }
-            else {
-                return composeInSomeTimeMessage(PERIODS[i], n);
-            }
+            return composeInSomeTimeMessage(PERIODS[i], n).get();
         }
 
         return "";
@@ -272,38 +263,26 @@ public class DateFormatUtil {
     // helpers
 
     @SuppressWarnings("Duplicates")
-    private static String someTimeAgoMessage(final Period period, final int n) {
-        switch (period) {
-            case DAY:
-                return CommonBundle.message("date.format.n.days.ago", n);
-            case MINUTE:
-                return CommonBundle.message("date.format.n.minutes.ago", n);
-            case HOUR:
-                return CommonBundle.message("date.format.n.hours.ago", n);
-            case MONTH:
-                return CommonBundle.message("date.format.n.months.ago", n);
-            case WEEK:
-                return CommonBundle.message("date.format.n.weeks.ago", n);
-            default:
-                return CommonBundle.message("date.format.n.years.ago", n);
-        }
+    private static LocalizeValue someTimeAgoMessage(Period period, int n) {
+        return switch (period) {
+            case MINUTE -> ApplicationLocalize.dateFormatNMinutesAgo(n);
+            case HOUR -> ApplicationLocalize.dateFormatNHoursAgo(n);
+            case DAY -> ApplicationLocalize.dateFormatNDaysAgo(n);
+            case WEEK -> ApplicationLocalize.dateFormatNWeeksAgo(n);
+            case MONTH -> ApplicationLocalize.dateFormatNMonthsAgo(n);
+            case YEAR -> ApplicationLocalize.dateFormatNYearsAgo(n);
+        };
     }
 
     @SuppressWarnings("Duplicates")
-    private static String composeInSomeTimeMessage(final Period period, final int n) {
-        switch (period) {
-            case DAY:
-                return CommonBundle.message("date.format.in.n.days", n);
-            case MINUTE:
-                return CommonBundle.message("date.format.in.n.minutes", n);
-            case HOUR:
-                return CommonBundle.message("date.format.in.n.hours", n);
-            case MONTH:
-                return CommonBundle.message("date.format.in.n.months", n);
-            case WEEK:
-                return CommonBundle.message("date.format.in.n.weeks", n);
-            default:
-                return CommonBundle.message("date.format.in.n.years", n);
-        }
+    private static LocalizeValue composeInSomeTimeMessage(Period period, int n) {
+        return switch (period) {
+            case MINUTE -> ApplicationLocalize.dateFormatInNMinutes(n);
+            case HOUR -> ApplicationLocalize.dateFormatInNHours(n);
+            case DAY -> ApplicationLocalize.dateFormatInNDays(n);
+            case WEEK -> ApplicationLocalize.dateFormatInNWeeks(n);
+            case MONTH -> ApplicationLocalize.dateFormatInNMonths(n);
+            case YEAR -> ApplicationLocalize.dateFormatInNYears(n);
+        };
     }
 }
