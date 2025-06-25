@@ -18,6 +18,7 @@ package consulo.versionControlSystem.root;
 import consulo.application.ApplicationManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
@@ -35,11 +36,10 @@ import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
-
-  protected final @Nonnull
-  Project myProject;
-  protected final @Nonnull
-  VcsT myVcs;
+  @Nonnull
+  protected final Project myProject;
+  @Nonnull
+  protected final VcsT myVcs;
 
 
   protected VcsIntegrationEnabler(@Nonnull VcsT vcs) {
@@ -90,8 +90,14 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
   protected abstract boolean initOrNotifyError(@Nonnull final VirtualFile projectDir);
 
   protected void notifyAddedRoots(Collection<VirtualFile> roots) {
-    VcsNotifier.NOTIFICATION_GROUP_ID.newInfo()
-        .content(LocalizeValue.localizeTODO(String.format("Added %s %s: %s", myVcs.getName(), StringUtil.pluralize("root", roots.size()), joinRootsPaths(roots))))
+    NotificationService.getInstance()
+        .newInfo(VcsNotifier.NOTIFICATION_GROUP_ID)
+        .content(LocalizeValue.localizeTODO(String.format(
+            "Added %s %s: %s",
+            myVcs.getName(),
+            StringUtil.pluralize("root", roots.size()),
+            joinRootsPaths(roots)
+        )))
         .notify(myProject);
   }
 
@@ -114,12 +120,10 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
       @RequiredUIAccess
       @Override
       public void run() {
-        ApplicationManager.getApplication().runWriteAction(() ->
-                                                           {
+        ApplicationManager.getApplication().runWriteAction(() -> {
           LocalFileSystem.getInstance().refreshAndFindFileByPath(projectDir.getPath() + "/" + vcsDirName);
         });
       }
     });
   }
-
 }

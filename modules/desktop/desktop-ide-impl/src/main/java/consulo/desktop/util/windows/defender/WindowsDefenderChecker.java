@@ -4,6 +4,7 @@ package consulo.desktop.util.windows.defender;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.internal.ApplicationInfo;
 import consulo.container.boot.ContainerPathManager;
@@ -30,6 +31,7 @@ import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -59,10 +61,6 @@ public class WindowsDefenderChecker {
         ERROR
     }
 
-    public static WindowsDefenderChecker getInstance() {
-        return ServiceManager.getService(WindowsDefenderChecker.class);
-    }
-
     public static class CheckResult {
         public final RealtimeScanningStatus status;
 
@@ -73,6 +71,18 @@ public class WindowsDefenderChecker {
             this.status = status;
             this.pathStatus = pathStatus;
         }
+    }
+
+    @Nonnull
+    private final Application myApplication;
+
+    @Inject
+    public WindowsDefenderChecker(@Nonnull Application application) {
+        myApplication = application;
+    }
+
+    public static WindowsDefenderChecker getInstance() {
+        return ServiceManager.getService(WindowsDefenderChecker.class);
     }
 
     public boolean isVirusCheckIgnored(Project project) {
@@ -359,7 +369,7 @@ public class WindowsDefenderChecker {
     }
 
     public void configureActions(Project project, WindowsDefenderNotification notification) {
-        notification.addAction(new WindowsDefenderFixAction(notification.getPaths()));
+        notification.addAction(new WindowsDefenderFixAction(myApplication, notification.getPaths()));
 
         notification.addAction(new NotificationAction(ExternalServiceLocalize.virusScanningDontShowAgain()) {
             @RequiredUIAccess

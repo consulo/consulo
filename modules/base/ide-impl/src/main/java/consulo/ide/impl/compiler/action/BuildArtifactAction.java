@@ -29,8 +29,10 @@ import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -48,6 +50,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -61,10 +64,18 @@ import java.util.*;
 public class BuildArtifactAction extends DumbAwareAction {
   public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Clean artifact");
 
+  private final NotificationService myNotificationService;
+
+  @Inject
+  public BuildArtifactAction(NotificationService notificationService) {
+    super(ActionLocalize.actionBuildartifactText(), ActionLocalize.actionBuildartifactDescription());
+    myNotificationService = notificationService;
+  }
+
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final Presentation presentation = e.getPresentation();
+    Project project = e.getData(Project.KEY);
+    Presentation presentation = e.getPresentation();
     presentation.setEnabled(project != null && !ArtifactUtil.getArtifactWithOutputPaths(project).isEmpty());
   }
 
@@ -95,7 +106,7 @@ public class BuildArtifactAction extends DumbAwareAction {
       items.add(item);
     }
 
-    final ChooseArtifactStep step = new ChooseArtifactStep(items, artifacts.get(0), project);
+    final ChooseArtifactStep step = new ChooseArtifactStep(items, artifacts.get(0), project, myNotificationService);
     step.setDefaultOptionIndices(selectedIndices.toArray());
 
     final ListPopupImpl popup = (ListPopupImpl)JBPopupFactory.getInstance().createListPopup(step);
@@ -147,8 +158,15 @@ public class BuildArtifactAction extends DumbAwareAction {
   }
 
   private static class CleanArtifactItem extends ArtifactActionItem {
-    private CleanArtifactItem(@Nonnull List<ArtifactPopupItem> item, @Nonnull Project project) {
+    private final NotificationService myNotificationService;
+
+    private CleanArtifactItem(
+        @Nonnull List<ArtifactPopupItem> item,
+        @Nonnull Project project,
+        @Nonnull NotificationService notificationService
+    ) {
       super(item, project, "Clean");
+      myNotificationService = notificationService;
     }
 
     @Override
@@ -205,7 +223,7 @@ public class BuildArtifactAction extends DumbAwareAction {
             indicator.checkCanceled();
             File file = pair.getFirst();
             if (!FileUtil.delete(file)) {
-              NOTIFICATION_GROUP.newError()
+              myNotificationService.newError(NOTIFICATION_GROUP)
                   .title(LocalizeValue.localizeTODO("Cannot clean '" + pair.getSecond().getName() + "' artifact"))
                   .content(LocalizeValue.localizeTODO("cannot delete '" + file.getAbsolutePath() + "'"))
                   .notify((Project)myProject);
@@ -292,11 +310,13 @@ public class BuildArtifactAction extends DumbAwareAction {
   private static class ChooseArtifactStep extends MultiSelectionListPopupStep<ArtifactPopupItem> {
     private final Artifact myFirst;
     private final Project myProject;
+    private final NotificationService myNotificationService;
 
-    public ChooseArtifactStep(List<ArtifactPopupItem> artifacts, Artifact first, Project project) {
+    public ChooseArtifactStep(List<ArtifactPopupItem> artifacts, Artifact first, Project project, NotificationService notificationService) {
       super("Build Artifact", artifacts);
       myFirst = first;
       myProject = project;
+      myNotificationService = notificationService;
     }
 
     @Override
@@ -335,10 +355,10 @@ public class BuildArtifactAction extends DumbAwareAction {
           }
         });
       }
-      final List<ArtifactActionItem> actions = new ArrayList<ArtifactActionItem>();
+      final List<ArtifactActionItem> actions = new ArrayList<>();
       actions.add(new BuildArtifactItem(selectedValues, myProject));
       actions.add(new RebuildArtifactItem(selectedValues, myProject));
-      actions.add(new CleanArtifactItem(selectedValues, myProject));
+      actions.add(new CleanArtifactItem(selectedValues, myProject, myNotificationService));
       actions.add(new EditArtifactItem(selectedValues, myProject));
 
       return new BaseListPopupStep<ArtifactActionItem>(selectedValues.size() == 1 ? "Action" : "Action for " + selectedValues.size() + " artifacts", actions) {

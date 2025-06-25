@@ -26,6 +26,7 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -134,7 +135,8 @@ public class TestsUIUtil {
       toolWindowManager.notifyByBalloon(testRunDebugId, type.toUI(), balloonText);
     }
 
-    NOTIFICATION_GROUP.newOfType(type)
+    NotificationService.getInstance()
+        .newOfType(NOTIFICATION_GROUP, type)
         .content(LocalizeValue.localizeTODO(balloonText))
         .notify(project);
     SystemNotifications.getInstance().notify("TestRunner", title, text);

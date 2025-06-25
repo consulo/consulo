@@ -33,7 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -346,7 +346,8 @@ public abstract class PluginTab implements Disposable {
             ? ExternalServiceLocalize.messageIdeaRestartRequired(appName).get()
             : ExternalServiceLocalize.messageIdeaShutdownRequired(appName).get();
         message += "<br><a href=" + (restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown") + "</a>";
-        PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup.newInfo()
+        NotificationService.getInstance()
+            .newInfo(PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(message)))
             .hyperlinkListener((notification, event) -> {

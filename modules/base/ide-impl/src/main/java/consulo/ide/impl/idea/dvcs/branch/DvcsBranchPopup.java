@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.branch;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.dvcs.ui.BranchActionGroupPopup;
 import consulo.ide.impl.idea.dvcs.ui.LightActionGroup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
@@ -22,6 +23,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -103,7 +105,8 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     }
 
     private void notifyAboutSyncedBranches() {
-        VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.newInfo()
+        NotificationService.getInstance()
+            .newInfo(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
             .title(LocalizeValue.localizeTODO("Synchronous branch control enabled"))
             .content(LocalizeValue.localizeTODO(
                 "You have several " +

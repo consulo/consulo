@@ -30,6 +30,7 @@ import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
@@ -380,15 +381,16 @@ public class PatchApplier<BinaryType extends FilePatch> {
     ) {
         ProgressManager.getInstance().runProcessWithProgressSynchronously(
             () -> {
+                NotificationService notificationService = NotificationService.getInstance();
                 try {
                     labelToRevert.revert(project, virtualFile);
-                    VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.newWarn()
+                    notificationService.newWarn(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
                         .title(LocalizeValue.localizeTODO("Apply Patch Aborted"))
                         .content(LocalizeValue.localizeTODO("All files changed during apply patch action were rolled back"))
                         .notify(project);
                 }
                 catch (LocalHistoryException e) {
-                    VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.newWarn()
+                    notificationService.newWarn(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
                         .title(LocalizeValue.localizeTODO("Rollback Failed"))
                         .content(LocalizeValue.localizeTODO(String.format(
                             "Try using local history dialog for %s and perform revert manually.",
@@ -403,19 +405,18 @@ public class PatchApplier<BinaryType extends FilePatch> {
         );
     }
 
-
-    protected void addSkippedItems(final TriggerAdditionOrDeletion trigger) {
+    protected void addSkippedItems(TriggerAdditionOrDeletion trigger) {
         trigger.addExisting(myVerifier.getToBeAdded());
         trigger.addDeleted(myVerifier.getToBeDeleted());
     }
 
     @Nonnull
     public ApplyPatchStatus nonWriteActionPreCheck() {
-        final List<FilePatch> failedPreCheck = myVerifier.nonWriteActionPreCheck();
+        List<FilePatch> failedPreCheck = myVerifier.nonWriteActionPreCheck();
         myFailedPatches.addAll(failedPreCheck);
         myPatches.removeAll(failedPreCheck);
-        final List<FilePatch> skipped = myVerifier.getSkipped();
-        final boolean applyAll = skipped.isEmpty();
+        List<FilePatch> skipped = myVerifier.getSkipped();
+        boolean applyAll = skipped.isEmpty();
         myPatches.removeAll(skipped);
         if (!failedPreCheck.isEmpty()) {
             return ApplyPatchStatus.FAILURE;
@@ -611,7 +612,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
             showError(project, VcsLocalize.patchApplyPartiallyApplied().get(), false);
         }
         else if (ApplyPatchStatus.SUCCESS.equals(status)) {
-            VcsBalloonProblemNotifier.NOTIFICATION_GROUP.newInfo()
+            NotificationService.getInstance()
+                .newInfo(VcsBalloonProblemNotifier.NOTIFICATION_GROUP)
                 .content(VcsLocalize.patchApplySuccessAppliedText())
                 .notify(project);
         }

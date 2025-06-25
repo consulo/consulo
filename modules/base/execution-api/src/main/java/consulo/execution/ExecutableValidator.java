@@ -24,9 +24,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.NotificationsManager;
+import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
@@ -242,7 +240,8 @@ public abstract class ExecutableValidator {
 
     public ExecutableNotValidNotification(@Nonnull String preparedDescription, @Nonnull NotificationType type) {
       super(
-        ExecutionNotificationGroupHolder.EXTERNAL.newOfType(type)
+        NotificationService.getInstance()
+          .newOfType(ExecutionNotificationGroupHolder.EXTERNAL, type)
           .content(LocalizeValue.localizeTODO(preparedDescription))
           .hyperlinkListener(new NotificationListener.Adapter() {
             @Override

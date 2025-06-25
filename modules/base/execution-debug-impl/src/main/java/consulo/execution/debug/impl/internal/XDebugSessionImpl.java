@@ -58,6 +58,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.NotificationType;
@@ -1008,7 +1009,8 @@ public class XDebugSessionImpl implements XDebugSession {
         @Nonnull NotificationType type,
         @Nullable HyperlinkListener listener
     ) {
-        NOTIFICATION_GROUP.newOfType(consulo.project.ui.notification.NotificationType.from(type))
+        NotificationService.getInstance()
+            .newOfType(NOTIFICATION_GROUP, consulo.project.ui.notification.NotificationType.from(type))
             .content(LocalizeValue.localizeTODO(message))
             .optionalHyperlinkListener(listener == null ? null : (notification, event) -> {
                 if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {

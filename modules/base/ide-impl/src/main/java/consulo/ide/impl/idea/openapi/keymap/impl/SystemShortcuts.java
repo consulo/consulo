@@ -18,8 +18,12 @@ import consulo.process.util.CapturingProcessUtil;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.util.lang.ref.SimpleReference;
@@ -54,9 +58,8 @@ public final class SystemShortcuts {
     @Nonnull
     private final Set<String> myNotifiedActions = new HashSet<>();
 
-    private
     @Nullable
-    Keymap myKeymap;
+    private Keymap myKeymap;
 
     @Nonnull
     private final Map<AWTKeyStroke, ConflictItem> myKeymapConflicts = new HashMap<>();
@@ -66,15 +69,12 @@ public final class SystemShortcuts {
     }
 
     public static final class ConflictItem {
-        final
         @Nonnull
-        String mySysActionDesc;
-        final
+        final String mySysActionDesc;
         @Nonnull
-        KeyStroke mySysKeyStroke;
-        final
+        final KeyStroke mySysKeyStroke;
         @Nonnull
-        String[] myActionIds;
+        final String[] myActionIds;
 
         public ConflictItem(@Nonnull KeyStroke sysKeyStroke, @Nonnull String sysActionDesc, @Nonnull String[] actionIds) {
             mySysKeyStroke = sysKeyStroke;
@@ -268,7 +268,8 @@ public final class SystemShortcuts {
         AnAction act = ActionManager.getInstance().getAction(actionId);
         String actText = act == null ? actionId : act.getTemplateText();
 
-        Notification.Builder notificationBuilder = SYSTEM_SHORTCUTS_CONFLICTS_GROUP.newWarn()
+        Notification.Builder notificationBuilder = NotificationService.getInstance()
+            .newWarn(SYSTEM_SHORTCUTS_CONFLICTS_GROUP)
             .title(LocalizeValue.localizeTODO("Shortcuts conflicts"))
             .content(LocalizeValue.localizeTODO(
                 "The " + actText +

@@ -31,6 +31,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.MessageDialogBuilder;
@@ -63,6 +64,7 @@ public class ReplaceInProjectManager {
     private static final NotificationGroup NOTIFICATION_GROUP = FindInPathAction.NOTIFICATION_GROUP;
 
     private final Project myProject;
+    private final NotificationService myNotificationService;
     private boolean myIsFindInProgress;
 
     public static ReplaceInProjectManager getInstance(Project project) {
@@ -70,8 +72,9 @@ public class ReplaceInProjectManager {
     }
 
     @Inject
-    public ReplaceInProjectManager(Project project) {
+    public ReplaceInProjectManager(Project project, NotificationService notificationService) {
         myProject = project;
+        myNotificationService = notificationService;
     }
 
     private static boolean hasReadOnlyUsages(final Collection<? extends Usage> usages) {
@@ -556,7 +559,7 @@ public class ReplaceInProjectManager {
             return true;
         }
         if (!success) {
-            NOTIFICATION_GROUP.newError()
+            myNotificationService.newError(NOTIFICATION_GROUP)
                 .content(LocalizeValue.localizeTODO("One or more malformed replacement strings"))
                 .notify(myProject);
         }

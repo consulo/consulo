@@ -52,20 +52,29 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
 
     public static final NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
+    @Nonnull
     private final ApplicationConcurrency myApplicationConcurrency;
+    @Nonnull
     private final Project myProject;
+    @Nonnull
     private final PluginAdvertiserRequester myPluginAdvertiserRequester;
+    @Nonnull
+    private final NotificationService myNotificationService;
 
     private UUID myTaskUUID;
     private Future<?> myTaskFuture = CompletableFuture.completedFuture(null);
 
     @Inject
-    public PluginAdvertiserImpl(ApplicationConcurrency applicationConcurrency,
-                                Project project,
-                                PluginAdvertiserRequester pluginAdvertiserRequester) {
+    public PluginAdvertiserImpl(
+        @Nonnull ApplicationConcurrency applicationConcurrency,
+        @Nonnull Project project,
+        @Nonnull PluginAdvertiserRequester pluginAdvertiserRequester,
+        @Nonnull NotificationService notificationService
+    ) {
         myApplicationConcurrency = applicationConcurrency;
         myProject = project;
         myPluginAdvertiserRequester = pluginAdvertiserRequester;
+        myNotificationService = notificationService;
     }
 
     @Override
@@ -118,7 +127,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
             return;
         }
 
-        ourGroup.newInfo()
+        myNotificationService.newInfo(ourGroup)
             .content(LocalizeValue.localizeTODO("Features covered by non-installed plugins are detected."))
             .addClosingAction(
                 LocalizeValue.localizeTODO("Install plugins..."),

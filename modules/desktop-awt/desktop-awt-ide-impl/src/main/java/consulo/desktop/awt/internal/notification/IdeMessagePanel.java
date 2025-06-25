@@ -12,6 +12,7 @@ import consulo.logging.internal.LogMessage;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.*;
 import consulo.ui.UIAccessScheduler;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -201,7 +202,8 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     }
 
     private void showErrorNotification(@Nonnull Project project) {
-        Notification notification = ReportMessages.GROUP.newError()
+        Notification notification = NotificationService.getInstance()
+            .newError(ReportMessages.GROUP)
             .icon(PlatformIconGroup.ideFatalerror())
             .title(ExternalServiceLocalize.errorNewNotificationTitle())
             .addClosingAction(ExternalServiceLocalize.errorNewNotificationLink(), () -> openErrorsDialog(null))

@@ -22,9 +22,8 @@ import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.*;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -38,11 +37,18 @@ public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
   private static final Logger LOG = Logger.getInstance(DesktopRemoteDesktopDetector.class);
   public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Remote Desktop", NotificationDisplayType.BALLOON, false);
 
+  @Nonnull
+  private final Application myApplication;
+  @Nonnull
+  private final NotificationService myNotificationService;
+
   private volatile boolean myFailureDetected;
   private volatile boolean myRemoteDesktopConnected;
 
   @Inject
-  DesktopRemoteDesktopDetector() {
+  DesktopRemoteDesktopDetector(@Nonnull Application application, @Nonnull NotificationService notificationService) {
+    myApplication = application;
+    myNotificationService = notificationService;
     if (Platform.current().os().isWindows()) {
       Desktop.getDesktop().addAppEventListener(new UserSessionListener() {
         @Override
@@ -72,8 +78,8 @@ public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
           if (myRemoteDesktopConnected) {
             // We postpone notification to avoid recursive initialization of RemoteDesktopDetector
             // (in case it's initialized by request from consulo.desktop.awt.internal.notification.EventLog)
-            Application.get().invokeLater(
-                () -> NOTIFICATION_GROUP.newOfType(NotificationType.INFORMATION)
+            myApplication.invokeLater(
+                () -> myNotificationService.newOfType(NOTIFICATION_GROUP, NotificationType.INFORMATION)
                     .title(ApplicationLocalize.remoteDesktopDetectedTitle())
                     .content(ApplicationLocalize.remoteDesktopDetectedMessage())
                     .notify(null)

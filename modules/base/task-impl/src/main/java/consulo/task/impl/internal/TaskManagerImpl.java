@@ -34,6 +34,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
+import consulo.project.ui.notification.NotificationService;
 import consulo.proxy.EventDispatcher;
 import consulo.task.*;
 import consulo.task.event.TaskListener;
@@ -124,20 +125,27 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   private volatile boolean myUpdating;
   private final Config myConfig = new Config();
   private final ChangeListListener myChangeListListener;
+  @Nonnull
   private final ChangeListManager myChangeListManager;
+  @Nonnull
+  private final NotificationService myNotificationService;
 
   private final List<TaskRepository> myRepositories = new ArrayList<>();
   private final EventDispatcher<TaskListener> myDispatcher = EventDispatcher.create(TaskListener.class);
   private Set<TaskRepository> myBadRepositories = ContainerUtil.newConcurrentSet();
 
   @Inject
-  public TaskManagerImpl(Application application,
-                         Project project,
-                         WorkingContextManager contextManager,
-                         ChangeListManager changeListManager) {
+  public TaskManagerImpl(
+      @Nonnull Application application,
+      @Nonnull Project project,
+      @Nonnull WorkingContextManager contextManager,
+      @Nonnull ChangeListManager changeListManager,
+      @Nonnull NotificationService notificationService
+  ) {
     myProject = project;
     myContextManager = contextManager;
     myChangeListManager = changeListManager;
+    myNotificationService = notificationService;
 
     myChangeListListener = new ChangeListListener() {
       @Override
@@ -835,7 +843,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     if (!StringUtil.isEmpty(details)) {
       content = "<p>" + details + "</p>" + content;
     }
-    TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP.newWarn()
+    myNotificationService.newWarn(TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP)
       .title(LocalizeValue.localizeTODO("Cannot connect to " + repository.getUrl()))
       .content(LocalizeValue.localizeTODO(content))
       .hyperlinkListener((notification, event) -> {

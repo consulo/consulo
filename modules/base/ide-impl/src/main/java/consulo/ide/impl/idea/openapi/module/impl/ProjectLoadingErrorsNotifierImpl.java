@@ -25,6 +25,7 @@ import consulo.project.Project;
 import consulo.project.impl.internal.ProjectNotificationGroups;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
+import consulo.project.ui.notification.NotificationService;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
@@ -44,10 +45,12 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
     private final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> myErrors = new MultiMap<ConfigurationErrorType, ConfigurationErrorDescription>();
     private final Object myLock = new Object();
     private final Project myProject;
+    private final NotificationService myNotificationService;
 
     @Inject
-    public ProjectLoadingErrorsNotifierImpl(Project project) {
+    public ProjectLoadingErrorsNotifierImpl(Project project, NotificationService notificationService) {
         myProject = project;
+        myNotificationService = notificationService;
     }
 
     @Override
@@ -99,7 +102,7 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
 
             String invalidElements = getInvalidElementsString(type, descriptions);
 
-            ProjectNotificationGroups.Project.newError()
+            myNotificationService.newError(ProjectNotificationGroups.Project)
                 .title(LocalizeValue.localizeTODO("Error Loading Project"))
                 .content(LocalizeValue.localizeTODO(
                     ProjectLocalize.errorMessageConfigurationCannotLoad() + " " + invalidElements + " <a href=\"\">Details...</a>"

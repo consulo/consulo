@@ -3,7 +3,6 @@ package consulo.credentialStorage.impl.internal;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import consulo.application.Application;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.concurrent.QueueProcessor;
 import consulo.component.ProcessCanceledException;
 import consulo.credentialStorage.CredentialAttributes;
@@ -14,6 +13,8 @@ import consulo.credentialStorage.impl.internal.ui.PasswordSafeNotificationGroupC
 import consulo.credentialStorage.localize.CredentialStorageLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.project.ui.notification.NotificationService;
 
 import java.io.Closeable;
 import java.util.concurrent.TimeUnit;
@@ -143,11 +144,12 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
     public static void notifyUnsatisfiedLinkError(UnsatisfiedLinkError e) {
         LOG.error(e);
         LocalizeValue message = CredentialStorageLocalize.notificationContentNativeKeychainUnavailable(Application.get().getName().get());
-        if (SystemInfo.isLinux) {
+        if (Platform.current().os().isLinux()) {
             message = LocalizeValue.join(message, LocalizeValue.of("\n"), CredentialStorageLocalize.notificationContentNativeKeychainUnavailableLinuxAddition());
         }
 
-        PasswordSafeNotificationGroupContributor.GROUP.newError()
+        NotificationService.getInstance()
+            .newError(PasswordSafeNotificationGroupContributor.GROUP)
             .title(CredentialStorageLocalize.notificationTitleNativeKeychainUnavailable())
             .content(message)
             .notify(null);
