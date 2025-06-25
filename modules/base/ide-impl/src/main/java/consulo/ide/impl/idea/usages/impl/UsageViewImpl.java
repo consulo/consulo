@@ -110,7 +110,6 @@ public class UsageViewImpl implements UsageViewEx {
     private final Map<Usage, UsageNode> myUsageNodes = new ConcurrentHashMap<>();
     public static final UsageNode NULL_NODE = new UsageNode(null, NullUsage.INSTANCE);
     private final ButtonPanel myButtonPanel;
-    private boolean myNeedUpdateButtons;
     private final JComponent myAdditionalComponent = new JPanel(new BorderLayout());
     private volatile boolean isDisposed;
     private volatile boolean myChangesDetected;
@@ -298,14 +297,7 @@ public class UsageViewImpl implements UsageViewEx {
                                     return;
                                 }
                                 updateOnSelectionChanged();
-                                myNeedUpdateButtons = true;
                             });
-                        }
-                    });
-                    myModel.addTreeModelListener(new TreeModelAdapter() {
-                        @Override
-                        protected void process(@Nonnull TreeModelEvent event, @Nonnull EventType type) {
-                            myNeedUpdateButtons = true;
                         }
                     });
 
@@ -802,13 +794,6 @@ public class UsageViewImpl implements UsageViewEx {
         UIAccess.assertIsUIThread();
 
         DefaultActionGroup group = new DefaultActionGroup() {
-            @Override
-            @RequiredUIAccess
-            public void update(@Nonnull AnActionEvent e) {
-                super.update(e);
-                myButtonPanel.update();
-            }
-
             @Override
             public boolean isDumbAware() {
                 return true;
@@ -2124,23 +2109,21 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     private final class ButtonPanel extends JPanel {
-        private final Project myProject;
         private ActionToolbar myActionToolbar;
         private DefaultActionGroup myActionGroup;
 
         private ButtonPanel(Project project) {
             super(new FlowLayout(FlowLayout.LEFT, 6, 0));
-            myProject = project;
 
-            getProject().getMessageBus().connect(UsageViewImpl.this).subscribe(DumbModeListener.class, new DumbModeListener() {
+            project.getMessageBus().connect(UsageViewImpl.this).subscribe(DumbModeListener.class, new DumbModeListener() {
                 @Override
                 public void enteredDumbMode() {
-                    update();
+                    project.getUIAccess().give(() -> update());
                 }
 
                 @Override
                 public void exitDumbMode() {
-                    update();
+                    project.getUIAccess().give(() -> update());
                 }
             });
         }
@@ -2161,11 +2144,11 @@ public class UsageViewImpl implements UsageViewEx {
             myActionToolbar.updateActionsAsync();
         }
 
+        @RequiredUIAccess
         void update() {
             if (myActionToolbar != null) {
                 myActionToolbar.updateActionsAsync();
             }
-            myNeedUpdateButtons = false;
         }
     }
 
