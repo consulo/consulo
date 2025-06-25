@@ -29,7 +29,6 @@ import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.PaintEvent;
@@ -112,22 +111,13 @@ public class ActionUpdater {
         for (Map.Entry<AnAction, Presentation> entry : myUpdatedPresentations.entrySet()) {
             Presentation original = myFactory.getPresentation(entry.getKey());
             Presentation cloned = entry.getValue();
+
             original.copyFrom(cloned);
-            reflectSubsequentChangesInOriginalPresentation(original, cloned);
         }
     }
 
     private DataContext getDataContext(@Nonnull AnAction action) {
         return myDataContext;
-    }
-
-    // some actions remember the presentation passed to "update" and modify it later, in hope that menu will change accordingly
-    private static void reflectSubsequentChangesInOriginalPresentation(Presentation original, Presentation cloned) {
-        cloned.addPropertyChangeListener(e -> {
-            if (SwingUtilities.isEventDispatchThread()) {
-                original.copyFrom(cloned);
-            }
-        });
     }
 
     @SuppressWarnings("deprecation")
@@ -218,6 +208,7 @@ public class ActionUpdater {
         future.whenComplete((anActions, throwable) -> {
             if (throwable != null) {
                 indicator.cancel();
+                
                 ActionUpdateEdtExecutor.computeOnEdt(() -> {
                     applyPresentationChanges();
                     return null;
@@ -403,7 +394,7 @@ public class ActionUpdater {
     }
 
     private Presentation orDefault(AnAction action, Presentation presentation) {
-        return presentation != null ? presentation : ActionUpdateEdtExecutor.computeOnEdt(() -> myFactory.getPresentation(action));
+        return presentation != null ? presentation : myFactory.getPresentation(action);
     }
 
     private static List<AnAction> removeUnnecessarySeparators(List<? extends AnAction> visible) {

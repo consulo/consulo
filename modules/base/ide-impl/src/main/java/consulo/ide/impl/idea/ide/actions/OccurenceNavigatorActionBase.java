@@ -16,6 +16,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.navigation.Navigatable;
@@ -25,13 +26,11 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.ContentManagerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OccurenceNavigator;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -65,8 +64,13 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         }
     }
 
+    @Nonnull
     @Override
-    @RequiredUIAccess
+    public ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.EDT; // TODO rework
+    }
+
+    @Override
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);
@@ -90,6 +94,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
 
     protected abstract OccurenceNavigator.OccurenceInfo go(OccurenceNavigator navigator);
 
+    @RequiredReadAction
     protected abstract boolean hasOccurenceToGo(OccurenceNavigator navigator);
 
     protected abstract String getDescription(OccurenceNavigator navigator);
