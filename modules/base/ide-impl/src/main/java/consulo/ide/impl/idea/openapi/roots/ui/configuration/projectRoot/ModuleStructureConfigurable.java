@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.configurable.*;
 import consulo.configurable.internal.ConfigurableWeight;
@@ -559,8 +560,9 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
             presentation.setTextValue(text);
             presentation.setDescriptionValue(text);
 
-            if (getModulesConfigurator() != null) {
-                presentation.setVisible(getModulesConfigurator().getModuleModel().hasModuleGroups());
+            ModulesConfiguratorImpl modulesConfigurator = ReadAction.compute(ModuleStructureConfigurable.this::getModulesConfigurator);
+            if (modulesConfigurator != null) {
+                presentation.setVisible(modulesConfigurator.getModuleModel().hasModuleGroups());
             }
         }
 
