@@ -106,16 +106,22 @@ public abstract class GenericNotifierImpl<T, Key> {
   }
 
   public boolean ensureNotify(final T obj) {
-    final MyNotification notification;
+    MyNotification notification;
     synchronized (myLock) {
-      final Key key = getKey(obj);
+      Key key = getKey(obj);
       if (myState.containsKey(key)) {
         return false;
       }
-      notification = new MyNotification(myGroup, myTitle, getNotificationContent(obj), myType, myListener, obj);
+      notification = new MyNotification(
+          myGroup.newOfType(myType)
+              .title(LocalizeValue.localizeTODO(myTitle))
+              .content(LocalizeValue.localizeTODO(getNotificationContent(obj)))
+              .optionalHyperlinkListener(myListener),
+          obj
+      );
       myState.put(key, notification);
     }
-    final boolean state = onFirstNotification(obj);
+    boolean state = onFirstNotification(obj);
     if (state) {
       removeLazyNotification(obj);
       return true;
@@ -181,18 +187,8 @@ public abstract class GenericNotifierImpl<T, Key> {
   protected class MyNotification extends Notification {
     private final T myObj;
 
-    protected MyNotification(@Nonnull NotificationGroup group,
-                             @Nonnull String title,
-                             @Nonnull String content,
-                             @Nonnull NotificationType type,
-                             @Nullable NotificationListener listener,
-                             @Nonnull T obj) {
-      super(
-          group.newOfType(type)
-              .title(LocalizeValue.localizeTODO(title))
-              .content(LocalizeValue.localizeTODO(content))
-              .optionalHyperlinkListener(listener)
-      );
+    protected MyNotification(@Nonnull Notification.Builder notificationBuilder, @Nonnull T obj) {
+      super(notificationBuilder);
       myObj = obj;
     }
 

@@ -287,18 +287,23 @@ public class Notification {
         KEEP_RIGHTMOST
     }
 
+    @Nonnull
     public final String id;
-
+    @Nonnull
     private final String myGroupId;
-    private Image myIcon;
+
+    @Nonnull
     private final NotificationType myType;
 
+    @Nullable
+    private Image myIcon;
     @Nonnull
     private LocalizeValue myTitle = LocalizeValue.empty();
     @Nonnull
     private LocalizeValue mySubtitle = LocalizeValue.empty();
     @Nonnull
     private LocalizeValue myContent = LocalizeValue.empty();
+
     private NotificationListener myListener;
     private String myDropDownText;
     private List<AnAction> myActions;
@@ -338,7 +343,7 @@ public class Notification {
         mySubtitle = subtitle;
 
         assertHasTitleOrContent();
-        id = calculateId(this);
+        id = calculateId();
     }
 
     /**
@@ -350,7 +355,7 @@ public class Notification {
         notificationBuilder.init(this);
 
         assertHasTitleOrContent();
-        id = calculateId(this);
+        id = calculateId();
     }
 
     /**
@@ -467,19 +472,6 @@ public class Notification {
     public Notification setTitle(@Nullable String title) {
         myTitle = LocalizeValue.ofNullable(title);
         return this;
-    }
-
-    @Nonnull
-    public Notification setTitle(@Nonnull LocalizeValue title, @Nonnull LocalizeValue subtitle) {
-        return setTitle(title).setSubtitle(subtitle);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
-    @SuppressWarnings("deprecation")
-    public Notification setTitle(@Nullable String title, @Nullable String subtitle) {
-        return setTitle(title).setSubtitle(subtitle);
     }
 
     @Nullable
@@ -687,8 +679,8 @@ public class Notification {
     }
 
     @Nonnull
-    private static String calculateId(@Nonnull Object notification) {
-        return String.valueOf(System.currentTimeMillis()) + "." + String.valueOf(System.identityHashCode(notification));
+    private String calculateId() {
+        return myTimestamp + "." + System.identityHashCode(this);
     }
 
     private void assertHasTitleOrContent() {

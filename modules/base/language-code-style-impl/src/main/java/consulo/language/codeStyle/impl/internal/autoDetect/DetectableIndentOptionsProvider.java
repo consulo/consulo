@@ -140,28 +140,20 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     }
 
     private static void showDisabledDetectionNotification(@Nonnull Project project) {
-        DetectionDisabledNotification notification = new DetectionDisabledNotification(project);
-        notification.notify(project);
-    }
-
-    private static final class DetectionDisabledNotification extends Notification {
-        private DetectionDisabledNotification(Project project) {
-            super(
-                NOTIFICATION_GROUP.newInfo()
-                    .title(ApplicationLocalize.codeStyleIndentDetectorNotificationContent())
-                    .addClosingAction(
-                        ApplicationLocalize.codeStyleIndentProviderNotificationReEnable(),
-                        () -> {
-                            CodeStyle.getSettings(project).AUTODETECT_INDENTS = true;
-                            notifyIndentOptionsChanged(project, null);
-                        }
-                    )
-                    .addClosingAction(
-                        ApplicationLocalize.codeStyleIndentProviderNotificationSettings(),
-                        () -> CodeStyleInternalHelper.getInstance().showDetectIndentSettings(project)
-                    )
-            );
-        }
+        NOTIFICATION_GROUP.newInfo()
+            .title(ApplicationLocalize.codeStyleIndentDetectorNotificationContent())
+            .addClosingAction(
+                ApplicationLocalize.codeStyleIndentProviderNotificationReEnable(),
+                () -> {
+                    CodeStyle.getSettings(project).AUTODETECT_INDENTS = true;
+                    notifyIndentOptionsChanged(project, null);
+                }
+            )
+            .addClosingAction(
+                ApplicationLocalize.codeStyleIndentProviderNotificationSettings(),
+                () -> CodeStyleInternalHelper.getInstance().showDetectIndentSettings(project)
+            )
+            .notify(project);
     }
 
     private static boolean areDetected(@Nonnull IndentOptions indentOptions) {
