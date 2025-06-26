@@ -2,61 +2,62 @@
 package consulo.application.util;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Date;
 
 /**
  * @author Konstantin Bulenkov
  */
 public abstract class JBDateTimeFormatter {
-  protected abstract boolean isPrettyFormattingSupported();
+    protected abstract boolean isPrettyFormattingSupported();
 
-  @Nonnull
-  public String formatTime(@Nonnull Date time) {
-    return formatTime(time.getTime());
-  }
+    @Nonnull
+    public String formatTime(@Nonnull Date time) {
+        return formatTime(time.getTime());
+    }
 
-  @Nonnull
-  public abstract String formatTime(long time);
+    @Nonnull
+    public abstract String formatTime(long time);
 
-  @Nonnull
-  public String formatTimeWithSeconds(@Nonnull Date time) {
-    return formatTimeWithSeconds(time.getTime());
-  }
+    @Nonnull
+    public String formatTimeWithSeconds(@Nonnull Date time) {
+        return formatTimeWithSeconds(time.getTime());
+    }
 
-  @Nonnull
-  public abstract String formatTimeWithSeconds(long time);
+    @Nonnull
+    public abstract String formatTimeWithSeconds(long time);
 
-  @Nonnull
-  public String formatDate(@Nonnull Date time) {
-    return formatDate(time.getTime());
-  }
+    @Nonnull
+    public String formatDate(@Nonnull Date time) {
+        return formatDate(time.getTime());
+    }
 
-  @Nonnull
-  public abstract String formatDate(long time);
+    @Nonnull
+    public abstract String formatDate(long time);
 
-  @Nonnull
-  public String formatDateTime(Date date) {
-    return formatDateTime(date.getTime());
-  }
+    @Nonnull
+    public String formatDateTime(Date date) {
+        return formatDateTime(date.getTime());
+    }
 
-  @Nonnull
-  public String formatDateTime(long time) {
-    return DateFormatUtil.formatDateTime(time);
-  }
+    @Nonnull
+    public String formatDateTime(long time) {
+        return DateFormatUtil.formatDateTime(time);
+    }
 
-  @Nonnull
-  public String formatPrettyDateTime(@Nonnull Date date) {
-    return formatPrettyDateTime(date.getTime());
-  }
+    @Nonnull
+    public String formatPrettyDateTime(@Nonnull Date date) {
+        return formatPrettyDateTime(date.getTime());
+    }
 
-  @Nonnull
-  public abstract String formatPrettyDateTime(long time);
+    @Nonnull
+    public abstract String formatPrettyDateTime(long time);
 
-  @Nonnull
-  public String formatPrettyDate(@Nonnull Date date) {
-    return formatPrettyDate(date.getTime());
-  }
+    @Nonnull
+    public String formatPrettyDate(@Nonnull Date date) {
+        return formatPrettyDate(date.getTime());
+    }
 
-  @Nonnull
-  public abstract String formatPrettyDate(long time);
+    @Nonnull
+    public abstract String formatPrettyDate(long time);
 }

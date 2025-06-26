@@ -260,7 +260,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                         children.add(HtmlChunk.nbsp());
                         String commitShort = StringUtil.first(pluginHistoryEntry.commitHash, 7, false);
                         HtmlChunk.Element commitSpan = HtmlChunk.span();
-                        commitSpan = commitSpan.addText("(commit: ");
+                        commitSpan = commitSpan.addText("(" + ExternalServiceLocalize.whatsnewCommitLabel() + " ");
                         String commitUrl = buildCommitUrl(pluginHistoryEntry.repoUrl, pluginHistoryEntry.commitHash);
                         if (commitUrl != null) {
                             commitSpan = commitSpan.child(HtmlChunk.tag("a").attr("href", commitUrl).addText(commitShort));

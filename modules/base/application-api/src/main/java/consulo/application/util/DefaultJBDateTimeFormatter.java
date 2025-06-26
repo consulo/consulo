@@ -7,45 +7,44 @@ import jakarta.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 class DefaultJBDateTimeFormatter extends JBDateTimeFormatter {
-
-  @Override
-  protected boolean isPrettyFormattingSupported() {
-    return DateTimeFormatManager.getInstance().isPrettyFormattingAllowed();
-  }
-
-  @Override
-  @Nonnull
-  public String formatTime(long time) {
-    return DateFormatUtil.formatTime(time);
-  }
-
-  @Override
-  @Nonnull
-  public String formatTimeWithSeconds(long time) {
-    return DateFormatUtil.formatTimeWithSeconds(time);
-  }
-
-  @Override
-  @Nonnull
-  public String formatDate(long time) {
-    return DateFormatUtil.formatDate(time);
-  }
-
-  @Override
-  @Nonnull
-  public String formatPrettyDateTime(long time) {
-    if (isPrettyFormattingSupported()) {
-      return DateFormatUtil.formatPrettyDateTime(time);
+    @Override
+    protected boolean isPrettyFormattingSupported() {
+        return DateTimeFormatManager.getInstance().isPrettyFormattingAllowed();
     }
-    return formatDateTime(time);
-  }
 
-  @Override
-  @Nonnull
-  public String formatPrettyDate(long time) {
-    if (isPrettyFormattingSupported()) {
-      return DateFormatUtil.formatPrettyDate(time);
+    @Override
+    @Nonnull
+    public String formatTime(long time) {
+        return DateFormatUtil.formatTime(time);
     }
-    return formatDate(time);
-  }
+
+    @Override
+    @Nonnull
+    public String formatTimeWithSeconds(long time) {
+        return DateFormatUtil.formatTimeWithSeconds(time);
+    }
+
+    @Override
+    @Nonnull
+    public String formatDate(long time) {
+        return DateFormatUtil.formatDate(time);
+    }
+
+    @Override
+    @Nonnull
+    public String formatPrettyDateTime(long time) {
+        if (isPrettyFormattingSupported()) {
+            return DateFormatUtil.formatPrettyDateTime(time);
+        }
+        return formatDateTime(time);
+    }
+
+    @Override
+    @Nonnull
+    public String formatPrettyDate(long time) {
+        if (isPrettyFormattingSupported()) {
+            return DateFormatUtil.formatPrettyDate(time);
+        }
+        return formatDate(time);
+    }
 }
