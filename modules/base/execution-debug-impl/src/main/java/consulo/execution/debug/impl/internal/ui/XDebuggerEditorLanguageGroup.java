@@ -58,7 +58,7 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
     @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        Collection<Language> languages = myLanguagesGetter.get();
+        Collection<Language> languages = ReadAction.compute(myLanguagesGetter::get);
         List<AnAction> result = new ArrayList<>(languages.size());
         for (Language language : languages) {
             Image icon = language.getAssociatedFileType() == null ? null : language.getAssociatedFileType().getIcon();
