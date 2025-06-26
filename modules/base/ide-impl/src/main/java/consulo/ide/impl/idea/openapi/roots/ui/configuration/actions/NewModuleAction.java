@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.newModule.NewOrImportModuleUtil;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.action.AnAction;
@@ -37,19 +38,20 @@ import jakarta.annotation.Nonnull;
  * @author Eugene Zhuravlev
  * @since 2004-01-05
  */
+@ActionImpl(id = "NewModule")
 public class NewModuleAction extends AnAction implements DumbAware {
     public NewModuleAction() {
-        super(ProjectLocalize.moduleNewAction(), ProjectLocalize.moduleNewActionDescription(), null);
+        super(ProjectLocalize.moduleNewAction(), ProjectLocalize.moduleNewActionDescription());
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e == null ? null : e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
-        final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
+        VirtualFile virtualFile = e.getData(VirtualFile.KEY);
 
         final ModuleManager moduleManager = ModuleManager.getInstance(project);
         FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
@@ -69,7 +71,6 @@ public class NewModuleAction extends AnAction implements DumbAware {
             }
         };
         fileChooserDescriptor.withTitleValue(ProjectLocalize.chooseModuleHome());
-
 
         AsyncResult<VirtualFile> chooseAsync =
             FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);

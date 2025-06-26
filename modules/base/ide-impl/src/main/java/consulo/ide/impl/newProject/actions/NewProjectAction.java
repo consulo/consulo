@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.newProject.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.WriteAction;
-import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.newProject.ui.NewProjectDialog;
 import consulo.ide.impl.newProject.ui.NewProjectPanel;
@@ -36,7 +36,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awt.UIUtil;
@@ -49,12 +48,12 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 
 /**
  * @author VISTALL
  */
+@ActionImpl(id = "NewProject")
 public class NewProjectAction extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(NewProjectAction.class);
 
@@ -79,16 +78,19 @@ public class NewProjectAction extends DumbAwareAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void setOKActionEnabled(boolean enabled) {
             myOkButton.setEnabled(enabled);
         }
 
         @Override
+        @RequiredUIAccess
         public void setOKActionText(@Nonnull LocalizeValue text) {
             myOkButton.setText(text);
         }
 
         @Override
+        @RequiredUIAccess
         public void setCancelText(@Nonnull LocalizeValue text) {
             myCancelButton.setText(text);
         }
@@ -144,9 +146,9 @@ public class NewProjectAction extends DumbAwareAction {
         }
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         NewProjectDialog dialog = new NewProjectDialog(project, null);
 
@@ -156,7 +158,7 @@ public class NewProjectAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    protected static void generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
+    protected static void generateProject(Project project, @Nonnull NewProjectPanel projectPanel) {
         NewModuleWizardContext context = projectPanel.getWizardContext();
         NewModuleBuilderProcessor<NewModuleWizardContext> processor = projectPanel.getProcessor();
         if (processor == null || context == null) {
@@ -174,14 +176,14 @@ public class NewProjectAction extends DumbAwareAction {
 
         NewModuleWizardContext context = panel.getWizardContext();
 
-        final File location = new File(context.getPath());
-        final int childCount = location.exists() ? location.list().length : 0;
+        File location = new File(context.getPath());
+        int childCount = location.exists() ? location.list().length : 0;
         if (!location.exists() && !location.mkdirs()) {
             Messages.showErrorDialog(project, "Cannot create directory '" + location + "'", "Create Project");
             return;
         }
 
-        final VirtualFile baseDir = WriteAction.compute(() -> LocalFileSystem.getInstance().refreshAndFindFileByIoFile(location));
+        VirtualFile baseDir = WriteAction.compute(() -> LocalFileSystem.getInstance().refreshAndFindFileByIoFile(location));
         baseDir.refresh(false, true);
 
         if (childCount > 0) {

@@ -2190,14 +2190,7 @@
 
         <!-- File -->
         <group id="OpenProjectGroup">
-            <group id="NewElementInMenuGroup" text="New" popup="true">
-                <action id="NewProject" class="consulo.ide.impl.newProject.actions.NewProjectAction"/>
-                <separator/>
-                <action id="NewModule" class="consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.NewModuleAction"/>
-                <action id="ImportModule" class="consulo.ide.impl.idea.ide.actions.ImportModuleAction" text="Import Module..."/>
-                <separator/>
-                <group class="consulo.ide.impl.idea.ide.actions.NewActionGroup" text="New" popup="false"/>
-            </group>
+            <reference id="NewElementInMenu"/>
 
             <add-to-group group-id="FileOpenGroup" anchor="first"/>
         </group>

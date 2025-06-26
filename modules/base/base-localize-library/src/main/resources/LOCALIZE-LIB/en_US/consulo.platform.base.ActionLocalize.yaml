@@ -1296,6 +1296,8 @@ action.ImportFromJBuilder.text:
     text: Import _From JBuilder…
 action.ImportModule.description:
     text: Import module from directory with existing sources or from existing project model
+action.ImportModule.text:
+    text: Module from Existing Sources…
 action.ImportModuleFromImlFile.description:
     text: Import iml file as a module to the project
 action.ImportModuleFromImlFile.text:
@@ -2478,10 +2480,10 @@ action.XDebugger.JumpToTypeSource.description:
     text: Open source of the selected value's type
 action.XDebugger.JumpToTypeSource.text:
     text: Jump To Type Source
-action.XDebugger.MuteBreakpoints.text:
-    text: Mute Breakpoints
 action.XDebugger.MuteBreakpoints.description:
     text: Ignore all breakpoints
+action.XDebugger.MuteBreakpoints.text:
+    text: Mute Breakpoints
 action.XDebugger.NewWatch.text:
     text: New Watch…
 action.XDebugger.RemoveAllWatches.text:
@@ -2496,10 +2498,10 @@ action.XDebugger.ToggleSortValues.description:
     text: Sort values alphabetically in debugger views
 action.XDebugger.ToggleSortValues.text:
     text: Sort Values Alphabetically
-action.XDebugger.UnmuteOnStop.text:
-    text: Unmute Breakpoints on Session Finish
 action.XDebugger.UnmuteOnStop.description:
     text: Undo mute mreakpoints when debug session ends
+action.XDebugger.UnmuteOnStop.text:
+    text: Unmute Breakpoints on Session Finish
 action.editRunConfigurations.description:
     text: Open edit Run/Debug configurations dialog
 action.editRunConfigurations.text:
@@ -2690,6 +2692,8 @@ group.MoveModuleToGroup.text:
     text: Move Module to Group
 group.NavbarPopupMenu.text:
     text: Navigation Bar
+group.NewElementInMenu.text:
+    text: _New
 group.NewGroup.text:
     text: _New
 group.NewGroup1.text:
@@ -2860,9 +2864,9 @@ group.WeighingNewGroup.text:
     text: _New
 group.WindowMenu.text:
     text: _Window
-group.XDebugger.settings.text:
-    text: Settings
 group.XDebugger.settings.description:
+    text: Settings
+group.XDebugger.settings.text:
     text: Settings
 group.XmlGenerateToolsGroup.text:
     text: XML Generate Actions

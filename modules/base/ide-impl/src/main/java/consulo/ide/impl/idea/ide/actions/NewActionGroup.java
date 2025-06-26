@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.*;
 
 import jakarta.annotation.Nonnull;
@@ -29,8 +31,13 @@ import java.util.function.Predicate;
 /**
  * @author Dmitry Avdeev
  */
+@ActionImpl(id = "NewAction")
 public class NewActionGroup extends ActionGroup {
     private static final String PROJECT_OR_MODULE_GROUP_ID = "NewProjectOrModuleGroup";
+
+    public NewActionGroup() {
+        super(ActionLocalize.groupNewelementinmenuText(), false);
+    }
 
     @Nonnull
     @Override

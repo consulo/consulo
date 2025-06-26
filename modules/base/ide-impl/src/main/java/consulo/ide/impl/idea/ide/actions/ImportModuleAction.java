@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.WriteAction;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.moduleImport.ModuleImportContext;
@@ -23,6 +24,7 @@ import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ide.moduleImport.ModuleImportProviders;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.ModuleManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -37,9 +39,14 @@ import jakarta.annotation.Nullable;
  * @author Dmitry Avdeev
  * @since 2012-10-31
  */
+@ActionImpl(id = "ImportModule")
 public class ImportModuleAction extends AnAction {
-    @RequiredUIAccess
+    public ImportModuleAction() {
+        super(ActionLocalize.actionImportmoduleText());
+    }
+
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         assert project != null;
@@ -68,8 +75,8 @@ public class ImportModuleAction extends AnAction {
         });
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
