@@ -63,7 +63,9 @@ class LookupUi {
     private Boolean myPositionedAbove = null;
 
     private AtomicBoolean myHintCalculating = new AtomicBoolean(true);
+    private final ActionToolbar myLookupUIToolbar;
 
+    @RequiredUIAccess
     LookupUi(@Nonnull LookupImpl lookup, Advertiser advertiser, JBList list) {
         myLookup = lookup;
         myAdvertiser = advertiser;
@@ -87,16 +89,17 @@ class LookupUi {
         moreActionGroup.add(new DelegatedAction(actionManager.getAction(IdeActions.ACTION_QUICK_IMPLEMENTATIONS)));
 
         ActionGroup toolbarGroup = ActionGroup.newImmutableBuilder().add(moreActionGroup).build();
-        ActionToolbar lookupUIToolbar = actionManager.createActionToolbar("LookupUIToolbar", toolbarGroup, true);
-        lookupUIToolbar.setMiniMode(true);
-        lookupUIToolbar.setTargetComponent(list);
+        myLookupUIToolbar = actionManager.createActionToolbar("LookupUIToolbar", toolbarGroup, true);
+        myLookupUIToolbar.setMiniMode(true);
+        myLookupUIToolbar.setTargetComponent(list);
+        myLookupUIToolbar.updateActionsAsync();
 
         myBottomPanel = new NonOpaquePanel(new BorderLayout());
         myBottomPanel.add(myAdvertiser.getAdComponent(), BorderLayout.WEST);
 
         JPanel rightPanel = new NonOpaquePanel(new HorizontalLayout(4, SwingConstants.CENTER));
         rightPanel.add(myProcessIcon);
-        JComponent toolbarComponent = lookupUIToolbar.getComponent();
+        JComponent toolbarComponent = myLookupUIToolbar.getComponent();
         toolbarComponent.setBorder(JBUI.Borders.empty());
         rightPanel.add(toolbarComponent);
 
@@ -119,6 +122,10 @@ class LookupUi {
 
         Disposer.register(lookup, myProcessIcon);
         Disposer.register(lookup, myHintAlarm);
+    }
+
+    public ActionToolbar getLookupUIToolbar() {
+        return myLookupUIToolbar;
     }
 
     private void addListeners() {
@@ -205,7 +212,7 @@ class LookupUi {
 
     // in layered pane coordinate system.
     Rectangle calculatePosition() {
-        final JComponent lookupComponent = myLookup.getComponent();
+        JComponent lookupComponent = myLookup.getComponent();
         Dimension dim = lookupComponent.getPreferredSize();
         int lookupStart = myLookup.getLookupStart();
         Editor editor = myLookup.getTopLevelEditor();
@@ -218,14 +225,14 @@ class LookupUi {
         location.y += editor.getLineHeight();
         location.x -= myLookup.myCellRenderer.getTextIndent();
         // extra check for other borders
-        final Window window = UIUtil.getWindow(lookupComponent);
+        Window window = UIUtil.getWindow(lookupComponent);
         if (window != null) {
-            final Point point = SwingUtilities.convertPoint(lookupComponent, 0, 0, window);
+            Point point = SwingUtilities.convertPoint(lookupComponent, 0, 0, window);
             location.x -= point.x;
         }
 
         SwingUtilities.convertPointToScreen(location, editor.getContentComponent());
-        final Rectangle screenRectangle = ScreenUtil.getScreenRectangle(editor.getContentComponent());
+        Rectangle screenRectangle = ScreenUtil.getScreenRectangle(editor.getContentComponent());
 
         if (!isPositionedAboveCaret()) {
             int shiftLow = screenRectangle.y + screenRectangle.height - (location.y + dim.height);
