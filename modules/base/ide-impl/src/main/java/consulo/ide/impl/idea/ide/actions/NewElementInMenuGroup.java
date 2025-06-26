@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.NewModuleAction;
 import consulo.ide.impl.newProject.actions.NewProjectAction;
 import consulo.platform.base.localize.ActionLocalize;
@@ -38,7 +39,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = NewActionGroup.class)
     }
 )
-public class NewElementInMenuGroup extends DefaultActionGroup {
+public class NewElementInMenuGroup extends DefaultActionGroup implements DumbAware {
     public NewElementInMenuGroup() {
         super(ActionLocalize.groupNewelementinmenuText(), true);
     }
