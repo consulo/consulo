@@ -38,54 +38,55 @@ import jakarta.annotation.Nonnull;
  * @since 2004-01-05
  */
 public class NewModuleAction extends AnAction implements DumbAware {
-  public NewModuleAction() {
-    super(ProjectLocalize.moduleNewAction(), ProjectLocalize.moduleNewActionDescription(), null);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e == null ? null : e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public NewModuleAction() {
+        super(ProjectLocalize.moduleNewAction(), ProjectLocalize.moduleNewActionDescription(), null);
     }
-    final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
 
-    final ModuleManager moduleManager = ModuleManager.getInstance(project);
-    FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
-      @Override
-      @RequiredUIAccess
-      public boolean isFileSelectable(VirtualFile file) {
-        if (!super.isFileSelectable(file)) {
-          return false;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e == null ? null : e.getData(Project.KEY);
+        if (project == null) {
+            return;
         }
-        for (Module module : moduleManager.getModules()) {
-          VirtualFile moduleDir = module.getModuleDir();
-          if (moduleDir != null && moduleDir.equals(file)) {
-            return false;
-          }
-        }
-        return true;
-      }
-    };
-    fileChooserDescriptor.withTitleValue(ProjectLocalize.chooseModuleHome());
+        final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
+
+        final ModuleManager moduleManager = ModuleManager.getInstance(project);
+        FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
+            @Override
+            @RequiredUIAccess
+            public boolean isFileSelectable(VirtualFile file) {
+                if (!super.isFileSelectable(file)) {
+                    return false;
+                }
+                for (Module module : moduleManager.getModules()) {
+                    VirtualFile moduleDir = module.getModuleDir();
+                    if (moduleDir != null && moduleDir.equals(file)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+        fileChooserDescriptor.withTitleValue(ProjectLocalize.chooseModuleHome());
 
 
-    AsyncResult<VirtualFile> chooseAsync = FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
-    chooseAsync.doWhenDone(moduleDir -> {
-      NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
+        AsyncResult<VirtualFile> chooseAsync =
+            FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
+        chooseAsync.doWhenDone(moduleDir -> {
+            NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
 
-      dialog.showAsync().doWhenDone(() -> {
-        NewProjectPanel panel = dialog.getProjectPanel();
-        NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), project, moduleDir);
-      });
-    });
-  }
+            dialog.showAsync().doWhenDone(() -> {
+                NewProjectPanel panel = dialog.getProjectPanel();
+                NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), project, moduleDir);
+            });
+        });
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+    }
 }
