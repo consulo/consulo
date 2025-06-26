@@ -216,8 +216,6 @@ public class ActionUpdater {
             }
         });
 
-        cancelAndRestartOnUserActivity(future, indicator);
-
         ourExecutor.execute(() -> {
             while (future.state() == Future.State.RUNNING) {
                 try {
@@ -240,17 +238,6 @@ public class ActionUpdater {
             }
         });
         return future;
-    }
-
-    private static void cancelAndRestartOnUserActivity(CompletableFuture<?> future, ProgressIndicator indicator) {
-        Disposable disposable = Disposable.newDisposable("Action Update");
-        IdeEventQueueProxy.getInstance().addPostprocessor(e -> {
-            if (e instanceof ComponentEvent && !(e instanceof PaintEvent) && (e.getID() & AWTEvent.MOUSE_MOTION_EVENT_MASK) == 0) {
-                indicator.cancel();
-            }
-            return false;
-        }, disposable);
-        future.whenComplete((o, throwable) -> Disposer.dispose(disposable));
     }
 
     private List<AnAction> doExpandActionGroup(ActionGroup group, boolean hideDisabled, UpdateStrategy strategy) {

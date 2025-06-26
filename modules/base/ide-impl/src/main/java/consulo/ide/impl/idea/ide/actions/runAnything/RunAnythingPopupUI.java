@@ -67,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -106,6 +107,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     private RunAnythingContext mySelectedExecutingContext;
     private final List<RunAnythingContext> myAvailableExecutingContexts = new ArrayList<>();
     private RunAnythingChooseContextAction myChooseContextAction;
+    private ActionToolbar myToolbar;
 
     private void onMouseClicked(@Nonnull MouseEvent event) {
         int clickCount = event.getClickCount();
@@ -980,14 +982,22 @@ public class RunAnythingPopupUI extends BigPopupUI {
         actionGroup.addAction(myChooseContextAction);
         actionGroup.addAction(new RunAnythingShowFilterAction());
 
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("run.anything.toolbar", actionGroup, true);
-        toolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
-        toolbar.setTargetComponent(this);
-        toolbar.updateActionsAsync();
-        JComponent toolbarComponent = toolbar.getComponent();
+        myToolbar = ActionManager.getInstance().createActionToolbar("run.anything.toolbar", actionGroup, true);
+        myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
+        myToolbar.setTargetComponent(this);
+        myToolbar.updateActionsAsync();
+        JComponent toolbarComponent = myToolbar.getComponent();
         toolbarComponent.setOpaque(false);
         res.add(toolbarComponent);
         return res;
+    }
+
+    @Nonnull
+    public CompletableFuture<?> updateToolbarFuture() {
+        if (myToolbar == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return myToolbar.updateActionsAsync();
     }
 
     @Nonnull

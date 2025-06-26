@@ -1,10 +1,11 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.impl.internal.service;
 
-import consulo.application.ApplicationManager;
 import consulo.dataContext.DataManager;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.ServiceViewActionUtils;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ComponentUtil;
@@ -112,6 +113,7 @@ final class ServiceViewTreeUi implements ServiceViewUi {
   }
 
   @Override
+  @RequiredUIAccess
   public void setDetailsComponent(@Nullable JComponent component) {
     if (component == null) {
       component = myMessagePanel;
@@ -137,12 +139,12 @@ final class ServiceViewTreeUi implements ServiceViewUi {
     ActionToolbar serviceActionToolbar = myServiceActionToolbar;
     if (serviceActionToolbar != null) {
       ((ActionToolbarEx)serviceActionToolbar).reset();
-      serviceActionToolbar.updateActionsImmediately();
+      serviceActionToolbar.updateActionsAsync();
     }
-    ApplicationManager.getApplication().invokeLater(() -> {
+    UIAccess.current().give(() -> {
       ActionToolbar masterActionToolbar = myMasterActionToolbar;
       if (masterActionToolbar != null) {
-        masterActionToolbar.updateActionsImmediately();
+        masterActionToolbar.updateActionsAsync();
       }
     });
   }

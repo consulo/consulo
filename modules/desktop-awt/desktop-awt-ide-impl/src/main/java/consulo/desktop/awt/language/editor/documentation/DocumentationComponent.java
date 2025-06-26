@@ -1287,7 +1287,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     @RequiredUIAccess
     private void updateControlState() {
         if (needsToolbar()) {
-            myToolBar.updateActionsImmediately(); // update faster
+            myToolBar.updateActionsAsync(); // update faster
             setControlPanelVisible();
             removeCornerMenu();
         }

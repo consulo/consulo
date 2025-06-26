@@ -38,6 +38,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static java.awt.event.InputEvent.*;
 import static javax.swing.ScrollPaneConstants.*;
@@ -148,6 +149,12 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         updateScrollBar();
     }
 
+    @RequiredUIAccess
+    @Nonnull
+    public CompletableFuture<?> updateAllAsync() {
+        return CompletableFuture.allOf(myPrefixToolbar.updateActionsAsync(), mySuffixToolbar.updateActionsAsync());
+    }
+
     @Override
     public void updateUI() {
         super.updateUI();
@@ -179,12 +186,12 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     public void setSuffixActions(List<AnAction> actions) {
         mySuffixToolbarGroup.addAll(actions, ActionManager.getInstance());
 
-        mySuffixToolbar.updateActionsImmediately();
+        mySuffixToolbar.updateActionsAsync();
     }
 
     @RequiredUIAccess
     public void updateExtraActions() {
-        mySuffixToolbar.updateActionsImmediately();
+        mySuffixToolbar.updateActionsAsync();
     }
 
     private final KeyAdapter myEnterRedispatcher = new KeyAdapter() {

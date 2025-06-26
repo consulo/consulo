@@ -32,16 +32,16 @@ import javax.swing.*;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SearchReplaceComponentFactory {
-  SearchReplaceComponent create(@Nullable Project project,
-                                @Nonnull JComponent targetComponent,
-                                @Nonnull DefaultActionGroup searchToolbar1Actions,
-                                @Nonnull final BooleanGetter searchToolbar1ModifiedFlagGetter,
-                                @Nonnull DefaultActionGroup searchToolbar2Actions,
-                                @Nonnull DefaultActionGroup searchFieldActions,
-                                @Nonnull DefaultActionGroup replaceToolbar1Actions,
-                                @Nonnull DefaultActionGroup replaceToolbar2Actions,
-                                @Nonnull DefaultActionGroup replaceFieldActions,
-                                @Nullable Runnable replaceAction,
-                                @Nullable Runnable closeAction,
-                                @Nullable DataProvider dataProvider);
+    SearchReplaceComponent create(@Nullable Project project,
+                                  @Nonnull JComponent targetComponent,
+                                  @Nonnull DefaultActionGroup searchToolbar1Actions,
+                                  @Nonnull BooleanGetter searchToolbar1ModifiedFlagGetter,
+                                  @Nonnull DefaultActionGroup searchToolbar2Actions,
+                                  @Nonnull DefaultActionGroup searchFieldActions,
+                                  @Nonnull DefaultActionGroup replaceToolbar1Actions,
+                                  @Nonnull DefaultActionGroup replaceToolbar2Actions,
+                                  @Nonnull DefaultActionGroup replaceFieldActions,
+                                  @Nullable Runnable replaceAction,
+                                  @Nullable Runnable closeAction,
+                                  @Nullable DataProvider dataProvider);
 }

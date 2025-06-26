@@ -9,6 +9,7 @@ import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Point2D;
 import consulo.ui.TextBox;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
@@ -111,6 +112,12 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
             Disposer.register(project, myBalloon);
         }
 
+        UIAccess uiAccess = UIAccess.current();
+
+        mySearchEverywhereUI.updateToolbarFuture().whenCompleteAsync((o, throwable) -> showPopupLater(project), uiAccess);
+    }
+
+    private void showPopupLater(@Nullable Project project) {
         Dimension size = mySearchEverywhereUI.getMinimumSize();
         JBInsets.addTo(size, myBalloon.getContent().getInsets());
         myBalloon.setMinimumSize(size);

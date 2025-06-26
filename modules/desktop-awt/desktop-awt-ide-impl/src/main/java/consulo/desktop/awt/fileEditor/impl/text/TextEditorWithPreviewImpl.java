@@ -368,7 +368,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
 
         public void refresh() {
             adjustSpacing();
-            myRightToolbar.updateActionsImmediately();
+            myRightToolbar.updateActionsAsync();
         }
 
         private void adjustSpacing() {

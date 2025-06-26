@@ -10,6 +10,7 @@ import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.ui.Point2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBInsets;
@@ -69,7 +70,7 @@ public class RunAnythingManager {
         predefineSelectedText(searchText);
 
         myBalloon = JBPopupFactory.getInstance()
-            .createComponentPopupBuilder(myRunAnythingUI, (JComponent)TargetAWT.to(myRunAnythingUI.getSearchField()))
+            .createComponentPopupBuilder(myRunAnythingUI, (JComponent) TargetAWT.to(myRunAnythingUI.getSearchField()))
             .setProject(myProject)
             .setModalContext(false)
             .setCancelOnClickOutside(true)
@@ -90,10 +91,6 @@ public class RunAnythingManager {
             Disposer.register(project, myBalloon);
         }
 
-        Dimension size = myRunAnythingUI.getMinimumSize();
-        JBInsets.addTo(size, myBalloon.getContent().getInsets());
-        myBalloon.setMinimumSize(size);
-
         Disposer.register(myBalloon, () -> {
             saveSize();
 
@@ -101,6 +98,16 @@ public class RunAnythingManager {
             myBalloon = null;
             myBalloonFullSize = null;
         });
+
+        UIAccess uiAccess = UIAccess.current();
+        myRunAnythingUI.updateToolbarFuture().whenCompleteAsync((o, throwable) -> showPopupLayer(project), uiAccess);
+    }
+
+    private void showPopupLayer(@Nullable Project project) {
+        Dimension size = myRunAnythingUI.getMinimumSize();
+        JBInsets.addTo(size, myBalloon.getContent().getInsets());
+        myBalloon.setMinimumSize(size);
+
 
         if (myRunAnythingUI.getViewType() == RunAnythingPopupUI.ViewType.SHORT) {
             myBalloonFullSize = TargetAWT.to(ProjectWindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY));

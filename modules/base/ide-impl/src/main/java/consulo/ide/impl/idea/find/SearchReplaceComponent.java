@@ -17,12 +17,14 @@ package consulo.ide.impl.idea.find;
 
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.EventListener;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /**
@@ -30,59 +32,63 @@ import java.util.function.Supplier;
  * @since 27/06/2023
  */
 public interface SearchReplaceComponent extends DataProvider {
-  public interface Listener extends EventListener {
-    void searchFieldDocumentChanged();
+    public interface Listener extends EventListener {
+        void searchFieldDocumentChanged();
 
-    void replaceFieldDocumentChanged();
+        void replaceFieldDocumentChanged();
 
-    void multilineStateChanged();
-  }
+        void multilineStateChanged();
+    }
 
-  @Nonnull
-  public static SearchReplaceComponentBuilder buildFor(@Nullable Project project, @Nonnull JComponent component) {
-    return new SearchReplaceComponentBuilder(project, component);
-  }
+    @Nonnull
+    public static SearchReplaceComponentBuilder buildFor(@Nullable Project project, @Nonnull JComponent component) {
+        return new SearchReplaceComponentBuilder(project, component);
+    }
 
-  void setRegularBackground();
+    void setRegularBackground();
 
-  void setNotFoundBackground();
+    void setNotFoundBackground();
 
-  JComponent getComponent();
+    JComponent getComponent();
 
-  void setStatusText(@Nonnull String status);
+    void setStatusText(@Nonnull String status);
 
-  void resetUndoRedoActions();
+    void resetUndoRedoActions();
 
-  void updateActions();
+    void updateActions();
 
-  boolean isMultiline();
+    boolean isMultiline();
 
-  void addListener(@Nonnull Listener listener);
+    void addListener(@Nonnull Listener listener);
 
-  Project getProject();
+    Project getProject();
 
-  String getSearchText();
+    String getSearchText();
 
-  void setSearchText(String text);
+    void setSearchText(String text);
 
-  String getReplaceText();
+    String getReplaceText();
 
-  void setReplaceText(String text);
+    void setReplaceText(String text);
 
-  void update(@Nonnull String findText, @Nonnull String replaceText, boolean replaceMode, boolean multiline);
+    void update(@Nonnull String findText, @Nonnull String replaceText, boolean replaceMode, boolean multiline);
 
-  void selectSearchAll();
+    void selectSearchAll();
 
-  void requestFocusInTheSearchFieldAndSelectContent(Project project);
+    void requestFocusInTheSearchFieldAndSelectContent(Project project);
 
-  String getStatusText();
+    String getStatusText();
 
-  @Nonnull
-  Color getStatusColor();
+    @Nonnull
+    Color getStatusColor();
 
-  void addTextToRecent(@Nonnull String text, boolean search);
+    void addTextToRecent(@Nonnull String text, boolean search);
 
-  void updateEmptyText(Supplier<String> textSupplier);
+    void updateEmptyText(Supplier<String> textSupplier);
 
-  boolean isJustClearedSearch();
+    boolean isJustClearedSearch();
+
+    @Nonnull
+    @RequiredUIAccess
+    CompletableFuture<?> prepareAsync();
 }

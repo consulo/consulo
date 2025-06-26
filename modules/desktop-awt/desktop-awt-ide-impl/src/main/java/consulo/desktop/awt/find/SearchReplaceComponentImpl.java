@@ -14,11 +14,10 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
 import consulo.ide.impl.idea.util.BooleanFunction;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -38,6 +37,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
@@ -76,7 +76,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     private String myStatusText = "";
     @Nonnull
     private Color myStatusColor = UIUtil.getLabelForeground();
-    private DefaultActionGroup myTouchbarActions;
 
     private final List<AnAction> mySearchSuffixActions = new ArrayList<>();
     private final List<AnAction> myReplaceSuffixActions = new ArrayList<>();
@@ -85,7 +84,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         @Nullable Project project,
         @Nonnull JComponent targetComponent,
         @Nonnull DefaultActionGroup searchToolbar1Actions,
-        @Nonnull final BooleanGetter searchToolbar1ModifiedFlagGetter,
+        @Nonnull BooleanGetter searchToolbar1ModifiedFlagGetter,
         @Nonnull DefaultActionGroup searchToolbar2Actions,
         @Nonnull DefaultActionGroup searchFieldActions,
         @Nonnull DefaultActionGroup replaceToolbar1Actions,
@@ -455,8 +454,8 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     @Override
     @RequiredUIAccess
     public void updateActions() {
-        mySearchActionsToolbar.updateActionsImmediately();
-        myReplaceActionsToolbar.updateActionsImmediately();
+        mySearchActionsToolbar.updateActionsAsync();
+        myReplaceActionsToolbar.updateActionsAsync();
         JComponent textComponent = mySearchFieldWrapper.getTargetComponent();
         if (textComponent instanceof SearchTextArea searchTextArea) {
             searchTextArea.updateExtraActions();
@@ -503,12 +502,24 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @RequiredUIAccess
+    @Nonnull
+    @Override
+    public CompletableFuture<?> prepareAsync() {
+        return CompletableFuture.allOf(
+            mySearchActionsToolbar.updateActionsAsync(),
+            myReplaceActionsToolbar.updateActionsAsync(),
+            mySearchFieldWrapper.prepareAsync(),
+            myReplaceFieldWrapper.prepareAsync()
+        );
+    }
+
+    @RequiredUIAccess
     private boolean updateTextComponent(boolean search) {
         JTextComponent oldComponent = search ? mySearchTextComponent : myReplaceTextComponent;
         if (oldComponent != null) {
             return false;
         }
-        final MyTextComponentWrapper wrapper = search ? mySearchFieldWrapper : myReplaceFieldWrapper;
+        MyTextComponentWrapper wrapper = search ? mySearchFieldWrapper : myReplaceFieldWrapper;
 
         final JBTextArea textComponent = new JBTextArea();
         textComponent.setRows(isMultiline() ? 2 : 1);
@@ -540,12 +551,12 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         textComponent.setBackground(UIUtil.getTextFieldBackground());
         textComponent.addFocusListener(new FocusListener() {
             @Override
-            public void focusGained(final FocusEvent e) {
+            public void focusGained(FocusEvent e) {
                 textComponent.repaint();
             }
 
             @Override
-            public void focusLost(final FocusEvent e) {
+            public void focusLost(FocusEvent e) {
                 textComponent.repaint();
             }
         });
@@ -576,7 +587,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     private void updateBindings(@Nonnull DefaultActionGroup group, @Nonnull JComponent shortcutHolder) {
-        updateBindings(ContainerUtil.immutableList(group.getChildActionsOrStubs()), shortcutHolder);
+        updateBindings(List.of(group.getChildActionsOrStubs()), shortcutHolder);
     }
 
     private void updateBindings(@Nonnull ActionToolbar toolbar, @Nonnull JComponent shortcutHolder) {
@@ -644,13 +655,23 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
             return wrapped != null ? unwrapTextComponent(wrapped) : null;
         }
 
+        @RequiredUIAccess
+        public CompletableFuture<?> prepareAsync() {
+            JComponent targetComponent = getTargetComponent();
+            if (targetComponent instanceof SearchTextArea searchTextArea) {
+                return searchTextArea.updateAllAsync();
+            }
+
+            return CompletableFuture.completedFuture(null);
+        }
+
         @Nonnull
         protected static JTextComponent unwrapTextComponent(@Nonnull JComponent wrapped) {
-            if (wrapped instanceof SearchTextField) {
-                return ((SearchTextField)wrapped).getTextEditor();
+            if (wrapped instanceof SearchTextField searchTextField) {
+                return searchTextField.getTextEditor();
             }
-            if (wrapped instanceof SearchTextArea) {
-                return ((SearchTextArea)wrapped).getTextArea();
+            if (wrapped instanceof SearchTextArea searchTextArea) {
+                return searchTextArea.getTextArea();
             }
             throw new AssertionError();
         }

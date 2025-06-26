@@ -17,6 +17,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.find.*;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.ide.impl.idea.find.impl.HelpID;
 import consulo.ide.impl.idea.find.impl.livePreview.LivePreviewController;
@@ -27,6 +28,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUIScale;
@@ -45,6 +47,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -67,7 +70,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     private boolean mySelectionUpdatedFromSearchResults;
 
     private final LinkLabel<Object> myClickToHighlightLabel = new LinkLabel<>(
-        FindBundle.message("link.click.to.highlight"),
+        FindLocalize.linkClickToHighlight().get(),
         null,
         (__, ___) -> {
             setMatchesLimit(Integer.MAX_VALUE);
@@ -224,17 +227,27 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     }
 
     @Nonnull
-    public static EditorSearchSession start(@Nonnull Editor editor, @Nullable Project project) {
+    @RequiredUIAccess
+    public static CompletableFuture<EditorSearchSession> start(@Nonnull Editor editor, @Nullable Project project) {
         EditorSearchSession session = new EditorSearchSession(editor, project);
-        editor.setHeaderComponent(session.getComponent().getComponent());
-        return session;
+
+        UIAccess uiAccess = UIAccess.current();
+        return session.prepareAsync().handleAsync((o, throwable) -> {
+            editor.setHeaderComponent(session.getComponent().getComponent());
+            return session;
+        }, uiAccess);
     }
 
     @Nonnull
-    public static EditorSearchSession start(@Nonnull Editor editor, @Nonnull FindModel findModel, @Nullable Project project) {
+    @RequiredUIAccess
+    public static CompletableFuture<EditorSearchSession> start(@Nonnull Editor editor, @Nonnull FindModel findModel, @Nullable Project project) {
         EditorSearchSession session = new EditorSearchSession(editor, project, findModel);
-        editor.setHeaderComponent(session.getComponent().getComponent());
-        return session;
+
+        UIAccess uiAccess = UIAccess.current();
+        return session.prepareAsync().handleAsync((o, throwable) -> {
+            editor.setHeaderComponent(session.getComponent().getComponent());
+            return session;
+        }, uiAccess);
     }
 
     @Nonnull
@@ -264,7 +277,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
     @Override
     @Nullable
-    public Object getData(@Nonnull final Key dataId) {
+    public Object getData(@Nonnull Key dataId) {
         if (SearchSession.KEY == dataId) {
             return this;
         }
@@ -474,8 +487,8 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         mySearchResults.addListener(this);
     }
 
-    private void updateResults(final boolean allowedToChangedEditorSelection) {
-        final String text = myFindModel.getStringToFind();
+    private void updateResults(boolean allowedToChangedEditorSelection) {
+        String text = myFindModel.getStringToFind();
         if (text.isEmpty()) {
             nothingToSearchFor(allowedToChangedEditorSelection);
         }
@@ -500,7 +513,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
             }
 
 
-            final FindManager findManager = FindManager.getInstance(getProject());
+            FindManager findManager = FindManager.getInstance(getProject());
             if (allowedToChangedEditorSelection) {
                 findManager.setFindWasPerformed();
                 FindModel copy = new FindModel();
@@ -541,7 +554,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         return myComponent.getSearchText();
     }
 
-    public void setTextInField(final String text) {
+    public void setTextInField(String text) {
         myComponent.setSearchText(text);
         myFindModel.setStringToFind(text);
     }
@@ -562,6 +575,10 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         myComponent.resetUndoRedoActions();
     }
 
+    @Nonnull
+    public CompletableFuture<?> prepareAsync() {
+        return myComponent.prepareAsync();
+    }
 
     private abstract static class ButtonAction extends DumbAwareAction implements CustomComponentAction, ActionListener {
         private final String myTitle;

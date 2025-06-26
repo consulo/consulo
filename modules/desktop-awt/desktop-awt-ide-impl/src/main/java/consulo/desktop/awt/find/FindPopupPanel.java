@@ -113,6 +113,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
@@ -186,6 +187,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     private String myFilesCount;
     private UsageViewPresentation myUsageViewPresentation;
     private final ComponentValidator myComponentValidator;
+    private ActionToolbar myFindInFilesTopMenu;
 
     @RequiredUIAccess
     FindPopupPanel(@Nonnull FindUIHelper helper) {
@@ -403,7 +405,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             }
         }
 
-        myDialog.showAsync();
+        UIAccess uiAccess = UIAccess.current();
+
+        CompletableFuture.allOf(myScopeSelectionToolbar.updateActionsAsync(), myFindInFilesTopMenu.updateActionsAsync())
+            .whenCompleteAsync((unused, throwable) -> myDialog.showAsync(), uiAccess);
     }
 
     protected boolean canBeClosed() {
@@ -865,10 +870,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         add(myFileMaskField, "gapleft 4, gapright 16, gaptop 4");
         myIsPinned.set(UISettings.getInstance().getPinFindInPath());
 
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("FindInFilesTopMenu", topActionGroup.build(), true);
-        toolbar.setTargetComponent(this);
+        myFindInFilesTopMenu = ActionManager.getInstance().createActionToolbar("FindInFilesTopMenu", topActionGroup.build(), true);
+        myFindInFilesTopMenu.setTargetComponent(this);
 
-        JComponent component = toolbar.getComponent();
+        JComponent component = myFindInFilesTopMenu.getComponent();
         component.setBorder(JBUI.Borders.emptyRight(4));
         component.setOpaque(false);
 

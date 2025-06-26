@@ -28,6 +28,8 @@ import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nullable;
@@ -44,6 +46,7 @@ public class IncrementalFindAction extends EditorAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void execute(Editor editor, DataContext dataContext) {
             Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
             if (!editor.isOneLineMode()) {
@@ -64,12 +67,17 @@ public class IncrementalFindAction extends EditorAction {
                     }
                     boolean consoleViewEditor = ConsoleViewUtil.isConsoleViewEditor(editor);
                     FindUtil.configureFindModel(myReplace, editor, model, consoleViewEditor);
-                    EditorSearchSession.start(editor, model, project).getComponent()
-                        .requestFocusInTheSearchFieldAndSelectContent(project);
-                    if (!consoleViewEditor && editor.getSelectionModel().hasSelection()) {
-                        // selection is used as string to find without search model modification so save the pattern explicitly
-                        FindUtil.updateFindInFileModel(project, model, true);
-                    }
+
+                    UIAccess uiAccess = UIAccess.current();
+
+                    EditorSearchSession.start(editor, model, project).whenCompleteAsync((e, t) -> {
+                        e.getComponent().requestFocusInTheSearchFieldAndSelectContent(project);
+
+                        if (!consoleViewEditor && editor.getSelectionModel().hasSelection()) {
+                            // selection is used as string to find without search model modification so save the pattern explicitly
+                            FindUtil.updateFindInFileModel(project, model, true);
+                        }
+                    }, uiAccess);
                 }
             }
         }
@@ -83,7 +91,7 @@ public class IncrementalFindAction extends EditorAction {
             if (SEARCH_DISABLED.get(editor, false)) {
                 return false;
             }
-            Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
+            Project project = dataContext.getData(Project.KEY);
             return project != null && !editor.isOneLineMode();
         }
     }
