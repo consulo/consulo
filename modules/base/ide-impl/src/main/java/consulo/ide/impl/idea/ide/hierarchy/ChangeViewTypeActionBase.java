@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -71,8 +72,8 @@ abstract class ChangeViewTypeActionBase extends ToggleAction {
         // its important to assign the myTypeHierarchyBrowser first
         super.update(event);
         Presentation presentation = event.getPresentation();
-        TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
-        presentation.setEnabled(browser != null && browser.isValidBase());
+        TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext()); 
+        presentation.setEnabled(browser != null && ReadAction.compute(browser::isValidBase));
     }
 
     protected static TypeHierarchyBrowserBase getTypeHierarchyBrowser(DataContext context) {
