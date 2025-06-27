@@ -4,16 +4,21 @@ package consulo.language.editor.action;
 
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.DataContext;
 import consulo.document.DocCommandGroupId;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -27,7 +32,16 @@ public abstract class CodeInsightAction extends AnAction {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
+            Editor hostEditor = e.getData(EditorKeys.HOST_EDITOR);
+            if (hostEditor != null) {
+                PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(hostEditor.getDocument());
+                if (file != null) {
+                    PsiDocumentManager.getInstance(project).commitAllDocuments();
+                }
+            }
+
             Editor editor = getEditor(e.getDataContext(), project, false);
+
             actionPerformedImpl(project, editor);
         }
     }
@@ -70,13 +84,6 @@ public abstract class CodeInsightAction extends AnAction {
                     handler.invoke(project, editor, psiFile);
                 }
             });
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
-        CodeInsightEditorAction.beforeActionPerformedUpdate(e);
-        super.beforeActionPerformedUpdate(e);
     }
 
     @RequiredUIAccess

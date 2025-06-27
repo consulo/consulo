@@ -16,76 +16,77 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowErrorDescriptionHandler;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowErrorDescriptionHandler;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.codeEditor.Editor;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.util.lang.Comparing;
-import consulo.language.psi.PsiFile;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
-
+import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
+
 import java.awt.event.KeyEvent;
 
 public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements DumbAware {
-  private static int width;
-  private static boolean shouldShowDescription = false;
-  private static boolean descriptionShown = true;
-  private boolean myRequestFocus = false;
+    private static int width;
+    private static boolean shouldShowDescription = false;
+    private static boolean descriptionShown = true;
+    private boolean myRequestFocus = false;
 
-  public ShowErrorDescriptionAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new ShowErrorDescriptionHandler(shouldShowDescription ? width : 0, myRequestFocus);
-  }
-
-  @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    return DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(file) && isEnabledForFile(project, editor, file);
-  }
-
-  private static boolean isEnabledForFile(Project project, Editor editor, PsiFile file) {
-    DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
-    HighlightInfoImpl info =
-      ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(editor.getDocument(), editor.getCaretModel().getOffset(), false);
-    return info != null && info.getDescription() != null;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void beforeActionPerformedUpdate(@Nonnull final AnActionEvent e) {
-    super.beforeActionPerformedUpdate(e);
-    // The tooltip gets the focus if using a screen reader and invocation through a keyboard shortcut.
-    myRequestFocus = ScreenReader.isActive() && (e.getInputEvent() instanceof KeyEvent);
-
-    changeState();
-  }
-
-  private static void changeState() {
-    if (Comparing.strEqual(ActionManagerEx.getInstanceEx().getPrevPreformedActionId(), IdeActions.ACTION_SHOW_ERROR_DESCRIPTION)) {
-      shouldShowDescription = descriptionShown;
-    } else {
-      shouldShowDescription = false;
-      descriptionShown = true;
+    public ShowErrorDescriptionAction() {
+        setEnabledInModalContext(true);
     }
-  }
 
-  public static void rememberCurrentWidth(int currentWidth) {
-    width = currentWidth;
-    descriptionShown = !shouldShowDescription;
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new ShowErrorDescriptionHandler(shouldShowDescription ? width : 0, myRequestFocus);
+    }
 
+    @Override
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        return DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(file) && isEnabledForFile(project, editor, file);
+    }
+
+    private static boolean isEnabledForFile(Project project, Editor editor, PsiFile file) {
+        DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
+        HighlightInfoImpl info =
+            ((DaemonCodeAnalyzerImpl) codeAnalyzer).findHighlightByOffset(editor.getDocument(), editor.getCaretModel().getOffset(), false);
+        return info != null && info.getDescription() != null;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        // The tooltip gets the focus if using a screen reader and invocation through a keyboard shortcut.
+        myRequestFocus = ScreenReader.isActive() && (e.getInputEvent() instanceof KeyEvent);
+
+        changeState();
+
+        super.actionPerformed(e);
+    }
+
+    private static void changeState() {
+        if (Comparing.strEqual(ActionManagerEx.getInstanceEx().getPrevPreformedActionId(), IdeActions.ACTION_SHOW_ERROR_DESCRIPTION)) {
+            shouldShowDescription = descriptionShown;
+        }
+        else {
+            shouldShowDescription = false;
+            descriptionShown = true;
+        }
+    }
+
+    public static void rememberCurrentWidth(int currentWidth) {
+        width = currentWidth;
+        descriptionShown = !shouldShowDescription;
+    }
 }

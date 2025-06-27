@@ -16,9 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.language.editor.action.CodeInsightEditorAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -77,12 +75,5 @@ public class PrevNextParameterHandler extends EditorActionHandler {
   private static PsiElement getExpressionList(@Nonnull Editor editor, int offset, @Nonnull Project project) {
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     return file != null ? ParameterInfoController.findArgumentList(file, offset, -1) : null;
-  }
-
-  public static void commitDocumentsIfNeeded(@Nonnull AnActionEvent e) {
-    Editor editor = e.getData(Editor.KEY);
-    if (editor != null && ParameterInfoController.existsForEditor(editor)) {
-      CodeInsightEditorAction.beforeActionPerformedUpdate(e);
-    }
   }
 }
