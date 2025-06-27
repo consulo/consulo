@@ -31,6 +31,7 @@ import consulo.localHistory.LocalHistoryAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -60,6 +61,7 @@ public class CommitHelper {
     public static final Key<Object> DOCUMENT_BEING_COMMITTED_KEY = new Key<>("DOCUMENT_BEING_COMMITTED");
 
     private final static Logger LOG = Logger.getInstance(CommitHelper.class);
+    @Nonnull
     private final Project myProject;
 
     private final ChangeList myChangeList;
@@ -80,7 +82,7 @@ public class CommitHelper {
     private final HashSet<String> myFeedback;
 
     public CommitHelper(
-        Project project,
+        @Nonnull Project project,
         ChangeList changeList,
         List<Change> includedChanges,
         @Nonnull LocalizeValue actionName,
@@ -107,7 +109,7 @@ public class CommitHelper {
     }
 
     public CommitHelper(
-        Project project,
+        @Nonnull Project project,
         ChangeList changeList,
         List<Change> includedChanges,
         String actionName,
@@ -228,8 +230,8 @@ public class CommitHelper {
             content.append(s);
         }
         NotificationType notificationType = resolveNotificationType(processor);
-        VcsBalloonProblemNotifier.NOTIFICATION_GROUP
-            .newOfType(notificationType)
+        NotificationService.getInstance()
+            .newOfType(VcsBalloonProblemNotifier.NOTIFICATION_GROUP, notificationType)
             .content(LocalizeValue.of(content.toString()))
             .notify(myProject);
         return text;

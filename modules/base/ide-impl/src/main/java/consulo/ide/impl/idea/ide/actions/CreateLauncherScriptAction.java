@@ -26,6 +26,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -126,15 +127,16 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
                         "mkdir -p \"" + scriptTargetDirPath + "\"\n" +
                         "install -g 0 -o 0 \"" + scriptFile.getCanonicalPath() + "\" \"" + pathName + "\"";
                 File installationScript = ExecUtil.createTempExecutableScript("launcher_installer", ".sh", installationScriptSrc);
-                String prompt = ApplicationLocalize.launcherScriptSudoPrompt(scriptTargetDirPath).get();
-                CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(installationScript.getPath()).withSudo(prompt));
+                LocalizeValue prompt = ApplicationLocalize.launcherScriptSudoPrompt(scriptTargetDirPath);
+                CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(installationScript.getPath()).withSudo(prompt.get()));
             }
         }
         catch (Exception e) {
             String message = e.getMessage();
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);
-                Notifications.SYSTEM_MESSAGES_GROUP.newError()
+                NotificationService.getInstance()
+                    .newError(Notifications.SYSTEM_MESSAGES_GROUP)
                     .title(LocalizeValue.localizeTODO("Failed to create launcher script"))
                     .content(LocalizeValue.localizeTODO(message))
                     .notify(project);

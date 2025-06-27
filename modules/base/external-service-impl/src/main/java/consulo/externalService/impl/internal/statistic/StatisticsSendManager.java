@@ -32,6 +32,7 @@ import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
@@ -52,13 +53,24 @@ public class StatisticsSendManager implements Disposable {
 
   private static final int DELAY_IN_MIN = 10;
 
+  @Nonnull
   private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsComponent;
+  @Nonnull
+  private final Application myApplication;
+  @Nonnull
+  private final NotificationService myNotificationService;
 
   private Future<?> myFuture;
 
   @Inject
-  StatisticsSendManager(Application application, Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent) {
+  StatisticsSendManager(
+      @Nonnull Application application,
+      @Nonnull Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent,
+      @Nonnull NotificationService notificationService
+  ) {
+    myApplication = application;
     myUsageStatisticsComponent = usageStatisticsComponent;
+    myNotificationService = notificationService;
 
     application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
@@ -143,10 +155,10 @@ public class StatisticsSendManager implements Disposable {
 
   // FIXME [VISTALL] at current moment we not show this notification
   public Notification createNotification(@Nonnull NotificationGroup group, @Nullable NotificationListener listener) {
-    String fullProductName = Application.get().getName().get();
+    LocalizeValue fullProductName = myApplication.getName();
     String companyName = ApplicationInfo.getInstance().getCompanyName();
 
-    return group.newInfo()
+    return myNotificationService.newInfo(group)
         .title(LocalizeValue.localizeTODO("Help improve " + fullProductName + " by sending anonymous usage statistics to " + companyName))
         .content(LocalizeValue.localizeTODO(
             "<html>Please click <a href='allow'>I agree</a> if you want to help make " + fullProductName +

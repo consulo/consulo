@@ -45,6 +45,7 @@ import consulo.logging.internal.*;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -125,7 +126,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
 
     private void loadDevelopersAsynchronously() {
-        Task.Backgroundable task = new Task.Backgroundable(null, "Loading developers list", true) {
+        Task.Backgroundable task = new Task.Backgroundable(null, LocalizeValue.localizeTODO("Loading developers list"), true) {
             private final Collection[] myDevelopers = new Collection[]{Collections.emptyList()};
 
             @Override
@@ -134,7 +135,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
                     myDevelopers[0] = DevelopersLoader.fetchDevelopers(indicator);
                 }
                 catch (IOException e) {
-                    ReportMessages.GROUP.newWarn()
+                    NotificationService.getInstance()
+                        .newWarn(ReportMessages.GROUP)
                         .title(LocalizeValue.localizeTODO("Communication error"))
                         .content(LocalizeValue.localizeTODO("Unable to load developers list from server."))
                         .notify(null);

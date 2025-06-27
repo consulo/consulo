@@ -33,6 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.util.io.zip.JBZipEntry;
@@ -83,9 +84,10 @@ public class PackageFileWorker {
                 packageFile(file, project, artifacts);
               }
               catch (IOException e) {
-                ARTIFACT_PACKAGING_GROUP.newError()
+                NotificationService.getInstance()
+                  .newError(ARTIFACT_PACKAGING_GROUP)
                   .title(LocalizeValue.localizeTODO("Cannot package file"))
-                  .content(CompilerLocalize.messageTectPackageFileIoError(e.toString()))
+                  .content(CompilerLocalize.messageTectPackageFileIoError(e))
                   .notify(null);
               }
             });

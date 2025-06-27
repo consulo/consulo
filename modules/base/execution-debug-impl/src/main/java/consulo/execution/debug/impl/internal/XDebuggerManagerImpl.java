@@ -169,7 +169,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
         }
     }
 
-
+    @Nonnull
     private final Project myProject;
     private final EditorFactory myEditorFactory;
     private final XBreakpointManagerImpl myBreakpointManager;
@@ -179,10 +179,12 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     private final AtomicReference<XDebugSessionImpl> myActiveSession = new AtomicReference<>();
 
     @Inject
-    public XDebuggerManagerImpl(Project project,
-                                StartupManager startupManager,
-                                EditorFactory editorFactory,
-                                ApplicationConcurrency applicationConcurrency) {
+    public XDebuggerManagerImpl(
+        @Nonnull Project project,
+        @Nonnull StartupManager startupManager,
+        @Nonnull EditorFactory editorFactory,
+        @Nonnull ApplicationConcurrency applicationConcurrency
+    ) {
         myProject = project;
         myEditorFactory = editorFactory;
         myBreakpointManager = new XBreakpointManagerImpl(project, this, startupManager, applicationConcurrency);

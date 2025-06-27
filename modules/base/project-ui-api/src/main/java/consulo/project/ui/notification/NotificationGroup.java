@@ -134,33 +134,18 @@ public final class NotificationGroup {
         return myDisplayName;
     }
 
-    public Notification.Builder newOfType(@Nonnull NotificationType type) {
-        return new Notification.Builder(this, type);
-    }
-
-    public Notification.Builder newError() {
-        return new Notification.Builder(this, NotificationType.ERROR);
-    }
-
-    public Notification.Builder newWarn() {
-        return new Notification.Builder(this, NotificationType.WARNING);
-    }
-
-    public Notification.Builder newInfo() {
-        return new Notification.Builder(this, NotificationType.INFORMATION);
-    }
-
     @Deprecated
-    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
+    @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(@Nonnull String content, @Nonnull NotificationType type) {
-        return newOfType(type)
+        return NotificationService.getInstance()
+            .newOfType(this, type)
             .content(LocalizeValue.of(content))
             .create();
     }
 
     @Deprecated
-    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
+    @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(
         @Nonnull String title,
@@ -168,7 +153,8 @@ public final class NotificationGroup {
         @Nonnull NotificationType type,
         @Nullable NotificationListener listener
     ) {
-        return newOfType(type)
+        return NotificationService.getInstance()
+            .newOfType(this, type)
             .title(LocalizeValue.of(title))
             .content(LocalizeValue.of(content))
             .optionalHyperlinkListener(listener)
@@ -176,21 +162,21 @@ public final class NotificationGroup {
     }
 
     @Deprecated
-    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
+    @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification() {
-        return newInfo().create();
+        return NotificationService.getInstance().newInfo(this).create();
     }
 
     @Deprecated
-    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
+    @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(@Nonnull NotificationType type) {
-        return newOfType(type).create();
+        return NotificationService.getInstance().newOfType(this, type).create();
     }
 
     @Deprecated
-    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
+    @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(
         @Nullable String title,
@@ -198,7 +184,7 @@ public final class NotificationGroup {
         @Nullable String content,
         @Nonnull NotificationType type
     ) {
-        return newOfType(type)
+        return NotificationService.getInstance().newOfType(this, type)
             .title(LocalizeValue.ofNullable(title))
             .subtitle(LocalizeValue.ofNullable(subtitle))
             .subtitle(LocalizeValue.ofNullable(content))
@@ -206,7 +192,7 @@ public final class NotificationGroup {
     }
 
     @Deprecated
-    @DeprecationInfo("Use newError/newWarning/newInfo/newOfType()...create()")
+    @DeprecationInfo("Use NotificationService.newError/newWarning/newInfo/newOfType()...create()")
     @Nonnull
     public Notification createNotification(
         @Nullable String title,
@@ -215,7 +201,7 @@ public final class NotificationGroup {
         @Nonnull NotificationType type,
         @Nullable NotificationListener listener
     ) {
-        return newOfType(type)
+        return NotificationService.getInstance().newOfType(this, type)
             .title(LocalizeValue.ofNullable(title))
             .subtitle(LocalizeValue.ofNullable(subtitle))
             .subtitle(LocalizeValue.ofNullable(content))

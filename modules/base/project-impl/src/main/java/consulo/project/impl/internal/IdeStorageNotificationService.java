@@ -25,8 +25,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.UnknownMacroNotification;
-import consulo.project.ui.notification.Notifications;
-import consulo.project.ui.notification.NotificationsManager;
+import consulo.project.ui.notification.*;
 import consulo.ui.NotificationType;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -49,16 +48,21 @@ import java.util.Set;
 public class IdeStorageNotificationService implements StorageNotificationService {
   private static final Logger LOG = Logger.getInstance(IdeStorageNotificationService.class);
 
+  @Nonnull
   private final Application myApplication;
+  @Nonnull
+  private final NotificationService myNotificationService;
 
   @Inject
-  public IdeStorageNotificationService(Application application) {
+  public IdeStorageNotificationService(@Nonnull Application application, NotificationService notificationService) {
     myApplication = application;
+    myNotificationService = notificationService;
   }
 
   @Override
   public void notify(@Nonnull NotificationType notificationType, @Nonnull String title, @Nonnull String text, @Nullable ComponentManager project) {
-    Notifications.SYSTEM_MESSAGES_GROUP.newOfType(consulo.project.ui.notification.NotificationType.from(notificationType))
+    myNotificationService
+        .newOfType(Notifications.SYSTEM_MESSAGES_GROUP, consulo.project.ui.notification.NotificationType.from(notificationType))
         .title(LocalizeValue.localizeTODO(title))
         .content(LocalizeValue.localizeTODO(text))
         .notify(ObjectUtil.tryCast(project, Project.class));
@@ -91,7 +95,7 @@ public class IdeStorageNotificationService implements StorageNotificationService
                          productName +
                          " cannot restore those paths.";
         new UnknownMacroNotification(
-            ProjectNotificationGroups.Project.newError()
+            myNotificationService.newError(ProjectNotificationGroups.Project)
                 .title(LocalizeValue.localizeTODO("Load error: undefined path variables"))
                 .content(LocalizeValue.localizeTODO(content))
                 .optionalHyperlinkListener(

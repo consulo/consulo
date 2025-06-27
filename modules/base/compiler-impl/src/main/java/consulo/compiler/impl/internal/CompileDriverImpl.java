@@ -60,6 +60,7 @@ import consulo.module.content.layer.ContentFolder;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ModalityState;
@@ -98,6 +99,7 @@ public class CompileDriverImpl implements CompileDriver {
     // to be used in tests only for debug output
     public static volatile boolean ourDebugMode = false;
 
+    @Nonnull
     private final Project myProject;
     private final Map<Pair<IntermediateOutputCompiler, Module>, Couple<VirtualFile>> myGenerationCompilerModuleToOutputDirMap;
     // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
@@ -122,7 +124,7 @@ public class CompileDriverImpl implements CompileDriver {
     private static final long ONE_MINUTE_MS = 60L /*sec*/ * 1000L /*millisec*/;
 
     @RequiredReadAction
-    public CompileDriverImpl(Project project) {
+    public CompileDriverImpl(@Nonnull Project project) {
         myProject = project;
         myCachesDirectoryPath = CompilerPaths.getCacheStoreDirectory(myProject).getPath().replace('/', File.separatorChar);
         myShouldClearOutputDirectory = CompilerWorkspaceConfiguration.getInstance(myProject).CLEAR_OUTPUT_DIRECTORY;
@@ -622,8 +624,8 @@ public class CompileDriverImpl implements CompileDriver {
                         ToolWindowManager.getInstance(myProject)
                             .notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage);
                     }
-                    CompilerManager.NOTIFICATION_GROUP
-                        .newOfType(messageType)
+                    NotificationService.getInstance()
+                        .newOfType(CompilerManager.NOTIFICATION_GROUP, messageType)
                         .content(LocalizeValue.localizeTODO(statusMessage))
                         .notify(myProject);
                     if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {

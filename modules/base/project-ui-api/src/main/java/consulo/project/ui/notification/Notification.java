@@ -77,13 +77,15 @@ import java.util.function.Function;
  * @author Alexander Lobas
  * @author UNV
  *
- * @see NotificationGroup#newError()
- * @see NotificationGroup#newWarn ()
- * @see NotificationGroup#newInfo()
- * @see NotificationGroup#newOfType (NotificationType)
+ * @see NotificationService#newError(NotificationGroup)
+ * @see NotificationService#newWarn(NotificationGroup)
+ * @see NotificationService#newInfo(NotificationGroup)
+ * @see NotificationService#newOfType(NotificationGroup, NotificationType)
  */
 public class Notification {
-    public static final class Builder {
+    public static class Builder {
+        @Nonnull
+        final NotificationService myService;
         @Nonnull
         final NotificationGroup myGroup;
         @Nonnull
@@ -106,7 +108,8 @@ public class Notification {
         @Nullable
         private Runnable myWhenExpired = null;
 
-        Builder(@Nonnull NotificationGroup group, @Nonnull NotificationType type) {
+        Builder(@Nonnull NotificationService service, @Nonnull NotificationGroup group, @Nonnull NotificationType type) {
+            myService = service;
             myGroup = group;
             myType = type;
         }
@@ -271,12 +274,12 @@ public class Notification {
         }
 
         public void notify(@Nullable Project project) {
-            create().notify(project);
+            myService.notify(create(), project);
         }
 
         public Notification notifyAndGet(@Nullable Project project) {
             Notification notification = create();
-            notification.notify(project);
+            myService.notify(notification, project);
             return notification;
         }
     }
@@ -374,7 +377,8 @@ public class Notification {
     @DeprecationInfo("Use NotificationGroup#newError/newWarning/newInfo/newOfType()...create()")
     public Notification(@Nonnull NotificationGroup group, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
         this(
-            group.newOfType(type)
+            NotificationService.getInstance()
+                .newOfType(group, type)
                 .title(LocalizeValue.of(title))
                 .content(LocalizeValue.of(content))
         );
@@ -401,7 +405,8 @@ public class Notification {
         @Nullable NotificationListener listener
     ) {
         this(
-            group.newOfType(type)
+            NotificationService.getInstance()
+                .newOfType(group, type)
                 .optionalIcon(icon)
                 .title(LocalizeValue.ofNullable(title))
                 .subtitle(LocalizeValue.ofNullable(subtitle))
@@ -427,7 +432,8 @@ public class Notification {
         @Nullable @RequiredUIAccess NotificationListener listener
     ) {
         this(
-            group.newOfType(type)
+            NotificationService.getInstance()
+                .newOfType(group, type)
                 .title(LocalizeValue.of(title))
                 .content(LocalizeValue.of(content))
                 .optionalHyperlinkListener(listener)
@@ -667,8 +673,10 @@ public class Notification {
         return SoftReference.dereference(myBalloonRef);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use Notification.Builder#notify()")
     public void notify(@Nullable Project project) {
-        Notifications.Bus.notify(this, project);
+        NotificationService.getInstance().notify(this, project);
     }
 
     public Notification setImportant(boolean important) {

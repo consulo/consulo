@@ -31,6 +31,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -78,7 +79,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         }
 
         boolean globalEntry = dialog.myGlobalEntryCheckBox.isSelected();
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, event.getPresentation().getText()) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, event.getPresentation().getTextValue()) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 createDesktopEntry((Project)getProject(), indicator, globalEntry);
@@ -105,7 +106,8 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
             install(entry, globalEntry);
             indicator.setFraction(indicator.getFraction() + step);
 
-            Notifications.SYSTEM_MESSAGES_GROUP.newInfo()
+            NotificationService.getInstance()
+                .newInfo(Notifications.SYSTEM_MESSAGES_GROUP)
                 .title(LocalizeValue.localizeTODO("Desktop entry created"))
                 .content(ApplicationLocalize.desktopEntrySuccess(Application.get().getName()))
                 .notify(null);
@@ -114,7 +116,8 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
             String message = e.getMessage();
             if (!StringUtil.isEmptyOrSpaces(message)) {
                 LOG.warn(e);
-                Notifications.SYSTEM_MESSAGES_GROUP.newError()
+                NotificationService.getInstance()
+                    .newError(Notifications.SYSTEM_MESSAGES_GROUP)
                     .title(LocalizeValue.localizeTODO("Failed to create desktop entry"))
                     .content(LocalizeValue.localizeTODO(message))
                     .notify(project);

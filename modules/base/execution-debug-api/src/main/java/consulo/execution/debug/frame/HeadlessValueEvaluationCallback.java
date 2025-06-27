@@ -22,6 +22,7 @@ import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 
@@ -30,7 +31,9 @@ import jakarta.annotation.Nullable;
 import java.awt.*;
 
 public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFullValueEvaluationCallback {
+  @Nonnull
   private final XValueNode myNode;
+  @Nonnull
   private final Project myProject;
 
   private volatile boolean myEvaluated;
@@ -63,7 +66,8 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
   @Override
   public void errorOccurred(@Nonnull String errorMessage) {
     try {
-      XDebuggerUIConstants.NOTIFICATION_GROUP.newError()
+      NotificationService.getInstance()
+        .newError(XDebuggerUIConstants.NOTIFICATION_GROUP)
         .content(XDebuggerLocalize.loadValueTaskError(errorMessage))
         .notify(myProject);
     }
@@ -100,7 +104,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
       return;
     }
 
-    new Task.Backgroundable(myProject, XDebuggerBundle.message("load.value.task.text")) {
+    new Task.Backgroundable(myProject, XDebuggerLocalize.loadValueTaskText()) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);

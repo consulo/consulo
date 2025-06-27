@@ -33,6 +33,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.ProcessNotCreatedException;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -60,8 +61,8 @@ public class ExecutionUtil {
   }
 
   public static void handleExecutionError(
-    @Nonnull final Project project,
-    @Nonnull final String toolWindowId,
+    @Nonnull Project project,
+    @Nonnull String toolWindowId,
     @Nonnull String taskName,
     @Nonnull ExecutionException e
   ) {
@@ -116,7 +117,8 @@ public class ExecutionUtil {
       else {
         Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "");
       }
-      ExecutionNotificationGroupHolder.BASE.newError()
+      NotificationService.getInstance()
+          .newError(ExecutionNotificationGroupHolder.BASE)
           .title(title)
           .content(LocalizeValue.localizeTODO(finalDescription))
           .optionalHyperlinkListener(finalListener == null ? null : (notification, event) -> finalListener.hyperlinkUpdate(event))

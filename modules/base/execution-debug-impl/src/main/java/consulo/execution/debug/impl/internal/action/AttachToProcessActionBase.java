@@ -15,6 +15,7 @@ import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -229,7 +230,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
       return host.getProcessList();
     }
     catch (ExecutionException e) {
-      GROUP.newWarn()
+      NotificationService.getInstance().newWarn(GROUP)
           .title(XDebuggerLocalize.xdebuggerAttachActionItemsErrorTitle())
           .content(XDebuggerLocalize.xdebuggerAttachActionItemsErrorMessage())
           .notify(null);

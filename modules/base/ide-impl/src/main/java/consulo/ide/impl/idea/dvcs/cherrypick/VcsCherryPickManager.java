@@ -23,6 +23,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationService;
 import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.logging.Logger;
@@ -55,12 +56,19 @@ public class VcsCherryPickManager {
   @Nonnull
   private final ProjectLevelVcsManager myProjectLevelVcsManager;
   @Nonnull
+  private final NotificationService myNotificationService;
+  @Nonnull
   private final Set<CommitId> myIdsInProgress = Sets.newConcurrentHashSet();
 
   @Inject
-  public VcsCherryPickManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager projectLevelVcsManager) {
+  public VcsCherryPickManager(
+    @Nonnull Project project,
+    @Nonnull ProjectLevelVcsManager projectLevelVcsManager,
+    @Nonnull NotificationService notificationService
+  ) {
     myProject = project;
     myProjectLevelVcsManager = projectLevelVcsManager;
+    myNotificationService = notificationService;
   }
 
   public void cherryPick(@Nonnull VcsLog log) {
@@ -124,7 +132,7 @@ public class VcsCherryPickManager {
     }
 
     public void showError(@Nonnull String message) {
-      VcsNotifier.NOTIFICATION_GROUP_ID.newError()
+      myNotificationService.newError(VcsNotifier.NOTIFICATION_GROUP_ID)
           .content(LocalizeValue.localizeTODO(message))
           .notify((Project)myProject);
       LOG.warn(message);

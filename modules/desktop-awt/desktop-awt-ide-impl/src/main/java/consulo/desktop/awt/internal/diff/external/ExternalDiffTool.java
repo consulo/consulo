@@ -28,19 +28,19 @@ import consulo.diff.chain.SimpleDiffRequestChain;
 import consulo.diff.content.DiffContent;
 import consulo.diff.impl.internal.external.ExternalDiffSettings;
 import consulo.diff.impl.internal.external.ExternalDiffToolUtil;
+import consulo.diff.internal.DiffManagerEx;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
-import consulo.diff.internal.DiffManagerEx;
 import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.StringUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -133,7 +133,8 @@ public class ExternalDiffTool {
         }
 
         if (!errorRequests.isEmpty()) {
-            DiffNotificationGroups.DIFF.newError()
+            NotificationService.getInstance()
+                .newError(DiffNotificationGroups.DIFF)
                 .title(LocalizeValue.localizeTODO("Can't load some changes"))
                 .content(LocalizeValue.localizeTODO(StringUtil.join(errorRequests, "<br>")))
                 .notify(project);

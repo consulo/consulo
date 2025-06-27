@@ -42,9 +42,11 @@ import consulo.logging.internal.LogMessageEx;
 import consulo.logging.internal.SubmittedReportInfo;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
@@ -150,11 +152,11 @@ public class ITNReporter extends ErrorReportSubmitter {
                     text.append("<br/>").append(ExternalServiceLocalize.errorReportGratitude().get());
                 }
 
-                ReportMessages.GROUP.newOfType(
-                        reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
-                            ? NotificationType.ERROR
-                            : NotificationType.INFORMATION
-                    )
+                NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
+                    ? NotificationType.ERROR
+                    : NotificationType.INFORMATION;
+                NotificationService.getInstance()
+                    .newOfType(ReportMessages.GROUP, type)
                     .title(ExternalServiceLocalize.errorReportTitle())
                     .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(text)))
                     .notImportant()
@@ -162,21 +164,22 @@ public class ITNReporter extends ErrorReportSubmitter {
                     .notify(project);
             });
         }, e -> application.invokeLater(() -> {
-            String msg;
+            LocalizeValue msg;
             if (e instanceof AuthorizationFailedException) {
-                msg = ExternalServiceLocalize.errorReportAuthenticationFailed().get();
+                msg = ExternalServiceLocalize.errorReportAuthenticationFailed();
             }
             else if (e instanceof WebServiceException) {
-                msg = ExternalServiceLocalize.errorReportPostingFailed(e.getMessage()).get();
+                msg = ExternalServiceLocalize.errorReportPostingFailed(e.getMessage());
             }
             else {
-                msg = ExternalServiceLocalize.errorReportSendingFailure().get();
+                msg = ExternalServiceLocalize.errorReportSendingFailure();
             }
 
             if (e instanceof UpdateAvailableException) {
                 callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
 
-                ReportMessages.GROUP.newInfo()
+                NotificationService.getInstance()
+                    .newInfo(ReportMessages.GROUP)
                     .title(ExternalServiceLocalize.errorReportTitle())
                     .content(ExternalServiceLocalize.errorReportUpdateRequiredMessage())
                     .notImportant()
@@ -187,7 +190,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                     )
                     .notify(project);
             }
-            else if (showYesNoDialog(parentComponent, project, msg, ExternalServiceLocalize.errorReportTitle().get(), Messages.getErrorIcon()) != 0) {
+            else if (showYesNoDialog(parentComponent, project, msg.get(), ExternalServiceLocalize.errorReportTitle().get(), Messages.getErrorIcon()) != 0) {
                 callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
             }
             else {
@@ -200,6 +203,7 @@ public class ITNReporter extends ErrorReportSubmitter {
         return true;
     }
 
+    @RequiredUIAccess
     private static int showYesNoDialog(Component parentComponent, Project project, String message, String title, Image icon) {
         if (parentComponent.isShowing()) {
             return Messages.showYesNoDialog(parentComponent, message, title, icon);

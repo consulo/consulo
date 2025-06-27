@@ -18,19 +18,20 @@ package consulo.ide.impl.idea.history.core;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.history.core.changes.ChangeSet;
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
-import consulo.localize.LocalizeValue;
-import consulo.webBrowser.BrowserUtil;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
-import consulo.util.io.FileUtil;
 import consulo.index.io.storage.AbstractStorage;
+import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.ManagingFS;
-
+import consulo.webBrowser.BrowserUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.event.HyperlinkEvent;
 import java.io.DataInputStream;
 import java.io.File;
@@ -128,7 +129,8 @@ public class ChangeListStorageImpl implements ChangeListStorage {
                              "<br>" +
                              "Please attach log files from <a href=\"file\">" + logFile + "</a><br>" +
                              "to the <a href=\"url\">YouTrack issue</a>";*/
-    Notifications.SYSTEM_MESSAGES_GROUP.newError()
+    NotificationService.getInstance()
+      .newError(Notifications.SYSTEM_MESSAGES_GROUP)
       .title(LocalizeValue.localizeTODO("Local History is broken"))
       .content(LocalizeValue.localizeTODO(message /*+ createIssuePart*/))
       .hyperlinkListener((notification, event) -> {

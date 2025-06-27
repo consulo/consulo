@@ -3,6 +3,7 @@ package consulo.remoteServer.impl.internal.util;
 
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 
 /**
@@ -17,8 +18,8 @@ public class CloudNotifier {
 
     public void showMessage(String message, NotificationType messageType) {
         // TODO this is invalid due group must be registered before !
-        NotificationGroup.balloonGroup(myNotificationDisplayId)
-            .newOfType(messageType)
+        NotificationService.getInstance()
+            .newOfType(NotificationGroup.balloonGroup(myNotificationDisplayId), messageType)
             .content(LocalizeValue.localizeTODO(message))
             .notify(null);
     }

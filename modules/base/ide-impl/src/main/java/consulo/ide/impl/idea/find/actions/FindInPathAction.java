@@ -18,10 +18,12 @@ package consulo.ide.impl.idea.find.actions;
 
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -32,10 +34,13 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
-public class FindInPathAction extends AnAction implements DumbAware {
-  public static final NotificationGroup NOTIFICATION_GROUP =
-    NotificationGroup.toolWindowGroup("Find in Path", ToolWindowId.FIND, false);
+public class FindInPathAction extends FindReplaceInPathActionBase {
+  @Inject
+  public FindInPathAction(NotificationService notificationService) {
+    super(ActionLocalize.actionFindinpathText(), ActionLocalize.actionFindinpathDescription(), notificationService);
+  }
 
   @Override
   @RequiredUIAccess
@@ -50,12 +55,6 @@ public class FindInPathAction extends AnAction implements DumbAware {
     }
 
     findManager.findInProject(dataContext, null);
-  }
-
-  static void showNotAvailableMessage(AnActionEvent e, Project project) {
-    NOTIFICATION_GROUP.newWarn()
-        .content(LocalizeValue.localizeTODO("'" + e.getPresentation().getText() + "' is not available while search is in progress"))
-        .notify(project);
   }
 
   @Override
@@ -74,11 +73,11 @@ public class FindInPathAction extends AnAction implements DumbAware {
   }
 
   private static boolean isValidSearchScope(@Nonnull AnActionEvent e) {
-    final PsiElement[] elements = e.getData(PsiElement.KEY_OF_ARRAY);
+    PsiElement[] elements = e.getData(PsiElement.KEY_OF_ARRAY);
     if (elements != null && elements.length == 1 && elements[0] instanceof PsiDirectoryContainer) {
       return true;
     }
-    final VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
+    VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
     return virtualFiles != null && virtualFiles.length == 1 && virtualFiles[0].isDirectory();
   }
 }

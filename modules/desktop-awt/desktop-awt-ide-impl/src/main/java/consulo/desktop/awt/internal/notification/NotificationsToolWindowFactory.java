@@ -32,7 +32,9 @@ import consulo.project.Project;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
@@ -44,8 +46,6 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.event.AncestorEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author peter
@@ -106,15 +106,14 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
         contentManager.addContent(content);
         contentManager.setSelectedContent(content);
 
-        List<AnAction> group = new ArrayList<>();
-        group.add(new DisplayBalloons());
-        group.add(new ToggleSoftWraps(editor));
-        group.add(new ScrollToTheEndToolbarAction(editor));
-        group.add(new MarkAllNotificationsAsReadAction());
-        group.add(new EventLogConsole.ClearLogAction(console));
-        group.add(new EditNotificationSettings(project));
-
-        toolWindow.setTabActions(group.toArray(AnAction.EMPTY_ARRAY));
+        toolWindow.setTabActions(
+            new DisplayBalloons(),
+            new ToggleSoftWraps(editor),
+            new ScrollToTheEndToolbarAction(editor),
+            new MarkAllNotificationsAsReadAction(),
+            new EventLogConsole.ClearLogAction(console),
+            new EditNotificationSettings(project)
+        );
     }
 
     private static class DisplayBalloons extends ToggleAction implements DumbAware {

@@ -62,6 +62,7 @@ import consulo.project.Project;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
@@ -317,7 +318,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         if (pluginErrors != null) {
             for (CompositeMessage pluginError : pluginErrors) {
-                PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup.newError()
+                NotificationService.getInstance()
+                    .newError(PlatformOrPluginsNotificationGroupContributor.ourPluginsLifecycleGroup)
                     .title(IdeLocalize.titlePluginNotificationTitle())
                     .content(LocalizeValue.localizeTODO(pluginError.toString()))
                     .hyperlinkListener(new NotificationListener() {

@@ -10,6 +10,7 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,7 +38,8 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
         for (RemovedMappingTracker.RemovedMapping mapping : list) {
           final FileNameMatcher matcher = mapping.getFileNameMatcher();
           final FileType fileType = FileTypeManager.getInstance().findFileTypeByName(mapping.getFileTypeName());
-          GROUP.newWarn()
+          NotificationService.getInstance()
+              .newWarn(GROUP)
               .title(LocalizeValue.localizeTODO("File type recognized"))
               .content(LocalizeValue.localizeTODO(
                   "File extension " + matcher.getPresentableString() + " was reassigned to " + fileType.getName() +

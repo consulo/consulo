@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packageDependencies.actions;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.ForwardDependenciesBuilder;
 import consulo.language.editor.scope.AnalysisScope;
@@ -23,6 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -65,8 +67,8 @@ public class AnalyzeDependenciesOnSpecifiedTargetHandler extends DependenciesHan
     }
     String source = StringUtil.decapitalize(builders.get(0).getScope().getDisplayName());
     String target = StringUtil.decapitalize(myTargetScope.getDisplayName());
-    NotificationGroup.toolWindowGroup("Dependencies", ToolWindowId.DEPENDENCIES, true)
-        .newInfo()
+    NotificationService.getInstance()
+        .newInfo(NotificationGroup.toolWindowGroup("Dependencies", ToolWindowId.DEPENDENCIES, true))
         .content(AnalysisScopeLocalize.noDependenciesFoundMessage(source, target))
         .notify(myProject);
     return false;

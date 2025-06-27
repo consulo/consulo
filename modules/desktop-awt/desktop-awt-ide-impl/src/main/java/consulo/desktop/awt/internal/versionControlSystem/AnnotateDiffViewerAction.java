@@ -41,6 +41,7 @@ import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
 import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationService;
 import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
@@ -207,7 +208,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
           VcsException exception = loader.getException();
           if (exception != null) {
-            Notification notification = VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.newError()
+            Notification notification = NotificationService.getInstance()
+              .newError(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
               .title(LocalizeValue.localizeTODO("Can't Load Annotations"))
               .content(LocalizeValue.of(exception.getMessage()))
               .create();

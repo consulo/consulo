@@ -7,6 +7,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
@@ -83,7 +84,8 @@ public abstract class RunAnythingNotifiableProvider<V> extends RunAnythingProvid
         private final V myValue;
 
         public NotificationBuilder(DataContext dataContext, V value) {
-            myBuilder = RunAnythingNotificationGroupContributor.GROUP.newInfo();
+            myBuilder = NotificationService.getInstance()
+                .newInfo(RunAnythingNotificationGroupContributor.GROUP);
             this.myDataContext = dataContext;
             this.myValue = value;
         }

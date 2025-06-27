@@ -18,6 +18,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -45,7 +46,7 @@ import java.util.concurrent.ExecutorService;
  * Thread-safe.
  *
  * @author Denis Zhdanov, Vladislav Soroka
- * @since 3/21/12 4:04 PM
+ * @since 2012-03-21
  */
 @Singleton
 @ServiceImpl
@@ -60,19 +61,23 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
     @Nonnull
     private final ExternalSystemInternalNotificationHelper myNotificationHelper;
     @Nonnull
-    private final List<Notification> myNotifications;
+    private final NotificationService myNotificationService;
     @Nonnull
-    private final Set<ProjectSystemId> initializedExternalSystem;
+    private final List<Notification> myNotifications = new ArrayList<>();
     @Nonnull
-    private final MessageCounter myMessageCounter;
+    private final Set<ProjectSystemId> initializedExternalSystem = new HashSet<>();
+    @Nonnull
+    private final MessageCounter myMessageCounter = new MessageCounter();
 
     @Inject
-    public ExternalSystemNotificationManagerImpl(@Nonnull Project project, ExternalSystemInternalNotificationHelper notificationHelper) {
+    public ExternalSystemNotificationManagerImpl(
+        @Nonnull Project project,
+        @Nonnull ExternalSystemInternalNotificationHelper notificationHelper,
+        @Nonnull NotificationService notificationService
+    ) {
         myProject = project;
         myNotificationHelper = notificationHelper;
-        myNotifications = new ArrayList<>();
-        initializedExternalSystem = new HashSet<>();
-        myMessageCounter = new MessageCounter();
+        myNotificationService = notificationService;
     }
 
     @Override
@@ -159,7 +164,8 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
                 return;
             }
 
-            Notification notification = group.newOfType(notificationData.getNotificationCategory().getNotificationType())
+            Notification notification = myNotificationService
+                .newOfType(group, notificationData.getNotificationCategory().getNotificationType())
                 .title(LocalizeValue.localizeTODO(notificationData.getTitle()))
                 .content(LocalizeValue.localizeTODO(notificationData.getMessage()))
                 .hyperlinkListener(notificationData.getListener())

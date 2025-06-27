@@ -25,6 +25,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -42,17 +43,24 @@ import java.util.stream.Collectors;
  */
 @ExtensionImpl
 public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity, DumbAware {
+  @Nonnull
   private final Application myApplication;
   private final Provider<WindowsDefenderChecker> myWindowsDefenderChecker;
   private final Provider<EarlyAccessProgramManager> myEarlyAccessProgramManager;
+  @Nonnull
+  private final NotificationService myNotificationService;
 
   @Inject
-  public WindowsDefenderCheckerActivity(Application application,
-                                        Provider<WindowsDefenderChecker> windowsDefenderChecker,
-                                        Provider<EarlyAccessProgramManager> earlyAccessProgramManager) {
+  public WindowsDefenderCheckerActivity(
+      @Nonnull Application application,
+      Provider<WindowsDefenderChecker> windowsDefenderChecker,
+      Provider<EarlyAccessProgramManager> earlyAccessProgramManager,
+      @Nonnull NotificationService notificationService
+  ) {
     myApplication = application;
     myWindowsDefenderChecker = windowsDefenderChecker;
     myEarlyAccessProgramManager = earlyAccessProgramManager;
+    myNotificationService = notificationService;
   }
 
   @Override
@@ -82,7 +90,7 @@ public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity
         .collect(Collectors.toList());
 
       WindowsDefenderNotification notification = new WindowsDefenderNotification(
-        SystemHealthMonitorImpl.GROUP.newWarn()
+        myNotificationService.newWarn(SystemHealthMonitorImpl.GROUP)
           .content(ExternalServiceLocalize.virusScanningWarnMessage(
               Application.get().getName(),
               StringUtil.join(nonExcludedPaths, "<br/>"))
