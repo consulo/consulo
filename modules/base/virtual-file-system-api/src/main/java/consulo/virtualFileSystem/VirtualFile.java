@@ -17,6 +17,7 @@ package consulo.virtualFileSystem;
 
 import consulo.application.ApplicationManager;
 import consulo.component.util.ModificationTracker;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.Key;
@@ -126,6 +127,11 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   private static final Key<Charset> CHARSET_KEY = Key.create("CHARSET");
 
   protected VirtualFile() {
+  }
+
+  @Nonnull
+  public LocalizeValue getLocalizedName() {
+    return LocalizeValue.of(getName());
   }
 
   /**

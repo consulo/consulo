@@ -17,6 +17,7 @@ package consulo.configuration.editor.impl.internal.file;
 
 import consulo.configuration.editor.ConfigurationFileEditorProvider;
 import consulo.configuration.editor.internal.ConfigurationEditorVirtualFile;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
@@ -64,6 +65,12 @@ public class ConfigurationEditorFileImpl extends LightVirtualFileBase implements
     @Override
     public String getPath() {
         return myPath;
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getLocalizedName() {
+        return getProvider().getName();
     }
 
     @Nonnull
