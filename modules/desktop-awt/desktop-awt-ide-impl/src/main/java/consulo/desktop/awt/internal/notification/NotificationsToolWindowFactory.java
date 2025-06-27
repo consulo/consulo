@@ -29,7 +29,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ui.view.localize.ProjectUIViewLocalize;
+import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -86,7 +86,7 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return ProjectUIViewLocalize.toolwindowNotificationsDisplayName();
+        return ProjectUILocalize.toolwindowNotificationsDisplayName();
     }
 
     private static void createContent(Project project, ToolWindow toolWindow, EventLogConsole console, String title) {
@@ -119,8 +119,8 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
     private static class DisplayBalloons extends ToggleAction implements DumbAware {
         public DisplayBalloons() {
             super(
-                LocalizeValue.localizeTODO("Show balloons"),
-                LocalizeValue.localizeTODO("Enable or suppress notification balloons"),
+                ProjectUILocalize.actionNotificationShowBalloonsText(),
+                ProjectUILocalize.actionNotificationShowBalloonsDescription(),
                 PlatformIconGroup.generalBalloon()
             );
         }
@@ -141,8 +141,8 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
 
         public EditNotificationSettings(Project project) {
             super(
-                LocalizeValue.localizeTODO("Settings"),
-                LocalizeValue.localizeTODO("Edit notification settings"),
+                ProjectUILocalize.actionNotificationSettingsText(),
+                ProjectUILocalize.actionNotificationSettingsDescription(),
                 PlatformIconGroup.generalSettings()
             );
             myProject = project;

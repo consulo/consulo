@@ -34,6 +34,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationType;
@@ -509,8 +510,8 @@ class EventLogConsole {
 
         public ClearLogAction(EventLogConsole console) {
             super(
-                LocalizeValue.localizeTODO("Clear All"),
-                LocalizeValue.localizeTODO("Clear the contents of the Event Log"),
+                ProjectUILocalize.actionNotificationClearText(),
+                ProjectUILocalize.actionNotificationClearDescription(),
                 PlatformIconGroup.actionsGc()
             );
             myConsole = console;

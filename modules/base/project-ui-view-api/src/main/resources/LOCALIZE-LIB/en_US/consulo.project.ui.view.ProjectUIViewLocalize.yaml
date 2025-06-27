@@ -50,9 +50,3 @@ select.in.project:
     text: Project
 select.in.scope:
     text: Scope
-toolwindow.messages.display.name:
-    text: Messages
-toolwindow.notifications.display.name:
-    text: Notifications
-toolwindow.project.display.name:
-    text: Project
