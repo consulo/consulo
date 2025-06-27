@@ -240,6 +240,8 @@ plugin.advestiser.notification.install.plugin.link:
     text: Install ''{0}''
 plugin.advestiser.notification.text:
     text: '{0, choice, 1#Plugin|2#Plugins} supporting current file are found'
+plugin.following.will.be.downloaded.label:
+    text: Following nodes will be downloaded & installed
 plugin.info.unknown:
     text: unknown
 plugin.install.dialog.title:
@@ -252,8 +254,6 @@ plugin.manager.wrong.platform.not.loaded.tooltip:
     text: The plugin ''{0}'' was not loaded due wrong platform
 plugin.status.not.specified:
     text: (not specified)
-plugin.following.will.be.downloaded.label:
-    text: Following nodes will be downloaded & installed
 progress.connecting.to.plugin.manager:
     text: Connecting to {0}
 progress.download.plugins:
@@ -331,7 +331,7 @@ whatsnew.action.custom.description:
 whatsnew.action.custom.text:
     text: What''s _New in {0}
 whatsnew.commit.label:
-    text: "commit:"
+    text: 'commit:'
 whatsnew.loading.text:
     text: Fetching change list...
 whatsnew.no.changes.text:
