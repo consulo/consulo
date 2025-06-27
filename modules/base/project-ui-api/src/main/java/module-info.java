@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 29/01/2022
+ * @since 2022-01-29
  */
 module consulo.project.ui.api {
     // todo obsolete dep
@@ -12,14 +12,16 @@ module consulo.project.ui.api {
     requires transitive kava.beans;
 
     exports consulo.project.ui;
-    exports consulo.project.ui.wm;
-    exports consulo.project.ui.wm.event;
-    exports consulo.project.ui.wm.dock;
+    exports consulo.project.ui.localize;
     exports consulo.project.ui.notification;
     exports consulo.project.ui.notification.event;
     exports consulo.project.ui.util;
+    exports consulo.project.ui.wm;
+    exports consulo.project.ui.wm.event;
+    exports consulo.project.ui.wm.dock;
 
-    exports consulo.project.ui.internal to consulo.ide.impl,
+    exports consulo.project.ui.internal to
+        consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.os.mac,
         consulo.desktop.swt.ide.impl,

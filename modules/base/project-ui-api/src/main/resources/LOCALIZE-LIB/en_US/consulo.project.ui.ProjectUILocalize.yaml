@@ -1,0 +1,22 @@
+action.notification.clear.description:
+    text: Clear the contents of the Event Log
+action.notification.clear.text:
+    text: Clear All
+action.notification.mark.as.read.description:
+    text: Mark all unread notifications as read
+action.notification.mark.as.read.text:
+    text: Mark all notifications as read
+action.notification.settings.description:
+    text: Edit notification settings
+action.notification.settings.text:
+    text: Settings
+action.notification.show.balloons.description:
+    text: Enable or suppress notification balloons
+action.notification.show.balloons.text:
+    text: Show balloons
+toolwindow.messages.display.name:
+    text: Messages
+toolwindow.notifications.display.name:
+    text: Notifications
+toolwindow.project.display.name:
+    text: Project
