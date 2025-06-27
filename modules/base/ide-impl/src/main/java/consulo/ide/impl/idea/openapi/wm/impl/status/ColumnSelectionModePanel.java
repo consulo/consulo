@@ -76,7 +76,7 @@ public class ColumnSelectionModePanel extends EditorBasedWidget
         else {
             myTextPanel.setVisible(true);
             myTextPanel.setText(UILocalize.statusBarColumnStatusText().get());
-            myTextPanel.setToolTipText("Column selection mode");
+            myTextPanel.setToolTipText(UILocalize.statusBarColumnStatusTooltipText().get());
         }
     }
 

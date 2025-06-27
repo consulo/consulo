@@ -6,9 +6,9 @@ import consulo.application.util.HtmlChunk;
 import consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.ColorValueUtil;
-import org.jetbrains.annotations.Nls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -35,16 +35,14 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
     @Nullable
     @Override
     public String getTooltip() {
-        return createTooltip(getIndentInfo(myIndentOptions), getHint());
+        return createTooltip(getIndentInfo(myIndentOptions).get(), getHint());
     }
 
-    @Nls
     @Nonnull
-    public static String getIndentInfo(@Nonnull IndentOptions indentOptions) {
-        return indentOptions.USE_TAB_CHARACTER ? CodeStyleBundle.message("indent.status.bar.tab") : CodeStyleBundle.message(
-            "indent.status.bar.spaces",
-            indentOptions.INDENT_SIZE
-        );
+    public static LocalizeValue getIndentInfo(@Nonnull IndentOptions indentOptions) {
+        return indentOptions.USE_TAB_CHARACTER
+            ? CodeStyleLocalize.indentStatusBarTab()
+            : CodeStyleLocalize.indentStatusBarSpaces(indentOptions.INDENT_SIZE);
     }
 
     /**
@@ -56,7 +54,7 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
     }
 
     @Nonnull
-    public static String createTooltip(@Nls String indentInfo, String hint) {
+    public static String createTooltip(String indentInfo, String hint) {
         HtmlBuilder builder = new HtmlBuilder();
         builder.append(CodeStyleLocalize.indentStatusBarIndentTooltip().get()).append(HtmlChunk.nbsp()).append(indentInfo);
         if (hint != null) {
@@ -68,7 +66,7 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
     @Nonnull
     @Override
     public String getStatusText(@Nonnull PsiFile psiFile) {
-        String widgetText = getIndentInfo(myIndentOptions);
+        String widgetText = getIndentInfo(myIndentOptions).get();
         IndentOptions projectIndentOptions = CodeStyle.getSettings(psiFile.getProject()).getLanguageIndentOptions(psiFile.getLanguage());
         if (!projectIndentOptions.equals(myIndentOptions)) {
             widgetText += "*";

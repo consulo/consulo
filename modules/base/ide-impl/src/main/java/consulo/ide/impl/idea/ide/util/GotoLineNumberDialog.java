@@ -1,15 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.PatternUtil;
-import consulo.ui.ex.awt.JBUI;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -28,10 +29,11 @@ public abstract class GotoLineNumberDialog extends DialogWrapper {
 
     public GotoLineNumberDialog(Project project) {
         super(project, true);
-        setTitle("Go to Line/Column");
+        setTitle(IdeLocalize.dialogTitleGoToLineColumn());
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myField;
     }
@@ -100,7 +102,7 @@ public abstract class GotoLineNumberDialog extends DialogWrapper {
         gbConstraints.weightx = 0;
         gbConstraints.weighty = 1;
         gbConstraints.anchor = GridBagConstraints.EAST;
-        JLabel label = new JLabel("[Line] [:column]:");
+        JLabel label = new JLabel(IdeLocalize.labelLineColumn().get());
         panel.add(label, gbConstraints);
 
         gbConstraints.fill = GridBagConstraints.BOTH;
@@ -109,12 +111,12 @@ public abstract class GotoLineNumberDialog extends DialogWrapper {
         panel.add(myField, gbConstraints);
         myField.setText(String.format("%d:%d", getLine() + 1, getColumn() + 1));
 
-        if (ApplicationManager.getApplication().isInternal()) {
+        if (Application.get().isInternal()) {
             gbConstraints.gridy = 1;
             gbConstraints.weightx = 0;
             gbConstraints.weighty = 1;
             gbConstraints.anchor = GridBagConstraints.EAST;
-            final JLabel offsetLabel = new JLabel("Offset:");
+            JLabel offsetLabel = new JLabel(IdeLocalize.labelOffset().get());
             panel.add(offsetLabel, gbConstraints);
 
             gbConstraints.fill = GridBagConstraints.BOTH;
