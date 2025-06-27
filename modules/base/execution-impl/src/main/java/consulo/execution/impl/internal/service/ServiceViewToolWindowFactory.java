@@ -16,6 +16,7 @@
 package consulo.execution.impl.internal.service;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.BaseServiceToolWindowFactory;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -51,6 +52,6 @@ public class ServiceViewToolWindowFactory extends BaseServiceToolWindowFactory {
     @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO(ToolWindowId.SERVICES);
+        return ExecutionLocalize.toolwindowServicesDisplayName();
     }
 }
