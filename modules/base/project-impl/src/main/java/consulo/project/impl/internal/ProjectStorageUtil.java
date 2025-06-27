@@ -31,108 +31,115 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.util.*;
 
 public class ProjectStorageUtil {
+    public static class UnableToSaveProjectNotification extends Notification {
+        private Project myProject;
+        private final List<String> myFileNames;
 
-  public static class UnableToSaveProjectNotification extends Notification {
-    private Project myProject;
-    private final List<String> myFileNames;
+        private UnableToSaveProjectNotification(@Nonnull Project project, Collection<File> readOnlyFiles) {
+            super(
+                NotificationService.getInstance()
+                    .newError(ProjectNotificationGroups.Project)
+                    .title(LocalizeValue.localizeTODO("Could not save project!"))
+                    .content(LocalizeValue.localizeTODO(buildMessage()))
+                    .hyperlinkListener((notification, event) -> {
+                        UnableToSaveProjectNotification unableToSaveProjectNotification = (UnableToSaveProjectNotification) notification;
+                        Project _project = unableToSaveProjectNotification.getProject();
+                        notification.expire();
 
-    private UnableToSaveProjectNotification(@Nonnull Project project, Collection<File> readOnlyFiles) {
-      super(
-        NotificationService.getInstance()
-          .newError(ProjectNotificationGroups.Project)
-          .title(LocalizeValue.localizeTODO("Could not save project!"))
-          .content(LocalizeValue.localizeTODO(buildMessage()))
-          .hyperlinkListener((notification, event) -> {
-            UnableToSaveProjectNotification unableToSaveProjectNotification = (UnableToSaveProjectNotification)notification;
-            Project _project = unableToSaveProjectNotification.getProject();
-            notification.expire();
+                        if (_project != null && !_project.isDisposed()) {
+                            _project.save();
+                        }
+                    })
+            );
 
-            if (_project != null && !_project.isDisposed()) {
-              _project.save();
+            myProject = project;
+            myFileNames = ContainerUtil.map(readOnlyFiles, File::getPath);
+        }
+
+        public List<String> getFileNames() {
+            return myFileNames;
+        }
+
+        private static String buildMessage() {
+            final StringBuilder sb = new StringBuilder(
+                "<p>Unable to save project files. Please ensure project files are writable and you have permissions to modify them.");
+            return sb.append(" <a href=\"\">Try to save project again</a>.</p>").toString();
+        }
+
+        public Project getProject() {
+            return myProject;
+        }
+
+        @Override
+        public void expire() {
+            myProject = null;
+            super.expire();
+        }
+    }
+
+    @RequiredUIAccess
+    public static void checkUnknownMacros(ProjectEx project, final boolean showDialog) {
+        final IProjectStore stateStore = project.getInstance(IProjectStore.class);
+
+        final TrackingPathMacroSubstitutor[] substitutors = stateStore.getSubstitutors();
+        final Set<String> unknownMacros = new HashSet<>();
+        for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
+            unknownMacros.addAll(substitutor.getUnknownMacros(null));
+        }
+
+        if (!unknownMacros.isEmpty()) {
+            if (!showDialog || project.getApplication()
+                .getInstance(ProjectCheckMacroService.class)
+                .checkMacros(project, new HashSet<>(unknownMacros))) {
+                final PathMacros pathMacros = PathMacros.getInstance();
+                final Set<String> macros2invalidate = new HashSet<>(unknownMacros);
+                for (Iterator it = macros2invalidate.iterator(); it.hasNext(); ) {
+                    final String macro = (String) it.next();
+                    final String value = pathMacros.getValue(macro);
+                    if ((value == null || value.trim().isEmpty()) && !pathMacros.isIgnoredMacroName(macro)) {
+                        it.remove();
+                    }
+                }
+
+                if (!macros2invalidate.isEmpty()) {
+                    final Set<String> components = new HashSet<>();
+                    for (TrackingPathMacroSubstitutor substitutor : substitutors) {
+                        components.addAll(substitutor.getComponents(macros2invalidate));
+                    }
+
+                    for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
+                        substitutor.invalidateUnknownMacros(macros2invalidate);
+                    }
+
+                    final UnknownMacroNotification[] notifications =
+                        NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, project);
+                    for (final UnknownMacroNotification notification : notifications) {
+                        if (macros2invalidate.containsAll(notification.getMacros())) {
+                            notification.expire();
+                        }
+                    }
+
+                    ApplicationManager.getApplication().runWriteAction(() -> stateStore.reinitComponents(components, true));
+                }
             }
-          })
-      );
-
-      myProject = project;
-      myFileNames = ContainerUtil.map(readOnlyFiles, File::getPath);
-    }
-
-    public List<String> getFileNames() {
-      return myFileNames;
-    }
-
-    private static String buildMessage() {
-      final StringBuilder sb = new StringBuilder("<p>Unable to save project files. Please ensure project files are writable and you have permissions to modify them.");
-      return sb.append(" <a href=\"\">Try to save project again</a>.</p>").toString();
-    }
-
-    public Project getProject() {
-      return myProject;
-    }
-
-    @Override
-    public void expire() {
-      myProject = null;
-      super.expire();
-    }
-  }
-
-  @RequiredUIAccess
-  public static void checkUnknownMacros(ProjectEx project, final boolean showDialog) {
-    final IProjectStore stateStore = project.getInstance(IProjectStore.class);
-
-    final TrackingPathMacroSubstitutor[] substitutors = stateStore.getSubstitutors();
-    final Set<String> unknownMacros = new HashSet<>();
-    for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
-      unknownMacros.addAll(substitutor.getUnknownMacros(null));
-    }
-
-    if (!unknownMacros.isEmpty()) {
-      if (!showDialog || project.getApplication().getInstance(ProjectCheckMacroService.class).checkMacros(project, new HashSet<>(unknownMacros))) {
-        final PathMacros pathMacros = PathMacros.getInstance();
-        final Set<String> macros2invalidate = new HashSet<>(unknownMacros);
-        for (Iterator it = macros2invalidate.iterator(); it.hasNext(); ) {
-          final String macro = (String)it.next();
-          final String value = pathMacros.getValue(macro);
-          if ((value == null || value.trim().isEmpty()) && !pathMacros.isIgnoredMacroName(macro)) {
-            it.remove();
-          }
         }
+    }
 
-        if (!macros2invalidate.isEmpty()) {
-          final Set<String> components = new HashSet<>();
-          for (TrackingPathMacroSubstitutor substitutor : substitutors) {
-            components.addAll(substitutor.getComponents(macros2invalidate));
-          }
+    @Nonnull
+    public static String getStoreDir(@Nonnull Project project) {
+        return project.getBasePath() + "/" + Project.DIRECTORY_STORE_FOLDER;
+    }
 
-          for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
-            substitutor.invalidateUnknownMacros(macros2invalidate);
-          }
-
-          final UnknownMacroNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, project);
-          for (final UnknownMacroNotification notification : notifications) {
-            if (macros2invalidate.containsAll(notification.getMacros())) notification.expire();
-          }
-
-          ApplicationManager.getApplication().runWriteAction(() -> stateStore.reinitComponents(components, true));
+    public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, Collection<File> readOnlyFiles) {
+        final UnableToSaveProjectNotification[] notifications =
+            NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
+        if (notifications.length == 0) {
+            Notifications.Bus.notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);
         }
-      }
     }
-  }
-
-  @Nonnull
-  public static String getStoreDir(@Nonnull Project project) {
-    return project.getBasePath() + "/" + Project.DIRECTORY_STORE_FOLDER;
-  }
-
-  public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, Collection<File> readOnlyFiles) {
-    final UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
-    if (notifications.length == 0) {
-      Notifications.Bus.notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);
-    }
-  }
 }
