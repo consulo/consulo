@@ -106,6 +106,17 @@ dialog.title.packaging.choose.library:
     text: Choose Library
 dialog.title.packaging.choose.module:
     text: Choose Module
+dialog.unsaved.project.read.only.files:
+    text: |-
+        Read-only files:
+
+        {0}
+dialog.unsaved.project.text:
+    text: |-
+        {0} was unable to save some project files,
+        are you sure you want to close this project anyway?
+dialog.unsaved.project.title:
+    text: Unsaved Project
 display.name.artifacts:
     text: Artifacts
 drag.n.drop.text.0.packaging.elements:
@@ -457,6 +468,10 @@ progress.text.searching.frameworks:
     text: Searching for frameworks. Please wait.
 progress.title.deleting.files:
     text: Deleting Files…
+progress.title.loading.modules:
+    text: Loading modules…
+progress.title.preparing.workspace:
+    text: Preparing workspace…
 project.compiler.output:
     text: '<html><b>Project compiler output:</b><br>This path is used to store all project compilation results. <br>A directory corresponding to each module is created under this path. <br>This directory contains two subdirectories: Production and Test for production code and test sources, respectively.<br>A module specific compiler output path can be configured for each of the modules as required</html>'
 project.configuration.save.file.not.found:
@@ -663,6 +678,8 @@ project.settings.display.name:
     text: Project Structure
 prompt.open.project.in.new.frame:
     text: <html><body>New projects can either be opened in a new window or replace the project in the existing window.<br>How would you like to open the project?</body></html>
+recent.project.0.opened.action.text:
+    text: '{0} (opened)'
 rename.message.prefix.module:
     text: Module
 rename.message.prefix.scope:
@@ -731,5 +748,3 @@ unknown.sdk:
     text: Unknown SDK
 warning.message.some.required.libraries.wasn.t.downloaded:
     text: Some required library wasn't downloaded. Do you want to proceed without it?
-recent.project.0.opened.action.text:
-    text: '{0} (opened)'
