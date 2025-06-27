@@ -248,6 +248,8 @@ action.pin.active.tab:
     text: P_in Active Tab
 action.pin.tab:
     text: P_in Tab
+action.presentation.EncodingPanel.text:
+    text: File Encoding
 action.previous.message:
     text: Previous Message
 action.previous.problem:
@@ -456,6 +458,10 @@ button.configure:
     text: '&Configure...'
 button.configure.e:
     text: Configure...
+button.convert:
+    text: Convert
+button.convert.anyway:
+    text: Convert Anyway
 button.copy:
     text: '&Copy'
 button.create:
@@ -506,6 +512,10 @@ button.no:
     text: _No
 button.ok:
     text: '&OK'
+button.reload:
+    text: Reload
+button.reload.anyway:
+    text: Reload Anyway
 button.remove:
     text: '&Remove'
 button.remove.action:
@@ -760,6 +770,10 @@ detach.library.from.module:
         No file on disk will be hurt.
 dialog.directory.for.downloaded.files.title:
     text: Downloaded files will be copied to selected directory
+dialog.message.cannot.save.the.file.0:
+    text: Cannot save the file {0}
+dialog.message.incompatible.encoding:
+    text: The encoding you''ve chosen (''{0}'') may change the contents of ''{1}''.<br>Do you want to<br>1. <b>Reload</b> the file from disk in the new encoding ''{0}'' and overwrite editor contents or<br>2. <b>Convert</b> the text and overwrite file in the new encoding?
 dialog.title.abbreviation:
     text: Abbreviation
 dialog.title.choose.color:
@@ -770,6 +784,14 @@ dialog.title.convert.module:
     text: Convert Module
 dialog.title.convert.project:
     text: Convert Project
+dialog.title.error.writing.file:
+    text: Error Writing File
+dialog.title.file.0.can.t.be.reloaded:
+    text: File ''{0}'' can''t be reloaded in the ''{1}'' encoding.{2}
+dialog.title.file.0.most.likely.isn.t.stored:
+    text: File ''{0}'' most likely isn''t stored in the ''{1}'' encoding.{2}
+dialog.title.unable.to.save:
+    text: Unable to Save
 diff.dialog.title:
     text: Diff Between ''{0}'' and ''{1}''
 directory.module.content.root:
@@ -837,8 +859,14 @@ element.of.class:
     text: of class
 element.of.interface:
     text: of interface
+encoding.do.not.convert.message:
+    text: Please do not convert to ''{0}''.
 encoding.name.system.default:
     text: '<System Default: {0}>'
+encoding.not.available:
+    text: N/A
+encoding.unsupported.characters.message:
+    text: Encoding ''{0}'' does not support some characters from the text.
 encodings.dialog.caption:
     text: |-
         <html>To change encoding {0} uses for a file or directory, click an item and then select encoding from the Default Encoding list.<br><br>
@@ -1225,6 +1253,8 @@ idea.intellij.look.and.feel:
     text: IntelliJ
 import.project.chooser.header:
     text: <html>Select {0}</html>
+incompatible.encoding.dialog.title:
+    text: 'Incompatible Encoding: {0}'
 install.package.failure:
     text: Error occurred when installing package ''{0}''. <a href="xxx">Details...</a>
 item.file.templates:
@@ -1645,6 +1675,18 @@ new.library.file.chooser.description:
     text: Select archive files in which library files are located
 new.library.file.chooser.title:
     text: New Library Files
+no.charset.set.reason.charset.auto.detected.by.bom:
+    text: charset is auto-detected by BOM
+no.charset.set.reason.charset.auto.detected.from.content:
+    text: charset is auto-detected from content
+no.charset.set.reason.charset.hard.coded.in.file:
+    text: charset is hard-coded in the file
+no.charset.set.reason.disabled.for.binary.file:
+    text: disabled for a binary file
+no.charset.set.reason.disabled.for.directory:
+    text: disabled for a directory
+no.charset.set.reason.disabled.for.file.type:
+    text: disabled for {0}
 no.information.available:
     text: No information available
 node.call.hierarchy.N.usages:
@@ -2320,6 +2362,8 @@ show.status.bar:
     text: Show Status Bar
 small.labels.in.editor.tabs:
     text: Small labels in editor tabs
+status.bar.text.file.encoding:
+    text: 'File Encoding: {0}'
 sys.health.acknowledge.link:
     text: <br/><a href="ack">Do not show again</a>.
 tab.chooser.project:

@@ -1,35 +1,37 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
+import consulo.application.Application;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.virtualFileSystem.encoding.EncodingManager;
-import consulo.virtualFileSystem.internal.LoadTextUtil;
-import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
-import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.component.messagebus.MessageBusConnection;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeWithPredefinedCharset;
-
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -118,39 +120,38 @@ public class EncodingUtil {
             String lineSeparator = FileDocumentManager.getInstance().getLineSeparator(virtualFile, null);
             CharSequence textToSave = lineSeparator.equals("\n") ? text : StringUtilRt.convertLineSeparators(text, lineSeparator);
 
-            consulo.util.lang.Pair<Charset, byte[]> chosen =
+            Pair<Charset, byte[]> chosen =
                 LoadTextUtil.chooseMostlyHarmlessCharset(virtualFile.getCharset(), charset, textToSave.toString());
 
             byte[] saved = chosen.second;
 
             CharSequence textLoadedBack = LoadTextUtil.getTextByBinaryPresentation(saved, charset);
 
-            return !StringUtil.equals(text, textLoadedBack) ? Magic8.NO_WAY : Arrays.equals(
-                saved,
-                bytesOnDisk
-            ) ? Magic8.ABSOLUTELY : Magic8.WELL_IF_YOU_INSIST;
+            return !StringUtil.equals(text, textLoadedBack) ? Magic8.NO_WAY
+                : Arrays.equals(saved, bytesOnDisk) ? Magic8.ABSOLUTELY : Magic8.WELL_IF_YOU_INSIST;
         }
         catch (UnsupportedOperationException e) { // unsupported encoding
             return Magic8.NO_WAY;
         }
     }
 
+    @RequiredUIAccess
     static void saveIn(
-        @Nonnull final Document document,
-        final Editor editor,
-        @Nonnull final VirtualFile virtualFile,
-        @Nonnull final Charset charset
+        @Nonnull Document document,
+        Editor editor,
+        @Nonnull VirtualFile virtualFile,
+        @Nonnull Charset charset
     ) {
         FileDocumentManager documentManager = FileDocumentManager.getInstance();
         documentManager.saveDocument(document);
-        final Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
+        Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
         boolean writable = project == null ? virtualFile.isWritable() : ReadonlyStatusHandler.ensureFilesWritable(project, virtualFile);
         if (!writable) {
             CommonRefactoringUtil.showErrorHint(
                 project,
                 editor,
-                "Cannot save the file " + virtualFile.getPresentableUrl(),
-                "Unable to Save",
+                IdeLocalize.dialogMessageCannotSaveTheFile0(virtualFile.getPresentableUrl()).get(),
+                IdeLocalize.dialogTitleUnableToSave().get(),
                 null
             );
             return;
@@ -159,20 +160,21 @@ public class EncodingUtil {
         EncodingProjectManagerImpl.suppressReloadDuring(() -> {
             EncodingManager.getInstance().setEncoding(virtualFile, charset);
             try {
-                ApplicationManager.getApplication().runWriteAction((ThrowableComputable<Object, IOException>) () -> {
+                Application.get().runWriteAction((ThrowableComputable<Object, IOException>) () -> {
                     virtualFile.setCharset(charset);
                     LoadTextUtil.write(project, virtualFile, virtualFile, document.getText(), document.getModificationStamp());
                     return null;
                 });
             }
             catch (IOException io) {
-                Messages.showErrorDialog(project, io.getMessage(), "Error Writing File");
+                Messages.showErrorDialog(project, io.getMessage(), IdeLocalize.dialogTitleErrorWritingFile().get());
             }
         });
     }
 
-    static void reloadIn(@Nonnull final VirtualFile virtualFile, @Nonnull final Charset charset, final Project project) {
-        final FileDocumentManager documentManager = FileDocumentManager.getInstance();
+    @RequiredUIAccess
+    static void reloadIn(@Nonnull final VirtualFile virtualFile, @Nonnull Charset charset, Project project) {
+        FileDocumentManager documentManager = FileDocumentManager.getInstance();
 
         Consumer<VirtualFile> setEncoding = file -> {
             if (project == null) {
@@ -189,7 +191,7 @@ public class EncodingUtil {
         }
 
         final Disposable disposable = Disposable.newDisposable();
-        MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(disposable);
+        MessageBusConnection connection = Application.get().getMessageBus().connect(disposable);
         connection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
             @Override
             public void beforeFileContentReload(@Nonnull VirtualFile file, @Nonnull Document document) {
@@ -206,13 +208,10 @@ public class EncodingUtil {
 
         // if file was modified, the user will be asked here
         try {
-            EncodingProjectManagerImpl.suppressReloadDuring(() -> ((FileDocumentManagerImpl) documentManager).contentsChanged(new VFileContentChangeEvent(
-                null,
-                virtualFile,
-                0,
-                0,
-                false
-            )));
+            EncodingProjectManagerImpl.suppressReloadDuring(
+                () ->
+                    ((FileDocumentManagerImpl) documentManager).contentsChanged(new VFileContentChangeEvent(null, virtualFile, 0, 0, false))
+            );
         }
         finally {
             Disposer.dispose(disposable);
@@ -222,8 +221,8 @@ public class EncodingUtil {
     // returns file type description if the charset is hard-coded or null if file type does not restrict encoding
     private static String checkHardcodedCharsetFileType(@Nonnull VirtualFile virtualFile) {
         FileType fileType = virtualFile.getFileType();
-        if (fileType instanceof FileTypeWithPredefinedCharset) {
-            return ((FileTypeWithPredefinedCharset) fileType).getPredefinedCharset(virtualFile).getSecond();
+        if (fileType instanceof FileTypeWithPredefinedCharset fileTypeWithPredefinedCharset) {
+            return fileTypeWithPredefinedCharset.getPredefinedCharset(virtualFile).getSecond();
         }
         return null;
     }
@@ -233,7 +232,7 @@ public class EncodingUtil {
     }
 
     @Nullable
-    static FailReason checkCanReload(@Nonnull VirtualFile virtualFile, @Nullable Ref<? super Charset> current) {
+    static FailReason checkCanReload(@Nonnull VirtualFile virtualFile, @Nullable SimpleReference<? super Charset> current) {
         if (virtualFile.isDirectory()) {
             return FailReason.IS_DIRECTORY;
         }
@@ -242,7 +241,7 @@ public class EncodingUtil {
         if (document == null) {
             return FailReason.IS_BINARY;
         }
-        Charset charsetFromContent = ((EncodingManagerImpl) EncodingManager.getInstance()).computeCharsetFromContent(virtualFile);
+        Charset charsetFromContent = EncodingManagerImpl.computeCharsetFromContent(virtualFile);
         Charset existing = virtualFile.getCharset();
         LoadTextUtil.AutoDetectionReason autoDetectedFrom = LoadTextUtil.getCharsetAutoDetectionReason(virtualFile);
         FailReason result;
@@ -283,7 +282,7 @@ public class EncodingUtil {
             return FailReason.IS_DIRECTORY;
         }
 
-        Charset charsetFromContent = ((EncodingManagerImpl) EncodingManager.getInstance()).computeCharsetFromContent(virtualFile);
+        Charset charsetFromContent = EncodingManagerImpl.computeCharsetFromContent(virtualFile);
         return charsetFromContent != null ? FailReason.BY_FILE : fileTypeDescriptionError(virtualFile);
     }
 
@@ -302,30 +301,24 @@ public class EncodingUtil {
         if (r1 == null) {
             return null;
         }
-        Ref<Charset> current = Ref.create();
+        SimpleReference<Charset> current = SimpleReference.create();
         FailReason r2 = checkCanReload(file, current);
         if (r2 == null) {
             return null;
         }
-        String errorDescription = r1 == r2 ? reasonToString(r1, file) : reasonToString(r1, file) + ", " + reasonToString(r2, file);
+        String errorDescription = r1 == r2 ? reasonToString(r1, file).get() : reasonToString(r1, file) + ", " + reasonToString(r2, file);
         return Pair.create(current.get(), errorDescription);
     }
 
-    static String reasonToString(@Nonnull FailReason reason, VirtualFile file) {
-        switch (reason) {
-            case IS_DIRECTORY:
-                return "disabled for a directory";
-            case IS_BINARY:
-                return "disabled for a binary file";
-            case BY_FILE:
-                return "charset is hard-coded in the file";
-            case BY_BOM:
-                return "charset is auto-detected by BOM";
-            case BY_BYTES:
-                return "charset is auto-detected from content";
-            case BY_FILETYPE:
-                return "disabled for " + file.getFileType().getDescription();
-        }
-        throw new AssertionError(reason);
+    @Nonnull
+    static LocalizeValue reasonToString(@Nonnull FailReason reason, VirtualFile file) {
+        return switch (reason) {
+            case IS_DIRECTORY -> IdeLocalize.noCharsetSetReasonDisabledForDirectory();
+            case IS_BINARY -> IdeLocalize.noCharsetSetReasonDisabledForBinaryFile();
+            case BY_FILE -> IdeLocalize.noCharsetSetReasonCharsetHardCodedInFile();
+            case BY_BOM -> IdeLocalize.noCharsetSetReasonCharsetAutoDetectedByBom();
+            case BY_BYTES -> IdeLocalize.noCharsetSetReasonCharsetAutoDetectedFromContent();
+            case BY_FILETYPE -> IdeLocalize.noCharsetSetReasonDisabledForFileType(file.getFileType().getDescription());
+        };
     }
 }
