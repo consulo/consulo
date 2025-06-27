@@ -22,11 +22,11 @@ import consulo.component.store.impl.internal.storage.StateStorageBase;
 import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.component.store.internal.StateStorage;
 import consulo.disposer.Disposable;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.StoreReloadManager;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.Alerts;
 import consulo.util.collection.Sets;
 import consulo.virtualFileSystem.VirtualFile;
@@ -50,7 +50,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author VISTALL
- * @since 11/09/2023
+ * @since 2023-09-11
  */
 @Singleton
 @ServiceImpl
@@ -134,33 +134,30 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         return askToRestart(project, causes);
     }
 
-    private static CompletableFuture<Boolean> askToRestart(Project project, @Nullable Collection<? extends StateStorage> changedStorages) {
-        StringBuilder message = new StringBuilder();
-        message.append("Project components were changed externally and cannot be reloaded");
-
-        message.append("\nWould you like to ");
-        message.append("reload project?");
-
+    private static CompletableFuture<Boolean> askToRestart(
+        @Nonnull Project project,
+        @Nullable Collection<? extends StateStorage> changedStorages
+    ) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        project.getUIAccess().give(() -> {
-            Alerts.yesNo()
-                .title(LocalizeValue.localizeTODO("Project Files Changed"))
-                .text(message.toString())
+        project.getUIAccess().give(
+            () -> Alerts.yesNo()
+                .title(ProjectLocalize.projectReloadExternalChangeTitle())
+                .text(ProjectLocalize.projectReloadExternalChangeMessage())
                 .showAsync(project)
                 .doWhenDone((it) -> {
                     if (it) {
                         if (changedStorages != null) {
                             for (StateStorage storage : changedStorages) {
-                                if (storage instanceof StateStorageBase) {
-                                    ((StateStorageBase) storage).disableSaving();
+                                if (storage instanceof StateStorageBase stateStorageBase) {
+                                    stateStorageBase.disableSaving();
                                 }
                             }
                         }
                     }
                     future.complete(it);
-                });
-        });
+                })
+        );
 
         return future;
     }
