@@ -103,6 +103,9 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
             case BORDERLESS:
                 toAWTComponent().putClientProperty("JButton.buttonType", "borderless");
                 break;
+            case TOOLBAR:
+                toAWTComponent().putClientProperty("JButton.buttonType", "toolBarButton");
+                break;
             case INPLACE:
                 InplaceComponent.prepareLeadingOrTrailingComponent(toAWTComponent());
                 break;
