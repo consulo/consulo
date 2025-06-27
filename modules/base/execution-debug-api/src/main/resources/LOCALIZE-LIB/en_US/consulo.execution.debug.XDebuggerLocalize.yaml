@@ -2,6 +2,8 @@ action.Debugger.PopFrame.description:
     text: Moves execution point back to the method call dropping current method frames from the stack
 action.Debugger.PopFrame.text:
     text: Reset _Frame
+action.memory.view.settings.text:
+    text: Memory View Settings
 action.next.frame.text:
     text: Next Frame
 action.previous.frame.text:
@@ -16,6 +18,8 @@ debugger.configurable.display.name:
     text: Debugger
 debugger.dataViews.display.name:
     text: Data Views
+debugger.evaluate.expression.or.add.a.watch.hint:
+    text: Evaluate expression ({0}) or add a watch ({1})
 debugger.frames.not.available:
     text: Frames are not available
 debugger.hotswap.display.name:
@@ -26,6 +30,8 @@ debugger.no.results:
     text: Type an expression and press 'Enter'
 debugger.no.watches:
     text: No watches
+debugger.result.node.name:
+    text: result
 debugger.runner.start.action.text:
     text: '&Debug'
 debugger.runner.start.action.text.0:
@@ -68,6 +74,30 @@ load.value.task.error:
     text: 'Cannot load value: {0}'
 load.value.task.text:
     text: Loading value
+memory.instances.close.text:
+    text: Close
+memory.unable.to.get.instances.of.class:
+    text: Unable to get instances of class {0}
+memory.view.empty.running:
+    text: Stop at a breakpoint to load the list of classes
+memory.view.empty.stopped:
+    text: Classes are not available
+memory.view.instances.dialog.title:
+    text: Instances of {0}
+memory.view.instances.dialog.title.warning:
+    text: 'Instances of {0}. Warning: {1}'
+memory.view.instances.warning.not.all.loaded:
+    text: Not all instances will be loaded (only {0})
+memory.view.load.classes:
+    text: Load classes
+memory.view.no.classes.loaded:
+    text: No classes loaded.
+memory.view.table.column.name.class:
+    text: Class
+memory.view.table.column.name.count:
+    text: Count
+memory.view.table.column.name.diff:
+    text: Diff
 node.test.show.full.value:
     text: … View
 node.text.ellipsis.0.more.nodes.double.click.to.show:
