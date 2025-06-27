@@ -2,9 +2,9 @@
 package consulo.desktop.awt.codeInsight.lookup;
 
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
@@ -23,12 +23,16 @@ import consulo.language.editor.inject.EditorWindow;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -41,6 +45,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -63,7 +68,6 @@ class LookupUi {
     private Boolean myPositionedAbove = null;
 
     private AtomicBoolean myHintCalculating = new AtomicBoolean(true);
-    private final ActionToolbar myLookupUIToolbar;
 
     @RequiredUIAccess
     LookupUi(@Nonnull LookupImpl lookup, Advertiser advertiser, JBList list) {
@@ -74,34 +78,38 @@ class LookupUi {
         myProcessIcon.setVisible(false);
         myLookup.resort(false);
 
-        final ActionManager actionManager = ActionManager.getInstance();
+        Button moreButton = Button.create(LocalizeValue.of());
+        moreButton.setIcon(PlatformIconGroup.actionsMorevertical());
+        moreButton.addStyle(ButtonStyle.TOOLBAR);
+        moreButton.addClickListener(event -> {
+            ActionManager actionManager = ActionManager.getInstance();
 
-        MoreActionGroup moreActionGroup = new MoreActionGroup();
-        moreActionGroup.add(new HintAction());
-        moreActionGroup.add(new ChangeSortingAction());
-        moreActionGroup.add(new DelegatedAction(actionManager.getAction(IdeActions.ACTION_QUICK_JAVADOC)) {
-            @RequiredUIAccess
-            @Override
-            public void update(@Nonnull AnActionEvent e) {
-                e.getPresentation().setVisible(!CodeInsightSettings.getInstance().AUTO_POPUP_JAVADOC_INFO);
-            }
+            MoreActionGroup moreActionGroup = new MoreActionGroup();
+            moreActionGroup.add(new HintAction());
+            moreActionGroup.add(new ChangeSortingAction());
+            moreActionGroup.add(new DelegatedAction(actionManager.getAction(IdeActions.ACTION_QUICK_JAVADOC)) {
+                @RequiredUIAccess
+                @Override
+                public void update(@Nonnull AnActionEvent e) {
+                    e.getPresentation().setVisible(!CodeInsightSettings.getInstance().AUTO_POPUP_JAVADOC_INFO);
+                }
+            });
+            moreActionGroup.add(new DelegatedAction(actionManager.getAction(IdeActions.ACTION_QUICK_IMPLEMENTATIONS)));
+
+            ActionPopupMenu menu = actionManager.createActionPopupMenu(ActionPlaces.EDITOR_POPUP, moreActionGroup);
+            menu.setTargetComponent(lookup.getEditor().getComponent());
+            
+            InputDetails inputDetails = Objects.requireNonNull(event.getInputDetails());
+
+            menu.show(moreButton, inputDetails.getX(), inputDetails.getY());
         });
-        moreActionGroup.add(new DelegatedAction(actionManager.getAction(IdeActions.ACTION_QUICK_IMPLEMENTATIONS)));
-
-        ActionGroup toolbarGroup = ActionGroup.newImmutableBuilder().add(moreActionGroup).build();
-        myLookupUIToolbar = actionManager.createActionToolbar("LookupUIToolbar", toolbarGroup, true);
-        myLookupUIToolbar.setMiniMode(true);
-        myLookupUIToolbar.setTargetComponent(list);
-        myLookupUIToolbar.updateActionsAsync();
 
         myBottomPanel = new NonOpaquePanel(new BorderLayout());
         myBottomPanel.add(myAdvertiser.getAdComponent(), BorderLayout.WEST);
 
         JPanel rightPanel = new NonOpaquePanel(new HorizontalLayout(4, SwingConstants.CENTER));
         rightPanel.add(myProcessIcon);
-        JComponent toolbarComponent = myLookupUIToolbar.getComponent();
-        toolbarComponent.setBorder(JBUI.Borders.empty());
-        rightPanel.add(toolbarComponent);
+        rightPanel.add(TargetAWT.to(moreButton));
 
         myBottomPanel.add(rightPanel, BorderLayout.EAST);
 
@@ -116,16 +124,12 @@ class LookupUi {
 
         layeredPane.mainPanel.add(myScrollPane, BorderLayout.CENTER);
 
-        myModalityState = IdeaModalityState.stateForComponent(lookup.getTopLevelEditor().getComponent());
+        myModalityState = Application.get().getModalityStateForComponent(lookup.getTopLevelEditor().getComponent());
 
         addListeners();
 
         Disposer.register(lookup, myProcessIcon);
         Disposer.register(lookup, myHintAlarm);
-    }
-
-    public ActionToolbar getLookupUIToolbar() {
-        return myLookupUIToolbar;
     }
 
     private void addListeners() {
@@ -366,29 +370,24 @@ class LookupUi {
         }
     }
 
-    private class ChangeSortingAction extends DumbAwareAction implements HintManagerImpl.ActionToIgnore {
-        private boolean sortByName = UISettings.getInstance().getSortLookupElementsLexicographically();
-
+    private class ChangeSortingAction extends DumbAwareToggleAction implements HintManagerImpl.ActionToIgnore {
         private ChangeSortingAction() {
             super("Sort by Name");
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-            if (e.getPlace() == ActionPlaces.EDITOR_POPUP) {
-                sortByName = !sortByName;
-
-                FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CHANGE_SORTING);
-                UISettings.getInstance().setSortLookupElementsLexicographically(sortByName);
-                myLookup.resort(false);
-            }
+        public boolean isSelected(@Nonnull AnActionEvent e) {
+            return UISettings.getInstance().getSortLookupElementsLexicographically();
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent e) {
-            e.getPresentation().setIcon(sortByName ? AllIcons.Actions.Checked : null);
+        @RequiredUIAccess
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CHANGE_SORTING);
+            
+            UISettings.getInstance().setSortLookupElementsLexicographically(state);
+
+            myLookup.resort(false);
         }
     }
 
@@ -397,7 +396,7 @@ class LookupUi {
 
         private DelegatedAction(AnAction action) {
             delegateAction = action;
-            getTemplatePresentation().setText(delegateAction.getTemplateText(), true);
+            getTemplatePresentation().setTextValue(delegateAction.getTemplatePresentation().getTextValue());
             copyShortcutFrom(delegateAction);
         }
 

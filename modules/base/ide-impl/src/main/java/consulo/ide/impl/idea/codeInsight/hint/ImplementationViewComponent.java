@@ -532,7 +532,7 @@ public class ImplementationViewComponent extends JPanel {
         edit.registerCustomShortcutSet(new CompositeShortcutSet(CommonShortcuts.getViewSource(), CommonShortcuts.CTRL_ENTER), this);
         group.add(edit);
 
-        return ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        return ActionManager.getInstance().createActionToolbar("ImplementationViewToolbar", group, true);
     }
 
     @RequiredUIAccess
