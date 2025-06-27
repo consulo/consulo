@@ -28,6 +28,7 @@ import consulo.ide.impl.idea.util.ui.ColorIcon;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.ui.AntialiasingType;
@@ -105,7 +106,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       UiInspectorNotification[] existing = NotificationsManager.getNotificationsManager().getNotificationsOfType(UiInspectorNotification.class, null);
       if (existing.length == 0) {
         new UiInspectorNotification(
-          Notifications.SYSTEM_MESSAGES_GROUP.newInfo()
+          NotificationService.getInstance()
+            .newInfo(Notifications.SYSTEM_MESSAGES_GROUP)
             .title(LocalizeValue.localizeTODO("UI Inspector"))
             .content(LocalizeValue.localizeTODO("Control-Alt-Click to view component info!"))
         ).notify(null);

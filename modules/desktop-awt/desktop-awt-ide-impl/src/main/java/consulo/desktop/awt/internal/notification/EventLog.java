@@ -31,6 +31,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.notification.event.NotificationListener;
@@ -183,7 +184,8 @@ public class EventLog {
                 isLongLine(actions) ? "<br>" : "&nbsp;"
             ) + "</p>";
 
-            Notification n = Notifications.SYSTEM_MESSAGES_GROUP.newInfo()
+            Notification n = NotificationService.getInstance()
+                .newInfo(Notifications.SYSTEM_MESSAGES_GROUP)
                 .content(LocalizeValue.of("."))
                 .hyperlinkListener(
                     (n1, event) ->

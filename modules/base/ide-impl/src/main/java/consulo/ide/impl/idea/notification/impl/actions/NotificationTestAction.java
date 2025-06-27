@@ -20,10 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -189,7 +186,8 @@ public class NotificationTestAction extends AnAction implements DumbAware {
         if (myToolwindow) {
           displayId = TEST_TOOLWINDOW_GROUP;
         }
-        Notification.Builder builder = displayId.newOfType(myType)
+        Notification.Builder builder = NotificationService.getInstance()
+            .newOfType(displayId, myType)
             .title(LocalizeValue.ofNullable(myTitle))
             .subtitle(LocalizeValue.ofNullable(mySubtitle))
             .content(LocalizeValue.ofNullable(StringUtil.join(myContent, "\n")))

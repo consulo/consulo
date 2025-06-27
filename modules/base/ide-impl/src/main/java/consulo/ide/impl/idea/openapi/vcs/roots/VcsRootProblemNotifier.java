@@ -15,6 +15,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
+import consulo.project.ui.notification.NotificationService;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
@@ -53,6 +54,8 @@ public final class VcsRootProblemNotifier {
   private final ChangeListManager myChangeListManager;
   @Nonnull
   private final ProjectFileIndex myProjectFileIndex;
+  @Nonnull
+  private final NotificationService myNotificationService;
 
   // unregistered roots reported during this session but not explicitly ignored
   @Nonnull
@@ -76,6 +79,7 @@ public final class VcsRootProblemNotifier {
     myChangeListManager = ChangeListManager.getInstance(project);
     myProjectFileIndex = ProjectFileIndex.getInstance(myProject);
     myVcsManager = ProjectLevelVcsManager.getInstance(project);
+    myNotificationService = NotificationService.getInstance();
     myReportedUnregisteredRoots = new HashSet<>();
   }
 
@@ -141,13 +145,13 @@ public final class VcsRootProblemNotifier {
 
     Notification.Builder builder;
     if (invalidRoots.isEmpty()) {
-      builder = VcsNotifier.STANDARD_NOTIFICATION.newInfo();
+      builder = myNotificationService.newInfo(VcsNotifier.STANDARD_NOTIFICATION);
       for (NotificationAction action : notificationActions) {
         builder.addAction(action);
       }
     }
     else {
-      builder = VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.newError()
+      builder = myNotificationService.newError(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
         .addAction(getConfigureNotificationAction());
     }
     builder.title(LocalizeValue.localizeTODO(title))

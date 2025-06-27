@@ -22,6 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.versionControlSystem.VcsToolWindow;
 
@@ -37,7 +38,9 @@ import javax.swing.event.HyperlinkEvent;
 public class VcsBalloonProblemNotifier implements Runnable {
   public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Common Version Control Messages",
                                                                                                VcsToolWindow.ID, true);
+  @Nonnull
   private final Project myProject;
+  @Nonnull
   private final String myMessage;
   private final NotificationType myMessageType;
   private final boolean myShowOverChangesView;
@@ -94,6 +97,7 @@ public class VcsBalloonProblemNotifier implements Runnable {
   }
 
   public void run() {
+    NotificationService notificationService = NotificationService.getInstance();
     final Notification notification;
     if (myNotificationListener != null && myNotificationListener.length > 0) {
       final StringBuilder sb = new StringBuilder(myMessage);
@@ -102,7 +106,7 @@ public class VcsBalloonProblemNotifier implements Runnable {
         sb.append("<br/><a href=\"").append(name).append("\">").append(name).append("</a>");
       }
 
-      notification = NOTIFICATION_GROUP.newOfType(myMessageType)
+      notification = notificationService.newOfType(NOTIFICATION_GROUP, myMessageType)
         .title(LocalizeValue.localizeTODO(myMessageType.name()))
         .content(LocalizeValue.localizeTODO(sb.toString()))
         .hyperlinkListener((thisNotification, event) -> {
@@ -127,7 +131,7 @@ public class VcsBalloonProblemNotifier implements Runnable {
         .create();
     }
     else {
-      notification = NOTIFICATION_GROUP.newOfType(myMessageType)
+      notification = notificationService.newOfType(NOTIFICATION_GROUP, myMessageType)
         .content(LocalizeValue.localizeTODO(myMessage))
         .create();
     }

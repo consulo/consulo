@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationService;
 import consulo.versionControlSystem.impl.internal.change.SortByVcsRoots;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.FilePathByPathComparator;
@@ -137,7 +139,8 @@ public class TriggerAdditionOrDeletion {
     String message = "The following " + StringUtil.pluralize("file", incorrectFilePath.size()) + " may be processed incorrectly by VCS.\n" +
       "Please check it manually: " + incorrectFilePath;
     LOG.warn(message);
-    VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.newWarn()
+    NotificationService.getInstance()
+        .newWarn(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
         .title(LocalizeValue.localizeTODO(topic))
         .content(LocalizeValue.localizeTODO(message))
         .notify(myProject);

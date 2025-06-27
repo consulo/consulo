@@ -35,6 +35,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
@@ -310,7 +311,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
     }
 
     private class Updater extends Task.Backgroundable {
-        private final String LOCAL_HISTORY_ACTION = VcsLocalize.localHistoryUpdateFromVcs().get();
+        private final LocalizeValue LOCAL_HISTORY_ACTION = VcsLocalize.localHistoryUpdateFromVcs();
 
         private final Project myProject;
         private final ProjectLevelVcsManagerImpl myProjectLevelVcsManager;
@@ -365,7 +366,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             myProjectLevelVcsManager.startBackgroundVcsOperation();
 
             myBefore = LocalHistory.getInstance().putSystemLabel(myProject, "Before update");
-            myLocalHistoryAction = LocalHistory.getInstance().startAction(LOCAL_HISTORY_ACTION);
+            myLocalHistoryAction = LocalHistory.getInstance().startAction(LOCAL_HISTORY_ACTION.get());
             ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
 
             try {
@@ -447,13 +448,14 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         private Notification.Builder prepareNotification(@Nonnull UpdateInfoTreeImpl tree, boolean someSessionWasCancelled) {
             int allFiles = getUpdatedFilesCount();
 
+            NotificationService notificationService = NotificationService.getInstance();
             if (someSessionWasCancelled) {
-                return STANDARD_NOTIFICATION.newWarn()
+                return notificationService.newWarn(STANDARD_NOTIFICATION)
                     .title(LocalizeValue.localizeTODO("Project Partially Updated"))
                     .content(LocalizeValue.localizeTODO(allFiles + " " + pluralize("file", allFiles) + " updated"));
             }
             else {
-                return STANDARD_NOTIFICATION.newInfo()
+                return notificationService.newInfo(STANDARD_NOTIFICATION)
                     .title(LocalizeValue.localizeTODO(allFiles + " Project " + pluralize("File", allFiles) + " Updated"))
                     .content(LocalizeValue.ofNullable(prepareScopeUpdatedText(tree)));
             }
@@ -494,7 +496,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             StoreReloadManager storeReloadManager = StoreReloadManager.getInstance((Project) getProject());
             if (!myProject.isOpen() || myProject.isDisposed()) {
                 storeReloadManager.unblockReloadingProjectOnExternalChanges();
-                LocalHistory.getInstance().putSystemLabel(myProject, LOCAL_HISTORY_ACTION); // TODO check why this label is needed
+                LocalHistory.getInstance().putSystemLabel(myProject, LOCAL_HISTORY_ACTION.get()); // TODO check why this label is needed
                 return;
             }
             boolean continueChain = false;
@@ -555,13 +557,14 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
 
                     final boolean noMerged = myUpdatedFiles.getGroupById(FileGroup.MERGED_WITH_CONFLICT_ID).isEmpty();
                     if (myUpdatedFiles.isEmpty() && myGroupedExceptions.isEmpty()) {
+                        NotificationService notificationService = NotificationService.getInstance();
                         if (someSessionWasCancelled) {
-                        STANDARD_NOTIFICATION.newWarn()
+                            notificationService.newWarn(STANDARD_NOTIFICATION)
                                 .content(VcsLocalize.progressTextUpdatingCanceled())
                                 .notify(myProject);
                         }
                         else {
-                            STANDARD_NOTIFICATION.newInfo()
+                            notificationService.newInfo(STANDARD_NOTIFICATION)
                                 .content(LocalizeValue.localizeTODO(getAllFilesAreUpToDateMessage(myRoots)))
                                 .notify(myProject);
                         }

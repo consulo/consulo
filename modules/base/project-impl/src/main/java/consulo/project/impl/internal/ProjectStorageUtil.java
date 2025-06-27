@@ -24,6 +24,7 @@ import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.UnknownMacroNotification;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -41,7 +42,8 @@ public class ProjectStorageUtil {
 
     private UnableToSaveProjectNotification(@Nonnull Project project, Collection<File> readOnlyFiles) {
       super(
-        ProjectNotificationGroups.Project.newError()
+        NotificationService.getInstance()
+          .newError(ProjectNotificationGroups.Project)
           .title(LocalizeValue.localizeTODO("Could not save project!"))
           .content(LocalizeValue.localizeTODO(buildMessage()))
           .hyperlinkListener((notification, event) -> {

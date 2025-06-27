@@ -65,12 +65,18 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
     private final Application myApplication;
     @Nonnull
     private final ApplicationPropertiesComponent myProperties;
+    @Nonnull
+    private final NotificationService myNotificationService;
 
     @Inject
-    public SystemHealthMonitorImpl(@Nonnull Application application,
-                                   @Nonnull ApplicationPropertiesComponent properties) {
+    public SystemHealthMonitorImpl(
+        @Nonnull Application application,
+        @Nonnull ApplicationPropertiesComponent properties,
+        @Nonnull NotificationService notificationService
+    ) {
         myApplication = application;
         myProperties = properties;
+        myNotificationService = notificationService;
     }
 
     @Override
@@ -78,7 +84,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
         checkEARuntime();
 
         SystemHealthMonitor.Reporter reporter = (notificationText, actionText, actionListener) -> myApplication.invokeLater(
-            () -> GROUP.newWarn()
+            () -> myNotificationService.newWarn(GROUP)
                 .content(LocalizeValue.localizeTODO(notificationText))
                 .important()
                 .addAction(LocalizeValue.localizeTODO(actionText), actionListener)
@@ -153,7 +159,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
 
         Application app = Application.get();
         app.invokeLater(
-            () -> GROUP.newWarn()
+            () -> myNotificationService.newWarn(GROUP)
                 .content(message)
                 .important()
                 .hyperlinkListener(new NotificationListener.Adapter() {
@@ -234,7 +240,8 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
                                         restart(timeout);
                                     }
                                     else {
-                                        GROUP.newOfType(NotificationType.ERROR)
+                                        NotificationService.getInstance()
+                                            .newOfType(GROUP, NotificationType.ERROR)
                                             .title(message)
                                             .content(LocalizeValue.of(file.getPath()))
                                             .whenExpired(() -> {

@@ -10,6 +10,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -63,7 +64,8 @@ public final class BuildConsoleUtils {
       });
     }
 
-    Notification notification = group.newWarn()
+    Notification notification = NotificationService.getInstance()
+      .newWarn(group)
       .title(LocalizeValue.localizeTODO(buildIssue.getTitle()))
       .content(LocalizeValue.localizeTODO(buildIssue.getDescription()))
       .hyperlinkListener(new NotificationListener.Adapter() {

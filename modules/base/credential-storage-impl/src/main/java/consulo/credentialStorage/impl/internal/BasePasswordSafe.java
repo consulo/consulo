@@ -27,6 +27,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
 
@@ -212,7 +213,8 @@ public abstract class BasePasswordSafe implements PasswordSafe {
             return new InMemoryCredentialStore();
         }
 
-        Consumer<LocalizeValue> showError = (title) -> PasswordSafeNotificationGroupContributor.GROUP.newError()
+        Consumer<LocalizeValue> showError = (title) -> NotificationService.getInstance()
+            .newError(PasswordSafeNotificationGroupContributor.GROUP)
             .title(title)
             .content(CredentialStorageLocalize.notificationContentInMemoryStorage())
             .addClosingAction(

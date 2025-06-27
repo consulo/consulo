@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.notification;
 
-import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
@@ -35,7 +34,7 @@ public interface Notifications {
         }
 
         public static void notify(@Nonnull Notification notification, @Nullable Project project) {
-            Application.get().getInstance(NotificationService.class).notify(notification, project);
+            NotificationService.getInstance().notify(notification, project);
         }
 
         public static void notifyAndHide(@Nonnull Notification notification) {

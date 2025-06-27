@@ -19,18 +19,14 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.Project;
+import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
-
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
 
@@ -113,7 +109,8 @@ public abstract class GenericNotifierImpl<T, Key> {
         return false;
       }
       notification = new MyNotification(
-          myGroup.newOfType(myType)
+          NotificationService.getInstance()
+              .newOfType(myGroup, myType)
               .title(LocalizeValue.localizeTODO(myTitle))
               .content(LocalizeValue.localizeTODO(getNotificationContent(obj)))
               .optionalHyperlinkListener(myListener),

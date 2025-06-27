@@ -68,6 +68,7 @@ import consulo.project.*;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
@@ -129,7 +130,10 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     private static final String CORRUPTION_MARKER_NAME = "corruption.marker";
     private static final ThreadLocal<Stack<DumbModeAccessType>> ourDumbModeAccessTypeStack = ThreadLocal.withInitial(Stack::new);
 
+    @Nonnull
     private final Application myApplication;
+    @Nonnull
+    private final NotificationService myNotificationService;
     private final List<ID<?, ?>> myIndicesForDirectories = new SmartList<>();
 
     private final Map<ID<?, ?>, DocumentUpdateTask> myUnsavedDataUpdateTasks = new ConcurrentHashMap<>();
@@ -192,8 +196,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     @Inject
-    public FileBasedIndexImpl(Application application) {
+    public FileBasedIndexImpl(@Nonnull Application application, @Nonnull NotificationService notificationService) {
         myApplication = application;
+        myNotificationService = notificationService;
         myFileDocumentManager = FileDocumentManager.getInstance();
         myIsUnitTestMode = application.isUnitTestMode();
 
@@ -434,7 +439,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                 InputFilter inputFilter = extension.getInputFilter();
 
                 Set<FileType> addedTypes;
-                if (inputFilter instanceof FileBasedIndex.FileTypeSpecificInputFilter fileTypeSpecificInputFilter) {
+                if (inputFilter instanceof FileTypeSpecificInputFilter fileTypeSpecificInputFilter) {
                     addedTypes = new HashSet<>();
                     fileTypeSpecificInputFilter.registerFileTypesUsedForIndexing(type -> {
                         if (type != null) {
@@ -2571,7 +2576,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                     currentVersionCorrupted ? "Indices to be rebuilt after corruption:" : "Indices to be built:"
                 );
                 if (rebuildNotification != null && !myApplication.isHeadlessEnvironment() && Registry.is("ide.showIndexRebuildMessage")) {
-                    NOTIFICATIONS.newInfo()
+                    myNotificationService.newInfo(NOTIFICATIONS)
                         .title(IndexingLocalize.indexRebuildNotificationTitle())
                         .content(LocalizeValue.localizeTODO(rebuildNotification))
                         .notify(null);

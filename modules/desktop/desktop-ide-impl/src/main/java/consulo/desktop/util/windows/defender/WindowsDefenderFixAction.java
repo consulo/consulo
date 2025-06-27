@@ -21,9 +21,7 @@ import consulo.ide.impl.idea.ide.SystemHealthMonitorImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationAction;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
@@ -38,10 +36,13 @@ import java.util.Collection;
  * from kotlin
  */
 public class WindowsDefenderFixAction extends NotificationAction {
+    @Nonnull
+    private final Application myApplication;
     private final Collection<Path> myPaths;
 
-    public WindowsDefenderFixAction(Collection<Path> paths) {
+    public WindowsDefenderFixAction(@Nonnull Application application, Collection<Path> paths) {
         super(LocalizeValue.localizeTODO("Fix..."));
+        myApplication = application;
         myPaths = paths;
     }
 
@@ -51,7 +52,7 @@ public class WindowsDefenderFixAction extends NotificationAction {
         int rc = Messages.showDialog(
             e.getData(Project.KEY),
             ExternalServiceLocalize.virusScanningFixExplanation(
-                Application.get().getName().get(),
+                myApplication.getName().get(),
                 WindowsDefenderChecker.getInstance().getConfigurationInstructionsUrl()
             ).get(),
             ExternalServiceLocalize.virusScanningFixTitle().get(),
@@ -67,10 +68,11 @@ public class WindowsDefenderFixAction extends NotificationAction {
         switch (rc) {
             case Messages.OK:
                 notification.expire();
-                Application.get().executeOnPooledThread(() -> {
+                myApplication.executeOnPooledThread(() -> {
                     if (WindowsDefenderChecker.getInstance().runExcludePathsCommand(e.getData(Project.KEY), myPaths)) {
                         UIUtil.invokeLaterIfNeeded(() -> Notifications.Bus.notifyAndHide(
-                            SystemHealthMonitorImpl.GROUP.newInfo()
+                            NotificationService.getInstance()
+                                .newInfo(SystemHealthMonitorImpl.GROUP)
                                 .content(ExternalServiceLocalize.virusScanningFixSuccessNotification())
                                 .create(),
                             e.getData(Project.KEY)

@@ -16,16 +16,10 @@ import consulo.language.psi.PsiBinaryFile;
 import consulo.language.psi.PsiCompiledFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.project.ui.notification.*;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -140,7 +134,8 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     }
 
     private static void showDisabledDetectionNotification(@Nonnull Project project) {
-        NOTIFICATION_GROUP.newInfo()
+        NotificationService.getInstance()
+            .newInfo(NOTIFICATION_GROUP)
             .title(ApplicationLocalize.codeStyleIndentDetectorNotificationContent())
             .addClosingAction(
                 ApplicationLocalize.codeStyleIndentProviderNotificationReEnable(),

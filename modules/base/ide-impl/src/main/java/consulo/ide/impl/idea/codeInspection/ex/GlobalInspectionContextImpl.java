@@ -77,6 +77,7 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -358,7 +359,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
     @Override
     protected void notifyInspectionsFinished() {
-        if (Application.get().isUnitTestMode()) {
+        Application application = getProject().getApplication();
+        if (application.isUnitTestMode()) {
             return;
         }
         UIUtil.invokeLaterIfNeeded(() -> {
@@ -366,7 +368,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
             if (myView != null) {
                 if (!myView.update() && !getUIOptions().SHOW_ONLY_DIFF) {
-                    NOTIFICATION_GROUP.newInfo()
+                    NotificationService.getInstance()
+                        .newInfo(NOTIFICATION_GROUP)
                         .content(InspectionLocalize.inspectionNoProblemsMessage())
                         .notify(getProject());
                     close(true);
@@ -1008,7 +1011,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         if (results.isEmpty()) {
             UIUtil.invokeLaterIfNeeded(() -> {
                 if (commandName != null) {
-                    NOTIFICATION_GROUP.newInfo()
+                    NotificationService.getInstance()
+                        .newInfo(NOTIFICATION_GROUP)
                         .content(InspectionLocalize.inspectionNoProblemsMessage())
                         .notify(getProject());
                 }

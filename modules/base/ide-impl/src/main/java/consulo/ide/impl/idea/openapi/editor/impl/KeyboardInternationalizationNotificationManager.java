@@ -61,11 +61,13 @@ public class KeyboardInternationalizationNotificationManager {
   }
 
   public static Notification createNotification(@Nonnull final NotificationGroup group, @Nullable NotificationListener listener) {
-    LocalizeValue productName = Application.get().getName();
+    Application application = Application.get();
+    LocalizeValue productName = application.getName();
 
     Window recentFocusedWindow = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
 
-    return group.newInfo()
+    return NotificationService.getInstance()
+        .newInfo(group)
         .title(LocalizeValue.localizeTODO("Enable smart keyboard internalization for " + productName + "."))
         .content(LocalizeValue.localizeTODO(
             "<html>We have found out that you are using a non-english keyboard layout." +

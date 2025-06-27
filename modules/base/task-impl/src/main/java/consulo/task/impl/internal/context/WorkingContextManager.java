@@ -22,6 +22,7 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.task.Task;
 import consulo.task.context.WorkingContextProvider;
 import consulo.task.impl.internal.TaskManagerNotificationGroupContributor;
@@ -59,7 +60,10 @@ public class WorkingContextManager {
     private static final Logger LOG = Logger.getInstance(WorkingContextManager.class);
     private static final String TASKS_FOLDER = "tasks";
 
+    @Nonnull
     private final Project myProject;
+    @Nonnull
+    private final NotificationService myNotificationService;
     private static final String TASKS_ZIP_POSTFIX = ".tasks.zip";
     private static final String TASK_XML_POSTFIX = ".task.xml";
     private static final String CONTEXT_ZIP_POSTFIX = ".contexts.zip";
@@ -70,8 +74,9 @@ public class WorkingContextManager {
     }
 
     @Inject
-    public WorkingContextManager(Project project) {
+    public WorkingContextManager(@Nonnull Project project, @Nonnull NotificationService notificationService) {
         myProject = project;
+        myNotificationService = notificationService;
     }
 
     private void loadContext(Element fromElement) {
@@ -154,7 +159,7 @@ public class WorkingContextManager {
             JBZipFile zipFile = null;
             try {
                 zipFile = new JBZipFile(file);
-                TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP.newError()
+                myNotificationService.newError(TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP)
                     .title(LocalizeValue.localizeTODO("Context Data Corrupted"))
                     .content(LocalizeValue.localizeTODO(
                         "Context information history for " + myProject.getName() + " was corrupted.\n" +

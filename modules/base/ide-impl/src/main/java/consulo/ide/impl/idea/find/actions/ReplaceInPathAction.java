@@ -14,18 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.find.actions;
 
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
-public class ReplaceInPathAction extends AnAction {
+public class ReplaceInPathAction extends FindReplaceInPathActionBase {
+  @Inject
+  public ReplaceInPathAction(@Nonnull NotificationService notificationService) {
+    super(ActionLocalize.actionReplaceinpathText(), ActionLocalize.actionReplaceinpathDescription(), notificationService);
+  }
+
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -34,7 +42,7 @@ public class ReplaceInPathAction extends AnAction {
 
     ReplaceInProjectManager replaceManager = ReplaceInProjectManager.getInstance(project);
     if (!replaceManager.isEnabled()) {
-      FindInPathAction.showNotAvailableMessage(e, project);
+      showNotAvailableMessage(e, project);
       return;
     }
 
