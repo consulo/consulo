@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import jakarta.annotation.Nonnull;
-import consulo.ui.annotation.RequiredUIAccess;
 
 public class BackgroundableActionLock {
     @Nonnull
@@ -26,22 +25,19 @@ public class BackgroundableActionLock {
     @Nonnull
     private final Object[] myKeys;
 
-    BackgroundableActionLock(@Nonnull Project project, @Nonnull final Object[] keys) {
+    BackgroundableActionLock(@Nonnull Project project, @Nonnull Object[] keys) {
         myProject = project;
         myKeys = keys;
     }
 
-    @RequiredUIAccess
     public boolean isLocked() {
         return isLocked(myProject, myKeys);
     }
 
-    @RequiredUIAccess
     public void lock() {
         lock(myProject, myKeys);
     }
 
-    @RequiredUIAccess
     public void unlock() {
         unlock(myProject, myKeys);
     }
