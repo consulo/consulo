@@ -34,6 +34,7 @@ import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.NotificationType;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
@@ -91,7 +92,7 @@ public class ExecutionUtil {
         if ((description.contains("87") || description.contains("111") || description.contains("206"))
             && e instanceof ProcessNotCreatedException processNotCreatedException &&
             !ProjectPropertiesComponent.getInstance(project).isTrueValue("dynamic.classpath")) {
-            final String commandLineString = processNotCreatedException.getCommandLine().getCommandLineString();
+            String commandLineString = processNotCreatedException.getCommandLine().getCommandLineString();
             if (commandLineString.length() > 1024 * 32) {
                 description = "Command line is too long. In order to reduce its length classpath file can be used.<br>" +
                     "Would you like to enable classpath file mode for all run configurations of your project?<br>" +
@@ -100,8 +101,8 @@ public class ExecutionUtil {
                 listener = event -> ProjectPropertiesComponent.getInstance(project).setValue("dynamic.classpath", "true");
             }
         }
-        final LocalizeValue title = ExecutionLocalize.errorRunningConfigurationMessage(taskName);
-        final String fullMessage = title + ":<br>" + description;
+        LocalizeValue title = ExecutionLocalize.errorRunningConfigurationMessage(taskName);
+        String fullMessage = title + ":<br>" + description;
 
         if (project.getApplication().isUnitTestMode()) {
             LOG.error(fullMessage, e);
@@ -111,8 +112,8 @@ public class ExecutionUtil {
             listener = hyperlinkListener;
         }
 
-        final HyperlinkListener finalListener = listener;
-        final String finalDescription = description;
+        HyperlinkListener finalListener = listener;
+        String finalDescription = description;
         UIUtil.invokeLaterIfNeeded(() -> {
             if (project.isDisposed()) {
                 return;
@@ -121,7 +122,7 @@ public class ExecutionUtil {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             if (toolWindowManager.canShowNotification(toolWindowId)) {
                 //noinspection SSBasedInspection
-                toolWindowManager.notifyByBalloon(toolWindowId, consulo.ui.NotificationType.ERROR, fullMessage, null, finalListener);
+                toolWindowManager.notifyByBalloon(toolWindowId, NotificationType.ERROR, fullMessage, null, finalListener);
             }
             else {
                 Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "");

@@ -10,18 +10,16 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.localize.LocalizeValue;
-import consulo.project.ui.notification.NotificationService;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IJSwingUtilities;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,7 +41,7 @@ public final class BuildConsoleUtils {
     private static final Pattern TAG_PATTERN = Pattern.compile("<[^>]*>");
     private static final Pattern A_PATTERN = Pattern.compile("<a ([^>]* )?href=[\"']([^>]*)[\"'][^>]*>");
     private static final String A_CLOSING = "</a>";
-    private static final Set<String> NEW_LINES = ContainerUtil.set("<br>", "</br>", "<br/>", "<p>", "</p>", "<p/>", "<pre>", "</pre>");
+    private static final Set<String> NEW_LINES = Set.of("<br>", "</br>", "<br/>", "<p>", "</p>", "<p/>", "<pre>", "</pre>");
 
     public static void printDetails(@Nonnull ConsoleView consoleView, @Nullable Failure failure, @Nullable String details) {
         String text = failure == null ? details : ObjectUtil.chooseNotNull(failure.getDescription(), failure.getMessage());
@@ -157,11 +155,11 @@ public final class BuildConsoleUtils {
     @Nonnull
     public static DataProvider getDataProvider(@Nonnull Object buildId, @Nonnull BuildProgressListener buildListener) {
         DataProvider provider;
-        if (buildListener instanceof BuildView) {
-            provider = (BuildView) buildListener;
+        if (buildListener instanceof BuildView buildView) {
+            provider = buildView;
         }
-        else if (buildListener instanceof AbstractViewManager) {
-            provider = getDataProvider(buildId, (AbstractViewManager) buildListener);
+        else if (buildListener instanceof AbstractViewManager abstractViewManager) {
+            provider = getDataProvider(buildId, abstractViewManager);
         }
         else {
             LOG.error("BuildView or AbstractViewManager expected to obtain proper DataProvider for build console quick fixes");
@@ -175,8 +173,8 @@ public final class BuildConsoleUtils {
     private static BuildView findBuildView(@Nonnull Component component) {
         Component parent = component;
         while ((parent = parent.getParent()) != null) {
-            if (parent instanceof BuildView) {
-                return (BuildView) parent;
+            if (parent instanceof BuildView buildView) {
+                return buildView;
             }
         }
         return null;

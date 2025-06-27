@@ -1,7 +1,6 @@
 package consulo.credentialStorage.impl.internal;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.util.SynchronizedClearableLazy;
 import consulo.component.ProcessCanceledException;
@@ -29,6 +28,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.Closeable;
@@ -81,13 +81,17 @@ public abstract class BasePasswordSafe implements PasswordSafe {
 
     public void closeCurrentStore(boolean isSave, boolean isEvenMemoryOnly) {
         CredentialStore store = getCurrentProviderIfComputed();
-        if (store == null) return;
-        if (!isEvenMemoryOnly && (store instanceof InMemoryCredentialStore)) return;
+        if (store == null) {
+            return;
+        }
+        if (!isEvenMemoryOnly && (store instanceof InMemoryCredentialStore)) {
+            return;
+        }
 
         _currentProvider.drop();
-        if (isSave && (store instanceof KeePassCredentialStore)) {
+        if (isSave && (store instanceof KeePassCredentialStore kpStore)) {
             try {
-                ((KeePassCredentialStore) store).save(createMainKeyEncryptionSpec());
+                kpStore.save(createMainKeyEncryptionSpec());
             }
             catch (ProcessCanceledException e) {
                 throw e;
@@ -96,9 +100,9 @@ public abstract class BasePasswordSafe implements PasswordSafe {
                 getLogger().warn(e);
             }
         }
-        else if (store instanceof Closeable) {
+        else if (store instanceof Closeable closeable) {
             try {
-                ((Closeable) store).close();
+                closeable.close();
             }
             catch (Exception e) {
                 // Ignore close exceptions.
@@ -138,19 +142,21 @@ public abstract class BasePasswordSafe implements PasswordSafe {
     }
 
     @Override
-    public Credentials get(CredentialAttributes attributes) {
+    public Credentials get(@Nonnull CredentialAttributes attributes) {
         //SlowOperations.assertNonCancelableSlowOperationsAreAllowed();
         Credentials value = getCurrentProvider().get(attributes);
         if ((value == null || StringUtil.isEmptyOrSpaces(value.getPassword()))
             && isMemoryHelperProviderInitialized()) {
             Credentials memCred = getMemoryHelperProvider().get(attributes);
-            if (memCred != null) return memCred;
+            if (memCred != null) {
+                return memCred;
+            }
         }
         return value;
     }
 
     @Override
-    public void set(CredentialAttributes attributes, Credentials credentials) {
+    public void set(@Nonnull CredentialAttributes attributes, Credentials credentials) {
         //SlowOperations.assertNonCancelableSlowOperationsAreAllowed();
         getCurrentProvider().set(attributes, credentials);
         if (attributes.isPasswordMemoryOnly() && credentials != null && !StringUtil.isEmptyOrSpaces(credentials.getPassword())) {
@@ -185,8 +191,9 @@ public abstract class BasePasswordSafe implements PasswordSafe {
 
     public void save() {
         CredentialStore store = getCurrentProviderIfComputed();
-        if (!(store instanceof KeePassCredentialStore)) return;
-        KeePassCredentialStore kpStore = (KeePassCredentialStore) store;
+        if (!(store instanceof KeePassCredentialStore kpStore)) {
+            return;
+        }
         try {
             kpStore.save(createMainKeyEncryptionSpec());
         }
@@ -209,7 +216,7 @@ public abstract class BasePasswordSafe implements PasswordSafe {
 
     private static CredentialStore computeProvider(PasswordSafeSettings settings) {
         if (settings.getProviderType() == ProviderType.MEMORY_ONLY ||
-            ApplicationManager.getApplication().isUnitTestMode()) {
+            Application.get().isUnitTestMode()) {
             return new InMemoryCredentialStore();
         }
 

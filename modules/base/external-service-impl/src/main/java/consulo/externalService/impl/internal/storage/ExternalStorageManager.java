@@ -43,6 +43,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.io.StreamUtil;
@@ -69,7 +70,7 @@ import java.util.zip.ZipInputStream;
 
 /**
  * @author VISTALL
- * @since 11/09/2021
+ * @since 2021-09-11
  */
 public class ExternalStorageManager {
     public static final NotificationGroup GROUP = new NotificationGroup(
@@ -94,7 +95,12 @@ public class ExternalStorageManager {
 
     private AtomicBoolean myCheckingState = new AtomicBoolean();
 
-    public ExternalStorageManager(@Nonnull Application application, @Nonnull IComponentStore applicationStore, @Nonnull ExternalStorage storage, @Nonnull ExternalStoragePluginManager pluginManager) {
+    public ExternalStorageManager(
+        @Nonnull Application application,
+        @Nonnull IComponentStore applicationStore,
+        @Nonnull ExternalStorage storage,
+        @Nonnull ExternalStoragePluginManager pluginManager
+    ) {
         myApplicationStore = applicationStore;
         myPluginManager = pluginManager;
         myApplication = (ApplicationEx) application;
@@ -106,13 +112,18 @@ public class ExternalStorageManager {
         boolean inSandbox = ApplicationProperties.isInSandbox();
         int time = inSandbox ? 1 : 10;
 
-        myCheckingFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(() -> {
-            if (!myCheckingState.compareAndSet(false, true)) {
-                return;
-            }
+        myCheckingFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(
+            () -> {
+                if (!myCheckingState.compareAndSet(false, true)) {
+                    return;
+                }
 
-            Task.Backgroundable.queue(null, "Checking external storage...", this::checkForModifications);
-        }, time, time, TimeUnit.MINUTES);
+                Task.Backgroundable.queue(null, LocalizeValue.localizeTODO("Checking external storage..."), this::checkForModifications);
+            },
+            time,
+            time,
+            TimeUnit.MINUTES
+        );
     }
 
     private void checkForModifications(@Nonnull ProgressIndicator indicator) {
@@ -177,11 +188,14 @@ public class ExternalStorageManager {
             }
 
             if (wantRestart) {
-                myApplication.invokeLater(() -> {
-                    if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
-                        Application.get().restart(true);
-                    }
-                }, ModalityState.nonModal());
+                myApplication.invokeLater(
+                    () -> {
+                        if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
+                            myApplication.restart(true);
+                        }
+                    },
+                    ModalityState.nonModal()
+                );
             }
         }
         catch (Exception e) {
@@ -199,7 +213,8 @@ public class ExternalStorageManager {
             // fist of all we need download changed or new files
             for (String fullFileSpec : fetchNewFileSpecs) {
                 try {
-                    byte[] compressed = WebServiceApiSender.doGetBytes(WebServiceApi.STORAGE_API, "getFile", Map.of("filePath", fullFileSpec));
+                    byte[] compressed =
+                        WebServiceApiSender.doGetBytes(WebServiceApi.STORAGE_API, "getFile", Map.of("filePath", fullFileSpec));
 
                     Pair<byte[], Integer> uncompressedData = DataCompressor.uncompress(new UnsyncByteArrayInputStream(compressed));
 
@@ -248,13 +263,12 @@ public class ExternalStorageManager {
     private void configurationChanged(@Nonnull ExternalServiceConfiguration configuration) {
         ThreeState state = configuration.getState(ExternalService.STORAGE);
         switch (state) {
-            case YES:
-                Task.Backgroundable.queue(null, "Initialing external storage...", this::initialize);
-                break;
-            case NO:
+            case YES ->
+                Task.Backgroundable.queue(null, LocalizeValue.localizeTODO("Initialing external storage..."), this::initialize);
+            case NO -> {
                 myCheckingFuture.cancel(false);
                 myStorage.setInitialized(false);
-                break;
+            }
         }
     }
 
@@ -310,10 +324,11 @@ public class ExternalStorageManager {
         }
     }
 
+    @RequiredUIAccess
     private void showRestartDialog() {
         if (Messages.showYesNoDialog(
             "Restart required for apply External Storage settings change. Restart now?",
-            Application.get().getName().get(),
+            myApplication.getName().get(),
             UIUtil.getInformationIcon()
         ) == Messages.YES) {
             myApplication.restart(true);

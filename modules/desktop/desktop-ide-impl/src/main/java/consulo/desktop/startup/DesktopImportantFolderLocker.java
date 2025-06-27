@@ -22,7 +22,6 @@ import consulo.builtinWebServer.impl.http.MessageDecoder;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.application.JetBrainsProtocolHandler;
 import consulo.ide.impl.idea.util.NotNullProducer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.NotificationService;
@@ -47,10 +46,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -159,7 +155,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
             PosixFileAttributeView view = Files.getFileAttributeView(tokenFile.toPath(), PosixFileAttributeView.class);
             if (view != null) {
                 try {
-                    view.setPermissions(ContainerUtil.newHashSet(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+                    view.setPermissions(Set.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
                 }
                 catch (IOException e) {
                     log(e);
@@ -288,7 +284,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
     }
 
     private static String[] checkForJetBrainsProtocolCommand(String[] args) {
-        final String jbUrl = System.getProperty(JetBrainsProtocolHandler.class.getName());
+        String jbUrl = System.getProperty(JetBrainsProtocolHandler.class.getName());
         if (jbUrl != null) {
             return new String[]{jbUrl};
         }

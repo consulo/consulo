@@ -219,12 +219,8 @@ public class ChangeListStorageImpl implements ChangeListStorage {
 
     @Nonnull
     private ChangeSetHolder doReadBlock(int id) throws IOException {
-        DataInputStream in = myStorage.readStream(id);
-        try {
+        try (DataInputStream in = myStorage.readStream(id)) {
             return new ChangeSetHolder(id, new ChangeSet(in));
-        }
-        finally {
-            in.close();
         }
     }
 
@@ -235,12 +231,8 @@ public class ChangeListStorageImpl implements ChangeListStorage {
         }
 
         try {
-            AbstractStorage.StorageDataOutput out = myStorage.writeStream(myStorage.createNextRecord(), true);
-            try {
+            try (AbstractStorage.StorageDataOutput out = myStorage.writeStream(myStorage.createNextRecord(), true)) {
                 changeSet.write(out);
-            }
-            finally {
-                out.close();
             }
             myStorage.setLastId(myLastId);
             myStorage.force();

@@ -15,7 +15,7 @@
  */
 package consulo.project.impl.internal;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.macro.PathMacros;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.localize.LocalizeValue;
@@ -29,7 +29,6 @@ import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 
 import java.io.File;
@@ -66,9 +65,8 @@ public class ProjectStorageUtil {
         }
 
         private static String buildMessage() {
-            final StringBuilder sb = new StringBuilder(
-                "<p>Unable to save project files. Please ensure project files are writable and you have permissions to modify them.");
-            return sb.append(" <a href=\"\">Try to save project again</a>.</p>").toString();
+            return "<p>Unable to save project files. Please ensure project files are writable and you have permissions to modify them. " +
+                "<a href=\"\">Try to save project again</a>.</p>";
         }
 
         public Project getProject() {
@@ -83,12 +81,12 @@ public class ProjectStorageUtil {
     }
 
     @RequiredUIAccess
-    public static void checkUnknownMacros(ProjectEx project, final boolean showDialog) {
-        final IProjectStore stateStore = project.getInstance(IProjectStore.class);
+    public static void checkUnknownMacros(ProjectEx project, boolean showDialog) {
+        IProjectStore stateStore = project.getInstance(IProjectStore.class);
 
-        final TrackingPathMacroSubstitutor[] substitutors = stateStore.getSubstitutors();
-        final Set<String> unknownMacros = new HashSet<>();
-        for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
+        TrackingPathMacroSubstitutor[] substitutors = stateStore.getSubstitutors();
+        Set<String> unknownMacros = new HashSet<>();
+        for (TrackingPathMacroSubstitutor substitutor : substitutors) {
             unknownMacros.addAll(substitutor.getUnknownMacros(null));
         }
 
@@ -96,35 +94,35 @@ public class ProjectStorageUtil {
             if (!showDialog || project.getApplication()
                 .getInstance(ProjectCheckMacroService.class)
                 .checkMacros(project, new HashSet<>(unknownMacros))) {
-                final PathMacros pathMacros = PathMacros.getInstance();
-                final Set<String> macros2invalidate = new HashSet<>(unknownMacros);
+                PathMacros pathMacros = PathMacros.getInstance();
+                Set<String> macros2invalidate = new HashSet<>(unknownMacros);
                 for (Iterator it = macros2invalidate.iterator(); it.hasNext(); ) {
-                    final String macro = (String) it.next();
-                    final String value = pathMacros.getValue(macro);
+                    String macro = (String) it.next();
+                    String value = pathMacros.getValue(macro);
                     if ((value == null || value.trim().isEmpty()) && !pathMacros.isIgnoredMacroName(macro)) {
                         it.remove();
                     }
                 }
 
                 if (!macros2invalidate.isEmpty()) {
-                    final Set<String> components = new HashSet<>();
+                    Set<String> components = new HashSet<>();
                     for (TrackingPathMacroSubstitutor substitutor : substitutors) {
                         components.addAll(substitutor.getComponents(macros2invalidate));
                     }
 
-                    for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
+                    for (TrackingPathMacroSubstitutor substitutor : substitutors) {
                         substitutor.invalidateUnknownMacros(macros2invalidate);
                     }
 
-                    final UnknownMacroNotification[] notifications =
+                    UnknownMacroNotification[] notifications =
                         NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, project);
-                    for (final UnknownMacroNotification notification : notifications) {
+                    for (UnknownMacroNotification notification : notifications) {
                         if (macros2invalidate.containsAll(notification.getMacros())) {
                             notification.expire();
                         }
                     }
 
-                    ApplicationManager.getApplication().runWriteAction(() -> stateStore.reinitComponents(components, true));
+                    Application.get().runWriteAction(() -> stateStore.reinitComponents(components, true));
                 }
             }
         }
@@ -135,8 +133,8 @@ public class ProjectStorageUtil {
         return project.getBasePath() + "/" + Project.DIRECTORY_STORE_FOLDER;
     }
 
-    public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, Collection<File> readOnlyFiles) {
-        final UnableToSaveProjectNotification[] notifications =
+    public static void dropUnableToSaveProjectNotification(@Nonnull Project project, Collection<File> readOnlyFiles) {
+        UnableToSaveProjectNotification[] notifications =
             NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
         if (notifications.length == 0) {
             Notifications.Bus.notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);

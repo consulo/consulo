@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
 import com.google.common.annotations.VisibleForTesting;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.UserHomeFileUtil;
@@ -16,6 +15,7 @@ import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
 import consulo.project.ui.notification.NotificationService;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import java.util.*;
 import java.util.function.Function;
@@ -96,7 +95,7 @@ public final class VcsRootProblemNotifier {
         Collection<VcsRootError> importantUnregisteredRoots = getImportantUnregisteredMappings(errors);
         Collection<VcsRootError> invalidRoots = getInvalidRoots(errors);
 
-        String title;
+        LocalizeValue title;
         String description;
         NotificationAction[] notificationActions;
 
@@ -136,19 +135,20 @@ public final class VcsRootProblemNotifier {
             title = makeTitle(importantUnregisteredRoots, invalidRoots, false);
             description = makeDescription(importantUnregisteredRoots, invalidRoots);
 
-            NotificationAction enableIntegration = NotificationAction
-                .create(
-                    VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextEnableIntegration(),
-                    (event, notification) -> addMappings(importantUnregisteredRoots)
-                );
-            NotificationAction ignoreAction =
-                NotificationAction.create(VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextIgnore(), (event, notification) -> {
+            NotificationAction enableIntegration = NotificationAction.create(
+                VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextEnableIntegration(),
+                (event, notification) -> addMappings(importantUnregisteredRoots)
+            );
+            NotificationAction ignoreAction = NotificationAction.create(
+                VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextIgnore(),
+                (event, notification) -> {
                     mySettings.addIgnoredUnregisteredRoots(map(
                         importantUnregisteredRoots,
                         rootError -> rootError.getMapping().getDirectory()
                     ));
                     notification.expire();
-                });
+                }
+            );
             notificationActions = new NotificationAction[]{enableIntegration, getConfigureNotificationAction(), ignoreAction};
         }
 
@@ -163,7 +163,7 @@ public final class VcsRootProblemNotifier {
             builder = myNotificationService.newError(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION)
                 .addAction(getConfigureNotificationAction());
         }
-        builder.title(LocalizeValue.localizeTODO(title))
+        builder.title(title)
             .content(LocalizeValue.localizeTODO(description));
 
         synchronized (NOTIFICATION_LOCK) {
@@ -217,6 +217,7 @@ public final class VcsRootProblemNotifier {
     }
 
     private boolean isExplicitlyIgnoredPath(@Nonnull VcsDirectoryMapping mapping) {
+        //noinspection SimplifiableIfStatement
         if (mapping.isDefaultMapping()) {
             return false;
         }
@@ -225,8 +226,8 @@ public final class VcsRootProblemNotifier {
 
     private void expireNotification() {
         if (myNotification != null) {
-            final Notification notification = myNotification;
-            ApplicationManager.getApplication().invokeLater(notification::expire);
+            Notification notification = myNotification;
+            myProject.getApplication().invokeLater(notification::expire);
 
             myNotification = null;
         }
@@ -242,7 +243,7 @@ public final class VcsRootProblemNotifier {
         @Nonnull Collection<? extends VcsRootError> unregisteredRoots,
         @Nonnull Collection<? extends VcsRootError> invalidRoots
     ) {
-        @Nls StringBuilder description = new StringBuilder();
+        StringBuilder description = new StringBuilder();
         if (!invalidRoots.isEmpty()) {
             if (invalidRoots.size() == 1) {
                 VcsRootError rootError = invalidRoots.iterator().next();
@@ -250,7 +251,7 @@ public final class VcsRootProblemNotifier {
                 description.append(getInvalidRootDescriptionItem(rootError, vcsName));
             }
             else {
-                description.append(VcsBundle.message("roots.the.following.directories.are.registered.as.vcs.roots.but.they.are.not"))
+                description.append(VcsLocalize.rootsTheFollowingDirectoriesAreRegisteredAsVcsRootsButTheyAreNot())
                     .append(BR)
                     .append(joinRootsForPresentation(invalidRoots));
             }
@@ -269,14 +270,13 @@ public final class VcsRootProblemNotifier {
         return description.toString();
     }
 
-    @VisibleForTesting
     @Nonnull
+    @VisibleForTesting
     String getInvalidRootDescriptionItem(@Nonnull VcsRootError rootError, @Nonnull String vcsName) {
-        return VcsBundle.message(
-            "roots.notification.content.directory.registered.as.root.but.no.repositories.were.found.there",
+        return VcsLocalize.rootsNotificationContentDirectoryRegisteredAsRootButNoRepositoriesWereFoundThere(
             ROOT_TO_PRESENTABLE.apply(rootError),
             vcsName
-        );
+        ).get();
     }
 
     @Nonnull
@@ -294,23 +294,23 @@ public final class VcsRootProblemNotifier {
     }
 
     @Nonnull
-    private static String makeTitle(
+    private static LocalizeValue makeTitle(
         @Nonnull Collection<? extends VcsRootError> unregisteredRoots,
         @Nonnull Collection<? extends VcsRootError> invalidRoots,
         boolean rootsAlreadyAdded
     ) {
-        String title;
+        LocalizeValue title;
         if (unregisteredRoots.isEmpty()) {
-            title = VcsBundle.message("roots.notification.title.invalid.vcs.root.choice.mapping.mappings", invalidRoots.size());
+            title = VcsLocalize.rootsNotificationTitleInvalidVcsRootChoiceMappingMappings(invalidRoots.size());
         }
         else if (invalidRoots.isEmpty()) {
             String vcs = getVcsName(unregisteredRoots);
             title = rootsAlreadyAdded
-                ? VcsBundle.message("roots.notification.title.vcs.name.integration.enabled", vcs)
-                : VcsBundle.message("notification.title.vcs.name.repository.repositories.found", vcs, unregisteredRoots.size());
+                ? VcsLocalize.rootsNotificationTitleVcsNameIntegrationEnabled(vcs)
+                : VcsLocalize.notificationTitleVcsNameRepositoryRepositoriesFound(vcs, unregisteredRoots.size());
         }
         else {
-            title = VcsBundle.message("roots.notification.title.vcs.root.configuration.problems");
+            title = VcsLocalize.rootsNotificationTitleVcsRootConfigurationProblems();
         }
         return title;
     }
@@ -323,7 +323,7 @@ public final class VcsRootProblemNotifier {
                 result = vcsName;
             }
             else if (!result.equals(vcsName)) {
-                return VcsBundle.message("vcs.generic.name");
+                return VcsLocalize.vcsGenericNameWithMnemonic().map(Presentation.NO_MNEMONIC).get();
             }
         }
         return result;
@@ -331,11 +331,16 @@ public final class VcsRootProblemNotifier {
 
     @Nonnull
     private List<VcsRootError> getImportantUnregisteredMappings(@Nonnull Collection<? extends VcsRootError> errors) {
-        return filter(errors, error -> {
-            VcsDirectoryMapping mapping = error.getMapping();
-            return error.getType() == UNREGISTERED_ROOT && isUnderOrAboveProjectDir(mapping) && !isIgnoredOrExcludedPath(mapping) && !isExplicitlyIgnoredPath(
-                mapping);
-        });
+        return filter(
+            errors,
+            error -> {
+                VcsDirectoryMapping mapping = error.getMapping();
+                return error.getType() == UNREGISTERED_ROOT
+                    && isUnderOrAboveProjectDir(mapping)
+                    && !isIgnoredOrExcludedPath(mapping)
+                    && !isExplicitlyIgnoredPath(mapping);
+            }
+        );
     }
 
     private boolean areThereExplicitlyIgnoredRoots(Collection<? extends VcsRootError> allErrors) {
@@ -366,7 +371,7 @@ public final class VcsRootProblemNotifier {
         if (projectDir != null && FileUtil.isAncestor(projectDir, mapping, true)) {
             String relativePath = FileUtil.getRelativePath(projectDir, mapping, '/');
             if (relativePath != null) {
-                presentablePath = toSystemDependentName(VcsBundle.message("label.relative.project.path.presentation", relativePath));
+                presentablePath = toSystemDependentName(VcsLocalize.labelRelativeProjectPathPresentation(relativePath).get());
             }
         }
         if (presentablePath == null) {

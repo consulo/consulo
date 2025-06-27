@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.project;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.Application;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;

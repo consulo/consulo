@@ -42,7 +42,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 22-Mar-22
+ * @since 2022-03-22
  */
 @Singleton
 @ServiceImpl
@@ -55,7 +55,7 @@ public class IdeStorageNotificationService implements StorageNotificationService
     private final NotificationService myNotificationService;
 
     @Inject
-    public IdeStorageNotificationService(@Nonnull Application application, NotificationService notificationService) {
+    public IdeStorageNotificationService(@Nonnull Application application, @Nonnull NotificationService notificationService) {
         myApplication = application;
         myNotificationService = notificationService;
     }
@@ -86,14 +86,14 @@ public class IdeStorageNotificationService implements StorageNotificationService
         }
 
         myApplication.getLastUIAccess().giveIfNeed(() -> {
-            final LinkedHashSet<String> macros = new LinkedHashSet<>(unknownMacros);
+            LinkedHashSet<String> macros = new LinkedHashSet<>(unknownMacros);
             macros.removeAll(getMacrosFromExistingNotifications((Project) project));
 
             if (!macros.isEmpty()) {
                 LOG.warn("Reporting unknown path macros " + macros + " in component " + componentName);
 
                 String format = "<p><i>%s</i> %s undefined. <a href=\"define\">Fix it</a></p>";
-                String productName = Application.get().getName().get();
+                String productName = myApplication.getName().get();
                 String content = String.format(format, StringUtil.join(macros, ", "), macros.size() == 1 ? "is" : "are") +
                     "<br>Path variables are used to substitute absolute paths " +
                     "in " +
@@ -121,7 +121,7 @@ public class IdeStorageNotificationService implements StorageNotificationService
     private static List<String> getMacrosFromExistingNotifications(Project project) {
         List<String> notified = new ArrayList<>();
         NotificationsManager manager = NotificationsManager.getNotificationsManager();
-        for (final UnknownMacroNotification notification : manager.getNotificationsOfType(UnknownMacroNotification.class, project)) {
+        for (UnknownMacroNotification notification : manager.getNotificationsOfType(UnknownMacroNotification.class, project)) {
             notified.addAll(notification.getMacros());
         }
         return notified;

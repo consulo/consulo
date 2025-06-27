@@ -4,7 +4,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import consulo.application.Application;
 import consulo.application.util.concurrent.QueueProcessor;
-import consulo.component.ProcessCanceledException;
 import consulo.credentialStorage.CredentialAttributes;
 import consulo.credentialStorage.CredentialStore;
 import consulo.credentialStorage.Credentials;
@@ -15,6 +14,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationService;
+import jakarta.annotation.Nonnull;
 
 import java.io.Closeable;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +45,7 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
 
     // Secondary constructor: uses a QueueProcessor that immediately runs tasks.
     public NativeCredentialStoreWrapper(CredentialStore store) {
-        this(store, new QueueProcessor<>(runnable -> runnable.run()));
+        this(store, new QueueProcessor<>(Runnable::run));
     }
 
     private boolean isFallbackStoreInitialized() {
@@ -60,7 +60,7 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
     }
 
     @Override
-    public Credentials get(CredentialAttributes attributes) {
+    public Credentials get(@Nonnull CredentialAttributes attributes) {
         // Check postponed credentials first.
         Credentials postponed = postponedCredentials.get(attributes);
         if (postponed != null) {
@@ -92,7 +92,7 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
     }
 
     @Override
-    public void set(CredentialAttributes attributes, Credentials credentials) {
+    public void set(@Nonnull CredentialAttributes attributes, Credentials credentials) {
         if (isFallbackStoreInitialized()) {
             getFallbackStore().set(attributes, credentials);
             return;
@@ -116,9 +116,6 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
                     LOG.error(e);
                 }
             }
-            catch (ProcessCanceledException e) {
-                throw e;
-            }
             finally {
                 Credentials currentPostponed = postponedCredentials.get(attributes);
                 if (postponed.equals(currentPostponed)) {
@@ -130,10 +127,10 @@ public class NativeCredentialStoreWrapper implements CredentialStore, Closeable 
 
     @Override
     public void close() {
-        if (store instanceof Closeable) {
+        if (store instanceof Closeable closeable) {
             queueProcessor.waitFor();
             try {
-                ((Closeable) store).close();
+                closeable.close();
             }
             catch (Exception e) {
                 LOG.error(e);

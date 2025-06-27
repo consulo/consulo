@@ -77,7 +77,7 @@ public class ReplaceInProjectManager {
         myNotificationService = notificationService;
     }
 
-    private static boolean hasReadOnlyUsages(final Collection<? extends Usage> usages) {
+    private static boolean hasReadOnlyUsages(Collection<? extends Usage> usages) {
         for (Usage usage : usages) {
             if (usage.isReadOnly()) {
                 return true;
@@ -125,12 +125,12 @@ public class ReplaceInProjectManager {
      */
     @RequiredUIAccess
     public void replaceInProject(@Nonnull DataContext dataContext, @Nullable FindModel model) {
-        final FindManager findManager = FindManager.getInstance(myProject);
-        final FindModel findModel;
+        FindManager findManager = FindManager.getInstance(myProject);
+        FindModel findModel;
 
-        final boolean isOpenInNewTabEnabled;
-        final boolean toOpenInNewTab;
-        final Content selectedContent = UsageViewContentManager.getInstance(myProject).getSelectedContent(true);
+        boolean isOpenInNewTabEnabled;
+        boolean toOpenInNewTab;
+        Content selectedContent = UsageViewContentManager.getInstance(myProject).getSelectedContent(true);
         if (selectedContent != null && selectedContent.isPinned()) {
             toOpenInNewTab = true;
             isOpenInNewTabEnabled = false;
@@ -178,10 +178,10 @@ public class ReplaceInProjectManager {
             return;
         }
         findManager.getFindInProjectModel().copyFrom(findModel);
-        final FindModel findModelCopy = findModel.clone();
+        FindModel findModelCopy = findModel.clone();
 
-        final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(findModelCopy);
-        final FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, true, presentation);
+        UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(findModelCopy);
+        FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, true, presentation);
         processPresentation.setShowFindOptionsPrompt(findModel.isPromptOnReplace());
 
         UsageSearcherFactory factory = new UsageSearcherFactory(findModelCopy, processPresentation);
@@ -223,7 +223,7 @@ public class ReplaceInProjectManager {
         @Nonnull FindUsagesProcessPresentation processPresentation
     ) {
         presentation.setMergeDupLinesAvailable(false);
-        final ReplaceInProjectTarget target = new ReplaceInProjectTarget(myProject, findModelCopy);
+        ReplaceInProjectTarget target = new ReplaceInProjectTarget(myProject, findModelCopy);
         ((FindManagerImpl)FindManager.getInstance(myProject)).getFindUsagesManager().addToHistory(target);
         final ReplaceContext[] context = new ReplaceContext[1];
         manager.searchAndShowUsages(
@@ -248,7 +248,7 @@ public class ReplaceInProjectManager {
 
                 @Override
                 @RequiredUIAccess
-                public void findingUsagesFinished(final UsageView usageView) {
+                public void findingUsagesFinished(UsageView usageView) {
                     if (context[0] != null && !processPresentation.isShowFindOptionsPrompt()) {
                         replaceUsagesUnderCommand(context[0], usageView.getUsages());
                         context[0].invalidateExcludedSetCache();
@@ -365,7 +365,7 @@ public class ReplaceInProjectManager {
         }
 
         int[] replacedCount = {0};
-        final boolean[] success = {true};
+        boolean[] success = {true};
 
         success[0] &= ((ApplicationEx)Application.get()).runWriteActionWithCancellableProgressInDispatchThread(
             FindLocalize.findReplaceAllConfirmationTitle().get(),
@@ -376,7 +376,7 @@ public class ReplaceInProjectManager {
                 int processed = 0;
                 VirtualFile lastFile = null;
 
-                for (final Usage usage : usages) {
+                for (Usage usage : usages) {
                     ++processed;
                     indicator.checkCanceled();
                     indicator.setFraction((float)processed / usages.size());
@@ -418,26 +418,26 @@ public class ReplaceInProjectManager {
     }
 
     public boolean replaceUsage(
-        @Nonnull final Usage usage,
-        @Nonnull final FindModel findModel,
-        @Nonnull final Set<Usage> excludedSet,
-        final boolean justCheck
+        @Nonnull Usage usage,
+        @Nonnull FindModel findModel,
+        @Nonnull Set<Usage> excludedSet,
+        boolean justCheck
     ) throws FindManager.MalformedReplacementStringException {
-        final SimpleReference<FindManager.MalformedReplacementStringException> exceptionResult = SimpleReference.create();
-        final boolean result = WriteAction.compute(() -> {
+        SimpleReference<FindManager.MalformedReplacementStringException> exceptionResult = SimpleReference.create();
+        boolean result = WriteAction.compute(() -> {
             if (excludedSet.contains(usage)) {
                 return false;
             }
 
-            final Document document = ((UsageInfo2UsageAdapter)usage).getDocument();
+            Document document = ((UsageInfo2UsageAdapter)usage).getDocument();
             if (!document.isWritable()) {
                 return false;
             }
 
             return ((UsageInfo2UsageAdapter)usage).processRangeMarkers(segment -> {
-                final int textOffset = segment.getStartOffset();
-                final int textEndOffset = segment.getEndOffset();
-                final SimpleReference<String> stringToReplace = SimpleReference.create();
+                int textOffset = segment.getStartOffset();
+                int textEndOffset = segment.getEndOffset();
+                SimpleReference<String> stringToReplace = SimpleReference.create();
                 try {
                     if (!getStringToReplace(textOffset, textEndOffset, document, findModel, stringToReplace)) {
                         return true;
@@ -474,7 +474,7 @@ public class ReplaceInProjectManager {
             return false;
         }
         FindManager findManager = FindManager.getInstance(myProject);
-        final CharSequence foundString = document.getCharsSequence().subSequence(textOffset, textEndOffset);
+        CharSequence foundString = document.getCharsSequence().subSequence(textOffset, textEndOffset);
         PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
         FindResult findResult =
             findManager.findString(document.getCharsSequence(), textOffset, findModel, file != null ? file.getVirtualFile() : null);
@@ -491,12 +491,12 @@ public class ReplaceInProjectManager {
     }
 
     @RequiredUIAccess
-    private void replaceUsagesUnderCommand(@Nonnull final ReplaceContext replaceContext, @Nonnull final Set<? extends Usage> usagesSet) {
+    private void replaceUsagesUnderCommand(@Nonnull ReplaceContext replaceContext, @Nonnull Set<? extends Usage> usagesSet) {
         if (usagesSet.isEmpty()) {
             return;
         }
 
-        final List<Usage> usages = new ArrayList<>(usagesSet);
+        List<Usage> usages = new ArrayList<>(usagesSet);
         Collections.sort(usages, UsageViewImpl.USAGE_COMPARATOR);
 
         if (!ensureUsagesWritable(replaceContext, usages)) {
@@ -507,8 +507,8 @@ public class ReplaceInProjectManager {
             .project(myProject)
             .name(FindLocalize.findReplaceCommand())
             .run(() -> {
-                final boolean success = replaceUsages(replaceContext, usages);
-                final UsageView usageView = replaceContext.getUsageView();
+                boolean success = replaceUsages(replaceContext, usages);
+                UsageView usageView = replaceContext.getUsageView();
 
                 if (closeUsageViewIfEmpty(usageView, success)) {
                     return;
@@ -524,8 +524,8 @@ public class ReplaceInProjectManager {
     @RequiredUIAccess
     private boolean ensureUsagesWritable(ReplaceContext replaceContext, Collection<? extends Usage> selectedUsages) {
         Set<VirtualFile> readOnlyFiles = null;
-        for (final Usage usage : selectedUsages) {
-            final VirtualFile file = ((UsageInFile)usage).getFile();
+        for (Usage usage : selectedUsages) {
+            VirtualFile file = ((UsageInFile)usage).getFile();
 
             if (file != null && !file.isWritable()) {
                 if (readOnlyFiles == null) {

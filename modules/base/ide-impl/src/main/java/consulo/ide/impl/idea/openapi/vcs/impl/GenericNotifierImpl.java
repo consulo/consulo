@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -45,52 +44,50 @@ public abstract class GenericNotifierImpl<T, Key> {
     private final Object myLock;
 
     protected GenericNotifierImpl(
-        final Project project,
+        Project project,
         @Nonnull NotificationGroup group,
         @Nonnull String title,
-        final @Nonnull NotificationType type
+        @Nonnull NotificationType type
     ) {
         myGroup = group;
         myTitle = title;
         myType = type;
         myProject = project;
-        myState = new HashMap<Key, MyNotification>();
+        myState = new HashMap<>();
         myListener = new MyListener();
         myLock = new Object();
     }
 
-    protected abstract boolean ask(final T obj, String description);
+    protected abstract boolean ask(T obj, String description);
 
     @Nonnull
-    protected abstract Key getKey(final T obj);
+    protected abstract Key getKey(T obj);
 
     @Nonnull
-    protected abstract String getNotificationContent(final T obj);
+    protected abstract String getNotificationContent(T obj);
 
     protected Collection<Key> getAllCurrentKeys() {
         synchronized (myLock) {
-            return new ArrayList<Key>(myState.keySet());
+            return new ArrayList<>(myState.keySet());
         }
     }
 
-    protected boolean getStateFor(final Key key) {
+    protected boolean getStateFor(Key key) {
         synchronized (myLock) {
             return myState.containsKey(key);
         }
     }
 
     public void clear() {
-        final List<MyNotification> notifications;
+        List<MyNotification> notifications;
         synchronized (myLock) {
-            notifications = new ArrayList<MyNotification>(myState.values());
+            notifications = new ArrayList<>(myState.values());
             myState.clear();
         }
-        final Application application = ApplicationManager.getApplication();
-        final Runnable runnable = new Runnable() {
-            public void run() {
-                for (MyNotification notification : notifications) {
-                    notification.expire();
-                }
+        Application application = Application.get();
+        Runnable runnable = () -> {
+            for (MyNotification notification : notifications) {
+                notification.expire();
             }
         };
         if (application.isDispatchThread()) {
@@ -101,15 +98,11 @@ public abstract class GenericNotifierImpl<T, Key> {
         }
     }
 
-    private void expireNotification(final MyNotification notification) {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-            public void run() {
-                notification.expire();
-            }
-        });
+    private void expireNotification(MyNotification notification) {
+        UIUtil.invokeLaterIfNeeded(notification::expire);
     }
 
-    public boolean ensureNotify(final T obj) {
+    public boolean ensureNotify(T obj) {
         MyNotification notification;
         synchronized (myLock) {
             Key key = getKey(obj);
@@ -139,8 +132,8 @@ public abstract class GenericNotifierImpl<T, Key> {
         return false;
     }
 
-    public void removeLazyNotificationByKey(final Key key) {
-        final MyNotification notification;
+    public void removeLazyNotificationByKey(Key key) {
+        MyNotification notification;
         synchronized (myLock) {
             notification = myState.get(key);
             if (notification != null) {
@@ -152,10 +145,10 @@ public abstract class GenericNotifierImpl<T, Key> {
         }
     }
 
-    public void removeLazyNotification(final T obj) {
-        final MyNotification notification;
+    public void removeLazyNotification(T obj) {
+        MyNotification notification;
         synchronized (myLock) {
-            final Key key = getKey(obj);
+            Key key = getKey(obj);
             notification = myState.get(key);
             if (notification != null) {
                 myState.remove(key);
@@ -167,13 +160,14 @@ public abstract class GenericNotifierImpl<T, Key> {
     }
 
     private class MyListener implements NotificationListener {
+        @Override
         public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-            final MyNotification concreteNotification = (MyNotification) notification;
-            final T obj = concreteNotification.getObj();
-            final boolean state = ask(obj, event.getDescription());
+            MyNotification concreteNotification = (MyNotification) notification;
+            T obj = concreteNotification.getObj();
+            boolean state = ask(obj, event.getDescription());
             if (state) {
                 synchronized (myLock) {
-                    final Key key = getKey(obj);
+                    Key key = getKey(obj);
                     myState.remove(key);
                 }
                 expireNotification(concreteNotification);
@@ -182,9 +176,9 @@ public abstract class GenericNotifierImpl<T, Key> {
     }
 
     @Nullable
-    protected T getObj(final Key key) {
+    protected T getObj(Key key) {
         synchronized (myLock) {
-            final MyNotification notification = myState.get(key);
+            MyNotification notification = myState.get(key);
             return notification == null ? null : notification.getObj();
         }
     }
@@ -210,7 +204,7 @@ public abstract class GenericNotifierImpl<T, Key> {
         }
     }
 
-    private static void log(final String s) {
+    private static void log(String s) {
         LOG.debug(s);
     }
 

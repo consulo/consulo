@@ -17,7 +17,6 @@ package consulo.task.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -43,7 +42,9 @@ import consulo.task.impl.internal.context.WorkingContextManager;
 import consulo.task.impl.internal.setting.TaskRepositoriesConfigurable;
 import consulo.task.util.RequestFailedException;
 import consulo.task.util.TaskUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Comparing;
@@ -62,12 +63,11 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -77,7 +77,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
-
 
 /**
  * @author Dmitry Avdeev
@@ -163,7 +162,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
             @Override
             public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
-                final LocalTask associatedTask = getAssociatedTask((LocalChangeList) newDefaultList);
+                LocalTask associatedTask = getAssociatedTask((LocalChangeList) newDefaultList);
                 if (associatedTask != null && !getActiveTask().equals(associatedTask)) {
                     application.invokeLater(() -> activateTask(associatedTask, true), myProject.getDisposed());
                 }
@@ -244,12 +243,12 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
     @Nonnull
     @Override
-    public List<Task> getIssues(@Nullable final String query) {
+    public List<Task> getIssues(@Nullable String query) {
         return getIssues(query, true);
     }
 
     @Override
-    public List<Task> getIssues(@Nullable final String query, final boolean forceRequest) {
+    public List<Task> getIssues(@Nullable String query, boolean forceRequest) {
         return getIssues(query, 0, 50, true, new EmptyProgressIndicator(), forceRequest);
     }
 
@@ -258,7 +257,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         @Nullable String query,
         int offset,
         int limit,
-        final boolean withClosed,
+        boolean withClosed,
         @Nonnull ProgressIndicator indicator,
         boolean forceRequest
     ) {
@@ -276,7 +275,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public List<Task> getCachedIssues(final boolean withClosed) {
+    public List<Task> getCachedIssues(boolean withClosed) {
         return ContainerUtil.filter(myIssueCache.values(), task -> withClosed || !task.isClosed());
     }
 
@@ -312,7 +311,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public List<LocalTask> getLocalTasks(final boolean withClosed) {
+    public List<LocalTask> getLocalTasks(boolean withClosed) {
         synchronized (myTasks) {
             return ContainerUtil.filter(myTasks.values(), task -> withClosed || !isLocallyClosed(task));
         }
@@ -320,7 +319,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
     @Override
     public LocalTask addTask(Task issue) {
-        LocalTaskImpl task = issue instanceof LocalTaskImpl ? (LocalTaskImpl) issue : new LocalTaskImpl(issue);
+        LocalTaskImpl task = issue instanceof LocalTaskImpl localTask ? localTask : new LocalTaskImpl(issue);
         addTask(task);
         return task;
     }
@@ -339,7 +338,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public LocalTask activateTask(@Nonnull final Task origin, boolean clearContext) {
+    public LocalTask activateTask(@Nonnull Task origin, boolean clearContext) {
         LocalTask activeTask = getActiveTask();
         if (origin.equals(activeTask)) {
             return activeTask;
@@ -352,7 +351,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         }
         myContextManager.restoreContext(origin);
 
-        final LocalTask task = doActivate(origin, true);
+        LocalTask task = doActivate(origin, true);
 
         return restoreVcsContext(task);
     }
@@ -402,7 +401,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return task;
     }
 
-    private List<BranchInfo> getAllBranches(final String repo) {
+    private List<BranchInfo> getAllBranches(String repo) {
         ArrayList<BranchInfo> infos = new ArrayList<>();
         VcsTaskHandler[] handlers = VcsTaskHandler.getAllHandlers(myProject);
         for (VcsTaskHandler handler : handlers) {
@@ -474,7 +473,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     private LocalTask doActivate(Task origin, boolean explicitly) {
-        final LocalTaskImpl task = origin instanceof LocalTaskImpl ? (LocalTaskImpl) origin : new LocalTaskImpl(origin);
+        final LocalTaskImpl task = origin instanceof LocalTaskImpl localTask ? localTask : new LocalTaskImpl(origin);
         if (explicitly) {
             task.setUpdated(new Date());
         }
@@ -482,14 +481,11 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         task.setActive(true);
         addTask(task);
         if (task.isIssue()) {
-            StartupManager.getInstance(myProject)
-                .runWhenProjectIsInitialized(() -> ProgressManager.getInstance()
-                    .run(new consulo.application.progress.Task.Backgroundable(
+            StartupManager.getInstance(myProject).runWhenProjectIsInitialized(
+                () -> ProgressManager.getInstance().run(new consulo.application.progress.Task.Backgroundable(
                         myProject,
-                        "Updating " + task
-                            .getPresentableId()
+                        "Updating " + task.getPresentableId()
                     ) {
-
                         @Override
                         public void run(@Nonnull ProgressIndicator indicator) {
                             updateIssue(task.getId());
@@ -512,6 +508,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
+    @RequiredUIAccess
     public boolean testConnection(final TaskRepository repository) {
         TestConnectionTask task = new TestConnectionTask("Test connection") {
             @Override
@@ -522,7 +519,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
                 try {
                     myConnection = repository.createCancellableConnection();
                     if (myConnection != null) {
-                        Future<Exception> future = ApplicationManager.getApplication().executeOnPooledThread(myConnection);
+                        Future<Exception> future = Application.get().executeOnPooledThread(myConnection);
                         while (true) {
                             try {
                                 myException = future.get(100, TimeUnit.MILLISECONDS);
@@ -563,7 +560,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         Exception e = task.myException;
         if (e == null) {
             myBadRepositories.remove(repository);
-            Messages.showMessageDialog(myProject, "Connection is successful", "Connection", Messages.getInformationIcon());
+            Messages.showMessageDialog(myProject, "Connection is successful", "Connection", UIUtil.getInformationIcon());
         }
         else if (!(e instanceof ProcessCanceledException)) {
             String message = e.getMessage();
@@ -579,10 +576,10 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return e == null;
     }
 
-    @Override
     @Nonnull
+    @Override
     public Config getState() {
-        myConfig.tasks = ContainerUtil.map(myTasks.values(), task -> new LocalTaskImpl(task));
+        myConfig.tasks = ContainerUtil.map(myTasks.values(), LocalTaskImpl::new);
         myConfig.servers = XmlSerializer.serialize(getAllRepositories());
         return myConfig;
     }
@@ -664,7 +661,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         // remove already not existing changelists from tasks changelists
         for (LocalTask localTask : getLocalTasks()) {
             for (Iterator<ChangeListInfo> iterator = localTask.getChangeLists().iterator(); iterator.hasNext(); ) {
-                final ChangeListInfo changeListInfo = iterator.next();
+                ChangeListInfo changeListInfo = iterator.next();
                 if (myChangeListManager.getChangeList(changeListInfo.id) == null) {
                     iterator.remove();
                 }
@@ -695,7 +692,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
         // search for active task
         LocalTask activeTask = null;
-        final List<LocalTask> tasks = getLocalTasks();
+        List<LocalTask> tasks = getLocalTasks();
         Collections.sort(tasks, TASK_UPDATE_COMPARATOR);
         for (LocalTask task : tasks) {
             if (activeTask == null) {
@@ -734,8 +731,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     @Override
-    public void updateIssues(final @Nullable Runnable onComplete) {
-        TaskRepository first = ContainerUtil.find(getAllRepositories(), repository -> repository.isConfigured());
+    public void updateIssues(@Nullable Runnable onComplete) {
+        TaskRepository first = ContainerUtil.find(getAllRepositories(), TaskRepository::isConfigured);
         if (first == null) {
             myIssueCache.clear();
             if (onComplete != null) {
@@ -744,11 +741,11 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
             return;
         }
         myUpdating = true;
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             doUpdate(onComplete);
         }
         else {
-            ApplicationManager.getApplication().executeOnPooledThread(() -> doUpdate(onComplete));
+            Application.get().executeOnPooledThread(() -> doUpdate(onComplete));
         }
     }
 
@@ -790,10 +787,10 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         int limit,
         boolean withClosed,
         boolean forceRequest,
-        @Nonnull final ProgressIndicator cancelled
+        @Nonnull ProgressIndicator cancelled
     ) {
         List<Task> issues = null;
-        for (final TaskRepository repository : getAllRepositories()) {
+        for (TaskRepository repository : getAllRepositories()) {
             if (!repository.isConfigured() || (!forceRequest && myBadRepositories.contains(repository))) {
                 continue;
             }
@@ -847,7 +844,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return issues;
     }
 
-    private void notifyAboutConnectionFailure(final TaskRepository repository, String details) {
+    private void notifyAboutConnectionFailure(TaskRepository repository, String details) {
         String content = "<p><a href=\"\">Configure server...</a></p>";
         if (!StringUtil.isEmpty(details)) {
             content = "<p>" + details + "</p>" + content;
@@ -943,7 +940,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
             changeList = myChangeListManager.addChangeList(name, comment);
         }
         else {
-            final LocalTask associatedTask = getAssociatedTask(changeList);
+            LocalTask associatedTask = getAssociatedTask(changeList);
             if (associatedTask != null) {
                 associatedTask.removeChangelist(new ChangeListInfo(changeList));
             }
@@ -972,8 +969,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
      */
     public void reconfigureRepositoryClients() {
         for (TaskRepository repository : myRepositories) {
-            if (repository instanceof ReconfigureRepository) {
-                ((ReconfigureRepository) repository).reconfigureClient();
+            if (repository instanceof ReconfigureRepository reconfigureRepository) {
+                reconfigureRepository.reconfigureClient();
             }
         }
     }
@@ -989,7 +986,6 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     public static class Config {
-
         @Property(surroundWithTag = false)
         @AbstractCollection(surroundWithTag = false, elementTag = "task")
         public List<LocalTaskImpl> tasks = new ArrayList<>();
@@ -1024,7 +1020,6 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
 
     private abstract class TestConnectionTask extends consulo.application.progress.Task.Modal {
-
         protected Exception myException;
 
         @Nullable
@@ -1035,6 +1030,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         }
 
         @Override
+        @RequiredUIAccess
         public void onCancel() {
             if (myConnection != null) {
                 myConnection.cancel();

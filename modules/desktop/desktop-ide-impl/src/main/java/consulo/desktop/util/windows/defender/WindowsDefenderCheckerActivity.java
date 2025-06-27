@@ -92,10 +92,9 @@ public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity
             WindowsDefenderNotification notification = new WindowsDefenderNotification(
                 myNotificationService.newWarn(SystemHealthMonitorImpl.GROUP)
                     .content(ExternalServiceLocalize.virusScanningWarnMessage(
-                            Application.get().getName(),
-                            StringUtil.join(nonExcludedPaths, "<br/>")
-                        )
-                    )
+                        Application.get().getName(),
+                        StringUtil.join(nonExcludedPaths, "<br/>")
+                    ))
                     .important(true),
                 nonExcludedPaths
             );

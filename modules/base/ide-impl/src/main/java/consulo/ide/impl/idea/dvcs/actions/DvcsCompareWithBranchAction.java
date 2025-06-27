@@ -15,32 +15,30 @@
  */
 package consulo.ide.impl.idea.dvcs.actions;
 
-import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.localize.LocalizeValue;
-import consulo.project.ui.notification.NotificationService;
-import consulo.versionControlSystem.distributed.DvcsUtil;
-import consulo.util.lang.StringUtil;
-import consulo.versionControlSystem.VcsDataKeys;
-import consulo.versionControlSystem.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.JBList;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -55,8 +53,8 @@ import java.util.List;
 public abstract class DvcsCompareWithBranchAction<T extends Repository> extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(DvcsCompareWithBranchAction.class);
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
         VirtualFile file = getAffectedFile(event);
@@ -70,17 +68,21 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         }
         List<String> branchNames = getBranchNamesExceptCurrent(repository);
 
-        JBList list = new JBList(branchNames);
-        new PopupChooserBuilder<>(list).setTitle("Select branch to compare")
-            .setItemChoosenCallback(new OnBranchChooseRunnable(project, file, presentableRevisionName, list)).setAutoselectOnMouseMove(true)
-            .setFilteringEnabled(o -> o.toString()).createPopup().showCenteredInCurrentWindow(project);
+        JBList<String> list = new JBList<>(branchNames);
+        new PopupChooserBuilder<>(list)
+            .setTitle("Select branch to compare")
+            .setItemChoosenCallback(new OnBranchChooseRunnable(project, file, presentableRevisionName, list))
+            .setAutoselectOnMouseMove(true)
+            .setFilteringEnabled(Object::toString)
+            .createPopup()
+            .showCenteredInCurrentWindow(project);
     }
 
     @Nonnull
     protected abstract List<String> getBranchNamesExceptCurrent(@Nonnull T repository);
 
     private static VirtualFile getAffectedFile(@Nonnull AnActionEvent event) {
-        final VirtualFile[] vFiles = event.getData(VirtualFile.KEY_OF_ARRAY);
+        VirtualFile[] vFiles = event.getData(VirtualFile.KEY_OF_ARRAY);
         assert vFiles != null && vFiles.length == 1 && vFiles[0] != null : "Illegal virtual files selected: " + Arrays.toString(vFiles);
         return vFiles[0];
     }
@@ -143,7 +145,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         @Nonnull final String head,
         @Nonnull final String compare
     ) {
-        new Task.Backgroundable(project, "Collecting Changes...", true) {
+        new Task.Backgroundable(project, LocalizeValue.localizeTODO("Collecting Changes..."), true) {
             private Collection<Change> changes;
 
             @Override

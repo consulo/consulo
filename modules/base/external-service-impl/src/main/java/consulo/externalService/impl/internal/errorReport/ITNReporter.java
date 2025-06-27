@@ -48,6 +48,7 @@ import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
@@ -82,8 +83,8 @@ public class ITNReporter extends ErrorReportSubmitter {
     private static boolean sendError(
         IdeaLoggingEvent event,
         String additionalInfo,
-        final Component parentComponent,
-        final Consumer<SubmittedReportInfo> callback
+        Component parentComponent,
+        Consumer<SubmittedReportInfo> callback
     ) {
         ErrorReportBean errorBean =
             new ErrorReportBean(UpdateSettings.getInstance().getChannel(), event.getThrowable(), LastActionTracker.ourLastActionId);
@@ -92,14 +93,14 @@ public class ITNReporter extends ErrorReportSubmitter {
     }
 
     private static boolean doSubmit(
-        final IdeaLoggingEvent event,
-        final Component parentComponent,
-        final Consumer<SubmittedReportInfo> callback,
-        final ErrorReportBean errorBean,
-        final String description
+        IdeaLoggingEvent event,
+        Component parentComponent,
+        Consumer<SubmittedReportInfo> callback,
+        ErrorReportBean errorBean,
+        String description
     ) {
-        final DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
-        final Project project = dataContext.getData(Project.KEY);
+        DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
+        Project project = dataContext.getData(Project.KEY);
 
         errorBean.setInstallationID(PermanentInstallationID.get());
         errorBean.setDescription(description);
@@ -113,13 +114,11 @@ public class ITNReporter extends ErrorReportSubmitter {
         if (t != null) {
             Set<PluginId> pluginIds = PluginExceptionUtil.findAllPluginIds(t);
             for (PluginId pluginId : pluginIds) {
-                final PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
+                PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
                 if (pluginDescriptor != null) {
                     String version = pluginDescriptor.getVersion();
-                    if (StringUtil.isEmpty(version)) {
-                        if (PluginIds.isPlatformPlugin(pluginId)) {
-                            version = ApplicationInfo.getInstance().getBuild().asString();
-                        }
+                    if (StringUtil.isEmpty(version) && PluginIds.isPlatformPlugin(pluginId)) {
+                        version = ApplicationInfo.getInstance().getBuild().asString();
                     }
 
                     if (StringUtil.isEmpty(version)) {
@@ -139,8 +138,8 @@ public class ITNReporter extends ErrorReportSubmitter {
             assignUserId = abstractMessage.getAssigneeId();
         }
 
-        if (data instanceof LogMessageEx) {
-            errorBean.setAttachments(((LogMessageEx) data).getAttachments());
+        if (data instanceof LogMessageEx logMessageEx) {
+            errorBean.setAttachments(logMessageEx.getAttachments());
         }
 
         Application application = Application.get();
@@ -151,17 +150,16 @@ public class ITNReporter extends ErrorReportSubmitter {
             id -> {
                 ourPreviousErrorReporterId = id;
                 String shortId = id.substring(0, 8);
-                final SubmittedReportInfo reportInfo =
-                    new SubmittedReportInfo(
-                        WebServiceApi.ERROR_REPORT.buildUrl(id),
-                        shortId,
-                        SubmittedReportInfo.SubmissionStatus.NEW_ISSUE
-                    );
+                SubmittedReportInfo reportInfo = new SubmittedReportInfo(
+                    WebServiceApi.ERROR_REPORT.buildUrl(id),
+                    shortId,
+                    SubmittedReportInfo.SubmissionStatus.NEW_ISSUE
+                );
                 callback.accept(reportInfo);
 
                 application.invokeLater(() -> {
                     StringBuilder text = new StringBuilder();
-                    final String url = SubmittedReportInfo.getUrl(reportInfo);
+                    String url = SubmittedReportInfo.getUrl(reportInfo);
 
                     SubmittedReportInfoUtil.appendSubmissionInformation(reportInfo, text, url);
 
@@ -219,7 +217,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                     project,
                     msg.get(),
                     ExternalServiceLocalize.errorReportTitle().get(),
-                    Messages.getErrorIcon()
+                    UIUtil.getErrorIcon()
                 ) != 0) {
                     callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
                 }

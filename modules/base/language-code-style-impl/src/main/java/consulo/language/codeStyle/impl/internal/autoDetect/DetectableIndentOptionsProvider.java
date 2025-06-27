@@ -42,8 +42,12 @@ import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
  */
 @ExtensionImpl(order = "last")
 public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
-    static final NotificationGroup NOTIFICATION_GROUP =
-        new NotificationGroup(ApplicationLocalize.notificationGroupAutomaticIndentDetection().get(), NotificationDisplayType.STICKY_BALLOON, true);
+    static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup(
+        "automaticIndentDetection",
+        ApplicationLocalize.notificationGroupAutomaticIndentDetection(),
+        NotificationDisplayType.STICKY_BALLOON,
+        true
+    );
 
     private boolean myIsEnabledInTest;
     private final Map<VirtualFile, IndentOptions> myDiscardedOptions = Maps.newWeakHashMap();

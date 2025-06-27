@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.impl.internal.action;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
@@ -25,6 +25,7 @@ import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.awt.popup.ListPopupStepEx;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
@@ -90,7 +91,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
         new Task.Backgroundable(
             project,
-            XDebuggerLocalize.xdebuggerAttachActionCollectingitems().get(),
+            XDebuggerLocalize.xdebuggerAttachActionCollectingitems(),
             true,
             PerformInBackgroundOption.DEAF
         ) {
@@ -99,15 +100,15 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
                 List<AttachItem> allItems = List.copyOf(getTopLevelItems(indicator, project));
 
-                ApplicationManager.getApplication().invokeLater(() -> {
+                Application.get().invokeLater(() -> {
                     AttachListStep step = new AttachListStep(
                         allItems,
                         XDebuggerLocalize.xdebuggerAttachPopupTitleDefault().get(),
                         project
                     );
 
-                    final ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
-                    final JList mainList = ((AWTListPopup) popup).getList();
+                    ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
+                    JList mainList = ((AWTListPopup) popup).getList();
 
                     ListSelectionListener listener = event -> {
                         if (event.getValueIsAdjusting()) {
@@ -183,7 +184,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
     }
 
     @Nonnull
-    public List<AttachItem> collectAttachHostsItems(@Nonnull final Project project, @Nonnull ProgressIndicator indicator) {
+    public List<AttachItem> collectAttachHostsItems(@Nonnull Project project, @Nonnull ProgressIndicator indicator) {
 
         List<AttachItem> currentItems = new ArrayList<>();
 
@@ -214,8 +215,8 @@ public abstract class AttachToProcessActionBase extends AnAction {
         @Nonnull Project project,
         @Nonnull UserDataHolder dataHolder
     ) {
-        final List<AttachToProcessItem> result = new ArrayList<>();
-        final List<RecentItem> recentItems = getRecentItems(host, project);
+        List<AttachToProcessItem> result = new ArrayList<>();
+        List<RecentItem> recentItems = getRecentItems(host, project);
 
         for (int i = recentItems.size() - 1; i >= 0; i--) {
             RecentItem recentItem = recentItems.get(i);
@@ -272,7 +273,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
     @Nonnull
     private List<XAttachDebuggerProvider> getProvidersApplicableForHost(@Nonnull XAttachHost host) {
-        return consulo.util.collection.ContainerUtil.filter(
+        return ContainerUtil.filter(
             myAttachProvidersSupplier.get(),
             provider -> provider.isAttachHostApplicable(host)
         );
@@ -280,7 +281,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
     @Nonnull
     public List<AttachToProcessItem> collectAttachProcessItems(
-        @Nonnull final Project project,
+        @Nonnull Project project,
         @Nonnull XAttachHost host,
         @Nonnull ProgressIndicator indicator
     ) {
@@ -289,7 +290,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
     @Nonnull
     static List<AttachToProcessItem> doCollectAttachProcessItems(
-        @Nonnull final Project project,
+        @Nonnull Project project,
         @Nonnull XAttachHost host,
         @Nonnull Collection<? extends ProcessInfo> processInfos,
         @Nonnull ProgressIndicator indicator,
@@ -346,7 +347,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
             hostRecentItems = recentItems.get(host);
         }
 
-        final RecentItem newRecentItem = new RecentItem(host, item);
+        RecentItem newRecentItem = new RecentItem(host, item);
 
         hostRecentItems.remove(newRecentItem);
 
@@ -585,7 +586,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
             myHost = host;
 
             if (debuggers.size() > 1) {
-                mySubItems = consulo.util.collection.ContainerUtil.map(
+                mySubItems = ContainerUtil.map(
                     debuggers,
                     debugger -> new AttachToProcessItem(
                         myGroup,
@@ -751,8 +752,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
         @Override
         public PopupStep onChosen(AttachItem selectedValue, boolean finalChoice) {
-            if (selectedValue instanceof AttachToProcessItem) {
-                AttachToProcessItem attachToProcessItem = (AttachToProcessItem) selectedValue;
+            if (selectedValue instanceof AttachToProcessItem attachToProcessItem) {
                 if (finalChoice) {
                     addToRecent(myProject, attachToProcessItem);
                     return doFinalStep(() -> attachToProcessItem.startDebugSession(myProject));
@@ -762,8 +762,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
                 }
             }
 
-            if (selectedValue instanceof AttachHostItem) {
-                AttachHostItem attachHostItem = (AttachHostItem) selectedValue;
+            if (selectedValue instanceof AttachHostItem attachHostItem) {
                 return new AsyncPopupStep() {
                     @Override
                     public PopupStep call() {
