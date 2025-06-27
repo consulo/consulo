@@ -67,27 +67,37 @@ public class ITNReporter extends ErrorReportSubmitter {
     private static String ourPreviousErrorReporterId;
 
     @Override
-    public boolean trySubmitAsync(IdeaLoggingEvent[] events, String additionalInfo, Component parentComponent, Consumer<SubmittedReportInfo> consumer) {
+    public boolean trySubmitAsync(
+        IdeaLoggingEvent[] events,
+        String additionalInfo,
+        Component parentComponent,
+        Consumer<SubmittedReportInfo> consumer
+    ) {
         return sendError(events[0], additionalInfo, parentComponent, consumer);
     }
 
     /**
      * @noinspection ThrowablePrintStackTrace
      */
-    private static boolean sendError(IdeaLoggingEvent event,
-                                     String additionalInfo,
-                                     final Component parentComponent,
-                                     final Consumer<SubmittedReportInfo> callback) {
-        ErrorReportBean errorBean = new ErrorReportBean(UpdateSettings.getInstance().getChannel(), event.getThrowable(), LastActionTracker.ourLastActionId);
+    private static boolean sendError(
+        IdeaLoggingEvent event,
+        String additionalInfo,
+        final Component parentComponent,
+        final Consumer<SubmittedReportInfo> callback
+    ) {
+        ErrorReportBean errorBean =
+            new ErrorReportBean(UpdateSettings.getInstance().getChannel(), event.getThrowable(), LastActionTracker.ourLastActionId);
 
         return doSubmit(event, parentComponent, callback, errorBean, additionalInfo);
     }
 
-    private static boolean doSubmit(final IdeaLoggingEvent event,
-                                    final Component parentComponent,
-                                    final Consumer<SubmittedReportInfo> callback,
-                                    final ErrorReportBean errorBean,
-                                    final String description) {
+    private static boolean doSubmit(
+        final IdeaLoggingEvent event,
+        final Component parentComponent,
+        final Consumer<SubmittedReportInfo> callback,
+        final ErrorReportBean errorBean,
+        final String description
+    ) {
         final DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
         final Project project = dataContext.getData(Project.KEY);
 
@@ -134,72 +144,93 @@ public class ITNReporter extends ErrorReportSubmitter {
         }
 
         Application application = Application.get();
-        ErrorReportSender.sendReport(project, errorBean, assignUserId, id -> {
-            ourPreviousErrorReporterId = id;
-            String shortId = id.substring(0, 8);
-            final SubmittedReportInfo reportInfo = new SubmittedReportInfo(WebServiceApi.ERROR_REPORT.buildUrl(id), shortId, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
-            callback.accept(reportInfo);
+        ErrorReportSender.sendReport(
+            project,
+            errorBean,
+            assignUserId,
+            id -> {
+                ourPreviousErrorReporterId = id;
+                String shortId = id.substring(0, 8);
+                final SubmittedReportInfo reportInfo =
+                    new SubmittedReportInfo(
+                        WebServiceApi.ERROR_REPORT.buildUrl(id),
+                        shortId,
+                        SubmittedReportInfo.SubmissionStatus.NEW_ISSUE
+                    );
+                callback.accept(reportInfo);
 
-            application.invokeLater(() -> {
-                StringBuilder text = new StringBuilder();
-                final String url = SubmittedReportInfo.getUrl(reportInfo);
+                application.invokeLater(() -> {
+                    StringBuilder text = new StringBuilder();
+                    final String url = SubmittedReportInfo.getUrl(reportInfo);
 
-                SubmittedReportInfoUtil.appendSubmissionInformation(reportInfo, text, url);
+                    SubmittedReportInfoUtil.appendSubmissionInformation(reportInfo, text, url);
 
-                text.append(".");
+                    text.append(".");
 
-                if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
-                    text.append("<br/>").append(ExternalServiceLocalize.errorReportGratitude().get());
-                }
+                    if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
+                        text.append("<br/>").append(ExternalServiceLocalize.errorReportGratitude().get());
+                    }
 
-                NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
-                    ? NotificationType.ERROR
-                    : NotificationType.INFORMATION;
-                NotificationService.getInstance()
-                    .newOfType(ReportMessages.GROUP, type)
-                    .title(ExternalServiceLocalize.errorReportTitle())
-                    .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(text)))
-                    .notImportant()
-                    .optionalHyperlinkListener(url != null ? new NotificationListener.UrlOpeningListener(true) : null)
-                    .notify(project);
-            });
-        }, e -> application.invokeLater(() -> {
-            LocalizeValue msg;
-            if (e instanceof AuthorizationFailedException) {
-                msg = ExternalServiceLocalize.errorReportAuthenticationFailed();
-            }
-            else if (e instanceof WebServiceException) {
-                msg = ExternalServiceLocalize.errorReportPostingFailed(e.getMessage());
-            }
-            else {
-                msg = ExternalServiceLocalize.errorReportSendingFailure();
-            }
-
-            if (e instanceof UpdateAvailableException) {
-                callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
-
-                NotificationService.getInstance()
-                    .newInfo(ReportMessages.GROUP)
-                    .title(ExternalServiceLocalize.errorReportTitle())
-                    .content(ExternalServiceLocalize.errorReportUpdateRequiredMessage())
-                    .notImportant()
-                    .addAction(
-                        ActionLocalize.actionCheckforupdateText(),
-                        evt ->
-                            CheckForUpdateAction.actionPerformed(evt.getData(Project.KEY), UpdateSettings.getInstance(), UIAccess.current())
-                    )
-                    .notify(project);
-            }
-            else if (showYesNoDialog(parentComponent, project, msg.get(), ExternalServiceLocalize.errorReportTitle().get(), Messages.getErrorIcon()) != 0) {
-                callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
-            }
-            else {
+                    NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
+                        ? NotificationType.ERROR
+                        : NotificationType.INFORMATION;
+                    NotificationService.getInstance()
+                        .newOfType(ReportMessages.GROUP, type)
+                        .title(ExternalServiceLocalize.errorReportTitle())
+                        .content(LocalizeValue.localizeTODO(XmlStringUtil.wrapInHtml(text)))
+                        .notImportant()
+                        .optionalHyperlinkListener(url != null ? new NotificationListener.UrlOpeningListener(true) : null)
+                        .notify(project);
+                });
+            },
+            e -> application.invokeLater(() -> {
+                LocalizeValue msg;
                 if (e instanceof AuthorizationFailedException) {
-                    // TODO [VISTALL]
+                    msg = ExternalServiceLocalize.errorReportAuthenticationFailed();
                 }
-                application.invokeLater(() -> doSubmit(event, parentComponent, callback, errorBean, description));
-            }
-        }));
+                else if (e instanceof WebServiceException) {
+                    msg = ExternalServiceLocalize.errorReportPostingFailed(e.getMessage());
+                }
+                else {
+                    msg = ExternalServiceLocalize.errorReportSendingFailure();
+                }
+
+                if (e instanceof UpdateAvailableException) {
+                    callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+
+                    NotificationService.getInstance()
+                        .newInfo(ReportMessages.GROUP)
+                        .title(ExternalServiceLocalize.errorReportTitle())
+                        .content(ExternalServiceLocalize.errorReportUpdateRequiredMessage())
+                        .notImportant()
+                        .addAction(
+                            ActionLocalize.actionCheckforupdateText(),
+                            evt ->
+                                CheckForUpdateAction.actionPerformed(
+                                    evt.getData(Project.KEY),
+                                    UpdateSettings.getInstance(),
+                                    UIAccess.current()
+                                )
+                        )
+                        .notify(project);
+                }
+                else if (showYesNoDialog(
+                    parentComponent,
+                    project,
+                    msg.get(),
+                    ExternalServiceLocalize.errorReportTitle().get(),
+                    Messages.getErrorIcon()
+                ) != 0) {
+                    callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+                }
+                else {
+                    if (e instanceof AuthorizationFailedException) {
+                        // TODO [VISTALL]
+                    }
+                    application.invokeLater(() -> doSubmit(event, parentComponent, callback, errorBean, description));
+                }
+            })
+        );
         return true;
     }
 

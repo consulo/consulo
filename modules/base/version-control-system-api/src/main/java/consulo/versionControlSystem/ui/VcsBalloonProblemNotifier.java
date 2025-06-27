@@ -28,6 +28,7 @@ import consulo.versionControlSystem.VcsToolWindow;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.event.HyperlinkEvent;
 
 /**
@@ -36,105 +37,116 @@ import javax.swing.event.HyperlinkEvent;
  * Use the special method or supply additional parameter to the constructor to show the balloon over the Version Control View.
  */
 public class VcsBalloonProblemNotifier implements Runnable {
-  public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Common Version Control Messages",
-                                                                                               VcsToolWindow.ID, true);
-  @Nonnull
-  private final Project myProject;
-  @Nonnull
-  private final String myMessage;
-  private final NotificationType myMessageType;
-  private final boolean myShowOverChangesView;
-  @Nullable
-  private final NamedRunnable[] myNotificationListener;
+    public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Common Version Control Messages",
+        VcsToolWindow.ID, true
+    );
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final String myMessage;
+    private final NotificationType myMessageType;
+    private final boolean myShowOverChangesView;
+    @Nullable
+    private final NamedRunnable[] myNotificationListener;
 
-  public VcsBalloonProblemNotifier(@Nonnull final Project project, @Nonnull final String message, final NotificationType messageType) {
-    this(project, message, messageType, true, null);
-  }
-
-  public VcsBalloonProblemNotifier(@Nonnull final Project project,
-                                   @Nonnull final String message,
-                                   final NotificationType messageType,
-                                   boolean showOverChangesView,
-                                   @Nullable final NamedRunnable[] notificationListener) {
-    myProject = project;
-    myMessage = message;
-    myMessageType = messageType;
-    myShowOverChangesView = showOverChangesView;
-    myNotificationListener = notificationListener;
-  }
-
-  public static void showOverChangesView(@Nonnull final Project project,
-                                         @Nonnull final String message,
-                                         final NotificationType type,
-                                         final NamedRunnable... notificationListener) {
-    show(project, message, type, true, notificationListener);
-  }
-
-  public static void showOverVersionControlView(@Nonnull final Project project,
-                                                @Nonnull final String message,
-                                                final NotificationType type) {
-    show(project, message, type, false, null);
-  }
-
-  private static void show(final Project project,
-                           final String message,
-                           final NotificationType type,
-                           final boolean showOverChangesView,
-                           @Nullable final NamedRunnable[] notificationListener) {
-    final Application application = ApplicationManager.getApplication();
-    if (application.isHeadlessEnvironment()) return;
-    final Runnable showErrorAction = new Runnable() {
-      public void run() {
-        new VcsBalloonProblemNotifier(project, message, type, showOverChangesView, notificationListener).run();
-      }
-    };
-    if (application.isDispatchThread()) {
-      showErrorAction.run();
+    public VcsBalloonProblemNotifier(@Nonnull final Project project, @Nonnull final String message, final NotificationType messageType) {
+        this(project, message, messageType, true, null);
     }
-    else {
-      application.invokeLater(showErrorAction);
+
+    public VcsBalloonProblemNotifier(
+        @Nonnull final Project project,
+        @Nonnull final String message,
+        final NotificationType messageType,
+        boolean showOverChangesView,
+        @Nullable final NamedRunnable[] notificationListener
+    ) {
+        myProject = project;
+        myMessage = message;
+        myMessageType = messageType;
+        myShowOverChangesView = showOverChangesView;
+        myNotificationListener = notificationListener;
     }
-  }
 
-  public void run() {
-    NotificationService notificationService = NotificationService.getInstance();
-    final Notification notification;
-    if (myNotificationListener != null && myNotificationListener.length > 0) {
-      final StringBuilder sb = new StringBuilder(myMessage);
-      for (NamedRunnable runnable : myNotificationListener) {
-        final String name = runnable.toString();
-        sb.append("<br/><a href=\"").append(name).append("\">").append(name).append("</a>");
-      }
+    public static void showOverChangesView(
+        @Nonnull final Project project,
+        @Nonnull final String message,
+        final NotificationType type,
+        final NamedRunnable... notificationListener
+    ) {
+        show(project, message, type, true, notificationListener);
+    }
 
-      notification = notificationService.newOfType(NOTIFICATION_GROUP, myMessageType)
-        .title(LocalizeValue.localizeTODO(myMessageType.name()))
-        .content(LocalizeValue.localizeTODO(sb.toString()))
-        .hyperlinkListener((thisNotification, event) -> {
-          if (HyperlinkEvent.EventType.ACTIVATED.equals(event.getEventType())) {
-            if (myNotificationListener.length == 1) {
-              myNotificationListener[0].run();
+    public static void showOverVersionControlView(
+        @Nonnull final Project project,
+        @Nonnull final String message,
+        final NotificationType type
+    ) {
+        show(project, message, type, false, null);
+    }
+
+    private static void show(
+        final Project project,
+        final String message,
+        final NotificationType type,
+        final boolean showOverChangesView,
+        @Nullable final NamedRunnable[] notificationListener
+    ) {
+        final Application application = ApplicationManager.getApplication();
+        if (application.isHeadlessEnvironment()) {
+            return;
+        }
+        final Runnable showErrorAction = new Runnable() {
+            public void run() {
+                new VcsBalloonProblemNotifier(project, message, type, showOverChangesView, notificationListener).run();
             }
-            else {
-              String description = event.getDescription();
-              if (description != null) {
-                for (NamedRunnable runnable : myNotificationListener) {
-                  if (description.equals(runnable.toString())) {
-                    runnable.run();
-                    break;
-                  }
-                }
-              }
+        };
+        if (application.isDispatchThread()) {
+            showErrorAction.run();
+        }
+        else {
+            application.invokeLater(showErrorAction);
+        }
+    }
+
+    public void run() {
+        NotificationService notificationService = NotificationService.getInstance();
+        final Notification notification;
+        if (myNotificationListener != null && myNotificationListener.length > 0) {
+            final StringBuilder sb = new StringBuilder(myMessage);
+            for (NamedRunnable runnable : myNotificationListener) {
+                final String name = runnable.toString();
+                sb.append("<br/><a href=\"").append(name).append("\">").append(name).append("</a>");
             }
-            thisNotification.expire();
-          }
-        })
-        .create();
+
+            notification = notificationService.newOfType(NOTIFICATION_GROUP, myMessageType)
+                .title(LocalizeValue.localizeTODO(myMessageType.name()))
+                .content(LocalizeValue.localizeTODO(sb.toString()))
+                .hyperlinkListener((thisNotification, event) -> {
+                    if (HyperlinkEvent.EventType.ACTIVATED.equals(event.getEventType())) {
+                        if (myNotificationListener.length == 1) {
+                            myNotificationListener[0].run();
+                        }
+                        else {
+                            String description = event.getDescription();
+                            if (description != null) {
+                                for (NamedRunnable runnable : myNotificationListener) {
+                                    if (description.equals(runnable.toString())) {
+                                        runnable.run();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        thisNotification.expire();
+                    }
+                })
+                .create();
+        }
+        else {
+            notification = notificationService.newOfType(NOTIFICATION_GROUP, myMessageType)
+                .content(LocalizeValue.localizeTODO(myMessage))
+                .create();
+        }
+        notification.notify(myProject.isDefault() ? null : myProject);
     }
-    else {
-      notification = notificationService.newOfType(NOTIFICATION_GROUP, myMessageType)
-        .content(LocalizeValue.localizeTODO(myMessage))
-        .create();
-    }
-    notification.notify(myProject.isDefault() ? null : myProject);
-  }
 }

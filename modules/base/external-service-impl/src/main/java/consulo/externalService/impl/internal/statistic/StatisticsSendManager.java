@@ -49,122 +49,122 @@ import java.util.concurrent.TimeUnit;
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class StatisticsSendManager implements Disposable {
-  private static final Logger LOG = Logger.getInstance(StatisticsSendManager.class);
+    private static final Logger LOG = Logger.getInstance(StatisticsSendManager.class);
 
-  private static final int DELAY_IN_MIN = 10;
+    private static final int DELAY_IN_MIN = 10;
 
-  @Nonnull
-  private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsComponent;
-  @Nonnull
-  private final Application myApplication;
-  @Nonnull
-  private final NotificationService myNotificationService;
+    @Nonnull
+    private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsComponent;
+    @Nonnull
+    private final Application myApplication;
+    @Nonnull
+    private final NotificationService myNotificationService;
 
-  private Future<?> myFuture;
+    private Future<?> myFuture;
 
-  @Inject
-  StatisticsSendManager(
-      @Nonnull Application application,
-      @Nonnull Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent,
-      @Nonnull NotificationService notificationService
-  ) {
-    myApplication = application;
-    myUsageStatisticsComponent = usageStatisticsComponent;
-    myNotificationService = notificationService;
+    @Inject
+    StatisticsSendManager(
+        @Nonnull Application application,
+        @Nonnull Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent,
+        @Nonnull NotificationService notificationService
+    ) {
+        myApplication = application;
+        myUsageStatisticsComponent = usageStatisticsComponent;
+        myNotificationService = notificationService;
 
-    application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
-      @Override
-      public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-        runStatisticsService();
-      }
-    });
-  }
-
-  @Override
-  public void dispose() {
-    if (myFuture != null) {
-      myFuture.cancel(false);
-      myFuture = null;
-    }
-  }
-
-  public void sheduleRunIfStarted() {
-    if (myFuture != null) {
-      myFuture.cancel(false);
-      myFuture = null;
-
-      runStatisticsService();
-    }
-  }
-
-  private void runStatisticsService() {
-    if (!myUsageStatisticsComponent.get().isAllowed()) {
-      if (myFuture != null) {
-        myFuture.cancel(false);
-        myFuture = null;
-      }
-      return;
+        application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
+            @Override
+            public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+                runStatisticsService();
+            }
+        });
     }
 
-    if (myFuture != null) {
-      return;
+    @Override
+    public void dispose() {
+        if (myFuture != null) {
+            myFuture.cancel(false);
+            myFuture = null;
+        }
     }
 
-    long oneDayAfterStart = PermanentInstallationID.date() + TimeUnit.DAYS.toMillis(1);
+    public void sheduleRunIfStarted() {
+        if (myFuture != null) {
+            myFuture.cancel(false);
+            myFuture = null;
 
-    // one day after installation
-    if (oneDayAfterStart > System.currentTimeMillis()) {
-      return;
+            runStatisticsService();
+        }
     }
 
-    if (myUsageStatisticsComponent.get().isTimeToSend()) {
-      runWithDelay();
+    private void runStatisticsService() {
+        if (!myUsageStatisticsComponent.get().isAllowed()) {
+            if (myFuture != null) {
+                myFuture.cancel(false);
+                myFuture = null;
+            }
+            return;
+        }
+
+        if (myFuture != null) {
+            return;
+        }
+
+        long oneDayAfterStart = PermanentInstallationID.date() + TimeUnit.DAYS.toMillis(1);
+
+        // one day after installation
+        if (oneDayAfterStart > System.currentTimeMillis()) {
+            return;
+        }
+
+        if (myUsageStatisticsComponent.get().isTimeToSend()) {
+            runWithDelay();
+        }
     }
-  }
 
-  private void runWithDelay() {
-    myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule((Runnable)() -> {
-      try {
-        UsageStatisticsPersistenceComponent component = myUsageStatisticsComponent.get();
+    private void runWithDelay() {
+        myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule((Runnable) () -> {
+            try {
+                UsageStatisticsPersistenceComponent component = myUsageStatisticsComponent.get();
 
-        sendNow(component);
-      }
-      finally {
-        myFuture = null;
-      }
-    }, DELAY_IN_MIN, TimeUnit.MINUTES);
-  }
-
-  public void sendNow(UsageStatisticsPersistenceComponent component) {
-    StatisticsBean bean = SendStatisticsUtil.getBean(component);
-
-    if (bean.groups.length == 0) {
-      component.setSentTime(System.currentTimeMillis());
-      return;
+                sendNow(component);
+            }
+            finally {
+                myFuture = null;
+            }
+        }, DELAY_IN_MIN, TimeUnit.MINUTES);
     }
 
-    try {
-      WebServiceApiSender.doPost(WebServiceApi.STATISTICS_API, "push", bean, Object.class);
+    public void sendNow(UsageStatisticsPersistenceComponent component) {
+        StatisticsBean bean = SendStatisticsUtil.getBean(component);
 
-      component.setSentTime(System.currentTimeMillis());
+        if (bean.groups.length == 0) {
+            component.setSentTime(System.currentTimeMillis());
+            return;
+        }
+
+        try {
+            WebServiceApiSender.doPost(WebServiceApi.STATISTICS_API, "push", bean, Object.class);
+
+            component.setSentTime(System.currentTimeMillis());
+        }
+        catch (IOException e) {
+            LOG.warn(e);
+        }
     }
-    catch (IOException e) {
-      LOG.warn(e);
+
+    // FIXME [VISTALL] at current moment we not show this notification
+    public Notification createNotification(@Nonnull NotificationGroup group, @Nullable NotificationListener listener) {
+        LocalizeValue fullProductName = myApplication.getName();
+        String companyName = ApplicationInfo.getInstance().getCompanyName();
+
+        return myNotificationService.newInfo(group)
+            .title(LocalizeValue.localizeTODO("Help improve " + fullProductName + " by sending anonymous usage statistics to " + companyName))
+            .content(LocalizeValue.localizeTODO(
+                "<html>Please click <a href='allow'>I agree</a> if you want to help make " + fullProductName +
+                    " better or <a href='decline'>I don't agree</a> otherwise. <a href='settings'>more...</a></html>"
+            ))
+            .optionalHyperlinkListener(listener)
+            .create();
     }
-  }
-
-  // FIXME [VISTALL] at current moment we not show this notification
-  public Notification createNotification(@Nonnull NotificationGroup group, @Nullable NotificationListener listener) {
-    LocalizeValue fullProductName = myApplication.getName();
-    String companyName = ApplicationInfo.getInstance().getCompanyName();
-
-    return myNotificationService.newInfo(group)
-        .title(LocalizeValue.localizeTODO("Help improve " + fullProductName + " by sending anonymous usage statistics to " + companyName))
-        .content(LocalizeValue.localizeTODO(
-            "<html>Please click <a href='allow'>I agree</a> if you want to help make " + fullProductName +
-                " better or <a href='decline'>I don't agree</a> otherwise. <a href='settings'>more...</a></html>"
-        ))
-        .optionalHyperlinkListener(listener)
-        .create();
-  }
 }

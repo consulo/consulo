@@ -36,63 +36,67 @@ import java.util.*;
  * @author nik
  */
 public class AnalyzeDependenciesOnSpecifiedTargetHandler extends DependenciesHandlerBase {
-  private final GlobalSearchScope myTargetScope;
+    private final GlobalSearchScope myTargetScope;
 
-  public AnalyzeDependenciesOnSpecifiedTargetHandler(@Nonnull Project project, @Nonnull AnalysisScope scope, @Nonnull GlobalSearchScope targetScope) {
-    super(project, Collections.singletonList(scope), Collections.<PsiFile>emptySet());
-    myTargetScope = targetScope;
-  }
-
-  @Override
-  protected String getProgressTitle() {
-    return AnalysisScopeLocalize.packageDependenciesProgressTitle().get();
-  }
-
-  @Override
-  protected String getPanelDisplayName(AnalysisScope scope) {
-    return AnalysisScopeLocalize.packageDependenciesOnToolwindowTitle(
-      scope.getDisplayName(),
-      myTargetScope.getDisplayName()
-    ).get();
-  }
-
-  @Override
-  protected boolean shouldShowDependenciesPanel(List<DependenciesBuilder> builders) {
-    for (DependenciesBuilder builder : builders) {
-      for (Set<PsiFile> files : builder.getDependencies().values()) {
-        if (!files.isEmpty()) {
-          return true;
-        }
-      }
+    public AnalyzeDependenciesOnSpecifiedTargetHandler(
+        @Nonnull Project project,
+        @Nonnull AnalysisScope scope,
+        @Nonnull GlobalSearchScope targetScope
+    ) {
+        super(project, Collections.singletonList(scope), Collections.<PsiFile>emptySet());
+        myTargetScope = targetScope;
     }
-    String source = StringUtil.decapitalize(builders.get(0).getScope().getDisplayName());
-    String target = StringUtil.decapitalize(myTargetScope.getDisplayName());
-    NotificationService.getInstance()
-        .newInfo(NotificationGroup.toolWindowGroup("Dependencies", ToolWindowId.DEPENDENCIES, true))
-        .content(AnalysisScopeLocalize.noDependenciesFoundMessage(source, target))
-        .notify(myProject);
-    return false;
-  }
 
-  @Override
-  protected DependenciesBuilder createDependenciesBuilder(AnalysisScope scope) {
-    return new ForwardDependenciesBuilder(myProject, scope) {
-      @Override
-      public void analyze() {
-        super.analyze();
-        final Map<PsiFile,Set<PsiFile>> dependencies = getDependencies();
-        for (PsiFile file : dependencies.keySet()) {
-          final Set<PsiFile> files = dependencies.get(file);
-          final Iterator<PsiFile> iterator = files.iterator();
-          while (iterator.hasNext()) {
-            PsiFile next = iterator.next();
-            final VirtualFile virtualFile = next.getVirtualFile();
-            if (virtualFile == null || !myTargetScope.contains(virtualFile)) {
-              iterator.remove();
+    @Override
+    protected String getProgressTitle() {
+        return AnalysisScopeLocalize.packageDependenciesProgressTitle().get();
+    }
+
+    @Override
+    protected String getPanelDisplayName(AnalysisScope scope) {
+        return AnalysisScopeLocalize.packageDependenciesOnToolwindowTitle(
+            scope.getDisplayName(),
+            myTargetScope.getDisplayName()
+        ).get();
+    }
+
+    @Override
+    protected boolean shouldShowDependenciesPanel(List<DependenciesBuilder> builders) {
+        for (DependenciesBuilder builder : builders) {
+            for (Set<PsiFile> files : builder.getDependencies().values()) {
+                if (!files.isEmpty()) {
+                    return true;
+                }
             }
-          }
         }
-      }
-    };
-  }
+        String source = StringUtil.decapitalize(builders.get(0).getScope().getDisplayName());
+        String target = StringUtil.decapitalize(myTargetScope.getDisplayName());
+        NotificationService.getInstance()
+            .newInfo(NotificationGroup.toolWindowGroup("Dependencies", ToolWindowId.DEPENDENCIES, true))
+            .content(AnalysisScopeLocalize.noDependenciesFoundMessage(source, target))
+            .notify(myProject);
+        return false;
+    }
+
+    @Override
+    protected DependenciesBuilder createDependenciesBuilder(AnalysisScope scope) {
+        return new ForwardDependenciesBuilder(myProject, scope) {
+            @Override
+            public void analyze() {
+                super.analyze();
+                final Map<PsiFile, Set<PsiFile>> dependencies = getDependencies();
+                for (PsiFile file : dependencies.keySet()) {
+                    final Set<PsiFile> files = dependencies.get(file);
+                    final Iterator<PsiFile> iterator = files.iterator();
+                    while (iterator.hasNext()) {
+                        PsiFile next = iterator.next();
+                        final VirtualFile virtualFile = next.getVirtualFile();
+                        if (virtualFile == null || !myTargetScope.contains(virtualFile)) {
+                            iterator.remove();
+                        }
+                    }
+                }
+            }
+        };
+    }
 }
