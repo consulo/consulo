@@ -44,16 +44,15 @@ public abstract class CodeInsightAction extends AnAction {
     }
 
     @RequiredUIAccess
-    public void actionPerformedImpl(@Nonnull final Project project, final Editor editor) {
+    public void actionPerformedImpl(@Nonnull Project project, Editor editor) {
         if (editor == null) {
             return;
         }
-        //final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-        final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
+        PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
         if (psiFile == null) {
             return;
         }
-        final CodeInsightActionHandler handler = getHandler();
+        CodeInsightActionHandler handler = getHandler();
         PsiElement elementToMakeWritable = handler.getElementToMakeWritable(psiFile);
         if (elementToMakeWritable != null && !(LanguageEditorUtil.checkModificationAllowed(editor)
             && FileModificationService.getInstance().preparePsiElementsForWrite(elementToMakeWritable))) {
@@ -91,14 +90,14 @@ public abstract class CodeInsightAction extends AnAction {
             return;
         }
 
-        final DataContext dataContext = e.getDataContext();
+        DataContext dataContext = e.getDataContext();
         Editor editor = getEditor(dataContext, project, true);
         if (editor == null) {
             presentation.setEnabled(false);
             return;
         }
 
-        final PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, project);
+        PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, project);
         if (file == null) {
             presentation.setEnabled(false);
             return;

@@ -16,46 +16,45 @@
 
 package consulo.ide.impl.idea.codeInsight.hint.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.action.BaseCodeInsightAction;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.hint.ShowExpressionTypeHandler;
 import consulo.language.Language;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.codeEditor.Editor;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 import jakarta.annotation.Nonnull;
+
 import java.awt.event.KeyEvent;
 
 public class ShowExpressionTypeAction extends BaseCodeInsightAction implements DumbAware {
-  private boolean myRequestFocus = false;
+    private boolean myRequestFocus = false;
 
-  public ShowExpressionTypeAction() {
-    setEnabledInModalContext(true);
-  }
+    public ShowExpressionTypeAction() {
+        setEnabledInModalContext(true);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
-    super.beforeActionPerformedUpdate(e);
-    // The tooltip gets the focus if using a screen reader and invocation through a keyboard shortcut.
-    myRequestFocus = ScreenReader.isActive() && (e.getInputEvent() instanceof KeyEvent);
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        myRequestFocus = ScreenReader.isActive() && (e.getInputEvent() instanceof KeyEvent);
+        super.actionPerformed(e);
+    }
 
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new ShowExpressionTypeHandler(myRequestFocus);
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new ShowExpressionTypeHandler(myRequestFocus);
+    }
 
-  @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
-    Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
-    return !ShowExpressionTypeHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()).isEmpty();
-  }
+    @Override
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
+        Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
+        return !ShowExpressionTypeHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()).isEmpty();
+    }
 }

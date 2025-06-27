@@ -15,15 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AsyncUpdateAction;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.VcsContext;
-
 import consulo.versionControlSystem.impl.internal.action.VcsContextWrapper;
 import jakarta.annotation.Nonnull;
 
@@ -57,8 +55,7 @@ public abstract class AbstractVcsAction extends DumbAwareAction {
   protected abstract void actionPerformed(@Nonnull VcsContext e);
 
   /**
-   * @deprecated Only sync update is currently supported by {@link AbstractVcsAction}. Use
-   * {@link AsyncUpdateAction} directly if async update is necessary.
+   * @deprecated Only sync update is currently supported by {@link AbstractVcsAction}.
    */
   @SuppressWarnings("unused") // Required for compatibility with external plugins.
   @Deprecated
