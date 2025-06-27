@@ -18,9 +18,9 @@ package consulo.project.impl.internal.store;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.store.internal.StateStorage;
 import consulo.component.store.impl.internal.storage.StateStorageBase;
 import consulo.component.store.impl.internal.storage.StorageUtil;
+import consulo.component.store.internal.StateStorage;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -55,171 +55,173 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Singleton
 @ServiceImpl
 public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
-  private static final Logger LOG = Logger.getInstance(StoreReloadManagerImpl.class);
+    private static final Logger LOG = Logger.getInstance(StoreReloadManagerImpl.class);
 
-  private Future<Void> myChangedFilesFuture = CompletableFuture.completedFuture(null);
+    private Future<Void> myChangedFilesFuture = CompletableFuture.completedFuture(null);
 
-  private final Set<StateStorage> myChangedProjectFiles = Sets.newConcurrentHashSet();
-  private final AtomicInteger myReloadBlockCount = new AtomicInteger(0);
-  private final Project myProject;
-  private final ProjectManager myProjectManager;
-  private final AtomicBoolean myDialogShow = new AtomicBoolean();
+    private final Set<StateStorage> myChangedProjectFiles = Sets.newConcurrentHashSet();
+    private final AtomicInteger myReloadBlockCount = new AtomicInteger(0);
+    private final Project myProject;
+    private final ProjectManager myProjectManager;
+    private final AtomicBoolean myDialogShow = new AtomicBoolean();
 
-  private final Callable<Void> restartApplicationOrReloadProjectTask = () -> {
-    if (isReloadUnblocked()) {
-      askToReloadProjectIfConfigFilesChangedExternally();
-    }
-    return null;
-  };
-
-  @Inject
-  public StoreReloadManagerImpl(Project project,
-                                VirtualFileManager virtualFileManager,
-                                ProjectManager projectManager) {
-    myProject = project;
-    myProjectManager = projectManager;
-
-    virtualFileManager.addVirtualFileManagerListener(new VirtualFileManagerListener() {
-      @Override
-      public void beforeRefreshStart(boolean asynchronous) {
-        blockReloadingProjectOnExternalChanges();
-      }
-
-      @Override
-      public void afterRefreshFinish(boolean asynchronous) {
-        unblockReloadingProjectOnExternalChanges();
-      }
-    }, this);
-
-    AppExecutorUtil.getAppScheduledExecutorService().schedule(restartApplicationOrReloadProjectTask, 1, TimeUnit.SECONDS);
-  }
-
-  public void projectStorageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage, @Nonnull Project project) {
-    VirtualFile file = event.getFile();
-    
-    if (!StorageUtil.isChangedByStorageOrSaveSession(event) && !(event.getRequestor() instanceof ProjectManager)) {
-      registerProjectToReload(file, storage);
-    }
-  }
-
-  private void askToReloadProjectIfConfigFilesChangedExternally() {
-    if (myChangedProjectFiles.isEmpty()) {
-      return;
-    }
-
-    if (myDialogShow.compareAndSet(false, true)) {
-      shouldReloadProject(myProject).thenAccept(restart -> {
-        myDialogShow.set(false);
-
-        if (restart) {
-          myProjectManager.reloadProject(myProject, myProject.getUIAccess());
+    private final Callable<Void> restartApplicationOrReloadProjectTask = () -> {
+        if (isReloadUnblocked()) {
+            askToReloadProjectIfConfigFilesChangedExternally();
         }
-      });
-    }
-  }
+        return null;
+    };
 
-  private CompletableFuture<Boolean> shouldReloadProject(@Nonnull Project project) {
-    if (project.isDisposed() || myChangedProjectFiles.isEmpty()) {
-      return CompletableFuture.completedFuture(false);
-    }
+    @Inject
+    public StoreReloadManagerImpl(
+        Project project,
+        VirtualFileManager virtualFileManager,
+        ProjectManager projectManager
+    ) {
+        myProject = project;
+        myProjectManager = projectManager;
 
-    Set<StateStorage> causes = new HashSet<>(myChangedProjectFiles);
-    myChangedProjectFiles.clear();
-    if (causes.isEmpty()) {
-      return CompletableFuture.completedFuture(false);
-    }
+        virtualFileManager.addVirtualFileManagerListener(new VirtualFileManagerListener() {
+            @Override
+            public void beforeRefreshStart(boolean asynchronous) {
+                blockReloadingProjectOnExternalChanges();
+            }
 
-    return askToRestart(project, causes);
-  }
+            @Override
+            public void afterRefreshFinish(boolean asynchronous) {
+                unblockReloadingProjectOnExternalChanges();
+            }
+        }, this);
 
-  private static CompletableFuture<Boolean> askToRestart(Project project, @Nullable Collection<? extends StateStorage> changedStorages) {
-    StringBuilder message = new StringBuilder();
-    message.append("Project components were changed externally and cannot be reloaded");
-
-    message.append("\nWould you like to ");
-    message.append("reload project?");
-
-    CompletableFuture<Boolean> future = new CompletableFuture<>();
-
-    project.getUIAccess().give(() -> {
-      Alerts.yesNo()
-            .title(LocalizeValue.localizeTODO("Project Files Changed"))
-            .text(message.toString())
-            .showAsync(project)
-            .doWhenDone((it) -> {
-              if (it) {
-                if (changedStorages != null) {
-                  for (StateStorage storage : changedStorages) {
-                    if (storage instanceof StateStorageBase) {
-                      ((StateStorageBase)storage).disableSaving();
-                    }
-                  }
-                }
-              }
-              future.complete(it);
-            });
-    });
-
-    return future;
-  }
-
-  private void registerProjectToReload(@Nonnull VirtualFile file, @Nonnull StateStorage storage) {
-    LOG.info("[RELOAD] Registering project to reload: " + file + ", project: " + myProject.getBasePath());
-
-    myChangedProjectFiles.add(storage);
-
-    if (storage instanceof StateStorageBase) {
-      ((StateStorageBase)storage).disableSaving();
-    }
-
-    if (isReloadUnblocked()) {
-      start();
-    }
-  }
-
-  private boolean isReloadUnblocked() {
-    int count = myReloadBlockCount.get();
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("[RELOAD] myReloadBlockCount = " + count);
-    }
-    return count == 0;
-  }
-
-  private void cancel() {
-    myChangedFilesFuture.cancel(false);
-    myChangedFilesFuture = CompletableFuture.completedFuture(null);
-  }
-
-  private void start() {
-    if (myChangedFilesFuture.isDone() || myChangedFilesFuture.isCancelled()) {
-      myChangedFilesFuture =
         AppExecutorUtil.getAppScheduledExecutorService().schedule(restartApplicationOrReloadProjectTask, 1, TimeUnit.SECONDS);
     }
-  }
 
-  @Override
-  public void blockReloadingProjectOnExternalChanges() {
-    cancel();
-    
-    myReloadBlockCount.incrementAndGet();
-  }
+    public void projectStorageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage, @Nonnull Project project) {
+        VirtualFile file = event.getFile();
 
-  @Override
-  public void unblockReloadingProjectOnExternalChanges() {
-    if (myReloadBlockCount.decrementAndGet() == 0) {
-      start();
+        if (!StorageUtil.isChangedByStorageOrSaveSession(event) && !(event.getRequestor() instanceof ProjectManager)) {
+            registerProjectToReload(file, storage);
+        }
     }
-  }
 
-  @Nonnull
-  @Override
-  public AccessToken blockReloadingOnExternalChanges() {
-    blockReloadingProjectOnExternalChanges();
-    return AccessToken.of(this::unblockReloadingProjectOnExternalChanges);
-  }
+    private void askToReloadProjectIfConfigFilesChangedExternally() {
+        if (myChangedProjectFiles.isEmpty()) {
+            return;
+        }
 
-  @Override
-  public void dispose() {
-    cancel();
-  }
+        if (myDialogShow.compareAndSet(false, true)) {
+            shouldReloadProject(myProject).thenAccept(restart -> {
+                myDialogShow.set(false);
+
+                if (restart) {
+                    myProjectManager.reloadProject(myProject, myProject.getUIAccess());
+                }
+            });
+        }
+    }
+
+    private CompletableFuture<Boolean> shouldReloadProject(@Nonnull Project project) {
+        if (project.isDisposed() || myChangedProjectFiles.isEmpty()) {
+            return CompletableFuture.completedFuture(false);
+        }
+
+        Set<StateStorage> causes = new HashSet<>(myChangedProjectFiles);
+        myChangedProjectFiles.clear();
+        if (causes.isEmpty()) {
+            return CompletableFuture.completedFuture(false);
+        }
+
+        return askToRestart(project, causes);
+    }
+
+    private static CompletableFuture<Boolean> askToRestart(Project project, @Nullable Collection<? extends StateStorage> changedStorages) {
+        StringBuilder message = new StringBuilder();
+        message.append("Project components were changed externally and cannot be reloaded");
+
+        message.append("\nWould you like to ");
+        message.append("reload project?");
+
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        project.getUIAccess().give(() -> {
+            Alerts.yesNo()
+                .title(LocalizeValue.localizeTODO("Project Files Changed"))
+                .text(message.toString())
+                .showAsync(project)
+                .doWhenDone((it) -> {
+                    if (it) {
+                        if (changedStorages != null) {
+                            for (StateStorage storage : changedStorages) {
+                                if (storage instanceof StateStorageBase) {
+                                    ((StateStorageBase) storage).disableSaving();
+                                }
+                            }
+                        }
+                    }
+                    future.complete(it);
+                });
+        });
+
+        return future;
+    }
+
+    private void registerProjectToReload(@Nonnull VirtualFile file, @Nonnull StateStorage storage) {
+        LOG.info("[RELOAD] Registering project to reload: " + file + ", project: " + myProject.getBasePath());
+
+        myChangedProjectFiles.add(storage);
+
+        if (storage instanceof StateStorageBase) {
+            ((StateStorageBase) storage).disableSaving();
+        }
+
+        if (isReloadUnblocked()) {
+            start();
+        }
+    }
+
+    private boolean isReloadUnblocked() {
+        int count = myReloadBlockCount.get();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("[RELOAD] myReloadBlockCount = " + count);
+        }
+        return count == 0;
+    }
+
+    private void cancel() {
+        myChangedFilesFuture.cancel(false);
+        myChangedFilesFuture = CompletableFuture.completedFuture(null);
+    }
+
+    private void start() {
+        if (myChangedFilesFuture.isDone() || myChangedFilesFuture.isCancelled()) {
+            myChangedFilesFuture =
+                AppExecutorUtil.getAppScheduledExecutorService().schedule(restartApplicationOrReloadProjectTask, 1, TimeUnit.SECONDS);
+        }
+    }
+
+    @Override
+    public void blockReloadingProjectOnExternalChanges() {
+        cancel();
+
+        myReloadBlockCount.incrementAndGet();
+    }
+
+    @Override
+    public void unblockReloadingProjectOnExternalChanges() {
+        if (myReloadBlockCount.decrementAndGet() == 0) {
+            start();
+        }
+    }
+
+    @Nonnull
+    @Override
+    public AccessToken blockReloadingOnExternalChanges() {
+        blockReloadingProjectOnExternalChanges();
+        return AccessToken.of(this::unblockReloadingProjectOnExternalChanges);
+    }
+
+    @Override
+    public void dispose() {
+        cancel();
+    }
 }
