@@ -243,7 +243,7 @@ public class Notification {
         }
 
         public Notification create() {
-            Notification notification = new Notification(myService, myGroup, myIcon, myTitle, mySubtitle, myContent, myType, myListener);
+            Notification notification = new Notification(myGroup, myIcon, myTitle, mySubtitle, myContent, myType, myListener);
             postInit(notification);
             return notification;
         }
@@ -274,12 +274,12 @@ public class Notification {
         }
 
         public void notify(@Nullable Project project) {
-            create().notify(project);
+            myService.notify(create(), project);
         }
 
         public Notification notifyAndGet(@Nullable Project project) {
             Notification notification = create();
-            notification.notify(project);
+            myService.notify(notification, project);
             return notification;
         }
     }
@@ -301,8 +301,6 @@ public class Notification {
     @Nonnull
     private final String myGroupId;
 
-    @Nonnull
-    private final NotificationService myService;
     @Nonnull
     private final NotificationType myType;
 
@@ -336,7 +334,6 @@ public class Notification {
      * @param listener notification lifecycle listener
      */
     private Notification(
-        @Nonnull NotificationService service,
         @Nonnull NotificationGroup group,
         @Nullable Image icon,
         @Nonnull LocalizeValue title,
@@ -345,7 +342,6 @@ public class Notification {
         @Nonnull NotificationType type,
         @Nullable NotificationListener listener
     ) {
-        myService = service;
         myGroupId = group.getId();
         myTitle = title;
         myContent = content;
@@ -363,7 +359,6 @@ public class Notification {
      * @param notificationBuilder notification builder
      */
     protected Notification(@Nonnull Builder notificationBuilder) {
-        myService = notificationBuilder.myService;
         myGroupId = notificationBuilder.myGroup.getId();
         myType = notificationBuilder.myType;
         notificationBuilder.init(this);
@@ -678,8 +673,10 @@ public class Notification {
         return SoftReference.dereference(myBalloonRef);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use Notification.Builder#notify()")
     public void notify(@Nullable Project project) {
-        myService.notify(this, project);
+        NotificationService.getInstance().notify(this, project);
     }
 
     public Notification setImportant(boolean important) {
