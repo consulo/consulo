@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class FindReplaceInPathActionBase extends AnAction implements DumbAware {
     public static final NotificationGroup NOTIFICATION_GROUP =
-        NotificationGroup.toolWindowGroup("Find in Path", ToolWindowId.FIND, false);
+        NotificationGroup.toolWindowGroup("findInPath", LocalizeValue.localizeTODO("Find in Path"), ToolWindowId.FIND, false);
 
     @Nonnull
     private final NotificationService myNotificationService;

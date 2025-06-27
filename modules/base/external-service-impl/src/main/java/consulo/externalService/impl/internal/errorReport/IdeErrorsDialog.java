@@ -15,7 +15,6 @@
  */
 package consulo.externalService.impl.internal.errorReport;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.ApplicationPropertiesComponent;
@@ -43,6 +42,7 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.*;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
@@ -156,7 +156,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     private boolean moveSelectionToMessage(LogMessage defaultMessage) {
         int index = -1;
         for (int i = 0; i < myMergedMessages.size(); i++) {
-            final AbstractMessage each = getMessageAt(i);
+            AbstractMessage each = getMessageAt(i);
             if (each == defaultMessage) {
                 index = i;
                 break;
@@ -183,7 +183,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     @Override
     public void poolCleared() {
-        SwingUtilities.invokeLater(() -> doOKAction());
+        SwingUtilities.invokeLater(this::doOKAction);
     }
 
     @Override
@@ -222,12 +222,11 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     private class ForwardAction extends AnAction implements DumbAware {
         public ForwardAction() {
-            super("Next", null, AllIcons.Actions.Forward);
+            super(LocalizeValue.localizeTODO("Next"), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
             AnAction forward = ActionManager.getInstance().getAction("Forward");
             if (forward != null) {
                 registerCustomShortcutSet(forward.getShortcutSet(), getRootPane(), getDisposable());
             }
-
         }
 
         @RequiredUIAccess
@@ -246,7 +245,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     private class BackAction extends AnAction implements DumbAware {
         public BackAction() {
-            super("Previous", null, AllIcons.Actions.Back);
+            super(LocalizeValue.localizeTODO("Previous"), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
             AnAction back = ActionManager.getInstance().getAction("Back");
             if (back != null) {
                 registerCustomShortcutSet(back.getShortcutSet(), getRootPane(), getDisposable());
@@ -286,7 +285,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         myNextButtonPanel.add(forwardToolbar.getComponent(), BorderLayout.CENTER);
 
         myTabs = new HeaderlessTabbedPane(getDisposable());
-        final LabeledTextComponent.TextListener commentsListener = newText -> {
+        LabeledTextComponent.TextListener commentsListener = newText -> {
             if (myMute) {
                 return;
             }
@@ -304,7 +303,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             myDetailsTabForm.setCommentsAreaVisible(false);
         }
         else {
-            final AnAction analyzePlatformAction = ActionManager.getInstance().getAction("AnalyzeStacktraceOnError");
+            AnAction analyzePlatformAction = ActionManager.getInstance().getAction("AnalyzeStacktraceOnError");
             if (analyzePlatformAction != null) {
                 myAnalyzeAction = new AnalyzeAction(analyzePlatformAction);
             }
@@ -326,7 +325,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         myTabs.setSelectedIndex(activeTabIndex);
 
         myTabs.addChangeListener(e -> {
-            final JComponent c = getPreferredFocusedComponent();
+            JComponent c = getPreferredFocusedComponent();
             if (c != null) {
                 IdeFocusManager.findInstanceByComponent(myContentPane).requestFocus(c, true);
             }
@@ -347,7 +346,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             }
         });
 
-        myAttachmentWarningLabel.setIcon(AllIcons.General.BalloonWarning);
+        myAttachmentWarningLabel.setIcon(PlatformIconGroup.generalBalloonwarning());
         myAttachmentWarningLabel.addHyperlinkListener(e -> {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                 myTabs.setSelectedIndex(myTabs.indexOfComponent(myAttachmentsTabForm.getContentPane()));
@@ -374,7 +373,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     private void moveSelectionToEarliestMessage() {
         myIndex = 0;
         for (int i = 0; i < myMergedMessages.size(); i++) {
-            final AbstractMessage each = getMessageAt(i);
+            AbstractMessage each = getMessageAt(i);
             if (!each.isRead()) {
                 myIndex = i;
                 break;
@@ -386,20 +385,24 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     @RequiredUIAccess
     private void disablePlugin() {
-        final PluginId pluginId = findFirstPluginId(getSelectedMessage().getThrowable());
+        PluginId pluginId = findFirstPluginId(getSelectedMessage().getThrowable());
         if (pluginId == null) {
             return;
         }
 
-        PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(pluginId);
-        final SimpleReference<Boolean> hasDependants = SimpleReference.create(false);
-        PluginValidator.checkDependants(plugin, consulo.container.plugin.PluginManager::findPlugin, pluginId1 -> {
-            if (PluginIds.isPlatformPlugin(pluginId1)) {
-                return true;
+        PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
+        SimpleReference<Boolean> hasDependants = SimpleReference.create(false);
+        PluginValidator.checkDependants(
+            plugin,
+            PluginManager::findPlugin,
+            pluginId1 -> {
+                if (PluginIds.isPlatformPlugin(pluginId1)) {
+                    return true;
+                }
+                hasDependants.set(true);
+                return false;
             }
-            hasDependants.set(true);
-            return false;
-        });
+        );
 
         Application app = Application.get();
         DisablePluginWarningDialog d =
@@ -428,7 +431,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     private void updateControls() {
         updateCountLabel();
-        final AbstractMessage message = getSelectedMessage();
+        AbstractMessage message = getSelectedMessage();
         updateInfoLabel(message);
         updateCredentialsPane(message);
         myCredentialsPanel.setVisible(false);
@@ -444,12 +447,10 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
     }
 
-    private void updateAttachmentWarning(final AbstractMessage message) {
-        final List<Attachment> includedAttachments;
-        if (
-            message instanceof LogMessageEx logMessageEx
-                && !(includedAttachments = ContainerUtil.filter(logMessageEx.getAttachments(), Attachment::isIncluded)).isEmpty()
-        ) {
+    private void updateAttachmentWarning(AbstractMessage message) {
+        List<Attachment> includedAttachments;
+        if (message instanceof LogMessageEx logMessageEx
+                && !(includedAttachments = ContainerUtil.filter(logMessageEx.getAttachments(), Attachment::isIncluded)).isEmpty()) {
             myAttachmentWarningPanel.setVisible(true);
             if (includedAttachments.size() == 1) {
                 myAttachmentWarningLabel.setHtmlText(
@@ -485,19 +486,16 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
 
     private void updateCredentialsPane(AbstractMessage message) {
-        if (message != null) {
-            final ErrorReportSubmitter submitter = getSubmitter(message.getThrowable());
-            if (submitter instanceof ITNReporter) {
-                myCredentialsPanel.setVisible(true);
-                String userName = null;
-                if (StringUtil.isEmpty(userName)) {
-                    myCredentialsLabel.setHtmlText(ExternalServiceLocalize.diagnosticErrorReportSubmitErrorAnonymously().get());
-                }
-                else {
-                    myCredentialsLabel.setHtmlText(ExternalServiceLocalize.diagnosticErrorReportSubmitReportAs(userName).get());
-                }
-                return;
+        if (message != null && getSubmitter(message.getThrowable()) instanceof ITNReporter) {
+            myCredentialsPanel.setVisible(true);
+            String userName = null;
+            if (StringUtil.isEmpty(userName)) {
+                myCredentialsLabel.setHtmlText(ExternalServiceLocalize.diagnosticErrorReportSubmitErrorAnonymously().get());
             }
+            else {
+                myCredentialsLabel.setHtmlText(ExternalServiceLocalize.diagnosticErrorReportSubmitReportAs(userName).get());
+            }
+            return;
         }
         myCredentialsPanel.setVisible(false);
     }
@@ -514,7 +512,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             myInfoLabel.setText("");
             return;
         }
-        final Throwable throwable = message.getThrowable();
+        Throwable throwable = message.getThrowable();
         if (throwable instanceof MessagePool.TooManyErrorsException) {
             myInfoLabel.setText("");
             return;
@@ -540,7 +538,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
         String url = null;
         if (message.isSubmitted()) {
-            final SubmittedReportInfo info = message.getSubmissionInfo();
+            SubmittedReportInfo info = message.getSubmissionInfo();
             url = SubmittedReportInfo.getUrl(info);
             SubmittedReportInfoUtil.appendSubmissionInformation(info, text, url);
             text.append(". ");
@@ -557,11 +555,11 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     private void updateForeignPluginLabel(AbstractMessage message) {
         if (message != null) {
-            final Throwable throwable = message.getThrowable();
+            Throwable throwable = message.getThrowable();
             ErrorReportSubmitter submitter = getSubmitter(throwable);
             if (submitter == null) {
                 PluginId pluginId = findFirstPluginId(throwable);
-                PluginDescriptor plugin = pluginId == null ? null : consulo.container.plugin.PluginManager.findPlugin(pluginId);
+                PluginDescriptor plugin = pluginId == null ? null : PluginManager.findPlugin(pluginId);
                 if (plugin == null) {
                     // unknown plugin
                     myForeignPluginWarningPanel.setVisible(false);
@@ -612,8 +610,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             if (myInternalMode) {
                 boolean hasAttachment = false;
                 for (ArrayList<AbstractMessage> merged : myMergedMessages) {
-                    final AbstractMessage message = merged.get(0);
-                    if (message instanceof LogMessageEx && !((LogMessageEx)message).getAttachments().isEmpty()) {
+                    AbstractMessage message = merged.get(0);
+                    if (message instanceof LogMessageEx logMessageEx && !logMessageEx.getAttachments().isEmpty()) {
                         hasAttachment = true;
                         break;
                     }
@@ -621,7 +619,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
                 myTabs.setHeaderVisible(hasAttachment);
             }
 
-            final AbstractMessage message = getSelectedMessage();
+            AbstractMessage message = getSelectedMessage();
             if (myCommentsTabForm != null) {
                 if (message != null) {
                     String msg = message.getMessage();
@@ -678,7 +676,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
 
     private static String getDetailsText(AbstractMessage message) {
-        final Throwable throwable = message.getThrowable();
+        Throwable throwable = message.getThrowable();
         return throwable instanceof MessagePool.TooManyErrorsException
             ? throwable.getMessage()
             : message.getMessage() + "\n" + message.getThrowableText();
@@ -690,7 +688,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
         Map<String, ArrayList<AbstractMessage>> hash2Messages = mergeMessages(myRawMessages);
 
-        for (final ArrayList<AbstractMessage> abstractMessages : hash2Messages.values()) {
+        for (ArrayList<AbstractMessage> abstractMessages : hash2Messages.values()) {
             myMergedMessages.add(abstractMessages);
         }
     }
@@ -701,10 +699,10 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
-        final int selectedIndex = myTabs.getSelectedIndex();
+        int selectedIndex = myTabs.getSelectedIndex();
         JComponent result;
         if (selectedIndex == 0) {
             result = myInternalMode ? myDetailsTabForm.getPreferredFocusedComponent() : myCommentsTabForm.getPreferredFocusedComponent();
@@ -720,8 +718,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     private static Map<String, ArrayList<AbstractMessage>> mergeMessages(List<AbstractMessage> aErrors) {
         Map<String, ArrayList<AbstractMessage>> hash2Messages = new LinkedHashMap<>();
-        for (final AbstractMessage each : aErrors) {
-            final String hashCode = getThrowableHashCode(each.getThrowable());
+        for (AbstractMessage each : aErrors) {
+            String hashCode = getThrowableHashCode(each.getThrowable());
             ArrayList<AbstractMessage> list;
             if (hash2Messages.containsKey(hashCode)) {
                 list = hash2Messages.get(hashCode);
@@ -776,7 +774,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         @Override
         public void actionPerformed(ActionEvent e) {
             boolean closeDialog = myMergedMessages.size() == 1;
-            final AbstractMessage logMessage = getSelectedMessage();
+            AbstractMessage logMessage = getSelectedMessage();
             boolean reportingStarted = reportMessage(logMessage, closeDialog);
             if (closeDialog) {
                 if (reportingStarted) {
@@ -789,8 +787,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             }
         }
 
-        private boolean reportMessage(final AbstractMessage logMessage, final boolean dialogClosed) {
-            final ErrorReportSubmitter submitter = getSubmitter(logMessage.getThrowable());
+        private boolean reportMessage(AbstractMessage logMessage, boolean dialogClosed) {
+            ErrorReportSubmitter submitter = getSubmitter(logMessage.getThrowable());
 
             if (submitter != null) {
                 logMessage.setSubmitting(true);
@@ -832,8 +830,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             Component target = component;
 
             while (target != null) {
-                if (target instanceof Window) {
-                    consulo.ui.Window uiWindow = TargetAWT.from((Window) target);
+                if (target instanceof Window window) {
+                    consulo.ui.Window uiWindow = TargetAWT.from(window);
 
                     IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
                     if (ideFrame != null) {
@@ -847,9 +845,9 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             return null;
         }
 
-        private IdeaLoggingEvent[] getEvents(final AbstractMessage logMessage) {
-            if (logMessage instanceof GroupedLogMessage) {
-                final List<AbstractMessage> messages = ((GroupedLogMessage)logMessage).getMessages();
+        private IdeaLoggingEvent[] getEvents(AbstractMessage logMessage) {
+            if (logMessage instanceof GroupedLogMessage groupedLogMessage) {
+                List<AbstractMessage> messages = groupedLogMessage.getMessages();
                 IdeaLoggingEvent[] res = new IdeaLoggingEvent[messages.size()];
                 for (int i = 0; i < res.length; i++) {
                     res[i] = getEvent(messages.get(i));
@@ -860,8 +858,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
 
         private IdeaLoggingEvent getEvent(final AbstractMessage logMessage) {
-            if (logMessage instanceof LogMessageEx) {
-                return ((LogMessageEx)logMessage).toEvent();
+            if (logMessage instanceof LogMessageEx logMessageEx) {
+                return logMessageEx.toEvent();
             }
             return new IdeaLoggingEvent(logMessage.getMessage(), logMessage.getThrowable()) {
                 @Override
@@ -877,7 +875,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
 
     @Nullable
-    public static ErrorReportSubmitter getSubmitter(final Throwable throwable) {
+    public static ErrorReportSubmitter getSubmitter(Throwable throwable) {
         if (throwable instanceof MessagePool.TooManyErrorsException || throwable instanceof AbstractMethodError) {
             return null;
         }
@@ -950,7 +948,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
                 e.getModifiers()
             );
 
-            final Project project = dataContext.getData(Project.KEY);
+            Project project = dataContext.getData(Project.KEY);
             if (project != null) {
                 myAnalyze.actionPerformed(event);
                 doOKAction();

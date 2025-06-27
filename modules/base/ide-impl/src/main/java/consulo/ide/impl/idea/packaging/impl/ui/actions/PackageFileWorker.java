@@ -71,18 +71,18 @@ public class PackageFileWorker {
         Project project,
         List<VirtualFile> files,
         Artifact[] artifacts,
-        final @Nonnull Runnable onFinishedInAwt
+        @Nonnull Runnable onFinishedInAwt
     ) {
         startPackagingFiles(project, files, artifacts).doWhenProcessed(() -> project.getApplication().invokeLater(onFinishedInAwt));
     }
 
     public static AsyncResult<Void> startPackagingFiles(final Project project, final List<VirtualFile> files, final Artifact[] artifacts) {
         final AsyncResult<Void> callback = new AsyncResult<>();
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "Packaging Files") {
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, LocalizeValue.localizeTODO("Packaging Files")) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 try {
-                    for (final VirtualFile file : files) {
+                    for (VirtualFile file : files) {
                         indicator.checkCanceled();
                         AccessRule.read(() -> {
                             try {
@@ -109,14 +109,14 @@ public class PackageFileWorker {
         return callback;
     }
 
-    public static void packageFile(@Nonnull VirtualFile file, @Nonnull Project project, final Artifact[] artifacts) throws IOException {
+    public static void packageFile(@Nonnull VirtualFile file, @Nonnull Project project, Artifact[] artifacts) throws IOException {
         LOG.debug("Start packaging file: " + file.getPath());
-        final Collection<Trinity<Artifact, PackagingElementPath, String>> items =
+        Collection<Trinity<Artifact, PackagingElementPath, String>> items =
             ArtifactUtil.findContainingArtifactsWithOutputPaths(file, project, artifacts);
         File ioFile = VfsUtilCore.virtualToIoFile(file);
         for (Trinity<Artifact, PackagingElementPath, String> item : items) {
-            final Artifact artifact = item.getFirst();
-            final String outputPath = artifact.getOutputPath();
+            Artifact artifact = item.getFirst();
+            String outputPath = artifact.getOutputPath();
             if (!StringUtil.isEmpty(outputPath)) {
                 PackageFileWorker worker = new PackageFileWorker(ioFile, item.getThird());
                 LOG.debug(" package to " + outputPath);
@@ -136,7 +136,7 @@ public class PackageFileWorker {
 
     private void copyFile(String outputPath, List<CompositePackagingElement<?>> parents) throws IOException {
         if (parents.isEmpty()) {
-            final String fullOutputPath = DeploymentUtil.appendToPath(outputPath, myRelativeOutputPath);
+            String fullOutputPath = DeploymentUtil.appendToPath(outputPath, myRelativeOutputPath);
             File target = new File(fullOutputPath);
             if (FileUtil.filesEqual(myFile, target)) {
                 LOG.debug("  skipping copying file to itself");
@@ -148,9 +148,9 @@ public class PackageFileWorker {
             return;
         }
 
-        final CompositePackagingElement<?> element = parents.get(0);
-        final String nextOutputPath = outputPath + "/" + element.getName();
-        final List<CompositePackagingElement<?>> parentsTrail = parents.subList(1, parents.size());
+        CompositePackagingElement<?> element = parents.get(0);
+        String nextOutputPath = outputPath + "/" + element.getName();
+        List<CompositePackagingElement<?>> parentsTrail = parents.subList(1, parents.size());
         if (element instanceof ArchivePackagingElement) {
             packFile(nextOutputPath, "", parentsTrail);
         }
@@ -160,14 +160,14 @@ public class PackageFileWorker {
     }
 
     private void packFile(String archivePath, String pathInArchive, List<CompositePackagingElement<?>> parents) throws IOException {
-        final File archiveFile = new File(archivePath);
+        File archiveFile = new File(archivePath);
         if (parents.isEmpty()) {
             LOG.debug("  adding to archive " + archivePath);
             JBZipFile file = getOrCreateZipFile(archiveFile);
             try {
-                final String fullPathInArchive =
+                String fullPathInArchive =
                     DeploymentUtil.trimForwardSlashes(DeploymentUtil.appendToPath(pathInArchive, myRelativeOutputPath));
-                final JBZipEntry entry = file.getOrCreateEntry(fullPathInArchive);
+                JBZipEntry entry = file.getOrCreateEntry(fullPathInArchive);
                 entry.setData(RawFileLoader.getInstance().loadFileBytes(myFile));
             }
             finally {
@@ -176,15 +176,15 @@ public class PackageFileWorker {
             return;
         }
 
-        final CompositePackagingElement<?> element = parents.get(0);
-        final String nextPathInArchive = DeploymentUtil.trimForwardSlashes(DeploymentUtil.appendToPath(pathInArchive, element.getName()));
-        final List<CompositePackagingElement<?>> parentsTrail = parents.subList(1, parents.size());
+        CompositePackagingElement<?> element = parents.get(0);
+        String nextPathInArchive = DeploymentUtil.trimForwardSlashes(DeploymentUtil.appendToPath(pathInArchive, element.getName()));
+        List<CompositePackagingElement<?>> parentsTrail = parents.subList(1, parents.size());
         if (element instanceof ArchivePackagingElement) {
             JBZipFile zipFile = getOrCreateZipFile(archiveFile);
             try {
-                final JBZipEntry entry = zipFile.getOrCreateEntry(nextPathInArchive);
+                JBZipEntry entry = zipFile.getOrCreateEntry(nextPathInArchive);
                 LOG.debug("  extracting to temp file: " + nextPathInArchive + " from " + archivePath);
-                final File tempFile = FileUtil.createTempFile(
+                File tempFile = FileUtil.createTempFile(
                     "packageFile" + FileUtil.sanitizeFileName(nextPathInArchive),
                     FileUtil.getExtension(PathUtil.getFileName(nextPathInArchive))
                 );

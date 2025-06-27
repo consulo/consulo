@@ -259,7 +259,7 @@ public abstract class PluginTab implements Disposable {
     }
 
     public String apply() {
-        final String applyMessage = canApply();
+        String applyMessage = canApply();
         if (applyMessage != null) {
             return applyMessage;
         }
@@ -284,7 +284,7 @@ public abstract class PluginTab implements Disposable {
             return true;
         }
         else {
-            final String description = descriptor.getDescription();
+            String description = descriptor.getDescription();
             if (description != null && isAccepted(search, filter, description)) {
                 return true;
             }
@@ -293,7 +293,7 @@ public abstract class PluginTab implements Disposable {
                     return true;
                 }
             }
-            final String changeNotes = descriptor.getChangeNotes();
+            String changeNotes = descriptor.getChangeNotes();
             if (changeNotes != null && isAccepted(search, filter, changeNotes)) {
                 return true;
             }
@@ -316,17 +316,16 @@ public abstract class PluginTab implements Disposable {
         return LocalizeKey.of(RepositoryTagLocalize.ID, tagId).getValue();
     }
 
-    private static boolean isAccepted(final Set<String> search, @Nonnull final String filter, @Nonnull final String description) {
+    private static boolean isAccepted(Set<String> search, @Nonnull String filter, @Nonnull String description) {
         if (StringUtil.containsIgnoreCase(description, filter)) {
             return true;
         }
-        final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
-        final HashSet<String> descriptionSet = new HashSet<>(search);
+        SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
+        Set<String> descriptionSet = new HashSet<>(search);
         descriptionSet.removeAll(optionsRegistrar.getProcessedWords(description));
         return descriptionSet.isEmpty();
     }
 
-    @NonNls
     public static void notifyPluginsWereInstalled(
         @Nonnull Collection<? extends PluginDescriptor> installed,
         Project project

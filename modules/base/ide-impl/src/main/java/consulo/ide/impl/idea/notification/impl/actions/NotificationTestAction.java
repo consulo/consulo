@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.notification.impl.actions;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.localize.LocalizeValue;
@@ -47,9 +47,9 @@ import java.util.List;
 public class NotificationTestAction extends AnAction implements DumbAware {
     public static final NotificationGroup TEST_GROUP = NotificationGroup.balloonGroup("Test Ballon");
     public static final NotificationGroup TEST_STICKY_GROUP =
-        new NotificationGroup("Test Sticky", NotificationDisplayType.STICKY_BALLOON, true);
+        new NotificationGroup("testSticky", LocalizeValue.localizeTODO("Test Sticky"), NotificationDisplayType.STICKY_BALLOON, true);
     public static final NotificationGroup TEST_TOOLWINDOW_GROUP =
-        NotificationGroup.toolWindowGroup("Test ToolWindow", ToolWindowId.TODO_VIEW, true);
+        NotificationGroup.toolWindowGroup("testToolWindow", LocalizeValue.localizeTODO("Test ToolWindow"), ToolWindowId.TODO_VIEW, true);
 
     private static final String MESSAGE_KEY = "NotificationTestAction_Message";
 
@@ -68,10 +68,12 @@ public class NotificationTestAction extends AnAction implements DumbAware {
             super(project, true, IdeModalityType.MODELESS);
             myProject = project;
             init();
-            setOKButtonText("Notify");
-            setTitle("Test VcsBranchMappingChangedNotification");
-            myMessage.setText(PropertiesComponent.getInstance()
-                .getValue(MESSAGE_KEY, "GroupID:\nTitle:\nSubtitle:\nContent:\nType:\nActions:\nSticky:\n"));
+            setOKButtonText(LocalizeValue.localizeTODO("Notify"));
+            setTitle(LocalizeValue.localizeTODO("Test VcsBranchMappingChangedNotification"));
+            myMessage.setText(
+                PropertiesComponent.getInstance()
+                    .getValue(MESSAGE_KEY, "GroupID:\nTitle:\nSubtitle:\nContent:\nType:\nActions:\nSticky:\n")
+            );
         }
 
         @Nullable
@@ -105,7 +107,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
         }
 
         private void newNotification(String text) {
-            final List<NotificationInfo> notifications = new ArrayList<>();
+            List<NotificationInfo> notifications = new ArrayList<>();
             NotificationInfo notification = null;
 
             for (String line : StringUtil.splitByLines(text, false)) {
@@ -160,7 +162,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
                 }
             }
 
-            ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            Application.get().executeOnPooledThread(() -> {
                 for (NotificationInfo info : notifications) {
                     info.getNotification().notify(myProject);
                 }

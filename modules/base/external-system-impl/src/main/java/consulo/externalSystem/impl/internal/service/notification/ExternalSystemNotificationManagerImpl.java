@@ -22,6 +22,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -135,14 +136,14 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
         showNotification(externalSystemId, notificationData);
     }
 
-    public void showNotification(@Nonnull final ProjectSystemId externalSystemId, @Nonnull final NotificationData notificationData) {
+    public void showNotification(@Nonnull ProjectSystemId externalSystemId, @Nonnull NotificationData notificationData) {
         myUpdater.execute(() -> {
             if (myProject.isDisposed()) {
                 return;
             }
 
             if (!initializedExternalSystem.contains(externalSystemId)) {
-                final Application app = myProject.getApplication();
+                Application app = myProject.getApplication();
                 Runnable action = () -> app.runWriteAction(() -> {
                     if (myProject.isDisposed()) {
                         return;
@@ -158,7 +159,7 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
                 }
             }
 
-            final NotificationGroup group = ExternalSystemUtil.getToolWindowElement(
+            NotificationGroup group = ExternalSystemUtil.getToolWindowElement(
                 NotificationGroup.class, myProject, ExternalSystemDataKeys.NOTIFICATION_GROUP, externalSystemId);
             if (group == null) {
                 return;
@@ -182,14 +183,15 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
         });
     }
 
+    @RequiredUIAccess
     private void addMessage(
         @Nonnull Notification notification,
         @Nonnull ProjectSystemId externalSystemId,
         @Nonnull NotificationData notificationData
     ) {
-        final VirtualFile virtualFile =
+        VirtualFile virtualFile =
             notificationData.getFilePath() != null ? ExternalSystemUtil.waitForTheFile(notificationData.getFilePath()) : null;
-        final String groupName = virtualFile != null ? virtualFile.getPresentableUrl() : notificationData.getTitle();
+        String groupName = virtualFile != null ? virtualFile.getPresentableUrl() : notificationData.getTitle();
 
         myMessageCounter
             .increment(groupName, notificationData.getNotificationSource(), notificationData.getNotificationCategory(), externalSystemId);
@@ -199,8 +201,8 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
 
     @Override
     public void clearNotifications(
-        @Nonnull final NotificationSource notificationSource,
-        @Nonnull final ProjectSystemId externalSystemId
+        @Nonnull NotificationSource notificationSource,
+        @Nonnull ProjectSystemId externalSystemId
     ) {
         @Deprecated
         String groupName = null;
@@ -212,13 +214,13 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
                 iterator.remove();
             }
 
-            final ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW);
+            ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW);
             if (toolWindow == null) {
                 return;
             }
 
-            final Pair<NotificationSource, ProjectSystemId> contentIdPair = Pair.create(notificationSource, externalSystemId);
-            final MessageView messageView = myProject.getInstance(MessageView.class);
+            Pair<NotificationSource, ProjectSystemId> contentIdPair = Pair.create(notificationSource, externalSystemId);
+            MessageView messageView = myProject.getInstance(MessageView.class);
             UIUtil.invokeLaterIfNeeded(() -> {
                 for (Content content : messageView.getContentManager().getContents()) {
                     if (!content.isPinned() && contentIdPair.equals(content.getUserData(ExternalSystemInternalNotificationHelper.CONTENT_ID_KEY))) {
@@ -230,23 +232,23 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
     }
 
     public int getMessageCount(
-        @Nonnull final NotificationSource notificationSource,
-        @Nullable final NotificationCategory notificationCategory,
-        @Nonnull final ProjectSystemId externalSystemId
+        @Nonnull NotificationSource notificationSource,
+        @Nullable NotificationCategory notificationCategory,
+        @Nonnull ProjectSystemId externalSystemId
     ) {
         return getMessageCount(null, notificationSource, notificationCategory, externalSystemId);
     }
 
     public int getMessageCount(
-        @Nullable final String groupName,
-        @Nonnull final NotificationSource notificationSource,
-        @Nullable final NotificationCategory notificationCategory,
-        @Nonnull final ProjectSystemId externalSystemId
+        @Nullable String groupName,
+        @Nonnull NotificationSource notificationSource,
+        @Nullable NotificationCategory notificationCategory,
+        @Nonnull ProjectSystemId externalSystemId
     ) {
         return myMessageCounter.getCount(groupName, notificationSource, notificationCategory, externalSystemId);
     }
 
-    private void applyNotification(@Nonnull final Notification notification) {
+    private void applyNotification(@Nonnull Notification notification) {
         if (!myProject.isDisposed() && myProject.isOpen()) {
             notification.notify(myProject);
         }

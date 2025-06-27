@@ -30,7 +30,7 @@ public class ApproveRemovedMappingsActivity implements PostStartupActivity {
     public static final NotificationGroup GROUP = NotificationGroup.balloonGroup("File type recognized");
 
     @Override
-    public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         RemovedMappingTracker removedMappings = ((FileTypeManagerImpl) FileTypeManager.getInstance()).getRemovedMappingTracker();
         List<RemovedMappingTracker.RemovedMapping> list = removedMappings.retrieveUnapprovedMappings();
         if (!list.isEmpty()) {

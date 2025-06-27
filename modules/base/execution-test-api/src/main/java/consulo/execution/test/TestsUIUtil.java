@@ -30,6 +30,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
 import consulo.ui.ex.SystemNotifications;
@@ -45,7 +46,8 @@ import java.awt.*;
 import java.util.List;
 
 public class TestsUIUtil {
-    public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.logOnlyGroup("Test Runner");
+    public static final NotificationGroup NOTIFICATION_GROUP =
+        NotificationGroup.logOnlyGroup("testRunner", LocalizeValue.localizeTODO("Test Runner"));
 
     public static final Color PASSED_COLOR = new Color(0, 128, 0);
     private static final String TESTS = "tests";
@@ -55,9 +57,9 @@ public class TestsUIUtil {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public static <T> T getData(final AbstractTestProxy testProxy, final Key<T> dataId, final TestFrameworkRunningModel model) {
-        final TestConsoleProperties properties = model.getProperties();
-        final Project project = properties.getProject();
+    public static <T> T getData(AbstractTestProxy testProxy, Key<T> dataId, TestFrameworkRunningModel model) {
+        TestConsoleProperties properties = model.getProperties();
+        Project project = properties.getProject();
         if (testProxy == null) {
             return null;
         }
@@ -68,9 +70,9 @@ public class TestsUIUtil {
             return (T) getOpenFileDescriptor(testProxy, model);
         }
         if (PsiElement.KEY == dataId) {
-            final Location location = testProxy.getLocation(project, properties.getScope());
+            Location location = testProxy.getLocation(project, properties.getScope());
             if (location != null) {
-                final PsiElement element = location.getPsiElement();
+                PsiElement element = location.getPsiElement();
                 return element.isValid() ? (T) element : null;
             }
             else {
@@ -80,19 +82,16 @@ public class TestsUIUtil {
         if (Location.DATA_KEY == dataId) {
             return (T) testProxy.getLocation(project, properties.getScope());
         }
-        if (RunConfiguration.KEY == dataId) {
-            final RunProfile configuration = properties.getConfiguration();
-            if (configuration instanceof RunConfiguration) {
-                return (T) configuration;
-            }
+        if (RunConfiguration.KEY == dataId && properties.getConfiguration() instanceof RunConfiguration runConfiguration) {
+            return (T) runConfiguration;
         }
         return null;
     }
 
     public static boolean isMultipleSelectionImpossible(DataContext dataContext) {
-        final Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        if (component instanceof JTree) {
-            final TreePath[] selectionPaths = ((JTree) component).getSelectionPaths();
+        Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        if (component instanceof JTree tree) {
+            TreePath[] selectionPaths = tree.getSelectionPaths();
             if (selectionPaths == null || selectionPaths.length <= 1) {
                 return true;
             }
@@ -100,8 +99,8 @@ public class TestsUIUtil {
         return false;
     }
 
-    public static Navigatable getOpenFileDescriptor(final AbstractTestProxy testProxy, final TestFrameworkRunningModel model) {
-        final TestConsoleProperties testConsoleProperties = model.getProperties();
+    public static Navigatable getOpenFileDescriptor(AbstractTestProxy testProxy, TestFrameworkRunningModel model) {
+        TestConsoleProperties testConsoleProperties = model.getProperties();
         return getOpenFileDescriptor(
             testProxy,
             testConsoleProperties,
@@ -110,18 +109,18 @@ public class TestsUIUtil {
     }
 
     private static Navigatable getOpenFileDescriptor(
-        final AbstractTestProxy proxy,
-        final TestConsoleProperties testConsoleProperties,
-        final boolean openFailureLine
+        AbstractTestProxy proxy,
+        TestConsoleProperties testConsoleProperties,
+        boolean openFailureLine
     ) {
-        final Project project = testConsoleProperties.getProject();
+        Project project = testConsoleProperties.getProject();
 
         if (proxy != null) {
-            final Location location = proxy.getLocation(project, testConsoleProperties.getScope());
+            Location location = proxy.getLocation(project, testConsoleProperties.getScope());
             if (openFailureLine) {
                 return proxy.getDescriptor(location, testConsoleProperties);
             }
-            final OpenFileDescriptor openFileDescriptor = location == null ? null : location.getOpenFileDescriptor();
+            OpenFileDescriptor openFileDescriptor = location == null ? null : location.getOpenFileDescriptor();
             if (openFileDescriptor != null && openFileDescriptor.getFile().isValid()) {
                 return openFileDescriptor;
             }
@@ -129,20 +128,22 @@ public class TestsUIUtil {
         return null;
     }
 
+    @RequiredUIAccess
     public static void notifyByBalloon(
-        @Nonnull final Project project,
+        @Nonnull Project project,
         boolean started,
-        final AbstractTestProxy root,
-        final TestConsoleProperties properties,
-        @jakarta.annotation.Nullable final String comment
+        AbstractTestProxy root,
+        TestConsoleProperties properties,
+        @Nullable String comment
     ) {
         notifyByBalloon(project, root, properties, new TestResultPresentation(root, started, comment).getPresentation());
     }
 
+    @RequiredUIAccess
     public static void notifyByBalloon(
-        @Nonnull final Project project,
-        final AbstractTestProxy root,
-        final TestConsoleProperties properties,
+        @Nonnull Project project,
+        AbstractTestProxy root,
+        TestConsoleProperties properties,
         TestResultPresentation testResultPresentation
     ) {
         if (project.isDisposed()) {
@@ -154,13 +155,13 @@ public class TestsUIUtil {
 
         TestStatusListener.notifySuiteFinished(root, properties.getProject());
 
-        final String testRunDebugId = properties.isDebug() ? ToolWindowId.DEBUG : ToolWindowId.RUN;
-        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        String testRunDebugId = properties.isDebug() ? ToolWindowId.DEBUG : ToolWindowId.RUN;
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
 
-        final String title = testResultPresentation.getTitle();
-        final String text = testResultPresentation.getText();
-        final String balloonText = testResultPresentation.getBalloonText();
-        final NotificationType type = testResultPresentation.getType();
+        String title = testResultPresentation.getTitle();
+        String text = testResultPresentation.getText();
+        String balloonText = testResultPresentation.getBalloonText();
+        NotificationType type = testResultPresentation.getType();
 
         if (!Comparing.strEqual(toolWindowManager.getActiveToolWindowId(), testRunDebugId)) {
             toolWindowManager.notifyByBalloon(testRunDebugId, type.toUI(), balloonText);
@@ -181,7 +182,7 @@ public class TestsUIUtil {
         return new TestResultPresentation(proxy).getPresentation().getText();
     }
 
-    public static void showIconProgress(Project project, int n, final int maximum, final int problemsCounter, boolean updateWithAttention) {
+    public static void showIconProgress(Project project, int n, int maximum, int problemsCounter, boolean updateWithAttention) {
         AppIcon icon = AppIcon.getInstance();
         if (n < maximum || !updateWithAttention) {
             if (!updateWithAttention || icon.setProgress(
@@ -251,11 +252,11 @@ public class TestsUIUtil {
         }
 
         public TestResultPresentation getPresentation() {
-            List allTests = Filter.LEAF.select(myRoot.getAllTests());
-            final List<AbstractTestProxy> failed = Filter.DEFECTIVE_LEAF.select(allTests);
-            final List<AbstractTestProxy> notStarted = Filter.NOT_PASSED.select(allTests);
+            List<? extends AbstractTestProxy> allTests = Filter.LEAF.select(myRoot.getAllTests());
+            List<AbstractTestProxy> failed = Filter.DEFECTIVE_LEAF.select(allTests);
+            List<AbstractTestProxy> notStarted = Filter.NOT_PASSED.select(allTests);
             notStarted.removeAll(failed);
-            final List ignored = Filter.IGNORED.select(allTests);
+            List<? extends AbstractTestProxy> ignored = Filter.IGNORED.select(allTests);
             notStarted.removeAll(ignored);
             failed.removeAll(ignored);
             int failedCount = failed.size();

@@ -42,7 +42,7 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifier {
-    private final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> myErrors = new MultiMap<ConfigurationErrorType, ConfigurationErrorDescription>();
+    private final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> myErrors = new MultiMap<>();
     private final Object myLock = new Object();
     private final Project myProject;
     private final NotificationService myNotificationService;
@@ -75,17 +75,12 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
             fireNotifications();
         }
         else if (first) {
-            StartupManager.getInstance(myProject).registerPostStartupActivity(new Runnable() {
-                @Override
-                public void run() {
-                    fireNotifications();
-                }
-            });
+            StartupManager.getInstance(myProject).registerPostStartupActivity(this::fireNotifications);
         }
     }
 
     private void fireNotifications() {
-        final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> descriptionsMap = new MultiMap<ConfigurationErrorType, ConfigurationErrorDescription>();
+        MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> descriptionsMap = new MultiMap<>();
         synchronized (myLock) {
             if (myErrors.isEmpty()) {
                 return;
@@ -94,8 +89,8 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
             myErrors.clear();
         }
 
-        for (final ConfigurationErrorType type : descriptionsMap.keySet()) {
-            final Collection<ConfigurationErrorDescription> descriptions = descriptionsMap.get(type);
+        for (ConfigurationErrorType type : descriptionsMap.keySet()) {
+            Collection<ConfigurationErrorDescription> descriptions = descriptionsMap.get(type);
             if (descriptions.isEmpty()) {
                 continue;
             }
@@ -120,7 +115,7 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
 
     private static String getInvalidElementsString(ConfigurationErrorType type, Collection<ConfigurationErrorDescription> descriptions) {
         if (descriptions.size() == 1) {
-            final ConfigurationErrorDescription description = ContainerUtil.getFirstItem(descriptions);
+            ConfigurationErrorDescription description = ContainerUtil.getFirstItem(descriptions);
             return type.getElementKind() + " <b>" + description.getElementName() + "</b>";
         }
 

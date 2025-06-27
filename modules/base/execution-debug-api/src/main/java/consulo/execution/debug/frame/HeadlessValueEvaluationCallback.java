@@ -18,14 +18,12 @@ package consulo.execution.debug.frame;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -87,6 +85,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
         }
     }
 
+    @Nonnull
     public XValueNode getNode() {
         return myNode;
     }

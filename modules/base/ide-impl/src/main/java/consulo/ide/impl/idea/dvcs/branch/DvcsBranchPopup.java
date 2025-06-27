@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.dvcs.branch;
 
-import consulo.application.Application;
 import consulo.ide.impl.idea.dvcs.ui.BranchActionGroupPopup;
 import consulo.ide.impl.idea.dvcs.ui.LightActionGroup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;

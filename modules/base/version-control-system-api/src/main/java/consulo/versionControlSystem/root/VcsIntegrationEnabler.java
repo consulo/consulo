@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.root;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
@@ -31,7 +31,6 @@ import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
@@ -88,7 +87,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
         return StringUtil.join(roots, VirtualFile::getPresentableUrl, ", ");
     }
 
-    protected abstract boolean initOrNotifyError(@Nonnull final VirtualFile projectDir);
+    protected abstract boolean initOrNotifyError(@Nonnull VirtualFile projectDir);
 
     protected void notifyAddedRoots(Collection<VirtualFile> roots) {
         NotificationService.getInstance()
@@ -106,7 +105,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
         List<VirtualFile> currentVcsRoots = Arrays.asList(vcsManager.getRootsUnderVcs(myVcs));
 
-        List<VcsDirectoryMapping> mappings = new ArrayList<VcsDirectoryMapping>(vcsManager.getDirectoryMappings(myVcs));
+        List<VcsDirectoryMapping> mappings = new ArrayList<>(vcsManager.getDirectoryMappings(myVcs));
 
         for (VirtualFile root : roots) {
             if (!currentVcsRoots.contains(root)) {
@@ -118,10 +117,10 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
 
     protected static void refreshVcsDir(@Nonnull final VirtualFile projectDir, @Nonnull final String vcsDirName) {
         UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void run() {
-                ApplicationManager.getApplication().runWriteAction(() -> {
+                Application.get().runWriteAction(() -> {
                     LocalFileSystem.getInstance().refreshAndFindFileByPath(projectDir.getPath() + "/" + vcsDirName);
                 });
             }

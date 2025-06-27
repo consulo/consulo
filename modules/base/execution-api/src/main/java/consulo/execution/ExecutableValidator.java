@@ -15,18 +15,22 @@
  */
 package consulo.execution;
 
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.execution.internal.ExecutionNotificationGroupHolder;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
-import consulo.project.ui.notification.*;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.io.CharsetToolkit;
 import jakarta.annotation.Nonnull;
@@ -133,7 +137,7 @@ public abstract class ExecutableValidator {
      * Makes sure that there is always only one notification about the problem in the stack of notifications.
      */
     private void showExecutableNotConfiguredNotification(@Nonnull Notification notification) {
-        if (ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        if (myProject.getApplication().isUnitTestMode() || myProject.getApplication().isHeadlessEnvironment()) {
             return;
         }
 
@@ -201,6 +205,7 @@ public abstract class ExecutableValidator {
      * @return true if executable was valid, false - if not valid (and a message is shown in that case).
      * @see #checkExecutableAndNotifyIfNeeded()
      */
+    @RequiredUIAccess
     public boolean checkExecutableAndShowMessageIfNeeded(@Nullable Component parentComponent) {
         if (myProject.isDisposed()) {
             return false;
@@ -208,22 +213,23 @@ public abstract class ExecutableValidator {
 
         if (!isExecutableValid(getCurrentExecutable())) {
             if (Messages.OK == showMessage(parentComponent)) {
-                ApplicationManager.getApplication().invokeLater(() -> showSettings());
+                myProject.getApplication().invokeLater(this::showSettings);
             }
             return false;
         }
         return true;
     }
 
+    @RequiredUIAccess
     private int showMessage(@Nullable Component parentComponent) {
         String okText = "Fix it";
-        String cancelText = CommonBundle.getCancelButtonText();
-        Image icon = Messages.getErrorIcon();
+        LocalizeValue cancelText = CommonLocalize.buttonCancel();
+        Image icon = UIUtil.getErrorIcon();
         String title = myNotificationErrorTitle;
         String description = myNotificationErrorDescription;
         return parentComponent != null
-            ? Messages.showOkCancelDialog(parentComponent, description, title, okText, cancelText, icon)
-            : Messages.showOkCancelDialog(myProject, description, title, okText, cancelText, icon);
+            ? Messages.showOkCancelDialog(parentComponent, description, title, okText, cancelText.get(), icon)
+            : Messages.showOkCancelDialog(myProject, description, title, okText, cancelText.get(), icon);
     }
 
     public boolean isExecutableValid() {

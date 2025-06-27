@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.internal.versionControlSystem;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.progress.ProgressManager;
@@ -40,17 +40,17 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
-import consulo.localize.LocalizeValue;
-import consulo.project.ui.notification.NotificationService;
-import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
@@ -60,7 +60,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
@@ -72,6 +72,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.change.CurrentContentRevision;
+import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.versionControlSystem.diff.VcsDiffDataKeys;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.util.VcsUtil;
@@ -103,7 +104,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         boolean enabled = isEnabled(e);
         e.getPresentation().setVisible(enabled);
@@ -164,14 +165,12 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
     public static boolean isEnabled(AnActionEvent e) {
         EventData data = collectEventData(e);
+        //noinspection SimplifiableIfStatement
         if (data == null) {
             return false;
         }
 
-        if (data.annotator.isAnnotationShown()) {
-            return true;
-        }
-        return data.annotator.createAnnotationsLoader() != null;
+        return data.annotator.isAnnotationShown() || data.annotator.createAnnotationsLoader() != null;
     }
 
     public static boolean isSuspended(AnActionEvent e) {
@@ -185,6 +184,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         return data.annotator.isAnnotationShown();
     }
 
+    @RequiredUIAccess
     public static void perform(AnActionEvent e, boolean selected) {
         EventData data = collectEventData(e);
         assert data != null;
@@ -199,29 +199,31 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
         EventData data = collectEventData(e);
         return data != null && data.annotator.isAnnotationShown();
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         perform(e, state);
     }
 
-    private static void doAnnotate(@Nonnull final ViewerAnnotator annotator) {
-        final DiffViewerBase viewer = annotator.getViewer();
-        final Project project = viewer.getProject();
+    @RequiredUIAccess
+    private static void doAnnotate(@Nonnull ViewerAnnotator annotator) {
+        DiffViewerBase viewer = annotator.getViewer();
+        Project project = viewer.getProject();
         if (project == null) {
             return;
         }
 
-        final FileAnnotationLoader loader = annotator.createAnnotationsLoader();
+        FileAnnotationLoader loader = annotator.createAnnotationsLoader();
         if (loader == null) {
             return;
         }
 
-        final DiffContextEx diffContext = ObjectUtil.tryCast(viewer.getContext(), DiffContextEx.class);
+        DiffContextEx diffContext = ObjectUtil.tryCast(viewer.getContext(), DiffContextEx.class);
 
         annotator.getBackgroundableLock().lock();
         if (diffContext != null) {
@@ -233,7 +235,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
                 loader.run();
             }
             finally {
-                ApplicationManager.getApplication().invokeLater(
+                Application.get().invokeLater(
                     () -> {
                         if (diffContext != null) {
                             diffContext.showProgressBar(false);
@@ -273,14 +275,11 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         @Nonnull DiffRequest request,
         @Nonnull ThreeSide side
     ) {
-        if (request instanceof ContentDiffRequest) {
-            ContentDiffRequest requestEx = (ContentDiffRequest) request;
-            if (requestEx.getContents().size() == 3) {
-                DiffContent content = side.select(requestEx.getContents());
-                FileAnnotationLoader loader = createAnnotationsLoader(project, content);
-                if (loader != null) {
-                    return loader;
-                }
+        if (request instanceof ContentDiffRequest requestEx && requestEx.getContents().size() == 3) {
+            DiffContent content = side.select(requestEx.getContents());
+            FileAnnotationLoader loader = createAnnotationsLoader(project, content);
+            if (loader != null) {
+                return loader;
             }
         }
 
@@ -387,15 +386,14 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         if (revisionNumber instanceof TextRevisionNumber) {
             return null;
         }
-        final AnnotationProvider annotationProvider = vcs.getAnnotationProvider();
-        if (!(annotationProvider instanceof AnnotationProviderEx)) {
+        if (!(vcs.getAnnotationProvider() instanceof AnnotationProviderEx annotationProviderEx)) {
             return null;
         }
 
         return new FileAnnotationLoader(vcs) {
             @Override
             public FileAnnotation compute() throws VcsException {
-                return ((AnnotationProviderEx) annotationProvider).annotate(path, revisionNumber);
+                return annotationProviderEx.annotate(path, revisionNumber);
             }
         };
     }
@@ -409,6 +407,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         }
 
         @Override
+        @RequiredUIAccess
         @SuppressWarnings("unchecked")
         public void onInit() {
             if (myViewer.getProject() == null) {
@@ -423,6 +422,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         }
 
         @Override
+        @RequiredUIAccess
         @SuppressWarnings("unchecked")
         public void onDispose() {
             if (myViewer.getProject() == null) {
@@ -437,6 +437,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         }
     }
 
+    @RequiredUIAccess
     private static void showNotification(@Nonnull DiffViewerBase viewer, @Nonnull Notification notification) {
         JComponent component = viewer.getComponent();
 
@@ -453,8 +454,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
             }
         }
 
-        Balloon balloon =
-            NotificationsManager.getNotificationsManager().createBalloon(component, notification, false, true, new Ref<>(), viewer);
+        Balloon balloon = NotificationsManager.getNotificationsManager()
+            .createBalloon(component, notification, false, true, new SimpleReference<>(), viewer);
 
         Dimension componentSize = component.getSize();
         Dimension balloonSize = balloon.getPreferredSize();
@@ -493,6 +494,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         }
 
         @Override
+        @RequiredUIAccess
         public void showAnnotation(@Nonnull TwosideTextDiffViewer viewer, @Nonnull Side side, @Nonnull AnnotationData data) {
             Project project = ObjectUtil.assertNotNull(viewer.getProject());
             AnnotateToggleAction.doAnnotate(viewer.getEditor(side), project, null, data.annotation, data.vcs);
@@ -522,13 +524,11 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
         @Override
         public boolean isAnnotationShown(@Nonnull OnesideTextDiffViewer viewer, @Nonnull Side side) {
-            if (side != viewer.getSide()) {
-                return false;
-            }
-            return viewer.getEditor().getGutter().isAnnotationsShown();
+            return side == viewer.getSide() && viewer.getEditor().getGutter().isAnnotationsShown();
         }
 
         @Override
+        @RequiredUIAccess
         public void showAnnotation(@Nonnull OnesideTextDiffViewer viewer, @Nonnull Side side, @Nonnull AnnotationData data) {
             if (side != viewer.getSide()) {
                 return;
@@ -561,13 +561,11 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
         @Override
         public boolean isAnnotationShown(@Nonnull UnifiedDiffViewer viewer, @Nonnull Side side) {
-            if (side != viewer.getMasterSide()) {
-                return false;
-            }
-            return viewer.getEditor().getGutter().isAnnotationsShown();
+            return side == viewer.getMasterSide() && viewer.getEditor().getGutter().isAnnotationsShown();
         }
 
         @Override
+        @RequiredUIAccess
         public void showAnnotation(@Nonnull UnifiedDiffViewer viewer, @Nonnull Side side, @Nonnull AnnotationData data) {
             if (side != viewer.getMasterSide()) {
                 return;
@@ -598,17 +596,20 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         }
 
         @Override
+        @RequiredUIAccess
         public int getLineNumber(int currentNumber) {
             int number = myViewer.transferLineFromOnesideStrict(mySide, currentNumber);
             return number != -1 ? myLocalChangesProvider.getLineNumber(number) : FAKE_LINE_NUMBER;
         }
 
         @Override
+        @RequiredUIAccess
         public boolean isLineChanged(int currentNumber) {
             return getLineNumber(currentNumber) == ABSENT_LINE_NUMBER;
         }
 
         @Override
+        @RequiredUIAccess
         public boolean isRangeChanged(int start, int end) {
             int line1 = myViewer.transferLineFromOnesideStrict(mySide, start);
             int line2 = myViewer.transferLineFromOnesideStrict(mySide, end);
@@ -659,6 +660,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         }
 
         @Override
+        @RequiredUIAccess
         public void showAnnotation(@Nonnull ThreesideTextDiffViewerEx viewer, @Nonnull ThreeSide side, @Nonnull AnnotationData data) {
             Project project = ObjectUtil.assertNotNull(viewer.getProject());
             AnnotateToggleAction.doAnnotate(viewer.getEditor(side), project, null, data.annotation, data.vcs);
@@ -708,6 +710,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         }
 
         @Override
+        @RequiredUIAccess
         public void showRememberedAnnotations(@Nonnull T viewer) {
             boolean[] annotationsShown = viewer.getRequest().getUserData(ANNOTATIONS_SHOWN_KEY);
             if (annotationsShown == null || annotationsShown.length != 2) {
@@ -771,6 +774,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
                 }
 
                 @Nonnull
+                @Override
                 public BackgroundableActionLock getBackgroundableLock() {
                     return BackgroundableActionLock.getLock(viewer.getProject(), VcsBackgroundableActions.ANNOTATE, viewer, side);
                 }
@@ -788,8 +792,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
         public abstract void hideAnnotation(@Nonnull T viewer, @Nonnull ThreeSide side);
 
-        @Override
         @Nullable
+        @Override
         public ViewerAnnotator createAnnotator(@Nonnull T viewer, @Nonnull Editor editor) {
             ThreeSide side = getCurrentSide(viewer, editor);
             if (side == null) {
@@ -799,6 +803,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
         }
 
         @Override
+        @RequiredUIAccess
         public void showRememberedAnnotations(@Nonnull T viewer) {
             boolean[] annotationsShown = viewer.getRequest().getUserData(ANNOTATIONS_SHOWN_KEY);
             if (annotationsShown == null || annotationsShown.length != 3) {
@@ -869,6 +874,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
                 }
 
                 @Nonnull
+                @Override
                 public BackgroundableActionLock getBackgroundableLock() {
                     return BackgroundableActionLock.getLock(viewer.getProject(), VcsBackgroundableActions.ANNOTATE, viewer, side);
                 }

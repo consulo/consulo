@@ -25,6 +25,7 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -60,7 +61,7 @@ public class KeyboardInternationalizationNotificationManager {
         notificationHasBeenShown = true;
     }
 
-    public static Notification createNotification(@Nonnull final NotificationGroup group, @Nullable NotificationListener listener) {
+    public static Notification createNotification(@Nonnull NotificationGroup group, @Nullable NotificationListener listener) {
         Application application = Application.get();
         LocalizeValue productName = application.getName();
 
@@ -85,14 +86,15 @@ public class KeyboardInternationalizationNotificationManager {
         }
 
         @Override
+        @RequiredUIAccess
         public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
             if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                final String description = event.getDescription();
+                String description = event.getDescription();
                 if ("enable".equals(description)) {
                     KeyboardSettingsExternalizable.getInstance().setNonEnglishKeyboardSupportEnabled(true);
                 }
                 else if ("settings".equals(description)) {
-                    final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
+                    ShowSettingsUtil util = ShowSettingsUtil.getInstance();
                     IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
                     //util.editConfigurable((JFrame)ideFrame, new StatisticsConfigurable(true));
                     util.showSettingsDialog(ideFrame.getProject(), KeymapPanel.class);

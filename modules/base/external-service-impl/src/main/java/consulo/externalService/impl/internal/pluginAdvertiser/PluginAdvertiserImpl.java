@@ -50,7 +50,12 @@ import java.util.concurrent.Future;
 public class PluginAdvertiserImpl implements PluginAdvertiser {
     private static final Logger LOG = Logger.getInstance(PluginAdvertiserImpl.class);
 
-    public static final NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
+    public static final NotificationGroup ourGroup = new NotificationGroup(
+        "pluginSuggestion",
+        LocalizeValue.localizeTODO("Plugins Suggestion"),
+        NotificationDisplayType.STICKY_BALLOON,
+        true
+    );
 
     @Nonnull
     private final ApplicationConcurrency myApplicationConcurrency;
@@ -84,9 +89,10 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
         myTaskFuture.cancel(false);
         myTaskUUID = UUID.randomUUID();
 
-        myTaskFuture = myPluginAdvertiserRequester.doRequest().whenCompleteAsync((pluginDescriptors, throwable) -> {
-            checkAndNotify(pluginDescriptors);
-        }, myApplicationConcurrency.getExecutorService());
+        myTaskFuture = myPluginAdvertiserRequester.doRequest().whenCompleteAsync(
+            (pluginDescriptors, throwable) -> checkAndNotify(pluginDescriptors),
+            myApplicationConcurrency.getExecutorService()
+        );
     }
 
     private void checkAndNotify(List<PluginDescriptor> allDescriptors) {
@@ -106,22 +112,21 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
             }
         });
 
-        final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(myProject);
+        UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(myProject);
 
         List<ExtensionPreview> previews = new ArrayList<>();
 
-        final Set<PluginDescriptor> ids = new HashSet<>();
-        myProject.getExtensionPoint(PluginAdvertiserExtension.class).forEach(extender -> {
-            extender.extend(feature -> {
+        Set<PluginDescriptor> ids = new HashSet<>();
+        myProject.getExtensionPoint(PluginAdvertiserExtension.class)
+            .forEach(extender -> extender.extend(feature -> {
                 previews.add(feature);
 
-                final Set<PluginDescriptor> descriptors = findImpl(allDescriptors, feature);
+                Set<PluginDescriptor> descriptors = findImpl(allDescriptors, feature);
 
                 for (PluginDescriptor id : descriptors) {
                     ids.add(id);
                 }
-            });
-        });
+            }));
 
         if (ids.isEmpty()) {
             return;

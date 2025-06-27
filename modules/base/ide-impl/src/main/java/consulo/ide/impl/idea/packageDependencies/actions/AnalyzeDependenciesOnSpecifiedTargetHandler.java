@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.packageDependencies.actions;
 
-import consulo.application.Application;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.ForwardDependenciesBuilder;
 import consulo.language.editor.scope.AnalysisScope;
@@ -84,13 +83,13 @@ public class AnalyzeDependenciesOnSpecifiedTargetHandler extends DependenciesHan
             @Override
             public void analyze() {
                 super.analyze();
-                final Map<PsiFile, Set<PsiFile>> dependencies = getDependencies();
+                Map<PsiFile, Set<PsiFile>> dependencies = getDependencies();
                 for (PsiFile file : dependencies.keySet()) {
-                    final Set<PsiFile> files = dependencies.get(file);
-                    final Iterator<PsiFile> iterator = files.iterator();
+                    Set<PsiFile> files = dependencies.get(file);
+                    Iterator<PsiFile> iterator = files.iterator();
                     while (iterator.hasNext()) {
                         PsiFile next = iterator.next();
-                        final VirtualFile virtualFile = next.getVirtualFile();
+                        VirtualFile virtualFile = next.getVirtualFile();
                         if (virtualFile == null || !myTargetScope.contains(virtualFile)) {
                             iterator.remove();
                         }

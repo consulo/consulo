@@ -37,8 +37,11 @@ import javax.swing.event.HyperlinkEvent;
  * Use the special method or supply additional parameter to the constructor to show the balloon over the Version Control View.
  */
 public class VcsBalloonProblemNotifier implements Runnable {
-    public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Common Version Control Messages",
-        VcsToolWindow.ID, true
+    public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup(
+        "commonVersionControlMessages",
+        LocalizeValue.localizeTODO("Common Version Control Messages"),
+        VcsToolWindow.ID,
+        true
     );
     @Nonnull
     private final Project myProject;
@@ -49,16 +52,16 @@ public class VcsBalloonProblemNotifier implements Runnable {
     @Nullable
     private final NamedRunnable[] myNotificationListener;
 
-    public VcsBalloonProblemNotifier(@Nonnull final Project project, @Nonnull final String message, final NotificationType messageType) {
+    public VcsBalloonProblemNotifier(@Nonnull Project project, @Nonnull String message, NotificationType messageType) {
         this(project, message, messageType, true, null);
     }
 
     public VcsBalloonProblemNotifier(
-        @Nonnull final Project project,
-        @Nonnull final String message,
-        final NotificationType messageType,
+        @Nonnull Project project,
+        @Nonnull String message,
+        NotificationType messageType,
         boolean showOverChangesView,
-        @Nullable final NamedRunnable[] notificationListener
+        @Nullable NamedRunnable[] notificationListener
     ) {
         myProject = project;
         myMessage = message;
@@ -68,18 +71,18 @@ public class VcsBalloonProblemNotifier implements Runnable {
     }
 
     public static void showOverChangesView(
-        @Nonnull final Project project,
-        @Nonnull final String message,
-        final NotificationType type,
-        final NamedRunnable... notificationListener
+        @Nonnull Project project,
+        @Nonnull String message,
+        NotificationType type,
+        NamedRunnable... notificationListener
     ) {
         show(project, message, type, true, notificationListener);
     }
 
     public static void showOverVersionControlView(
-        @Nonnull final Project project,
-        @Nonnull final String message,
-        final NotificationType type
+        @Nonnull Project project,
+        @Nonnull String message,
+        NotificationType type
     ) {
         show(project, message, type, false, null);
     }
@@ -91,15 +94,12 @@ public class VcsBalloonProblemNotifier implements Runnable {
         final boolean showOverChangesView,
         @Nullable final NamedRunnable[] notificationListener
     ) {
-        final Application application = ApplicationManager.getApplication();
+        Application application = Application.get();
         if (application.isHeadlessEnvironment()) {
             return;
         }
-        final Runnable showErrorAction = new Runnable() {
-            public void run() {
-                new VcsBalloonProblemNotifier(project, message, type, showOverChangesView, notificationListener).run();
-            }
-        };
+        Runnable showErrorAction =
+            () -> new VcsBalloonProblemNotifier(project, message, type, showOverChangesView, notificationListener).run();
         if (application.isDispatchThread()) {
             showErrorAction.run();
         }
@@ -108,13 +108,14 @@ public class VcsBalloonProblemNotifier implements Runnable {
         }
     }
 
+    @Override
     public void run() {
         NotificationService notificationService = NotificationService.getInstance();
-        final Notification notification;
+        Notification notification;
         if (myNotificationListener != null && myNotificationListener.length > 0) {
-            final StringBuilder sb = new StringBuilder(myMessage);
+            StringBuilder sb = new StringBuilder(myMessage);
             for (NamedRunnable runnable : myNotificationListener) {
-                final String name = runnable.toString();
+                String name = runnable.toString();
                 sb.append("<br/><a href=\"").append(name).append("\">").append(name).append("</a>");
             }
 

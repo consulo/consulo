@@ -18,32 +18,32 @@ package consulo.ide.impl.idea.dvcs.cherrypick;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.localize.LocalizeValue;
-import consulo.project.ui.notification.NotificationService;
-import consulo.versionControlSystem.VcsNotifier;
-import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationService;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.distributed.VcsCherryPicker;
+import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsLog;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.*;
 
@@ -97,7 +97,7 @@ public class VcsCherryPickManager {
     }
 
     @Nullable
-    public VcsCherryPicker getCherryPickerFor(@Nonnull final VcsKey key) {
+    public VcsCherryPicker getCherryPickerFor(@Nonnull VcsKey key) {
         return ContainerUtil.find(myProject.getExtensionList(VcsCherryPicker.class), picker -> picker.getSupportedVcs().equals(key));
     }
 
@@ -107,8 +107,9 @@ public class VcsCherryPickManager {
         @Nonnull
         private final ChangeListManagerEx myChangeListManager;
 
+        @RequiredUIAccess
         public CherryPickingTask(@Nonnull Project project, @Nonnull List<VcsFullCommitDetails> detailsInReverseOrder) {
-            super(project, "Cherry-Picking");
+            super(project, LocalizeValue.localizeTODO("Cherry-Picking"));
             myAllDetailsInReverseOrder = detailsInReverseOrder;
             myChangeListManager = (ChangeListManagerEx) ChangeListManager.getInstance((Project) myProject);
             myChangeListManager.blockModalNotifications();
@@ -164,12 +165,10 @@ public class VcsCherryPickManager {
                 }
             }
             finally {
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
-                    public void run() {
-                        myChangeListManager.unblockModalNotifications();
-                        for (VcsFullCommitDetails details : myAllDetailsInReverseOrder) {
-                            myIdsInProgress.remove(new CommitId(details.getId(), details.getRoot()));
-                        }
+                Application.get().invokeLater(() -> {
+                    myChangeListManager.unblockModalNotifications();
+                    for (VcsFullCommitDetails details : myAllDetailsInReverseOrder) {
+                        myIdsInProgress.remove(new CommitId(details.getId(), details.getRoot()));
                     }
                 });
             }
@@ -177,7 +176,7 @@ public class VcsCherryPickManager {
 
         @Nonnull
         public MultiMap<VcsCherryPicker, VcsFullCommitDetails> createArrayMultiMap() {
-            return new MultiMap<VcsCherryPicker, VcsFullCommitDetails>() {
+            return new MultiMap<>() {
                 @Nonnull
                 @Override
                 protected Collection<VcsFullCommitDetails> createCollection() {

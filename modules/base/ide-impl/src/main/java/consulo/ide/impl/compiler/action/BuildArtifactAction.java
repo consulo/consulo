@@ -33,6 +33,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -80,22 +81,23 @@ public class BuildArtifactAction extends DumbAwareAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
 
-        final List<Artifact> artifacts = ArtifactUtil.getArtifactWithOutputPaths(project);
+        List<Artifact> artifacts = ArtifactUtil.getArtifactWithOutputPaths(project);
         if (artifacts.isEmpty()) {
             return;
         }
 
-        List<ArtifactPopupItem> items = new ArrayList<ArtifactPopupItem>();
+        List<ArtifactPopupItem> items = new ArrayList<>();
         if (artifacts.size() > 1) {
             items.add(0, new ArtifactPopupItem(null, "All Artifacts", Image.empty(16)));
         }
-        Set<Artifact> selectedArtifacts = new HashSet<Artifact>(ArtifactsWorkspaceSettings.getInstance(project).getArtifactsToBuild());
+        Set<Artifact> selectedArtifacts = new HashSet<>(ArtifactsWorkspaceSettings.getInstance(project).getArtifactsToBuild());
         IntList selectedIndices = IntLists.newArrayList();
         if (Comparing.haveEqualElements(artifacts, selectedArtifacts) && selectedArtifacts.size() > 1) {
             selectedIndices.add(0);
@@ -103,37 +105,42 @@ public class BuildArtifactAction extends DumbAwareAction {
         }
 
         for (Artifact artifact : artifacts) {
-            final ArtifactPopupItem item = new ArtifactPopupItem(artifact, artifact.getName(), artifact.getArtifactType().getIcon());
+            ArtifactPopupItem item = new ArtifactPopupItem(artifact, artifact.getName(), artifact.getArtifactType().getIcon());
             if (selectedArtifacts.contains(artifact)) {
                 selectedIndices.add(items.size());
             }
             items.add(item);
         }
 
-        final ChooseArtifactStep step = new ChooseArtifactStep(items, artifacts.get(0), project, myNotificationService);
+        ChooseArtifactStep step = new ChooseArtifactStep(items, artifacts.get(0), project, myNotificationService);
         step.setDefaultOptionIndices(selectedIndices.toArray());
 
         final ListPopupImpl popup = (ListPopupImpl) JBPopupFactory.getInstance().createListPopup(step);
-        final KeyStroke editKeyStroke = KeymapUtil.getKeyStroke(CommonShortcuts.getEditSource());
+        KeyStroke editKeyStroke = KeymapUtil.getKeyStroke(CommonShortcuts.getEditSource());
         if (editKeyStroke != null) {
-            popup.registerAction("editArtifact", editKeyStroke, new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Object[] values = popup.getSelectedValues();
-                    popup.cancel();
-                    ModulesConfiguratorImpl.showArtifactSettings(
-                        project,
-                        values.length > 0 ? ((ArtifactPopupItem) values[0]).getArtifact() : null
-                    );
+            popup.registerAction(
+                "editArtifact",
+                editKeyStroke,
+                new AbstractAction() {
+                    @Override
+                    @RequiredUIAccess
+                    public void actionPerformed(ActionEvent e) {
+                        Object[] values = popup.getSelectedValues();
+                        popup.cancel();
+                        ModulesConfiguratorImpl.showArtifactSettings(
+                            project,
+                            values.length > 0 ? ((ArtifactPopupItem) values[0]).getArtifact() : null
+                        );
+                    }
                 }
-            });
+            );
         }
         popup.showCenteredInCurrentWindow(project);
     }
 
-    private static void doBuild(@Nonnull Project project, final @Nonnull List<ArtifactPopupItem> items, boolean rebuild) {
-        final Set<Artifact> artifacts = getArtifacts(items, project);
-        final CompileScope scope = ArtifactCompileScope.createArtifactsScope(project, artifacts, rebuild);
+    private static void doBuild(@Nonnull Project project, @Nonnull List<ArtifactPopupItem> items, boolean rebuild) {
+        Set<Artifact> artifacts = getArtifacts(items, project);
+        CompileScope scope = ArtifactCompileScope.createArtifactsScope(project, artifacts, rebuild);
 
         ArtifactsWorkspaceSettings.getInstance(project).setArtifactsToBuild(artifacts);
         if (!rebuild) {
@@ -145,8 +152,8 @@ public class BuildArtifactAction extends DumbAwareAction {
         }
     }
 
-    private static Set<Artifact> getArtifacts(final List<ArtifactPopupItem> items, final Project project) {
-        Set<Artifact> artifacts = new LinkedHashSet<Artifact>();
+    private static Set<Artifact> getArtifacts(List<ArtifactPopupItem> items, Project project) {
+        Set<Artifact> artifacts = new LinkedHashSet<>();
         for (ArtifactPopupItem item : items) {
             artifacts.addAll(item.getArtifacts(project));
         }
@@ -177,9 +184,10 @@ public class BuildArtifactAction extends DumbAwareAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void run() {
-            Set<VirtualFile> parents = new HashSet<VirtualFile>();
-            final VirtualFile[] roots = ProjectRootManager.getInstance(myProject).getContentSourceRoots();
+            Set<VirtualFile> parents = new HashSet<>();
+            VirtualFile[] roots = ProjectRootManager.getInstance(myProject).getContentSourceRoots();
             for (VirtualFile root : roots) {
                 VirtualFile parent = root;
                 while (parent != null && !parents.contains(parent)) {
@@ -188,14 +196,14 @@ public class BuildArtifactAction extends DumbAwareAction {
                 }
             }
 
-            Map<String, String> outputPathContainingSourceRoots = new HashMap<String, String>();
-            final List<Pair<File, Artifact>> toClean = new ArrayList<Pair<File, Artifact>>();
+            Map<String, String> outputPathContainingSourceRoots = new HashMap<>();
+            final List<Pair<File, Artifact>> toClean = new ArrayList<>();
             Set<Artifact> artifacts = getArtifacts(myArtifactPopupItems, myProject);
             for (Artifact artifact : artifacts) {
                 String outputPath = artifact.getOutputFilePath();
                 if (outputPath != null) {
                     toClean.add(Pair.create(new File(FileUtil.toSystemDependentName(outputPath)), artifact));
-                    final VirtualFile outputFile = LocalFileSystem.getInstance().findFileByPath(outputPath);
+                    VirtualFile outputFile = LocalFileSystem.getInstance().findFileByPath(outputPath);
                     if (parents.contains(outputFile)) {
                         outputPathContainingSourceRoots.put(artifact.getName(), outputPath);
                     }
@@ -203,12 +211,12 @@ public class BuildArtifactAction extends DumbAwareAction {
             }
 
             if (!outputPathContainingSourceRoots.isEmpty()) {
-                final String message;
+                String message;
                 if (outputPathContainingSourceRoots.size() == 1 && outputPathContainingSourceRoots.values().size() == 1) {
-                    final String name = ContainerUtil.getFirstItem(outputPathContainingSourceRoots.keySet());
-                    final String output = outputPathContainingSourceRoots.get(name);
-                    message =
-                        "The output directory '" + output + "' of '" + name + "' artifact contains source roots of the project. Do you want to continue and clear it?";
+                    String name = ContainerUtil.getFirstItem(outputPathContainingSourceRoots.keySet());
+                    String output = outputPathContainingSourceRoots.get(name);
+                    message = "The output directory '" + output + "' of '" + name + "' artifact " +
+                        "contains source roots of the project. Do you want to continue and clear it?";
                 }
                 else {
                     StringBuilder info = new StringBuilder();
@@ -219,19 +227,19 @@ public class BuildArtifactAction extends DumbAwareAction {
                             .append(outputPathContainingSourceRoots.get(name))
                             .append("')\n");
                     }
-                    message =
-                        "The output directories of the following artifacts contains source roots:\n" + info + "Do you want to continue and clear these directories?";
+                    message = "The output directories of the following artifacts contains source roots:\n" + info +
+                        "Do you want to continue and clear these directories?";
                 }
-                final int answer = Messages.showYesNoDialog(myProject, message, "Clean Artifacts", null);
+                int answer = Messages.showYesNoDialog(myProject, message, "Clean Artifacts", null);
                 if (answer != Messages.YES) {
                     return;
                 }
             }
 
-            new Task.Backgroundable(myProject, "Cleaning artifacts...", true) {
+            new Task.Backgroundable(myProject, LocalizeValue.localizeTODO("Cleaning artifacts..."), true) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
-                    List<File> deleted = new ArrayList<File>();
+                    List<File> deleted = new ArrayList<>();
                     for (Pair<File, Artifact> pair : toClean) {
                         indicator.checkCanceled();
                         File file = pair.getFirst();
@@ -268,6 +276,7 @@ public class BuildArtifactAction extends DumbAwareAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void run() {
             ModulesConfiguratorImpl.showArtifactSettings(myProject, myArtifactPopupItems.get(0).getArtifact());
         }
@@ -315,7 +324,7 @@ public class BuildArtifactAction extends DumbAwareAction {
         }
 
         public List<Artifact> getArtifacts(Project project) {
-            final Artifact artifact = getArtifact();
+            Artifact artifact = getArtifact();
             return artifact != null ? Collections.singletonList(artifact) : ArtifactUtil.getArtifactWithOutputPaths(project);
         }
     }
@@ -366,12 +375,7 @@ public class BuildArtifactAction extends DumbAwareAction {
         @Override
         public PopupStep<?> onChosen(final List<ArtifactPopupItem> selectedValues, boolean finalChoice) {
             if (finalChoice) {
-                return doFinalStep(new Runnable() {
-                    @Override
-                    public void run() {
-                        doBuild(myProject, selectedValues, false);
-                    }
-                });
+                return doFinalStep(() -> doBuild(myProject, selectedValues, false));
             }
             final List<ArtifactActionItem> actions = new ArrayList<>();
             actions.add(new BuildArtifactItem(selectedValues, myProject));
