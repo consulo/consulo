@@ -21,21 +21,25 @@ package consulo.ui.ex.update;
  */
 public interface Activatable {
 
-  default void showNotify() {
-  }
-
-  default void hideNotify() {
-  }
-
-  @Deprecated
-  class Adapter implements Activatable {
-    @Override
-    public void hideNotify() {
+    default void showNotify() {
     }
 
-    @Override
-    public void showNotify() {
+    default void hideNotify() {
     }
-  }
+
+    default void hideOnDispose() {
+        hideNotify();
+    }
+
+    @Deprecated
+    class Adapter implements Activatable {
+        @Override
+        public void hideNotify() {
+        }
+
+        @Override
+        public void showNotify() {
+        }
+    }
 
 }

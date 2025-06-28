@@ -35,7 +35,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
     private final WeakReference<Component> myComponent;
     private Activatable myTarget;
 
-    public UiNotifyConnector(@Nonnull final Component component, @Nonnull final Activatable target) {
+    public UiNotifyConnector(@Nonnull Component component, @Nonnull Activatable target) {
         myComponent = new WeakReference<>(component);
         myTarget = target;
         if (component.isShowing()) {
@@ -58,8 +58,8 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
         }
 
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) > 0) {
-            final Runnable runnable = () -> {
-                final Component c = myComponent.get();
+            Runnable runnable = () -> {
+                Component c = myComponent.get();
                 if (isDisposed() || c == null) {
                     return;
                 }
@@ -71,8 +71,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
                     hideNotify();
                 }
             };
-            @SuppressWarnings("deprecation")
-            final Application app = ApplicationManager.getApplication();
+            @SuppressWarnings("deprecation") Application app = ApplicationManager.getApplication();
             if (app != null && app.isDispatchThread()) {
                 app.invokeLater(runnable, app.getCurrentModalityState());
             }
@@ -92,7 +91,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
     }
 
     protected void hideOnDispose() {
-        myTarget.hideNotify();
+        myTarget.hideOnDispose();
     }
 
     @Override
@@ -102,7 +101,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
         }
 
         hideOnDispose();
-        final Component c = myComponent.get();
+        Component c = myComponent.get();
         if (c != null) {
             c.removeHierarchyListener(this);
         }
@@ -120,7 +119,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
         private boolean myShown;
         private boolean myHidden;
 
-        public Once(final Component component, final Activatable target) {
+        public Once(Component component, Activatable target) {
             super(component, target);
         }
 
