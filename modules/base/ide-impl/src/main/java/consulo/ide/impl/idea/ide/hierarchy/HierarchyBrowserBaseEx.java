@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
+import consulo.application.ReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
@@ -586,11 +587,10 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         @Override
-        @RequiredUIAccess
         public final void update(@Nonnull AnActionEvent event) {
             super.update(event);
             Presentation presentation = event.getPresentation();
-            presentation.setEnabled(isValidBase());
+            presentation.setEnabled(ReadAction.compute(HierarchyBrowserBaseEx.this::isValidBase));
         }
     }
 
