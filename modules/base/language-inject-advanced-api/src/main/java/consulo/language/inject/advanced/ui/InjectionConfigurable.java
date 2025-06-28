@@ -18,6 +18,7 @@ package consulo.language.inject.advanced.ui;
 import consulo.configurable.ConfigurationException;
 import consulo.language.inject.advanced.Injection;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -27,7 +28,7 @@ public abstract class InjectionConfigurable<T extends Injection, P extends Injec
   protected final Project myProject;
   private P myPanel;
 
-  public InjectionConfigurable(T injection, Runnable treeUpdater, Project project) {
+  public InjectionConfigurable(T injection, @Nonnull Runnable treeUpdater, Project project) {
     myProject = project;
     myInjection = injection;
     myTreeUpdater = treeUpdater;
