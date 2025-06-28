@@ -31,6 +31,10 @@ import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeStructureUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -67,6 +71,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchObjectWithWeight;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -565,7 +570,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(chkPanel, BorderLayout.WEST);
 
-        topPanel.add(createSettingsButton(), BorderLayout.EAST);
+        topPanel.add(TargetAWT.to(createSettingsButton()), BorderLayout.EAST);
 
         topPanel.setBackground(JBCurrentTheme.Popup.toolbarPanelColor());
         Dimension prefSize = topPanel.getPreferredSize();
@@ -628,59 +633,52 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     }
 
     @Nonnull
-    private JComponent createSettingsButton() {
-        JLabel label = new JBLabel(AllIcons.General.GearPlain);
-        label.setBorder(JBUI.Borders.empty(0, 4));
-        label.setHorizontalAlignment(SwingConstants.RIGHT);
-        label.setVerticalAlignment(SwingConstants.CENTER);
-
-        List<AnAction> sorters = createSorters();
-        new ClickListener() {
-            @Override
-            public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
-                DefaultActionGroup group = new DefaultActionGroup();
-                if (!sorters.isEmpty()) {
-                    group.addAll(sorters);
-                    group.addSeparator();
-                }
-                //addGroupers(group);
-                //addFilters(group);
-
-                group.add(new ToggleAction(IdeLocalize.checkboxNarrowDownOnTyping()) {
-                    @Override
-                    public boolean isSelected(@Nonnull AnActionEvent e) {
-                        return isShouldNarrowDown();
-                    }
-
-                    @Override
-                    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-                        PropertiesComponent.getInstance().setValue(NARROW_DOWN_PROPERTY_KEY, Boolean.toString(state));
-                        if (mySpeedSearch.isPopupActive() && !StringUtil.isEmpty(mySpeedSearch.getEnteredPrefix())) {
-                            rebuild(true);
-                        }
-                    }
-                });
-
-                DataManager dataManager = DataManager.getInstance();
-                ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-                    null,
-                    group,
-                    dataManager.getDataContext(label),
-                    JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                    false
-                );
-                popup.addListener(new JBPopupListener() {
-                    @Override
-                    public void onClosed(@Nonnull LightweightWindowEvent event) {
-                        myCanClose = true;
-                    }
-                });
-                myCanClose = false;
-                popup.showUnderneathOf(label);
-                return true;
+    private Button createSettingsButton() {
+        Button settingsButton = Button.create(LocalizeValue.of());
+        settingsButton.setIcon(PlatformIconGroup.generalGearplain());
+        settingsButton.addStyle(ButtonStyle.TOOLBAR);
+        settingsButton.addClickListener(event -> {
+            List<AnAction> sorters = createSorters();
+            ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
+            if (!sorters.isEmpty()) {
+                group.addAll(sorters);
+                group.addSeparator();
             }
-        }.installOn(label);
-        return label;
+
+            group.add(new ToggleAction(IdeLocalize.checkboxNarrowDownOnTyping()) {
+                @Override
+                public boolean isSelected(@Nonnull AnActionEvent e) {
+                    return isShouldNarrowDown();
+                }
+
+                @Override
+                public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+                    PropertiesComponent.getInstance().setValue(NARROW_DOWN_PROPERTY_KEY, Boolean.toString(state));
+                    if (mySpeedSearch.isPopupActive() && !StringUtil.isEmpty(mySpeedSearch.getEnteredPrefix())) {
+                        rebuild(true);
+                    }
+                }
+            });
+
+            DataManager dataManager = DataManager.getInstance();
+            ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+                null,
+                group.build(),
+                dataManager.getDataContext(settingsButton),
+                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                false
+            );
+            popup.addListener(new JBPopupListener() {
+                @Override
+                public void onClosed(@Nonnull LightweightWindowEvent event) {
+                    myCanClose = true;
+                }
+            });
+            myCanClose = false;
+            
+            popup.showUnderneathOf(TargetAWT.to(settingsButton));
+        });
+        return settingsButton;
     }
 
     private List<AnAction> createSorters() {
@@ -697,7 +695,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     @RequiredReadAction
     private static Object findClosestPsiElement(@Nonnull PsiElement element, @Nonnull TreePath adjusted, @Nonnull TreeModel treeModel) {
         TextRange range = element.getTextRange();
-        if (range == null) {
+        if (range.isEmpty()) {
             return null;
         }
         Object parent = adjusted.getLastPathComponent();
