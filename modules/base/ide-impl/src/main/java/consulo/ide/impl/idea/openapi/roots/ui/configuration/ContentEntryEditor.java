@@ -67,7 +67,9 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
         }
     }
 
-    public ContentEntryEditor(ContentEntry contentEntry, boolean onlySingleFile, Supplier<ModifiableRootModel> modelSupplier) {
+    public ContentEntryEditor(ContentEntry contentEntry,
+                              boolean onlySingleFile,
+                              Supplier<ModifiableRootModel> modelSupplier) {
         myContentEntry = contentEntry;
         myOnlySingleFile = onlySingleFile;
         myModelSupplier = modelSupplier;
@@ -80,20 +82,6 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
             @Override
             public void mouseClicked(MouseEvent e) {
                 myEventDispatcher.getMulticaster().editingStarted(ContentEntryEditor.this);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (!myIsSelected) {
-                    highlight(true);
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!myIsSelected) {
-                    highlight(false);
-                }
             }
         });
         myEventDispatcher = EventDispatcher.create(ContentEntryEditorListener.class);
@@ -114,8 +102,8 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
     @Override
     @RequiredUIAccess
     public void deleteContentEntry() {
-        final String path = FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(myContentEntry.getUrl()));
-        final int answer = Messages.showYesNoDialog(
+        String path = FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(myContentEntry.getUrl()));
+        int answer = Messages.showYesNoDialog(
             ProjectLocalize.modulePathsRemoveContentPrompt(path).get(),
             ProjectLocalize.modulePathsRemoveContentTitle().get(),
             UIUtil.getQuestionIcon()
@@ -124,7 +112,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
             return;
         }
         myEventDispatcher.getMulticaster().beforeEntryDeleted(this);
-        final ContentEntry entry = getContentEntry();
+        ContentEntry entry = getContentEntry();
         getModel().removeContentEntry(entry);
     }
 
@@ -145,7 +133,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
 
     @Override
     public void navigateFolder(ContentEntry contentEntry, ContentFolder contentFolder) {
-        final VirtualFile file = contentFolder.getFile();
+        VirtualFile file = contentFolder.getFile();
         if (file != null) { // file can be deleted externally
             myEventDispatcher.getMulticaster().navigationRequested(this, file);
         }
@@ -161,14 +149,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
 
     public void setSelected(boolean isSelected) {
         if (myIsSelected != isSelected) {
-            highlight(isSelected);
             myIsSelected = isSelected;
-        }
-    }
-
-    private void highlight(boolean selected) {
-        if (myContentRootPanel != null) {
-            myContentRootPanel.setSelected(selected);
         }
     }
 
@@ -182,7 +163,6 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
         }
         myContentRootPanel = createContentRootPane();
         myContentRootPanel.initUI();
-        myContentRootPanel.setSelected(myIsSelected);
         myMainPanel.add(myContentRootPanel, BorderLayout.CENTER);
         myMainPanel.revalidate();
     }
@@ -195,9 +175,9 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
     }
 
     @Nullable
-    public ContentFolder addFolder(@Nonnull final VirtualFile file, ContentFolderTypeProvider contentFolderType) {
-        final ContentEntry contentEntry = getContentEntry();
-        final ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);
+    public ContentFolder addFolder(@Nonnull VirtualFile file, ContentFolderTypeProvider contentFolderType) {
+        ContentEntry contentEntry = getContentEntry();
+        ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);
         try {
             return contentFolder;
         }
@@ -207,12 +187,12 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
         }
     }
 
-    public void removeFolder(@Nonnull final ContentFolder contentFolder) {
+    public void removeFolder(@Nonnull ContentFolder contentFolder) {
         try {
             if (contentFolder.isSynthetic()) {
                 return;
             }
-            final ContentEntry contentEntry = getContentEntry();
+            ContentEntry contentEntry = getContentEntry();
             contentEntry.removeFolder(contentFolder);
         }
         finally {
@@ -222,10 +202,10 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
     }
 
     @Nullable
-    public ContentFolder getFolder(@Nonnull final VirtualFile file) {
-        final ContentEntry contentEntry = getContentEntry();
+    public ContentFolder getFolder(@Nonnull VirtualFile file) {
+        ContentEntry contentEntry = getContentEntry();
         for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
-            final VirtualFile f = contentFolder.getFile();
+            VirtualFile f = contentFolder.getFile();
             if (f != null && f.equals(file)) {
                 return contentFolder;
             }

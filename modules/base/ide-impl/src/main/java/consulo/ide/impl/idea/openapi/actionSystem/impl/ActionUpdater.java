@@ -12,11 +12,8 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -29,10 +26,6 @@ import consulo.util.lang.function.Predicates;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.PaintEvent;
-import java.util.List;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,6 +52,8 @@ public class ActionUpdater {
     private final UpdateStrategy myRealUpdateStrategy;
     private final UpdateStrategy myCheapStrategy;
     private final ActionManager myActionManager;
+    @Nonnull
+    private final UIAccess myUiAccess;
 
     private boolean myAllowPartialExpand = true;
 
@@ -68,8 +63,10 @@ public class ActionUpdater {
         DataContext dataContext,
         String place,
         boolean isContextMenuAction,
-        boolean isToolbarAction
+        boolean isToolbarAction,
+        @Nonnull UIAccess uiAccess
     ) {
+        myUiAccess = uiAccess;
         myProject = dataContext.getData(Project.KEY);
         myActionManager = actionManager;
         myFactory = presentationFactory;
@@ -83,10 +80,11 @@ public class ActionUpdater {
                 Presentation presentation = myFactory.getPresentation(action).clone();
                 presentation.setEnabledAndVisible(true);
                 Supplier<Boolean> doUpdate = () -> doUpdate(action, createActionEvent(action, presentation));
-                boolean success = callAction(action, "update", doUpdate);
+                boolean success = callAction(uiAccess, action, "update", doUpdate);
                 return success ? presentation : null;
             },
             group -> callAction(
+                uiAccess,
                 group,
                 "getChildren",
                 () -> group.getChildren(createActionEvent(
@@ -99,6 +97,7 @@ public class ActionUpdater {
                 ))
             ),
             group -> callAction(
+                uiAccess,
                 group,
                 "canBePerformed",
                 () -> group.canBePerformed(getDataContext(group))
@@ -125,14 +124,14 @@ public class ActionUpdater {
         return action instanceof UpdateInBackground || action.getActionUpdateThread() == ActionUpdateThread.BGT;
     }
 
-    private static <T> T callAction(AnAction action, String operation, Supplier<T> call) {
+    private static <T> T callAction(@Nonnull UIAccess uiAccess, @Nonnull AnAction action, String operation, Supplier<T> call) {
         if (isUpdateInBackground(action) || UIAccess.isUIThread()) {
             return call.get();
         }
 
         ProgressIndicator progress = Objects.requireNonNull(ProgressManager.getInstance().getProgressIndicator());
 
-        return ActionUpdateEdtExecutor.computeOnEdt(() -> {
+        return ActionUIActionRunner.compute(uiAccess, () -> {
             long start = System.currentTimeMillis();
             try {
                 return ProgressManager.getInstance().runProcess(call, ProgressWrapper.wrap(progress));
@@ -201,7 +200,8 @@ public class ActionUpdater {
     }
 
     @Nonnull
-    public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(ActionGroup group, boolean hideDisabled) {
+    public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(ActionGroup group,
+                                                                              boolean hideDisabled) {
         CompletableFuture<List<? extends AnAction>> future = new CompletableFuture<>();
         ProgressIndicator indicator = new EmptyProgressIndicator();
 
@@ -209,7 +209,7 @@ public class ActionUpdater {
             if (throwable != null) {
                 indicator.cancel();
                 
-                ActionUpdateEdtExecutor.computeOnEdt(() -> {
+                ActionUIActionRunner.compute(myUiAccess, () -> {
                     applyPresentationChanges();
                     return null;
                 });
@@ -222,7 +222,7 @@ public class ActionUpdater {
                     ProgressManager.getInstance().runProcess(() -> {
                         List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
 
-                        ActionUpdateEdtExecutor.computeOnEdt(() -> {
+                        ActionUIActionRunner.compute(myUiAccess, () -> {
                             applyPresentationChanges();
                             future.complete(result);
                             return null;
@@ -427,7 +427,8 @@ public class ActionUpdater {
         return hasChildrenWithState(group, true, false, strategy);
     }
 
-    private boolean hasChildrenWithState(ActionGroup group, boolean checkVisible, boolean checkEnabled, UpdateStrategy strategy) {
+    private boolean hasChildrenWithState(ActionGroup group,
+                                         boolean checkVisible, boolean checkEnabled, UpdateStrategy strategy) {
         if (group instanceof AlwaysVisibleActionGroup) {
             return true;
         }

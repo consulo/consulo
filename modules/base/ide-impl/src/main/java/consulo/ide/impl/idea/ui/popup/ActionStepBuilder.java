@@ -123,7 +123,7 @@ class ActionStepBuilder {
 
   private void appendActionsFromGroup(@Nonnull ActionGroup actionGroup) {
     List<AnAction> newVisibleActions =
-      ActionGroupExpander.expandActionGroup(false, actionGroup, myPresentationFactory, myDataContext, myActionPlace);
+      ActionGroupExpander.expandActionGroup(actionGroup, myPresentationFactory, myDataContext, myActionPlace);
     for (AnAction action : newVisibleActions) {
       if (action instanceof AnSeparator separator) {
         myPrependWithSeparator = true;

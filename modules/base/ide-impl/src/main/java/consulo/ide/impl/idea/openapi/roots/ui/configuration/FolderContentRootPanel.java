@@ -27,13 +27,15 @@ import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -41,8 +43,10 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -55,7 +59,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
 
     @Override
     protected void addBottomComponents() {
-        final ContentFolder[] contentFolders = getContentEntry().getFolders(t -> true);
+        ContentFolder[] contentFolders = getContentEntry().getFolders(t -> true);
 
         ExtensionPoint<ContentFolderTypeProvider> point = Application.get().getExtensionPoint(ContentFolderTypeProvider.class);
 
@@ -115,6 +119,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
                 0));
     }
 
+    @RequiredUIAccess
     protected JComponent createFolderGroupComponent(
         String title,
         List<ContentFolder> folders,
@@ -133,19 +138,11 @@ public class FolderContentRootPanel extends ContentRootPanel {
 
             rowPanel.add(createFolderComponent(folder, foregroundColor), BorderLayout.CENTER);
 
-            ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
-            builder.add(createChangeOptionsAction(folder, editor));
-            builder.add(createFolderDeleteAction(folder, editor));
+            HorizontalLayout buttonsLayout = HorizontalLayout.create(0);
+            buttonsLayout.add(createChangeOptionsAction(folder, editor));
+            buttonsLayout.add(createFolderDeleteAction(folder, editor));
 
-            ActionToolbar toolbar = ActionToolbarFactory.getInstance()
-                .createActionToolbar("FolderGroupd", builder.build(), ActionToolbar.Style.INPLACE);
-            toolbar.setTargetComponent(rowsPanel);
-
-            JComponent component = toolbar.getComponent();
-            component.setOpaque(false);
-            component.setBorder(JBUI.Borders.empty());
-
-            rowPanel.add(component, BorderLayout.EAST);
+            rowPanel.add(TargetAWT.to(buttonsLayout), BorderLayout.EAST);
         }
 
         JLabel titleLabel = new JLabel(title);
@@ -154,7 +151,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
         titleLabel.setOpaque(false);
         registerTextComponent(titleLabel, foregroundColor);
 
-        final JPanel groupPanel = new JPanel(new BorderLayout());
+        JPanel groupPanel = new JPanel(new BorderLayout());
         groupPanel.setBorder(JBUI.Borders.empty(0, 4));
         groupPanel.setOpaque(false);
         groupPanel.add(titleLabel, BorderLayout.NORTH);
@@ -163,10 +160,10 @@ public class FolderContentRootPanel extends ContentRootPanel {
         return groupPanel;
     }
 
-    private JComponent createFolderComponent(final ContentFolder folder, Color foreground) {
-        final VirtualFile folderFile = folder.getFile();
-        final VirtualFile contentEntryFile = getContentEntry().getFile();
-        final String properties = "";
+    private JComponent createFolderComponent(ContentFolder folder, Color foreground) {
+        VirtualFile folderFile = folder.getFile();
+        VirtualFile contentEntryFile = getContentEntry().getFile();
+        String properties = "";
         if (folderFile != null && contentEntryFile != null) {
             String path =
                 folderFile.equals(contentEntryFile) ? "." : VfsUtilCore.getRelativePath(folderFile, contentEntryFile, File.separatorChar);
@@ -178,7 +175,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
         }
         else {
             String path = toRelativeDisplayPath(folder.getUrl(), getContentEntry().getUrl());
-            final JLabel pathLabel = new JLabel(path + properties);
+            JLabel pathLabel = new JLabel(path + properties);
             pathLabel.setOpaque(false);
             pathLabel.setForeground(JBColor.RED);
 
@@ -196,36 +193,36 @@ public class FolderContentRootPanel extends ContentRootPanel {
         return toDisplayPath(url);
     }
 
-    private void registerTextComponent(final JComponent component, final Color foreground) {
+    private void registerTextComponent(JComponent component, Color foreground) {
         component.setForeground(foreground);
     }
 
-    private DumbAwareAction createChangeOptionsAction(ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
-        return new DumbAwareAction(ProjectLocalize.modulePathsPropertiesTooltip(), LocalizeValue.of(), PlatformIconGroup.generalInline_edit()) {
-
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
-                myCallback.showChangeOptionsDialog(getContentEntry(), folder);
-            }
-        };
+    @RequiredUIAccess
+    private Button createChangeOptionsAction(ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
+        Button button = Button.create(LocalizeValue.of());
+        button.setToolTipText(ProjectLocalize.modulePathsPropertiesTooltip());
+        button.addStyle(ButtonStyle.INPLACE);
+        button.addClickListener(event -> myCallback.showChangeOptionsDialog(getContentEntry(), folder));
+        button.setIcon(PlatformIconGroup.generalInline_edit());
+        return button;
     }
 
-    private DumbAwareAction createFolderDeleteAction(final ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
-        final LocalizeValue tooltipText;
+    @RequiredUIAccess
+    private Button createFolderDeleteAction(ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
+        LocalizeValue tooltipText;
         if (folder.getFile() != null && getContentEntry().getFile() != null) {
             tooltipText = ProjectLocalize.modulePathsUnmark0Tooltip(editor.getName());
         }
         else {
             tooltipText = ProjectLocalize.modulePathsRemoveTooltip();
         }
-        return new DumbAwareAction(tooltipText, LocalizeValue.of(), PlatformIconGroup.actionsClose()) {
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
-                myCallback.deleteContentFolder(getContentEntry(), folder);
-            }
-        };
+
+        Button button = Button.create(LocalizeValue.of());
+        button.setToolTipText(tooltipText);
+        button.addStyle(ButtonStyle.INPLACE);
+        button.addClickListener(event -> myCallback.deleteContentFolder(getContentEntry(), folder));
+        button.setIcon(PlatformIconGroup.actionsClose());
+        return button;
     }
 
     private static class UnderlinedPathLabel extends ResizingWrapper {
@@ -237,12 +234,12 @@ public class FolderContentRootPanel extends ContentRootPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            final int startX = myWrappedComponent.getWidth();
-            final int endX = getWidth();
+            int startX = myWrappedComponent.getWidth();
+            int endX = getWidth();
             if (endX > startX) {
-                final FontMetrics fontMetrics = myWrappedComponent.getFontMetrics(myWrappedComponent.getFont());
-                final int y = fontMetrics.getMaxAscent();
-                final Color savedColor = g.getColor();
+                FontMetrics fontMetrics = myWrappedComponent.getFontMetrics(myWrappedComponent.getFont());
+                int y = fontMetrics.getMaxAscent();
+                Color savedColor = g.getColor();
                 g.setColor(JBColor.border());
                 UIUtil.drawLine((Graphics2D) g, startX, y, endX, y);
                 g.setColor(savedColor);

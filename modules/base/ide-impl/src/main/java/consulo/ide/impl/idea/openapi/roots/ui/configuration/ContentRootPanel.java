@@ -22,10 +22,12 @@ import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.annotation.Nonnull;
 
@@ -78,51 +80,37 @@ public class ContentRootPanel extends JPanel {
                 0));
 
         addBottomComponents();
-
-        setSelected(false);
     }
 
     protected void addBottomComponents() {
     }
 
+    @RequiredUIAccess
     private JComponent createHeader() {
-        final JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(JBUI.Borders.empty(4));
 
-        final JLabel headerLabel = new JLabel(toDisplayPath(getContentEntry().getUrl()));
+        JLabel headerLabel = new JLabel(toDisplayPath(getContentEntry().getUrl()));
         headerLabel.setFont(headerLabel.getFont().deriveFont(Font.BOLD));
         headerLabel.setOpaque(false);
         if (getContentEntry().getFile() == null) {
             headerLabel.setForeground(JBColor.RED);
         }
 
-        DumbAwareAction deleteFolder = new DumbAwareAction(ProjectLocalize.modulePathsRemoveContentTooltip(),
-            LocalizeValue.of(),
-            PlatformIconGroup.actionsClose()) {
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
-                myCallback.deleteContentEntry();
-            }
-        };
-
-        ActionToolbar toolbar = ActionToolbarFactory.getInstance().createActionToolbar("ContentFolderHeader",
-            ActionGroup.newImmutableBuilder().add(deleteFolder).build(),
-            ActionToolbar.Style.INPLACE);
-
-        toolbar.setTargetComponent(panel);
-        JComponent component = toolbar.getComponent();
-        component.setOpaque(false);
-        component.setBorder(JBUI.Borders.empty());
+        Button button = Button.create(LocalizeValue.of());
+        button.setToolTipText(ProjectLocalize.modulePathsRemoveContentTooltip());
+        button.addStyle(ButtonStyle.INPLACE);
+        button.addClickListener(event -> myCallback.deleteContentEntry());
+        button.setIcon(PlatformIconGroup.actionsClose());
 
         panel.add(headerLabel, BorderLayout.CENTER);
-        panel.add(component, BorderLayout.EAST);
+        panel.add(TargetAWT.to(button), BorderLayout.EAST);
 
         FilePathClipper.install(headerLabel, panel);
         return panel;
     }
 
-    protected static String toDisplayPath(final String url) {
+    protected static String toDisplayPath(String url) {
         return VirtualFileManager.extractPath(url).replace('/', File.separatorChar);
     }
 

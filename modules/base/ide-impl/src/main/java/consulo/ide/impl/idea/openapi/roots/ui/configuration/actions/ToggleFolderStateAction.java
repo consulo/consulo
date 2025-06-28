@@ -21,6 +21,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.ContentEntryTreeEdit
 import consulo.module.content.layer.ContentFolder;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,55 +30,57 @@ import javax.swing.*;
  * @since 2003-10-14
  */
 public class ToggleFolderStateAction extends ContentEntryEditingAction {
-  private final ContentEntryTreeEditor myEntryTreeEditor;
-  private final ContentFolderTypeProvider myContentFolderType;
+    private final ContentEntryTreeEditor myEntryTreeEditor;
+    private final ContentFolderTypeProvider myContentFolderType;
 
-  public ToggleFolderStateAction(JTree tree, ContentEntryTreeEditor entryEditor, ContentFolderTypeProvider contentFolderType) {
-    super(tree, contentFolderType.getName(), contentFolderType.getIcon());
-    myEntryTreeEditor = entryEditor;
-    myContentFolderType = contentFolderType;
-  }
-
-  @Override
-  public boolean displayTextInToolbar() {
-    return true;
-  }
-
-  @Override
-  public boolean isSelected(final AnActionEvent e) {
-    final VirtualFile[] selectedFiles = getSelectedFiles();
-    if (selectedFiles.length == 0) return false;
-
-    final ContentEntryEditor editor = myEntryTreeEditor.getContentEntryEditor();
-    final ContentFolder folder = editor.getFolder(selectedFiles[0]);
-    return folder != null && folder.getType() == myContentFolderType;
-  }
-
-  @Override
-  public void setSelected(final AnActionEvent e, final boolean isSelected) {
-    final VirtualFile[] selectedFiles = getSelectedFiles();
-    assert selectedFiles.length != 0;
-
-    final ContentEntryEditor contentEntryEditor = myEntryTreeEditor.getContentEntryEditor();
-    for (VirtualFile selectedFile : selectedFiles) {
-      final ContentFolder contentFolder = contentEntryEditor.getFolder(selectedFile);
-      if (isSelected) {
-        if (contentFolder == null) { // not marked yet
-          contentEntryEditor.addFolder(selectedFile, myContentFolderType);
-        }
-        else {
-          if (myContentFolderType.equals(contentFolder.getType())) {
-
-            contentEntryEditor.removeFolder(contentFolder);
-            contentEntryEditor.addFolder(selectedFile, myContentFolderType);
-          }
-        }
-      }
-      else {
-        if (contentFolder != null) { // already marked
-          contentEntryEditor.removeFolder(contentFolder);
-        }
-      }
+    public ToggleFolderStateAction(JTree tree, ContentEntryTreeEditor entryEditor, ContentFolderTypeProvider contentFolderType) {
+        super(tree, contentFolderType.getName(), contentFolderType.getIcon());
+        myEntryTreeEditor = entryEditor;
+        myContentFolderType = contentFolderType;
     }
-  }
+
+    @Override
+    public boolean displayTextInToolbar() {
+        return true;
+    }
+
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        VirtualFile[] selectedFiles = getSelectedFiles();
+        if (selectedFiles.length == 0) {
+            return false;
+        }
+
+        ContentEntryEditor editor = myEntryTreeEditor.getContentEntryEditor();
+        ContentFolder folder = editor.getFolder(selectedFiles[0]);
+        return folder != null && folder.getType() == myContentFolderType;
+    }
+
+    @Override
+    public void setSelected(@Nonnull AnActionEvent e, boolean isSelected) {
+        VirtualFile[] selectedFiles = getSelectedFiles();
+        assert selectedFiles.length != 0;
+
+        ContentEntryEditor contentEntryEditor = myEntryTreeEditor.getContentEntryEditor();
+        for (VirtualFile selectedFile : selectedFiles) {
+            ContentFolder contentFolder = contentEntryEditor.getFolder(selectedFile);
+            if (isSelected) {
+                if (contentFolder == null) { // not marked yet
+                    contentEntryEditor.addFolder(selectedFile, myContentFolderType);
+                }
+                else {
+                    if (myContentFolderType.equals(contentFolder.getType())) {
+
+                        contentEntryEditor.removeFolder(contentFolder);
+                        contentEntryEditor.addFolder(selectedFile, myContentFolderType);
+                    }
+                }
+            }
+            else {
+                if (contentFolder != null) { // already marked
+                    contentEntryEditor.removeFolder(contentFolder);
+                }
+            }
+        }
+    }
 }

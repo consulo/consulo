@@ -102,12 +102,14 @@ public abstract class ActionToolbarEngine {
     private CompletableFuture<List<? extends AnAction>> updateAsync() {
         DataContext dataContext = getDataContext();
         boolean async = myAlreadyUpdated && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
-        ActionUpdater updater = new ActionUpdater(myActionManager,
+        ActionUpdater updater = new ActionUpdater(
+            myActionManager,
             myPresentationFactory,
             async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
             myPlace,
             false,
-            true
+            true,
+            UIAccess.current()
         );
 
         myLastUpdate.cancel(false);
@@ -122,16 +124,19 @@ public abstract class ActionToolbarEngine {
     }
 
     @Deprecated
+    @RequiredUIAccess
     private void updateActionsImpl() {
         DataContext dataContext = getDataContext();
         boolean async = myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(myActionToolbar) && isShowing();
-        ActionUpdater updater =
-            new ActionUpdater(myActionManager,
-                myPresentationFactory,
-                async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
-                myPlace,
-                false,
-                true);
+        ActionUpdater updater = new ActionUpdater(
+            myActionManager,
+            myPresentationFactory,
+            async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
+            myPlace,
+            false,
+            true,
+            UIAccess.current()
+        );
         if (async) {
             myLastUpdate.cancel(false);
 

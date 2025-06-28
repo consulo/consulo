@@ -11,6 +11,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
 import consulo.ide.impl.idea.ui.popup.NothingHereAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.StringUtil;
@@ -43,7 +44,7 @@ public class Utils {
         boolean checked = group instanceof CheckedActionGroup;
 
         ActionUpdater updater =
-            new ActionUpdater(ActionManager.getInstance(), presentationFactory, context, place, true, false);
+            new ActionUpdater(ActionManager.getInstance(), presentationFactory, context, place, true, false, UIAccess.current());
         List<AnAction> list =
             DO_FULL_EXPAND ? updater.expandActionGroupFull(group, group instanceof CompactActionGroup) : updater.expandActionGroupWithTimeout(
                 group,

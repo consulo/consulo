@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
+import consulo.application.Application;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 
@@ -30,47 +33,51 @@ import java.util.concurrent.CompletableFuture;
  */
 public class ActionGroupExpander {
 
-  /**
-   * @return actions from the given and nested non-popup groups that are visible after updating
-   */
-  public static List<AnAction> expandActionGroup(boolean isInModalContext,
-                                                 @Nonnull ActionGroup group,
-                                                 PresentationFactory presentationFactory,
-                                                 @Nonnull DataContext context,
-                                                 String place) {
-    return new ActionUpdater(ActionManager.getInstance(),
-        presentationFactory,
-                             context,
-                             place,
-                             false,
-                             false
-    ).expandActionGroup(group, group instanceof CompactActionGroup);
-  }
+    /**
+     * @return actions from the given and nested non-popup groups that are visible after updating
+     */
+    @RequiredUIAccess
+    public static List<AnAction> expandActionGroup(@Nonnull ActionGroup group,
+                                                   PresentationFactory presentationFactory,
+                                                   @Nonnull DataContext context,
+                                                   String place) {
+        return new ActionUpdater(ActionManager.getInstance(),
+            presentationFactory,
+            context,
+            place,
+            false,
+            false,
+            UIAccess.current()
+        ).expandActionGroup(group, group instanceof CompactActionGroup);
+    }
 
-  @Nonnull
-  public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(boolean isInModalContext,
-                                                                         @Nonnull ActionGroup group,
-                                                                         PresentationFactory presentationFactory,
-                                                                         @Nonnull DataContext context,
-                                                                         String place) {
-    if (!(context instanceof AsyncDataContext)) context = DataManager.getInstance().createAsyncDataContext(context);
-    return new ActionUpdater(ActionManager.getInstance(), presentationFactory, context, place, false, false)
-      .expandActionGroupAsync(group, group instanceof CompactActionGroup);
-  }
+    @Nonnull
+    public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(@Nonnull ActionGroup group,
+                                                                                     PresentationFactory presentationFactory,
+                                                                                     @Nonnull DataContext context,
+                                                                                     String place) {
+        if (!(context instanceof AsyncDataContext)) {
+            context = DataManager.getInstance().createAsyncDataContext(context);
+        }
+        return new ActionUpdater(ActionManager.getInstance(), presentationFactory, context, place, false, false, Application.get().getLastUIAccess())
+            .expandActionGroupAsync(group, group instanceof CompactActionGroup);
+    }
 
-  public static List<AnAction> expandActionGroupWithTimeout(boolean isInModalContext,
-                                                            @Nonnull ActionGroup group,
-                                                            BasePresentationFactory presentationFactory,
-                                                            @Nonnull DataContext context,
-                                                            String place,
-                                                            int timeoutMs) {
-    return new ActionUpdater(ActionManager.getInstance(),
-        presentationFactory,
-                             context,
-                             place,
-                             false,
-                             false
-    ).expandActionGroupWithTimeout
-      (group, group instanceof CompactActionGroup, timeoutMs);
-  }
+    public static List<AnAction> expandActionGroupWithTimeout(UIAccess uiAccess,
+                                                              boolean isInModalContext,
+                                                              @Nonnull ActionGroup group,
+                                                              BasePresentationFactory presentationFactory,
+                                                              @Nonnull DataContext context,
+                                                              String place,
+                                                              int timeoutMs) {
+        return new ActionUpdater(ActionManager.getInstance(),
+            presentationFactory,
+            context,
+            place,
+            false,
+            false,
+            uiAccess
+        ).expandActionGroupWithTimeout
+            (group, group instanceof CompactActionGroup, timeoutMs);
+    }
 }

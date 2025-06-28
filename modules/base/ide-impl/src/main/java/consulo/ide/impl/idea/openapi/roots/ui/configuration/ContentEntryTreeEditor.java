@@ -17,8 +17,6 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
-import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.dataContext.DataProvider;
@@ -45,6 +43,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -94,7 +93,7 @@ public class ContentEntryTreeEditor {
         new TreeSpeedSearch(myTree);
 
         myTreePanel = new MyPanel(new BorderLayout());
-        final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
         myTreePanel.add(scrollPane, BorderLayout.CENTER);
 
         myTreePanel.setVisible(false);
@@ -118,10 +117,7 @@ public class ContentEntryTreeEditor {
         Arrays.sort(supportedFolders, (o1, o2) -> ComparatorUtil.compareInt(o1.getWeight(), o2.getWeight()));
         for (ContentFolderTypeProvider contentFolderTypeProvider : supportedFolders) {
             ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, contentFolderTypeProvider);
-     /* CustomShortcutSet shortcutSet = editor.getMarkRootShortcutSet();
-      if (shortcutSet != null) {
-        action.registerCustomShortcutSet(shortcutSet, myTree);
-      }     */
+
             myEditingActionsGroup.add(action);
         }
     }
@@ -129,7 +125,7 @@ public class ContentEntryTreeEditor {
     /**
      * @param contentEntryEditor : null means to clear the editor
      */
-    public void setContentEntryEditor(@Nullable final ContentEntryEditor contentEntryEditor) {
+    public void setContentEntryEditor(@Nullable ContentEntryEditor contentEntryEditor) {
         if (myContentEntryEditor != null && myContentEntryEditor.equals(contentEntryEditor)) {
             return;
         }
@@ -149,12 +145,12 @@ public class ContentEntryTreeEditor {
         myContentEntryEditor = contentEntryEditor;
         myContentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
 
-        final ContentEntry entry = contentEntryEditor.getContentEntry();
+        ContentEntry entry = contentEntryEditor.getContentEntry();
         assert entry != null : contentEntryEditor;
-        final VirtualFile file = entry.getFile();
+        VirtualFile file = entry.getFile();
         myDescriptor.setRoots(file);
         if (file == null) {
-            final String path = VfsUtilCore.urlToPath(entry.getUrl());
+            String path = VfsUtilCore.urlToPath(entry.getUrl());
             myDescriptor.setTitle(FileUtil.toSystemDependentName(path));
         }
 
@@ -180,13 +176,13 @@ public class ContentEntryTreeEditor {
                         if (value instanceof FileNode fileNode) {
                             VirtualFile treeFile = fileNode.getFile();
                             if (treeFile != null && treeFile.isDirectory()) {
-                                final ContentEntry contentEntry = contentEntryEditor.getContentEntry();
+                                ContentEntry contentEntry = contentEntryEditor.getContentEntry();
                                 renderer.setIcon(updateIcon(contentEntry, treeFile, renderer.getIcon()));
                             }
                         }
                         else if (value instanceof VirtualFile virtualFile) {
                             if (virtualFile.isDirectory()) {
-                                final ContentEntry contentEntry = contentEntryEditor.getContentEntry();
+                                ContentEntry contentEntry = contentEntryEditor.getContentEntry();
                                 renderer.setIcon(updateIcon(contentEntry, virtualFile, renderer.getIcon()));
                             }
                         }
@@ -195,22 +191,24 @@ public class ContentEntryTreeEditor {
             }
         };
         myFileSystemTree.showHiddens(true);
+
         Disposer.register(myProject, myFileSystemTree);
 
-        final NewFolderAction newFolderAction = new MyNewFolderAction();
-        final DefaultActionGroup mousePopupGroup = new DefaultActionGroup();
+        NewFolderAction newFolderAction = new MyNewFolderAction();
+        ActionGroup.Builder mousePopupGroup = ActionGroup.newImmutableBuilder();
         mousePopupGroup.add(myEditingActionsGroup);
         mousePopupGroup.addSeparator();
         mousePopupGroup.add(newFolderAction);
-        myFileSystemTree.registerMouseListener(mousePopupGroup);
+
+        myFileSystemTree.registerMouseListener(mousePopupGroup.build());
     }
 
     @RequiredReadAction
-    private Image updateIcon(final ContentEntry entry, final VirtualFile file, Image originalIcon) {
+    private Image updateIcon(ContentEntry entry, VirtualFile file, Image originalIcon) {
         Image icon = originalIcon;
         VirtualFile currentRoot = null;
         for (ContentFolder contentFolder : entry.getFolders(LanguageContentFolderScopes.all())) {
-            final VirtualFile contentPath = contentFolder.getFile();
+            VirtualFile contentPath = contentFolder.getFile();
             if (file.equals(contentPath)) {
                 icon = ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
             }
@@ -255,20 +253,6 @@ public class ContentEntryTreeEditor {
 
     public void update() {
         updateMarkActions();
-//    if (myFileSystemTree != null) {
-//      myFileSystemTree.updateTree();
-//      final AsyncTreeModel model = (AsyncTreeModel)myTree.getModel();
-//      final int visibleRowCount = myTree.getVisibleRowCount();
-//      for (int row = 0; row < visibleRowCount; row++) {
-//        final TreePath pathForRow = myTree.getPathForRow(row);
-//        if (pathForRow != null) {
-//          final TreeNode node = (TreeNode)pathForRow.getLastPathComponent();
-//          if (node != null) {
-//            model.nodeChanged(node);
-//          }
-//        }
-//      }
-//    }
     }
 
     private class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
@@ -288,19 +272,19 @@ public class ContentEntryTreeEditor {
             super(
                 ActionLocalize.actionFilechooserNewfolderText(),
                 ActionLocalize.actionFilechooserNewfolderDescription(),
-                AllIcons.Actions.NewFolder
+                PlatformIconGroup.actionsNewfolder()
             );
         }
     }
 
     private class MyPanel extends JPanel implements DataProvider {
-        private MyPanel(final LayoutManager layout) {
+        private MyPanel(LayoutManager layout) {
             super(layout);
         }
 
         @Override
         @Nullable
-        public Object getData(@Nonnull final Key<?> dataId) {
+        public Object getData(@Nonnull Key<?> dataId) {
             if (FileSystemTree.DATA_KEY == dataId) {
                 return myFileSystemTree;
             }

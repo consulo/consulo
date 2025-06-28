@@ -56,19 +56,19 @@ public class FileSystemTreeImpl implements FileSystemTree {
     private final List<Listener> myListeners = Lists.newLockFreeCopyOnWriteList();
     private AbstractTreeModel myFileTreeModel;
 
-    public FileSystemTreeImpl(@Nullable final Project project, final FileChooserDescriptor descriptor) {
+    public FileSystemTreeImpl(@Nullable Project project, FileChooserDescriptor descriptor) {
         this(project, descriptor, new Tree(), null, null, null);
         myTree.setRootVisible(descriptor.isTreeRootVisible());
         myTree.setShowsRootHandles(true);
     }
 
     public FileSystemTreeImpl(
-        @Nullable final Project project,
-        final FileChooserDescriptor descriptor,
-        final Tree tree,
+        @Nullable Project project,
+        FileChooserDescriptor descriptor,
+        Tree tree,
         @Nullable TreeCellRenderer renderer,
-        @Nullable final Runnable onInitialized,
-        @Nullable final Function<? super TreePath, String> speedSearchConverter
+        @Nullable Runnable onInitialized,
+        @Nullable Function<? super TreePath, String> speedSearchConverter
     ) {
         myProject = project;
 
@@ -118,7 +118,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                     boolean hasFocus
                 ) {
                     super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
-                    final Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
+                    Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
                     if (userObject instanceof FileNodeDescriptor fileNodeDescriptor) {
                         String comment = fileNodeDescriptor.getComment();
                         if (comment != null) {
@@ -178,7 +178,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
         }
     }
 
-    public void registerMouseListener(final ActionGroup group) {
+    public void registerMouseListener(ActionGroup group) {
         PopupHandler.installUnknownPopupHandler(myTree, group, ActionManager.getInstance());
     }
 
@@ -220,12 +220,12 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    public void select(VirtualFile file, @Nullable final Runnable onDone) {
+    public void select(VirtualFile file, @Nullable Runnable onDone) {
         select(new VirtualFile[]{file}, onDone);
     }
 
     @Override
-    public void select(VirtualFile[] file, @Nullable final Runnable onDone) {
+    public void select(VirtualFile[] file, @Nullable Runnable onDone) {
         switch (file.length) {
             case 0:
                 myTree.clearSelection();
@@ -253,7 +253,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    public void expand(final VirtualFile file, @Nullable final Runnable onDone) {
+    public void expand(VirtualFile file, @Nullable Runnable onDone) {
         TreeUtil.promiseExpand(myTree, new FileNodeVisitor(file)).onSuccess(path -> {
             if (path != null && onDone != null) {
                 onDone.run();
@@ -262,7 +262,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @RequiredUIAccess
-    public Exception createNewFolder(final VirtualFile parentDirectory, final String newFolderName) {
+    public Exception createNewFolder(VirtualFile parentDirectory, String newFolderName) {
         return CommandProcessor.getInstance().<Exception>newCommand()
             .project(myProject)
             .name(UILocalize.fileChooserCreateNewFolderCommandName())
@@ -286,10 +286,10 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
     @RequiredUIAccess
     public Exception createNewFile(
-        final VirtualFile parentDirectory,
-        final String newFileName,
-        final FileType fileType,
-        final String initialContent
+        VirtualFile parentDirectory,
+        String newFileName,
+        FileType fileType,
+        String initialContent
     ) {
         return CommandProcessor.getInstance().<Exception>newCommand()
             .project(myProject)
@@ -297,10 +297,10 @@ public class FileSystemTreeImpl implements FileSystemTree {
             .inWriteAction()
             .compute(() -> {
                 try {
-                    final String newFileNameWithExtension = newFileName.endsWith('.' + fileType.getDefaultExtension())
+                    String newFileNameWithExtension = newFileName.endsWith('.' + fileType.getDefaultExtension())
                         ? newFileName
                         : newFileName + '.' + fileType.getDefaultExtension();
-                    final VirtualFile file = parentDirectory.createChildData(this, newFileNameWithExtension);
+                    VirtualFile file = parentDirectory.createChildData(this, newFileNameWithExtension);
                     VfsUtil.saveText(file, initialContent != null ? initialContent : "");
                     updateTree();
                     select(file, null);
@@ -320,7 +320,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     @Override
     @Nullable
     public VirtualFile getSelectedFile() {
-        final TreePath path = myTree.getSelectionPath();
+        TreePath path = myTree.getSelectionPath();
         if (path == null) {
             return null;
         }
@@ -330,12 +330,12 @@ public class FileSystemTreeImpl implements FileSystemTree {
     @Override
     @Nullable
     public VirtualFile getNewFileParent() {
-        final VirtualFile selected = getSelectedFile();
+        VirtualFile selected = getSelectedFile();
         if (selected != null) {
             return selected;
         }
 
-        final List<VirtualFile> roots = myDescriptor.getRoots();
+        List<VirtualFile> roots = myDescriptor.getRoots();
         return roots.size() == 1 ? roots.get(0) : null;
     }
 
@@ -347,12 +347,12 @@ public class FileSystemTreeImpl implements FileSystemTree {
     @Override
     @Nonnull
     public VirtualFile[] getSelectedFiles() {
-        final TreePath[] paths = myTree.getSelectionPaths();
+        TreePath[] paths = myTree.getSelectionPaths();
         if (paths == null) {
             return VirtualFile.EMPTY_ARRAY;
         }
 
-        final List<VirtualFile> files = new ArrayList<>();
+        List<VirtualFile> files = new ArrayList<>();
         for (TreePath path : paths) {
             VirtualFile file = getVirtualFile(path);
             if (file != null && file.isValid()) {
@@ -384,7 +384,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
     @Override
     public boolean isUnderRoots(@Nonnull VirtualFile file) {
-        final List<VirtualFile> roots = myDescriptor.getRoots();
+        List<VirtualFile> roots = myDescriptor.getRoots();
         if (roots.size() == 0) {
             return true;
         }
@@ -399,7 +399,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    public void addListener(final Listener listener, final Disposable parent) {
+    public void addListener(Listener listener, Disposable parent) {
         myListeners.add(listener);
         Disposer.register(parent, () -> myListeners.remove(listener));
     }
@@ -416,7 +416,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
         }
         List<VirtualFile> selection = new ArrayList<>();
 
-        final TreePath[] paths = myTree.getSelectionPaths();
+        TreePath[] paths = myTree.getSelectionPaths();
         if (paths != null) {
             for (TreePath each : paths) {
                 VirtualFile file = getVirtualFile(each);
