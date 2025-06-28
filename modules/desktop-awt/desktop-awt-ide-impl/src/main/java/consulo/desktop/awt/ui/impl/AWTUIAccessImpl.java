@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.LaterInvocator;
+import consulo.component.ProcessCanceledException;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.logging.Logger;
@@ -81,6 +82,9 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
         T result = supplier.get();
         future.complete(result);
       }
+      catch (ProcessCanceledException exception) {
+          future.cancel(false);
+      }
       catch (Throwable e) {
         LOGGER.error(e);
         future.completeExceptionally(e);
@@ -97,6 +101,9 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
       try {
         T result = supplier.get();
         asyncResult.setDone(result);
+      }
+      catch (ProcessCanceledException exception) {
+          asyncResult.rejectWithThrowable(exception);
       }
       catch (Throwable e) {
         LOGGER.error(e);
