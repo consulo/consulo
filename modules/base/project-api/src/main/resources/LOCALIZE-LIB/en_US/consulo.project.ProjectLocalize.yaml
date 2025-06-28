@@ -604,16 +604,10 @@ project.new.wizard.select.type.label:
     text: Select type
 project.order.entry.project:
     text: <Project>
-project.reload.external.change.multiple:
+project.reload.external.change.message:
     text: |-
-        Project files:
-        {0}
-        have been changed externally.
-        It is recommended to reload project for changes to take effect.
-project.reload.external.change.single:
-    text: |-
-        Project file {0} has been changed externally.
-        It is recommended to reload project for changes to take effect.
+        Project components were changed externally and cannot be reloaded.
+        Would you like to reload project?.
 project.reload.external.change.title:
     text: Project Files Changed
 project.reload.failed:
