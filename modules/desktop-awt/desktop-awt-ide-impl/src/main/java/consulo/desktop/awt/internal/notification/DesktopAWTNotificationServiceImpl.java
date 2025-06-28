@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 21/08/2023
+ * @since 2023-08-21
  */
 @Singleton
 @ServiceImpl

@@ -40,7 +40,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -64,13 +64,13 @@ public class ExternalDiffTool {
     public static void show(
         @Nullable final Project project,
         @Nonnull final DiffRequestChain chain,
-        @Nonnull final DiffDialogHints hints
+        @Nonnull DiffDialogHints hints
     ) {
         try {
             //noinspection unchecked
-            final Ref<List<DiffRequest>> requestsRef = new Ref<>();
-            final Ref<Throwable> exceptionRef = new Ref<>();
-            ProgressManager.getInstance().run(new Task.Modal(project, "Loading Requests", true) {
+            final SimpleReference<List<DiffRequest>> requestsRef = new SimpleReference<>();
+            final SimpleReference<Throwable> exceptionRef = new SimpleReference<>();
+            ProgressManager.getInstance().run(new Task.Modal(project, LocalizeValue.localizeTODO("Loading Requests"), true) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     try {
@@ -111,7 +111,7 @@ public class ExternalDiffTool {
     @Nonnull
     private static List<DiffRequest> collectRequests(
         @Nullable Project project,
-        @Nonnull final DiffRequestChain chain,
+        @Nonnull DiffRequestChain chain,
         @Nonnull ProgressIndicator indicator
     ) {
         List<DiffRequest> requests = new ArrayList<>();

@@ -200,7 +200,6 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
         }
 
         Runtime rt = Runtime.getRuntime();
-        long maxMem = rt.maxMemory() / MEGABYTE;
         long allocatedMem = rt.totalMemory() / MEGABYTE;
         long usedMem = allocatedMem - rt.freeMemory() / MEGABYTE;
 
@@ -212,7 +211,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
                 repaint();
             });
 
-            setToolTipText(UIBundle.message("memory.usage.panel.statistics.message", maxMem, allocatedMem, usedMem));
+            setToolTipText(UILocalize.memoryUsagePanelStatisticsMessage(allocatedMem, usedMem).get());
         }
     }
 }

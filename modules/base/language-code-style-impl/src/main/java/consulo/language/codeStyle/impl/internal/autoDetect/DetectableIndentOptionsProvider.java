@@ -16,6 +16,7 @@ import consulo.language.psi.PsiBinaryFile;
 import consulo.language.psi.PsiCompiledFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.*;
 import consulo.ui.ex.JBColor;
@@ -25,7 +26,6 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Maps;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -42,8 +42,12 @@ import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
  */
 @ExtensionImpl(order = "last")
 public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
-    static final NotificationGroup NOTIFICATION_GROUP =
-        new NotificationGroup(ApplicationLocalize.notificationGroupAutomaticIndentDetection().get(), NotificationDisplayType.STICKY_BALLOON, true);
+    static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup(
+        "automaticIndentDetection",
+        ApplicationLocalize.notificationGroupAutomaticIndentDetection(),
+        NotificationDisplayType.STICKY_BALLOON,
+        true
+    );
 
     private boolean myIsEnabledInTest;
     private final Map<VirtualFile, IndentOptions> myDiscardedOptions = Maps.newWeakHashMap();
@@ -173,7 +177,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
             VirtualFile virtualFile = file.getVirtualFile();
             Project project = file.getProject();
             IndentOptions projectOptions = CodeStyle.getSettings(project).getIndentOptions(file.getFileType());
-            String projectOptionsTip = StringUtil.capitalizeWords(IndentStatusBarUIContributor.getIndentInfo(projectOptions), true);
+            LocalizeValue projectOptionsTip = IndentStatusBarUIContributor.getIndentInfo(projectOptions);
             if (indentOptions instanceof TimeStampedIndentOptions timeStampedIndentOptions) {
                 if (timeStampedIndentOptions.isDetected()) {
                     actions.add(DumbAwareAction.create(
@@ -206,7 +210,9 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
                         ApplicationLocalize.codeStyleIndentDetectorApply(
                             IndentStatusBarUIContributor.getIndentInfo(discardedOptions),
                             ColorUtil.toHex(JBColor.GRAY)
-                        ).get(),
+                        ),
+                        LocalizeValue.empty(),
+                        null,
                         e -> {
                             myDiscardedOptions.remove(virtualFile);
                             discardedOptions.associateWithDocument(document);

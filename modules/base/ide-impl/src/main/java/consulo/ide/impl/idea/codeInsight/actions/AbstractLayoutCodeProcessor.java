@@ -225,8 +225,8 @@ public abstract class AbstractLayoutCodeProcessor {
         throws IncorrectOperationException;
 
     public FutureTask<Boolean> preprocessFile(@Nonnull PsiFile file, boolean processChangedTextOnly) throws IncorrectOperationException {
-        final FutureTask<Boolean> previousTask = getPreviousProcessorTask(file, processChangedTextOnly);
-        final FutureTask<Boolean> currentTask = prepareTask(file, processChangedTextOnly);
+        FutureTask<Boolean> previousTask = getPreviousProcessorTask(file, processChangedTextOnly);
+        FutureTask<Boolean> currentTask = prepareTask(file, processChangedTextOnly);
 
         return new FutureTask<>(() -> {
             try {
@@ -238,7 +238,7 @@ public abstract class AbstractLayoutCodeProcessor {
                 }
 
                 //noinspection RequiredXAction
-                Application.get().runWriteAction(currentTask);
+                myProject.getApplication().runWriteAction(currentTask);
 
                 return currentTask.get() && !currentTask.isCancelled();
             }
@@ -305,7 +305,7 @@ public abstract class AbstractLayoutCodeProcessor {
     }
 
     @RequiredUIAccess
-    private void runProcessFile(@Nonnull final PsiFile file) {
+    private void runProcessFile(@Nonnull PsiFile file) {
         assert file.isValid() : "Invalid " + file.getLanguage() + " PSI file " + file.getName();
 
         Document document = PsiDocumentManager.getInstance(myProject).getDocument(file);
@@ -324,7 +324,7 @@ public abstract class AbstractLayoutCodeProcessor {
             return;
         }
 
-        final SimpleReference<FutureTask<Boolean>> writeActionRunnable = new SimpleReference<>();
+        SimpleReference<FutureTask<Boolean>> writeActionRunnable = new SimpleReference<>();
         Runnable readAction = () -> {
             if (!file.isValid() || !checkFileWritable(file)) {
                 return;
@@ -364,7 +364,7 @@ public abstract class AbstractLayoutCodeProcessor {
         runLayoutCodeProcess(readAction, writeAction);
     }
 
-    private boolean checkFileWritable(final PsiFile file) {
+    private boolean checkFileWritable(PsiFile file) {
         if (!file.isWritable()) {
             MessagesEx.fileIsReadOnly(myProject, file.getVirtualFile())
                 .setTitle(CodeInsightLocalize.errorDialogReadonlyFileTitle().get())
@@ -411,14 +411,15 @@ public abstract class AbstractLayoutCodeProcessor {
             && !GeneratedSourcesFilter.isGenerated(file.getProject(), virtualFile);
     }
 
-    private void runLayoutCodeProcess(final Runnable readAction, final Runnable writeAction) {
-        final ProgressWindow progressWindow = new ProgressWindow(true, myProject);
+    private void runLayoutCodeProcess(Runnable readAction, Runnable writeAction) {
+        ProgressWindow progressWindow = new ProgressWindow(true, myProject);
         progressWindow.setTitle(myCommandName);
         progressWindow.setText(myProgressText);
 
-        final ModalityState modalityState = Application.get().getCurrentModalityState();
+        Application app = myProject.getApplication();
+        ModalityState modalityState = app.getCurrentModalityState();
 
-        final Runnable process = () -> Application.get().runReadAction(readAction);
+        Runnable process = () -> app.runReadAction(readAction);
 
         Runnable runnable = () -> {
             try {
@@ -432,7 +433,7 @@ public abstract class AbstractLayoutCodeProcessor {
                 return;
             }
 
-            final Runnable writeRunnable = () -> CommandProcessor.getInstance().newCommand()
+            Runnable writeRunnable = () -> CommandProcessor.getInstance().newCommand()
                 .project(myProject)
                 .name(LocalizeValue.ofNullable(myCommandName))
                 .run(() -> {
@@ -440,7 +441,7 @@ public abstract class AbstractLayoutCodeProcessor {
                         writeAction.run();
 
                         if (myPostRunnable != null) {
-                            Application.get().invokeLater(myPostRunnable);
+                            app.invokeLater(myPostRunnable);
                         }
                     }
                     catch (IndexNotReadyException e) {
@@ -448,24 +449,24 @@ public abstract class AbstractLayoutCodeProcessor {
                     }
                 });
 
-            if (Application.get().isUnitTestMode()) {
+            if (app.isUnitTestMode()) {
                 writeRunnable.run();
             }
             else {
-                Application.get().invokeLater(writeRunnable, modalityState, myProject.getDisposed());
+                app.invokeLater(writeRunnable, modalityState, myProject.getDisposed());
             }
         };
 
-        if (Application.get().isUnitTestMode()) {
+        if (app.isUnitTestMode()) {
             runnable.run();
         }
         else {
-            Application.get().executeOnPooledThread(runnable);
+            app.executeOnPooledThread(runnable);
         }
     }
 
     public void runWithoutProgress() throws IncorrectOperationException {
-        final Runnable runnable = preprocessFile(myFile, myProcessChangedTextOnly);
+        Runnable runnable = preprocessFile(myFile, myProcessChangedTextOnly);
         runnable.run();
     }
 
@@ -542,7 +543,7 @@ public abstract class AbstractLayoutCodeProcessor {
 
                 ProgressIndicatorProvider.checkCanceled();
 
-                Application.get().invokeAndWait(
+                myProject.getApplication().invokeAndWait(
                     () -> CommandProcessor.getInstance().newCommand()
                         .project(myProject)
                         .name(LocalizeValue.ofNullable(myCommandName))
@@ -622,7 +623,7 @@ public abstract class AbstractLayoutCodeProcessor {
     }
 
     static List<TextRange> getSelectedRanges(@Nonnull SelectionModel selectionModel) {
-        final List<TextRange> ranges = new SmartList<>();
+        List<TextRange> ranges = new SmartList<>();
         if (selectionModel.hasSelection()) {
             TextRange range = TextRange.create(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd());
             ranges.add(range);

@@ -32,46 +32,46 @@ import java.nio.charset.StandardCharsets;
  * @author Kirill Likhodedov
  */
 public enum LineSeparator {
-  LF("\n"),
-  CRLF("\r\n"),
-  CR("\r");
+    LF("\n"),
+    CRLF("\r\n"),
+    CR("\r");
 
-  private static final Logger LOG = Logger.getInstance(LineSeparator.class);
-  private final String mySeparatorString;
-  private final byte[] myBytes;
+    private static final Logger LOG = Logger.getInstance(LineSeparator.class);
+    private final String mySeparatorString;
+    private final byte[] myBytes;
 
-  LineSeparator(@Nonnull String separatorString) {
-    mySeparatorString = separatorString;
-    myBytes = separatorString.getBytes(StandardCharsets.UTF_8);
-  }
-
-  @Nonnull
-  public static LineSeparator fromString(@Nonnull String string) {
-    for (LineSeparator separator : values()) {
-      if (separator.getSeparatorString().equals(string)) {
-        return separator;
-      }
+    LineSeparator(@Nonnull String separatorString) {
+        mySeparatorString = separatorString;
+        myBytes = separatorString.getBytes(StandardCharsets.UTF_8);
     }
-    LOG.error("Invalid string for line separator: " + StringUtil.escapeStringCharacters(string));
-    return getSystemLineSeparator();
-  }
 
-  @Nonnull
-  public String getSeparatorString() {
-    return mySeparatorString;
-  }
+    @Nonnull
+    public static LineSeparator fromString(@Nonnull String string) {
+        for (LineSeparator separator : values()) {
+            if (separator.getSeparatorString().equals(string)) {
+                return separator;
+            }
+        }
+        LOG.error("Invalid string for line separator: " + StringUtil.escapeStringCharacters(string));
+        return getSystemLineSeparator();
+    }
 
-  @Nonnull
-  public byte[] getSeparatorBytes() {
-    return myBytes;
-  }
+    @Nonnull
+    public String getSeparatorString() {
+        return mySeparatorString;
+    }
 
-  public static boolean knownAndDifferent(@Nullable LineSeparator separator1, @Nullable LineSeparator separator2) {
-    return separator1 != null && separator2 != null && !separator1.equals(separator2);
-  }
+    @Nonnull
+    public byte[] getSeparatorBytes() {
+        return myBytes;
+    }
 
-  @Nonnull
-  public static LineSeparator getSystemLineSeparator() {
-    return Platform.current().os().isWindows() ? CRLF : LF;
-  }
+    public static boolean knownAndDifferent(@Nullable LineSeparator separator1, @Nullable LineSeparator separator2) {
+        return separator1 != null && separator2 != null && !separator1.equals(separator2);
+    }
+
+    @Nonnull
+    public static LineSeparator getSystemLineSeparator() {
+        return Platform.current().os().isWindows() ? CRLF : LF;
+    }
 }

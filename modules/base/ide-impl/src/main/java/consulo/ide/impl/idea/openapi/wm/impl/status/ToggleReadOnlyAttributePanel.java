@@ -8,6 +8,7 @@ import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
@@ -16,6 +17,7 @@ import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
@@ -88,7 +90,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
         VirtualFile virtualFile = getCurrentFile();
         int writable = virtualFile == null || virtualFile.isWritable() ? 1 : 0;
         int readonly = writable == 1 ? 0 : 1;
-        return ActionsBundle.message("action.ToggleReadOnlyAttribute.files", readonly, writable, 1, 0);
+        return ActionLocalize.actionTogglereadonlyattributeFiles(readonly, 1).get();
     }
 
     @Override
@@ -105,7 +107,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
                 myStatusBar.updateWidget(getId());
             }
             catch (IOException e) {
-                Messages.showMessageDialog(getProject(), e.getMessage(), UIBundle.message("error.dialog.title"), UIUtil.getErrorIcon());
+                Messages.showMessageDialog(getProject(), e.getMessage(), UILocalize.errorDialogTitle().get(), UIUtil.getErrorIcon());
             }
         };
     }

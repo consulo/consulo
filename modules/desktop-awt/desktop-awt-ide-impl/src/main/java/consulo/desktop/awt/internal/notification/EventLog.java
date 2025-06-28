@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.notification;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -255,6 +256,7 @@ public class EventLog {
         return title;
     }
 
+    @SuppressWarnings("RequiredXAction")
     private static void indentNewLines(
         DocumentImpl logDoc,
         List<RangeMarker> lineSeparators,

@@ -59,7 +59,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SystemHealthMonitorImpl extends PreloadingActivity {
     private static final Logger LOG = Logger.getInstance(SystemHealthMonitorImpl.class);
 
-    public static final NotificationGroup GROUP = new NotificationGroup("System Health", NotificationDisplayType.STICKY_BALLOON, false);
+    public static final NotificationGroup GROUP =
+        new NotificationGroup("systemHealth", LocalizeValue.localizeTODO("System Health"), NotificationDisplayType.STICKY_BALLOON, false);
 
     @Nonnull
     private final Application myApplication;
@@ -157,8 +158,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
             return;
         }
 
-        Application app = Application.get();
-        app.invokeLater(
+        Application.get().invokeLater(
             () -> myNotificationService.newWarn(GROUP)
                 .content(message)
                 .important()
@@ -197,7 +197,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
                     if (!reported.get()) {
                         Future<Long> future = ourFreeSpaceCalculation.get();
                         if (future == null) {
-                            ourFreeSpaceCalculation.set(future = ApplicationManager.getApplication().executeOnPooledThread(() -> {
+                            ourFreeSpaceCalculation.set(future = Application.get().executeOnPooledThread(() -> {
                                 // file.getUsableSpace() can fail and return 0 e.g. after MacOSX restart or awakening from sleep
                                 // so several times try to recalculate usable space on receiving 0 to be sure
                                 long fileUsableSpace = file.getUsableSpace();
@@ -215,9 +215,9 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
                         }
 
                         try {
-                            final long fileUsableSpace = future.get();
-                            final long rawTimeout = (fileUsableSpace - LOW_DISK_SPACE_THRESHOLD) / MAX_WRITE_SPEED_IN_BPS;
-                            final long timeout = Math.min(3600, Math.max(5, rawTimeout));
+                            long fileUsableSpace = future.get();
+                            long rawTimeout = (fileUsableSpace - LOW_DISK_SPACE_THRESHOLD) / MAX_WRITE_SPEED_IN_BPS;
+                            long timeout = Math.min(3600, Math.max(5, rawTimeout));
                             ourFreeSpaceCalculation.set(null);
 
                             if (fileUsableSpace < LOW_DISK_SPACE_THRESHOLD) {

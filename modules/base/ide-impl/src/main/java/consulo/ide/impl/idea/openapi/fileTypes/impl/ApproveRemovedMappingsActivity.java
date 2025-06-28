@@ -27,39 +27,39 @@ import java.util.List;
  */
 @ExtensionImpl
 public class ApproveRemovedMappingsActivity implements PostStartupActivity {
-  public static final NotificationGroup GROUP = NotificationGroup.balloonGroup("File type recognized");
+    public static final NotificationGroup GROUP = NotificationGroup.balloonGroup("File type recognized");
 
-  @Override
-  public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
-    RemovedMappingTracker removedMappings = ((FileTypeManagerImpl)FileTypeManager.getInstance()).getRemovedMappingTracker();
-    List<RemovedMappingTracker.RemovedMapping> list = removedMappings.retrieveUnapprovedMappings();
-    if (!list.isEmpty()) {
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
-        for (RemovedMappingTracker.RemovedMapping mapping : list) {
-          final FileNameMatcher matcher = mapping.getFileNameMatcher();
-          final FileType fileType = FileTypeManager.getInstance().findFileTypeByName(mapping.getFileTypeName());
-          NotificationService.getInstance()
-              .newWarn(GROUP)
-              .title(LocalizeValue.localizeTODO("File type recognized"))
-              .content(LocalizeValue.localizeTODO(
-                  "File extension " + matcher.getPresentableString() + " was reassigned to " + fileType.getName() +
-                      " <a href='revert'>Revert</a>"
-              ))
-              .hyperlinkListener(new NotificationListener.Adapter() {
-                @Override
-                @RequiredUIAccess
-                protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
-                  Application.get().runWriteAction(() -> {
-                    FileTypeManager.getInstance().associate(PlainTextFileType.INSTANCE, matcher);
-                    removedMappings.add(matcher, fileType.getName(), true);
-                  });
-                  notification.expire();
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        RemovedMappingTracker removedMappings = ((FileTypeManagerImpl) FileTypeManager.getInstance()).getRemovedMappingTracker();
+        List<RemovedMappingTracker.RemovedMapping> list = removedMappings.retrieveUnapprovedMappings();
+        if (!list.isEmpty()) {
+            UIUtil.invokeAndWaitIfNeeded((Runnable) () -> {
+                for (RemovedMappingTracker.RemovedMapping mapping : list) {
+                    final FileNameMatcher matcher = mapping.getFileNameMatcher();
+                    final FileType fileType = FileTypeManager.getInstance().findFileTypeByName(mapping.getFileTypeName());
+                    NotificationService.getInstance()
+                        .newWarn(GROUP)
+                        .title(LocalizeValue.localizeTODO("File type recognized"))
+                        .content(LocalizeValue.localizeTODO(
+                            "File extension " + matcher.getPresentableString() + " was reassigned to " + fileType.getName() +
+                                " <a href='revert'>Revert</a>"
+                        ))
+                        .hyperlinkListener(new NotificationListener.Adapter() {
+                            @Override
+                            @RequiredUIAccess
+                            protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+                                Application.get().runWriteAction(() -> {
+                                    FileTypeManager.getInstance().associate(PlainTextFileType.INSTANCE, matcher);
+                                    removedMappings.add(matcher, fileType.getName(), true);
+                                });
+                                notification.expire();
+                            }
+                        })
+                        .notify(project);
+                    Application.get().runWriteAction(() -> FileTypeManager.getInstance().associate(fileType, matcher));
                 }
-              })
-              .notify(project);
-          Application.get().runWriteAction(() -> FileTypeManager.getInstance().associate(fileType, matcher));
+            });
         }
-      });
     }
-  }
 }

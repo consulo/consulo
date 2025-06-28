@@ -16,23 +16,18 @@
  */
 package consulo.ide.impl.idea.find.actions;
 
-import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.project.ui.notification.NotificationGroup;
 import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
+import consulo.language.psi.PsiDirectoryContainer;
+import consulo.language.psi.PsiElement;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.language.psi.PsiDirectoryContainer;
-import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 

@@ -25,6 +25,7 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -36,71 +37,73 @@ import java.awt.*;
  * @author Denis Fokin
  */
 public class KeyboardInternationalizationNotificationManager {
-  public static final NotificationGroup LOCALIZATION_GROUP = NotificationGroup.balloonGroup("Localization and Internationalization");
+    public static final NotificationGroup LOCALIZATION_GROUP = NotificationGroup.balloonGroup("Localization and Internationalization");
 
-  public static boolean notificationHasBeenShown;
+    public static boolean notificationHasBeenShown;
 
-  private KeyboardInternationalizationNotificationManager() {
-  }
-
-  public static void showNotification() {
-
-    if (notificationHasBeenShown) {
-      return;
+    private KeyboardInternationalizationNotificationManager() {
     }
 
-    consulo.ui.Window window = WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
-    if(!KeyboardSettingsExternalizable.isSupportedKeyboardLayout(TargetAWT.to(window))) {
-      return;
-    }
+    public static void showNotification() {
 
-    MyNotificationListener listener = new MyNotificationListener();
-
-    Notifications.Bus.notify(createNotification(LOCALIZATION_GROUP, listener));
-    notificationHasBeenShown = true;
-  }
-
-  public static Notification createNotification(@Nonnull final NotificationGroup group, @Nullable NotificationListener listener) {
-    Application application = Application.get();
-    LocalizeValue productName = application.getName();
-
-    Window recentFocusedWindow = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
-
-    return NotificationService.getInstance()
-        .newInfo(group)
-        .title(LocalizeValue.localizeTODO("Enable smart keyboard internalization for " + productName + "."))
-        .content(LocalizeValue.localizeTODO(
-            "<html>We have found out that you are using a non-english keyboard layout." +
-                " You can <a href='enable'>enable</a> smart layout support for " +
-                KeyboardSettingsExternalizable.getDisplayLanguageNameForComponent(recentFocusedWindow) + " language." +
-                " You can change this option in the settings of " + productName + " <a href='settings'>more...</a></html>"
-        ))
-        .optionalHyperlinkListener(listener)
-        .create();
-  }
-
-  private static class MyNotificationListener implements NotificationListener {
-
-    public MyNotificationListener() {
-    }
-
-    @Override
-    public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-      if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        final String description = event.getDescription();
-        if ("enable".equals(description)) {
-          KeyboardSettingsExternalizable.getInstance().setNonEnglishKeyboardSupportEnabled(true);
-        }
-        else if ("settings".equals(description)) {
-          final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
-          IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-          //util.editConfigurable((JFrame)ideFrame, new StatisticsConfigurable(true));
-          util.showSettingsDialog(ideFrame.getProject(), KeymapPanel.class);
+        if (notificationHasBeenShown) {
+            return;
         }
 
-        NotificationsConfiguration.getNotificationsConfiguration().changeSettings(LOCALIZATION_GROUP, NotificationDisplayType.NONE, false, false);
-        notification.expire();
-      }
+        consulo.ui.Window window = WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
+        if (!KeyboardSettingsExternalizable.isSupportedKeyboardLayout(TargetAWT.to(window))) {
+            return;
+        }
+
+        MyNotificationListener listener = new MyNotificationListener();
+
+        Notifications.Bus.notify(createNotification(LOCALIZATION_GROUP, listener));
+        notificationHasBeenShown = true;
     }
-  }
+
+    public static Notification createNotification(@Nonnull NotificationGroup group, @Nullable NotificationListener listener) {
+        Application application = Application.get();
+        LocalizeValue productName = application.getName();
+
+        Window recentFocusedWindow = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
+
+        return NotificationService.getInstance()
+            .newInfo(group)
+            .title(LocalizeValue.localizeTODO("Enable smart keyboard internalization for " + productName + "."))
+            .content(LocalizeValue.localizeTODO(
+                "<html>We have found out that you are using a non-english keyboard layout." +
+                    " You can <a href='enable'>enable</a> smart layout support for " +
+                    KeyboardSettingsExternalizable.getDisplayLanguageNameForComponent(recentFocusedWindow) + " language." +
+                    " You can change this option in the settings of " + productName + " <a href='settings'>more...</a></html>"
+            ))
+            .optionalHyperlinkListener(listener)
+            .create();
+    }
+
+    private static class MyNotificationListener implements NotificationListener {
+
+        public MyNotificationListener() {
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+            if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                String description = event.getDescription();
+                if ("enable".equals(description)) {
+                    KeyboardSettingsExternalizable.getInstance().setNonEnglishKeyboardSupportEnabled(true);
+                }
+                else if ("settings".equals(description)) {
+                    ShowSettingsUtil util = ShowSettingsUtil.getInstance();
+                    IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
+                    //util.editConfigurable((JFrame)ideFrame, new StatisticsConfigurable(true));
+                    util.showSettingsDialog(ideFrame.getProject(), KeymapPanel.class);
+                }
+
+                NotificationsConfiguration.getNotificationsConfiguration()
+                    .changeSettings(LOCALIZATION_GROUP, NotificationDisplayType.NONE, false, false);
+                notification.expire();
+            }
+        }
+    }
 }

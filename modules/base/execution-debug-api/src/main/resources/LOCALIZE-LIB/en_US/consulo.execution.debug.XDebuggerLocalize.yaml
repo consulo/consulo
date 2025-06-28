@@ -1,284 +1,314 @@
-xdebugger.colors.page.name:
-  text: Debugger
-debugger.configurable.display.name:
-  text: Debugger
-debugger.dataViews.display.name:
-  text: Data Views
-debugger.stepping.display.name:
-  text: Stepping
-debugger.hotswap.display.name:
-  text: HotSwap
-xdebugger.default.content.title:
-  text: Debug
-xdebugger.debugger.tab.title:
-  text: Debugger
-xdebugger.attach.popup.title:
-  text: Attach with {0} To
-xdebugger.attach.host.popup.title:
-  text: View {0} processes
-xdebugger.attach.toLocal.popup.selectDebugger.title:
-  text: Debugger
-xdebugger.attach.toLocal.popup.recent:
-  text: Recent
-xdebugger.attach.toLocal.action:
-  text: Attach to Local Process...
-xdebugger.attach.toLocal.action.description:
-  text: Attach to a locally running process with an available debugger
-xdebugger.attach.toLocal.action.collectingProcesses:
-  text: Collecting Processes...
-xdebugger.attach.popup.emptyText:
-  text: No processes to attach to
-xdebugger.attach.popup.title.default:
-  text: Attach To
-xdebugger.attach.toRemote.popup.title:
-  text: Show {0} processes
-xdebugger.attach.popup.selectDebugger.title:
-  text: Debugger
-xdebugger.attach.popup.recent:
-  text: Recent
-xdebugger.attach.action:
-  text: Attach to Process...
-xdebugger.attach.action.description:
-  text: Attach to process with an available debugger
-xdebugger.attach.action.collectingItems:
-  text: Collecting Attach Items...
-xdebugger.attach.action.items.error.title:
-  text: Failed to get processes
-xdebugger.attach.action.items.error.message:
-  text: Failed to get list of processes running on the host
-xdebugger.remove.line.breakpoint.action.text:
-  text: Remove breakpoint
-xdebugger.disable.breakpoint.action.text:
-  text: Disable breakpoint
-xdebugger.enable.breakpoint.action.text:
-  text: Enable breakpoint
-xdebugger.view.breakpoint.properties.action:
-  text: Properties
-xdebugger.view.breakpoint.reveal.action:
-  text: Show Breakpoints Dialog
-xdebugger.view.breakpoint.edit.action:
-  text: Edit
-xbreakpoint.tooltip.suspend.policy.all:
-  text: 'Suspend: all'
-xbreakpoint.tooltip.suspend.policy.thread:
-  text: 'Suspend: thread'
-xbreakpoint.tooltip.suspend.policy.none:
-  text: 'Suspend: none'
-xbreakpoint.tooltip.condition:
-  text: 'Condition:'
-xbreakpoint.tooltip.log.message:
-  text: 'Log message: yes'
-xbreakpoint.tooltip.log.expression:
-  text: 'Log expression:'
-xbreakpoint.tooltip.depends.on:
-  text: 'Depends on:'
-xbreakpoints.dialog.title:
-  text: Breakpoints
-xbreakpoints.dialog.button.goto:
-  text: '&Go to'
-xbreakpoints.dialog.button.view.source:
-  text: '&View Source'
-xbreakpoints.dialog.button.remove:
-  text: '&Remove'
-xbreakpoints.dialog.button.add:
-  text: '&Add...'
-xbreakpoints.conditions.group.title:
-  text: Conditions
-suspend.policy.panel.title:
-  text: Suspend policy
-suspend.policy.panel.suspend:
-  text: '&Suspend'
-suspend.policy.panel.all:
-  text: '&All'
-suspend.policy.panel.thread:
-  text: '&Thread'
-suspend.policy.panel.makeDefault:
-  text: Make De&fault
-xbreakpoints.properties.actions.group.title:
-  text: Actions
-xbreakpoints.log.message.checkbox:
-  text: Log &message to console
-xbreakpoints.log.expression.checkbox:
-  text: 'Log evaluated &expression:'
-xbreakpoints.condition.checkbox:
-  text: '&Condition:'
-xbreakpoints.enabled.label:
-  text: Enable&d
-xbreakpoint.group.depends.on:
-  text: Depends on
-xbreakpoint.label.after.breakpoint.was.hit:
-  text: After breakpoint was hit
-xbreakpoint.radio.disable.again:
-  text: Disable again
-xbreakpoint.radio.leave.enabled:
-  text: Leave enabled
-xbreakpoint.master.breakpoint.none:
-  text: <None>
-xbreakpoint.master.breakpoint.description:
-  text: 'Disabled until selected breakpoint is hit:'
-rule.name.group.by.file:
-  text: Group by file
-xbreakpoint.default.display.text:
-  text: Line {0} in {1}
-xbreakpoint.label.empty:
-  text: Select a breakpoint
-xbreakpoint.reached.text:
-  text: 'Breakpoint reached:'
-xdebugger.evaluate.language.hint:
-  text: Click to change the language
-xdebugger.evaluate.history.hint:
-  text: Show history
-xdebugger.evaluate.label.result:
-  text: '&Result:'
-xdebugger.button.evaluate:
-  text: E&valuate
-xdebugger.evaluate.dialog.close:
-  text: Close
-xdebugger.dialog.title.evaluate.expression:
-  text: Evaluate Expression
-xdebugger.evaluate.label.expression:
-  text: 'Expression:'
-xdebugger.evaluate.addtowatches.hint:
-  text: Use Control+Shift+Enter to add to Watches
-dialog.title.evaluate.code.fragment:
-  text: Evaluate Code Fragment
-button.text.code.fragment.mode:
-  text: Code Fragment &Mode
-button.text.expression.mode:
-  text: Expression &Mode
-xdebugger.label.text.code.fragment:
-  text: 'Code fragment:'
-xdebugger.evaluate.result:
-  text: result
-xdebugger.evaluate.stack.frame.has.not.evaluator:
-  text: Cannot evaluate, current stack frame doesn't support evaluation
-xdebugger.popup.value.tree.set.root.action.tooltip:
-  text: Set As Root
-xdebugger.building.tree.node.message:
-  text: Collecting data…
-xdebugger.modifiyng.value.node.message:
-  text: Modifying value…
-xdebugger.evaluating.expression.node.message:
-  text: Evaluating…
-node.text.ellipsis.0.more.nodes.double.click.to.show:
-  text: … ({0} more {0, choice, 1#item|2#items}. Double-click to see)
-node.text.ellipsis.0.unknown.more.nodes.double.click.to.show:
-  text: … (Double-click to see more items)
-node.text.ellipsis.truncated:
-  text: '… (length: {0})'
-node.test.show.full.value:
-  text: … View
-inspect.value.dialog.title:
-  text: Inspect ''{0}''
-debugger.state.message.connected:
-  text: Connected
-debugger.state.message.connecting:
-  text: Connecting
-debugger.state.message.disconnected:
-  text: Disconnected
-debugger.runner.start.action.text:
-  text: '&Debug'
-debugger.runner.start.action.text.0:
-  text: '&Debug {0}'
-string.debugger.runner.description:
-  text: Debug selected configuration
-debugger.session.tab.threads.title:
-  text: Threads
-debugger.session.tab.frames.title:
-  text: Frames
-debugger.session.tab.watches.title:
-  text: Watches
-debugger.session.tab.variables.title:
-  text: Variables
-debugger.session.tab.log.content.name:
-  text: 'Log: {0}'
-debugger.session.tab.console.content.name:
-  text: Console
-debugger.session.tab.watches.title.with.size:
-  text: Watches ({0})
-action.next.frame.text:
-  text: Next Frame
-action.previous.frame.text:
-  text: Previous Frame
-stack.frame.loading.text:
-  text: Loading…
-invalid.frame:
-  text: <invalid frame>
-xdebugger.drag.text.0.elements:
-  text: '{0} elements'
-xdebugger.drop.text.add.to.watches:
-  text: Add to watches
-debugger.session.tab.show.watches.in.variables:
-  text: Show watches in variables tab
-debugger.frames.not.available:
-  text: Frames are not available
-debugger.threads.not.available:
-  text: Threads are not available
-debugger.variables.not.available:
-  text: Variables are not available
-debugger.no.watches:
-  text: No watches
-debugger.no.breakpoints:
-  text: No breakpoints
-debugger.no.results:
-  text: Type an expression and press 'Enter'
-load.value.task.error:
-  text: 'Cannot load value: {0}'
-load.value.task.text:
-  text: Loading value
-scope.global:
-  text: Global
-scope.local:
-  text: Local
-scope.with:
-  text: With Block
-scope.closure:
-  text: Closure
-scope.catch:
-  text: Catch
-scope.class:
-  text: Class
-scope.instance:
-  text: Instance
-scope.library:
-  text: Library
-scope.block:
-  text: Block
-scope.script:
-  text: Script
-scope.unknown:
-  text: Unknown
-setting.value.tooltip.delay.label:
-  text: '&Value tooltip delay (ms):'
-setting.enable.auto.expressions.label:
-  text: Enable auto expressions in Variables view
-setting.sort.alphabetically.label:
-  text: Sort values a&lphabetically
-setting.hide.window.label:
-  text: Hide debug &window on process termination
-setting.focus.app.on.breakpoint.label:
-  text: Focus application on breakpoint
-setting.single.click.for.disabling.breakpoint:
-  text: Single click for disabling breakpoint
-settings.show.window.label:
-  text: Show &debug window on breakpoint
-showReferring.dialog.title:
-  text: Referring Objects For {0}
-settings.show.values.inline:
-  text: Show values inline
-settings.show.value.tooltip:
-  text: Show value tooltip.
-settings.show.tooltip.on.selection:
-  text: Show value tooltip on code selection
-settings.scroll.to.center:
-  text: Scroll execution point to center
-settings.tooltip.label:
-  text: If disabled, use "{0}" to show/hide tooltips
-ad.extra.selection.shortcut:
-  text: 'You can also choose an item with: {0}'
-action.Debugger.PopFrame.text:
-  text: Reset _Frame
 action.Debugger.PopFrame.description:
-  text: Moves execution point back to the method call dropping current method frames from the stack
+    text: Moves execution point back to the method call dropping current method frames from the stack
+action.Debugger.PopFrame.text:
+    text: Reset _Frame
+action.memory.view.settings.text:
+    text: Memory View Settings
+action.next.frame.text:
+    text: Next Frame
+action.previous.frame.text:
+    text: Previous Frame
+ad.extra.selection.shortcut:
+    text: 'You can also choose an item with: {0}'
+button.text.code.fragment.mode:
+    text: Code Fragment &Mode
+button.text.expression.mode:
+    text: Expression &Mode
+debugger.configurable.display.name:
+    text: Debugger
+debugger.dataViews.display.name:
+    text: Data Views
+debugger.evaluate.expression.or.add.a.watch.hint:
+    text: Evaluate expression ({0}) or add a watch ({1})
+debugger.frames.not.available:
+    text: Frames are not available
+debugger.hotswap.display.name:
+    text: HotSwap
+debugger.no.breakpoints:
+    text: No breakpoints
+debugger.no.results:
+    text: Type an expression and press 'Enter'
+debugger.no.watches:
+    text: No watches
+debugger.result.node.name:
+    text: result
+debugger.runner.start.action.text:
+    text: '&Debug'
+debugger.runner.start.action.text.0:
+    text: '&Debug {0}'
+debugger.session.tab.console.content.name:
+    text: Console
+debugger.session.tab.frames.title:
+    text: Frames
+debugger.session.tab.log.content.name:
+    text: 'Log: {0}'
+debugger.session.tab.show.watches.in.variables:
+    text: Show watches in variables tab
+debugger.session.tab.threads.title:
+    text: Threads
+debugger.session.tab.variables.title:
+    text: Variables
+debugger.session.tab.watches.title:
+    text: Watches
+debugger.session.tab.watches.title.with.size:
+    text: Watches ({0})
+debugger.state.message.connected:
+    text: Connected
+debugger.state.message.connecting:
+    text: Connecting
+debugger.state.message.disconnected:
+    text: Disconnected
+debugger.stepping.display.name:
+    text: Stepping
+debugger.threads.not.available:
+    text: Threads are not available
+debugger.variables.not.available:
+    text: Variables are not available
+dialog.title.evaluate.code.fragment:
+    text: Evaluate Code Fragment
+inspect.value.dialog.title:
+    text: Inspect ''{0}''
+invalid.frame:
+    text: <invalid frame>
+load.value.task.error:
+    text: 'Cannot load value: {0}'
+load.value.task.text:
+    text: Loading value
+memory.instances.close.text:
+    text: Close
+memory.unable.to.get.instances.of.class:
+    text: Unable to get instances of class {0}
+memory.view.empty.running:
+    text: Stop at a breakpoint to load the list of classes
+memory.view.empty.stopped:
+    text: Classes are not available
+memory.view.instances.dialog.title:
+    text: Instances of {0}
+memory.view.instances.dialog.title.warning:
+    text: 'Instances of {0}. Warning: {1}'
+memory.view.instances.warning.not.all.loaded:
+    text: Not all instances will be loaded (only {0})
+memory.view.load.classes:
+    text: Load classes
+memory.view.no.classes.loaded:
+    text: No classes loaded.
+memory.view.table.column.name.class:
+    text: Class
+memory.view.table.column.name.count:
+    text: Count
+memory.view.table.column.name.diff:
+    text: Diff
+node.test.show.full.value:
+    text: … View
+node.text.ellipsis.0.more.nodes.double.click.to.show:
+    text: … ({0} more {0, choice, 1#item|2#items}. Double-click to see)
+node.text.ellipsis.0.unknown.more.nodes.double.click.to.show:
+    text: … (Double-click to see more items)
+node.text.ellipsis.truncated:
+    text: '… (length: {0})'
+rule.name.group.by.file:
+    text: Group by file
+scope.block:
+    text: Block
+scope.catch:
+    text: Catch
+scope.class:
+    text: Class
+scope.closure:
+    text: Closure
+scope.global:
+    text: Global
+scope.instance:
+    text: Instance
+scope.library:
+    text: Library
+scope.local:
+    text: Local
+scope.script:
+    text: Script
+scope.unknown:
+    text: Unknown
+scope.with:
+    text: With Block
+setting.enable.auto.expressions.label:
+    text: Enable auto expressions in Variables view
+setting.focus.app.on.breakpoint.label:
+    text: Focus application on breakpoint
+setting.hide.window.label:
+    text: Hide debug &window on process termination
+setting.single.click.for.disabling.breakpoint:
+    text: Single click for disabling breakpoint
+setting.sort.alphabetically.label:
+    text: Sort values a&lphabetically
+setting.value.tooltip.delay.label:
+    text: '&Value tooltip delay (ms):'
+settings.scroll.to.center:
+    text: Scroll execution point to center
+settings.show.tooltip.on.selection:
+    text: Show value tooltip on code selection
+settings.show.value.tooltip:
+    text: Show value tooltip.
+settings.show.values.inline:
+    text: Show values inline
+settings.show.window.label:
+    text: Show &debug window on breakpoint
+settings.tooltip.label:
+    text: If disabled, use "{0}" to show/hide tooltips
+showReferring.dialog.title:
+    text: Referring Objects For {0}
+stack.frame.loading.text:
+    text: Loading…
+string.debugger.runner.description:
+    text: Debug selected configuration
+suspend.policy.panel.all:
+    text: '&All'
+suspend.policy.panel.makeDefault:
+    text: Make De&fault
+suspend.policy.panel.suspend:
+    text: '&Suspend'
+suspend.policy.panel.thread:
+    text: '&Thread'
+suspend.policy.panel.title:
+    text: Suspend policy
+xbreakpoint.default.display.text:
+    text: Line {0} in {1}
+xbreakpoint.group.depends.on:
+    text: Depends on
+xbreakpoint.label.after.breakpoint.was.hit:
+    text: After breakpoint was hit
+xbreakpoint.label.empty:
+    text: Select a breakpoint
+xbreakpoint.master.breakpoint.description:
+    text: 'Disabled until selected breakpoint is hit:'
+xbreakpoint.master.breakpoint.none:
+    text: <None>
+xbreakpoint.radio.disable.again:
+    text: Disable again
+xbreakpoint.radio.leave.enabled:
+    text: Leave enabled
+xbreakpoint.reached.text:
+    text: 'Breakpoint reached:'
+xbreakpoint.tooltip.condition:
+    text: 'Condition:'
+xbreakpoint.tooltip.depends.on:
+    text: 'Depends on:'
+xbreakpoint.tooltip.log.expression:
+    text: 'Log expression:'
+xbreakpoint.tooltip.log.message:
+    text: 'Log message: yes'
+xbreakpoint.tooltip.suspend.policy.all:
+    text: 'Suspend: all'
+xbreakpoint.tooltip.suspend.policy.none:
+    text: 'Suspend: none'
+xbreakpoint.tooltip.suspend.policy.thread:
+    text: 'Suspend: thread'
+xbreakpoints.condition.checkbox:
+    text: '&Condition:'
+xbreakpoints.conditions.group.title:
+    text: Conditions
+xbreakpoints.dialog.button.add:
+    text: '&Add...'
+xbreakpoints.dialog.button.goto:
+    text: '&Go to'
+xbreakpoints.dialog.button.remove:
+    text: '&Remove'
+xbreakpoints.dialog.button.view.source:
+    text: '&View Source'
+xbreakpoints.dialog.title:
+    text: Breakpoints
+xbreakpoints.enabled.label:
+    text: Enable&d
+xbreakpoints.log.expression.checkbox:
+    text: 'Log evaluated &expression:'
+xbreakpoints.log.message.checkbox:
+    text: Log &message to console
+xbreakpoints.properties.actions.group.title:
+    text: Actions
+xdebugger.attach.action:
+    text: Attach to Process...
+xdebugger.attach.action.collectingItems:
+    text: Collecting Attach Items...
+xdebugger.attach.action.description:
+    text: Attach to process with an available debugger
+xdebugger.attach.action.items.error.message:
+    text: Failed to get list of processes running on the host
+xdebugger.attach.action.items.error.title:
+    text: Failed to get processes
+xdebugger.attach.host.popup.title:
+    text: View {0} processes
+xdebugger.attach.popup.emptyText:
+    text: No processes to attach to
+xdebugger.attach.popup.recent:
+    text: Recent
+xdebugger.attach.popup.selectDebugger.title:
+    text: Debugger
+xdebugger.attach.popup.title:
+    text: Attach with {0} To
+xdebugger.attach.popup.title.default:
+    text: Attach To
+xdebugger.attach.toLocal.action:
+    text: Attach to Local Process...
+xdebugger.attach.toLocal.action.collectingProcesses:
+    text: Collecting Processes...
+xdebugger.attach.toLocal.action.description:
+    text: Attach to a locally running process with an available debugger
+xdebugger.attach.toLocal.popup.recent:
+    text: Recent
+xdebugger.attach.toLocal.popup.selectDebugger.title:
+    text: Debugger
+xdebugger.attach.toRemote.popup.title:
+    text: Show {0} processes
+xdebugger.building.tree.node.message:
+    text: Collecting data…
+xdebugger.button.evaluate:
+    text: E&valuate
+xdebugger.colors.page.name:
+    text: Debugger
+xdebugger.debugger.tab.title:
+    text: Debugger
+xdebugger.default.content.title:
+    text: Debug
+xdebugger.dialog.title.evaluate.expression:
+    text: Evaluate Expression
+xdebugger.disable.breakpoint.action.text:
+    text: Disable breakpoint
+xdebugger.drag.text.0.elements:
+    text: '{0} elements'
+xdebugger.drop.text.add.to.watches:
+    text: Add to watches
+xdebugger.enable.breakpoint.action.text:
+    text: Enable breakpoint
+xdebugger.evaluate.addtowatches.hint:
+    text: Use Control+Shift+Enter to add to Watches
+xdebugger.evaluate.dialog.close:
+    text: Close
+xdebugger.evaluate.history.hint:
+    text: Show history
+xdebugger.evaluate.label.expression:
+    text: 'Expression:'
+xdebugger.evaluate.label.result:
+    text: '&Result:'
+xdebugger.evaluate.language.hint:
+    text: Click to change the language
+xdebugger.evaluate.result:
+    text: result
+xdebugger.evaluate.stack.frame.has.not.evaluator:
+    text: Cannot evaluate, current stack frame doesn't support evaluation
+xdebugger.evaluating.expression.node.message:
+    text: Evaluating…
+xdebugger.label.text.code.fragment:
+    text: 'Code fragment:'
+xdebugger.modifiyng.value.node.message:
+    text: Modifying value…
+xdebugger.popup.value.tree.set.root.action.tooltip:
+    text: Set As Root
+xdebugger.remove.line.breakpoint.action.text:
+    text: Remove breakpoint
 xdebugger.reset.frame.title:
-  text: Reset Frame
+    text: Reset Frame
+xdebugger.view.breakpoint.edit.action:
+    text: Edit
+xdebugger.view.breakpoint.properties.action:
+    text: Properties
+xdebugger.view.breakpoint.reveal.action:
+    text: Show Breakpoints Dialog

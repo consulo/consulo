@@ -34,6 +34,7 @@ import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -41,79 +42,88 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 22-Mar-22
+ * @since 2022-03-22
  */
 @Singleton
 @ServiceImpl
 public class IdeStorageNotificationService implements StorageNotificationService {
-  private static final Logger LOG = Logger.getInstance(IdeStorageNotificationService.class);
+    private static final Logger LOG = Logger.getInstance(IdeStorageNotificationService.class);
 
-  @Nonnull
-  private final Application myApplication;
-  @Nonnull
-  private final NotificationService myNotificationService;
+    @Nonnull
+    private final Application myApplication;
+    @Nonnull
+    private final NotificationService myNotificationService;
 
-  @Inject
-  public IdeStorageNotificationService(@Nonnull Application application, NotificationService notificationService) {
-    myApplication = application;
-    myNotificationService = notificationService;
-  }
-
-  @Override
-  public void notify(@Nonnull NotificationType notificationType, @Nonnull String title, @Nonnull String text, @Nullable ComponentManager project) {
-    myNotificationService
-        .newOfType(Notifications.SYSTEM_MESSAGES_GROUP, consulo.project.ui.notification.NotificationType.from(notificationType))
-        .title(LocalizeValue.localizeTODO(title))
-        .content(LocalizeValue.localizeTODO(text))
-        .notify(ObjectUtil.tryCast(project, Project.class));
-  }
-
-  @Override
-  public void notifyUnknownMacros(@Nonnull TrackingPathMacroSubstitutor substitutor, @Nonnull ComponentManager project, @Nullable String componentName) {
-    Set<String> unknownMacros = substitutor.getUnknownMacros(componentName);
-    if (unknownMacros.isEmpty()) {
-      return;
+    @Inject
+    public IdeStorageNotificationService(@Nonnull Application application, @Nonnull NotificationService notificationService) {
+        myApplication = application;
+        myNotificationService = notificationService;
     }
 
-    myApplication.getLastUIAccess().giveIfNeed(() -> {
-      final LinkedHashSet<String> macros = new LinkedHashSet<>(unknownMacros);
-      macros.removeAll(getMacrosFromExistingNotifications((Project)project));
-
-      if (!macros.isEmpty()) {
-        LOG.warn("Reporting unknown path macros " + macros + " in component " + componentName);
-
-        String format = "<p><i>%s</i> %s undefined. <a href=\"define\">Fix it</a></p>";
-        String productName = Application.get().getName().get();
-        String content = String.format(format, StringUtil.join(macros, ", "), macros.size() == 1 ? "is" : "are") +
-                         "<br>Path variables are used to substitute absolute paths " +
-                         "in " +
-                         productName +
-                         " project files " +
-                         "and allow project file sharing in version control systems.<br>" +
-                         "Some of the files describing the current project settings contain unknown path variables " +
-                         "and " +
-                         productName +
-                         " cannot restore those paths.";
-        new UnknownMacroNotification(
-            myNotificationService.newError(ProjectNotificationGroups.Project)
-                .title(LocalizeValue.localizeTODO("Load error: undefined path variables"))
-                .content(LocalizeValue.localizeTODO(content))
-                .optionalHyperlinkListener(
-                    (notification, event) -> ProjectStorageUtil.checkUnknownMacros((ProjectEx)project, true)
-                ),
-            macros
-        ).notify((Project)project);
-      }
-    });
-  }
-
-
-  private static List<String> getMacrosFromExistingNotifications(Project project) {
-    List<String> notified = new ArrayList<>();
-    NotificationsManager manager = NotificationsManager.getNotificationsManager();
-    for (final UnknownMacroNotification notification : manager.getNotificationsOfType(UnknownMacroNotification.class, project)) {
-      notified.addAll(notification.getMacros());
+    @Override
+    public void notify(
+        @Nonnull NotificationType notificationType,
+        @Nonnull String title,
+        @Nonnull String text,
+        @Nullable ComponentManager project
+    ) {
+        myNotificationService
+            .newOfType(Notifications.SYSTEM_MESSAGES_GROUP, consulo.project.ui.notification.NotificationType.from(notificationType))
+            .title(LocalizeValue.localizeTODO(title))
+            .content(LocalizeValue.localizeTODO(text))
+            .notify(ObjectUtil.tryCast(project, Project.class));
     }
-    return notified;
-  }
+
+    @Override
+    public void notifyUnknownMacros(
+        @Nonnull TrackingPathMacroSubstitutor substitutor,
+        @Nonnull ComponentManager project,
+        @Nullable String componentName
+    ) {
+        Set<String> unknownMacros = substitutor.getUnknownMacros(componentName);
+        if (unknownMacros.isEmpty()) {
+            return;
+        }
+
+        myApplication.getLastUIAccess().giveIfNeed(() -> {
+            LinkedHashSet<String> macros = new LinkedHashSet<>(unknownMacros);
+            macros.removeAll(getMacrosFromExistingNotifications((Project) project));
+
+            if (!macros.isEmpty()) {
+                LOG.warn("Reporting unknown path macros " + macros + " in component " + componentName);
+
+                String format = "<p><i>%s</i> %s undefined. <a href=\"define\">Fix it</a></p>";
+                String productName = myApplication.getName().get();
+                String content = String.format(format, StringUtil.join(macros, ", "), macros.size() == 1 ? "is" : "are") +
+                    "<br>Path variables are used to substitute absolute paths " +
+                    "in " +
+                    productName +
+                    " project files " +
+                    "and allow project file sharing in version control systems.<br>" +
+                    "Some of the files describing the current project settings contain unknown path variables " +
+                    "and " +
+                    productName +
+                    " cannot restore those paths.";
+                new UnknownMacroNotification(
+                    myNotificationService.newError(ProjectNotificationGroups.Project)
+                        .title(LocalizeValue.localizeTODO("Load error: undefined path variables"))
+                        .content(LocalizeValue.localizeTODO(content))
+                        .optionalHyperlinkListener(
+                            (notification, event) -> ProjectStorageUtil.checkUnknownMacros((ProjectEx) project, true)
+                        ),
+                    macros
+                ).notify((Project) project);
+            }
+        });
+    }
+
+
+    private static List<String> getMacrosFromExistingNotifications(Project project) {
+        List<String> notified = new ArrayList<>();
+        NotificationsManager manager = NotificationsManager.getNotificationsManager();
+        for (UnknownMacroNotification notification : manager.getNotificationsOfType(UnknownMacroNotification.class, project)) {
+            notified.addAll(notification.getMacros());
+        }
+        return notified;
+    }
 }

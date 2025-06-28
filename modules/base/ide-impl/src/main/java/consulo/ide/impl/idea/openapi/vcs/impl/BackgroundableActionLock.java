@@ -18,54 +18,49 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import jakarta.annotation.Nonnull;
-import consulo.ui.annotation.RequiredUIAccess;
 
 public class BackgroundableActionLock {
-  @Nonnull
-  private final Project myProject;
-  @Nonnull
-  private final Object[] myKeys;
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final Object[] myKeys;
 
-  BackgroundableActionLock(@Nonnull Project project, @Nonnull final Object[] keys) {
-    myProject = project;
-    myKeys = keys;
-  }
+    BackgroundableActionLock(@Nonnull Project project, @Nonnull Object[] keys) {
+        myProject = project;
+        myKeys = keys;
+    }
 
-  @RequiredUIAccess
-  public boolean isLocked() {
-    return isLocked(myProject, myKeys);
-  }
+    public boolean isLocked() {
+        return isLocked(myProject, myKeys);
+    }
 
-  @RequiredUIAccess
-  public void lock() {
-    lock(myProject, myKeys);
-  }
+    public void lock() {
+        lock(myProject, myKeys);
+    }
 
-  @RequiredUIAccess
-  public void unlock() {
-    unlock(myProject, myKeys);
-  }
+    public void unlock() {
+        unlock(myProject, myKeys);
+    }
 
+    @Nonnull
+    public static BackgroundableActionLock getLock(@Nonnull Project project, @Nonnull Object... keys) {
+        return new BackgroundableActionLock(project, keys);
+    }
 
-  @Nonnull
-  public static BackgroundableActionLock getLock(@Nonnull Project project, @Nonnull Object... keys) {
-    return new BackgroundableActionLock(project, keys);
-  }
+    public static boolean isLocked(@Nonnull Project project, @Nonnull Object... keys) {
+        return getManager(project).isBackgroundTaskRunning(keys);
+    }
 
-  public static boolean isLocked(@Nonnull Project project, @Nonnull Object... keys) {
-    return getManager(project).isBackgroundTaskRunning(keys);
-  }
+    public static void lock(@Nonnull Project project, @Nonnull Object... keys) {
+        getManager(project).startBackgroundTask(keys);
+    }
 
-  public static void lock(@Nonnull Project project, @Nonnull Object... keys) {
-    getManager(project).startBackgroundTask(keys);
-  }
+    public static void unlock(@Nonnull Project project, @Nonnull Object... keys) {
+        getManager(project).stopBackgroundTask(keys);
+    }
 
-  public static void unlock(@Nonnull Project project, @Nonnull Object... keys) {
-    getManager(project).stopBackgroundTask(keys);
-  }
-
-  @Nonnull
-  private static ProjectLevelVcsManagerImpl getManager(@Nonnull Project project) {
-    return (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(project);
-  }
+    @Nonnull
+    private static ProjectLevelVcsManagerImpl getManager(@Nonnull Project project) {
+        return (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
+    }
 }

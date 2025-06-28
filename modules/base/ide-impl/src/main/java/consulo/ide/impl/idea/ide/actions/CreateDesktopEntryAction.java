@@ -47,7 +47,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.Map;
 
 public class CreateDesktopEntryAction extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(CreateDesktopEntryAction.class);
@@ -154,9 +154,11 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         String content = ExecUtil.loadTemplate(
             CreateDesktopEntryAction.class.getClassLoader(),
             "entry.desktop",
-            consulo.ide.impl.idea.util.containers.ContainerUtil.newHashMap(
-                Arrays.asList("$NAME$", "$SCRIPT$", "$ICON$", "$WM_CLASS$"),
-                Arrays.asList(name, execPath.getPath(), iconPath.toAbsolutePath().toString(), wmClass)
+            Map.of(
+                "$NAME$", name,
+                "$SCRIPT$", execPath.getPath(),
+                "$ICON$", iconPath.toAbsolutePath().toString(),
+                "$WM_CLASS$", wmClass
             )
         );
 
@@ -214,7 +216,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         public CreateDesktopEntryDialog(Project project) {
             super(project);
             init();
-            setTitle("Create Desktop Entry");
+            setTitle(LocalizeValue.localizeTODO("Create Desktop Entry"));
             myLabel.setText(myLabel.getText().replace("$APP_NAME$", Application.get().getName().toString()));
         }
 

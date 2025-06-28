@@ -25,13 +25,12 @@ import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 24/08/2023
+ * @since 2023-08-24
  */
 @Singleton
 @ServiceImpl
 public class WebNotificationService implements NotificationService {
-  @Override
-  public void notify(@Nonnull Notification notification, @Nullable Project project) {
-
-  }
+    @Override
+    public void notify(@Nonnull Notification notification, @Nullable Project project) {
+    }
 }

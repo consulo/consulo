@@ -33,14 +33,14 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
             super(text, description, PlatformIconGroup.actionsCancel());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             cancelRequest();
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(myInfo != null && myInfo.isCancellable());
         }
@@ -132,6 +132,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         cancel();
     }
 
+    @RequiredUIAccess
     public void updateProgress() {
         queueProgressUpdate();
     }
@@ -170,10 +171,10 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
 
         if (isStopping()) {
             if (myCompact) {
-                myText.setText("Stopping - " + myText.getText());
+                myText.setText(IdeLocalize.progressTextStopping(myText.getText()).get());
             }
             else {
-                myProcessName.setText("Stopping - " + myInfo.getTitle());
+                myProcessName.setText(IdeLocalize.progressTextStopping(myInfo.getTitle()).get());
                 myText.setEnabled(false);
                 myText2.setEnabled(false);
             }
@@ -210,6 +211,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     }
 
     @Override
+    @RequiredUIAccess
     protected void onProgressChange() {
         updateProgress();
     }
@@ -227,11 +229,10 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     }
 
     private class MyComponent extends JPanel {
-
-        private MyComponent(final JComponent processName) {
+        private MyComponent(JComponent processName) {
             addMouseListener(new MouseAdapter() {
                 @Override
-                public void mousePressed(final MouseEvent e) {
+                public void mousePressed(MouseEvent e) {
                     if (UIUtil.isCloseClick(e) && getBounds().contains(e.getX(), e.getY())) {
                         cancelRequest();
                     }

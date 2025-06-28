@@ -30,6 +30,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
 import consulo.ui.ex.SystemNotifications;
@@ -45,217 +46,255 @@ import java.awt.*;
 import java.util.List;
 
 public class TestsUIUtil {
-  public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.logOnlyGroup("Test Runner");
+    public static final NotificationGroup NOTIFICATION_GROUP =
+        NotificationGroup.logOnlyGroup("testRunner", LocalizeValue.localizeTODO("Test Runner"));
 
-  public static final Color PASSED_COLOR = new Color(0, 128, 0);
-  private static final String TESTS = "tests";
+    public static final Color PASSED_COLOR = new Color(0, 128, 0);
+    private static final String TESTS = "tests";
 
-  private TestsUIUtil() {
-  }
+    private TestsUIUtil() {
+    }
 
-  @Nullable
-  @SuppressWarnings("unchecked")
-  public static <T> T getData(final AbstractTestProxy testProxy, final Key<T> dataId, final TestFrameworkRunningModel model) {
-    final TestConsoleProperties properties = model.getProperties();
-    final Project project = properties.getProject();
-    if (testProxy == null) return null;
-    if (AbstractTestProxy.KEY == dataId) return (T)testProxy;
-    if (Navigatable.KEY == dataId) return (T)getOpenFileDescriptor(testProxy, model);
-    if (PsiElement.KEY == dataId) {
-      final Location location = testProxy.getLocation(project, properties.getScope());
-      if (location != null) {
-        final PsiElement element = location.getPsiElement();
-        return element.isValid() ? (T)element : null;
-      }
-      else {
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <T> T getData(AbstractTestProxy testProxy, Key<T> dataId, TestFrameworkRunningModel model) {
+        TestConsoleProperties properties = model.getProperties();
+        Project project = properties.getProject();
+        if (testProxy == null) {
+            return null;
+        }
+        if (AbstractTestProxy.KEY == dataId) {
+            return (T) testProxy;
+        }
+        if (Navigatable.KEY == dataId) {
+            return (T) getOpenFileDescriptor(testProxy, model);
+        }
+        if (PsiElement.KEY == dataId) {
+            Location location = testProxy.getLocation(project, properties.getScope());
+            if (location != null) {
+                PsiElement element = location.getPsiElement();
+                return element.isValid() ? (T) element : null;
+            }
+            else {
+                return null;
+            }
+        }
+        if (Location.DATA_KEY == dataId) {
+            return (T) testProxy.getLocation(project, properties.getScope());
+        }
+        if (RunConfiguration.KEY == dataId && properties.getConfiguration() instanceof RunConfiguration runConfiguration) {
+            return (T) runConfiguration;
+        }
         return null;
-      }
-    }
-    if (Location.DATA_KEY == dataId) return (T)testProxy.getLocation(project, properties.getScope());
-    if (RunConfiguration.KEY == dataId) {
-      final RunProfile configuration = properties.getConfiguration();
-      if (configuration instanceof RunConfiguration) {
-        return (T)configuration;
-      }
-    }
-    return null;
-  }
-
-  public static boolean isMultipleSelectionImpossible(DataContext dataContext) {
-    final Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (component instanceof JTree) {
-      final TreePath[] selectionPaths = ((JTree)component).getSelectionPaths();
-      if (selectionPaths == null || selectionPaths.length <= 1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public static Navigatable getOpenFileDescriptor(final AbstractTestProxy testProxy, final TestFrameworkRunningModel model) {
-    final TestConsoleProperties testConsoleProperties = model.getProperties();
-    return getOpenFileDescriptor(testProxy, testConsoleProperties, TestConsoleProperties.OPEN_FAILURE_LINE.value(testConsoleProperties));
-  }
-
-  private static Navigatable getOpenFileDescriptor(final AbstractTestProxy proxy, final TestConsoleProperties testConsoleProperties, final boolean openFailureLine) {
-    final Project project = testConsoleProperties.getProject();
-
-    if (proxy != null) {
-      final Location location = proxy.getLocation(project, testConsoleProperties.getScope());
-      if (openFailureLine) {
-        return proxy.getDescriptor(location, testConsoleProperties);
-      }
-      final OpenFileDescriptor openFileDescriptor = location == null ? null : location.getOpenFileDescriptor();
-      if (openFileDescriptor != null && openFileDescriptor.getFile().isValid()) {
-        return openFileDescriptor;
-      }
-    }
-    return null;
-  }
-
-  public static void notifyByBalloon(@Nonnull final Project project, boolean started, final AbstractTestProxy root, final TestConsoleProperties properties, @jakarta.annotation.Nullable final String comment) {
-    notifyByBalloon(project, root, properties, new TestResultPresentation(root, started, comment).getPresentation());
-  }
-
-  public static void notifyByBalloon(@Nonnull final Project project, final AbstractTestProxy root, final TestConsoleProperties properties, TestResultPresentation testResultPresentation) {
-    if (project.isDisposed()) return;
-    if (properties == null) return;
-
-    TestStatusListener.notifySuiteFinished(root, properties.getProject());
-
-    final String testRunDebugId = properties.isDebug() ? ToolWindowId.DEBUG : ToolWindowId.RUN;
-    final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-
-    final String title = testResultPresentation.getTitle();
-    final String text = testResultPresentation.getText();
-    final String balloonText = testResultPresentation.getBalloonText();
-    final NotificationType type = testResultPresentation.getType();
-
-    if (!Comparing.strEqual(toolWindowManager.getActiveToolWindowId(), testRunDebugId)) {
-      toolWindowManager.notifyByBalloon(testRunDebugId, type.toUI(), balloonText);
     }
 
-    NotificationService.getInstance()
-        .newOfType(NOTIFICATION_GROUP, type)
-        .content(LocalizeValue.localizeTODO(balloonText))
-        .notify(project);
-    SystemNotifications.getInstance().notify("TestRunner", title, text);
-  }
-
-  public static String getTestSummary(AbstractTestProxy proxy) {
-    return new TestResultPresentation(proxy).getPresentation().getBalloonText();
-  }
-
-  public static String getTestShortSummary(AbstractTestProxy proxy) {
-    return new TestResultPresentation(proxy).getPresentation().getText();
-  }
-
-  public static void showIconProgress(Project project, int n, final int maximum, final int problemsCounter, boolean updateWithAttention) {
-    AppIcon icon = AppIcon.getInstance();
-    if (n < maximum || !updateWithAttention) {
-      if (!updateWithAttention || icon.setProgress(project, TESTS, AppIconScheme.Progress.TESTS, (double)n / (double)maximum, problemsCounter == 0)) {
-        if (problemsCounter > 0) {
-          icon.setErrorBadge(project, String.valueOf(problemsCounter));
+    public static boolean isMultipleSelectionImpossible(DataContext dataContext) {
+        Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+        if (component instanceof JTree tree) {
+            TreePath[] selectionPaths = tree.getSelectionPaths();
+            if (selectionPaths == null || selectionPaths.length <= 1) {
+                return true;
+            }
         }
-      }
+        return false;
     }
-    else {
-      if (icon.hideProgress(project, TESTS)) {
-        if (problemsCounter > 0) {
-          icon.setErrorBadge(project, String.valueOf(problemsCounter));
-          icon.requestAttention(project, false);
+
+    public static Navigatable getOpenFileDescriptor(AbstractTestProxy testProxy, TestFrameworkRunningModel model) {
+        TestConsoleProperties testConsoleProperties = model.getProperties();
+        return getOpenFileDescriptor(
+            testProxy,
+            testConsoleProperties,
+            TestConsoleProperties.OPEN_FAILURE_LINE.value(testConsoleProperties)
+        );
+    }
+
+    private static Navigatable getOpenFileDescriptor(
+        AbstractTestProxy proxy,
+        TestConsoleProperties testConsoleProperties,
+        boolean openFailureLine
+    ) {
+        Project project = testConsoleProperties.getProject();
+
+        if (proxy != null) {
+            Location location = proxy.getLocation(project, testConsoleProperties.getScope());
+            if (openFailureLine) {
+                return proxy.getDescriptor(location, testConsoleProperties);
+            }
+            OpenFileDescriptor openFileDescriptor = location == null ? null : location.getOpenFileDescriptor();
+            if (openFileDescriptor != null && openFileDescriptor.getFile().isValid()) {
+                return openFileDescriptor;
+            }
         }
-        else {
-          icon.setOkBadge(project, true);
-          icon.requestAttention(project, false);
+        return null;
+    }
+
+    @RequiredUIAccess
+    public static void notifyByBalloon(
+        @Nonnull Project project,
+        boolean started,
+        AbstractTestProxy root,
+        TestConsoleProperties properties,
+        @Nullable String comment
+    ) {
+        notifyByBalloon(project, root, properties, new TestResultPresentation(root, started, comment).getPresentation());
+    }
+
+    @RequiredUIAccess
+    public static void notifyByBalloon(
+        @Nonnull Project project,
+        AbstractTestProxy root,
+        TestConsoleProperties properties,
+        TestResultPresentation testResultPresentation
+    ) {
+        if (project.isDisposed()) {
+            return;
         }
-      }
-    }
-  }
-
-  public static void clearIconProgress(Project project) {
-    AppIcon.getInstance().hideProgress(project, TESTS);
-    AppIcon.getInstance().setErrorBadge(project, null);
-  }
-
-  public static class TestResultPresentation {
-    private AbstractTestProxy myRoot;
-    private boolean myStarted;
-    private String myComment;
-    private String myTitle;
-    private String myText;
-    private String myBalloonText;
-    private NotificationType myType;
-
-    public TestResultPresentation(AbstractTestProxy root, boolean started, String comment) {
-      myRoot = root;
-      myStarted = started;
-      myComment = comment;
-    }
-
-    public TestResultPresentation(AbstractTestProxy root) {
-      this(root, true, null);
-    }
-
-    public String getTitle() {
-      return myTitle;
-    }
-
-    public String getText() {
-      return myText;
-    }
-
-    public String getBalloonText() {
-      return myBalloonText;
-    }
-
-    public NotificationType getType() {
-      return myType;
-    }
-
-    public TestResultPresentation getPresentation() {
-      List allTests = Filter.LEAF.select(myRoot.getAllTests());
-      final List<AbstractTestProxy> failed = Filter.DEFECTIVE_LEAF.select(allTests);
-      final List<AbstractTestProxy> notStarted = Filter.NOT_PASSED.select(allTests);
-      notStarted.removeAll(failed);
-      final List ignored = Filter.IGNORED.select(allTests);
-      notStarted.removeAll(ignored);
-      failed.removeAll(ignored);
-      int failedCount = failed.size();
-      int notStartedCount = notStarted.size() + ignored.size();
-      int passedCount = allTests.size() - failedCount - notStartedCount;
-      return getPresentation(failedCount, passedCount, notStartedCount, ignored.size());
-    }
-
-    public TestResultPresentation getPresentation(int failedCount, int passedCount, int notStartedCount, int ignoredCount) {
-      if (myRoot == null) {
-        myBalloonText = myTitle = myStarted ? "Tests were interrupted" : ExecutionLocalize.testNotStartedProgressText().get();
-        myText = "";
-        myType = NotificationType.WARNING;
-      }
-      else {
-        if (failedCount > 0) {
-          myTitle = ExecutionLocalize.junitRuningInfoTestsFailedLabel().get();
-          myText = passedCount + " passed, " + failedCount + " failed" + (notStartedCount > 0 ? ", " + notStartedCount + " not started" : "");
-          myType = NotificationType.ERROR;
+        if (properties == null) {
+            return;
         }
-        else if (notStartedCount > 0) {
-          myTitle = ignoredCount > 0 ? "Tests Ignored" : ExecutionLocalize.junitRunningInfoFailedToStartErrorMessage().get();
-          myText = passedCount + " passed, " + notStartedCount + (ignoredCount > 0 ? " ignored" : " not started");
-          myType = ignoredCount == 0 ? NotificationType.WARNING : NotificationType.ERROR;
+
+        TestStatusListener.notifySuiteFinished(root, properties.getProject());
+
+        String testRunDebugId = properties.isDebug() ? ToolWindowId.DEBUG : ToolWindowId.RUN;
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+
+        String title = testResultPresentation.getTitle();
+        String text = testResultPresentation.getText();
+        String balloonText = testResultPresentation.getBalloonText();
+        NotificationType type = testResultPresentation.getType();
+
+        if (!Comparing.strEqual(toolWindowManager.getActiveToolWindowId(), testRunDebugId)) {
+            toolWindowManager.notifyByBalloon(testRunDebugId, type.toUI(), balloonText);
+        }
+
+        NotificationService.getInstance()
+            .newOfType(NOTIFICATION_GROUP, type)
+            .content(LocalizeValue.localizeTODO(balloonText))
+            .notify(project);
+        SystemNotifications.getInstance().notify("TestRunner", title, text);
+    }
+
+    public static String getTestSummary(AbstractTestProxy proxy) {
+        return new TestResultPresentation(proxy).getPresentation().getBalloonText();
+    }
+
+    public static String getTestShortSummary(AbstractTestProxy proxy) {
+        return new TestResultPresentation(proxy).getPresentation().getText();
+    }
+
+    public static void showIconProgress(Project project, int n, int maximum, int problemsCounter, boolean updateWithAttention) {
+        AppIcon icon = AppIcon.getInstance();
+        if (n < maximum || !updateWithAttention) {
+            if (!updateWithAttention || icon.setProgress(
+                project,
+                TESTS,
+                AppIconScheme.Progress.TESTS,
+                (double) n / (double) maximum,
+                problemsCounter == 0
+            )) {
+                if (problemsCounter > 0) {
+                    icon.setErrorBadge(project, String.valueOf(problemsCounter));
+                }
+            }
         }
         else {
-          myTitle = ExecutionLocalize.junitRuningInfoTestsPassedLabel().get();
-          myText = passedCount + " passed";
-          myType = NotificationType.INFORMATION;
+            if (icon.hideProgress(project, TESTS)) {
+                if (problemsCounter > 0) {
+                    icon.setErrorBadge(project, String.valueOf(problemsCounter));
+                    icon.requestAttention(project, false);
+                }
+                else {
+                    icon.setOkBadge(project, true);
+                    icon.requestAttention(project, false);
+                }
+            }
         }
-        if (myComment != null) {
-          myText += " " + myComment;
-        }
-        myBalloonText = myTitle + ": " + myText;
-      }
-      return this;
     }
 
-  }
+    public static void clearIconProgress(Project project) {
+        AppIcon.getInstance().hideProgress(project, TESTS);
+        AppIcon.getInstance().setErrorBadge(project, null);
+    }
+
+    public static class TestResultPresentation {
+        private AbstractTestProxy myRoot;
+        private boolean myStarted;
+        private String myComment;
+        private String myTitle;
+        private String myText;
+        private String myBalloonText;
+        private NotificationType myType;
+
+        public TestResultPresentation(AbstractTestProxy root, boolean started, String comment) {
+            myRoot = root;
+            myStarted = started;
+            myComment = comment;
+        }
+
+        public TestResultPresentation(AbstractTestProxy root) {
+            this(root, true, null);
+        }
+
+        public String getTitle() {
+            return myTitle;
+        }
+
+        public String getText() {
+            return myText;
+        }
+
+        public String getBalloonText() {
+            return myBalloonText;
+        }
+
+        public NotificationType getType() {
+            return myType;
+        }
+
+        public TestResultPresentation getPresentation() {
+            List<? extends AbstractTestProxy> allTests = Filter.LEAF.select(myRoot.getAllTests());
+            List<AbstractTestProxy> failed = Filter.DEFECTIVE_LEAF.select(allTests);
+            List<AbstractTestProxy> notStarted = Filter.NOT_PASSED.select(allTests);
+            notStarted.removeAll(failed);
+            List<? extends AbstractTestProxy> ignored = Filter.IGNORED.select(allTests);
+            notStarted.removeAll(ignored);
+            failed.removeAll(ignored);
+            int failedCount = failed.size();
+            int notStartedCount = notStarted.size() + ignored.size();
+            int passedCount = allTests.size() - failedCount - notStartedCount;
+            return getPresentation(failedCount, passedCount, notStartedCount, ignored.size());
+        }
+
+        public TestResultPresentation getPresentation(int failedCount, int passedCount, int notStartedCount, int ignoredCount) {
+            if (myRoot == null) {
+                myBalloonText = myTitle = myStarted ? "Tests were interrupted" : ExecutionLocalize.testNotStartedProgressText().get();
+                myText = "";
+                myType = NotificationType.WARNING;
+            }
+            else {
+                if (failedCount > 0) {
+                    myTitle = ExecutionLocalize.junitRuningInfoTestsFailedLabel().get();
+                    myText =
+                        passedCount + " passed, " + failedCount + " failed" + (notStartedCount > 0 ? ", " + notStartedCount + " not started" : "");
+                    myType = NotificationType.ERROR;
+                }
+                else if (notStartedCount > 0) {
+                    myTitle = ignoredCount > 0 ? "Tests Ignored" : ExecutionLocalize.junitRunningInfoFailedToStartErrorMessage().get();
+                    myText = passedCount + " passed, " + notStartedCount + (ignoredCount > 0 ? " ignored" : " not started");
+                    myType = ignoredCount == 0 ? NotificationType.WARNING : NotificationType.ERROR;
+                }
+                else {
+                    myTitle = ExecutionLocalize.junitRuningInfoTestsPassedLabel().get();
+                    myText = passedCount + " passed";
+                    myType = NotificationType.INFORMATION;
+                }
+                if (myComment != null) {
+                    myText += " " + myComment;
+                }
+                myBalloonText = myTitle + ": " + myText;
+            }
+            return this;
+        }
+
+    }
 }
