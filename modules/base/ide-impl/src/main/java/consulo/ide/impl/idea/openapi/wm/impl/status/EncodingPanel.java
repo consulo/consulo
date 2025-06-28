@@ -7,6 +7,8 @@ import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingUtil;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
@@ -37,11 +39,15 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
             return WidgetState.HIDDEN;
         }
 
-        Pair<Charset, String> check = EncodingUtil.getCharsetAndTheReasonTooltip(file);
-        String failReason = Pair.getSecond(check);
+        Pair<Charset, LocalizeValue> check = EncodingUtil.getCharsetAndTheReasonTooltip(file);
+        LocalizeValue failReason = check == null ? LocalizeValue.empty() : check.getSecond();
         Charset charset = ObjectUtil.notNull(Pair.getFirst(check), file.getCharset());
-        String charsetName = ObjectUtil.notNull(charset.displayName(), "n/a");
-        String toolTipText = failReason == null ? "File Encoding: " + charsetName : StringUtil.capitalize(failReason) + ".";
+        LocalizeValue charsetName = StringUtil.isNotEmpty(charset.displayName())
+            ? LocalizeValue.of(charset.displayName())
+            : IdeLocalize.encodingNotAvailable();
+        LocalizeValue toolTipText = failReason == null
+            ? IdeLocalize.statusBarTextFileEncoding(charsetName)
+            : failReason.map((localizeManager, string) -> StringUtil.capitalize(string) + ".");
         return new WidgetState(toolTipText, charsetName, failReason == null);
     }
 
@@ -49,7 +55,7 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
     @Override
     protected ListPopup createPopup(DataContext context) {
         ChangeFileEncodingAction action = new ChangeFileEncodingAction();
-        action.getTemplatePresentation().setText("File Encoding");
+        action.getTemplatePresentation().setTextValue(IdeLocalize.actionPresentationEncodingpanelText());
         return action.createPopup(context);
     }
 

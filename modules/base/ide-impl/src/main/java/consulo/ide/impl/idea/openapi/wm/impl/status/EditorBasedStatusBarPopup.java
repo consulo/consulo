@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.dataContext.DataContext;
@@ -19,6 +20,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
@@ -252,7 +254,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         ObjectUtil.consumeIfCast(myComponent, TextPanel.WithIconAndArrows.class, textPanel -> {
             textPanel.setTextAlignment(Component.CENTER_ALIGNMENT);
             textPanel.setIcon(state.icon);
-            textPanel.setText(state.text);
+            textPanel.setText(state.text.get());
         });
     }
 
@@ -347,21 +349,29 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
          */
         public static final WidgetState NO_CHANGE_MAKE_VISIBLE = new WidgetState();
 
-        protected final String toolTip;
+        @Nonnull
+        protected final LocalizeValue toolTip;
         protected String shortcutText;
 
-        private final String text;
+        @Nonnull
+        private final LocalizeValue text;
         private final boolean actionEnabled;
         private Image icon;
 
         private WidgetState() {
-            this("", "", false);
+            this(LocalizeValue.empty(), LocalizeValue.empty(), false);
         }
 
-        public WidgetState(String toolTip, String text, boolean actionEnabled) {
+        public WidgetState(@Nonnull LocalizeValue toolTip, @Nonnull LocalizeValue text, boolean actionEnabled) {
             this.toolTip = toolTip;
             this.text = text;
             this.actionEnabled = actionEnabled;
+        }
+
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
+        public WidgetState(String toolTip, String text, boolean actionEnabled) {
+            this(LocalizeValue.ofNullable(toolTip), LocalizeValue.ofNullable(text), actionEnabled);
         }
 
         public void setIcon(Image icon) {
@@ -377,11 +387,11 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         }
 
         public String getText() {
-            return text;
+            return text.get();
         }
 
         public String getToolTip() {
-            return toolTip;
+            return toolTip.get();
         }
 
         public Image getIcon() {

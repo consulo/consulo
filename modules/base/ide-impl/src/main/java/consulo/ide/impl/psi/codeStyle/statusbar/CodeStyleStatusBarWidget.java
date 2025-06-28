@@ -13,6 +13,7 @@ import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
 import consulo.language.codeStyle.event.CodeStyleSettingsListener;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
@@ -104,9 +105,9 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
             );
         }
         else {
-            String indentInfo = IndentStatusBarUIContributor.getIndentInfo(indentOptions);
-            String tooltip = IndentStatusBarUIContributor.createTooltip(indentInfo, null);
-            return new MyWidgetState(tooltip, indentInfo, psiFile, indentOptions, null);
+            LocalizeValue indentInfo = IndentStatusBarUIContributor.getIndentInfo(indentOptions);
+            String tooltip = IndentStatusBarUIContributor.createTooltip(indentInfo.get(), null);
+            return new MyWidgetState(tooltip, indentInfo.get(), psiFile, indentOptions, null);
         }
     }
 
