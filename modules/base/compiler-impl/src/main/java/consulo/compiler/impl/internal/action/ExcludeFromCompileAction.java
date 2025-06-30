@@ -29,38 +29,38 @@ import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nullable;
 
 /**
-* @author Eugene Zhuravlev
-* @since 2012-09-12
-*/
+ * @author Eugene Zhuravlev
+ * @since 2012-09-12
+ */
 public abstract class ExcludeFromCompileAction extends AnAction {
-  private final Project myProject;
+    private final Project myProject;
 
-  public ExcludeFromCompileAction(Project project) {
-    super(CompilerBundle.message("actions.exclude.from.compile.text"));
-    myProject = project;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    VirtualFile file = getFile();
-
-    if (file != null && file.isValid()) {
-      ExcludeEntryDescription description = new ExcludeEntryDescription(file, false, true, myProject);
-      CompilerManager.getInstance(myProject).getExcludedEntriesConfiguration().addExcludeEntryDescription(description);
-      FileStatusManager.getInstance(myProject).fileStatusesChanged();
+    public ExcludeFromCompileAction(Project project) {
+        super(CompilerBundle.message("actions.exclude.from.compile.text"));
+        myProject = project;
     }
-  }
 
-  @Nullable
-  protected abstract VirtualFile getFile();
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        VirtualFile file = getFile();
 
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    final boolean isApplicable = getFile() != null;
-    presentation.setEnabled(isApplicable);
-    presentation.setVisible(isApplicable);
-  }
+        if (file != null && file.isValid()) {
+            ExcludeEntryDescription description = new ExcludeEntryDescription(file, false, true, myProject);
+            CompilerManager.getInstance(myProject).getExcludedEntriesConfiguration().addExcludeEntryDescription(description);
+            FileStatusManager.getInstance(myProject).fileStatusesChanged();
+        }
+    }
+
+    @Nullable
+    protected abstract VirtualFile getFile();
+
+    @RequiredUIAccess
+    @Override
+    public void update(AnActionEvent e) {
+        final Presentation presentation = e.getPresentation();
+        final boolean isApplicable = getFile() != null;
+        presentation.setEnabled(isApplicable);
+        presentation.setVisible(isApplicable);
+    }
 }

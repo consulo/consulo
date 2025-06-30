@@ -48,135 +48,138 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class CompilerCacheManager implements Disposable {
-  private static final Logger LOG = Logger.getInstance(CompilerCacheManager.class);
-  private final Map<Compiler, Object> myCompilerToCacheMap = new HashMap<>();
-  private final Map<GenericCompiler<?, ?, ?>, GenericCompilerCache<?, ?, ?>> myGenericCachesMap = new HashMap<>();
-  private final List<Disposable> myCacheDisposables = new ArrayList<>();
-  private final File myCachesRoot;
-  private final Project myProject;
+    private static final Logger LOG = Logger.getInstance(CompilerCacheManager.class);
+    private final Map<Compiler, Object> myCompilerToCacheMap = new HashMap<>();
+    private final Map<GenericCompiler<?, ?, ?>, GenericCompilerCache<?, ?, ?>> myGenericCachesMap = new HashMap<>();
+    private final List<Disposable> myCacheDisposables = new ArrayList<>();
+    private final File myCachesRoot;
+    private final Project myProject;
 
-  @Inject
-  public CompilerCacheManager(Project project) {
-    myProject = project;
-    myCachesRoot = CompilerPaths.getCacheStoreDirectory(project);
-  }
-
-  public static CompilerCacheManager getInstance(Project project) {
-    return project.getInstance(CompilerCacheManager.class);
-  }
-
-  @Override
-  public void dispose() {
-    flushCaches();
-  }
-
-  private File getCompilerRootDir(final Compiler compiler) {
-    final File dir = new File(myCachesRoot, getCompilerIdString(compiler));
-    dir.mkdirs();
-    return dir;
-  }
-
-  public synchronized <Key, SourceState, OutputState> GenericCompilerCache<Key, SourceState, OutputState>
-  getGenericCompilerCache(final GenericCompiler<Key, SourceState, OutputState> compiler) throws IOException {
-    GenericCompilerCache<?, ?, ?> cache = myGenericCachesMap.get(compiler);
-    if (cache == null) {
-      final GenericCompilerCache<?, ?, ?> genericCache = new GenericCompilerCache<>(compiler, GenericCompilerRunner
-        .getGenericCompilerCacheDir(myProject, compiler));
-      myGenericCachesMap.put(compiler, genericCache);
-      myCacheDisposables.add(() -> {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Closing cache for feneric compiler " + compiler.getId());
-        }
-        genericCache.close();
-      });
-      cache = genericCache;
+    @Inject
+    public CompilerCacheManager(Project project) {
+        myProject = project;
+        myCachesRoot = CompilerPaths.getCacheStoreDirectory(project);
     }
-    //noinspection unchecked
-    return (GenericCompilerCache<Key, SourceState, OutputState>)cache;
-  }
 
-  public synchronized FileProcessingCompilerStateCache getFileProcessingCompilerCache(final FileProcessingCompiler compiler) throws IOException {
-    Object cache = myCompilerToCacheMap.get(compiler);
-    if (cache == null) {
-      final File compilerRootDir = getCompilerRootDir(compiler);
-      final FileProcessingCompilerStateCache stateCache = new FileProcessingCompilerStateCache(compilerRootDir, compiler);
-      myCompilerToCacheMap.put(compiler, stateCache);
-      myCacheDisposables.add(() -> {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Closing cache for compiler " + compiler.getDescription() + "; cache root dir: " + compilerRootDir);
-        }
-        stateCache.close();
-      });
-      cache = stateCache;
+    public static CompilerCacheManager getInstance(Project project) {
+        return project.getInstance(CompilerCacheManager.class);
     }
-    else {
-      LOG.assertTrue(cache instanceof FileProcessingCompilerStateCache);
+
+    @Override
+    public void dispose() {
+        flushCaches();
     }
-    return (FileProcessingCompilerStateCache)cache;
-  }
 
-  public synchronized StateCache<ValidityState> getGeneratingCompilerCache(final GeneratingCompiler compiler) throws IOException {
-    Object cache = myCompilerToCacheMap.get(compiler);
-    if (cache == null) {
-      final File cacheDir = getCompilerRootDir(compiler);
-      final StateCache<ValidityState> stateCache = new StateCache<ValidityState>(new File(cacheDir, "timestamps")) {
-        @Override
-        public ValidityState read(DataInput stream) throws IOException {
-          return compiler.createValidityState(stream);
-        }
-
-        @Override
-        public void write(ValidityState validityState, DataOutput out) throws IOException {
-          validityState.save(out);
-        }
-      };
-      myCompilerToCacheMap.put(compiler, stateCache);
-      myCacheDisposables.add(() -> {
-        try {
-          stateCache.close();
-        }
-        catch (IOException e) {
-          LOG.info(e);
-        }
-      });
-      cache = stateCache;
+    private File getCompilerRootDir(final Compiler compiler) {
+        final File dir = new File(myCachesRoot, getCompilerIdString(compiler));
+        dir.mkdirs();
+        return dir;
     }
-    return (StateCache<ValidityState>)cache;
-  }
 
-  public static String getCompilerIdString(Compiler compiler) {
-    @NonNls String description = compiler.getDescription();
-    return description.replaceAll("\\s+", "_").replaceAll("[\\.\\?]", "_").toLowerCase();
-  }
-
-  public synchronized void flushCaches() {
-    for (Disposable disposable : myCacheDisposables) {
-      try {
-        disposable.dispose();
-      }
-      catch (Throwable e) {
-        LOG.info(e);
-      }
-    }
-    myCacheDisposables.clear();
-    myGenericCachesMap.clear();
-    myCompilerToCacheMap.clear();
-  }
-
-  public void clearCaches(final CompileContext context) {
-    flushCaches();
-    final File[] children = myCachesRoot.listFiles();
-    if (children != null) {
-      for (final File child : children) {
-        final boolean deleteOk = FileUtil.delete(child);
-        if (!deleteOk) {
-          context.addMessage(CompilerMessageCategory.ERROR,
-                             CompilerBundle.message("compiler.error.failed.to.delete", child.getPath()),
-                             null,
-                             -1,
-                             -1);
+    public synchronized <Key, SourceState, OutputState> GenericCompilerCache<Key, SourceState, OutputState>
+    getGenericCompilerCache(final GenericCompiler<Key, SourceState, OutputState> compiler) throws IOException {
+        GenericCompilerCache<?, ?, ?> cache = myGenericCachesMap.get(compiler);
+        if (cache == null) {
+            final GenericCompilerCache<?, ?, ?> genericCache = new GenericCompilerCache<>(compiler, GenericCompilerRunner
+                .getGenericCompilerCacheDir(myProject, compiler));
+            myGenericCachesMap.put(compiler, genericCache);
+            myCacheDisposables.add(() -> {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Closing cache for feneric compiler " + compiler.getId());
+                }
+                genericCache.close();
+            });
+            cache = genericCache;
         }
-      }
+        //noinspection unchecked
+        return (GenericCompilerCache<Key, SourceState, OutputState>) cache;
     }
-  }
+
+    public synchronized FileProcessingCompilerStateCache getFileProcessingCompilerCache(final FileProcessingCompiler compiler)
+        throws IOException {
+        Object cache = myCompilerToCacheMap.get(compiler);
+        if (cache == null) {
+            final File compilerRootDir = getCompilerRootDir(compiler);
+            final FileProcessingCompilerStateCache stateCache = new FileProcessingCompilerStateCache(compilerRootDir, compiler);
+            myCompilerToCacheMap.put(compiler, stateCache);
+            myCacheDisposables.add(() -> {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Closing cache for compiler " + compiler.getDescription() + "; cache root dir: " + compilerRootDir);
+                }
+                stateCache.close();
+            });
+            cache = stateCache;
+        }
+        else {
+            LOG.assertTrue(cache instanceof FileProcessingCompilerStateCache);
+        }
+        return (FileProcessingCompilerStateCache) cache;
+    }
+
+    public synchronized StateCache<ValidityState> getGeneratingCompilerCache(final GeneratingCompiler compiler) throws IOException {
+        Object cache = myCompilerToCacheMap.get(compiler);
+        if (cache == null) {
+            final File cacheDir = getCompilerRootDir(compiler);
+            final StateCache<ValidityState> stateCache = new StateCache<ValidityState>(new File(cacheDir, "timestamps")) {
+                @Override
+                public ValidityState read(DataInput stream) throws IOException {
+                    return compiler.createValidityState(stream);
+                }
+
+                @Override
+                public void write(ValidityState validityState, DataOutput out) throws IOException {
+                    validityState.save(out);
+                }
+            };
+            myCompilerToCacheMap.put(compiler, stateCache);
+            myCacheDisposables.add(() -> {
+                try {
+                    stateCache.close();
+                }
+                catch (IOException e) {
+                    LOG.info(e);
+                }
+            });
+            cache = stateCache;
+        }
+        return (StateCache<ValidityState>) cache;
+    }
+
+    public static String getCompilerIdString(Compiler compiler) {
+        @NonNls String description = compiler.getDescription();
+        return description.replaceAll("\\s+", "_").replaceAll("[\\.\\?]", "_").toLowerCase();
+    }
+
+    public synchronized void flushCaches() {
+        for (Disposable disposable : myCacheDisposables) {
+            try {
+                disposable.dispose();
+            }
+            catch (Throwable e) {
+                LOG.info(e);
+            }
+        }
+        myCacheDisposables.clear();
+        myGenericCachesMap.clear();
+        myCompilerToCacheMap.clear();
+    }
+
+    public void clearCaches(final CompileContext context) {
+        flushCaches();
+        final File[] children = myCachesRoot.listFiles();
+        if (children != null) {
+            for (final File child : children) {
+                final boolean deleteOk = FileUtil.delete(child);
+                if (!deleteOk) {
+                    context.addMessage(
+                        CompilerMessageCategory.ERROR,
+                        CompilerBundle.message("compiler.error.failed.to.delete", child.getPath()),
+                        null,
+                        -1,
+                        -1
+                    );
+                }
+            }
+        }
+    }
 }

@@ -22,30 +22,30 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class VirtualFilePersistentState {
-  public static DataExternalizer<VirtualFilePersistentState> EXTERNALIZER = new VirtualFileStateExternalizer();
-  private final long mySourceTimestamp;
+    public static DataExternalizer<VirtualFilePersistentState> EXTERNALIZER = new VirtualFileStateExternalizer();
+    private final long mySourceTimestamp;
 
-  public VirtualFilePersistentState(long sourceTimestamp) {
-    mySourceTimestamp = sourceTimestamp;
-  }
-
-  public final long getSourceTimestamp() {
-    return mySourceTimestamp;
-  }
-
-  private static class VirtualFileStateExternalizer implements DataExternalizer<VirtualFilePersistentState> {
-    @Override
-    public void save(DataOutput out, VirtualFilePersistentState value) throws IOException {
-      out.writeLong(value.getSourceTimestamp());
+    public VirtualFilePersistentState(long sourceTimestamp) {
+        mySourceTimestamp = sourceTimestamp;
     }
 
-    @Override
-    public VirtualFilePersistentState read(DataInput in) throws IOException {
-      return new VirtualFilePersistentState(in.readLong());
+    public final long getSourceTimestamp() {
+        return mySourceTimestamp;
     }
 
-  }
+    private static class VirtualFileStateExternalizer implements DataExternalizer<VirtualFilePersistentState> {
+        @Override
+        public void save(DataOutput out, VirtualFilePersistentState value) throws IOException {
+            out.writeLong(value.getSourceTimestamp());
+        }
+
+        @Override
+        public VirtualFilePersistentState read(DataInput in) throws IOException {
+            return new VirtualFilePersistentState(in.readLong());
+        }
+
+    }
 }

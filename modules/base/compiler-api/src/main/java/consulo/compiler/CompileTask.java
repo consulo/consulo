@@ -19,13 +19,13 @@ package consulo.compiler;
  * Describes a task to be executed before or after compilation.
  */
 public interface CompileTask {
-  /**
-   * Executes the task.
-   *
-   * @param context current compile context
-   * @return true if execution succeeded, false otherwise. If the task returns false, the compilation
-   * is aborted, and it's expected that the task adds a message defining the reason for the failure
-   * to the compile context.
-   */
-  boolean execute(CompileContext context);
+    /**
+     * Executes the task.
+     *
+     * @param context current compile context
+     * @return true if execution succeeded, false otherwise. If the task returns false, the compilation
+     * is aborted, and it's expected that the task adds a message defining the reason for the failure
+     * to the compile context.
+     */
+    boolean execute(CompileContext context);
 }

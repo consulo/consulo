@@ -43,212 +43,217 @@ import java.util.function.Supplier;
  * A set of utility methods for working with paths
  */
 public class CompilerPaths {
-  private static final Logger LOG = Logger.getInstance(CompilerPaths.class);
+    private static final Logger LOG = Logger.getInstance(CompilerPaths.class);
 
-  private static volatile String ourSystemPath;
-  public static final Comparator<String> URLS_COMPARATOR = (o1, o2) -> o1.compareTo(o2);
-  private static final String DEFAULT_GENERATED_DIR_NAME = "generated";
+    private static volatile String ourSystemPath;
+    public static final Comparator<String> URLS_COMPARATOR = (o1, o2) -> o1.compareTo(o2);
+    private static final String DEFAULT_GENERATED_DIR_NAME = "generated";
 
-  /**
-   * Returns a directory
-   *
-   * @param project
-   * @param compiler
-   * @return a directory where compiler may generate files. All generated files are not deleted when the application exits
-   */
-  public static File getGeneratedDataDirectory(Project project, Compiler compiler) {
-    //noinspection HardCodedStringLiteral
-    return new File(getGeneratedDataDirectory(project), compiler.getDescription().replaceAll("\\s+", "_"));
-  }
-
-  /**
-   * @param project
-   * @return a root directory where generated files for various compilers are stored
-   */
-  public static File getGeneratedDataDirectory(Project project) {
-    //noinspection HardCodedStringLiteral
-    return new File(getCompilerSystemDirectory(project), ".generated");
-  }
-
-  /**
-   * @param project
-   * @return a root directory where compiler caches for the given project are stored
-   */
-  public static File getCacheStoreDirectory(final Project project) {
-    //noinspection HardCodedStringLiteral
-    return new File(getCompilerSystemDirectory(project), ".caches");
-  }
-
-  public static File getRebuildMarkerFile(Project project) {
-    return new File(getCompilerSystemDirectory(project), "rebuild_required");
-  }
-
-  /**
-   * @param project
-   * @return a directory under IDEA "system" directory where all files related to compiler subsystem are stored (such as compiler caches or generated files)
-   */
-  public static File getCompilerSystemDirectory(Project project) {
-    return getCompilerSystemDirectory(getCompilerSystemDirectoryName(project));
-  }
-
-  public static File getCompilerSystemDirectory(String compilerProjectDirName) {
-    return new File(getCompilerSystemDirectory(), compilerProjectDirName);
-  }
-
-  public static String getCompilerSystemDirectoryName(Project project) {
-    return getPresentableName(project) + "" + project.getLocationHash();
-  }
-
-  @Nullable
-  private static String getPresentableName(final Project project) {
-    if (project.isDefault()) {
-      return project.getName();
+    /**
+     * Returns a directory
+     *
+     * @param project
+     * @param compiler
+     * @return a directory where compiler may generate files. All generated files are not deleted when the application exits
+     */
+    public static File getGeneratedDataDirectory(Project project, Compiler compiler) {
+        //noinspection HardCodedStringLiteral
+        return new File(getGeneratedDataDirectory(project), compiler.getDescription().replaceAll("\\s+", "_"));
     }
 
-    String location = project.getPresentableUrl();
-    if (location == null) {
-      return null;
+    /**
+     * @param project
+     * @return a root directory where generated files for various compilers are stored
+     */
+    public static File getGeneratedDataDirectory(Project project) {
+        //noinspection HardCodedStringLiteral
+        return new File(getCompilerSystemDirectory(project), ".generated");
     }
 
-    String projectName = FileUtil.toSystemIndependentName(location);
-    if (projectName.endsWith("/")) {
-      projectName = projectName.substring(0, projectName.length() - 1);
+    /**
+     * @param project
+     * @return a root directory where compiler caches for the given project are stored
+     */
+    public static File getCacheStoreDirectory(final Project project) {
+        //noinspection HardCodedStringLiteral
+        return new File(getCompilerSystemDirectory(project), ".caches");
     }
 
-    final int lastSlash = projectName.lastIndexOf('/');
-    if (lastSlash >= 0 && lastSlash + 1 < projectName.length()) {
-      projectName = projectName.substring(lastSlash + 1);
+    public static File getRebuildMarkerFile(Project project) {
+        return new File(getCompilerSystemDirectory(project), "rebuild_required");
     }
 
-    projectName = projectName.toLowerCase(Locale.US).replace(':', '_'); // replace ':' from windows drive names
-    return projectName;
-  }
-
-  public static File getCompilerSystemDirectory() {
-    //noinspection HardCodedStringLiteral
-    final String systemPath = ourSystemPath != null ? ourSystemPath : (ourSystemPath = FileUtil.toCanonicalPath(ContainerPathManager.get().getSystemPath()));
-    return new File(systemPath, "compiler");
-  }
-
-  @Nonnull
-  public static String getGenerationOutputPath(IntermediateOutputCompiler compiler, Module module, final boolean forTestSources) {
-    final String generatedCompilerDirectoryPath = getGeneratedDataDirectory(module.getProject(), compiler).getPath();
-    String moduleHash = null;
-    String moduleDirPath = module.getModuleDirPath();
-    if (moduleDirPath != null) {
-      moduleHash = Integer.toHexString(moduleDirPath.hashCode());
-    }
-    else {
-      moduleHash = module.getProject().getLocationHash();
-    }
-    final String moduleDir = module.getName().replaceAll("\\s+", "_") + "" + moduleHash;
-    return generatedCompilerDirectoryPath.replace(File.separatorChar, '/') + "/" + moduleDir + "/" + (forTestSources ? "test" : "production");
-  }
-
-  /**
-   * @param module
-   * @param forTestClasses true if directory for test sources, false - for sources.
-   * @return a directory to which the sources (or test sources depending on the second partameter) should be compiled.
-   * Null is returned if output directory is not specified or is not valid
-   */
-  @Nullable
-  public static VirtualFile getModuleOutputDirectory(final Module module, boolean forTestClasses) {
-    final ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
-    VirtualFile outPath;
-    if (forTestClasses) {
-      final VirtualFile path = manager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
-      if (path != null) {
-        outPath = path;
-      }
-      else {
-        outPath = manager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
-      }
-    }
-    else {
-      outPath = manager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
-    }
-    if (outPath == null) {
-      return null;
-    }
-    if (!outPath.isValid()) {
-      LOG.info("Requested output path for module " + module.getName() + " is not valid");
-      return null;
-    }
-    return outPath;
-  }
-
-  /**
-   * The same as {@link #getModuleOutputDirectory} but returns String.
-   * The method still returns a non-null value if the output path is specified in Settings but does not exist on disk.
-   */
-  @Nullable
-  @Deprecated
-  public static String getModuleOutputPath(final Module module, final boolean forTestClasses) {
-    final String outPathUrl;
-    final Application application = Application.get();
-    final ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
-
-    if (application.isDispatchThread()) {
-      outPathUrl = pathsManager.getCompilerOutputUrl(forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance());
-    }
-    else {
-      outPathUrl = application.runReadAction(
-              (Supplier<String>)() -> pathsManager.getCompilerOutputUrl(forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()));
+    /**
+     * @param project
+     * @return a directory under IDEA "system" directory where all files related to compiler subsystem are stored (such as compiler caches or generated files)
+     */
+    public static File getCompilerSystemDirectory(Project project) {
+        return getCompilerSystemDirectory(getCompilerSystemDirectoryName(project));
     }
 
-    return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
-  }
-
-  @Nullable
-  public static String getModuleOutputPath(final Module module, final ContentFolderTypeProvider contentFolderType) {
-    final String outPathUrl;
-    final Application application = Application.get();
-    final ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
-
-    if (application.isDispatchThread()) {
-      outPathUrl = pathsManager.getCompilerOutputUrl(contentFolderType);
-    }
-    else {
-      outPathUrl = application.runReadAction((Supplier<String>)() -> pathsManager.getCompilerOutputUrl(contentFolderType));
+    public static File getCompilerSystemDirectory(String compilerProjectDirName) {
+        return new File(getCompilerSystemDirectory(), compilerProjectDirName);
     }
 
-    return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
-  }
-
-
-  public static String[] getOutputPaths(Module[] modules) {
-    if (modules.length == 0) {
-      return ArrayUtil.EMPTY_STRING_ARRAY;
+    public static String getCompilerSystemDirectoryName(Project project) {
+        return getPresentableName(project) + "" + project.getLocationHash();
     }
 
-    final Set<String> outputPaths = new LinkedHashSet<>();
-    for (Module module : modules) {
-      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
-        String outputPathUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
-        if (outputPathUrl != null) {
-          outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
+    @Nullable
+    private static String getPresentableName(final Project project) {
+        if (project.isDefault()) {
+            return project.getName();
         }
-      }
-    }
 
-    return ArrayUtil.toStringArray(outputPaths);
-  }
-
-  public static VirtualFile[] getOutputDirectories(final Module[] modules) {
-    if (modules.length == 0) {
-      return VirtualFile.EMPTY_ARRAY;
-    }
-
-    final Set<VirtualFile> dirs = new LinkedHashSet<>();
-    for (Module module : modules) {
-      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
-        VirtualFile virtualFile = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
-        if (virtualFile != null) {
-          dirs.add(virtualFile);
+        String location = project.getPresentableUrl();
+        if (location == null) {
+            return null;
         }
-      }
+
+        String projectName = FileUtil.toSystemIndependentName(location);
+        if (projectName.endsWith("/")) {
+            projectName = projectName.substring(0, projectName.length() - 1);
+        }
+
+        final int lastSlash = projectName.lastIndexOf('/');
+        if (lastSlash >= 0 && lastSlash + 1 < projectName.length()) {
+            projectName = projectName.substring(lastSlash + 1);
+        }
+
+        projectName = projectName.toLowerCase(Locale.US).replace(':', '_'); // replace ':' from windows drive names
+        return projectName;
     }
 
-    return VirtualFileUtil.toVirtualFileArray(dirs);
-  }
+    public static File getCompilerSystemDirectory() {
+        //noinspection HardCodedStringLiteral
+        final String systemPath =
+            ourSystemPath != null ? ourSystemPath : (ourSystemPath = FileUtil.toCanonicalPath(ContainerPathManager.get().getSystemPath()));
+        return new File(systemPath, "compiler");
+    }
+
+    @Nonnull
+    public static String getGenerationOutputPath(IntermediateOutputCompiler compiler, Module module, final boolean forTestSources) {
+        final String generatedCompilerDirectoryPath = getGeneratedDataDirectory(module.getProject(), compiler).getPath();
+        String moduleHash = null;
+        String moduleDirPath = module.getModuleDirPath();
+        if (moduleDirPath != null) {
+            moduleHash = Integer.toHexString(moduleDirPath.hashCode());
+        }
+        else {
+            moduleHash = module.getProject().getLocationHash();
+        }
+        final String moduleDir = module.getName().replaceAll("\\s+", "_") + "" + moduleHash;
+        return generatedCompilerDirectoryPath.replace(
+            File.separatorChar,
+            '/'
+        ) + "/" + moduleDir + "/" + (forTestSources ? "test" : "production");
+    }
+
+    /**
+     * @param module
+     * @param forTestClasses true if directory for test sources, false - for sources.
+     * @return a directory to which the sources (or test sources depending on the second partameter) should be compiled.
+     * Null is returned if output directory is not specified or is not valid
+     */
+    @Nullable
+    public static VirtualFile getModuleOutputDirectory(final Module module, boolean forTestClasses) {
+        final ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
+        VirtualFile outPath;
+        if (forTestClasses) {
+            final VirtualFile path = manager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
+            if (path != null) {
+                outPath = path;
+            }
+            else {
+                outPath = manager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
+            }
+        }
+        else {
+            outPath = manager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
+        }
+        if (outPath == null) {
+            return null;
+        }
+        if (!outPath.isValid()) {
+            LOG.info("Requested output path for module " + module.getName() + " is not valid");
+            return null;
+        }
+        return outPath;
+    }
+
+    /**
+     * The same as {@link #getModuleOutputDirectory} but returns String.
+     * The method still returns a non-null value if the output path is specified in Settings but does not exist on disk.
+     */
+    @Nullable
+    @Deprecated
+    public static String getModuleOutputPath(final Module module, final boolean forTestClasses) {
+        final String outPathUrl;
+        final Application application = Application.get();
+        final ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
+
+        if (application.isDispatchThread()) {
+            outPathUrl =
+                pathsManager.getCompilerOutputUrl(forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance());
+        }
+        else {
+            outPathUrl = application.runReadAction(
+                (Supplier<String>) () -> pathsManager.getCompilerOutputUrl(forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()));
+        }
+
+        return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
+    }
+
+    @Nullable
+    public static String getModuleOutputPath(final Module module, final ContentFolderTypeProvider contentFolderType) {
+        final String outPathUrl;
+        final Application application = Application.get();
+        final ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
+
+        if (application.isDispatchThread()) {
+            outPathUrl = pathsManager.getCompilerOutputUrl(contentFolderType);
+        }
+        else {
+            outPathUrl = application.runReadAction((Supplier<String>) () -> pathsManager.getCompilerOutputUrl(contentFolderType));
+        }
+
+        return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
+    }
+
+
+    public static String[] getOutputPaths(Module[] modules) {
+        if (modules.length == 0) {
+            return ArrayUtil.EMPTY_STRING_ARRAY;
+        }
+
+        final Set<String> outputPaths = new LinkedHashSet<>();
+        for (Module module : modules) {
+            for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
+                String outputPathUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
+                if (outputPathUrl != null) {
+                    outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
+                }
+            }
+        }
+
+        return ArrayUtil.toStringArray(outputPaths);
+    }
+
+    public static VirtualFile[] getOutputDirectories(final Module[] modules) {
+        if (modules.length == 0) {
+            return VirtualFile.EMPTY_ARRAY;
+        }
+
+        final Set<VirtualFile> dirs = new LinkedHashSet<>();
+        for (Module module : modules) {
+            for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
+                VirtualFile virtualFile = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
+                if (virtualFile != null) {
+                    dirs.add(virtualFile);
+                }
+            }
+        }
+
+        return VirtualFileUtil.toVirtualFileArray(dirs);
+    }
 }

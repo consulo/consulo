@@ -23,6 +23,7 @@ import consulo.util.collection.Chunk;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.charset.Charset;
 import java.util.Collection;
 
@@ -31,28 +32,28 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CompilerEncodingService {
-  public static CompilerEncodingService getInstance(@Nonnull Project project) {
-    return project.getInstance(CompilerEncodingService.class);
-  }
-
-  @Nullable
-  public static Charset getPreferredModuleEncoding(Chunk<Module> chunk) {
-    CompilerEncodingService service = null;
-    for (Module module : chunk.getNodes()) {
-      if (service == null) {
-        service = getInstance(module.getProject());
-      }
-      final Charset charset = service.getPreferredModuleEncoding(module);
-      if (charset != null) {
-        return charset;
-      }
+    public static CompilerEncodingService getInstance(@Nonnull Project project) {
+        return project.getInstance(CompilerEncodingService.class);
     }
-    return null;
-  }
 
-  @Nullable
-  public abstract Charset getPreferredModuleEncoding(@Nonnull Module module);
+    @Nullable
+    public static Charset getPreferredModuleEncoding(Chunk<Module> chunk) {
+        CompilerEncodingService service = null;
+        for (Module module : chunk.getNodes()) {
+            if (service == null) {
+                service = getInstance(module.getProject());
+            }
+            final Charset charset = service.getPreferredModuleEncoding(module);
+            if (charset != null) {
+                return charset;
+            }
+        }
+        return null;
+    }
 
-  @Nonnull
-  public abstract Collection<Charset> getAllModuleEncodings(@Nonnull Module module);
+    @Nullable
+    public abstract Charset getPreferredModuleEncoding(@Nonnull Module module);
+
+    @Nonnull
+    public abstract Collection<Charset> getAllModuleEncodings(@Nonnull Module module);
 }

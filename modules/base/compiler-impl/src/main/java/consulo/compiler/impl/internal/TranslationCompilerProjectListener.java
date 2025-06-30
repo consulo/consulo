@@ -41,127 +41,130 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
-* @author VISTALL
-* @since 18-Jun-22
-*/
+ * @author VISTALL
+ * @since 18-Jun-22
+ */
 @TopicImpl(ComponentScope.APPLICATION)
 class TranslationCompilerProjectListener implements ProjectManagerListener {
-  private static final Logger LOG = Logger.getInstance(TranslationCompilerProjectListener.class);
+    private static final Logger LOG = Logger.getInstance(TranslationCompilerProjectListener.class);
 
-  private final Provider<TranslatingCompilerFilesMonitor> myMonitorProvider;
+    private final Provider<TranslatingCompilerFilesMonitor> myMonitorProvider;
 
-  @Inject
-  TranslationCompilerProjectListener(Provider<TranslatingCompilerFilesMonitor> monitorProvider) {
-    myMonitorProvider = monitorProvider;
-  }
-
-  @Override
-  public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
-
-    final MessageBusConnection conn = project.getMessageBus().connect();
-    final TranslatingCompilerFilesMonitorImpl.ProjectRef projRef = new TranslatingCompilerFilesMonitorImpl.ProjectRef(project);
-    final int projectId = monitor.getProjectId(project);
-
-    monitor.watchProject(project);
-
-    conn.subscribe(ModuleRootListener.class, new ModuleRootListener() {
-      private VirtualFile[] myRootsBefore;
-      private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
-
-      @Override
-      public void beforeRootsChange(final ModuleRootEvent event) {
-        if (monitor.isSuspended(projectId)) {
-          return;
-        }
-        try {
-          myRootsBefore = monitor.getRootsForScan(projRef.get());
-        }
-        catch (TranslatingCompilerFilesMonitorImpl.ProjectRef.ProjectClosedException e) {
-          myRootsBefore = null;
-        }
-      }
-
-      @Override
-      public void rootsChanged(final ModuleRootEvent event) {
-        if (monitor.isSuspended(projectId)) {
-          return;
-        }
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Before roots changed for projectId=" + projectId + "; url=" + project.getPresentableUrl());
-        }
-        try {
-          final VirtualFile[] rootsBefore = myRootsBefore;
-          myRootsBefore = null;
-          final VirtualFile[] rootsAfter = monitor.getRootsForScan(projRef.get());
-          final Set<VirtualFile> newRoots = new HashSet<>();
-          final Set<VirtualFile> oldRoots = new HashSet<>();
-          {
-            if (rootsAfter.length > 0) {
-              ContainerUtil.addAll(newRoots, rootsAfter);
-            }
-            if (rootsBefore != null) {
-              newRoots.removeAll(Arrays.asList(rootsBefore));
-            }
-          }
-          {
-            if (rootsBefore != null) {
-              ContainerUtil.addAll(oldRoots, rootsBefore);
-            }
-            if (!oldRoots.isEmpty() && rootsAfter.length > 0) {
-              oldRoots.removeAll(Arrays.asList(rootsAfter));
-            }
-          }
-
-          myAlarm.cancelAllRequests(); // need alarm to deal with multiple rootsChanged events
-          myAlarm.addRequest(new Runnable() {
-            @Override
-            public void run() {
-              monitor.startAsyncScan(projectId);
-              new Task.Backgroundable(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false) {
-                @Override
-                public void run(@Nonnull final ProgressIndicator indicator) {
-                  try {
-                    if (newRoots.size() > 0) {
-                      monitor.scanSourceContent(projRef, newRoots, newRoots.size(), true);
-                    }
-                    if (oldRoots.size() > 0) {
-                      monitor.scanSourceContent(projRef, oldRoots, oldRoots.size(), false);
-                    }
-                    monitor.markOldOutputRoots(projRef, TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout());
-                  }
-                  catch (TranslatingCompilerFilesMonitorImpl.ProjectRef.ProjectClosedException swallowed) {
-                    // ignored
-                  }
-                  finally {
-                    monitor.terminateAsyncScan(projectId, false);
-                  }
-                }
-              }.queue();
-            }
-          }, 500, ModalityState.nonModal());
-        }
-        catch (TranslatingCompilerFilesMonitorImpl.ProjectRef.ProjectClosedException e) {
-          LOG.info(e);
-        }
-      }
-    });
-  }
-
-  @Override
-  public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
-
-    final int projectId = monitor.getProjectId(project);
-    monitor.terminateAsyncScan(projectId, true);
-    synchronized (monitor.myDataLock) {
-      monitor.mySourcesToRecompile.remove(projectId);
-      monitor.myOutputsToDelete.remove(projectId);  // drop cache to save memory
+    @Inject
+    TranslationCompilerProjectListener(Provider<TranslatingCompilerFilesMonitor> monitorProvider) {
+        myMonitorProvider = monitorProvider;
     }
-  }
 
-  @Nonnull
-  TranslatingCompilerFilesMonitorImpl getMonitor() {
-    return (TranslatingCompilerFilesMonitorImpl)myMonitorProvider.get();
-  }
+    @Override
+    public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
+
+        final MessageBusConnection conn = project.getMessageBus().connect();
+        final TranslatingCompilerFilesMonitorImpl.ProjectRef projRef = new TranslatingCompilerFilesMonitorImpl.ProjectRef(project);
+        final int projectId = monitor.getProjectId(project);
+
+        monitor.watchProject(project);
+
+        conn.subscribe(ModuleRootListener.class, new ModuleRootListener() {
+            private VirtualFile[] myRootsBefore;
+            private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
+
+            @Override
+            public void beforeRootsChange(final ModuleRootEvent event) {
+                if (monitor.isSuspended(projectId)) {
+                    return;
+                }
+                try {
+                    myRootsBefore = monitor.getRootsForScan(projRef.get());
+                }
+                catch (TranslatingCompilerFilesMonitorImpl.ProjectRef.ProjectClosedException e) {
+                    myRootsBefore = null;
+                }
+            }
+
+            @Override
+            public void rootsChanged(final ModuleRootEvent event) {
+                if (monitor.isSuspended(projectId)) {
+                    return;
+                }
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Before roots changed for projectId=" + projectId + "; url=" + project.getPresentableUrl());
+                }
+                try {
+                    final VirtualFile[] rootsBefore = myRootsBefore;
+                    myRootsBefore = null;
+                    final VirtualFile[] rootsAfter = monitor.getRootsForScan(projRef.get());
+                    final Set<VirtualFile> newRoots = new HashSet<>();
+                    final Set<VirtualFile> oldRoots = new HashSet<>();
+                    {
+                        if (rootsAfter.length > 0) {
+                            ContainerUtil.addAll(newRoots, rootsAfter);
+                        }
+                        if (rootsBefore != null) {
+                            newRoots.removeAll(Arrays.asList(rootsBefore));
+                        }
+                    }
+                    {
+                        if (rootsBefore != null) {
+                            ContainerUtil.addAll(oldRoots, rootsBefore);
+                        }
+                        if (!oldRoots.isEmpty() && rootsAfter.length > 0) {
+                            oldRoots.removeAll(Arrays.asList(rootsAfter));
+                        }
+                    }
+
+                    myAlarm.cancelAllRequests(); // need alarm to deal with multiple rootsChanged events
+                    myAlarm.addRequest(new Runnable() {
+                        @Override
+                        public void run() {
+                            monitor.startAsyncScan(projectId);
+                            new Task.Backgroundable(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false) {
+                                @Override
+                                public void run(@Nonnull final ProgressIndicator indicator) {
+                                    try {
+                                        if (newRoots.size() > 0) {
+                                            monitor.scanSourceContent(projRef, newRoots, newRoots.size(), true);
+                                        }
+                                        if (oldRoots.size() > 0) {
+                                            monitor.scanSourceContent(projRef, oldRoots, oldRoots.size(), false);
+                                        }
+                                        monitor.markOldOutputRoots(
+                                            projRef,
+                                            TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout()
+                                        );
+                                    }
+                                    catch (TranslatingCompilerFilesMonitorImpl.ProjectRef.ProjectClosedException swallowed) {
+                                        // ignored
+                                    }
+                                    finally {
+                                        monitor.terminateAsyncScan(projectId, false);
+                                    }
+                                }
+                            }.queue();
+                        }
+                    }, 500, ModalityState.nonModal());
+                }
+                catch (TranslatingCompilerFilesMonitorImpl.ProjectRef.ProjectClosedException e) {
+                    LOG.info(e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
+
+        final int projectId = monitor.getProjectId(project);
+        monitor.terminateAsyncScan(projectId, true);
+        synchronized (monitor.myDataLock) {
+            monitor.mySourcesToRecompile.remove(projectId);
+            monitor.myOutputsToDelete.remove(projectId);  // drop cache to save memory
+        }
+    }
+
+    @Nonnull
+    TranslatingCompilerFilesMonitorImpl getMonitor() {
+        return (TranslatingCompilerFilesMonitorImpl) myMonitorProvider.get();
+    }
 }

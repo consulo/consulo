@@ -34,51 +34,50 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OneProjectItemCompileScope extends ExportableUserDataHolderBase implements CompileScope{
-  private static final Logger LOG = Logger.getInstance(OneProjectItemCompileScope.class);
-  private final Project myProject;
-  private final VirtualFile myFile;
-  private final String myUrl;
+public class OneProjectItemCompileScope extends ExportableUserDataHolderBase implements CompileScope {
+    private static final Logger LOG = Logger.getInstance(OneProjectItemCompileScope.class);
+    private final Project myProject;
+    private final VirtualFile myFile;
+    private final String myUrl;
 
-  public OneProjectItemCompileScope(Project project, VirtualFile file) {
-    myProject = project;
-    myFile = file;
-    final String url = file.getUrl();
-    myUrl = file.isDirectory()? url + "/" : url;
-  }
-
-  @Override
-  @Nonnull
-  public VirtualFile[] getFiles(final FileType fileType) {
-    final List<VirtualFile> files = new ArrayList<>(1);
-    final FileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-    final ContentIterator iterator = new CompilerContentIterator(fileType, projectFileIndex, true, files);
-    if (myFile.isDirectory()){
-      projectFileIndex.iterateContentUnderDirectory(myFile, iterator);
+    public OneProjectItemCompileScope(Project project, VirtualFile file) {
+        myProject = project;
+        myFile = file;
+        final String url = file.getUrl();
+        myUrl = file.isDirectory() ? url + "/" : url;
     }
-    else{
-      iterator.processFile(myFile);
-    }
-    return VirtualFileUtil.toVirtualFileArray(files);
-  }
 
-  @Override
-  public boolean belongs(String url) {
-    if (myFile.isDirectory()){
-      return FileUtil.startsWith(url, myUrl);
+    @Override
+    @Nonnull
+    public VirtualFile[] getFiles(final FileType fileType) {
+        final List<VirtualFile> files = new ArrayList<>(1);
+        final FileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+        final ContentIterator iterator = new CompilerContentIterator(fileType, projectFileIndex, true, files);
+        if (myFile.isDirectory()) {
+            projectFileIndex.iterateContentUnderDirectory(myFile, iterator);
+        }
+        else {
+            iterator.processFile(myFile);
+        }
+        return VirtualFileUtil.toVirtualFileArray(files);
     }
-    return FileUtil.pathsEqual(url, myUrl);
-  }
 
-  @Override
-  @Nonnull
-  public Module[] getAffectedModules() {
-    final Module module = ModuleUtilCore.findModuleForFile(myFile, myProject);
-    if (module == null) {
-      LOG.error("Module is null for file " + myFile.getPresentableUrl());
-      return Module.EMPTY_ARRAY;
+    @Override
+    public boolean belongs(String url) {
+        if (myFile.isDirectory()) {
+            return FileUtil.startsWith(url, myUrl);
+        }
+        return FileUtil.pathsEqual(url, myUrl);
     }
-    return new Module[] {module};
-  }
 
+    @Override
+    @Nonnull
+    public Module[] getAffectedModules() {
+        final Module module = ModuleUtilCore.findModuleForFile(myFile, myProject);
+        if (module == null) {
+            LOG.error("Module is null for file " + myFile.getPresentableUrl());
+            return Module.EMPTY_ARRAY;
+        }
+        return new Module[]{module};
+    }
 }

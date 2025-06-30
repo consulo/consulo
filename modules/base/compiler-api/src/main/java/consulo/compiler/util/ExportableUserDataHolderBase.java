@@ -23,32 +23,32 @@ import jakarta.annotation.Nullable;
 import java.util.*;
 
 public class ExportableUserDataHolderBase extends UserDataHolderBase implements ExportableUserDataHolder {
-  private final Set<Key> myKeys = Collections.synchronizedSet(new HashSet<Key>());
+    private final Set<Key> myKeys = Collections.synchronizedSet(new HashSet<Key>());
 
-  @Override
-  @Nonnull
-  public final Map<Key, Object> exportUserData() {
-    final Map<Key, Object> result = new HashMap<Key, Object>();
-    synchronized (myKeys) {
-      for (Key<?> k : myKeys) {
-        final Object data = getUserData(k);
-        if (data != null) {
-          result.put(k, data);
+    @Override
+    @Nonnull
+    public final Map<Key, Object> exportUserData() {
+        final Map<Key, Object> result = new HashMap<Key, Object>();
+        synchronized (myKeys) {
+            for (Key<?> k : myKeys) {
+                final Object data = getUserData(k);
+                if (data != null) {
+                    result.put(k, data);
+                }
+            }
         }
-      }
+        return result;
     }
-    return result;
-  }
 
-  @Override
-  public final <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    if (value != null) {
-      myKeys.add(key);
+    @Override
+    public final <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        if (value != null) {
+            myKeys.add(key);
+        }
+        else {
+            myKeys.remove(key);
+        }
+        super.putUserData(key, value);
     }
-    else {
-      myKeys.remove(key);
-    }
-    super.putUserData(key, value);
-  }
 
 }

@@ -46,185 +46,198 @@ import java.util.concurrent.TimeUnit;
  * @since 2003-01-22
  */
 public class CompilerTask extends Task.Backgroundable {
-  private static final String APP_ICON_ID = "compiler";
+    private static final String APP_ICON_ID = "compiler";
 
-  private final boolean myWaitForPreviousSession;
-  private int myErrorCount = 0;
-  private int myWarningCount = 0;
+    private final boolean myWaitForPreviousSession;
+    private int myErrorCount = 0;
+    private int myWarningCount = 0;
 
-  private volatile ProgressIndicator myIndicator = new EmptyProgressIndicator();
-  private Runnable myCompileWork;
-  private final boolean myCompilationStartedAutomatically;
-  private final UUID mySessionId;
+    private volatile ProgressIndicator myIndicator = new EmptyProgressIndicator();
+    private Runnable myCompileWork;
+    private final boolean myCompilationStartedAutomatically;
+    private final UUID mySessionId;
 
-  private final BuildViewService myBuildViewService;
-  private long myEndCompilationStamp;
-  private ExitStatus myExitStatus;
+    private final BuildViewService myBuildViewService;
+    private long myEndCompilationStamp;
+    private ExitStatus myExitStatus;
 
-  public CompilerTask(@Nonnull Project project, String contentName, boolean waitForPreviousSession, boolean compilationStartedAutomatically) {
-    super(project, contentName);
-    myWaitForPreviousSession = waitForPreviousSession;
-    myCompilationStartedAutomatically = compilationStartedAutomatically;
-    mySessionId = UUID.randomUUID();
-    myBuildViewService = project.getApplication().getInstance(BuildViewServiceFactory.class).createBuildViewService(project, mySessionId, contentName);
-  }
+    public CompilerTask(
+        @Nonnull Project project,
+        String contentName,
+        boolean waitForPreviousSession,
+        boolean compilationStartedAutomatically
+    ) {
+        super(project, contentName);
+        myWaitForPreviousSession = waitForPreviousSession;
+        myCompilationStartedAutomatically = compilationStartedAutomatically;
+        mySessionId = UUID.randomUUID();
+        myBuildViewService =
+            project.getApplication().getInstance(BuildViewServiceFactory.class).createBuildViewService(project, mySessionId, contentName);
+    }
 
-  @Nonnull
-  public ProgressIndicator getIndicator() {
-    return myIndicator;
-  }
+    @Nonnull
+    public ProgressIndicator getIndicator() {
+        return myIndicator;
+    }
 
-  public void setEndCompilationStamp(ExitStatus exitStatus, long endCompilationStamp) {
-    myExitStatus = exitStatus;
-    myEndCompilationStamp = endCompilationStamp;
-  }
+    public void setEndCompilationStamp(ExitStatus exitStatus, long endCompilationStamp) {
+        myExitStatus = exitStatus;
+        myEndCompilationStamp = endCompilationStamp;
+    }
 
-  @Override
-  @Nullable
-  public NotificationInfo getNotificationInfo() {
-    return new NotificationInfo(myErrorCount > 0 ? "Compiler (errors)" : "Compiler (success)", "Compilation Finished", myErrorCount + " Errors, " + myWarningCount + " Warnings", true);
-  }
+    @Override
+    @Nullable
+    public NotificationInfo getNotificationInfo() {
+        return new NotificationInfo(
+            myErrorCount > 0 ? "Compiler (errors)" : "Compiler (success)",
+            "Compilation Finished",
+            myErrorCount + " Errors, " + myWarningCount + " Warnings",
+            true
+        );
+    }
 
-  @Override
-  public void run(@Nonnull final ProgressIndicator indicator) {
-    myIndicator = indicator;
+    @Override
+    public void run(@Nonnull final ProgressIndicator indicator) {
+        myIndicator = indicator;
 
-    long startCompilationStamp = System.currentTimeMillis();
+        long startCompilationStamp = System.currentTimeMillis();
 
 
-    indicator.setIndeterminate(false);
+        indicator.setIndeterminate(false);
 
-    myBuildViewService.onStart(mySessionId, startCompilationStamp, null, indicator);
+        myBuildViewService.onStart(mySessionId, startCompilationStamp, null, indicator);
 
-    final Semaphore semaphore = ((CompilerManagerImpl)CompilerManager.getInstance((Project)myProject)).getCompilationSemaphore();
-    boolean acquired = false;
-    try {
+        final Semaphore semaphore = ((CompilerManagerImpl) CompilerManager.getInstance((Project) myProject)).getCompilationSemaphore();
+        boolean acquired = false;
+        try {
 
-      try {
-        while (!acquired) {
-          acquired = semaphore.tryAcquire(300, TimeUnit.MILLISECONDS);
-          if (!acquired && !myWaitForPreviousSession) {
+            try {
+                while (!acquired) {
+                    acquired = semaphore.tryAcquire(300, TimeUnit.MILLISECONDS);
+                    if (!acquired && !myWaitForPreviousSession) {
+                        return;
+                    }
+                    if (indicator.isCanceled()) {
+                        // give up obtaining the semaphore,
+                        // let compile work begin in order to stop gracefuly on cancel event
+                        break;
+                    }
+                }
+            }
+            catch (InterruptedException ignored) {
+            }
+
+            if (!isHeadless()) {
+                addIndicatorDelegate();
+            }
+            myCompileWork.run();
+        }
+        catch (ProcessCanceledException ignored) {
+        }
+        finally {
+            try {
+                indicator.stop();
+
+                myBuildViewService.onEnd(mySessionId, myExitStatus, myEndCompilationStamp);
+            }
+            finally {
+                if (acquired) {
+                    semaphore.release();
+                }
+            }
+        }
+    }
+
+    private void addIndicatorDelegate() {
+        ProgressIndicator indicator = myIndicator;
+        if (!(indicator instanceof ProgressIndicatorEx)) {
             return;
-          }
-          if (indicator.isCanceled()) {
-            // give up obtaining the semaphore,
-            // let compile work begin in order to stop gracefuly on cancel event
-            break;
-          }
         }
-      }
-      catch (InterruptedException ignored) {
-      }
-
-      if (!isHeadless()) {
-        addIndicatorDelegate();
-      }
-      myCompileWork.run();
-    }
-    catch (ProcessCanceledException ignored) {
-    }
-    finally {
-      try {
-        indicator.stop();
-
-        myBuildViewService.onEnd(mySessionId, myExitStatus, myEndCompilationStamp);
-      }
-      finally {
-        if (acquired) {
-          semaphore.release();
-        }
-      }
-    }
-  }
-
-  private void addIndicatorDelegate() {
-    ProgressIndicator indicator = myIndicator;
-    if (!(indicator instanceof ProgressIndicatorEx)) return;
-    ((ProgressIndicatorEx)indicator).addStateDelegate(new AbstractProgressIndicatorExBase() {
-
-      @Override
-      public void cancel() {
-        super.cancel();
-        stopAppIconProgress();
-      }
-
-      @Override
-      public void stop() {
-        super.stop();
-        stopAppIconProgress();
-      }
-
-      private void stopAppIconProgress() {
-        UIUtil.invokeLaterIfNeeded(() -> {
-          AppIcon appIcon = AppIcon.getInstance();
-          if (appIcon.hideProgress((Project)myProject, APP_ICON_ID)) {
-            if (myErrorCount > 0) {
-              appIcon.setErrorBadge((Project)myProject, String.valueOf(myErrorCount));
-              appIcon.requestAttention((Project)myProject, true);
+        ((ProgressIndicatorEx) indicator).addStateDelegate(new AbstractProgressIndicatorExBase() {
+            @Override
+            public void cancel() {
+                super.cancel();
+                stopAppIconProgress();
             }
-            else if (!myCompilationStartedAutomatically) {
-              appIcon.setOkBadge((Project)myProject, true);
-              appIcon.requestAttention((Project)myProject, false);
+
+            @Override
+            public void stop() {
+                super.stop();
+                stopAppIconProgress();
             }
-          }
+
+            private void stopAppIconProgress() {
+                UIUtil.invokeLaterIfNeeded(() -> {
+                    AppIcon appIcon = AppIcon.getInstance();
+                    if (appIcon.hideProgress((Project) myProject, APP_ICON_ID)) {
+                        if (myErrorCount > 0) {
+                            appIcon.setErrorBadge((Project) myProject, String.valueOf(myErrorCount));
+                            appIcon.requestAttention((Project) myProject, true);
+                        }
+                        else if (!myCompilationStartedAutomatically) {
+                            appIcon.setOkBadge((Project) myProject, true);
+                            appIcon.requestAttention((Project) myProject, false);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void setFraction(final double fraction) {
+                super.setFraction(fraction);
+                UIUtil.invokeLaterIfNeeded(() -> AppIcon.getInstance()
+                    .setProgress((Project) myProject, APP_ICON_ID, AppIconScheme.Progress.BUILD, fraction, true));
+            }
         });
-      }
-
-      @Override
-      public void setFraction(final double fraction) {
-        super.setFraction(fraction);
-        UIUtil.invokeLaterIfNeeded(() -> AppIcon.getInstance().setProgress((Project)myProject, APP_ICON_ID, AppIconScheme.Progress.BUILD, fraction, true));
-      }
-    });
-  }
-
-  public void cancel() {
-    if (!myIndicator.isCanceled()) {
-      myIndicator.cancel();
-    }
-  }
-
-  public void addMessage(final CompilerMessage message) {
-    final CompilerMessageCategory messageCategory = message.getCategory();
-    if (CompilerMessageCategory.WARNING.equals(messageCategory)) {
-      myWarningCount += 1;
-    }
-    else if (CompilerMessageCategory.ERROR.equals(messageCategory)) {
-      myErrorCount += 1;
-      informWolf(message);
     }
 
-    myBuildViewService.addMessage(mySessionId, message);
-  }
-
-  private void informWolf(final CompilerMessage message) {
-    WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance((Project)myProject);
-    VirtualFile file = getVirtualFile(message);
-    wolf.queue(file);
-  }
-
-  public void start(Runnable compileWork) {
-    myCompileWork = compileWork;
-    queue();
-  }
-
-  private static VirtualFile getVirtualFile(final CompilerMessage message) {
-    VirtualFile virtualFile = message.getVirtualFile();
-    if (virtualFile == null) {
-      Navigatable navigatable = message.getNavigatable();
-      if (navigatable instanceof OpenFileDescriptor) {
-        virtualFile = ((OpenFileDescriptor)navigatable).getFile();
-      }
+    public void cancel() {
+        if (!myIndicator.isCanceled()) {
+            myIndicator.cancel();
+        }
     }
-    return virtualFile;
-  }
 
-  public static TextRange getTextRange(final CompilerMessage message) {
-    Navigatable navigatable = message.getNavigatable();
-    if (navigatable instanceof OpenFileDescriptor) {
-      int offset = ((OpenFileDescriptor)navigatable).getOffset();
-      return new TextRange(offset, offset);
+    public void addMessage(final CompilerMessage message) {
+        final CompilerMessageCategory messageCategory = message.getCategory();
+        if (CompilerMessageCategory.WARNING.equals(messageCategory)) {
+            myWarningCount += 1;
+        }
+        else if (CompilerMessageCategory.ERROR.equals(messageCategory)) {
+            myErrorCount += 1;
+            informWolf(message);
+        }
+
+        myBuildViewService.addMessage(mySessionId, message);
     }
-    return TextRange.EMPTY_RANGE;
-  }
+
+    private void informWolf(final CompilerMessage message) {
+        WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance((Project) myProject);
+        VirtualFile file = getVirtualFile(message);
+        wolf.queue(file);
+    }
+
+    public void start(Runnable compileWork) {
+        myCompileWork = compileWork;
+        queue();
+    }
+
+    private static VirtualFile getVirtualFile(final CompilerMessage message) {
+        VirtualFile virtualFile = message.getVirtualFile();
+        if (virtualFile == null) {
+            Navigatable navigatable = message.getNavigatable();
+            if (navigatable instanceof OpenFileDescriptor) {
+                virtualFile = ((OpenFileDescriptor) navigatable).getFile();
+            }
+        }
+        return virtualFile;
+    }
+
+    public static TextRange getTextRange(final CompilerMessage message) {
+        Navigatable navigatable = message.getNavigatable();
+        if (navigatable instanceof OpenFileDescriptor) {
+            int offset = ((OpenFileDescriptor) navigatable).getOffset();
+            return new TextRange(offset, offset);
+        }
+        return TextRange.EMPTY_RANGE;
+    }
 }

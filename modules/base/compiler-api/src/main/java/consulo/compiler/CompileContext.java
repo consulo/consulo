@@ -31,128 +31,130 @@ import jakarta.annotation.Nullable;
  * An interface allowing access and modification of the data associated with the current compile session.
  */
 public interface CompileContext extends UserDataHolder {
-  /**
-   * Allows to add a message to be shown in Compiler message view.
-   * If correct url, line and column numbers are supplied, the navigation to the specified file is available from the view.
-   *
-   * @param category  the category of a message (information, error, warning).
-   * @param message   the text of the message.
-   * @param url       a url to the file to which the message applies, null if not available.
-   * @param lineNum   a line number, -1 if not available.
-   * @param columnNum a column number, -1 if not available.
-   */
-  void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum);
+    /**
+     * Allows to add a message to be shown in Compiler message view.
+     * If correct url, line and column numbers are supplied, the navigation to the specified file is available from the view.
+     *
+     * @param category  the category of a message (information, error, warning).
+     * @param message   the text of the message.
+     * @param url       a url to the file to which the message applies, null if not available.
+     * @param lineNum   a line number, -1 if not available.
+     * @param columnNum a column number, -1 if not available.
+     */
+    void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum);
 
-  /**
-   * Allows to add a message to be shown in Compiler message view, with a specified Navigatable
-   * that is used to navigate to the error location.
-   *
-   * @param category    the category of a message (information, error, warning).
-   * @param message     the text of the message.
-   * @param url         a url to the file to which the message applies, null if not available.
-   * @param lineNum     a line number, -1 if not available.
-   * @param columnNum   a column number, -1 if not available.
-   * @param navigatable the navigatable pointing to the error location.
-   * @since 6.0
-   */
-  void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum,
-                  Navigatable navigatable);
+    /**
+     * Allows to add a message to be shown in Compiler message view, with a specified Navigatable
+     * that is used to navigate to the error location.
+     *
+     * @param category    the category of a message (information, error, warning).
+     * @param message     the text of the message.
+     * @param url         a url to the file to which the message applies, null if not available.
+     * @param lineNum     a line number, -1 if not available.
+     * @param columnNum   a column number, -1 if not available.
+     * @param navigatable the navigatable pointing to the error location.
+     * @since 6.0
+     */
+    void addMessage(
+        CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum,
+        Navigatable navigatable
+    );
 
-  /**
-   * Returns all messages of the specified category added during the current compile session.
-   *
-   * @param category the category for which messages are requested.
-   * @return all compiler messages of the specified category
-   */
-  CompilerMessage[] getMessages(CompilerMessageCategory category);
+    /**
+     * Returns all messages of the specified category added during the current compile session.
+     *
+     * @param category the category for which messages are requested.
+     * @return all compiler messages of the specified category
+     */
+    CompilerMessage[] getMessages(CompilerMessageCategory category);
 
-  /**
-   * Returns the count of messages of the specified category added during the current compile session.
-   *
-   * @param category the category for which messages are requested.
-   * @return the number of messages of the specified category
-   */
-  int getMessageCount(CompilerMessageCategory category);
+    /**
+     * Returns the count of messages of the specified category added during the current compile session.
+     *
+     * @param category the category for which messages are requested.
+     * @return the number of messages of the specified category
+     */
+    int getMessageCount(CompilerMessageCategory category);
 
-  /**
-   * Returns the progress indicator of the compilation process.
-   *
-   * @return the progress indicator instance.
-   */
-  @Nonnull
-  ProgressIndicator getProgressIndicator();
+    /**
+     * Returns the progress indicator of the compilation process.
+     *
+     * @return the progress indicator instance.
+     */
+    @Nonnull
+    ProgressIndicator getProgressIndicator();
 
-  /**
-   * Returns the current compile scope.
-   *
-   * @return current compile scope
-   */
-  CompileScope getCompileScope();
+    /**
+     * Returns the current compile scope.
+     *
+     * @return current compile scope
+     */
+    CompileScope getCompileScope();
 
-  /**
-   * A compiler may call this method in order to request complete project rebuild.
-   * This may be necessary, for example, when compiler caches are corrupted.
-   */
-  void requestRebuildNextTime(String message);
+    /**
+     * A compiler may call this method in order to request complete project rebuild.
+     * This may be necessary, for example, when compiler caches are corrupted.
+     */
+    void requestRebuildNextTime(String message);
 
-  /**
-   * Returns the module to which the specified file belongs. This method is aware of the file->module mapping
-   * for generated files.
-   *
-   * @param file the file to check.
-   * @return the module to which the file belongs
-   */
-  Module getModuleByFile(VirtualFile file);
+    /**
+     * Returns the module to which the specified file belongs. This method is aware of the file->module mapping
+     * for generated files.
+     *
+     * @param file the file to check.
+     * @return the module to which the file belongs
+     */
+    Module getModuleByFile(VirtualFile file);
 
-  /**
-   * Returns the source roots for the specified module.
-   *
-   * @return module's source roots as well as source roots for generated sources that are attributed to the module
-   */
-  VirtualFile[] getSourceRoots(Module module);
+    /**
+     * Returns the source roots for the specified module.
+     *
+     * @return module's source roots as well as source roots for generated sources that are attributed to the module
+     */
+    VirtualFile[] getSourceRoots(Module module);
 
-  /**
-   * Returns the list of all output directories.
-   *
-   * @return a list of all configured output directories from all modules (including output directories for tests)
-   */
-  VirtualFile[] getAllOutputDirectories();
+    /**
+     * Returns the list of all output directories.
+     *
+     * @return a list of all configured output directories from all modules (including output directories for tests)
+     */
+    VirtualFile[] getAllOutputDirectories();
 
-  /**
-   * Returns the output directory for the specified module.
-   *
-   * @param module the module to check.
-   * @return the output directory for the module specified, null if corresponding VirtualFile is not valid or directory not specified
-   */
-  @jakarta.annotation.Nullable
-  @Deprecated
-  VirtualFile getModuleOutputDirectory(Module module);
+    /**
+     * Returns the output directory for the specified module.
+     *
+     * @param module the module to check.
+     * @return the output directory for the module specified, null if corresponding VirtualFile is not valid or directory not specified
+     */
+    @jakarta.annotation.Nullable
+    @Deprecated
+    VirtualFile getModuleOutputDirectory(Module module);
 
-  /**
-   * Returns the test output directory for the specified module.
-   *
-   * @param module the module to check.
-   * @return the tests output directory the module specified, null if corresponding VirtualFile is not valid. If in Paths settings
-   *         output directory for tests is not configured explicitly, but the output path is present, the output path will be returned.
-   */
-  @Nullable
-  @Deprecated
-  VirtualFile getModuleOutputDirectoryForTests(Module module);
+    /**
+     * Returns the test output directory for the specified module.
+     *
+     * @param module the module to check.
+     * @return the tests output directory the module specified, null if corresponding VirtualFile is not valid. If in Paths settings
+     * output directory for tests is not configured explicitly, but the output path is present, the output path will be returned.
+     */
+    @Nullable
+    @Deprecated
+    VirtualFile getModuleOutputDirectoryForTests(Module module);
 
-  @Nullable
-  VirtualFile getOutputForFile(Module module, VirtualFile virtualFile);
+    @Nullable
+    VirtualFile getOutputForFile(Module module, VirtualFile virtualFile);
 
-  @Nullable
-  VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType);
+    @Nullable
+    VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType);
 
-  /**
-   * Checks if the compilation is incremental, i.e. triggered by one of "Make" actions.
-   *
-   * @return true if compilation is incremental. 
-   */
-  boolean isMake();
+    /**
+     * Checks if the compilation is incremental, i.e. triggered by one of "Make" actions.
+     *
+     * @return true if compilation is incremental.
+     */
+    boolean isMake();
 
-  boolean isRebuild();
+    boolean isRebuild();
 
-  Project getProject();
+    Project getProject();
 }

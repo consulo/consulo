@@ -30,141 +30,126 @@ import jakarta.annotation.Nullable;
  * @since 28/11/2021
  */
 public class DummyProgressIndicator implements ProgressIndicatorEx {
-  @Override
-  public void addStateDelegate(@Nonnull ProgressIndicatorEx delegate) {
+    @Override
+    public void addStateDelegate(@Nonnull ProgressIndicatorEx delegate) {
+    }
 
-  }
+    @Override
+    public void finish(@Nonnull TaskInfo task) {
+    }
 
-  @Override
-  public void finish(@Nonnull TaskInfo task) {
+    @Override
+    public boolean isFinished(@Nonnull TaskInfo task) {
+        return false;
+    }
 
-  }
+    @Override
+    public boolean wasStarted() {
+        return false;
+    }
 
-  @Override
-  public boolean isFinished(@Nonnull TaskInfo task) {
-    return false;
-  }
+    @Override
+    public void processFinish() {
+    }
 
-  @Override
-  public boolean wasStarted() {
-    return false;
-  }
+    @Override
+    public void initStateFrom(@Nonnull ProgressIndicator indicator) {
+    }
 
-  @Override
-  public void processFinish() {
+    @Override
+    public void start() {
+    }
 
-  }
+    @Override
+    public void stop() {
+    }
 
-  @Override
-  public void initStateFrom(@Nonnull ProgressIndicator indicator) {
+    @Override
+    public boolean isRunning() {
+        return false;
+    }
 
-  }
+    @Override
+    public void cancel() {
+    }
 
-  @Override
-  public void start() {
+    @Override
+    public boolean isCanceled() {
+        return false;
+    }
 
-  }
+    @Override
+    public void setTextValue(@Nonnull LocalizeValue textValue) {
+    }
 
-  @Override
-  public void stop() {
+    @Nonnull
+    @Override
+    public LocalizeValue getTextValue() {
+        return LocalizeValue.of();
+    }
 
-  }
+    @Override
+    public void setText2Value(@Nonnull LocalizeValue text) {
+    }
 
-  @Override
-  public boolean isRunning() {
-    return false;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getText2Value() {
+        return LocalizeValue.of();
+    }
 
-  @Override
-  public void cancel() {
+    @Override
+    public double getFraction() {
+        return 0;
+    }
 
-  }
+    @Override
+    public void setFraction(double fraction) {
+    }
 
-  @Override
-  public boolean isCanceled() {
-    return false;
-  }
+    @Override
+    public void pushState() {
+    }
 
-  @Override
-  public void setTextValue(@Nonnull LocalizeValue textValue) {
+    @Override
+    public void popState() {
+    }
 
-  }
+    @Override
+    public boolean isModal() {
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getTextValue() {
-    return LocalizeValue.of();
-  }
+    @Nonnull
+    @Override
+    public ModalityState getModalityState() {
+        return Application.get().getDefaultModalityState();
+    }
 
-  @Override
-  public void setText2Value(@Nonnull LocalizeValue text) {
+    @Override
+    public void setModalityProgress(@Nullable ProgressIndicator modalityProgress) {
+    }
 
-  }
+    @Override
+    public boolean isIndeterminate() {
+        return false;
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getText2Value() {
-    return LocalizeValue.of();
-  }
+    @Override
+    public void setIndeterminate(boolean indeterminate) {
+    }
 
-  @Override
-  public double getFraction() {
-    return 0;
-  }
+    @Override
+    public void checkCanceled() throws ProcessCanceledException {
+    }
 
-  @Override
-  public void setFraction(double fraction) {
+    @Override
+    public boolean isPopupWasShown() {
+        return false;
+    }
 
-  }
-
-  @Override
-  public void pushState() {
-
-  }
-
-  @Override
-  public void popState() {
-
-  }
-
-  @Override
-  public boolean isModal() {
-    return false;
-  }
-
-  @Nonnull
-  @Override
-  public ModalityState getModalityState() {
-    return Application.get().getDefaultModalityState();
-  }
-
-  @Override
-  public void setModalityProgress(@Nullable ProgressIndicator modalityProgress) {
-
-  }
-
-  @Override
-  public boolean isIndeterminate() {
-    return false;
-  }
-
-  @Override
-  public void setIndeterminate(boolean indeterminate) {
-
-  }
-
-  @Override
-  public void checkCanceled() throws ProcessCanceledException {
-
-  }
-
-  @Override
-  public boolean isPopupWasShown() {
-    return false;
-  }
-
-  @Override
-  public boolean isShowing() {
-    return false;
-  }
+    @Override
+    public boolean isShowing() {
+        return false;
+    }
 }

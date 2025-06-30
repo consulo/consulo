@@ -40,67 +40,71 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class CompilerPathsManager {
-  @Nonnull
-  public static CompilerPathsManager getInstance(@Nonnull final Project project) {
-    return project.getComponent(CompilerPathsManager.class);
-  }
+    @Nonnull
+    public static CompilerPathsManager getInstance(@Nonnull final Project project) {
+        return project.getComponent(CompilerPathsManager.class);
+    }
 
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public CompilerPathsManager(Project project) {
-    myProject = project;
-  }
+    @Inject
+    public CompilerPathsManager(Project project) {
+        myProject = project;
+    }
 
-  @Nullable
-  public VirtualFile getCompilerOutput() {
-    return CompilerConfiguration.getInstance(myProject).getCompilerOutput();
-  }
+    @Nullable
+    public VirtualFile getCompilerOutput() {
+        return CompilerConfiguration.getInstance(myProject).getCompilerOutput();
+    }
 
-  @Nullable
-  public String getCompilerOutputUrl() {
-    return CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
-  }
+    @Nullable
+    public String getCompilerOutputUrl() {
+        return CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
+    }
 
-  public VirtualFilePointer getCompilerOutputPointer() {
-    return CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
-  }
+    public VirtualFilePointer getCompilerOutputPointer() {
+        return CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
+    }
 
-  public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
-    CompilerConfiguration.getInstance(myProject).setCompilerOutputUrl(compilerOutputUrl);
-  }
+    public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
+        CompilerConfiguration.getInstance(myProject).setCompilerOutputUrl(compilerOutputUrl);
+    }
 
-  public boolean isInheritedCompilerOutput(@Nonnull Module module) {
-    return ModuleCompilerPathsManager.getInstance(module).isInheritedCompilerOutput();
-  }
+    public boolean isInheritedCompilerOutput(@Nonnull Module module) {
+        return ModuleCompilerPathsManager.getInstance(module).isInheritedCompilerOutput();
+    }
 
-  public void setInheritedCompilerOutput(@Nonnull Module module, boolean val) {
-    ModuleCompilerPathsManager.getInstance(module).setInheritedCompilerOutput(val);
-  }
+    public void setInheritedCompilerOutput(@Nonnull Module module, boolean val) {
+        ModuleCompilerPathsManager.getInstance(module).setInheritedCompilerOutput(val);
+    }
 
-  public boolean isExcludeOutput(@Nonnull Module module) {
-    return ModuleCompilerPathsManager.getInstance(module).isExcludeOutput();
-  }
+    public boolean isExcludeOutput(@Nonnull Module module) {
+        return ModuleCompilerPathsManager.getInstance(module).isExcludeOutput();
+    }
 
-  public void setExcludeOutput(@Nonnull Module module, boolean val) {
-    ModuleCompilerPathsManager.getInstance(module).setExcludeOutput(val);
-  }
+    public void setExcludeOutput(@Nonnull Module module, boolean val) {
+        ModuleCompilerPathsManager.getInstance(module).setExcludeOutput(val);
+    }
 
-  public void setCompilerOutputUrl(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl) {
-    ModuleCompilerPathsManager.getInstance(module).setCompilerOutputUrl(contentFolderType, compilerOutputUrl);
-  }
+    public void setCompilerOutputUrl(
+        @Nonnull Module module,
+        @Nonnull ContentFolderTypeProvider contentFolderType,
+        @Nullable String compilerOutputUrl
+    ) {
+        ModuleCompilerPathsManager.getInstance(module).setCompilerOutputUrl(contentFolderType, compilerOutputUrl);
+    }
 
-  public String getCompilerOutputUrl(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
-    return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
-  }
+    public String getCompilerOutputUrl(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
+        return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
+    }
 
-  @Nullable
-  public VirtualFile getCompilerOutput(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
-    return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
-  }
+    @Nullable
+    public VirtualFile getCompilerOutput(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
+        return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
+    }
 
-  @Nonnull
-  public VirtualFilePointer getCompilerOutputPointer(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
-    return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPointer(contentFolderType);
-  }
+    @Nonnull
+    public VirtualFilePointer getCompilerOutputPointer(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
+        return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPointer(contentFolderType);
+    }
 }

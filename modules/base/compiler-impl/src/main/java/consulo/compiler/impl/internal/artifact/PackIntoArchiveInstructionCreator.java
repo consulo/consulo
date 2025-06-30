@@ -27,45 +27,49 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstructionCreatorBase {
-  private final DestinationInfo myDestinationInfo;
-  private final ArchivePackageInfo myArchivePackageInfo;
-  private final String myPathInJar;
+    private final DestinationInfo myDestinationInfo;
+    private final ArchivePackageInfo myArchivePackageInfo;
+    private final String myPathInJar;
 
-  public PackIntoArchiveInstructionCreator(ArtifactsProcessingItemsBuilderContext context, ArchivePackageInfo archivePackageInfo,
-                                           String pathInJar, DestinationInfo destinationInfo) {
-    super(context);
-    myArchivePackageInfo = archivePackageInfo;
-    myPathInJar = pathInJar;
-    myDestinationInfo = destinationInfo;
-  }
-
-  @Override
-  public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
-    final String pathInJar = childPathInJar(outputFileName);
-    if (myContext.addDestination(file, new ArchiveDestinationInfo(pathInJar, myArchivePackageInfo, myDestinationInfo))) {
-      myArchivePackageInfo.addContent(pathInJar, file);
+    public PackIntoArchiveInstructionCreator(
+        ArtifactsProcessingItemsBuilderContext context,
+        ArchivePackageInfo archivePackageInfo,
+        String pathInJar, DestinationInfo destinationInfo
+    ) {
+        super(context);
+        myArchivePackageInfo = archivePackageInfo;
+        myPathInJar = pathInJar;
+        myDestinationInfo = destinationInfo;
     }
-  }
 
-  private String childPathInJar(String fileName) {
-    return myPathInJar.length() == 0 ? fileName : myPathInJar + "/" + fileName;
-  }
-
-  @Override
-  public PackIntoArchiveInstructionCreator subFolder(@Nonnull String directoryName) {
-    return new PackIntoArchiveInstructionCreator(myContext, myArchivePackageInfo, childPathInJar(directoryName), myDestinationInfo);
-  }
-
-  @Nonnull
-  @Override
-  public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
-    final ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
-    final String outputPath = myDestinationInfo.getOutputPath() + "/" + archiveFileName;
-    if (!myContext.registerJarFile(archivePackageInfo, outputPath)) {
-      return new SkipAllInstructionCreator(myContext);
+    @Override
+    public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
+        final String pathInJar = childPathInJar(outputFileName);
+        if (myContext.addDestination(file, new ArchiveDestinationInfo(pathInJar, myArchivePackageInfo, myDestinationInfo))) {
+            myArchivePackageInfo.addContent(pathInJar, file);
+        }
     }
-    final ArchiveDestinationInfo destination = new ArchiveDestinationInfo(childPathInJar(archiveFileName), myArchivePackageInfo, myDestinationInfo);
-    archivePackageInfo.addDestination(destination);
-    return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);
-  }
+
+    private String childPathInJar(String fileName) {
+        return myPathInJar.length() == 0 ? fileName : myPathInJar + "/" + fileName;
+    }
+
+    @Override
+    public PackIntoArchiveInstructionCreator subFolder(@Nonnull String directoryName) {
+        return new PackIntoArchiveInstructionCreator(myContext, myArchivePackageInfo, childPathInJar(directoryName), myDestinationInfo);
+    }
+
+    @Nonnull
+    @Override
+    public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
+        final ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
+        final String outputPath = myDestinationInfo.getOutputPath() + "/" + archiveFileName;
+        if (!myContext.registerJarFile(archivePackageInfo, outputPath)) {
+            return new SkipAllInstructionCreator(myContext);
+        }
+        final ArchiveDestinationInfo destination =
+            new ArchiveDestinationInfo(childPathInJar(archiveFileName), myArchivePackageInfo, myDestinationInfo);
+        archivePackageInfo.addDestination(destination);
+        return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);
+    }
 }

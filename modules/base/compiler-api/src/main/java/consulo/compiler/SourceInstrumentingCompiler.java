@@ -21,7 +21,8 @@ import consulo.compiler.FileProcessingCompiler;
  * A tag interface indicating that the compiler will instrument java sources.
  * This affects the order of compiler calls:
  * The sequence in which compilers are called:
- * SourceGeneratingCompiler -> SourceInstrumentingCompiler -> TranslatingCompiler ->  ClassInstrumentingCompiler -> ClassPostProcessingCompiler -> Validator
+ * SourceGeneratingCompiler -> SourceInstrumentingCompiler -> TranslatingCompiler ->  ClassInstrumentingCompiler ->
+ * ClassPostProcessingCompiler -> Validator
  */
 public interface SourceInstrumentingCompiler extends FileProcessingCompiler {
 }

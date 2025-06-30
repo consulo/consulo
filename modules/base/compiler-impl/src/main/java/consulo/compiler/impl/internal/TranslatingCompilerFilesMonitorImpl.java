@@ -381,7 +381,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     ) throws IOException {
         myForceCompiling = false;
         Project project = context.getProject();
-        DependencyCache dependencyCache = ((CompileContextEx)context).getDependencyCache();
+        DependencyCache dependencyCache = ((CompileContextEx) context).getDependencyCache();
         int projectId = getProjectId(project);
         if (!successfullyCompiled.isEmpty()) {
             LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -439,7 +439,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                             }
                         }
                     }
-                    long compilationStartStamp = ((CompileContextEx)context).getStartCompilationStamp();
+                    long compilationStartStamp = ((CompileContextEx) context).getStartCompilationStamp();
                     for (Map.Entry<VirtualFile, TranslationSourceFileInfo> entry : compiledSources.entrySet()) {
                         TranslationSourceFileInfo info = entry.getValue();
                         VirtualFile file = entry.getKey();
@@ -455,7 +455,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                             }
                         }
                         removeSourceForRecompilation(projectId, Math.abs(getFileId(file)));
-                        if (fileStamp > compilationStartStamp && !((CompileContextEx)context).isGenerated(file)
+                        if (fileStamp > compilationStartStamp && !((CompileContextEx) context).isGenerated(file)
                             || forceRecompile.contains(file)) {
                             // changes were made during compilation, need to re-schedule compilation
                             // it is important to invoke removeSourceForRecompilation() before this call to make sure
@@ -614,7 +614,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             if (indicator != null) {
                 projRef.get();
                 indicator.setText2Value(LocalizeValue.ofNullable(srcRoot.getPresentableUrl()));
-                indicator.setFraction(++processed / (double)totalRootCount);
+                indicator.setFraction(++processed / (double) totalRootCount);
             }
             if (isNewRoots) {
                 fileIndex.iterateContentUnderDirectory(
@@ -803,7 +803,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 for (VirtualFile root : intermediateRoots) {
                     projRef.get();
                     indicator.setText2Value(LocalizeValue.ofNullable(root.getPresentableUrl()));
-                    indicator.setFraction(++processed / (double)totalRootsCount);
+                    indicator.setFraction(++processed / (double) totalRootsCount);
 
                     TranslationCompilerFilesMonitorVfsListener.processRecursively(root, false, processor);
                 }
@@ -856,7 +856,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
 
         //optimization: if file is in content of some project it's definitely not ignored
-        boolean isInContent = Application.get().runReadAction((Supplier<Boolean>)() -> {
+        boolean isInContent = Application.get().runReadAction((Supplier<Boolean>) () -> {
             for (Project project : projectManager.getOpenProjects()) {
                 if (project.isInitialized() && ProjectRootManager.getInstance(project).getFileIndex().isInContent(file)) {
                     return true;

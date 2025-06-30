@@ -23,19 +23,19 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class ArtifactBuildTarget extends BuildTarget {
-  private Artifact myArtifact;
+    private Artifact myArtifact;
 
-  public ArtifactBuildTarget(Artifact artifact) {
-    myArtifact = artifact;
-  }
+    public ArtifactBuildTarget(Artifact artifact) {
+        myArtifact = artifact;
+    }
 
-  public Artifact getArtifact() {
-    return myArtifact;
-  }
+    public Artifact getArtifact() {
+        return myArtifact;
+    }
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return myArtifact.getName();
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return myArtifact.getName();
+    }
 }

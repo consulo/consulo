@@ -26,6 +26,7 @@ import consulo.compiler.internal.AdditionalCompileScopeProvider;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -34,19 +35,23 @@ import java.util.function.Predicate;
  */
 @ExtensionImpl
 public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileScopeProvider {
-  @Override
-  public CompileScope getAdditionalScope(@Nonnull final CompileScope baseScope, @Nonnull Predicate<Compiler> filter, @Nonnull final Project project) {
-    if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
-      return null;
+    @Override
+    public CompileScope getAdditionalScope(
+        @Nonnull final CompileScope baseScope,
+        @Nonnull Predicate<Compiler> filter,
+        @Nonnull final Project project
+    ) {
+        if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
+            return null;
+        }
+        final ArtifactsCompiler compiler = ArtifactsCompiler.getInstance(project);
+        if (compiler == null || !filter.test(compiler)) {
+            return null;
+        }
+        ThrowableComputable<ModuleCompileScope, RuntimeException> action = () -> {
+            final Set<Artifact> artifacts = ArtifactCompileScope.getArtifactsToBuild(project, baseScope, false);
+            return ArtifactCompileScope.createScopeForModulesInArtifacts(project, artifacts);
+        };
+        return AccessRule.read(action);
     }
-    final ArtifactsCompiler compiler = ArtifactsCompiler.getInstance(project);
-    if (compiler == null || !filter.test(compiler)) {
-      return null;
-    }
-    ThrowableComputable<ModuleCompileScope,RuntimeException> action = () -> {
-      final Set<Artifact> artifacts = ArtifactCompileScope.getArtifactsToBuild(project, baseScope, false);
-      return ArtifactCompileScope.createScopeForModulesInArtifacts(project, artifacts);
-    };
-    return AccessRule.read(action);
-  }
 }

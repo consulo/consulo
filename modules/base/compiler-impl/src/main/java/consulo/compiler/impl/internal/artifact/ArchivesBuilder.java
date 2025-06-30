@@ -42,244 +42,272 @@ import java.util.*;
  * @author nik
  */
 public class ArchivesBuilder {
-  public static final Logger LOGGER = Logger.getInstance(ArchivesBuilder.class);
+    public static final Logger LOGGER = Logger.getInstance(ArchivesBuilder.class);
 
-  private final Set<ArchivePackageInfo> myArchivesToBuild;
-  private final FileFilter myFileFilter;
-  private final CompileContext myContext;
-  private Map<ArchivePackageInfo, File> myBuiltArchives;
+    private final Set<ArchivePackageInfo> myArchivesToBuild;
+    private final FileFilter myFileFilter;
+    private final CompileContext myContext;
+    private Map<ArchivePackageInfo, File> myBuiltArchives;
 
-  public ArchivesBuilder(@Nonnull Set<ArchivePackageInfo> archivesToBuild, @Nonnull FileFilter fileFilter, @Nonnull CompileContext context) {
-    DependentArchivesEvaluator evaluator = new DependentArchivesEvaluator();
-    for (ArchivePackageInfo archivePackageInfo : archivesToBuild) {
-      evaluator.addArchiveWithDependencies(archivePackageInfo);
-    }
-    myArchivesToBuild = evaluator.getArchivePackageInfos();
-    myFileFilter = fileFilter;
-    myContext = context;
-  }
-
-  public boolean buildArchives(Set<String> writtenPaths) throws IOException {
-    myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.building.archives"));
-
-    final ArchivePackageInfo[] sortedArchives = sortArchives();
-    if (sortedArchives == null) {
-      return false;
-    }
-
-    myBuiltArchives = new HashMap<>();
-    try {
-      for (ArchivePackageInfo archivePackageInfo : sortedArchives) {
-        myContext.getProgressIndicator().checkCanceled();
-        buildArchive(archivePackageInfo);
-      }
-
-      myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.copying.archives"));
-      copyJars(writtenPaths);
-    }
-    finally {
-      deleteTemporaryJars();
-    }
-
-
-    return true;
-  }
-
-  private void deleteTemporaryJars() {
-    for (File file : myBuiltArchives.values()) {
-      FileUtil.delete(file);
-    }
-  }
-
-  private void copyJars(final Set<String> writtenPaths) throws IOException {
-    for (Map.Entry<ArchivePackageInfo, File> entry : myBuiltArchives.entrySet()) {
-      File fromFile = entry.getValue();
-      boolean first = true;
-      for (DestinationInfo destination : entry.getKey().getAllDestinations()) {
-        if (destination instanceof ExplodedDestinationInfo) {
-          File toFile = new File(FileUtil.toSystemDependentName(destination.getOutputPath()));
-
-          if (first) {
-            first = false;
-            renameFile(fromFile, toFile, writtenPaths);
-            fromFile = toFile;
-          }
-          else {
-            DeploymentUtilImpl.copyFile(fromFile, toFile, myContext, writtenPaths, myFileFilter);
-          }
-
+    public ArchivesBuilder(
+        @Nonnull Set<ArchivePackageInfo> archivesToBuild,
+        @Nonnull FileFilter fileFilter,
+        @Nonnull CompileContext context
+    ) {
+        DependentArchivesEvaluator evaluator = new DependentArchivesEvaluator();
+        for (ArchivePackageInfo archivePackageInfo : archivesToBuild) {
+            evaluator.addArchiveWithDependencies(archivePackageInfo);
         }
-      }
-    }
-  }
-
-  private static void renameFile(final File fromFile, final File toFile, final Set<String> writtenPaths) throws IOException {
-    FileUtil.rename(fromFile, toFile, FilePermissionCopier.BY_NIO2);
-    writtenPaths.add(toFile.getPath());
-  }
-
-  @Nullable
-  private ArchivePackageInfo[] sortArchives() {
-    final DFSTBuilder<ArchivePackageInfo> builder = new DFSTBuilder<>(GraphGenerator.create(CachingSemiGraph.create(new ArchivesGraph())));
-    if (!builder.isAcyclic()) {
-      final consulo.util.lang.Pair<ArchivePackageInfo, ArchivePackageInfo> dependency = builder.getCircularDependency();
-      String message = CompilerBundle
-              .message("packaging.compiler.error.cannot.build.circular.dependency.found.between.0.and.1", dependency.getFirst().getPresentableDestination(),
-                       dependency.getSecond().getPresentableDestination());
-      myContext.addMessage(CompilerMessageCategory.ERROR, message, null, -1, -1);
-      return null;
+        myArchivesToBuild = evaluator.getArchivePackageInfos();
+        myFileFilter = fileFilter;
+        myContext = context;
     }
 
-    ArchivePackageInfo[] archives = myArchivesToBuild.toArray(new ArchivePackageInfo[myArchivesToBuild.size()]);
-    Arrays.sort(archives, builder.comparator());
-    archives = ArrayUtil.reverseArray(archives);
-    return archives;
-  }
+    public boolean buildArchives(Set<String> writtenPaths) throws IOException {
+        myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.building.archives"));
 
-  public Set<ArchivePackageInfo> getArchivesToBuild() {
-    return myArchivesToBuild;
-  }
-
-  @SuppressWarnings("unchecked")
-  private <T> void buildArchive(final ArchivePackageInfo archive) throws IOException {
-    if (archive.getPackedFiles().isEmpty() && archive.getPackedArchives().isEmpty()) {
-      myContext.addMessage(CompilerMessageCategory.WARNING, "Archive '" + archive.getPresentableDestination() + "' has no files so it won't be created", null,
-                           -1, -1);
-      return;
-    }
-
-    myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.building.0", archive.getPresentableDestination()));
-    File tempFile = File.createTempFile("artifactCompiler", "tmp");
-
-    myBuiltArchives.put(archive, tempFile);
-
-    FileUtil.createParentDirs(tempFile);
-
-    ArchivePackageWriter<T> packageWriter = (ArchivePackageWriter<T>)archive.getPackageWriter();
-
-    T archiveFile;
-
-    if (packageWriter instanceof ArchivePackageWriterEx) {
-      archiveFile = ((ArchivePackageWriterEx<T>)packageWriter).createArchiveObject(tempFile, archive);
-    }
-    else {
-      archiveFile = packageWriter.createArchiveObject(tempFile);
-    }
-
-    try {
-      final Set<String> writtenPaths = new HashSet<>();
-      for (Pair<String, VirtualFile> pair : archive.getPackedFiles()) {
-        final VirtualFile sourceFile = pair.getSecond();
-        if (sourceFile.isInLocalFileSystem()) {
-          File file = VirtualFileUtil.virtualToIoFile(sourceFile);
-          addFileToArchive(archiveFile, packageWriter, file, pair.getFirst(), writtenPaths);
+        final ArchivePackageInfo[] sortedArchives = sortArchives();
+        if (sortedArchives == null) {
+            return false;
         }
-        else {
-          extractFileAndAddToArchive(archiveFile, packageWriter, sourceFile, pair.getFirst(), writtenPaths);
-        }
-      }
 
-      for (Pair<String, ArchivePackageInfo> nestedArchive : archive.getPackedArchives()) {
-        File nestedArchiveFile = myBuiltArchives.get(nestedArchive.getSecond());
-        if (nestedArchiveFile != null) {
-          addFileToArchive(archiveFile, packageWriter, nestedArchiveFile, nestedArchive.getFirst(), writtenPaths);
+        myBuiltArchives = new HashMap<>();
+        try {
+            for (ArchivePackageInfo archivePackageInfo : sortedArchives) {
+                myContext.getProgressIndicator().checkCanceled();
+                buildArchive(archivePackageInfo);
+            }
+
+            myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.copying.archives"));
+            copyJars(writtenPaths);
+        }
+        finally {
+            deleteTemporaryJars();
+        }
+
+
+        return true;
+    }
+
+    private void deleteTemporaryJars() {
+        for (File file : myBuiltArchives.values()) {
+            FileUtil.delete(file);
+        }
+    }
+
+    private void copyJars(final Set<String> writtenPaths) throws IOException {
+        for (Map.Entry<ArchivePackageInfo, File> entry : myBuiltArchives.entrySet()) {
+            File fromFile = entry.getValue();
+            boolean first = true;
+            for (DestinationInfo destination : entry.getKey().getAllDestinations()) {
+                if (destination instanceof ExplodedDestinationInfo) {
+                    File toFile = new File(FileUtil.toSystemDependentName(destination.getOutputPath()));
+
+                    if (first) {
+                        first = false;
+                        renameFile(fromFile, toFile, writtenPaths);
+                        fromFile = toFile;
+                    }
+                    else {
+                        DeploymentUtilImpl.copyFile(fromFile, toFile, myContext, writtenPaths, myFileFilter);
+                    }
+
+                }
+            }
+        }
+    }
+
+    private static void renameFile(final File fromFile, final File toFile, final Set<String> writtenPaths) throws IOException {
+        FileUtil.rename(fromFile, toFile, FilePermissionCopier.BY_NIO2);
+        writtenPaths.add(toFile.getPath());
+    }
+
+    @Nullable
+    private ArchivePackageInfo[] sortArchives() {
+        final DFSTBuilder<ArchivePackageInfo> builder =
+            new DFSTBuilder<>(GraphGenerator.create(CachingSemiGraph.create(new ArchivesGraph())));
+        if (!builder.isAcyclic()) {
+            final consulo.util.lang.Pair<ArchivePackageInfo, ArchivePackageInfo> dependency = builder.getCircularDependency();
+            String message = CompilerBundle
+                .message(
+                    "packaging.compiler.error.cannot.build.circular.dependency.found.between.0.and.1",
+                    dependency.getFirst().getPresentableDestination(),
+                    dependency.getSecond().getPresentableDestination()
+                );
+            myContext.addMessage(CompilerMessageCategory.ERROR, message, null, -1, -1);
+            return null;
+        }
+
+        ArchivePackageInfo[] archives = myArchivesToBuild.toArray(new ArchivePackageInfo[myArchivesToBuild.size()]);
+        Arrays.sort(archives, builder.comparator());
+        archives = ArrayUtil.reverseArray(archives);
+        return archives;
+    }
+
+    public Set<ArchivePackageInfo> getArchivesToBuild() {
+        return myArchivesToBuild;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void buildArchive(final ArchivePackageInfo archive) throws IOException {
+        if (archive.getPackedFiles().isEmpty() && archive.getPackedArchives().isEmpty()) {
+            myContext.addMessage(
+                CompilerMessageCategory.WARNING,
+                "Archive '" + archive.getPresentableDestination() + "' has no files so it won't be created",
+                null,
+                -1,
+                -1
+            );
+            return;
+        }
+
+        myContext.getProgressIndicator()
+            .setText(CompilerBundle.message("packaging.compiler.message.building.0", archive.getPresentableDestination()));
+        File tempFile = File.createTempFile("artifactCompiler", "tmp");
+
+        myBuiltArchives.put(archive, tempFile);
+
+        FileUtil.createParentDirs(tempFile);
+
+        ArchivePackageWriter<T> packageWriter = (ArchivePackageWriter<T>) archive.getPackageWriter();
+
+        T archiveFile;
+
+        if (packageWriter instanceof ArchivePackageWriterEx) {
+            archiveFile = ((ArchivePackageWriterEx<T>) packageWriter).createArchiveObject(tempFile, archive);
         }
         else {
-          LOGGER.debug("nested archive file " + nestedArchive.getFirst() + " for " + archive.getPresentableDestination() + " not found");
+            archiveFile = packageWriter.createArchiveObject(tempFile);
         }
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    finally {
-      packageWriter.close(archiveFile);
-    }
-  }
 
-  private <T> void extractFileAndAddToArchive(@Nonnull T archiveObject,
-                                              @Nonnull ArchivePackageWriter<T> writer,
-                                              VirtualFile sourceFile,
-                                              String relativePath,
-                                              Set<String> writtenPaths) throws IOException {
-    relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
-    myContext.getProgressIndicator().setText2(relativePath);
-    if (!writtenPaths.add(relativePath)) return;
+        try {
+            final Set<String> writtenPaths = new HashSet<>();
+            for (Pair<String, VirtualFile> pair : archive.getPackedFiles()) {
+                final VirtualFile sourceFile = pair.getSecond();
+                if (sourceFile.isInLocalFileSystem()) {
+                    File file = VirtualFileUtil.virtualToIoFile(sourceFile);
+                    addFileToArchive(archiveFile, packageWriter, file, pair.getFirst(), writtenPaths);
+                }
+                else {
+                    extractFileAndAddToArchive(archiveFile, packageWriter, sourceFile, pair.getFirst(), writtenPaths);
+                }
+            }
 
-    Pair<InputStream, Long> streamLongPair = ArtifactCompilerUtil.getArchiveEntryInputStream(sourceFile, myContext);
-    final InputStream input = streamLongPair.getFirst();
-    if (input == null) {
-      return;
-    }
-
-    try {
-      writer.addFile(archiveObject, input, relativePath, streamLongPair.getSecond(), ArtifactCompilerUtil.getArchiveFile(sourceFile).lastModified());
-    }
-    finally {
-      input.close();
-    }
-  }
-
-  private <T> void addFileToArchive(@Nonnull T archiveObject,
-                                    @Nonnull ArchivePackageWriter<T> writer,
-                                    @Nonnull File file,
-                                    @Nonnull String relativePath,
-                                    @Nonnull Set<String> writtenPaths) throws IOException {
-    if (!file.exists()) {
-      return;
+            for (Pair<String, ArchivePackageInfo> nestedArchive : archive.getPackedArchives()) {
+                File nestedArchiveFile = myBuiltArchives.get(nestedArchive.getSecond());
+                if (nestedArchiveFile != null) {
+                    addFileToArchive(archiveFile, packageWriter, nestedArchiveFile, nestedArchive.getFirst(), writtenPaths);
+                }
+                else {
+                    LOGGER.debug("nested archive file " + nestedArchive.getFirst() + " for " + archive.getPresentableDestination() + " not found");
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            packageWriter.close(archiveFile);
+        }
     }
 
-    if (!FileUtil.isFilePathAcceptable(file, myFileFilter)) {
-      return;
+    private <T> void extractFileAndAddToArchive(
+        @Nonnull T archiveObject,
+        @Nonnull ArchivePackageWriter<T> writer,
+        VirtualFile sourceFile,
+        String relativePath,
+        Set<String> writtenPaths
+    ) throws IOException {
+        relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
+        myContext.getProgressIndicator().setText2(relativePath);
+        if (!writtenPaths.add(relativePath)) {
+            return;
+        }
+
+        Pair<InputStream, Long> streamLongPair = ArtifactCompilerUtil.getArchiveEntryInputStream(sourceFile, myContext);
+        final InputStream input = streamLongPair.getFirst();
+        if (input == null) {
+            return;
+        }
+
+        try {
+            writer.addFile(
+                archiveObject,
+                input,
+                relativePath,
+                streamLongPair.getSecond(),
+                ArtifactCompilerUtil.getArchiveFile(sourceFile).lastModified()
+            );
+        }
+        finally {
+            input.close();
+        }
     }
 
-    if (!writtenPaths.add(relativePath)) {
-      return;
+    private <T> void addFileToArchive(
+        @Nonnull T archiveObject,
+        @Nonnull ArchivePackageWriter<T> writer,
+        @Nonnull File file,
+        @Nonnull String relativePath,
+        @Nonnull Set<String> writtenPaths
+    ) throws IOException {
+        if (!file.exists()) {
+            return;
+        }
+
+        if (!FileUtil.isFilePathAcceptable(file, myFileFilter)) {
+            return;
+        }
+
+        if (!writtenPaths.add(relativePath)) {
+            return;
+        }
+
+        relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
+
+        myContext.getProgressIndicator().setText2(relativePath);
+
+        try (FileInputStream fileOutputStream = new FileInputStream(file)) {
+            writer.addFile(archiveObject, fileOutputStream, relativePath, file.length(), file.lastModified());
+        }
     }
 
-    relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
+    private static <T> String addParentDirectories(
+        @Nonnull T archiveObject,
+        @Nonnull ArchivePackageWriter<T> writer,
+        Set<String> writtenPaths,
+        String relativePath
+    ) throws IOException {
+        while (StringUtil.startsWithChar(relativePath, '/')) {
+            relativePath = relativePath.substring(1);
+        }
+        int i = relativePath.indexOf('/');
+        while (i != -1) {
+            String prefix = relativePath.substring(0, i + 1);
+            if (!writtenPaths.contains(prefix) && prefix.length() > 1) {
 
-    myContext.getProgressIndicator().setText2(relativePath);
+                writer.addDirectory(archiveObject, prefix);
 
-    try (FileInputStream fileOutputStream = new FileInputStream(file)) {
-      writer.addFile(archiveObject, fileOutputStream, relativePath, file.length(), file.lastModified());
-    }
-  }
-
-  private static <T> String addParentDirectories(@Nonnull T archiveObject,
-                                                 @Nonnull ArchivePackageWriter<T> writer,
-                                                 Set<String> writtenPaths,
-                                                 String relativePath) throws IOException {
-    while (StringUtil.startsWithChar(relativePath, '/')) {
-      relativePath = relativePath.substring(1);
-    }
-    int i = relativePath.indexOf('/');
-    while (i != -1) {
-      String prefix = relativePath.substring(0, i + 1);
-      if (!writtenPaths.contains(prefix) && prefix.length() > 1) {
-
-        writer.addDirectory(archiveObject, prefix);
-
-        writtenPaths.add(prefix);
-      }
-      i = relativePath.indexOf('/', i + 1);
-    }
-    return relativePath;
-  }
-
-  private class ArchivesGraph implements GraphGenerator.SemiGraph<ArchivePackageInfo> {
-    @Override
-    public Collection<ArchivePackageInfo> getNodes() {
-      return myArchivesToBuild;
+                writtenPaths.add(prefix);
+            }
+            i = relativePath.indexOf('/', i + 1);
+        }
+        return relativePath;
     }
 
-    @Override
-    public Iterator<ArchivePackageInfo> getIn(final ArchivePackageInfo n) {
-      Set<ArchivePackageInfo> ins = new HashSet<>();
-      for (ArchiveDestinationInfo destination : n.getArchiveDestinations()) {
-        ins.add(destination.getArchivePackageInfo());
-      }
-      return ins.iterator();
+    private class ArchivesGraph implements GraphGenerator.SemiGraph<ArchivePackageInfo> {
+        @Override
+        public Collection<ArchivePackageInfo> getNodes() {
+            return myArchivesToBuild;
+        }
+
+        @Override
+        public Iterator<ArchivePackageInfo> getIn(final ArchivePackageInfo n) {
+            Set<ArchivePackageInfo> ins = new HashSet<>();
+            for (ArchiveDestinationInfo destination : n.getArchiveDestinations()) {
+                ins.add(destination.getArchivePackageInfo());
+            }
+            return ins.iterator();
+        }
     }
-  }
 }

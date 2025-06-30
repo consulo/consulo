@@ -31,31 +31,36 @@ import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "CompileProject")
 public class CompileProjectAction extends CompileActionBase {
-  @RequiredUIAccess
-  @Override
-  protected void doAction(DataContext dataContext, final Project project) {
-    CompilerManager.getInstance(project).rebuild(new CompileStatusNotification() {
-      @Override
-      public void finished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {
-        if (aborted) return;
+    @Override
+    @RequiredUIAccess
+    protected void doAction(DataContext dataContext, final Project project) {
+        CompilerManager.getInstance(project).rebuild(new CompileStatusNotification() {
+            @Override
+            public void finished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {
+                if (aborted) {
+                    return;
+                }
 
-        String text = getTemplatePresentation().getText();
-        LocalHistory.getInstance().putSystemLabel(project, errors == 0
-          ? CompilerBundle.message("rebuild.lvcs.label.no.errors", text)
-          : CompilerBundle.message("rebuild.lvcs.label.with.errors", text));
-      }
-    });
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent event) {
-    super.update(event);
-    Presentation presentation = event.getPresentation();
-    if (!presentation.isEnabled()) {
-      return;
+                String text = getTemplatePresentation().getText();
+                LocalHistory.getInstance().putSystemLabel(
+                    project,
+                    errors == 0
+                        ? CompilerBundle.message("rebuild.lvcs.label.no.errors", text)
+                        : CompilerBundle.message("rebuild.lvcs.label.with.errors", text)
+                );
+            }
+        });
     }
-    Project project = event.getData(Project.KEY);
-    presentation.setEnabled(project != null);
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
+        super.update(event);
+        Presentation presentation = event.getPresentation();
+        if (!presentation.isEnabled()) {
+            return;
+        }
+        Project project = event.getData(Project.KEY);
+        presentation.setEnabled(project != null);
+    }
 }

@@ -33,72 +33,78 @@ import java.util.List;
  * @author nik
  */
 public abstract class IncrementalCompilerInstructionCreatorBase implements IncrementalCompilerInstructionCreator {
-  protected final ArtifactsProcessingItemsBuilderContext myContext;
+    protected final ArtifactsProcessingItemsBuilderContext myContext;
 
-  public IncrementalCompilerInstructionCreatorBase(ArtifactsProcessingItemsBuilderContext context) {
-    myContext = context;
-  }
-
-  @Override
-  public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory) {
-    addDirectoryCopyInstructions(directory, null);
-  }
-
-  @Override
-  public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory, @jakarta.annotation.Nullable PackagingFileFilter filter) {
-    final ProjectFileIndex index = ProjectRootManager.getInstance(myContext.getCompileContext().getProject()).getFileIndex();
-    final boolean copyExcluded = index.isExcluded(directory);
-    collectInstructionsRecursively(directory, this, filter, index, copyExcluded);
-  }
-
-  private static void collectInstructionsRecursively(VirtualFile directory,
-                                                     final IncrementalCompilerInstructionCreatorBase creator,
-                                                     @Nullable final PackagingFileFilter filter,
-                                                     final ProjectFileIndex index,
-                                                     final boolean copyExcluded) {
-    final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-    VirtualFileUtil.visitChildrenRecursively(directory,
-                                             new VirtualFileVisitor<IncrementalCompilerInstructionCreatorBase>(VirtualFileVisitor.SKIP_ROOT) {
-                                               {
-                                                 setValueForChildren(creator);
-                                               }
-
-                                               @Override
-                                               public boolean visitFile(@Nonnull VirtualFile child) {
-                                                 if (copyExcluded) {
-                                                   if (fileTypeManager.isFileIgnored(child)) return false;
-                                                 }
-                                                 else {
-                                                   if (index.isExcluded(child)) return false;
-                                                 }
-
-                                                 final IncrementalCompilerInstructionCreatorBase creator = getCurrentValue();
-                                                 if (filter != null && !filter.accept(child, creator.myContext.getCompileContext())) {
-                                                   return false;
-                                                 }
-
-                                                 if (!child.isDirectory()) {
-                                                   creator.addFileCopyInstruction(child, child.getName());
-                                                 }
-                                                 else {
-                                                   setValueForChildren(creator.subFolder(child.getName()));
-                                                 }
-
-                                                 return true;
-                                               }
-                                             });
-  }
-
-  @Override
-  public abstract IncrementalCompilerInstructionCreatorBase subFolder(@Nonnull String directoryName);
-
-  @Override
-  public IncrementalCompilerInstructionCreator subFolderByRelativePath(@Nonnull String relativeDirectoryPath) {
-    final List<String> folders = StringUtil.split(relativeDirectoryPath, "/");
-    IncrementalCompilerInstructionCreator current = this;
-    for (String folder : folders) {
-      current = current.subFolder(folder);
+    public IncrementalCompilerInstructionCreatorBase(ArtifactsProcessingItemsBuilderContext context) {
+        myContext = context;
     }
-    return current;
-  }
+
+    @Override
+    public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory) {
+        addDirectoryCopyInstructions(directory, null);
+    }
+
+    @Override
+    public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory, @jakarta.annotation.Nullable PackagingFileFilter filter) {
+        final ProjectFileIndex index = ProjectRootManager.getInstance(myContext.getCompileContext().getProject()).getFileIndex();
+        final boolean copyExcluded = index.isExcluded(directory);
+        collectInstructionsRecursively(directory, this, filter, index, copyExcluded);
+    }
+
+    private static void collectInstructionsRecursively(
+        VirtualFile directory,
+        final IncrementalCompilerInstructionCreatorBase creator,
+        @Nullable final PackagingFileFilter filter,
+        final ProjectFileIndex index,
+        final boolean copyExcluded
+    ) {
+        final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        VirtualFileUtil.visitChildrenRecursively(
+            directory,
+            new VirtualFileVisitor<IncrementalCompilerInstructionCreatorBase>(VirtualFileVisitor.SKIP_ROOT) {
+                {
+                    setValueForChildren(creator);
+                }
+
+                @Override
+                public boolean visitFile(@Nonnull VirtualFile child) {
+                    if (copyExcluded) {
+                        if (fileTypeManager.isFileIgnored(child)) {
+                            return false;
+                        }
+                    }
+                    else if (index.isExcluded(child)) {
+                        return false;
+                    }
+
+                    final IncrementalCompilerInstructionCreatorBase creator = getCurrentValue();
+                    if (filter != null && !filter.accept(child, creator.myContext.getCompileContext())) {
+                        return false;
+                    }
+
+                    if (!child.isDirectory()) {
+                        creator.addFileCopyInstruction(child, child.getName());
+                    }
+                    else {
+                        setValueForChildren(creator.subFolder(child.getName()));
+                    }
+
+                    return true;
+                }
+            }
+        );
+    }
+
+    @Override
+    public abstract IncrementalCompilerInstructionCreatorBase subFolder(@Nonnull String directoryName);
+
+    @Override
+    public IncrementalCompilerInstructionCreator subFolderByRelativePath(@Nonnull String relativeDirectoryPath) {
+        final List<String> folders = StringUtil.split(relativeDirectoryPath, "/");
+        IncrementalCompilerInstructionCreator current = this;
+        for (String folder : folders) {
+            current = current.subFolder(folder);
+        }
+        return current;
+    }
 }

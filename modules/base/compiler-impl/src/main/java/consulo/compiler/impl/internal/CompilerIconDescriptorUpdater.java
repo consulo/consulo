@@ -36,29 +36,29 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class CompilerIconDescriptorUpdater implements IconDescriptorUpdater {
-  private final FileIndexFacade myFileIndexFacade;
-  private final CompilerManager myCompilerManager;
+    private final FileIndexFacade myFileIndexFacade;
+    private final CompilerManager myCompilerManager;
 
-  @Inject
-  public CompilerIconDescriptorUpdater(FileIndexFacade fileIndexFacade, CompilerManager compilerManager) {
-    myFileIndexFacade = fileIndexFacade;
-    myCompilerManager = compilerManager;
-  }
-
-  @RequiredReadAction
-  @Override
-  public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
-    VirtualFile vFile = PsiUtilCore.getVirtualFile(element);
-
-    if (vFile != null && myFileIndexFacade.isInSource(vFile) && myCompilerManager.isExcludedFromCompilation(vFile)) {
-      iconDescriptor.addLayerIcon(AllIcons.Nodes.ExcludedFromCompile);
+    @Inject
+    public CompilerIconDescriptorUpdater(FileIndexFacade fileIndexFacade, CompilerManager compilerManager) {
+        myFileIndexFacade = fileIndexFacade;
+        myCompilerManager = compilerManager;
     }
-  }
 
-  @Deprecated
-  public static boolean isExcluded(final VirtualFile vFile, final Project project) {
-    return vFile != null &&
-           FileIndexFacade.getInstance(project).isInSource(vFile) &&
-           CompilerManager.getInstance(project).isExcludedFromCompilation(vFile);
-  }
+    @RequiredReadAction
+    @Override
+    public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+        VirtualFile vFile = PsiUtilCore.getVirtualFile(element);
+
+        if (vFile != null && myFileIndexFacade.isInSource(vFile) && myCompilerManager.isExcludedFromCompilation(vFile)) {
+            iconDescriptor.addLayerIcon(AllIcons.Nodes.ExcludedFromCompile);
+        }
+    }
+
+    @Deprecated
+    public static boolean isExcluded(final VirtualFile vFile, final Project project) {
+        return vFile != null &&
+            FileIndexFacade.getInstance(project).isInSource(vFile) &&
+            CompilerManager.getInstance(project).isExcludedFromCompilation(vFile);
+    }
 }

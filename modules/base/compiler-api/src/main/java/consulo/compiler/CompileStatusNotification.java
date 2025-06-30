@@ -24,13 +24,13 @@ import consulo.compiler.scope.CompileScope;
  * @see CompilerManager#compile(CompileScope, CompileStatusNotification)
  */
 public interface CompileStatusNotification {
-  /**
-   * Invoked in a ui thread after the compilation is finished.
-   *
-   * @param aborted  true if compilation has been cancelled.
-   * @param errors   error count
-   * @param warnings warning count
-   * @param compileContext context for the finished compilation
-   */
-  void finished(boolean aborted, int errors, int warnings, final CompileContext compileContext);
+    /**
+     * Invoked in a ui thread after the compilation is finished.
+     *
+     * @param aborted        true if compilation has been cancelled.
+     * @param errors         error count
+     * @param warnings       warning count
+     * @param compileContext context for the finished compilation
+     */
+    void finished(boolean aborted, int errors, int warnings, final CompileContext compileContext);
 }

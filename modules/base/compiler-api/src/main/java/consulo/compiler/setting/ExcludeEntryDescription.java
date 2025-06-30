@@ -16,6 +16,7 @@
 
 /**
  * created at Jan 3, 2002
+ *
  * @author Jeka
  */
 package consulo.compiler.setting;
@@ -31,84 +32,85 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nullable;
 
 public class ExcludeEntryDescription implements Disposable {
-  private boolean myIsFile;
-  private boolean myIncludeSubdirectories;
-  private VirtualFilePointer myFilePointer;
-  private final Disposable myParentDisposable;
+    private boolean myIsFile;
+    private boolean myIncludeSubdirectories;
+    private VirtualFilePointer myFilePointer;
+    private final Disposable myParentDisposable;
 
-  public ExcludeEntryDescription(String url, boolean includeSubdirectories, boolean isFile, Disposable parent) {
-    myParentDisposable = parent;
-    myFilePointer = VirtualFilePointerManager.getInstance().create(url, parent, null);
-    myIncludeSubdirectories = includeSubdirectories;
-    myIsFile = isFile;
-  }
-
-  public ExcludeEntryDescription(VirtualFile virtualFile, boolean includeSubdirectories, boolean isFile, Disposable parent) {
-    this(virtualFile.getUrl(), includeSubdirectories, isFile, parent);
-  }
-
-  public ExcludeEntryDescription copy(Disposable parent) {
-    return new ExcludeEntryDescription(getUrl(), myIncludeSubdirectories, myIsFile,parent);
-  }
-
-  public void setPresentableUrl(String newUrl) {
-    myFilePointer = VirtualFilePointerManager.getInstance().create(VirtualFileUtil.pathToUrl(FileUtil.toSystemIndependentName(newUrl)), myParentDisposable, null);
-    final VirtualFile file = getVirtualFile();
-    if (file != null) {
-      myIsFile = !file.isDirectory();
+    public ExcludeEntryDescription(String url, boolean includeSubdirectories, boolean isFile, Disposable parent) {
+        myParentDisposable = parent;
+        myFilePointer = VirtualFilePointerManager.getInstance().create(url, parent, null);
+        myIncludeSubdirectories = includeSubdirectories;
+        myIsFile = isFile;
     }
-  }
 
-  public boolean isFile() {
-    return myIsFile;
-  }
-
-  public String getUrl() {
-    return myFilePointer.getUrl();
-  }
-
-  public String getPresentableUrl() {
-    return myFilePointer.getPresentableUrl();
-  }
-
-  public boolean isIncludeSubdirectories() {
-    return myIncludeSubdirectories;
-  }
-
-  public void setIncludeSubdirectories(boolean includeSubdirectories) {
-    myIncludeSubdirectories = includeSubdirectories;
-  }
-
-  @Nullable
-  public VirtualFile getVirtualFile() {
-    return myFilePointer.getFile();
-  }
-
-  public boolean isValid() {
-    return myFilePointer.isValid();
-  }
-
-  public boolean equals(Object obj) {
-    if(!(obj instanceof ExcludeEntryDescription)) {
-      return false;
+    public ExcludeEntryDescription(VirtualFile virtualFile, boolean includeSubdirectories, boolean isFile, Disposable parent) {
+        this(virtualFile.getUrl(), includeSubdirectories, isFile, parent);
     }
-    ExcludeEntryDescription entryDescription = (ExcludeEntryDescription)obj;
-    if(entryDescription.myIsFile != myIsFile) {
-      return false;
-    }
-    if(entryDescription.myIncludeSubdirectories != myIncludeSubdirectories) {
-      return false;
-    }
-    return Comparing.equal(entryDescription.getUrl(), getUrl());
-  }
 
-  public int hashCode() {
-    int result = (myIsFile ? 1 : 0);
-    result = 31 * result + (myIncludeSubdirectories ? 1 : 0);
-    result = 31 * result + getUrl().hashCode();
-    return result;
-  }
+    public ExcludeEntryDescription copy(Disposable parent) {
+        return new ExcludeEntryDescription(getUrl(), myIncludeSubdirectories, myIsFile, parent);
+    }
 
-  public void dispose() {
-  }
+    public void setPresentableUrl(String newUrl) {
+        myFilePointer = VirtualFilePointerManager.getInstance()
+            .create(VirtualFileUtil.pathToUrl(FileUtil.toSystemIndependentName(newUrl)), myParentDisposable, null);
+        final VirtualFile file = getVirtualFile();
+        if (file != null) {
+            myIsFile = !file.isDirectory();
+        }
+    }
+
+    public boolean isFile() {
+        return myIsFile;
+    }
+
+    public String getUrl() {
+        return myFilePointer.getUrl();
+    }
+
+    public String getPresentableUrl() {
+        return myFilePointer.getPresentableUrl();
+    }
+
+    public boolean isIncludeSubdirectories() {
+        return myIncludeSubdirectories;
+    }
+
+    public void setIncludeSubdirectories(boolean includeSubdirectories) {
+        myIncludeSubdirectories = includeSubdirectories;
+    }
+
+    @Nullable
+    public VirtualFile getVirtualFile() {
+        return myFilePointer.getFile();
+    }
+
+    public boolean isValid() {
+        return myFilePointer.isValid();
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ExcludeEntryDescription)) {
+            return false;
+        }
+        ExcludeEntryDescription entryDescription = (ExcludeEntryDescription) obj;
+        if (entryDescription.myIsFile != myIsFile) {
+            return false;
+        }
+        if (entryDescription.myIncludeSubdirectories != myIncludeSubdirectories) {
+            return false;
+        }
+        return Comparing.equal(entryDescription.getUrl(), getUrl());
+    }
+
+    public int hashCode() {
+        int result = (myIsFile ? 1 : 0);
+        result = 31 * result + (myIncludeSubdirectories ? 1 : 0);
+        result = 31 * result + getUrl().hashCode();
+        return result;
+    }
+
+    public void dispose() {
+    }
 }

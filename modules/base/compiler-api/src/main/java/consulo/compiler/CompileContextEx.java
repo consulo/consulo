@@ -21,36 +21,37 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Set;
 
 public interface CompileContextEx extends CompileContext {
-  CompositeDependencyCache getDependencyCache();
+    CompositeDependencyCache getDependencyCache();
 
-  @Nullable
-  VirtualFile getSourceFileByOutputFile(VirtualFile outputFile);
+    @Nullable
+    VirtualFile getSourceFileByOutputFile(VirtualFile outputFile);
 
-  void addMessage(CompilerMessage message);
+    void addMessage(CompilerMessage message);
 
-  @Nonnull
-  Set<VirtualFile> getTestOutputDirectories();
+    @Nonnull
+    Set<VirtualFile> getTestOutputDirectories();
 
-  /**
-   * the same as FileIndex.isInTestSourceContent(), but takes into account generated output dirs
-   */
-  boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir);
+    /**
+     * the same as FileIndex.isInTestSourceContent(), but takes into account generated output dirs
+     */
+    boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir);
 
-  boolean isInSourceContent(@Nonnull VirtualFile fileOrDir);
+    boolean isInSourceContent(@Nonnull VirtualFile fileOrDir);
 
-  void addScope(CompileScope additionalScope);
+    void addScope(CompileScope additionalScope);
 
-  long getStartCompilationStamp();
+    long getStartCompilationStamp();
 
-  void recalculateOutputDirs();
+    void recalculateOutputDirs();
 
-  void markGenerated(Collection<VirtualFile> files);
+    void markGenerated(Collection<VirtualFile> files);
 
-  boolean isGenerated(VirtualFile file);
+    boolean isGenerated(VirtualFile file);
 
-  void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @Nullable Compiler compiler);
+    void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @Nullable Compiler compiler);
 }

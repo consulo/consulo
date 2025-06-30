@@ -24,44 +24,44 @@ import java.io.IOException;
  * The file is considered modified if its timestamp is changed.
  */
 public final class TimestampValidityState implements ValidityState {
-  private final long myTimestamp;
+    private final long myTimestamp;
 
-  /**
-   * Creates a validity state with the specified timestamp.
-   *
-   * @param timestamp the timestamp for the validity state.
-   */
-  public TimestampValidityState(long timestamp) {
-    myTimestamp = timestamp;
-  }
-
-  @Override
-  public boolean equalsTo(ValidityState otherState) {
-    if (!(otherState instanceof TimestampValidityState)) {
-      return false;
+    /**
+     * Creates a validity state with the specified timestamp.
+     *
+     * @param timestamp the timestamp for the validity state.
+     */
+    public TimestampValidityState(long timestamp) {
+        myTimestamp = timestamp;
     }
-    return myTimestamp == ((TimestampValidityState)otherState).myTimestamp;
-  }
 
-  /**
-   * Saves the validity state to the specified stream.
-   *
-   * @param out
-   * @throws IOException if the stream write fails.
-   */
-  @Override
-  public void save(DataOutput out) throws IOException {
-    out.writeLong(myTimestamp);
-  }
+    @Override
+    public boolean equalsTo(ValidityState otherState) {
+        if (!(otherState instanceof TimestampValidityState)) {
+            return false;
+        }
+        return myTimestamp == ((TimestampValidityState) otherState).myTimestamp;
+    }
 
-  /**
-   * Loads the validity state from the specified stream.
-   *
-   * @param is the stream to load the validity state from.
-   * @throws IOException if the stream read fails.
-   * @since 5.0.2
-   */
-  public static TimestampValidityState load(DataInput is) throws IOException {
-    return new TimestampValidityState(is.readLong());
-  }
+    /**
+     * Saves the validity state to the specified stream.
+     *
+     * @param out
+     * @throws IOException if the stream write fails.
+     */
+    @Override
+    public void save(DataOutput out) throws IOException {
+        out.writeLong(myTimestamp);
+    }
+
+    /**
+     * Loads the validity state from the specified stream.
+     *
+     * @param is the stream to load the validity state from.
+     * @throws IOException if the stream read fails.
+     * @since 5.0.2
+     */
+    public static TimestampValidityState load(DataInput is) throws IOException {
+        return new TimestampValidityState(is.readLong());
+    }
 }

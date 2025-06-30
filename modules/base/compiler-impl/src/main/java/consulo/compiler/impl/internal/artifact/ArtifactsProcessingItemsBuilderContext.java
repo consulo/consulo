@@ -31,81 +31,81 @@ import java.util.Map;
  * @author nik
  */
 public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrementalCompilerContext {
-  protected final Map<VirtualFile, ArtifactCompilerCompileItem> myItemsBySource;
-  private final Map<String, VirtualFile> mySourceByOutput;
-  private final Map<String, ArchivePackageInfo> myJarByPath;
-  private final CompileContext myCompileContext;
-  private final boolean myPrintToLog;
+    protected final Map<VirtualFile, ArtifactCompilerCompileItem> myItemsBySource;
+    private final Map<String, VirtualFile> mySourceByOutput;
+    private final Map<String, ArchivePackageInfo> myJarByPath;
+    private final CompileContext myCompileContext;
+    private final boolean myPrintToLog;
 
-  public ArtifactsProcessingItemsBuilderContext(CompileContext compileContext) {
-    myCompileContext = compileContext;
-    myItemsBySource = new HashMap<>();
-    mySourceByOutput = new HashMap<>();
-    myJarByPath = new HashMap<>();
-    myPrintToLog = ArtifactsCompilerInstance.FULL_LOG.isDebugEnabled();
-  }
-
-  public boolean addDestination(@Nonnull VirtualFile sourceFile, @Nonnull DestinationInfo destinationInfo) {
-    if (destinationInfo instanceof ExplodedDestinationInfo && sourceFile.equals(destinationInfo.getOutputFile())) {
-      return false;
+    public ArtifactsProcessingItemsBuilderContext(CompileContext compileContext) {
+        myCompileContext = compileContext;
+        myItemsBySource = new HashMap<>();
+        mySourceByOutput = new HashMap<>();
+        myJarByPath = new HashMap<>();
+        myPrintToLog = ArtifactsCompilerInstance.FULL_LOG.isDebugEnabled();
     }
 
-    if (checkOutputPath(destinationInfo.getOutputPath(), sourceFile)) {
-      if (myPrintToLog) {
-        ArtifactsCompilerInstance.FULL_LOG.debug("  " + sourceFile.getPath() + " -> " + destinationInfo);
-      }
-      getOrCreateProcessingItem(sourceFile).addDestination(destinationInfo);
-      return true;
+    public boolean addDestination(@Nonnull VirtualFile sourceFile, @Nonnull DestinationInfo destinationInfo) {
+        if (destinationInfo instanceof ExplodedDestinationInfo && sourceFile.equals(destinationInfo.getOutputFile())) {
+            return false;
+        }
+
+        if (checkOutputPath(destinationInfo.getOutputPath(), sourceFile)) {
+            if (myPrintToLog) {
+                ArtifactsCompilerInstance.FULL_LOG.debug("  " + sourceFile.getPath() + " -> " + destinationInfo);
+            }
+            getOrCreateProcessingItem(sourceFile).addDestination(destinationInfo);
+            return true;
+        }
+        return false;
     }
-    return false;
-  }
 
-  public Collection<ArtifactCompilerCompileItem> getProcessingItems() {
-    return myItemsBySource.values();
-  }
-
-  public boolean checkOutputPath(final String outputPath, final VirtualFile sourceFile) {
-    VirtualFile old = mySourceByOutput.get(outputPath);
-    if (old == null) {
-      mySourceByOutput.put(outputPath, sourceFile);
-      return true;
+    public Collection<ArtifactCompilerCompileItem> getProcessingItems() {
+        return myItemsBySource.values();
     }
-    //todo[nik] show warning?
-    return false;
-  }
 
-  public ArtifactCompilerCompileItem getItemBySource(VirtualFile source) {
-    return myItemsBySource.get(source);
-  }
-
-  public boolean registerJarFile(@Nonnull ArchivePackageInfo archivePackageInfo, @Nonnull String outputPath) {
-    if (mySourceByOutput.containsKey(outputPath) || myJarByPath.containsKey(outputPath)) {
-      return false;
+    public boolean checkOutputPath(final String outputPath, final VirtualFile sourceFile) {
+        VirtualFile old = mySourceByOutput.get(outputPath);
+        if (old == null) {
+            mySourceByOutput.put(outputPath, sourceFile);
+            return true;
+        }
+        //todo[nik] show warning?
+        return false;
     }
-    myJarByPath.put(outputPath, archivePackageInfo);
-    return true;
-  }
 
-  @jakarta.annotation.Nullable
-  public ArchivePackageInfo getJarInfo(String outputPath) {
-    return myJarByPath.get(outputPath);
-  }
-
-  @jakarta.annotation.Nullable
-  public VirtualFile getSourceByOutput(String outputPath) {
-    return mySourceByOutput.get(outputPath);
-  }
-
-  public CompileContext getCompileContext() {
-    return myCompileContext;
-  }
-
-  public ArtifactCompilerCompileItem getOrCreateProcessingItem(VirtualFile sourceFile) {
-    ArtifactCompilerCompileItem item = myItemsBySource.get(sourceFile);
-    if (item == null) {
-      item = new ArtifactCompilerCompileItem(sourceFile);
-      myItemsBySource.put(sourceFile, item);
+    public ArtifactCompilerCompileItem getItemBySource(VirtualFile source) {
+        return myItemsBySource.get(source);
     }
-    return item;
-  }
+
+    public boolean registerJarFile(@Nonnull ArchivePackageInfo archivePackageInfo, @Nonnull String outputPath) {
+        if (mySourceByOutput.containsKey(outputPath) || myJarByPath.containsKey(outputPath)) {
+            return false;
+        }
+        myJarByPath.put(outputPath, archivePackageInfo);
+        return true;
+    }
+
+    @jakarta.annotation.Nullable
+    public ArchivePackageInfo getJarInfo(String outputPath) {
+        return myJarByPath.get(outputPath);
+    }
+
+    @jakarta.annotation.Nullable
+    public VirtualFile getSourceByOutput(String outputPath) {
+        return mySourceByOutput.get(outputPath);
+    }
+
+    public CompileContext getCompileContext() {
+        return myCompileContext;
+    }
+
+    public ArtifactCompilerCompileItem getOrCreateProcessingItem(VirtualFile sourceFile) {
+        ArtifactCompilerCompileItem item = myItemsBySource.get(sourceFile);
+        if (item == null) {
+            item = new ArtifactCompilerCompileItem(sourceFile);
+            myItemsBySource.put(sourceFile, item);
+        }
+        return item;
+    }
 }

@@ -50,83 +50,92 @@ import java.util.zip.ZipFile;
  * @author nik
  */
 public class ArtifactCompilerUtil {
-  private static final Logger LOG = Logger.getInstance(ArtifactCompilerUtil.class);
+    private static final Logger LOG = Logger.getInstance(ArtifactCompilerUtil.class);
 
-  private ArtifactCompilerUtil() {
-  }
-
-  @Nonnull
-  public static Pair<InputStream, Long> getArchiveEntryInputStream(VirtualFile sourceFile, final CompileContext context) throws IOException {
-    final String fullPath = sourceFile.getPath();
-    final int jarEnd = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
-    LOG.assertTrue(jarEnd != -1, fullPath);
-    String pathInJar = fullPath.substring(jarEnd + ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
-    String jarPath = fullPath.substring(0, jarEnd);
-    final ZipFile jarFile = new ZipFile(new File(FileUtil.toSystemDependentName(jarPath)));
-    final ZipEntry entry = jarFile.getEntry(pathInJar);
-    if (entry == null) {
-      context.addMessage(CompilerMessageCategory.ERROR, "Cannot extract '" + pathInJar + "' from '" + jarFile.getName() + "': entry not found", null, -1, -1);
-      return Pair.empty();
+    private ArtifactCompilerUtil() {
     }
 
-    BufferedInputStream bufferedInputStream = new BufferedInputStream(jarFile.getInputStream(entry)) {
-      @Override
-      public void close() throws IOException {
-        super.close();
-        jarFile.close();
-      }
-    };
-    return Pair.<InputStream, Long>create(bufferedInputStream, entry.getSize());
-  }
-
-  public static File getArchiveFile(VirtualFile file) {
-    String fullPath = file.getPath();
-    return new File(FileUtil.toSystemDependentName(fullPath.substring(fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR))));
-  }
-
-  @Nonnull
-  public static Set<VirtualFile> getArtifactOutputsContainingSourceFiles(final @Nonnull Project project) {
-    final List<VirtualFile> allOutputs = new ArrayList<>();
-    for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
-      ContainerUtil.addIfNotNull(allOutputs, artifact.getOutputFile());
-    }
-
-    final Set<VirtualFile> roots = new HashSet<>();
-    final PackagingElementResolvingContext context = ArtifactManager.getInstance(project).getResolvingContext();
-    for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
-      Predicate<PackagingElement<?>> processor = element -> {
-        if (element instanceof FileOrDirectoryCopyPackagingElement<?>) {
-          final VirtualFile file = ((FileOrDirectoryCopyPackagingElement)element).findFile();
-          if (file != null) {
-            roots.add(file);
-          }
+    @Nonnull
+    public static Pair<InputStream, Long> getArchiveEntryInputStream(
+        VirtualFile sourceFile,
+        final CompileContext context
+    ) throws IOException {
+        final String fullPath = sourceFile.getPath();
+        final int jarEnd = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
+        LOG.assertTrue(jarEnd != -1, fullPath);
+        String pathInJar = fullPath.substring(jarEnd + ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
+        String jarPath = fullPath.substring(0, jarEnd);
+        final ZipFile jarFile = new ZipFile(new File(FileUtil.toSystemDependentName(jarPath)));
+        final ZipEntry entry = jarFile.getEntry(pathInJar);
+        if (entry == null) {
+            context.addMessage(
+                CompilerMessageCategory.ERROR,
+                "Cannot extract '" + pathInJar + "' from '" + jarFile.getName() + "': entry not found",
+                null,
+                -1,
+                -1
+            );
+            return Pair.empty();
         }
-        return true;
-      };
-      ArtifactUtil.processRecursivelySkippingIncludedArtifacts(artifact, processor, context);
+
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(jarFile.getInputStream(entry)) {
+            @Override
+            public void close() throws IOException {
+                super.close();
+                jarFile.close();
+            }
+        };
+        return Pair.<InputStream, Long>create(bufferedInputStream, entry.getSize());
     }
 
-    final Set<VirtualFile> affectedOutputPaths = new HashSet<>();
-    for (VirtualFile output : allOutputs) {
-      for (VirtualFile root : roots) {
-        if (VirtualFileUtil.isAncestor(output, root, false)) {
-          affectedOutputPaths.add(output);
-        }
-      }
+    public static File getArchiveFile(VirtualFile file) {
+        String fullPath = file.getPath();
+        return new File(FileUtil.toSystemDependentName(fullPath.substring(fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR))));
     }
-    return affectedOutputPaths;
-  }
 
-  public static MultiMap<String, Artifact> createOutputToArtifactMap(final Project project) {
-    final MultiMap<String, Artifact> result = new MultiMap<>(Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY));
-    AccessRule.read(() -> {
-      for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
-        String outputPath = artifact.getOutputFilePath();
-        if (!StringUtil.isEmpty(outputPath)) {
-          result.putValue(outputPath, artifact);
+    @Nonnull
+    public static Set<VirtualFile> getArtifactOutputsContainingSourceFiles(final @Nonnull Project project) {
+        final List<VirtualFile> allOutputs = new ArrayList<>();
+        for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
+            ContainerUtil.addIfNotNull(allOutputs, artifact.getOutputFile());
         }
-      }
-    });
-    return result;
-  }
+
+        final Set<VirtualFile> roots = new HashSet<>();
+        final PackagingElementResolvingContext context = ArtifactManager.getInstance(project).getResolvingContext();
+        for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
+            Predicate<PackagingElement<?>> processor = element -> {
+                if (element instanceof FileOrDirectoryCopyPackagingElement<?>) {
+                    final VirtualFile file = ((FileOrDirectoryCopyPackagingElement) element).findFile();
+                    if (file != null) {
+                        roots.add(file);
+                    }
+                }
+                return true;
+            };
+            ArtifactUtil.processRecursivelySkippingIncludedArtifacts(artifact, processor, context);
+        }
+
+        final Set<VirtualFile> affectedOutputPaths = new HashSet<>();
+        for (VirtualFile output : allOutputs) {
+            for (VirtualFile root : roots) {
+                if (VirtualFileUtil.isAncestor(output, root, false)) {
+                    affectedOutputPaths.add(output);
+                }
+            }
+        }
+        return affectedOutputPaths;
+    }
+
+    public static MultiMap<String, Artifact> createOutputToArtifactMap(final Project project) {
+        final MultiMap<String, Artifact> result = new MultiMap<>(Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY));
+        AccessRule.read(() -> {
+            for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
+                String outputPath = artifact.getOutputFilePath();
+                if (!StringUtil.isEmpty(outputPath)) {
+                    result.putValue(outputPath, artifact);
+                }
+            }
+        });
+        return result;
+    }
 }

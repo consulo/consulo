@@ -28,6 +28,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompileModuleScopeFactory {
-  @Nullable
-  FileIndexCompileScope createScope(@Nonnull final Module module, boolean includeDependentModules, boolean includeTestScope);
+    @Nullable
+    FileIndexCompileScope createScope(@Nonnull final Module module, boolean includeDependentModules, boolean includeTestScope);
 }

@@ -22,6 +22,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,17 +31,16 @@ import java.util.List;
  * @since 2003-12-18
  */
 public abstract class FileIndexCompileScope extends ExportableUserDataHolderBase implements CompileScope {
+    protected abstract FileIndex[] getFileIndices();
 
-  protected abstract FileIndex[] getFileIndices();
-
-  @Override
-  @Nonnull
-  public VirtualFile[] getFiles(final FileType fileType) {
-    final List<VirtualFile> files = new ArrayList<>();
-    final FileIndex[] fileIndices = getFileIndices();
-    for (final FileIndex fileIndex : fileIndices) {
-      fileIndex.iterateContent(new CompilerContentIterator(fileType, fileIndex, !includeTestScope(), files));
+    @Override
+    @Nonnull
+    public VirtualFile[] getFiles(final FileType fileType) {
+        final List<VirtualFile> files = new ArrayList<>();
+        final FileIndex[] fileIndices = getFileIndices();
+        for (final FileIndex fileIndex : fileIndices) {
+            fileIndex.iterateContent(new CompilerContentIterator(fileType, fileIndex, !includeTestScope(), files));
+        }
+        return VirtualFileUtil.toVirtualFileArray(files);
     }
-    return VirtualFileUtil.toVirtualFileArray(files);
-  }
 }

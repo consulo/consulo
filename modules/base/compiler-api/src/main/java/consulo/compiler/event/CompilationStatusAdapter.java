@@ -19,7 +19,7 @@ import consulo.compiler.CompileContext;
 
 @Deprecated(forRemoval = true)
 public class CompilationStatusAdapter implements CompilationStatusListener {
-  @Override
-  public void compilationFinished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {
-  }
+    @Override
+    public void compilationFinished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {
+    }
 }

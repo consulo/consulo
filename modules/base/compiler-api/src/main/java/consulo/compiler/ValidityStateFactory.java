@@ -22,10 +22,11 @@ import java.io.IOException;
  * A factory for creating {@link ValidityState} objects.
  */
 public interface ValidityStateFactory {
-  /**
-   * Used for deserialization of ValidityState objects from compiler internal caches.
-   * @see ValidityState
-   * @param in
-   */ 
-  ValidityState createValidityState(DataInput in) throws IOException;
+    /**
+     * Used for deserialization of ValidityState objects from compiler internal caches.
+     *
+     * @param in
+     * @see ValidityState
+     */
+    ValidityState createValidityState(DataInput in) throws IOException;
 }

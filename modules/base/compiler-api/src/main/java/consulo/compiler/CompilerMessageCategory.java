@@ -22,42 +22,46 @@ package consulo.compiler;
  * @see CompileContext#addMessage(CompilerMessageCategory, String, String, int, int)
  */
 public enum CompilerMessageCategory {
-  ERROR {
-    public String toString() {
-      return CompilerBundle.message("message.category.error");
-    }
-    @Override
-    public String getPresentableText() {
-      return toString();
-    }
-  },
-  WARNING {
-    public String toString() {
-      return CompilerBundle.message("message.category.warning");
-    }
-    @Override
-    public String getPresentableText() {
-      return toString();
-    }
-  },
-  INFORMATION {
-    public String toString() {
-      return CompilerBundle.message("message.category.information");
-    }
-    @Override
-    public String getPresentableText() {
-      return toString();
-    }
-  },
-  STATISTICS {
-    public String toString() {
-      return CompilerBundle.message("message.category.statistics");
-    }
-    @Override
-    public String getPresentableText() {
-      return toString();
-    }
-  };
+    ERROR {
+        public String toString() {
+            return CompilerBundle.message("message.category.error");
+        }
 
-  public abstract String getPresentableText();
+        @Override
+        public String getPresentableText() {
+            return toString();
+        }
+    },
+    WARNING {
+        public String toString() {
+            return CompilerBundle.message("message.category.warning");
+        }
+
+        @Override
+        public String getPresentableText() {
+            return toString();
+        }
+    },
+    INFORMATION {
+        public String toString() {
+            return CompilerBundle.message("message.category.information");
+        }
+
+        @Override
+        public String getPresentableText() {
+            return toString();
+        }
+    },
+    STATISTICS {
+        public String toString() {
+            return CompilerBundle.message("message.category.statistics");
+        }
+
+        @Override
+        public String getPresentableText() {
+            return toString();
+        }
+    };
+
+    public abstract String getPresentableText();
 }

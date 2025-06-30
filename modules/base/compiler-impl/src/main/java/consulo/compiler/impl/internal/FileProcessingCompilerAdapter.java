@@ -26,29 +26,30 @@ import java.io.File;
  * @since 2003-10-16
  */
 public class FileProcessingCompilerAdapter {
-  private final CompileContext myCompileContext;
-  private final FileProcessingCompiler myCompiler;
+    private final CompileContext myCompileContext;
+    private final FileProcessingCompiler myCompiler;
 
-  protected FileProcessingCompilerAdapter(CompileContext compileContext, FileProcessingCompiler compiler) {
-    myCompileContext = compileContext;
-    myCompiler = compiler;
-  }
+    protected FileProcessingCompilerAdapter(CompileContext compileContext, FileProcessingCompiler compiler) {
+        myCompileContext = compileContext;
+        myCompiler = compiler;
+    }
 
-  public CompileContext getCompileContext() {
-    return myCompileContext;
-  }
+    public CompileContext getCompileContext() {
+        return myCompileContext;
+    }
 
-  public FileProcessingCompiler.ProcessingItem[] getProcessingItems() {
-    return myCompiler.getProcessingItems(getCompileContext());
-  }
+    public FileProcessingCompiler.ProcessingItem[] getProcessingItems() {
+        return myCompiler.getProcessingItems(getCompileContext());
+    }
 
-  public FileProcessingCompiler.ProcessingItem[] process(FileProcessingCompiler.ProcessingItem[] items) {
-    return myCompiler.process(getCompileContext(), items);
-  }
+    public FileProcessingCompiler.ProcessingItem[] process(FileProcessingCompiler.ProcessingItem[] items) {
+        return myCompiler.process(getCompileContext(), items);
+    }
 
-  public final FileProcessingCompiler getCompiler() {
-    return myCompiler;
-  }
+    public final FileProcessingCompiler getCompiler() {
+        return myCompiler;
+    }
 
-  public void processOutdatedItem(CompileContext context, File file, @jakarta.annotation.Nullable ValidityState state){}
+    public void processOutdatedItem(CompileContext context, File file, @jakarta.annotation.Nullable ValidityState state) {
+    }
 }

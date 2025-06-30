@@ -38,61 +38,67 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TranslatingCompilerFilesMonitor {
-  @Nonnull
-  @Deprecated
-  public static TranslatingCompilerFilesMonitor getInstance() {
-    return Application.get().getInstance(TranslatingCompilerFilesMonitor.class);
-  }
-
-  public static final class ProjectRef extends SimpleReference<Project> {
-    public static class ProjectClosedException extends RuntimeException {
+    @Nonnull
+    @Deprecated
+    public static TranslatingCompilerFilesMonitor getInstance() {
+        return Application.get().getInstance(TranslatingCompilerFilesMonitor.class);
     }
 
-    public ProjectRef(Project project) {
-      super(project);
+    public static final class ProjectRef extends SimpleReference<Project> {
+        public static class ProjectClosedException extends RuntimeException {
+        }
+
+        public ProjectRef(Project project) {
+            super(project);
+        }
+
+        @Override
+        public Project get() {
+            final Project project = super.get();
+            if (project != null && project.isDisposed()) {
+                throw new ProjectClosedException();
+            }
+            return project;
+        }
     }
 
-    @Override
-    public Project get() {
-      final Project project = super.get();
-      if (project != null && project.isDisposed()) {
-        throw new ProjectClosedException();
-      }
-      return project;
-    }
-  }
+    public abstract void suspendProject(Project project);
 
-  public abstract void suspendProject(Project project);
+    public abstract void watchProject(Project project);
 
-  public abstract void watchProject(Project project);
+    public abstract boolean isSuspended(Project project);
 
-  public abstract boolean isSuspended(Project project);
+    public abstract boolean isSuspended(int projectId);
 
-  public abstract boolean isSuspended(int projectId);
+    public abstract void collectFiles(
+        CompileContext context,
+        TranslatingCompiler compiler,
+        Iterator<VirtualFile> scopeSrcIterator,
+        boolean forceCompile,
+        boolean isRebuild,
+        Collection<VirtualFile> toCompile,
+        Collection<Trinity<File, String, Boolean>> toDelete
+    );
 
-  public abstract void collectFiles(CompileContext context,
-                                    TranslatingCompiler compiler,
-                                    Iterator<VirtualFile> scopeSrcIterator,
-                                    boolean forceCompile,
-                                    boolean isRebuild,
-                                    Collection<VirtualFile> toCompile,
-                                    Collection<Trinity<File, String, Boolean>> toDelete);
+    public abstract void update(
+        CompileContext context,
+        @Nullable String outputRoot,
+        Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
+        VirtualFile[] filesToRecompile
+    ) throws IOException;
 
-  public abstract void update(CompileContext context,
-                              @Nullable String outputRoot,
-                              Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
-                              VirtualFile[] filesToRecompile) throws IOException;
+    public abstract void updateOutputRootsLayout(Project project);
 
-  public abstract void updateOutputRootsLayout(Project project);
+    public abstract List<String> getCompiledClassNames(VirtualFile srcFile, Project project);
 
-  public abstract List<String> getCompiledClassNames(VirtualFile srcFile, Project project);
+    public abstract void scanSourceContent(
+        ProjectRef projRef,
+        Collection<VirtualFile> roots,
+        int totalRootCount,
+        boolean isNewRoots
+    );
 
-  public abstract void scanSourceContent(ProjectRef projRef,
-                                         Collection<VirtualFile> roots,
-                                         int totalRootCount,
-                                         boolean isNewRoots);
+    public abstract void ensureInitializationCompleted(Project project, ProgressIndicator indicator);
 
-  public abstract void ensureInitializationCompleted(Project project, ProgressIndicator indicator);
-
-  public abstract boolean isMarkedForCompilation(Project project, VirtualFile file);
+    public abstract boolean isMarkedForCompilation(Project project, VirtualFile file);
 }

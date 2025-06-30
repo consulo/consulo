@@ -16,24 +16,25 @@
 package consulo.compiler;
 
 import jakarta.annotation.Nullable;
-import java.io.File;
 
+import java.io.File;
 
 /**
  * A tag interface indicating that the compiler will package the compiled Java classes.
  * This affects the order of compiler calls.
  * The sequence in which compilers are called:
- * SourceGeneratingCompiler -> SourceInstrumentingCompiler -> TranslatingCompiler ->  ClassInstrumentingCompiler -> ClassPostProcessingCompiler -> PackagingCompiler -> Validator
+ * SourceGeneratingCompiler -> SourceInstrumentingCompiler -> TranslatingCompiler -> ClassInstrumentingCompiler ->
+ * ClassPostProcessingCompiler -> PackagingCompiler -> Validator
  */
 public interface PackagingCompiler extends FileProcessingCompiler {
-  /**
-   * Called when the compiler detects that an item in the output directory is outdated
-   * and will be recompiled. Note that this method will be called before, and independently from,
-   * subsequent calls to {@link #process}.
-   *
-   * @param context the current compile context.
-   * @param file     a file in the output directory which will be recompiled.
-   * @param state   the validity state of the file specified by <code>url</code>.
-   */
-  void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state);
+    /**
+     * Called when the compiler detects that an item in the output directory is outdated
+     * and will be recompiled. Note that this method will be called before, and independently from,
+     * subsequent calls to {@link #process}.
+     *
+     * @param context the current compile context.
+     * @param file    a file in the output directory which will be recompiled.
+     * @param state   the validity state of the file specified by <code>url</code>.
+     */
+    void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state);
 }

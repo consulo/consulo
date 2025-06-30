@@ -27,20 +27,20 @@ import java.util.Set;
  * @author nik
  */
 public class DependentArchivesEvaluator {
-  private final Set<ArchivePackageInfo> myArchivePackageInfos = new LinkedHashSet<ArchivePackageInfo>();
+    private final Set<ArchivePackageInfo> myArchivePackageInfos = new LinkedHashSet<ArchivePackageInfo>();
 
-  public void addArchiveWithDependencies(final ArchivePackageInfo archivePackageInfo) {
-    if (myArchivePackageInfos.add(archivePackageInfo)) {
-      for (ArchiveDestinationInfo destination : archivePackageInfo.getArchiveDestinations()) {
-        addArchiveWithDependencies(destination.getArchivePackageInfo());
-      }
-      for (Pair<String, ArchivePackageInfo> pair : archivePackageInfo.getPackedArchives()) {
-        addArchiveWithDependencies(pair.getSecond());
-      }
+    public void addArchiveWithDependencies(final ArchivePackageInfo archivePackageInfo) {
+        if (myArchivePackageInfos.add(archivePackageInfo)) {
+            for (ArchiveDestinationInfo destination : archivePackageInfo.getArchiveDestinations()) {
+                addArchiveWithDependencies(destination.getArchivePackageInfo());
+            }
+            for (Pair<String, ArchivePackageInfo> pair : archivePackageInfo.getPackedArchives()) {
+                addArchiveWithDependencies(pair.getSecond());
+            }
+        }
     }
-  }
 
-  public Set<ArchivePackageInfo> getArchivePackageInfos() {
-    return myArchivePackageInfos;
-  }
+    public Set<ArchivePackageInfo> getArchivePackageInfos() {
+        return myArchivePackageInfos;
+    }
 }

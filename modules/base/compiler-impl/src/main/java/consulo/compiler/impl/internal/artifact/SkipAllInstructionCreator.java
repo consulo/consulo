@@ -24,22 +24,22 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class SkipAllInstructionCreator extends IncrementalCompilerInstructionCreatorBase {
-  public SkipAllInstructionCreator(ArtifactsProcessingItemsBuilderContext context) {
-    super(context);
-  }
+    public SkipAllInstructionCreator(ArtifactsProcessingItemsBuilderContext context) {
+        super(context);
+    }
 
-  @Override
-  public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
-  }
+    @Override
+    public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
+    }
 
-  @Override
-  public SkipAllInstructionCreator subFolder(@Nonnull String directoryName) {
-    return this;
-  }
+    @Override
+    public SkipAllInstructionCreator subFolder(@Nonnull String directoryName) {
+        return this;
+    }
 
-  @Nonnull
-  @Override
-  public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
-    return this;
-  }
+    @Nonnull
+    @Override
+    public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
+        return this;
+    }
 }

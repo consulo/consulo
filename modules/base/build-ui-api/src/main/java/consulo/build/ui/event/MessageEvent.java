@@ -12,22 +12,22 @@ import jakarta.annotation.Nullable;
  * @author Vladislav.Soroka
  */
 public interface MessageEvent extends BuildEvent {
-  enum Kind {
-    ERROR,
-    WARNING,
-    INFO,
-    STATISTICS,
-    SIMPLE
-  }
+    enum Kind {
+        ERROR,
+        WARNING,
+        INFO,
+        STATISTICS,
+        SIMPLE
+    }
 
-  @Nonnull
-  Kind getKind();
+    @Nonnull
+    Kind getKind();
 
-  @Nonnull
-  NotificationGroup getGroup();
+    @Nonnull
+    NotificationGroup getGroup();
 
-  @Nullable
-  Navigatable getNavigatable(@Nonnull Project project);
+    @Nullable
+    Navigatable getNavigatable(@Nonnull Project project);
 
-  MessageEventResult getResult();
+    MessageEventResult getResult();
 }

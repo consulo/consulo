@@ -8,5 +8,5 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ResourceCompilerExtension {
-  public abstract boolean skipStandardResourceCompiler(final @Nonnull Module module);
+    public abstract boolean skipStandardResourceCompiler(final @Nonnull Module module);
 }

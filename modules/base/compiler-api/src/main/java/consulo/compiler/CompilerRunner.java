@@ -38,9 +38,11 @@ public interface CompilerRunner {
     default void cleanUp(CompileDriver compileDriver, CompileContextEx context) {
     }
 
-    boolean build(CompileDriver compileDriver,
-                  CompileContextEx context,
-                  boolean isRebuild,
-                  boolean forceCompile,
-                  boolean onlyCheckStatus) throws ExitException;
+    boolean build(
+        CompileDriver compileDriver,
+        CompileContextEx context,
+        boolean isRebuild,
+        boolean forceCompile,
+        boolean onlyCheckStatus
+    ) throws ExitException;
 }

@@ -31,14 +31,14 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class TranslationCompilerPostStartupActivity implements PostStartupActivity, DumbAware {
-  @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl)TranslatingCompilerFilesMonitor.getInstance();
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl) TranslatingCompilerFilesMonitor.getInstance();
 
-    monitor.startAsyncScan(project);
+        monitor.startAsyncScan(project);
 
-    Task.Backgroundable.queue(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false, indicator -> {
-      monitor.runScan(indicator, project);
-    });
-  }
+        Task.Backgroundable.queue(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false, indicator -> {
+            monitor.runScan(indicator, project);
+        });
+    }
 }

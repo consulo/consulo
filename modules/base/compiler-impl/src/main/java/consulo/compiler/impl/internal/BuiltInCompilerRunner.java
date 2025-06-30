@@ -74,7 +74,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
     private static final FileProcessingCompilerAdapterFactory FILE_PROCESSING_COMPILER_ADAPTER_FACTORY = FileProcessingCompilerAdapter::new;
     private static final FileProcessingCompilerAdapterFactory FILE_PACKAGING_COMPILER_ADAPTER_FACTORY =
-        (context, compiler) -> new PackagingCompilerAdapter(context, (PackagingCompiler)compiler);
+        (context, compiler) -> new PackagingCompilerAdapter(context, (PackagingCompiler) compiler);
 
     private static final Predicate<Compiler> SOURCE_PROCESSING_ONLY = compiler -> compiler instanceof SourceProcessingCompiler;
 
@@ -290,7 +290,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         TranslatingCompiler[] original = compilerManager.getCompilers(TranslatingCompiler.class, compileDriver.getCompilerFilter());
 
         List<Chunk<Module>> sortedChunks =
-            Collections.unmodifiableList(Application.get().runReadAction((Supplier<List<Chunk<Module>>>)() -> {
+            Collections.unmodifiableList(Application.get().runReadAction((Supplier<List<Chunk<Module>>>) () -> {
                 ModuleManager moduleManager = ModuleManager.getInstance(myProject);
                 return ModuleCompilerUtil.getSortedModuleChunks(myProject, Arrays.asList(moduleManager.getModules()));
             }));
@@ -339,7 +339,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                                     ? Arrays.asList(snapshot)
                                     : Collections.<VirtualFile>emptySet();
                                 snapshot = Application.get().runReadAction(
-                                    (Supplier<VirtualFile[]>)() -> context.getCompileScope().getFiles(null)
+                                    (Supplier<VirtualFile[]>) () -> context.getCompileScope().getFiles(null)
                                 );
                                 recalculateChunkToFilesMap(context, sortedChunks, snapshot, chunkMap);
                                 if (round == 0) {
@@ -390,7 +390,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                             );
 
                             processed += chunkFiles.size();
-                            _context.getProgressIndicator().setFraction(((double)processed) / total);
+                            _context.getProgressIndicator().setFraction(((double) processed) / total);
 
                             if (compiledSomething) {
                                 generatedTypes.addAll(compilerManager.getRegisteredOutputTypes(compiler));
@@ -946,7 +946,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         boolean onlyCheckStatus,
         CacheDeferredUpdater cacheUpdater
     ) throws ExitException, IOException {
-        CompileContextEx context = (CompileContextEx)adapter.getCompileContext();
+        CompileContextEx context = (CompileContextEx) adapter.getCompileContext();
         FileProcessingCompilerStateCache cache = getFileProcessingCompilerCache(adapter.getCompiler());
         FileProcessingCompiler.ProcessingItem[] items = adapter.getProcessingItems();
         if (context.getMessageCount(CompilerMessageCategory.ERROR) > 0) {

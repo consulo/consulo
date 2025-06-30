@@ -29,6 +29,7 @@ import consulo.util.collection.ArrayUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -39,61 +40,68 @@ import java.util.StringTokenizer;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ProblemsView {
-  @Nonnull
-  public static ProblemsView getInstance(@Nonnull Project project) {
-    return project.getInstance(ProblemsView.class);
-  }
-
-  public static void showCurrentFileProblems(@Nonnull Project project) {
-    ToolWindow window = getToolWindow(project);
-    if (window == null) return; // does not exist
-    selectContent(window.getContentManager(), 0);
-    window.setAvailable(true, null);
-    window.activate(null, true);
-  }
-
-  @Nullable
-  public static ToolWindow getToolWindow(@Nullable Project project) {
-    return project == null || project.isDisposed() ? null : ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.MESSAGES_WINDOW);
-  }
-
-  private static void selectContent(@Nonnull ContentManager manager, int index) {
-    Content content = manager.getContent(index);
-    if (content != null) manager.setSelectedContent(content);
-  }
-
-  public abstract void clearOldMessages();
-
-  public abstract void addMessage(int type,
-                                  @Nonnull String[] text,
-                                  @Nullable String groupName,
-                                  @Nullable Navigatable navigatable,
-                                  @Nullable String exportTextPrefix,
-                                  @Nullable String rendererTextPrefix);
-
-
-  @RequiredUIAccess
-  public abstract void showOrHide(boolean hide);
-
-  public abstract boolean isHideWarnings();
-
-  public abstract void selectFirstMessage();
-
-  public abstract void setProgress(String text, float fraction);
-
-  public abstract void setProgress(String text);
-
-  public abstract void clearProgress();
-
-  public static String[] convertMessage(final String text) {
-    if (!text.contains("\n")) {
-      return new String[]{text};
+    @Nonnull
+    public static ProblemsView getInstance(@Nonnull Project project) {
+        return project.getInstance(ProblemsView.class);
     }
-    final List<String> lines = new ArrayList<>();
-    StringTokenizer tokenizer = new StringTokenizer(text, "\n", false);
-    while (tokenizer.hasMoreTokens()) {
-      lines.add(tokenizer.nextToken());
+
+    public static void showCurrentFileProblems(@Nonnull Project project) {
+        ToolWindow window = getToolWindow(project);
+        if (window == null) {
+            return; // does not exist
+        }
+        selectContent(window.getContentManager(), 0);
+        window.setAvailable(true, null);
+        window.activate(null, true);
     }
-    return ArrayUtil.toStringArray(lines);
-  }
+
+    @Nullable
+    public static ToolWindow getToolWindow(@Nullable Project project) {
+        return project == null || project.isDisposed() ? null : ToolWindowManager.getInstance(project)
+            .getToolWindow(ToolWindowId.MESSAGES_WINDOW);
+    }
+
+    private static void selectContent(@Nonnull ContentManager manager, int index) {
+        Content content = manager.getContent(index);
+        if (content != null) {
+            manager.setSelectedContent(content);
+        }
+    }
+
+    public abstract void clearOldMessages();
+
+    public abstract void addMessage(
+        int type,
+        @Nonnull String[] text,
+        @Nullable String groupName,
+        @Nullable Navigatable navigatable,
+        @Nullable String exportTextPrefix,
+        @Nullable String rendererTextPrefix
+    );
+
+
+    @RequiredUIAccess
+    public abstract void showOrHide(boolean hide);
+
+    public abstract boolean isHideWarnings();
+
+    public abstract void selectFirstMessage();
+
+    public abstract void setProgress(String text, float fraction);
+
+    public abstract void setProgress(String text);
+
+    public abstract void clearProgress();
+
+    public static String[] convertMessage(final String text) {
+        if (!text.contains("\n")) {
+            return new String[]{text};
+        }
+        final List<String> lines = new ArrayList<>();
+        StringTokenizer tokenizer = new StringTokenizer(text, "\n", false);
+        while (tokenizer.hasMoreTokens()) {
+            lines.add(tokenizer.nextToken());
+        }
+        return ArrayUtil.toStringArray(lines);
+    }
 }

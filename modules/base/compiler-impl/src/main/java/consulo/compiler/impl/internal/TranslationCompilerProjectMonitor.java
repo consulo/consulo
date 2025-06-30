@@ -52,96 +52,100 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class TranslationCompilerProjectMonitor {
-  @Nonnull
-  public static TranslationCompilerProjectMonitor getInstance(@Nonnull Project project) {
-    return project.getInstance(TranslationCompilerProjectMonitor.class);
-  }
-
-  private static final Logger LOG = Logger.getInstance(TranslationCompilerProjectMonitor.class);
-
-  private final Project myProject;
-
-  @Inject
-  public TranslationCompilerProjectMonitor(Project project) {
-    myProject = project;
-  }
-
-  @RequiredReadAction
-  public void updateCompileOutputInfoFile() {
-    Map<String, Couple<String>> map = buildOutputRootsLayout();
-
-    Element root = new Element("list");
-    for (Map.Entry<String, Couple<String>> entry : map.entrySet()) {
-      Element module = new Element("module");
-      root.addContent(module);
-
-      module.setAttribute("name", entry.getKey());
-
-      String first = entry.getValue().getFirst();
-      if (first != null) module.setAttribute("output-url", first);
-
-      String second = entry.getValue().getSecond();
-      if (second != null) module.setAttribute("test-output-url", second);
+    @Nonnull
+    public static TranslationCompilerProjectMonitor getInstance(@Nonnull Project project) {
+        return project.getInstance(TranslationCompilerProjectMonitor.class);
     }
 
-    try {
-      JDOMUtil.writeDocument(new Document(root), getOutputUrlsFile(), "\n");
+    private static final Logger LOG = Logger.getInstance(TranslationCompilerProjectMonitor.class);
+
+    private final Project myProject;
+
+    @Inject
+    public TranslationCompilerProjectMonitor(Project project) {
+        myProject = project;
     }
-    catch (IOException e) {
-      LOG.error(e);
-    }
-  }
 
-  @Nonnull
-  public Map<String, Couple<String>> getLastOutputRootsLayout() {
-    File file = getOutputUrlsFile();
+    @RequiredReadAction
+    public void updateCompileOutputInfoFile() {
+        Map<String, Couple<String>> map = buildOutputRootsLayout();
 
-    Map<String, Couple<String>> map = new HashMap<>();
-    if (file.exists()) {
-      try {
-        Element root = JDOMUtil.load(file);
+        Element root = new Element("list");
+        for (Map.Entry<String, Couple<String>> entry : map.entrySet()) {
+            Element module = new Element("module");
+            root.addContent(module);
 
-        for (Element module : root.getChildren()) {
-          String name = module.getAttributeValue("name");
-          String outputUrl = module.getAttributeValue("output-url");
-          String testOutputUrl = module.getAttributeValue("test-output-url");
+            module.setAttribute("name", entry.getKey());
 
-          map.put(name, Couple.of(outputUrl, testOutputUrl));
+            String first = entry.getValue().getFirst();
+            if (first != null) {
+                module.setAttribute("output-url", first);
+            }
+
+            String second = entry.getValue().getSecond();
+            if (second != null) {
+                module.setAttribute("test-output-url", second);
+            }
         }
-      }
-      catch (IOException | JDOMException e) {
-        LOG.error(e);
-      }
+
+        try {
+            JDOMUtil.writeDocument(new Document(root), getOutputUrlsFile(), "\n");
+        }
+        catch (IOException e) {
+            LOG.error(e);
+        }
     }
 
-    return map;
-  }
+    @Nonnull
+    public Map<String, Couple<String>> getLastOutputRootsLayout() {
+        File file = getOutputUrlsFile();
 
-  public void removeCompileOutputInfoFile() {
-    File outputUrlsFile = getOutputUrlsFile();
-    FileUtil.delete(outputUrlsFile);
-  }
+        Map<String, Couple<String>> map = new HashMap<>();
+        if (file.exists()) {
+            try {
+                Element root = JDOMUtil.load(file);
 
-  @RequiredReadAction
-  public Map<String, Couple<String>> buildOutputRootsLayout() {
-    Map<String, Couple<String>> map = new LinkedHashMap<>();
+                for (Element module : root.getChildren()) {
+                    String name = module.getAttributeValue("name");
+                    String outputUrl = module.getAttributeValue("output-url");
+                    String testOutputUrl = module.getAttributeValue("test-output-url");
 
-    for (Module module : ModuleManager.getInstance(myProject).getModules()) {
-      ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+                    map.put(name, Couple.of(outputUrl, testOutputUrl));
+                }
+            }
+            catch (IOException | JDOMException e) {
+                LOG.error(e);
+            }
+        }
 
-      final VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
-      final String outputUrl = output == null ? null : output.getUrl();
-      final VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
-      final String testoutUrl = testsOutput == null ? null : testsOutput.getUrl();
-      map.put(module.getName(), Couple.of(outputUrl, testoutUrl));
+        return map;
     }
 
-    return map;
-  }
+    public void removeCompileOutputInfoFile() {
+        File outputUrlsFile = getOutputUrlsFile();
+        FileUtil.delete(outputUrlsFile);
+    }
 
-  @Nonnull
-  private File getOutputUrlsFile() {
-    File dir = CompilerPaths.getCompilerSystemDirectory(myProject);
-    return new File(dir, "outputs.xml");
-  }
+    @RequiredReadAction
+    public Map<String, Couple<String>> buildOutputRootsLayout() {
+        Map<String, Couple<String>> map = new LinkedHashMap<>();
+
+        for (Module module : ModuleManager.getInstance(myProject).getModules()) {
+            ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+
+            final VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
+            final String outputUrl = output == null ? null : output.getUrl();
+            final VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
+            final String testoutUrl = testsOutput == null ? null : testsOutput.getUrl();
+            map.put(module.getName(), Couple.of(outputUrl, testoutUrl));
+        }
+
+        return map;
+    }
+
+    @Nonnull
+    private File getOutputUrlsFile() {
+        File dir = CompilerPaths.getCompilerSystemDirectory(myProject);
+        return new File(dir, "outputs.xml");
+    }
 }
