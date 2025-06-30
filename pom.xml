@@ -98,6 +98,7 @@
     <module>modules/base/execution-debug-api</module>
     <module>modules/base/execution-debug-impl</module>
     <module>modules/base/execution-coverage-api</module>
+    <module>modules/base/execution-coverage-impl</module>
     <module>modules/base/execution-test-api</module>
     <module>modules/base/execution-test-impl</module>
     <module>modules/base/execution-test-sm-api</module>

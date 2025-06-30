@@ -33,5 +33,6 @@ module consulo.file.editor.api {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl,
         consulo.language.editor.impl,
-        consulo.configuration.editor.api;
+        consulo.configuration.editor.api,
+        consulo.execution.coverage.impl;
 }

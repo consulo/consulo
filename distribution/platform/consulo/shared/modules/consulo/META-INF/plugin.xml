@@ -2599,11 +2599,9 @@
         </group>
 
         <group id="CoverageMenu">
-            <action id="SwitchCoverage" class="consulo.ide.impl.idea.coverage.actions.SwitchCoverageSuiteAction"
-                    text="Show Co_verage Data..."/>
-            <action id="GenerateCoverageReport" class="consulo.ide.impl.idea.coverage.actions.GenerateCoverageReportAction"
-                    text="_Generate Coverage Report..." icon="consulo.platform.base.PlatformIconGroup@actions.export"/>
-            <action id="HideCoverage" class="consulo.execution.coverage.action.HideCoverageInfoAction"/>
+            <reference id="SwitchCoverage"/>
+            <reference id="GenerateCoverageReport" />
+            <reference id="HideCoverage"/>
             <separator/>
         </group>
 

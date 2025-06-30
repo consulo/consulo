@@ -18,7 +18,7 @@ package consulo.desktop.awt.fileEditor.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.fileEditor.EditorNotificationBuilder;
-import consulo.fileEditor.impl.internal.EditorNotificationBuilderFactory;
+import consulo.fileEditor.internal.EditorNotificationBuilderFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

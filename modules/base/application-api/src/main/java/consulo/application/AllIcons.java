@@ -288,7 +288,6 @@ public class AllIcons {
         public static final Image QuestionDialog = PlatformIconGroup.generalQuestiondialog(); // 32x32
         public static final Image Remove = PlatformIconGroup.generalRemove(); // 16x16
         public static final Image Reset = PlatformIconGroup.generalReset(); // 16x16
-        public static final Image RunWithCoverage = PlatformIconGroup.generalRunwithcoverage(); // 16x16
         public static final Image SeparatorH = PlatformIconGroup.generalSeparatorh(); // 17x11
         public static final Image Settings = PlatformIconGroup.generalSettings(); // 16x16
         public static final Image Show_to_implement = PlatformIconGroup.generalShowtoimplement(); // 16x16
@@ -586,7 +585,6 @@ public class AllIcons {
         public static final Image TestPaused = PlatformIconGroup.runconfigurationsTestpaused(); // 16x16
         public static final Image TestSkipped = PlatformIconGroup.runconfigurationsTestskipped(); // 16x16
         public static final Image TestTerminated = PlatformIconGroup.runconfigurationsTestterminated(); // 16x16
-        public static final Image TrackCoverage = PlatformIconGroup.runconfigurationsTrackcoverage(); // 16x16
         public static final Image Web_app = PlatformIconGroup.runconfigurationsWeb_app(); // 16x16
 
     }
@@ -600,7 +598,6 @@ public class AllIcons {
     public static class Toolwindows {
         public static final Image Documentation = PlatformIconGroup.toolwindowsDocumentation(); // 13x13
         public static final Image ToolWindowChanges = PlatformIconGroup.toolwindowsToolwindowchanges(); // 13x13
-        public static final Image ToolWindowCoverage = PlatformIconGroup.toolwindowsToolwindowcoverage(); // 13x13
         public static final Image ToolWindowFind = PlatformIconGroup.toolwindowsToolwindowfind(); // 13x13
         public static final Image ToolWindowHierarchy = PlatformIconGroup.toolwindowsToolwindowhierarchy(); // 13x13
         public static final Image ToolWindowMessages = PlatformIconGroup.toolwindowsToolwindowmessages(); // 13x13

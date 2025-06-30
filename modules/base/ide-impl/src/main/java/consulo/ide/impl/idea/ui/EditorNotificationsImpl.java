@@ -27,7 +27,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.fileEditor.impl.internal.EditorNotificationBuilderFactory;
+import consulo.fileEditor.internal.EditorNotificationBuilderFactory;
 import consulo.fileEditor.internal.EditorNotificationBuilderEx;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.module.content.layer.event.ModuleRootEvent;

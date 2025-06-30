@@ -29,6 +29,7 @@ module consulo.project.ui.api {
         consulo.desktop.ide.impl,
         consulo.ui.ex.awt.api,
         consulo.execution.test.sm.api,
+        consulo.execution.coverage.impl,
         consulo.file.editor.api,
         consulo.file.editor.impl,
         consulo.execution.impl,

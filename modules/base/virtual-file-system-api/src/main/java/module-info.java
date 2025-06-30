@@ -33,7 +33,8 @@ module consulo.virtual.file.system.api {
         consulo.virtual.file.system.impl,
         consulo.extension.preview.recorder.impl;
 
-    exports consulo.virtualFileSystem.internal to consulo.document.api,
+    exports consulo.virtualFileSystem.internal to
+        consulo.document.api,
         consulo.virtual.file.system.impl,
         consulo.ide.impl,
         consulo.component.store.impl,
@@ -46,5 +47,6 @@ module consulo.virtual.file.system.api {
         consulo.language.editor.impl,
         consulo.test.junit.impl,
         consulo.desktop.ide.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl,
+        consulo.execution.coverage.impl;
 }

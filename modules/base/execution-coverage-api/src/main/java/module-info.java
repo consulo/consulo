@@ -16,5 +16,10 @@ module consulo.execution.coverage.api {
     exports consulo.execution.coverage;
     exports consulo.execution.coverage.action;
     exports consulo.execution.coverage.localize;
+    exports consulo.execution.coverage.icon;
     exports consulo.execution.coverage.view;
+
+    exports consulo.execution.coverage.internal to
+        consulo.ide.impl,
+        consulo.execution.coverage.impl;
 }

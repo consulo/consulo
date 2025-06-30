@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.configurable.ConfigurationException;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
-import consulo.ide.impl.idea.openapi.ui.PanelWithText;
+import consulo.ui.ex.awt.PanelWithText;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

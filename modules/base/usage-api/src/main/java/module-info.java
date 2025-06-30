@@ -13,10 +13,12 @@ module consulo.usage.api {
     requires transitive consulo.virtual.file.status.api;
 
     exports consulo.usage;
-    exports consulo.usage.internal to
-        consulo.ide.impl,
-        consulo.language.editor.refactoring.api;
     exports consulo.usage.localize;
     exports consulo.usage.rule;
     exports consulo.usage.util;
+
+    exports consulo.usage.internal to
+        consulo.ide.impl,
+        consulo.execution.coverage.impl,
+        consulo.language.editor.refactoring.api;
 }

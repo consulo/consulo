@@ -179,7 +179,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.diff;
   exports consulo.ide.impl.eap;
   exports consulo.ide.impl.execution;
-  exports consulo.ide.impl.execution.coverage;
   exports consulo.ide.impl.fileChooser;
   exports consulo.ide.impl.fileEditor;
   exports consulo.ide.impl.fileEditor.text;
@@ -261,9 +260,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInspection.util;
   exports consulo.ide.impl.idea.codeStyle;
   exports consulo.ide.impl.idea.concurrency;
-  exports consulo.ide.impl.idea.coverage;
-  exports consulo.ide.impl.idea.coverage.actions;
-  exports consulo.ide.impl.idea.coverage.view;
   exports consulo.ide.impl.idea.designer;
   exports consulo.ide.impl.idea.designer.model;
   exports consulo.ide.impl.idea.designer.propertyTable;

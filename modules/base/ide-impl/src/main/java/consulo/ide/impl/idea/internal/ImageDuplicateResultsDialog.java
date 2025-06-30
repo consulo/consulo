@@ -18,12 +18,9 @@ package consulo.ide.impl.idea.internal;
 import consulo.application.AllIcons;
 import consulo.component.PropertyName;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
+import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponentImpl;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.io.FileUtil;
-import consulo.ide.impl.idea.ui.popup.NotLookupOrSearchCondition;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.internal.DocumentationManagerHelper;
@@ -33,6 +30,7 @@ import consulo.language.psi.PsiManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
@@ -45,11 +43,11 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionListener;
@@ -92,7 +90,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
   @Nonnull
   @Override
   protected Action[] createActions() {
-    final Action[] actions = new Action[4];
+    Action[] actions = new Action[4];
     actions[0] = new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -113,13 +111,12 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     return new Action[0];
   }
 
-  @NonNls
   @Override
   @RequiredUIAccess
   protected JComponent createCenterPanel() {
-    final JPanel panel = new JPanel(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
     DataManager.registerDataProvider(panel, dataId -> {
-      final TreePath path = myTree.getSelectionPath();
+      TreePath path = myTree.getSelectionPath();
       if (path != null) {
         Object component = path.getLastPathComponent();
         VirtualFile file = null;
@@ -139,8 +136,8 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
       return null;
     });
 
-    final JBList list = new JBList(new ResourceModules().getModuleNames());
-    final NotNullFunction<Object, JComponent> modulesRenderer = new NotNullFunction<>() {
+    JBList list = new JBList(new ResourceModules().getModuleNames());
+    NotNullFunction<Object, JComponent> modulesRenderer = new NotNullFunction<>() {
       @Nonnull
       @Override
       public JComponent apply(Object dom) {
@@ -152,17 +149,17 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
       }
     };
     list.installCellRenderer(modulesRenderer);
-    final JPanel modulesPanel = ToolbarDecorator.createDecorator(list)
+    JPanel modulesPanel = ToolbarDecorator.createDecorator(list)
       .setAddAction(button -> {
-        final Module[] all = ModuleManager.getInstance(myProject).getModules();
+        Module[] all = ModuleManager.getInstance(myProject).getModules();
         Arrays.sort(all, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-        final JBList modules = new JBList(all);
+        JBList modules = new JBList(all);
         modules.installCellRenderer(modulesRenderer);
         new PopupChooserBuilder<>(modules)
           .setTitle("Add Resource Module")
           .setFilteringEnabled(o -> ((Module)o).getName())
           .setItemChoosenCallback(() -> {
-            final Object value = modules.getSelectedValue();
+            Object value = modules.getSelectedValue();
             if (value instanceof Module module && !myResourceModules.contains(module)) {
               myResourceModules.add(module);
               ((DefaultListModel)list.getModel()).addElement(module.getName());
@@ -172,7 +169,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
           }).createPopup().show(button.getPreferredPopupPoint());
       })
       .setRemoveAction(button -> {
-        final Object[] values = list.getSelectedValues();
+        Object[] values = list.getSelectedValues();
         for (Object value : values) {
           myResourceModules.remove((String)value);
           ((DefaultListModel)list.getModel()).removeElement(value);
@@ -184,7 +181,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
       .disableUpAction()
       .createPanel();
     modulesPanel.setPreferredSize(new Dimension(-1, 60));
-    final JPanel top = new JPanel(new BorderLayout());
+    JPanel top = new JPanel(new BorderLayout());
     top.add(new JLabel("Image modules:"), BorderLayout.NORTH);
     top.add(modulesPanel, BorderLayout.CENTER);
 
@@ -196,13 +193,13 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
       public void actionPerformed(@Nonnull AnActionEvent e) {
         VirtualFile file = getFileFromSelection();
         if (file != null) {
-          final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
+          PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
           if (psiFile != null) {
-            final ImplementationViewComponent viewComponent = new ImplementationViewComponent(new PsiElement[]{psiFile}, 0);
-            final TreeSelectionListener listener = e1 -> {
-              final VirtualFile selection = getFileFromSelection();
+            ImplementationViewComponentImpl viewComponent = new ImplementationViewComponentImpl(new PsiElement[]{psiFile}, 0);
+            TreeSelectionListener listener = e1 -> {
+              VirtualFile selection = getFileFromSelection();
               if (selection != null) {
-                final PsiFile newElement = PsiManager.getInstance(myProject).findFile(selection);
+                PsiFile newElement = PsiManager.getInstance(myProject).findFile(selection);
                 if (newElement != null) {
                   viewComponent.update(new PsiElement[]{newElement}, 0);
                 }
@@ -210,10 +207,9 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
             };
             myTree.addTreeSelectionListener(listener);
 
-            final JBPopup popup =
+            JBPopup popup =
               JBPopupFactory.getInstance()
                 .createComponentPopupBuilder(viewComponent, viewComponent.getPreferredFocusableComponent())
-                .setRequestFocusCondition(myProject, NotLookupOrSearchCondition.INSTANCE)
                 .setProject(myProject)
                 .setDimensionServiceKey(myProject, DocumentationManagerHelper.JAVADOC_LOCATION_AND_SIZE, false)
                 .setResizable(true)
@@ -226,7 +222,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
                 .setTitle("Image Preview")
                 .createPopup();
 
-            final Window window = ImageDuplicateResultsDialog.this.getWindow();
+            Window window = ImageDuplicateResultsDialog.this.getWindow();
             popup.show(new RelativePoint(window, new Point(window.getWidth(), 0)));
             viewComponent.setHint(popup, "Image Preview");
           }
@@ -237,7 +233,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     int total = 0;
     for (Set set : myDuplicates.values()) total+=set.size();
     total-=myDuplicates.size();
-    final JLabel label = new JLabel(
+    JLabel label = new JLabel(
       "<html>Press <b>Enter</b> to preview image<br>" +
         "Total images found: " + myImages.size() + ". Total duplicates found: " + total+"</html>"
     );
@@ -258,7 +254,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
 
   @Nullable
   private VirtualFile getFileFromSelection() {
-    final TreePath path = myTree.getSelectionPath();
+    TreePath path = myTree.getSelectionPath();
     if (path != null) {
       Object component = path.getLastPathComponent();
       VirtualFile file = null;
@@ -275,7 +271,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
 
   private class MyRootNode extends DefaultMutableTreeNode {
     private MyRootNode() {
-      final Vector vector = new Vector();
+      Vector vector = new Vector();
       for (Set<VirtualFile> files : myDuplicates.values()) {
         vector.add(new MyDuplicatesNode(this, files));
       }
@@ -290,7 +286,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
       super(files);
       myFiles = files;
       setParent(node);
-      final Vector vector = new Vector();
+      Vector vector = new Vector();
       for (VirtualFile file : files) {
         vector.add(new MyFileNode(this, file));
       }
@@ -327,8 +323,8 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
       boolean hasFocus
     ) {
       if (value instanceof MyFileNode fileNode) {
-        final VirtualFile file = fileNode.getUserObject();
-        final Module module = ModuleUtil.findModuleForFile(file, myProject);
+        VirtualFile file = fileNode.getUserObject();
+        Module module = ModuleUtil.findModuleForFile(file, myProject);
         if (module != null) {
           setIcon(AllIcons.Nodes.Module);
           append(
@@ -342,9 +338,9 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
         }
       }
       else if (value instanceof MyDuplicatesNode duplicatesNode) {
-        final Set<VirtualFile> files = duplicatesNode.getUserObject();
+        Set<VirtualFile> files = duplicatesNode.getUserObject();
         for (VirtualFile file : files) {
-          final Module module = ModuleUtil.findModuleForFile(file, myProject);
+          Module module = ModuleUtil.findModuleForFile(file, myProject);
 
           if (module != null && myResourceModules.contains(module)) {
             append("Icons can be replaced to ");
@@ -363,9 +359,9 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
   }
 
   private static String getRelativePathToProject(Project project, VirtualFile file) {
-    final String path = project.getBasePath();
+    String path = project.getBasePath();
     assert path != null;
-    final String result = FileUtil.getRelativePath(
+    String result = FileUtil.getRelativePath(
       path,
       file.getPath().replace('/', File.separatorChar),
       File.separatorChar
@@ -395,7 +391,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     }
 
     public void remove(String value) {
-      final List<String> names = new ArrayList<>(getModuleNames());
+      List<String> names = new ArrayList<>(getModuleNames());
       names.remove(value);
       modules = StringUtil.join(names, "\n");
     }

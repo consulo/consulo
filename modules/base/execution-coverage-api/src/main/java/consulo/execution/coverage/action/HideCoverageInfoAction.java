@@ -1,9 +1,9 @@
 package consulo.execution.coverage.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
-import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -15,6 +15,7 @@ import consulo.ui.ex.action.Presentation;
  * @author anna
  * @since 2012-02-14
  */
+@ActionImpl(id = "HideCoverage")
 public class HideCoverageInfoAction extends AnAction {
     public HideCoverageInfoAction() {
         super(

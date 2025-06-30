@@ -16,9 +16,8 @@
 package consulo.sandboxPlugin.ide.coverage;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.coverage.CoverageOptions;
 import consulo.configurable.Configurable;
-
+import consulo.execution.coverage.CoverageOptions;
 import jakarta.annotation.Nullable;
 
 /**
@@ -26,7 +25,7 @@ import jakarta.annotation.Nullable;
  * @since 2020-09-20
  */
 @ExtensionImpl
-public class SandCoverageOptions extends CoverageOptions {
+public class SandCoverageOptions implements CoverageOptions {
   @Nullable
   @Override
   public Configurable createConfigurable() {

@@ -45,20 +45,21 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.localize;
 
     exports consulo.ui.ex.internal to
-            consulo.ide.impl,
-            consulo.desktop.awt.ide.impl,
-            consulo.desktop.swt.ide.impl,
-            consulo.ui.ex.awt.api,
-            consulo.execution.api,
-            consulo.execution.impl,
-            consulo.project.ui.api,
-            consulo.execution.debug.impl,
-            consulo.external.service.impl,
-            consulo.desktop.awt.os.mac;
+        consulo.ide.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.swt.ide.impl,
+        consulo.ui.ex.awt.api,
+        consulo.execution.api,
+        consulo.execution.impl,
+        consulo.project.ui.api,
+        consulo.execution.debug.impl,
+        consulo.execution.coverage.impl,
+        consulo.external.service.impl,
+        consulo.desktop.awt.os.mac;
 
     exports consulo.ui.ex.awtUnsafe.internal to
-            consulo.desktop.awt.ide.impl,
-            consulo.desktop.swt.ide.impl;
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.swt.ide.impl;
 
     uses TargetAWTFacade;
 }
