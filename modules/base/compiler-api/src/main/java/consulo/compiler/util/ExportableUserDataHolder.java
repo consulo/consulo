@@ -19,6 +19,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Map;
 
 /**
@@ -26,6 +27,6 @@ import java.util.Map;
  * @since 2012-02-21
  */
 public interface ExportableUserDataHolder extends UserDataHolder {
-  @Nonnull
-  Map<Key, Object> exportUserData();
+    @Nonnull
+    Map<Key, Object> exportUserData();
 }

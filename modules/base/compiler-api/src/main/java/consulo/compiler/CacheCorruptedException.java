@@ -20,15 +20,18 @@ package consulo.compiler;
  * @since 2003-07-10
  */
 public class CacheCorruptedException extends Exception {
-  public CacheCorruptedException(String message) {
-    super((message == null || message.length() == 0) ? CompilerBundle.message("error.dependency.info.on.disk.corrupted") : message);
-  }
+    public CacheCorruptedException(String message) {
+        super((message == null || message.length() == 0) ? CompilerBundle.message("error.dependency.info.on.disk.corrupted") : message);
+    }
 
-  public CacheCorruptedException(Throwable cause) {
-    super(CompilerBundle.message("error.dependency.info.on.disk.corrupted"), cause);
-  }
+    public CacheCorruptedException(Throwable cause) {
+        super(CompilerBundle.message("error.dependency.info.on.disk.corrupted"), cause);
+    }
 
-  public CacheCorruptedException(String message, Throwable cause) {
-    super((message == null || message.length() == 0) ? CompilerBundle.message("error.dependency.info.on.disk.corrupted") : message, cause);
-  }
+    public CacheCorruptedException(String message, Throwable cause) {
+        super(
+            (message == null || message.length() == 0) ? CompilerBundle.message("error.dependency.info.on.disk.corrupted") : message,
+            cause
+        );
+    }
 }

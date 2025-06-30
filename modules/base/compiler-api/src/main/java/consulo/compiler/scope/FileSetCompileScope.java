@@ -25,6 +25,7 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 /**
@@ -32,106 +33,106 @@ import java.util.*;
  * @author 2003-01-20
  */
 public class FileSetCompileScope extends ExportableUserDataHolderBase implements CompileScope {
-  private final Set<VirtualFile> myRootFiles = new HashSet<>();
-  private final Set<String> myDirectoryUrls = new HashSet<>();
-  private Set<String> myUrls = null; // urls caching
-  private final Module[] myAffectedModules;
-  private final boolean myIncludeTestScope;
+    private final Set<VirtualFile> myRootFiles = new HashSet<>();
+    private final Set<String> myDirectoryUrls = new HashSet<>();
+    private Set<String> myUrls = null; // urls caching
+    private final Module[] myAffectedModules;
+    private final boolean myIncludeTestScope;
 
-  public FileSetCompileScope(final Collection<VirtualFile> files, Module[] modules) {
-    this(files, modules, true);
-  }
+    public FileSetCompileScope(final Collection<VirtualFile> files, Module[] modules) {
+        this(files, modules, true);
+    }
 
-  public FileSetCompileScope(final Collection<VirtualFile> files, Module[] modules, boolean includeTestScope) {
-    myAffectedModules = modules;
-    myIncludeTestScope = includeTestScope;
-    ReadAction.run(() -> {
-      for (VirtualFile file : files) {
-        assert file != null;
-        addFile(file);
-      }
-    });
-  }
+    public FileSetCompileScope(final Collection<VirtualFile> files, Module[] modules, boolean includeTestScope) {
+        myAffectedModules = modules;
+        myIncludeTestScope = includeTestScope;
+        ReadAction.run(() -> {
+            for (VirtualFile file : files) {
+                assert file != null;
+                addFile(file);
+            }
+        });
+    }
 
-  @Override
-  public boolean includeTestScope() {
-    return myIncludeTestScope;
-  }
+    @Override
+    public boolean includeTestScope() {
+        return myIncludeTestScope;
+    }
 
-  @Override
-  @Nonnull
-  public Module[] getAffectedModules() {
-    return myAffectedModules;
-  }
+    @Override
+    @Nonnull
+    public Module[] getAffectedModules() {
+        return myAffectedModules;
+    }
 
-  public Collection<VirtualFile> getRootFiles() {
-    return Collections.unmodifiableCollection(myRootFiles);
-  }
+    public Collection<VirtualFile> getRootFiles() {
+        return Collections.unmodifiableCollection(myRootFiles);
+    }
 
-  @Override
-  @Nonnull
-  public VirtualFile[] getFiles(final FileType fileType) {
-    final List<VirtualFile> files = new ArrayList<>();
-    for (Iterator<VirtualFile> it = myRootFiles.iterator(); it.hasNext(); ) {
-      VirtualFile file = it.next();
-      if (!file.isValid()) {
-        it.remove();
-        continue;
-      }
-      if (file.isDirectory()) {
-        addRecursively(files, file, fileType);
-      }
-      else {
-        if (fileType == null || fileType.equals(file.getFileType())) {
-          files.add(file);
+    @Override
+    @Nonnull
+    public VirtualFile[] getFiles(final FileType fileType) {
+        final List<VirtualFile> files = new ArrayList<>();
+        for (Iterator<VirtualFile> it = myRootFiles.iterator(); it.hasNext(); ) {
+            VirtualFile file = it.next();
+            if (!file.isValid()) {
+                it.remove();
+                continue;
+            }
+            if (file.isDirectory()) {
+                addRecursively(files, file, fileType);
+            }
+            else {
+                if (fileType == null || fileType.equals(file.getFileType())) {
+                    files.add(file);
+                }
+            }
         }
-      }
+        return VirtualFileUtil.toVirtualFileArray(files);
     }
-    return VirtualFileUtil.toVirtualFileArray(files);
-  }
 
-  @Override
-  public boolean belongs(String url) {
-    //url = CompilerUtil.normalizePath(url, '/');
-    if (getUrls().contains(url)) {
-      return true;
-    }
-    for (String directoryUrl : myDirectoryUrls) {
-      if (FileUtil.startsWith(url, directoryUrl)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private Set<String> getUrls() {
-    if (myUrls == null) {
-      myUrls = new HashSet<>();
-      for (VirtualFile file : myRootFiles) {
-        String url = file.getUrl();
-        myUrls.add(url);
-      }
-    }
-    return myUrls;
-  }
-
-  private void addFile(VirtualFile file) {
-    if (file.isDirectory()) {
-      myDirectoryUrls.add(file.getUrl() + "/");
-    }
-    myRootFiles.add(file);
-    myUrls = null;
-  }
-
-  private static void addRecursively(final Collection<VirtualFile> container, VirtualFile fromDirectory, final FileType fileType) {
-    VirtualFileUtil.visitChildrenRecursively(fromDirectory, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT) {
-      @Override
-      public boolean visitFile(@Nonnull VirtualFile child) {
-        if (!child.isDirectory() && (fileType == null || fileType.equals(child.getFileType()))) {
-          container.add(child);
+    @Override
+    public boolean belongs(String url) {
+        //url = CompilerUtil.normalizePath(url, '/');
+        if (getUrls().contains(url)) {
+            return true;
         }
-        return true;
-      }
-    });
-  }
+        for (String directoryUrl : myDirectoryUrls) {
+            if (FileUtil.startsWith(url, directoryUrl)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Set<String> getUrls() {
+        if (myUrls == null) {
+            myUrls = new HashSet<>();
+            for (VirtualFile file : myRootFiles) {
+                String url = file.getUrl();
+                myUrls.add(url);
+            }
+        }
+        return myUrls;
+    }
+
+    private void addFile(VirtualFile file) {
+        if (file.isDirectory()) {
+            myDirectoryUrls.add(file.getUrl() + "/");
+        }
+        myRootFiles.add(file);
+        myUrls = null;
+    }
+
+    private static void addRecursively(final Collection<VirtualFile> container, VirtualFile fromDirectory, final FileType fileType) {
+        VirtualFileUtil.visitChildrenRecursively(fromDirectory, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT) {
+            @Override
+            public boolean visitFile(@Nonnull VirtualFile child) {
+                if (!child.isDirectory() && (fileType == null || fileType.equals(child.getFileType()))) {
+                    container.add(child);
+                }
+                return true;
+            }
+        });
+    }
 }

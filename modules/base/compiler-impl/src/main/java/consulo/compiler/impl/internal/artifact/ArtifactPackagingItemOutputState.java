@@ -19,12 +19,12 @@ import consulo.util.lang.Pair;
 import consulo.util.collection.SmartList;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class ArtifactPackagingItemOutputState {
-  public final SmartList<Pair<String, Long>> myDestinations;
+    public final SmartList<Pair<String, Long>> myDestinations;
 
-  public ArtifactPackagingItemOutputState(SmartList<Pair<String, Long>> destinations) {
-    myDestinations = destinations;
-  }
+    public ArtifactPackagingItemOutputState(SmartList<Pair<String, Long>> destinations) {
+        myDestinations = destinations;
+    }
 }

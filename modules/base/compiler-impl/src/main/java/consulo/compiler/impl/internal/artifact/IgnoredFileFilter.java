@@ -25,10 +25,10 @@ import java.io.FileFilter;
  * @author cdr
  */
 public class IgnoredFileFilter implements FileFilter {
-  @Override
-  public boolean accept(File file) {
-    final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-    final String name = file.getName();
-    return !fileTypeManager.isFileIgnored(name);
-  }
+    @Override
+    public boolean accept(File file) {
+        final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        final String name = file.getName();
+        return !fileTypeManager.isFileIgnored(name);
+    }
 }

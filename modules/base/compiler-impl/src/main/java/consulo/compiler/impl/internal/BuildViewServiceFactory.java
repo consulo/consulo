@@ -24,10 +24,10 @@ import java.util.UUID;
 
 /**
  * @author VISTALL
- * @since 28/11/2021
+ * @since 2021-11-28
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface BuildViewServiceFactory {
-  @Nonnull
-  BuildViewService createBuildViewService(Project project, UUID sessionId, String contentName);
+    @Nonnull
+    BuildViewService createBuildViewService(Project project, UUID sessionId, String contentName);
 }

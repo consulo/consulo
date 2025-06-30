@@ -23,32 +23,31 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public abstract class VirtualFileCompileItem<OutputState> extends CompileItem<String, VirtualFilePersistentState, OutputState> {
-  protected final VirtualFile myFile;
+    protected final VirtualFile myFile;
 
-  public VirtualFileCompileItem(@Nonnull VirtualFile file) {
-    myFile = file;
-  }
+    public VirtualFileCompileItem(@Nonnull VirtualFile file) {
+        myFile = file;
+    }
 
-  @Nonnull
-  public VirtualFile getFile() {
-    return myFile;
-  }
+    @Nonnull
+    public VirtualFile getFile() {
+        return myFile;
+    }
 
-  @Nonnull
-  @Override
-  public VirtualFilePersistentState computeSourceState() {
-    return new VirtualFilePersistentState(myFile.getTimeStamp());
-  }
+    @Nonnull
+    @Override
+    public VirtualFilePersistentState computeSourceState() {
+        return new VirtualFilePersistentState(myFile.getTimeStamp());
+    }
 
-  @Override
-  public boolean isSourceUpToDate(@Nonnull VirtualFilePersistentState state) {
-    return myFile.getTimeStamp() == state.getSourceTimestamp();
-  }
+    @Override
+    public boolean isSourceUpToDate(@Nonnull VirtualFilePersistentState state) {
+        return myFile.getTimeStamp() == state.getSourceTimestamp();
+    }
 
-  @Nonnull
-  @Override
-  public String getKey() {
-    return myFile.getUrl();
-  }
-
+    @Nonnull
+    @Override
+    public String getKey() {
+        return myFile.getUrl();
+    }
 }

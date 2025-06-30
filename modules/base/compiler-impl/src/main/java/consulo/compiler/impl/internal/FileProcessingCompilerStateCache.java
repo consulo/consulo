@@ -29,86 +29,86 @@ import java.util.Collection;
  * @since 2003-04-01
  */
 public class FileProcessingCompilerStateCache {
-  private static final Logger LOG = Logger.getInstance(FileProcessingCompilerStateCache.class);
-  private final StateCache<MyState> myCache;
+    private static final Logger LOG = Logger.getInstance(FileProcessingCompilerStateCache.class);
+    private final StateCache<MyState> myCache;
 
-  public FileProcessingCompilerStateCache(File storeDirectory, final ValidityStateFactory stateFactory) throws IOException {
-    myCache = new StateCache<MyState>(new File(storeDirectory, "timestamps")) {
-      @Override
-      public MyState read(DataInput stream) throws IOException {
-        return new MyState(stream.readLong(), stateFactory.createValidityState(stream));
-      }
+    public FileProcessingCompilerStateCache(File storeDirectory, final ValidityStateFactory stateFactory) throws IOException {
+        myCache = new StateCache<MyState>(new File(storeDirectory, "timestamps")) {
+            @Override
+            public MyState read(DataInput stream) throws IOException {
+                return new MyState(stream.readLong(), stateFactory.createValidityState(stream));
+            }
 
-      @Override
-      public void write(MyState state, DataOutput out) throws IOException {
-        out.writeLong(state.getTimestamp());
-        final ValidityState extState = state.getExtState();
-        if (extState != null) {
-          extState.save(out);
+            @Override
+            public void write(MyState state, DataOutput out) throws IOException {
+                out.writeLong(state.getTimestamp());
+                final ValidityState extState = state.getExtState();
+                if (extState != null) {
+                    extState.save(out);
+                }
+            }
+        };
+    }
+
+    public void update(File file, ValidityState extState) throws IOException {
+        myCache.update(file, new MyState(file.lastModified(), extState));
+    }
+
+    public void remove(File url) throws IOException {
+        myCache.remove(url);
+    }
+
+    public long getTimestamp(File url) throws IOException {
+        final Serializable savedState = myCache.getState(url);
+        if (savedState != null) {
+            LOG.assertTrue(savedState instanceof MyState);
         }
-      }
-    };
-  }
-
-  public void update(File file, ValidityState extState) throws IOException {
-    myCache.update(file, new MyState(file.lastModified(), extState));
-  }
-
-  public void remove(File url) throws IOException {
-    myCache.remove(url);
-  }
-
-  public long getTimestamp(File url) throws IOException {
-    final Serializable savedState = myCache.getState(url);
-    if (savedState != null) {
-      LOG.assertTrue(savedState instanceof MyState);
-    }
-    MyState state = (MyState)savedState;
-    return (state != null)? state.getTimestamp() : -1L;
-  }
-
-  public ValidityState getExtState(File url) throws IOException {
-    MyState state = myCache.getState(url);
-    return (state != null)? state.getExtState() : null;
-  }
-
-  public void force() {
-    myCache.force();
-  }
-
-  public Collection<File> getFiles() throws IOException {
-    return myCache.getFiles();
-  }
-
-  public boolean wipe() {
-    return myCache.wipe();
-  }
-
-  public void close() {
-    try {
-      myCache.close();
-    }
-    catch (IOException ignored) {
-      LOG.info(ignored);
-    }
-  }
-
-  private static class MyState implements Serializable {
-    private final long myTimestamp;
-    private final ValidityState myExtState;
-
-    public MyState(long timestamp, @Nullable ValidityState extState) {
-      myTimestamp = timestamp;
-      myExtState = extState;
+        MyState state = (MyState) savedState;
+        return (state != null) ? state.getTimestamp() : -1L;
     }
 
-    public long getTimestamp() {
-      return myTimestamp;
+    public ValidityState getExtState(File url) throws IOException {
+        MyState state = myCache.getState(url);
+        return (state != null) ? state.getExtState() : null;
     }
 
-    public @Nullable ValidityState getExtState() {
-      return myExtState;
+    public void force() {
+        myCache.force();
     }
-  }
+
+    public Collection<File> getFiles() throws IOException {
+        return myCache.getFiles();
+    }
+
+    public boolean wipe() {
+        return myCache.wipe();
+    }
+
+    public void close() {
+        try {
+            myCache.close();
+        }
+        catch (IOException ignored) {
+            LOG.info(ignored);
+        }
+    }
+
+    private static class MyState implements Serializable {
+        private final long myTimestamp;
+        private final ValidityState myExtState;
+
+        public MyState(long timestamp, @Nullable ValidityState extState) {
+            myTimestamp = timestamp;
+            myExtState = extState;
+        }
+
+        public long getTimestamp() {
+            return myTimestamp;
+        }
+
+        public @Nullable ValidityState getExtState() {
+            return myExtState;
+        }
+    }
 
 }

@@ -21,19 +21,19 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public abstract class BuildTarget {
-  public static final BuildTarget DEFAULT = new BuildTarget() {
+    public static final BuildTarget DEFAULT = new BuildTarget() {
+        @Nonnull
+        @Override
+        public String getId() {
+            return "<default>";
+        }
+    };
+
     @Nonnull
+    public abstract String getId();
+
     @Override
-    public String getId() {
-      return "<default>";
+    public String toString() {
+        return "Build Target: " + getId();
     }
-  };
-
-  @Nonnull
-  public abstract String getId();
-
-  @Override
-  public String toString() {
-    return "Build Target: " + getId();
-  }
 }

@@ -304,7 +304,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     @RequiredReadAction
     public Element getState() {
         Element state = new Element("state");
-        CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+        CompilerConfigurationImpl configuration = (CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject);
         configuration.getState(state);
 
         if (!myExcludedEntriesConfiguration.isEmpty()) {
@@ -326,7 +326,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
             myExcludedEntriesConfiguration.readExternal(exclude);
         }
 
-        CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+        CompilerConfigurationImpl configuration = (CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject);
         configuration.loadState(state);
     }
 

@@ -20,7 +20,8 @@ package consulo.compiler;
  * Error/Warning messages should be added to the CompileContext object.
  * This affects the order of compiler calls.
  * The sequence in which compilers are called:
- * SourceGeneratingCompiler -> SourceInstrumentingCompiler -> TranslatingCompiler ->  ClassInstrumentingCompiler -> ClassPostProcessingCompiler -> PackagingCompiler -> Validator
+ * SourceGeneratingCompiler -> SourceInstrumentingCompiler -> TranslatingCompiler ->  ClassInstrumentingCompiler ->
+ * ClassPostProcessingCompiler -> PackagingCompiler -> Validator
  */
 public interface Validator extends FileProcessingCompiler {
 }

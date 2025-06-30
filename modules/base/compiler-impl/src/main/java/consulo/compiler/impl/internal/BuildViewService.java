@@ -13,13 +13,13 @@ import jakarta.annotation.Nullable;
  * @see CompilerTask
  */
 public interface BuildViewService {
-  void onStart(Object sessionId, long startCompilationStamp, @Nullable Runnable restartWork, ProgressIndicator indicator);
+    void onStart(Object sessionId, long startCompilationStamp, @Nullable Runnable restartWork, ProgressIndicator indicator);
 
-  void onEnd(Object sessionId, ExitStatus exitStatus, long endCompilationStamp);
+    void onEnd(Object sessionId, ExitStatus exitStatus, long endCompilationStamp);
 
-  void addMessage(Object sessionId, CompilerMessage message);
+    void addMessage(Object sessionId, CompilerMessage message);
 
-  void onProgressChange(Object sessionId, ProgressIndicator indicator);
+    void onProgressChange(Object sessionId, ProgressIndicator indicator);
 
-  void registerCloseAction(Runnable onClose);
+    void registerCloseAction(Runnable onClose);
 }

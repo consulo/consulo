@@ -20,6 +20,7 @@ import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.function.Predicate;
 
@@ -28,20 +29,19 @@ import java.util.function.Predicate;
  * @since 17/04/2023
  */
 public interface CompileDriver {
+    /**
+     * @param file a file to delete
+     * @return true if and only if the file existed and was successfully deleted
+     * Note: the behaviour is different from FileUtil.delete() which returns true if the file absent on the disk
+     */
+    boolean deleteFile(final File file);
 
-  /**
-   * @param file a file to delete
-   * @return true if and only if the file existed and was successfully deleted
-   * Note: the behaviour is different from FileUtil.delete() which returns true if the file absent on the disk
-   */
-  boolean deleteFile(final File file);
+    void dropDependencyCache(CompileContextEx context);
 
-  void dropDependencyCache(CompileContextEx context);
+    CompileScope attachIntermediateOutputDirectories(CompileScope originalScope, Predicate<Compiler> filter);
 
-  CompileScope attachIntermediateOutputDirectories(CompileScope originalScope, Predicate<Compiler> filter);
+    @Nullable
+    VirtualFile getGenerationOutputDir(final IntermediateOutputCompiler compiler, final Module module, final boolean forTestSources);
 
-  @Nullable
-  VirtualFile getGenerationOutputDir(final IntermediateOutputCompiler compiler, final Module module, final boolean forTestSources);
-
-  Predicate<Compiler> getCompilerFilter();
+    Predicate<Compiler> getCompilerFilter();
 }

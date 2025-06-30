@@ -25,21 +25,21 @@ import jakarta.inject.Provider;
 import java.util.Set;
 
 /**
-* @author VISTALL
-* @since 18-Jun-22
-*/
+ * @author VISTALL
+ * @since 18-Jun-22
+ */
 @ExtensionImpl
 public class CompilerWatchedRootsProvider implements WatchedRootsProvider {
-  private final Provider<CompilerConfiguration> myCompilerConfigurationProvider;
+    private final Provider<CompilerConfiguration> myCompilerConfigurationProvider;
 
-  @Inject
-  public CompilerWatchedRootsProvider(Provider<CompilerConfiguration> compilerConfigurationProvider) {
-    myCompilerConfigurationProvider = compilerConfigurationProvider;
-  }
+    @Inject
+    public CompilerWatchedRootsProvider(Provider<CompilerConfiguration> compilerConfigurationProvider) {
+        myCompilerConfigurationProvider = compilerConfigurationProvider;
+    }
 
-  @Nonnull
-  @Override
-  public Set<String> getRootsToWatch() {
-    return ((CompilerConfigurationImpl)myCompilerConfigurationProvider.get()).getRootsToWatch();
-  }
+    @Nonnull
+    @Override
+    public Set<String> getRootsToWatch() {
+        return ((CompilerConfigurationImpl) myCompilerConfigurationProvider.get()).getRootsToWatch();
+    }
 }

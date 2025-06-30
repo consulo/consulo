@@ -38,74 +38,75 @@ import java.util.Set;
  */
 @ExtensionImpl(id = "artifactCompiler", order = "last")
 public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState> {
-  private static final Key<Set<String>> WRITTEN_PATHS_KEY = Key.create("artifacts_written_paths");
-  private static final Key<Set<Artifact>> CHANGED_ARTIFACTS = Key.create("affected_artifacts");
+    private static final Key<Set<String>> WRITTEN_PATHS_KEY = Key.create("artifacts_written_paths");
+    private static final Key<Set<Artifact>> CHANGED_ARTIFACTS = Key.create("affected_artifacts");
 
-  public ArtifactsCompiler() {
-    super("artifacts_compiler", 0, GenericCompiler.CompileOrderPlace.PACKAGING);
-  }
-
-  @Nullable
-  public static ArtifactsCompiler getInstance(@Nonnull Project project) {
-    final ArtifactsCompiler[] compilers = CompilerManager.getInstance(project).getCompilers(ArtifactsCompiler.class);
-    return compilers.length == 1 ? compilers[0] : null;
-  }
-
-  public static void addChangedArtifact(final CompileContext context, Artifact artifact) {
-    Set<Artifact> artifacts = context.getUserData(CHANGED_ARTIFACTS);
-    if (artifacts == null) {
-      artifacts = new HashSet<Artifact>();
-      context.putUserData(CHANGED_ARTIFACTS, artifacts);
+    public ArtifactsCompiler() {
+        super("artifacts_compiler", 0, GenericCompiler.CompileOrderPlace.PACKAGING);
     }
-    artifacts.add(artifact);
-  }
 
-  public static void addWrittenPaths(final CompileContext context, Set<String> writtenPaths) {
-    Set<String> paths = context.getUserData(WRITTEN_PATHS_KEY);
-    if (paths == null) {
-      paths = new HashSet<String>();
-      context.putUserData(WRITTEN_PATHS_KEY, paths);
+    @Nullable
+    public static ArtifactsCompiler getInstance(@Nonnull Project project) {
+        final ArtifactsCompiler[] compilers = CompilerManager.getInstance(project).getCompilers(ArtifactsCompiler.class);
+        return compilers.length == 1 ? compilers[0] : null;
     }
-    paths.addAll(writtenPaths);
-  }
 
-  @Nonnull
-  @Override
-  public KeyDescriptor<String> getItemKeyDescriptor() {
-    return STRING_KEY_DESCRIPTOR;
-  }
+    public static void addChangedArtifact(final CompileContext context, Artifact artifact) {
+        Set<Artifact> artifacts = context.getUserData(CHANGED_ARTIFACTS);
+        if (artifacts == null) {
+            artifacts = new HashSet<Artifact>();
+            context.putUserData(CHANGED_ARTIFACTS, artifacts);
+        }
+        artifacts.add(artifact);
+    }
 
-  @Nonnull
-  @Override
-  public DataExternalizer<VirtualFilePersistentState> getSourceStateExternalizer() {
-    return VirtualFilePersistentState.EXTERNALIZER;
-  }
+    public static void addWrittenPaths(final CompileContext context, Set<String> writtenPaths) {
+        Set<String> paths = context.getUserData(WRITTEN_PATHS_KEY);
+        if (paths == null) {
+            paths = new HashSet<String>();
+            context.putUserData(WRITTEN_PATHS_KEY, paths);
+        }
+        paths.addAll(writtenPaths);
+    }
 
-  @Nonnull
-  @Override
-  public DataExternalizer<ArtifactPackagingItemOutputState> getOutputStateExternalizer() {
-    return new ArtifactPackagingItemExternalizer();
-  }
+    @Nonnull
+    @Override
+    public KeyDescriptor<String> getItemKeyDescriptor() {
+        return STRING_KEY_DESCRIPTOR;
+    }
 
-  @Nonnull
-  @Override
-  public GenericCompilerInstance<ArtifactBuildTarget, ? extends CompileItem<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>, String, VirtualFilePersistentState, ArtifactPackagingItemOutputState> createInstance(
-    @Nonnull CompileContext context) {
-    return new ArtifactsCompilerInstance(context);
-  }
+    @Nonnull
+    @Override
+    public DataExternalizer<VirtualFilePersistentState> getSourceStateExternalizer() {
+        return VirtualFilePersistentState.EXTERNALIZER;
+    }
 
-  @Nonnull
-  public String getDescription() {
-    return "Artifacts Packaging Compiler";
-  }
+    @Nonnull
+    @Override
+    public DataExternalizer<ArtifactPackagingItemOutputState> getOutputStateExternalizer() {
+        return new ArtifactPackagingItemExternalizer();
+    }
 
-  @Nullable
-  public static Set<Artifact> getChangedArtifacts(final CompileContext compileContext) {
-    return compileContext.getUserData(CHANGED_ARTIFACTS);
-  }
+    @Nonnull
+    @Override
+    public GenericCompilerInstance<ArtifactBuildTarget, ? extends CompileItem<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>, String, VirtualFilePersistentState, ArtifactPackagingItemOutputState> createInstance(
+        @Nonnull CompileContext context
+    ) {
+        return new ArtifactsCompilerInstance(context);
+    }
 
-  @Nullable
-  public static Set<String> getWrittenPaths(@Nonnull CompileContext context) {
-    return context.getUserData(WRITTEN_PATHS_KEY);
-  }
+    @Nonnull
+    public String getDescription() {
+        return "Artifacts Packaging Compiler";
+    }
+
+    @Nullable
+    public static Set<Artifact> getChangedArtifacts(final CompileContext compileContext) {
+        return compileContext.getUserData(CHANGED_ARTIFACTS);
+    }
+
+    @Nullable
+    public static Set<String> getWrittenPaths(@Nonnull CompileContext context) {
+        return context.getUserData(WRITTEN_PATHS_KEY);
+    }
 }

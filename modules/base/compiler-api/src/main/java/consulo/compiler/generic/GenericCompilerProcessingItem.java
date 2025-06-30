@@ -22,28 +22,32 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public class GenericCompilerProcessingItem<Item extends CompileItem<?, SourceState, OutputState>, SourceState, OutputState> {
-  private final Item myItem;
-  private final SourceState myCachedSourceState;
-  private final OutputState myCachedOutputState;
+    private final Item myItem;
+    private final SourceState myCachedSourceState;
+    private final OutputState myCachedOutputState;
 
-  public GenericCompilerProcessingItem(@Nonnull Item item, @Nullable SourceState cachedSourceState, @Nullable OutputState cachedOutputState) {
-    myItem = item;
-    myCachedSourceState = cachedSourceState;
-    myCachedOutputState = cachedOutputState;
-  }
+    public GenericCompilerProcessingItem(
+        @Nonnull Item item,
+        @Nullable SourceState cachedSourceState,
+        @Nullable OutputState cachedOutputState
+    ) {
+        myItem = item;
+        myCachedSourceState = cachedSourceState;
+        myCachedOutputState = cachedOutputState;
+    }
 
-  @Nonnull
-  public Item getItem() {
-    return myItem;
-  }
+    @Nonnull
+    public Item getItem() {
+        return myItem;
+    }
 
-  @Nullable
-  public SourceState getCachedSourceState() {
-    return myCachedSourceState;
-  }
+    @Nullable
+    public SourceState getCachedSourceState() {
+        return myCachedSourceState;
+    }
 
-  @Nullable
-  public OutputState getCachedOutputState() {
-    return myCachedOutputState;
-  }
+    @Nullable
+    public OutputState getCachedOutputState() {
+        return myCachedOutputState;
+    }
 }

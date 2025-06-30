@@ -20,13 +20,13 @@ package consulo.compiler;
  * @since 2011-11-24
  */
 public class ExitException extends Exception {
-  private final ExitStatus myStatus;
+    private final ExitStatus myStatus;
 
-  public ExitException(ExitStatus status) {
-    myStatus = status;
-  }
+    public ExitException(ExitStatus status) {
+        myStatus = status;
+    }
 
-  public ExitStatus getExitStatus() {
-    return myStatus;
-  }
+    public ExitStatus getExitStatus() {
+        return myStatus;
+    }
 }

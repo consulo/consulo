@@ -26,6 +26,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface DependencyCacheFactory {
-  @Nonnull
-  DependencyCache create(@Nonnull String cacheDir);
+    @Nonnull
+    DependencyCache create(@Nonnull String cacheDir);
 }

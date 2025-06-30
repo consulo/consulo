@@ -34,81 +34,81 @@ import java.util.function.Supplier;
 
 @ExtensionImpl
 public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements ProjectConfigurable {
-  protected static class Root implements Supplier<Component> {
-    private CheckBox myCbClearOutputDirectory;
-    private CheckBox myCbAutoShowFirstError;
+    protected static class Root implements Supplier<Component> {
+        private CheckBox myCbClearOutputDirectory;
+        private CheckBox myCbAutoShowFirstError;
 
-    private VerticalLayout myLayout;
+        private VerticalLayout myLayout;
+
+        @RequiredUIAccess
+        public Root() {
+            myLayout = VerticalLayout.create();
+
+            myCbClearOutputDirectory = CheckBox.create(CompilerLocalize.labelOptionClearOutputDirectoryOnRebuild());
+            myLayout.add(myCbClearOutputDirectory);
+
+            myCbAutoShowFirstError = CheckBox.create(CompilerLocalize.labelOptionAutoshowFirstError());
+            myLayout.add(myCbAutoShowFirstError);
+        }
+
+        @Nonnull
+        @Override
+        public Component get() {
+            return myLayout;
+        }
+    }
+
+    private final Provider<CompilerWorkspaceConfiguration> myCompilerWorkspaceConfiguration;
+
+    @Inject
+    public CompilerConfigurable(Provider<CompilerWorkspaceConfiguration> compilerWorkspaceConfiguration) {
+        myCompilerWorkspaceConfiguration = compilerWorkspaceConfiguration;
+    }
 
     @RequiredUIAccess
-    public Root() {
-      myLayout = VerticalLayout.create();
+    @Nonnull
+    @Override
+    protected Root createPanel(@Nonnull Disposable uiDisposable) {
+        return new Root();
+    }
 
-      myCbClearOutputDirectory = CheckBox.create(CompilerLocalize.labelOptionClearOutputDirectoryOnRebuild());
-      myLayout.add(myCbClearOutputDirectory);
+    @RequiredUIAccess
+    @Override
+    protected boolean isModified(@Nonnull Root component) {
+        CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
 
-      myCbAutoShowFirstError = CheckBox.create(CompilerLocalize.labelOptionAutoshowFirstError());
-      myLayout.add(myCbAutoShowFirstError);
+        boolean isModified = component.myCbClearOutputDirectory.getValue() != compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
+        isModified |= component.myCbAutoShowFirstError.getValue() != compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
+        return isModified;
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void reset(@Nonnull Root component) {
+        CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
+
+        component.myCbAutoShowFirstError.setValue(compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
+        component.myCbClearOutputDirectory.setValue(compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
+    }
+
+    @RequiredUIAccess
+    @Override
+    protected void apply(@Nonnull Root component) throws ConfigurationException {
+        CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
+
+        compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = component.myCbAutoShowFirstError.getValue();
+        compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();
     }
 
     @Nonnull
     @Override
-    public Component get() {
-      return myLayout;
+    public String getDisplayName() {
+        return CompilerLocalize.compilerConfigurableDisplayName().get();
     }
-  }
 
-  private final Provider<CompilerWorkspaceConfiguration> myCompilerWorkspaceConfiguration;
-
-  @Inject
-  public CompilerConfigurable(Provider<CompilerWorkspaceConfiguration> compilerWorkspaceConfiguration) {
-    myCompilerWorkspaceConfiguration = compilerWorkspaceConfiguration;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected Root createPanel(@Nonnull Disposable uiDisposable) {
-    return new Root();
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected boolean isModified(@Nonnull Root component) {
-    CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
-
-    boolean isModified = component.myCbClearOutputDirectory.getValue() != compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
-    isModified |= component.myCbAutoShowFirstError.getValue() != compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
-    return isModified;
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected void reset(@Nonnull Root component) {
-    CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
-
-    component.myCbAutoShowFirstError.setValue(compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
-    component.myCbClearOutputDirectory.setValue(compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected void apply(@Nonnull Root component) throws ConfigurationException {
-    CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
-
-    compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = component.myCbAutoShowFirstError.getValue();
-    compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();
-  }
-
-  @Nonnull
-  @Override
-  public String getDisplayName() {
-    return CompilerLocalize.compilerConfigurableDisplayName().get();
-  }
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return StandardConfigurableIds.COMPILER_GROUP;
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return StandardConfigurableIds.COMPILER_GROUP;
+    }
 }

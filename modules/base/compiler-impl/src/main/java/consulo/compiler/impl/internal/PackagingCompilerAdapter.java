@@ -23,15 +23,15 @@ import jakarta.annotation.Nullable;
 import java.io.File;
 
 public class PackagingCompilerAdapter extends FileProcessingCompilerAdapter {
-  private final PackagingCompiler myCompiler;
+    private final PackagingCompiler myCompiler;
 
-  public PackagingCompilerAdapter(CompileContext compileContext, PackagingCompiler compiler) {
-    super(compileContext, compiler);
-    myCompiler = compiler;
-  }
+    public PackagingCompilerAdapter(CompileContext compileContext, PackagingCompiler compiler) {
+        super(compileContext, compiler);
+        myCompiler = compiler;
+    }
 
-  @Override
-  public void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state) {
-    myCompiler.processOutdatedItem(context, file, state);
-  }
+    @Override
+    public void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state) {
+        myCompiler.processOutdatedItem(context, file, state);
+    }
 }

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author Eugene Zhuravlev
- */
 package consulo.compiler.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
@@ -30,25 +26,28 @@ import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
+/**
+ * @author Eugene Zhuravlev
+ */
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 @State(name = "CompilerWorkspaceConfiguration", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class CompilerWorkspaceConfiguration implements PersistentStateComponent<CompilerWorkspaceConfiguration> {
-  public boolean AUTO_SHOW_ERRORS_IN_EDITOR = true;
-  public boolean CLEAR_OUTPUT_DIRECTORY = true;
+    public boolean AUTO_SHOW_ERRORS_IN_EDITOR = true;
+    public boolean CLEAR_OUTPUT_DIRECTORY = true;
 
-  public static CompilerWorkspaceConfiguration getInstance(Project project) {
-    return project.getInstance(CompilerWorkspaceConfiguration.class);
-  }
+    public static CompilerWorkspaceConfiguration getInstance(Project project) {
+        return project.getInstance(CompilerWorkspaceConfiguration.class);
+    }
 
-  @Override
-  public CompilerWorkspaceConfiguration getState() {
-    return this;
-  }
+    @Override
+    public CompilerWorkspaceConfiguration getState() {
+        return this;
+    }
 
-  @Override
-  public void loadState(CompilerWorkspaceConfiguration state) {
-    XmlSerializerUtil.copyBean(state, this);
-  }
+    @Override
+    public void loadState(CompilerWorkspaceConfiguration state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
 }

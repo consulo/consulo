@@ -27,42 +27,45 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public class CopyToDirectoryInstructionCreator extends IncrementalCompilerInstructionCreatorBase {
-  private final String myOutputPath;
-  private final @Nullable VirtualFile myOutputFile;
+    private final String myOutputPath;
+    private final @Nullable VirtualFile myOutputFile;
 
-  public CopyToDirectoryInstructionCreator(ArtifactsProcessingItemsBuilderContext context, String outputPath,
-                                           @Nullable VirtualFile outputFile) {
-    super(context);
-    myOutputPath = outputPath;
-    myOutputFile = outputFile;
-  }
-
-  @Override
-  public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
-    myContext.addDestination(file, new ExplodedDestinationInfo(myOutputPath + "/" + outputFileName, outputChild(outputFileName)));
-  }
-
-  @Override
-  public CopyToDirectoryInstructionCreator subFolder(@Nonnull String directoryName) {
-    return new CopyToDirectoryInstructionCreator(myContext, myOutputPath + "/" + directoryName, outputChild(directoryName));
-  }
-
-  @Nonnull
-  @Override
-  public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
-    String jarOutputPath = myOutputPath + "/" + archiveFileName;
-    final ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
-    if (!myContext.registerJarFile(archivePackageInfo, jarOutputPath)) {
-      return new SkipAllInstructionCreator(myContext);
+    public CopyToDirectoryInstructionCreator(
+        ArtifactsProcessingItemsBuilderContext context,
+        String outputPath,
+        @Nullable VirtualFile outputFile
+    ) {
+        super(context);
+        myOutputPath = outputPath;
+        myOutputFile = outputFile;
     }
-    VirtualFile outputFile = outputChild(archiveFileName);
-    final ExplodedDestinationInfo destination = new ExplodedDestinationInfo(jarOutputPath, outputFile);
-    archivePackageInfo.addDestination(destination);
-    return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);
-  }
 
-  @Nullable
-  private VirtualFile outputChild(String name) {
-    return myOutputFile != null ? myOutputFile.findChild(name) : null;
-  }
+    @Override
+    public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
+        myContext.addDestination(file, new ExplodedDestinationInfo(myOutputPath + "/" + outputFileName, outputChild(outputFileName)));
+    }
+
+    @Override
+    public CopyToDirectoryInstructionCreator subFolder(@Nonnull String directoryName) {
+        return new CopyToDirectoryInstructionCreator(myContext, myOutputPath + "/" + directoryName, outputChild(directoryName));
+    }
+
+    @Nonnull
+    @Override
+    public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
+        String jarOutputPath = myOutputPath + "/" + archiveFileName;
+        final ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
+        if (!myContext.registerJarFile(archivePackageInfo, jarOutputPath)) {
+            return new SkipAllInstructionCreator(myContext);
+        }
+        VirtualFile outputFile = outputChild(archiveFileName);
+        final ExplodedDestinationInfo destination = new ExplodedDestinationInfo(jarOutputPath, outputFile);
+        archivePackageInfo.addDestination(destination);
+        return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);
+    }
+
+    @Nullable
+    private VirtualFile outputChild(String name) {
+        return myOutputFile != null ? myOutputFile.findChild(name) : null;
+    }
 }

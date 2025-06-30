@@ -23,77 +23,78 @@ import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nullable;
+
 import java.io.*;
 
 public class TranslationOutputFileInfo {
-  private static final Logger LOG = Logger.getInstance(TranslationOutputFileInfo.class);
-  private static final FileAttribute ourOutputFileAttribute = new FileAttribute("_make_output_file_info_", 4, true);
+    private static final Logger LOG = Logger.getInstance(TranslationOutputFileInfo.class);
+    private static final FileAttribute ourOutputFileAttribute = new FileAttribute("_make_output_file_info_", 4, true);
 
-  @Nullable
-  public static TranslationOutputFileInfo loadOutputInfo(final VirtualFile file) {
-    try {
-      final DataInputStream is = ourOutputFileAttribute.readAttribute(file);
-      if (is != null) {
+    @Nullable
+    public static TranslationOutputFileInfo loadOutputInfo(final VirtualFile file) {
         try {
-          return new TranslationOutputFileInfo(is);
+            final DataInputStream is = ourOutputFileAttribute.readAttribute(file);
+            if (is != null) {
+                try {
+                    return new TranslationOutputFileInfo(is);
+                }
+                finally {
+                    is.close();
+                }
+            }
         }
-        finally {
-          is.close();
+        catch (RuntimeException e) {
+            final Throwable cause = e.getCause();
+            if (cause instanceof IOException) {
+                LOG.info(e); // ignore IO exceptions
+            }
+            else {
+                throw e;
+            }
         }
-      }
+        catch (IOException ignored) {
+            LOG.info(ignored);
+        }
+        return null;
     }
-    catch (RuntimeException e) {
-      final Throwable cause = e.getCause();
-      if (cause instanceof IOException) {
-        LOG.info(e); // ignore IO exceptions
-      }
-      else {
-        throw e;
-      }
+
+    public static void saveOutputInfo(VirtualFile file, TranslationOutputFileInfo descriptor) {
+        try {
+            try (DataOutputStream out = ourOutputFileAttribute.writeAttribute(file)) {
+                descriptor.save(out);
+            }
+        }
+        catch (IOException ignored) {
+            LOG.info(ignored);
+        }
     }
-    catch (IOException ignored) {
-      LOG.info(ignored);
+
+    private final int mySourcePath;
+
+    private final String myClassName;
+
+    TranslationOutputFileInfo(final VirtualFile sourcePath, @Nullable String className) throws IOException {
+        mySourcePath = FileBasedIndex.getFileId(sourcePath);
+        myClassName = className;
     }
-    return null;
-  }
 
-  public static void saveOutputInfo(VirtualFile file, TranslationOutputFileInfo descriptor) {
-    try {
-      try (DataOutputStream out = ourOutputFileAttribute.writeAttribute(file)) {
-        descriptor.save(out);
-      }
+    TranslationOutputFileInfo(final DataInput in) throws IOException {
+        mySourcePath = in.readInt();
+        myClassName = StringUtil.nullize(in.readUTF());
     }
-    catch (IOException ignored) {
-      LOG.info(ignored);
+
+    @Nullable
+    public VirtualFile getSourceFile() {
+        return VirtualFileManager.getInstance().findFileById(mySourcePath);
     }
-  }
 
-  private final int mySourcePath;
+    @Nullable
+    public String getClassName() {
+        return myClassName;
+    }
 
-  private final String myClassName;
-
-  TranslationOutputFileInfo(final VirtualFile sourcePath, @Nullable String className) throws IOException {
-    mySourcePath = FileBasedIndex.getFileId(sourcePath);
-    myClassName = className;
-  }
-
-  TranslationOutputFileInfo(final DataInput in) throws IOException {
-    mySourcePath = in.readInt();
-    myClassName = StringUtil.nullize(in.readUTF());
-  }
-
-  @Nullable
-  public VirtualFile getSourceFile() {
-    return VirtualFileManager.getInstance().findFileById(mySourcePath);
-  }
-
-  @Nullable
-  public String getClassName() {
-    return myClassName;
-  }
-
-  public void save(final DataOutput out) throws IOException {
-    out.writeInt(mySourcePath);
-    out.writeUTF(myClassName == null ? "" : myClassName);
-  }
+    public void save(final DataOutput out) throws IOException {
+        out.writeInt(mySourcePath);
+        out.writeUTF(myClassName == null ? "" : myClassName);
+    }
 }

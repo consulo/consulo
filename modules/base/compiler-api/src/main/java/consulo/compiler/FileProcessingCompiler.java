@@ -17,6 +17,7 @@ package consulo.compiler;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -26,52 +27,52 @@ import java.io.File;
  * {@link SourceInstrumentingCompiler}.
  */
 public interface FileProcessingCompiler extends Compiler, ValidityStateFactory {
-  /**
-   * Describes a processing unit for this compiler - a virtual file with associated state.
-   */
-  interface ProcessingItem {
     /**
-     * A utility constant used to return empty arrays of ProcessingItem objects
+     * Describes a processing unit for this compiler - a virtual file with associated state.
      */
-    ProcessingItem[] EMPTY_ARRAY = new ProcessingItem[0];
+    interface ProcessingItem {
+        /**
+         * A utility constant used to return empty arrays of ProcessingItem objects
+         */
+        ProcessingItem[] EMPTY_ARRAY = new ProcessingItem[0];
+
+        /**
+         * Returns the file to be processed.
+         *
+         * @return a file to be processed; cannot be null
+         */
+        @Nonnull
+        File getFile();
+
+        /**
+         * @return an object describing dependencies of the instrumented file (can be null).
+         * For example, if the file "A" should be processed whenever file "B" or file "C" is changed, the ValidityState object can
+         * be composed of a pair [timestamp("B"), timestamp("C")]. Thus, whenever a timestamp of any of these files is changed,
+         * the current ValidityState won't be equal to the stored ValidityState and the item will be picked up by the make for recompilation.
+         */
+        @Nullable
+        ValidityState getValidityState();
+    }
 
     /**
-     * Returns the file to be processed.
+     * Returns the items which will be processed in the current compile operation.
+     * The method is called before the call to {@link #process} method
      *
-     * @return a file to be processed; cannot be null
+     * @param context the current compilation context.
+     * @return a non-null array of all items that potentially can be processed at the moment of method call. Even if
+     * the file is not changed, it should be returned if it _can_ be processed by the compiler implementing the interface.
      */
     @Nonnull
-    File getFile();
+    ProcessingItem[] getProcessingItems(CompileContext context);
 
     /**
-     * @return an object describing dependencies of the instrumented file (can be null).
-     *         For example, if the file "A" should be processed whenever file "B" or file "C" is changed, the ValidityState object can
-     *         be composed of a pair [timestamp("B"), timestamp("C")]. Thus, whenever a timestamp of any of these files is changed,
-     *         the current ValidityState won't be equal to the stored ValidityState and the item will be picked up by the make for recompilation.
+     * Compiles the specified items.
+     *
+     * @param context the current compilation context.
+     * @param items   items to be processed, selected by make subsystem. The items are selected from the list returned by the
+     *                {@link #getProcessingItems} method.
+     * @return successfully processed items.
      */
-    @Nullable
-    ValidityState getValidityState();
-  }
-
-  /**
-   * Returns the items which will be processed in the current compile operation.
-   * The method is called before the call to {@link #process} method
-   *
-   * @param context the current compilation context.
-   * @return a non-null array of all items that potentially can be processed at the moment of method call. Even if
-   *         the file is not changed, it should be returned if it _can_ be processed by the compiler implementing the interface.
-   */
-  @Nonnull
-  ProcessingItem[] getProcessingItems(CompileContext context);
-
-  /**
-   * Compiles the specified items.
-   *
-   * @param context the current compilation context.
-   * @param items items to be processed, selected by make subsystem. The items are selected from the list returned by the
-   *              {@link #getProcessingItems} method.
-   * @return successfully processed items.
-   */
-  ProcessingItem[] process(CompileContext context, ProcessingItem[] items);
+    ProcessingItem[] process(CompileContext context, ProcessingItem[] items);
 
 }

@@ -34,39 +34,40 @@ import java.util.function.Function;
  * @since 2003-08-18
  */
 public class CacheUtils {
-  private static final Logger LOG = Logger.getInstance(CacheUtils.class);
+    private static final Logger LOG = Logger.getInstance(CacheUtils.class);
 
-  public static Collection<VirtualFile> findDependentFiles(final CompileContextEx context,
-                                                           final Set<VirtualFile> compiledWithErrors,
-                                                           final @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter)
-    throws CacheCorruptedException, ExitException {
+    public static Collection<VirtualFile> findDependentFiles(
+        final CompileContextEx context,
+        final Set<VirtualFile> compiledWithErrors,
+        final @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter
+    ) throws CacheCorruptedException, ExitException {
 
-    context.getProgressIndicator().setText(CompilerBundle.message("progress.checking.dependencies"));
+        context.getProgressIndicator().setText(CompilerBundle.message("progress.checking.dependencies"));
 
-    final DependencyCache dependencyCache = context.getDependencyCache();
-    final Set<VirtualFile> dependentFiles = new HashSet<VirtualFile>();
+        final DependencyCache dependencyCache = context.getDependencyCache();
+        final Set<VirtualFile> dependentFiles = new HashSet<VirtualFile>();
 
-    dependencyCache.findDependentFiles(context, new Ref<CacheCorruptedException>(), filter, dependentFiles, compiledWithErrors);
+        dependencyCache.findDependentFiles(context, new Ref<CacheCorruptedException>(), filter, dependentFiles, compiledWithErrors);
 
-    context.getProgressIndicator()
-           .setText(dependentFiles.size() > 0 ? CompilerBundle.message("progress.found.dependent.files", dependentFiles.size()) : "");
+        context.getProgressIndicator()
+            .setText(dependentFiles.size() > 0 ? CompilerBundle.message("progress.found.dependent.files", dependentFiles.size()) : "");
 
-    return dependentFiles;
-  }
-
-  @Nonnull
-  public static Set<VirtualFile> getFilesCompiledWithErrors(final CompileContextEx context) {
-    CompilerMessage[] messages = context.getMessages(CompilerMessageCategory.ERROR);
-    Set<VirtualFile> compiledWithErrors = Collections.emptySet();
-    if (messages.length > 0) {
-      compiledWithErrors = new HashSet<VirtualFile>(messages.length);
-      for (CompilerMessage message : messages) {
-        final VirtualFile file = message.getVirtualFile();
-        if (file != null) {
-          compiledWithErrors.add(file);
-        }
-      }
+        return dependentFiles;
     }
-    return compiledWithErrors;
-  }
+
+    @Nonnull
+    public static Set<VirtualFile> getFilesCompiledWithErrors(final CompileContextEx context) {
+        CompilerMessage[] messages = context.getMessages(CompilerMessageCategory.ERROR);
+        Set<VirtualFile> compiledWithErrors = Collections.emptySet();
+        if (messages.length > 0) {
+            compiledWithErrors = new HashSet<VirtualFile>(messages.length);
+            for (CompilerMessage message : messages) {
+                final VirtualFile file = message.getVirtualFile();
+                if (file != null) {
+                    compiledWithErrors.add(file);
+                }
+            }
+        }
+        return compiledWithErrors;
+    }
 }

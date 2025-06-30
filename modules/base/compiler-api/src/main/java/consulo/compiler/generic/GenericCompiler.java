@@ -28,46 +28,52 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public abstract class GenericCompiler<Key, SourceState, OutputState> implements Compiler {
-  protected static final KeyDescriptor<String> STRING_KEY_DESCRIPTOR = new EnumeratorStringDescriptor();
-  private final String myId;
-  private final int myVersion;
-  private final CompileOrderPlace myOrderPlace;
+    protected static final KeyDescriptor<String> STRING_KEY_DESCRIPTOR = new EnumeratorStringDescriptor();
+    private final String myId;
+    private final int myVersion;
+    private final CompileOrderPlace myOrderPlace;
 
-  protected GenericCompiler(@Nonnull String id, int version, @Nonnull CompileOrderPlace orderPlace) {
-    myId = id;
-    myVersion = version;
-    myOrderPlace = orderPlace;
-  }
+    protected GenericCompiler(@Nonnull String id, int version, @Nonnull CompileOrderPlace orderPlace) {
+        myId = id;
+        myVersion = version;
+        myOrderPlace = orderPlace;
+    }
 
-  @Nonnull
-  public abstract KeyDescriptor<Key> getItemKeyDescriptor();
-  @Nonnull
-  public abstract DataExternalizer<SourceState> getSourceStateExternalizer();
-  @Nonnull
-  public abstract DataExternalizer<OutputState> getOutputStateExternalizer();
+    @Nonnull
+    public abstract KeyDescriptor<Key> getItemKeyDescriptor();
 
-  @Nonnull
-  public abstract GenericCompilerInstance<?, ? extends CompileItem<Key, SourceState, OutputState>, Key, SourceState, OutputState> createInstance(@Nonnull CompileContext context);
+    @Nonnull
+    public abstract DataExternalizer<SourceState> getSourceStateExternalizer();
 
-  public final String getId() {
-    return myId;
-  }
+    @Nonnull
+    public abstract DataExternalizer<OutputState> getOutputStateExternalizer();
 
-  public final int getVersion() {
-    return myVersion;
-  }
+    @Nonnull
+    public abstract GenericCompilerInstance<?, ? extends CompileItem<Key, SourceState, OutputState>, Key, SourceState, OutputState> createInstance(
+        @Nonnull CompileContext context
+    );
 
-  @Override
-  public boolean validateConfiguration(CompileScope scope) {
-    return true;
-  }
+    public final String getId() {
+        return myId;
+    }
 
-  public CompileOrderPlace getOrderPlace() {
-    return myOrderPlace;
-  }
+    public final int getVersion() {
+        return myVersion;
+    }
 
-  public static enum CompileOrderPlace {
-    CLASS_INSTRUMENTING, CLASS_POST_PROCESSING, PACKAGING, VALIDATING
-  }
+    @Override
+    public boolean validateConfiguration(CompileScope scope) {
+        return true;
+    }
 
+    public CompileOrderPlace getOrderPlace() {
+        return myOrderPlace;
+    }
+
+    public static enum CompileOrderPlace {
+        CLASS_INSTRUMENTING,
+        CLASS_POST_PROCESSING,
+        PACKAGING,
+        VALIDATING
+    }
 }

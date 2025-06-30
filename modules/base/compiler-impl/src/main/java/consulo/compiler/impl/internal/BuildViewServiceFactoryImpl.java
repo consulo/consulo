@@ -29,9 +29,9 @@ import java.util.UUID;
 @Singleton
 @ServiceImpl
 public class BuildViewServiceFactoryImpl implements BuildViewServiceFactory {
-  @Nonnull
-  @Override
-  public BuildViewService createBuildViewService(Project project, UUID sessionId, String contentName) {
-    return new BuildViewServiceImpl(project, sessionId, contentName);
-  }
+    @Nonnull
+    @Override
+    public BuildViewService createBuildViewService(Project project, UUID sessionId, String contentName) {
+        return new BuildViewServiceImpl(project, sessionId, contentName);
+    }
 }

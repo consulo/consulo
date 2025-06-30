@@ -25,20 +25,20 @@ import java.io.IOException;
  * @author nik
  */
 public class DummyPersistentState {
-  public static final DummyPersistentState INSTANCE = new DummyPersistentState();
-  public static final DataExternalizer<DummyPersistentState> EXTERNALIZER = new DummyPersistentStateExternalizer();
+    public static final DummyPersistentState INSTANCE = new DummyPersistentState();
+    public static final DataExternalizer<DummyPersistentState> EXTERNALIZER = new DummyPersistentStateExternalizer();
 
-  private DummyPersistentState() {
-  }
-
-  private static class DummyPersistentStateExternalizer implements DataExternalizer<DummyPersistentState> {
-    @Override
-    public void save(DataOutput out, DummyPersistentState value) throws IOException {
+    private DummyPersistentState() {
     }
 
-    @Override
-    public DummyPersistentState read(DataInput in) throws IOException {
-      return INSTANCE;
+    private static class DummyPersistentStateExternalizer implements DataExternalizer<DummyPersistentState> {
+        @Override
+        public void save(DataOutput out, DummyPersistentState value) throws IOException {
+        }
+
+        @Override
+        public DummyPersistentState read(DataInput in) throws IOException {
+            return INSTANCE;
+        }
     }
-  }
 }

@@ -31,56 +31,56 @@ import java.util.Map;
  * @author nik
  */
 public class VirtualFileWithDependenciesState {
-  public static final DataExternalizer<VirtualFileWithDependenciesState> EXTERNALIZER = new VirtualFileWithDependenciesExternalizer();
-  private long mySourceTimestamp;
-  private Map<String, Long> myDependencies = new HashMap<String, Long>();
+    public static final DataExternalizer<VirtualFileWithDependenciesState> EXTERNALIZER = new VirtualFileWithDependenciesExternalizer();
+    private long mySourceTimestamp;
+    private Map<String, Long> myDependencies = new HashMap<String, Long>();
 
-  public VirtualFileWithDependenciesState(long sourceTimestamp) {
-    mySourceTimestamp = sourceTimestamp;
-  }
-
-  public void addDependency(@Nonnull VirtualFile file) {
-    myDependencies.put(file.getUrl(), file.getTimeStamp());
-  }
-
-  public boolean isUpToDate(@Nonnull VirtualFile sourceFile) {
-    if (sourceFile.getTimeStamp() != mySourceTimestamp) {
-      return false;
+    public VirtualFileWithDependenciesState(long sourceTimestamp) {
+        mySourceTimestamp = sourceTimestamp;
     }
 
-    VirtualFileManager manager = VirtualFileManager.getInstance();
-    for (Map.Entry<String, Long> entry : myDependencies.entrySet()) {
-      final VirtualFile file = manager.findFileByUrl(entry.getKey());
-      if (file == null || file.getTimeStamp() != entry.getValue()) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-
-  private static class VirtualFileWithDependenciesExternalizer implements DataExternalizer<VirtualFileWithDependenciesState> {
-    @Override
-    public void save(@Nonnull DataOutput out, VirtualFileWithDependenciesState value) throws IOException {
-      out.writeLong(value.mySourceTimestamp);
-      final Map<String, Long> dependencies = value.myDependencies;
-      out.writeInt(dependencies.size());
-      for (Map.Entry<String, Long> entry : dependencies.entrySet()) {
-        IOUtil.writeUTF(out, entry.getKey());
-        out.writeLong(entry.getValue());
-      }
+    public void addDependency(@Nonnull VirtualFile file) {
+        myDependencies.put(file.getUrl(), file.getTimeStamp());
     }
 
-    @Override
-    public VirtualFileWithDependenciesState read(@Nonnull DataInput in) throws IOException {
-      final VirtualFileWithDependenciesState state = new VirtualFileWithDependenciesState(in.readLong());
-      int size = in.readInt();
-      while (size-- > 0) {
-        final String url = IOUtil.readUTF(in);
-        final long timestamp = in.readLong();
-        state.myDependencies.put(url, timestamp);
-      }
-      return state;
+    public boolean isUpToDate(@Nonnull VirtualFile sourceFile) {
+        if (sourceFile.getTimeStamp() != mySourceTimestamp) {
+            return false;
+        }
+
+        VirtualFileManager manager = VirtualFileManager.getInstance();
+        for (Map.Entry<String, Long> entry : myDependencies.entrySet()) {
+            final VirtualFile file = manager.findFileByUrl(entry.getKey());
+            if (file == null || file.getTimeStamp() != entry.getValue()) {
+                return false;
+            }
+        }
+        return true;
     }
-  }
+
+
+    private static class VirtualFileWithDependenciesExternalizer implements DataExternalizer<VirtualFileWithDependenciesState> {
+        @Override
+        public void save(@Nonnull DataOutput out, VirtualFileWithDependenciesState value) throws IOException {
+            out.writeLong(value.mySourceTimestamp);
+            final Map<String, Long> dependencies = value.myDependencies;
+            out.writeInt(dependencies.size());
+            for (Map.Entry<String, Long> entry : dependencies.entrySet()) {
+                IOUtil.writeUTF(out, entry.getKey());
+                out.writeLong(entry.getValue());
+            }
+        }
+
+        @Override
+        public VirtualFileWithDependenciesState read(@Nonnull DataInput in) throws IOException {
+            final VirtualFileWithDependenciesState state = new VirtualFileWithDependenciesState(in.readLong());
+            int size = in.readInt();
+            while (size-- > 0) {
+                final String url = IOUtil.readUTF(in);
+                final long timestamp = in.readLong();
+                state.myDependencies.put(url, timestamp);
+            }
+            return state;
+        }
+    }
 }

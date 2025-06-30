@@ -24,6 +24,7 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Locale;
 
 /**
@@ -32,37 +33,37 @@ import java.util.Locale;
  */
 @ServiceAPI(ComponentScope.MODULE)
 public abstract class ModuleCompilerPathsManager {
-  @Nonnull
-  public static ModuleCompilerPathsManager getInstance(@Nonnull Module module) {
-    return module.getInstance(ModuleCompilerPathsManager.class);
-  }
+    @Nonnull
+    public static ModuleCompilerPathsManager getInstance(@Nonnull Module module) {
+        return module.getInstance(ModuleCompilerPathsManager.class);
+    }
 
-  public abstract boolean isInheritedCompilerOutput();
+    public abstract boolean isInheritedCompilerOutput();
 
-  public abstract void setInheritedCompilerOutput(boolean val);
+    public abstract void setInheritedCompilerOutput(boolean val);
 
-  public abstract boolean isExcludeOutput();
+    public abstract boolean isExcludeOutput();
 
-  public abstract void setExcludeOutput(boolean val);
+    public abstract void setExcludeOutput(boolean val);
 
-  public abstract void setCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl);
+    public abstract void setCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl);
 
-  @Nullable
-  public abstract String getCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType);
+    @Nullable
+    public abstract String getCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType);
 
-  @Nullable
-  public abstract VirtualFile getCompilerOutput(@Nonnull ContentFolderTypeProvider contentFolderType);
+    @Nullable
+    public abstract VirtualFile getCompilerOutput(@Nonnull ContentFolderTypeProvider contentFolderType);
 
-  @Nonnull
-  public abstract VirtualFilePointer getCompilerOutputPointer(@Nonnull ContentFolderTypeProvider contentFolderType);
+    @Nonnull
+    public abstract VirtualFilePointer getCompilerOutputPointer(@Nonnull ContentFolderTypeProvider contentFolderType);
 
-  @Nonnull
-  public static String getRelativePathForProvider(@Nonnull ContentFolderTypeProvider contentFolderType, @Nonnull Module module) {
-    return getRelativePathForProvider(contentFolderType, module.getName());
-  }
+    @Nonnull
+    public static String getRelativePathForProvider(@Nonnull ContentFolderTypeProvider contentFolderType, @Nonnull Module module) {
+        return getRelativePathForProvider(contentFolderType, module.getName());
+    }
 
-  @Nonnull
-  public static String getRelativePathForProvider(@Nonnull ContentFolderTypeProvider contentFolderType, @Nonnull String moduleName) {
-    return contentFolderType.getId().toLowerCase(Locale.ROOT) + "/" + moduleName;
-  }
+    @Nonnull
+    public static String getRelativePathForProvider(@Nonnull ContentFolderTypeProvider contentFolderType, @Nonnull String moduleName) {
+        return contentFolderType.getId().toLowerCase(Locale.ROOT) + "/" + moduleName;
+    }
 }

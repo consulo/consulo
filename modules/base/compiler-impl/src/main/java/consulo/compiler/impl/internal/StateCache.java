@@ -30,104 +30,103 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public abstract class StateCache<T> {
-  private static class FileKeyDescriptor implements KeyDescriptor<File> {
-    public static final FileKeyDescriptor INSTANCE = new FileKeyDescriptor();
+    private static class FileKeyDescriptor implements KeyDescriptor<File> {
+        public static final FileKeyDescriptor INSTANCE = new FileKeyDescriptor();
 
-    @Override
-    public int hashCode(File value) {
-      return FileUtil.fileHashCode(value);
+        @Override
+        public int hashCode(File value) {
+            return FileUtil.fileHashCode(value);
+        }
+
+        @Override
+        public boolean equals(File val1, File val2) {
+            return FileUtil.filesEqual(val1, val2);
+        }
+
+        @Override
+        public void save(DataOutput out, File value) throws IOException {
+            IOUtil.writeUTF(out, value.getPath());
+        }
+
+        @Override
+        public File read(DataInput in) throws IOException {
+            return new File(IOUtil.readUTF(in));
+        }
     }
 
-    @Override
-    public boolean equals(File val1, File val2) {
-      return FileUtil.filesEqual(val1, val2);
+    private PersistentHashMap<File, T> myMap;
+    private final File myBaseFile;
+
+    public StateCache(@NonNls File storePath) throws IOException {
+        myBaseFile = storePath;
+        myMap = createMap(storePath);
     }
 
-    @Override
-    public void save(DataOutput out, File value) throws IOException {
-      IOUtil.writeUTF(out, value.getPath());
+    protected abstract T read(DataInput stream) throws IOException;
+
+    protected abstract void write(T t, DataOutput out) throws IOException;
+
+    public void force() {
+        myMap.force();
     }
 
-    @Override
-    public File read(DataInput in) throws IOException {
-      return new File(IOUtil.readUTF(in));
+    public void close() throws IOException {
+        myMap.close();
     }
-  }
 
-  private PersistentHashMap<File, T> myMap;
-  private final File myBaseFile;
-
-  public StateCache(@NonNls File storePath) throws IOException {
-    myBaseFile = storePath;
-    myMap = createMap(storePath);
-  }
-
-  protected abstract T read(DataInput stream) throws IOException;
-
-  protected abstract void write(T t, DataOutput out) throws IOException;
-
-  public void force() {
-    myMap.force();
-  }
-
-  public void close() throws IOException {
-    myMap.close();
-  }
-
-  public boolean wipe() {
-    try {
-      myMap.close();
+    public boolean wipe() {
+        try {
+            myMap.close();
+        }
+        catch (IOException ignored) {
+        }
+        PersistentHashMap.deleteFilesStartingWith(myBaseFile);
+        try {
+            myMap = createMap(myBaseFile);
+        }
+        catch (IOException ignored) {
+            return false;
+        }
+        return true;
     }
-    catch (IOException ignored) {
+
+    public void update(@NonNls File file, T state) throws IOException {
+        if (state != null) {
+            myMap.put(file, state);
+        }
+        else {
+            remove(file);
+        }
     }
-    PersistentHashMap.deleteFilesStartingWith(myBaseFile);
-    try {
-      myMap = createMap(myBaseFile);
+
+    public void remove(File file) throws IOException {
+        myMap.remove(file);
     }
-    catch (IOException ignored) {
-      return false;
+
+    public T getState(File file) throws IOException {
+        return myMap.get(file);
     }
-    return true;
-  }
 
-  public void update(@NonNls File file, T state) throws IOException {
-    if (state != null) {
-      myMap.put(file, state);
+    public Collection<File> getFiles() throws IOException {
+        return myMap.getAllKeysWithExistingMapping();
     }
-    else {
-      remove(file);
+
+    public Iterator<File> getFilesIterator() throws IOException {
+        return myMap.getAllKeysWithExistingMapping().iterator();
     }
-  }
-
-  public void remove(File file) throws IOException {
-    myMap.remove(file);
-  }
-
-  public T getState(File file) throws IOException {
-    return myMap.get(file);
-  }
-
-  public Collection<File> getFiles() throws IOException {
-    return myMap.getAllKeysWithExistingMapping();
-  }
-
-  public Iterator<File> getFilesIterator() throws IOException {
-    return myMap.getAllKeysWithExistingMapping().iterator();
-  }
 
 
-  private PersistentHashMap<File, T> createMap(final File file) throws IOException {
-    return new PersistentHashMap<>(file, FileKeyDescriptor.INSTANCE, new DataExternalizer<T>() {
-      @Override
-      public void save(final DataOutput out, final T value) throws IOException {
-        StateCache.this.write(value, out);
-      }
+    private PersistentHashMap<File, T> createMap(final File file) throws IOException {
+        return new PersistentHashMap<>(file, FileKeyDescriptor.INSTANCE, new DataExternalizer<T>() {
+            @Override
+            public void save(final DataOutput out, final T value) throws IOException {
+                StateCache.this.write(value, out);
+            }
 
-      @Override
-      public T read(final DataInput in) throws IOException {
-        return StateCache.this.read(in);
-      }
-    });
-  }
-
+            @Override
+            public T read(final DataInput in) throws IOException {
+                return StateCache.this.read(in);
+            }
+        });
+    }
 }

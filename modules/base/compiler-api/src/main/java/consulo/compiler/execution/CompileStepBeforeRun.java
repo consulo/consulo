@@ -54,7 +54,6 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
      * Marked for disable adding CompileStepBeforeRun
      */
     public static interface Suppressor {
-
     }
 
     private static final Logger LOG = Logger.getInstance(CompileStepBeforeRun.class);
@@ -162,7 +161,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
             boolean[] isTestCompile = new boolean[]{true};
             try {
                 isTestCompile[0] = DumbService.getInstance(myProject)
-                    .runWithAlternativeResolveEnabled(((RunProfileWithCompileBeforeLaunchOption)configuration)::includeTestScope);
+                    .runWithAlternativeResolveEnabled(((RunProfileWithCompileBeforeLaunchOption) configuration)::includeTestScope);
             }
             catch (IndexNotReadyException ignored) {
             }
@@ -181,8 +180,8 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
                             LOG.error(
                                 "RunConfiguration should not return null modules. Configuration=" + runConfiguration.getName() +
                                     "; class=" + runConfiguration
-                                .getClass()
-                                .getName()
+                                    .getClass()
+                                    .getName()
                             );
                         }
                     }

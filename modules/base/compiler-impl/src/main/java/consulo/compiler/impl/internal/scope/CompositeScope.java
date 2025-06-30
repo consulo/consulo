@@ -32,97 +32,97 @@ import java.util.*;
  * @since 2003-02-05
  */
 public class CompositeScope extends ExportableUserDataHolderBase implements CompileScope {
-  private final List<CompileScope> myScopes = new ArrayList<>();
+    private final List<CompileScope> myScopes = new ArrayList<>();
 
-  public CompositeScope(CompileScope scope1, CompileScope scope2) {
-    addScope(scope1);
-    addScope(scope2);
-  }
-
-  public CompositeScope(CompileScope[] scopes) {
-    for (CompileScope scope : scopes) {
-      addScope(scope);
-    }
-  }
-
-  public CompositeScope(Collection<? extends CompileScope> scopes) {
-    for (CompileScope scope : scopes) {
-      addScope(scope);
-    }
-  }
-
-  private void addScope(CompileScope scope) {
-    if (scope instanceof CompositeScope) {
-      final CompositeScope compositeScope = (CompositeScope)scope;
-      for (CompileScope childScope : compositeScope.myScopes) {
-        addScope(childScope);
-      }
-    }
-    else {
-      myScopes.add(scope);
+    public CompositeScope(CompileScope scope1, CompileScope scope2) {
+        addScope(scope1);
+        addScope(scope2);
     }
 
-    Map<Key, Object> map = scope.exportUserData();
-    for (Map.Entry<Key, Object> entry : map.entrySet()) {
-      putUserData(entry.getKey(), entry.getValue());
+    public CompositeScope(CompileScope[] scopes) {
+        for (CompileScope scope : scopes) {
+            addScope(scope);
+        }
     }
-  }
 
-  @Override
-  @Nonnull
-  public VirtualFile[] getFiles(FileType fileType) {
-    Set<VirtualFile> allFiles = new HashSet<>();
-    for (CompileScope scope : myScopes) {
-      final VirtualFile[] files = scope.getFiles(fileType);
-      if (files.length > 0) {
-        ContainerUtil.addAll(allFiles, files);
-      }
+    public CompositeScope(Collection<? extends CompileScope> scopes) {
+        for (CompileScope scope : scopes) {
+            addScope(scope);
+        }
     }
-    return VirtualFileUtil.toVirtualFileArray(allFiles);
-  }
 
-  @Override
-  public boolean belongs(String url) {
-    for (CompileScope scope : myScopes) {
-      if (scope.belongs(url)) {
-        return true;
-      }
+    private void addScope(CompileScope scope) {
+        if (scope instanceof CompositeScope) {
+            final CompositeScope compositeScope = (CompositeScope) scope;
+            for (CompileScope childScope : compositeScope.myScopes) {
+                addScope(childScope);
+            }
+        }
+        else {
+            myScopes.add(scope);
+        }
+
+        Map<Key, Object> map = scope.exportUserData();
+        for (Map.Entry<Key, Object> entry : map.entrySet()) {
+            putUserData(entry.getKey(), entry.getValue());
+        }
     }
-    return false;
-  }
 
-  @Override
-  @Nonnull
-  public Module[] getAffectedModules() {
-    Set<Module> modules = new HashSet<>();
-    for (final CompileScope compileScope : myScopes) {
-      ContainerUtil.addAll(modules, compileScope.getAffectedModules());
+    @Override
+    @Nonnull
+    public VirtualFile[] getFiles(FileType fileType) {
+        Set<VirtualFile> allFiles = new HashSet<>();
+        for (CompileScope scope : myScopes) {
+            final VirtualFile[] files = scope.getFiles(fileType);
+            if (files.length > 0) {
+                ContainerUtil.addAll(allFiles, files);
+            }
+        }
+        return VirtualFileUtil.toVirtualFileArray(allFiles);
     }
-    return modules.toArray(new Module[modules.size()]);
-  }
 
-  @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    for (CompileScope compileScope : myScopes) {
-      T userData = compileScope.getUserData(key);
-      if (userData != null) {
-        return userData;
-      }
+    @Override
+    public boolean belongs(String url) {
+        for (CompileScope scope : myScopes) {
+            if (scope.belongs(url)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return super.getUserData(key);
-  }
 
-  @Override
-  public boolean includeTestScope() {
-    for (CompileScope scope : myScopes) {
-      if (scope.includeTestScope()) {
-        return true;
-      }
+    @Override
+    @Nonnull
+    public Module[] getAffectedModules() {
+        Set<Module> modules = new HashSet<>();
+        for (final CompileScope compileScope : myScopes) {
+            ContainerUtil.addAll(modules, compileScope.getAffectedModules());
+        }
+        return modules.toArray(new Module[modules.size()]);
     }
-    return false;
-  }
 
-  public Collection<CompileScope> getScopes() {
-    return Collections.unmodifiableList(myScopes);
-  }
+    @Override
+    public <T> T getUserData(@Nonnull Key<T> key) {
+        for (CompileScope compileScope : myScopes) {
+            T userData = compileScope.getUserData(key);
+            if (userData != null) {
+                return userData;
+            }
+        }
+        return super.getUserData(key);
+    }
+
+    @Override
+    public boolean includeTestScope() {
+        for (CompileScope scope : myScopes) {
+            if (scope.includeTestScope()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Collection<CompileScope> getScopes() {
+        return Collections.unmodifiableList(myScopes);
+    }
 }

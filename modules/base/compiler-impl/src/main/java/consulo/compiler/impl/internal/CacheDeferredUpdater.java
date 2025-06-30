@@ -28,35 +28,36 @@ import java.util.List;
 import java.util.Map;
 
 class CacheDeferredUpdater {
-  private final Map<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> myData = Maps.newHashMap(FileUtil.FILE_HASHING_STRATEGY);
+    private final Map<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> myData =
+        Maps.newHashMap(FileUtil.FILE_HASHING_STRATEGY);
 
-  public void addFileForUpdate(final FileProcessingCompiler.ProcessingItem item, FileProcessingCompilerStateCache cache) {
-    final File file = item.getFile();
-    List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>> list = myData.get(file);
-    if (list == null) {
-      list = new ArrayList<>();
-      myData.put(file, list);
-    }
-    list.add(Pair.create(cache, item));
-  }
-
-  public void doUpdate() throws IOException {
-    final IOException[] ex = {null};
-    ApplicationManager.getApplication().runReadAction(() -> {
-      try {
-        for (Map.Entry<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> entry : myData.entrySet()) {
-          for (Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem> pair : entry.getValue()) {
-            final FileProcessingCompiler.ProcessingItem item = pair.getSecond();
-            pair.getFirst().update(entry.getKey(), item.getValidityState());
-          }
+    public void addFileForUpdate(final FileProcessingCompiler.ProcessingItem item, FileProcessingCompilerStateCache cache) {
+        final File file = item.getFile();
+        List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>> list = myData.get(file);
+        if (list == null) {
+            list = new ArrayList<>();
+            myData.put(file, list);
         }
-      }
-      catch (IOException e) {
-        ex[0] = e;
-      }
-    });
-    if (ex[0] != null) {
-      throw ex[0];
+        list.add(Pair.create(cache, item));
     }
-  }
+
+    public void doUpdate() throws IOException {
+        final IOException[] ex = {null};
+        ApplicationManager.getApplication().runReadAction(() -> {
+            try {
+                for (Map.Entry<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> entry : myData.entrySet()) {
+                    for (Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem> pair : entry.getValue()) {
+                        final FileProcessingCompiler.ProcessingItem item = pair.getSecond();
+                        pair.getFirst().update(entry.getKey(), item.getValidityState());
+                    }
+                }
+            }
+            catch (IOException e) {
+                ex[0] = e;
+            }
+        });
+        if (ex[0] != null) {
+            throw ex[0];
+        }
+    }
 }

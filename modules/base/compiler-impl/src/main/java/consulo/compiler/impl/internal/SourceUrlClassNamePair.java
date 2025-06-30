@@ -22,19 +22,19 @@ import jakarta.annotation.Nullable;
  * @since 2006-06-21
  */
 public class SourceUrlClassNamePair {
-  private final String mySourceUrl;
-  private final @Nullable String myClassName;
+    private final String mySourceUrl;
+    private final @Nullable String myClassName;
 
-  public SourceUrlClassNamePair(String url, @Nullable String className) {
-    mySourceUrl = url;
-    myClassName = className;
-  }
+    public SourceUrlClassNamePair(String url, @Nullable String className) {
+        mySourceUrl = url;
+        myClassName = className;
+    }
 
-  public String getSourceUrl() {
-    return mySourceUrl;
-  }
+    public String getSourceUrl() {
+        return mySourceUrl;
+    }
 
-  public @Nullable String getClassName() {
-    return myClassName;
-  }
+    public @Nullable String getClassName() {
+        return myClassName;
+    }
 }

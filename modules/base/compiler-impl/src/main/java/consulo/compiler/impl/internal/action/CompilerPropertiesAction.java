@@ -29,16 +29,16 @@ import consulo.ui.ex.action.AnActionEvent;
  * @since 2012-09-12
  */
 public class CompilerPropertiesAction extends AnAction {
-  public CompilerPropertiesAction() {
-    super(CompilerBundle.message("action.compiler.properties.text"), null, PlatformIconGroup.generalSettings());
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      ProjectSettingsService.getInstance(project).showAndSelect(CompilerConfigurable.class);
+    public CompilerPropertiesAction() {
+        super(CompilerBundle.message("action.compiler.properties.text"), null, PlatformIconGroup.generalSettings());
     }
-  }
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            ProjectSettingsService.getInstance(project).showAndSelect(CompilerConfigurable.class);
+        }
+    }
 }

@@ -28,18 +28,26 @@ import consulo.ui.ex.action.IdeActions;
  * @author VISTALL
  * @since 2023-11-13
  */
-@ActionImpl(id = "BuildMenu", children = {
-  @ActionRef(type = CompileDirtyAction.class),
-  @ActionRef(type = MakeModuleAction.class),
-  @ActionRef(type = CompileAction.class),
-  @ActionRef(type = AnSeparator.class),
-  @ActionRef(type = CompileProjectAction.class),
-  @ActionRef(type = AnSeparator.class),
-  @ActionRef(id = "BuildArtifact")
-}, parents = @ActionParentRef(value = @ActionRef(id = IdeActions.GROUP_MAIN_MENU), anchor = ActionRefAnchor.BEFORE, relatedToAction = @ActionRef(id = IdeActions.GROUP_RUN)))
+@ActionImpl(
+    id = "BuildMenu",
+    children = {
+        @ActionRef(type = CompileDirtyAction.class),
+        @ActionRef(type = MakeModuleAction.class),
+        @ActionRef(type = CompileAction.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = CompileProjectAction.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(id = "BuildArtifact")
+    },
+    parents = @ActionParentRef(
+        value = @ActionRef(id = IdeActions.GROUP_MAIN_MENU),
+        anchor = ActionRefAnchor.BEFORE,
+        relatedToAction = @ActionRef(id = IdeActions.GROUP_RUN)
+    )
+)
 public class BuildMenuGroup extends DefaultActionGroup implements DumbAware {
-  @Override
-  public boolean isPopup() {
-    return true;
-  }
+    @Override
+    public boolean isPopup() {
+        return true;
+    }
 }

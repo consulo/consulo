@@ -31,97 +31,100 @@ import java.util.Set;
  * @author nik
  */
 public class GenericCompilerPersistentData {
-  private static final Logger LOG = Logger.getInstance(GenericCompilerPersistentData.class);
-  private static final int VERSION = 1;
-  private File myFile;
-  private Map<String, Integer> myTarget2Id = new HashMap<>();
-  private IntSet myUsedIds = IntSets.newHashSet();
-  private boolean myVersionChanged;
-  private final int myCompilerVersion;
+    private static final Logger LOG = Logger.getInstance(GenericCompilerPersistentData.class);
+    private static final int VERSION = 1;
+    private File myFile;
+    private Map<String, Integer> myTarget2Id = new HashMap<>();
+    private IntSet myUsedIds = IntSets.newHashSet();
+    private boolean myVersionChanged;
+    private final int myCompilerVersion;
 
-  public GenericCompilerPersistentData(File cacheStoreDirectory, int compilerVersion) throws IOException {
-    myCompilerVersion = compilerVersion;
-    myFile = new File(cacheStoreDirectory, "info");
-    if (!myFile.exists()) {
-      LOG.info("Compiler info file doesn't exists: " + myFile.getAbsolutePath());
-      myVersionChanged = true;
-      return;
-    }
-
-    try {
-      DataInputStream input = new DataInputStream(new BufferedInputStream(new FileInputStream(myFile)));
-      try {
-        final int dataVersion = input.readInt();
-        if (dataVersion != VERSION) {
-          LOG.info("Version of compiler info file (" + myFile.getAbsolutePath() + ") changed: " + dataVersion + " -> " + VERSION);
-          myVersionChanged = true;
-          return;
+    public GenericCompilerPersistentData(File cacheStoreDirectory, int compilerVersion) throws IOException {
+        myCompilerVersion = compilerVersion;
+        myFile = new File(cacheStoreDirectory, "info");
+        if (!myFile.exists()) {
+            LOG.info("Compiler info file doesn't exists: " + myFile.getAbsolutePath());
+            myVersionChanged = true;
+            return;
         }
 
-        final int savedCompilerVersion = input.readInt();
-        if (savedCompilerVersion != compilerVersion) {
-          LOG.info("Compiler caches version changed (" + myFile.getAbsolutePath() + "): " + savedCompilerVersion + " -> " + compilerVersion);
-          myVersionChanged = true;
-          return;
+        try {
+            DataInputStream input = new DataInputStream(new BufferedInputStream(new FileInputStream(myFile)));
+            try {
+                final int dataVersion = input.readInt();
+                if (dataVersion != VERSION) {
+                    LOG.info("Version of compiler info file (" + myFile.getAbsolutePath() + ") changed: " + dataVersion + " -> " + VERSION);
+                    myVersionChanged = true;
+                    return;
+                }
+
+                final int savedCompilerVersion = input.readInt();
+                if (savedCompilerVersion != compilerVersion) {
+                    LOG.info(
+                        "Compiler caches version changed (" + myFile.getAbsolutePath() + "): " +
+                            savedCompilerVersion + " -> " + compilerVersion
+                    );
+                    myVersionChanged = true;
+                    return;
+                }
+
+                int size = input.readInt();
+                while (size-- > 0) {
+                    final String target = IOUtil.readString(input);
+                    final int id = input.readInt();
+                    myTarget2Id.put(target, id);
+                    myUsedIds.add(id);
+                }
+            }
+            finally {
+                input.close();
+            }
         }
-
-        int size = input.readInt();
-        while (size-- > 0) {
-          final String target = IOUtil.readString(input);
-          final int id = input.readInt();
-          myTarget2Id.put(target, id);
-          myUsedIds.add(id);
+        catch (IOException e) {
+            FileUtil.delete(myFile);
+            throw e;
         }
-      }
-      finally {
-        input.close();
-      }
     }
-    catch (IOException e) {
-      FileUtil.delete(myFile);
-      throw e;
+
+    public boolean isVersionChanged() {
+        return myVersionChanged;
     }
-  }
 
-  public boolean isVersionChanged() {
-    return myVersionChanged;
-  }
+    public void save() throws IOException {
+        final DataOutputStream output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(myFile)));
+        try {
+            output.writeInt(VERSION);
+            output.writeInt(myCompilerVersion);
+            output.writeInt(myTarget2Id.size());
 
-  public void save() throws IOException {
-    final DataOutputStream output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(myFile)));
-    try {
-      output.writeInt(VERSION);
-      output.writeInt(myCompilerVersion);
-      output.writeInt(myTarget2Id.size());
-
-      for (Map.Entry<String, Integer> entry : myTarget2Id.entrySet()) {
-        IOUtil.writeString(entry.getKey(), output);
-        output.writeInt(entry.getValue());
-      }
+            for (Map.Entry<String, Integer> entry : myTarget2Id.entrySet()) {
+                IOUtil.writeString(entry.getKey(), output);
+                output.writeInt(entry.getValue());
+            }
+        }
+        finally {
+            output.close();
+        }
     }
-    finally {
-      output.close();
-    }
-  }
 
-  public int getId(@Nonnull String target) {
-    if (myTarget2Id.containsKey(target)) {
-      return myTarget2Id.get(target);
+    public int getId(@Nonnull String target) {
+        if (myTarget2Id.containsKey(target)) {
+            return myTarget2Id.get(target);
+        }
+        int id = 0;
+        while (myUsedIds.contains(id)) {
+            id++;
+        }
+        myTarget2Id.put(target, id);
+        myUsedIds.add(id);
+        return id;
     }
-    int id = 0;
-    while (myUsedIds.contains(id)) {
-      id++;
+
+    public Set<String> getAllTargets() {
+        return myTarget2Id.keySet();
     }
-    myTarget2Id.put(target, id);
-    myUsedIds.add(id);
-    return id;
-  }
 
-  public Set<String> getAllTargets() {
-    return myTarget2Id.keySet();
-  }
-
-  public int removeId(String target) {
-    return myTarget2Id.remove(target);
-  }
+    public int removeId(String target) {
+        return myTarget2Id.remove(target);
+    }
 }

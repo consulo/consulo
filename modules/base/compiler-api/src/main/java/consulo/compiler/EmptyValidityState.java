@@ -24,21 +24,21 @@ import java.io.IOException;
  * @author Konstantin Bulenkov
  */
 public final class EmptyValidityState implements ValidityState {
-  /**
-   * In most cases this method returns false to force recompile
-   *
-   * @param otherState the state to compare with.
-   * @return true if and only if otherState == this
-   */
-  @Override
-  public boolean equalsTo(ValidityState otherState) {
-      return otherState == this;
-  }
+    /**
+     * In most cases this method returns false to force recompile
+     *
+     * @param otherState the state to compare with.
+     * @return true if and only if otherState == this
+     */
+    @Override
+    public boolean equalsTo(ValidityState otherState) {
+        return otherState == this;
+    }
 
-  /**
-   * Do nothing here
-   */
-  @Override
-  public void save(DataOutput dataOutput) throws IOException {
-  }
+    /**
+     * Do nothing here
+     */
+    @Override
+    public void save(DataOutput dataOutput) throws IOException {
+    }
 }

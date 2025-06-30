@@ -25,28 +25,28 @@ import jakarta.inject.Provider;
 import jakarta.annotation.Nonnull;
 
 /**
-* @author VISTALL
-* @since 18-Jun-22
-*/
+ * @author VISTALL
+ * @since 18-Jun-22
+ */
 @ExtensionImpl
 class TranslactionCompilerMonitorCachesInvalidator extends CachesInvalidator {
-  private final Provider<TranslatingCompilerFilesMonitor> myTranslatingCompilerFilesMonitorProvider;
+    private final Provider<TranslatingCompilerFilesMonitor> myTranslatingCompilerFilesMonitorProvider;
 
-  @Inject
-  TranslactionCompilerMonitorCachesInvalidator(Provider<TranslatingCompilerFilesMonitor> translatingCompilerFilesMonitorProvider) {
-    myTranslatingCompilerFilesMonitorProvider = translatingCompilerFilesMonitorProvider;
-  }
+    @Inject
+    TranslactionCompilerMonitorCachesInvalidator(Provider<TranslatingCompilerFilesMonitor> translatingCompilerFilesMonitorProvider) {
+        myTranslatingCompilerFilesMonitorProvider = translatingCompilerFilesMonitorProvider;
+    }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getDescription() {
-    return LocalizeValue.localizeTODO("Invalidate compiler cache");
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("Invalidate compiler cache");
+    }
 
-  @Override
-  public void invalidateCaches() {
-    TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl)myTranslatingCompilerFilesMonitorProvider.get();
+    @Override
+    public void invalidateCaches() {
+        TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl) myTranslatingCompilerFilesMonitorProvider.get();
 
-    monitor.invalidate();
-  }
+        monitor.invalidate();
+    }
 }

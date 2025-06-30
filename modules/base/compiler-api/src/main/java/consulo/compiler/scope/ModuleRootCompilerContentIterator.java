@@ -26,26 +26,26 @@ import java.util.Collection;
  * @since 17.08.14
  */
 public class ModuleRootCompilerContentIterator implements ContentIterator {
-  private final FileType myFileType;
-  private final Collection<VirtualFile> myFiles;
+    private final FileType myFileType;
+    private final Collection<VirtualFile> myFiles;
 
-  public ModuleRootCompilerContentIterator(FileType fileType, Collection<VirtualFile> files) {
-    myFileType = fileType;
-    myFiles = files;
-  }
-
-  @Override
-  public boolean processFile(VirtualFile fileOrDir) {
-    if (fileOrDir.isDirectory()) {
-      return true;
-    }
-    if (!fileOrDir.isInLocalFileSystem()) {
-      return true;
+    public ModuleRootCompilerContentIterator(FileType fileType, Collection<VirtualFile> files) {
+        myFileType = fileType;
+        myFiles = files;
     }
 
-    if (myFileType == null || myFileType == fileOrDir.getFileType()) {
-      myFiles.add(fileOrDir);
+    @Override
+    public boolean processFile(VirtualFile fileOrDir) {
+        if (fileOrDir.isDirectory()) {
+            return true;
+        }
+        if (!fileOrDir.isInLocalFileSystem()) {
+            return true;
+        }
+
+        if (myFileType == null || myFileType == fileOrDir.getFileType()) {
+            myFiles.add(fileOrDir);
+        }
+        return true;
     }
-    return true;
-  }
 }

@@ -27,15 +27,15 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class BuildWorkspaceConfigurationImpl implements BuildWorkspaceConfiguration {
-  private final CompilerWorkspaceConfiguration myCompilerConfiguration;
+    private final CompilerWorkspaceConfiguration myCompilerConfiguration;
 
-  @Inject
-  public BuildWorkspaceConfigurationImpl(CompilerWorkspaceConfiguration compilerConfiguration) {
-    myCompilerConfiguration = compilerConfiguration;
-  }
+    @Inject
+    public BuildWorkspaceConfigurationImpl(CompilerWorkspaceConfiguration compilerConfiguration) {
+        myCompilerConfiguration = compilerConfiguration;
+    }
 
-  @Override
-  public boolean isShowFirstErrorInEditor() {
-    return myCompilerConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
-  }
+    @Override
+    public boolean isShowFirstErrorInEditor() {
+        return myCompilerConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
+    }
 }

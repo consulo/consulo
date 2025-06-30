@@ -28,37 +28,44 @@ import java.util.List;
 /**
  * @author nik
  */
-public abstract class GenericCompilerInstance<T extends BuildTarget, Item extends CompileItem<Key, SourceState, OutputState>, Key, SourceState, OutputState> {
-  protected final CompileContext myContext;
+public abstract class GenericCompilerInstance<T extends BuildTarget, Item
+    extends CompileItem<Key, SourceState, OutputState>, Key, SourceState, OutputState> {
+    protected final CompileContext myContext;
 
-  protected GenericCompilerInstance(CompileContext context) {
-    myContext = context;
-  }
+    protected GenericCompilerInstance(CompileContext context) {
+        myContext = context;
+    }
 
-  protected Project getProject() {
-    return myContext.getProject();
-  }
+    protected Project getProject() {
+        return myContext.getProject();
+    }
 
-  @Nonnull
-  public abstract List<T> getAllTargets();
+    @Nonnull
+    public abstract List<T> getAllTargets();
 
-  @Nonnull
-  public abstract List<T> getSelectedTargets();
+    @Nonnull
+    public abstract List<T> getSelectedTargets();
 
-  public abstract void processObsoleteTarget(@Nonnull String targetId, @Nonnull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems);
+    public abstract void processObsoleteTarget(
+        @Nonnull String targetId,
+        @Nonnull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems
+    );
 
+    @Nonnull
+    public abstract List<Item> getItems(@Nonnull T target);
 
-  @Nonnull
-  public abstract List<Item> getItems(@Nonnull T target);
+    public abstract void processItems(
+        @Nonnull T target,
+        @Nonnull List<GenericCompilerProcessingItem<Item, SourceState, OutputState>> changedItems,
+        @Nonnull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems,
+        @Nonnull OutputConsumer<Item> consumer
+    );
 
-  public abstract void processItems(@Nonnull T target, @Nonnull List<GenericCompilerProcessingItem<Item, SourceState, OutputState>> changedItems, @Nonnull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems,
-                                    @Nonnull OutputConsumer<Item> consumer);
+    public interface OutputConsumer<Item extends CompileItem<?, ?, ?>> {
+        void addFileToRefresh(@Nonnull File file);
 
-  public interface OutputConsumer<Item extends CompileItem<?,?,?>> {
-    void addFileToRefresh(@Nonnull File file);
+        void addDirectoryToRefresh(@Nonnull File dir);
 
-    void addDirectoryToRefresh(@Nonnull File dir);
-
-    void addProcessedItem(@Nonnull Item sourceItem);
-  }
+        void addProcessedItem(@Nonnull Item sourceItem);
+    }
 }

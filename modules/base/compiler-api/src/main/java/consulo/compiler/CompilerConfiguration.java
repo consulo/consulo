@@ -30,18 +30,18 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CompilerConfiguration {
-  @Nonnull
-  public static CompilerConfiguration getInstance(@Nonnull Project project) {
-    return project.getInstance(CompilerConfiguration.class);
-  }
+    @Nonnull
+    public static CompilerConfiguration getInstance(@Nonnull Project project) {
+        return project.getInstance(CompilerConfiguration.class);
+    }
 
-  @Nullable
-  public abstract VirtualFile getCompilerOutput();
+    @Nullable
+    public abstract VirtualFile getCompilerOutput();
 
-  @Nonnull
-  public abstract String getCompilerOutputUrl();
+    @Nonnull
+    public abstract String getCompilerOutputUrl();
 
-  public abstract VirtualFilePointer getCompilerOutputPointer();
+    public abstract VirtualFilePointer getCompilerOutputPointer();
 
-  public abstract void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
+    public abstract void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
 }

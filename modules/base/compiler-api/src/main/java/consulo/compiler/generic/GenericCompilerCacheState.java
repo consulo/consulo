@@ -21,28 +21,28 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class GenericCompilerCacheState<Key, SourceState, OutputState> {
-  private final Key myKey;
-  private final SourceState mySourceState;
-  private final OutputState myOutputState;
+    private final Key myKey;
+    private final SourceState mySourceState;
+    private final OutputState myOutputState;
 
-  public GenericCompilerCacheState(@Nonnull Key key, @Nonnull SourceState sourceState, @Nonnull OutputState outputState) {
-    myKey = key;
-    mySourceState = sourceState;
-    myOutputState = outputState;
-  }
+    public GenericCompilerCacheState(@Nonnull Key key, @Nonnull SourceState sourceState, @Nonnull OutputState outputState) {
+        myKey = key;
+        mySourceState = sourceState;
+        myOutputState = outputState;
+    }
 
-  @Nonnull
-  public Key getKey() {
-    return myKey;
-  }
+    @Nonnull
+    public Key getKey() {
+        return myKey;
+    }
 
-  @Nonnull
-  public SourceState getSourceState() {
-    return mySourceState;
-  }
+    @Nonnull
+    public SourceState getSourceState() {
+        return mySourceState;
+    }
 
-  @Nonnull
-  public OutputState getOutputState() {
-    return myOutputState;
-  }
+    @Nonnull
+    public OutputState getOutputState() {
+        return myOutputState;
+    }
 }

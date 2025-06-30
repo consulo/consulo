@@ -28,28 +28,26 @@ import java.util.Collection;
 @Deprecated
 @DeprecationInfo("Just drop")
 public class BuildManager {
-  public static final BuildManager ourInstance = new BuildManager();
+    public static final BuildManager ourInstance = new BuildManager();
 
-  public static BuildManager getInstance() {
-    return ourInstance;
-  }
+    public static BuildManager getInstance() {
+        return ourInstance;
+    }
 
-  public void notifyFilesDeleted(Collection<File> paths) {
+    public void notifyFilesDeleted(Collection<File> paths) {
+    }
 
-  }
+    public void notifyFilesChanged(Collection<File> paths) {
+    }
 
-  public void notifyFilesChanged(Collection<File> paths) {
+    public File getProjectSystemDirectory(Project project) {
+        return null;
+    }
 
-  }
+    public void clearState(Project project) {
+    }
 
-  public File getProjectSystemDirectory(Project project) {
-    return null;
-  }
-
-  public void clearState(Project project) {
-
-  }
-  public void runCommand(Runnable runnable) {
-    runnable.run();
-  }
+    public void runCommand(Runnable runnable) {
+        runnable.run();
+    }
 }

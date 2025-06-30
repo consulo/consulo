@@ -29,58 +29,61 @@ import java.util.List;
  * @author nik
  */
 public class ArtifactCompilerCompileItem extends VirtualFileCompileItem<ArtifactPackagingItemOutputState> {
-  public static final DataExternalizer<ArtifactPackagingItemOutputState> OUTPUT_EXTERNALIZER = new ArtifactPackagingItemExternalizer();
-  private final List<DestinationInfo> myDestinations = new SmartList<DestinationInfo>();
+    public static final DataExternalizer<ArtifactPackagingItemOutputState> OUTPUT_EXTERNALIZER = new ArtifactPackagingItemExternalizer();
+    private final List<DestinationInfo> myDestinations = new SmartList<DestinationInfo>();
 
-  public ArtifactCompilerCompileItem(VirtualFile file) {
-    super(file);
-  }
-
-  public void addDestination(DestinationInfo info) {
-    myDestinations.add(info);
-  }
-
-  public List<DestinationInfo> getDestinations() {
-    return myDestinations;
-  }
-
-  @Nonnull
-  @Override
-  public ArtifactPackagingItemOutputState computeOutputState() {
-    final SmartList<Pair<String, Long>> pairs = new SmartList<Pair<String, Long>>();
-    for (DestinationInfo destination : myDestinations) {
-      destination.update();
-      final VirtualFile outputFile = destination.getOutputFile();
-      long timestamp = outputFile != null ? outputFile.getTimeStamp() : -1;
-      pairs.add(Pair.create(destination.getOutputPath(), timestamp));
-    }
-    return new ArtifactPackagingItemOutputState(pairs);
-  }
-
-  @Override
-  public boolean isOutputUpToDate(@Nonnull ArtifactPackagingItemOutputState state) {
-    final SmartList<Pair<String, Long>> cachedDestinations = state.myDestinations;
-    if (cachedDestinations.size() != myDestinations.size()) {
-      return false;
+    public ArtifactCompilerCompileItem(VirtualFile file) {
+        super(file);
     }
 
-    for (DestinationInfo info : myDestinations) {
-      final VirtualFile outputFile = info.getOutputFile();
-      long timestamp = outputFile != null ? outputFile.getTimeStamp() : -1;
-      final String path = info.getOutputPath();
-      boolean found = false;
-      //todo[nik] use map if list contains many items
-      for (Pair<String, Long> cachedDestination : cachedDestinations) {
-        if (cachedDestination.first.equals(path)) {
-          if (cachedDestination.second != timestamp) return false;
-          found = true;
-          break;
+    public void addDestination(DestinationInfo info) {
+        myDestinations.add(info);
+    }
+
+    public List<DestinationInfo> getDestinations() {
+        return myDestinations;
+    }
+
+    @Nonnull
+    @Override
+    public ArtifactPackagingItemOutputState computeOutputState() {
+        final SmartList<Pair<String, Long>> pairs = new SmartList<Pair<String, Long>>();
+        for (DestinationInfo destination : myDestinations) {
+            destination.update();
+            final VirtualFile outputFile = destination.getOutputFile();
+            long timestamp = outputFile != null ? outputFile.getTimeStamp() : -1;
+            pairs.add(Pair.create(destination.getOutputPath(), timestamp));
         }
-      }
-      if (!found) return false;
+        return new ArtifactPackagingItemOutputState(pairs);
     }
 
-    return true;
-  }
+    @Override
+    public boolean isOutputUpToDate(@Nonnull ArtifactPackagingItemOutputState state) {
+        final SmartList<Pair<String, Long>> cachedDestinations = state.myDestinations;
+        if (cachedDestinations.size() != myDestinations.size()) {
+            return false;
+        }
 
+        for (DestinationInfo info : myDestinations) {
+            final VirtualFile outputFile = info.getOutputFile();
+            long timestamp = outputFile != null ? outputFile.getTimeStamp() : -1;
+            final String path = info.getOutputPath();
+            boolean found = false;
+            //todo[nik] use map if list contains many items
+            for (Pair<String, Long> cachedDestination : cachedDestinations) {
+                if (cachedDestination.first.equals(path)) {
+                    if (cachedDestination.second != timestamp) {
+                        return false;
+                    }
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

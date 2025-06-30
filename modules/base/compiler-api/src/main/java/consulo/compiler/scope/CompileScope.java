@@ -32,37 +32,38 @@ import jakarta.annotation.Nullable;
  * @see CompilerManager#compile(CompileScope, CompileStatusNotification)
  */
 public interface CompileScope extends ExportableUserDataHolder {
-  CompileScope[] EMPTY_ARRAY = new CompileScope[0];
-  /**
-   * Returns the list of files within the scope.
-   *
-   * @param fileType     the type of the files. Null should be passed if all available files are needed.
-   * @return a list of files of given type that belong to this scope.
-   */
-  @Nonnull
-  VirtualFile[] getFiles(@Nullable FileType fileType);
+    CompileScope[] EMPTY_ARRAY = new CompileScope[0];
 
-  /**
-   * Checks if the file with the specified URL belongs to the scope.
-   *
-   * @param url an VFS url. Note that actual file may not exist on the disk.
-   * @return true if the url specified belongs to the scope, false otherwise.
-   *         Note: the method may be time-consuming.
-   */
-  boolean belongs(String url);
+    /**
+     * Returns the list of files within the scope.
+     *
+     * @param fileType the type of the files. Null should be passed if all available files are needed.
+     * @return a list of files of given type that belong to this scope.
+     */
+    @Nonnull
+    VirtualFile[] getFiles(@Nullable FileType fileType);
 
-  /**
-   * Returns the list of modules files in which belong to the scope.
-   *
-   * @return a list of modules this scope affects.
-   */
-  @Nonnull
-  Module[] getAffectedModules();
+    /**
+     * Checks if the file with the specified URL belongs to the scope.
+     *
+     * @param url an VFS url. Note that actual file may not exist on the disk.
+     * @return true if the url specified belongs to the scope, false otherwise.
+     * Note: the method may be time-consuming.
+     */
+    boolean belongs(String url);
 
-  /**
-   * This scope include test sources or not
-   */
-  default boolean includeTestScope() {
-    return true;
-  }
+    /**
+     * Returns the list of modules files in which belong to the scope.
+     *
+     * @return a list of modules this scope affects.
+     */
+    @Nonnull
+    Module[] getAffectedModules();
+
+    /**
+     * This scope include test sources or not
+     */
+    default boolean includeTestScope() {
+        return true;
+    }
 }

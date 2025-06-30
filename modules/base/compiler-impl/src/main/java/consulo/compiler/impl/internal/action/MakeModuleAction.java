@@ -33,66 +33,66 @@ import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "MakeModule")
 public class MakeModuleAction extends CompileActionBase {
-  private static final Logger LOG = Logger.getInstance(MakeModuleAction.class);
+    private static final Logger LOG = Logger.getInstance(MakeModuleAction.class);
 
-  @Override
-  @RequiredUIAccess
-  protected void doAction(DataContext dataContext, Project project) {
-    Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
-    Module module;
-    if (modules == null) {
-      module = dataContext.getData(Module.KEY);
-      if (module == null) {
-        return;
-      }
-      modules = new Module[]{module};
-    }
-    try {
-      CompilerManager.getInstance(project).make(modules[0].getProject(), modules, null);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent event){
-    super.update(event);
-    Presentation presentation = event.getPresentation();
-    if (!presentation.isEnabled()) {
-      return;
-    }
-    final DataContext dataContext = event.getDataContext();
-    final Module module = dataContext.getData(Module.KEY);
-    Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
-    final boolean isEnabled = module != null || modules != null;
-    presentation.setEnabled(isEnabled);
-    final String actionName = getTemplatePresentation().getTextWithMnemonic();
-
-    String presentationText;
-    if (modules != null) {
-      String text = actionName;
-      for (int i = 0; i < modules.length; i++) {
-        if (text.length() > 30) {
-          text = CompilerBundle.message("action.make.selected.modules.text");
-          break;
+    @Override
+    @RequiredUIAccess
+    protected void doAction(DataContext dataContext, Project project) {
+        Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        Module module;
+        if (modules == null) {
+            module = dataContext.getData(Module.KEY);
+            if (module == null) {
+                return;
+            }
+            modules = new Module[]{module};
         }
-        Module toMake = modules[i];
-        if (i!=0) {
-          text += ",";
+        try {
+            CompilerManager.getInstance(project).make(modules[0].getProject(), modules, null);
         }
-        text += " '" + toMake.getName() + "'";
-      }
-      presentationText = text;
+        catch (Exception e) {
+            LOG.error(e);
+        }
     }
-    else if (module != null) {
-      presentationText = actionName + " '" + module.getName() + "'";
+
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
+        super.update(event);
+        Presentation presentation = event.getPresentation();
+        if (!presentation.isEnabled()) {
+            return;
+        }
+        final DataContext dataContext = event.getDataContext();
+        final Module module = dataContext.getData(Module.KEY);
+        Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        final boolean isEnabled = module != null || modules != null;
+        presentation.setEnabled(isEnabled);
+        final String actionName = getTemplatePresentation().getTextWithMnemonic();
+
+        String presentationText;
+        if (modules != null) {
+            String text = actionName;
+            for (int i = 0; i < modules.length; i++) {
+                if (text.length() > 30) {
+                    text = CompilerBundle.message("action.make.selected.modules.text");
+                    break;
+                }
+                Module toMake = modules[i];
+                if (i != 0) {
+                    text += ",";
+                }
+                text += " '" + toMake.getName() + "'";
+            }
+            presentationText = text;
+        }
+        else if (module != null) {
+            presentationText = actionName + " '" + module.getName() + "'";
+        }
+        else {
+            presentationText = actionName;
+        }
+        presentation.setText(presentationText);
+        presentation.setVisible(isEnabled || !ActionPlaces.PROJECT_VIEW_POPUP.equals(event.getPlace()));
     }
-    else {
-      presentationText = actionName;
-    }
-    presentation.setText(presentationText);
-    presentation.setVisible(isEnabled || !ActionPlaces.PROJECT_VIEW_POPUP.equals(event.getPlace()));
-  }
 }

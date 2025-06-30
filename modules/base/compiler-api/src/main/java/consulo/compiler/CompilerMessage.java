@@ -19,6 +19,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Collections;
 
@@ -28,62 +29,62 @@ import java.util.Collections;
  * @see CompileContext#addMessage(CompilerMessageCategory, String, String, int, int)
  */
 public interface CompilerMessage {
-  /**
-   * An empty array of compiler messages which can be reused to avoid unnecessary allocations.
-   */
-  CompilerMessage[] EMPTY_ARRAY = new CompilerMessage[0];
+    /**
+     * An empty array of compiler messages which can be reused to avoid unnecessary allocations.
+     */
+    CompilerMessage[] EMPTY_ARRAY = new CompilerMessage[0];
 
-  /**
-   * Returns the category of the message.
-   *
-   * @return a category this message belongs to (error, warning, information).
-   */
-  CompilerMessageCategory getCategory();
+    /**
+     * Returns the category of the message.
+     *
+     * @return a category this message belongs to (error, warning, information).
+     */
+    CompilerMessageCategory getCategory();
 
-  /**
-   * Returs the message text.
-   *
-   * @return message text
-   */
-  String getMessage();
+    /**
+     * Returs the message text.
+     *
+     * @return message text
+     */
+    String getMessage();
 
-  /**
-   * Returns the navigatable object allowing to navigate to the message source.
-   *
-   * @return the instance.
-   */
-  @Nullable
-  Navigatable getNavigatable();
+    /**
+     * Returns the navigatable object allowing to navigate to the message source.
+     *
+     * @return the instance.
+     */
+    @Nullable
+    Navigatable getNavigatable();
 
-  /**
-   * Returns the file to which the message applies.
-   *
-   * @return the file to which the message applies.
-   */
-  VirtualFile getVirtualFile();
+    /**
+     * Returns the file to which the message applies.
+     *
+     * @return the file to which the message applies.
+     */
+    VirtualFile getVirtualFile();
 
-  /**
-   * Returns the location prefix prepended to message while exporting compilation results to text.
-   *
-   * @return location prefix prepended to message while exporting compilation results to text.
-   */
-  String getExportTextPrefix();
+    /**
+     * Returns the location prefix prepended to message while exporting compilation results to text.
+     *
+     * @return location prefix prepended to message while exporting compilation results to text.
+     */
+    String getExportTextPrefix();
 
-  /**
-   * Returns the location prefix prepended to message while exporting compilation results to text.
-   *
-   * @return location prefix prepended to message while rendering compilation results in UI.
-   */
-  String getRenderTextPrefix();
+    /**
+     * Returns the location prefix prepended to message while exporting compilation results to text.
+     *
+     * @return location prefix prepended to message while rendering compilation results in UI.
+     */
+    String getRenderTextPrefix();
 
-  int getLine();
+    int getLine();
 
-  int getColumn();
+    int getColumn();
 
-  /**
-   * @return module name (or names of modules in a module dependency cycle) where this message occurred
-   */
-  default Collection<String> getModuleNames() {
-    return Collections.emptyList();
-  }
+    /**
+     * @return module name (or names of modules in a module dependency cycle) where this message occurred
+     */
+    default Collection<String> getModuleNames() {
+        return Collections.emptyList();
+    }
 }

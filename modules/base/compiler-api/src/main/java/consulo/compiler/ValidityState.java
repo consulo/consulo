@@ -23,19 +23,20 @@ import java.io.IOException;
  * A file is considered modified if currently associated ValidityState differs from the previously stored ValiditySate for this file.
  */
 public interface ValidityState {
-  /**
-   * Compares this validity state to other ValidityState.
-   *
-   * @param otherState the state to compare with.
-   * @return true if states can be considered equal, false otherwise.
-   */
-  boolean equalsTo(ValidityState otherState);
-  /**
-   * Invoked by make subsystem in order to store the state.
-   *
-   * @param out the output to which the state should be stored.
-   * @throws IOException if the save operation failed because of an I/O error.
-   * @see TimestampValidityState#load(java.io.DataInputStream)
-   */
-  void save(DataOutput out) throws IOException;
+    /**
+     * Compares this validity state to other ValidityState.
+     *
+     * @param otherState the state to compare with.
+     * @return true if states can be considered equal, false otherwise.
+     */
+    boolean equalsTo(ValidityState otherState);
+
+    /**
+     * Invoked by make subsystem in order to store the state.
+     *
+     * @param out the output to which the state should be stored.
+     * @throws IOException if the save operation failed because of an I/O error.
+     * @see TimestampValidityState#load(java.io.DataInputStream)
+     */
+    void save(DataOutput out) throws IOException;
 }
