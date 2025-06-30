@@ -9,6 +9,7 @@ import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageEnabledConfiguration;
 import consulo.execution.coverage.CoverageExecutor;
 import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.icon.ExecutionCoverageIconGroup;
 import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.execution.executor.Executor;
 import consulo.execution.test.AbstractTestProxy;
@@ -16,7 +17,6 @@ import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.action.ToggleModelAction;
 import consulo.language.psi.PsiElement;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.Alarm;
@@ -41,7 +41,7 @@ public class TrackCoverageAction extends ToggleModelAction {
         super(
             ExecutionCoverageLocalize.showCoveragePerTestActionText(),
             ExecutionCoverageLocalize.showCoveragePerTestActionDescription(),
-            PlatformIconGroup.runconfigurationsTrackcoverage(),
+            ExecutionCoverageIconGroup.runwithcoverage(),
             properties,
             TestConsoleProperties.TRACK_CODE_COVERAGE
         );

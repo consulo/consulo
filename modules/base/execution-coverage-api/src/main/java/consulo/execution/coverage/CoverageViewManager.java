@@ -9,9 +9,9 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.coverage.icon.ExecutionCoverageIconGroup;
 import consulo.execution.coverage.view.CoverageView;
 import consulo.logging.Logger;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -52,7 +52,7 @@ public class CoverageViewManager implements PersistentStateComponent<CoverageVie
         myDataManager = dataManager;
 
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(TOOLWINDOW_ID, true, ToolWindowAnchor.RIGHT, myProject);
-        toolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowcoverage());
+        toolWindow.setIcon(ExecutionCoverageIconGroup.toolwindowcoverage());
         toolWindow.setSplitMode(true, null);
         myContentManager = toolWindow.getContentManager();
         ContentManagerWatcher.watchContentManager(toolWindow, myContentManager);
