@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -49,13 +50,13 @@ public class PrintAction extends AnAction implements DumbAware {
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    VirtualFile file = dataContext.getData(VirtualFile.KEY);
+    VirtualFile file = ReadAction.compute(() -> dataContext.getData(VirtualFile.KEY));
     if (file != null && file.isDirectory()) {
       presentation.setEnabled(true);
       return;
     }
     Editor editor = dataContext.getData(Editor.KEY);
-    PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+    PsiFile psiFile = ReadAction.compute(() -> dataContext.getData(PsiFile.KEY));
     presentation.setEnabled(psiFile != null || editor != null);
   }
 }
