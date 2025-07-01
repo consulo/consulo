@@ -15,7 +15,6 @@
  */
 package consulo.compiler.impl.internal.generic;
 
-import consulo.application.util.function.Processor;
 import consulo.compiler.generic.GenericCompiler;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.PersistentEnumerator;
@@ -29,6 +28,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Predicate;
 
 /**
  * @author nik
@@ -39,7 +39,7 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
     private File myCacheFile;
     private final GenericCompiler<Key, SourceState, OutputState> myCompiler;
 
-    public GenericCompilerCache(GenericCompiler<Key, SourceState, OutputState> compiler, final File compilerCacheDir) throws IOException {
+    public GenericCompilerCache(GenericCompiler<Key, SourceState, OutputState> compiler, File compilerCacheDir) throws IOException {
         myCompiler = compiler;
         myCacheFile = new File(compilerCacheDir, "timestamps");
         createMap();
@@ -88,8 +88,10 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
         return myPersistentMap.get(getKeyAndTargetData(key, targetId));
     }
 
-    public void processSources(final int targetId, final Processor<Key> processor) throws IOException {
-        myPersistentMap.processKeysWithExistingMapping(data -> targetId == data.myTarget ? processor.process(data.myKey) : true);
+    public void processSources(int targetId, Predicate<Key> processor) throws IOException {
+        myPersistentMap.processKeysWithExistingMapping(
+            data -> targetId != data.myTarget || processor.test(data.myKey)
+        );
     }
 
     public void putState(
@@ -149,7 +151,7 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
         @Override
         public KeyAndTargetData<Key> read(DataInput in) throws IOException {
             int target = in.readInt();
-            final Key item = myKeyDescriptor.read(in);
+            Key item = myKeyDescriptor.read(in);
             return getKeyAndTargetData(item, target);
         }
     }

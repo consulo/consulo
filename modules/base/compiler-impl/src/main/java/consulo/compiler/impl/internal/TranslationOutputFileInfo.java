@@ -31,9 +31,9 @@ public class TranslationOutputFileInfo {
     private static final FileAttribute ourOutputFileAttribute = new FileAttribute("_make_output_file_info_", 4, true);
 
     @Nullable
-    public static TranslationOutputFileInfo loadOutputInfo(final VirtualFile file) {
+    public static TranslationOutputFileInfo loadOutputInfo(VirtualFile file) {
         try {
-            final DataInputStream is = ourOutputFileAttribute.readAttribute(file);
+            DataInputStream is = ourOutputFileAttribute.readAttribute(file);
             if (is != null) {
                 try {
                     return new TranslationOutputFileInfo(is);
@@ -44,7 +44,7 @@ public class TranslationOutputFileInfo {
             }
         }
         catch (RuntimeException e) {
-            final Throwable cause = e.getCause();
+            Throwable cause = e.getCause();
             if (cause instanceof IOException) {
                 LOG.info(e); // ignore IO exceptions
             }
@@ -73,12 +73,12 @@ public class TranslationOutputFileInfo {
 
     private final String myClassName;
 
-    TranslationOutputFileInfo(final VirtualFile sourcePath, @Nullable String className) throws IOException {
+    TranslationOutputFileInfo(VirtualFile sourcePath, @Nullable String className) throws IOException {
         mySourcePath = FileBasedIndex.getFileId(sourcePath);
         myClassName = className;
     }
 
-    TranslationOutputFileInfo(final DataInput in) throws IOException {
+    TranslationOutputFileInfo(DataInput in) throws IOException {
         mySourcePath = in.readInt();
         myClassName = StringUtil.nullize(in.readUTF());
     }
@@ -93,7 +93,7 @@ public class TranslationOutputFileInfo {
         return myClassName;
     }
 
-    public void save(final DataOutput out) throws IOException {
+    public void save(DataOutput out) throws IOException {
         out.writeInt(mySourcePath);
         out.writeUTF(myClassName == null ? "" : myClassName);
     }

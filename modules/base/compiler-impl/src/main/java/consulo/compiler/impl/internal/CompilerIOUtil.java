@@ -20,7 +20,8 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 public class CompilerIOUtil {
-    private final static ThreadLocal<byte[]> myBuffer = new ThreadLocal<byte[]>() {
+    private final static ThreadLocal<byte[]> myBuffer = new ThreadLocal<>() {
+        @Override
         protected byte[] initialValue() {
             return new byte[1024];
         }
@@ -30,7 +31,7 @@ public class CompilerIOUtil {
     }
 
     public static String readString(DataInput stream) throws IOException {
-        final int length = stream.readInt();
+        int length = stream.readInt();
         if (length == -1) {
             return null;
         }
@@ -42,9 +43,9 @@ public class CompilerIOUtil {
         char[] chars = new char[length];
         int charsRead = 0;
 
-        final byte[] buff = myBuffer.get();
+        byte[] buff = myBuffer.get();
         while (charsRead < length) {
-            final int bytesRead = Math.min((length - charsRead) * 2, buff.length);
+            int bytesRead = Math.min((length - charsRead) * 2, buff.length);
             stream.readFully(buff, 0, bytesRead);
             for (int i = 0; i < bytesRead; i += 2) {
                 chars[charsRead++] = (char) ((buff[i] << 8) + (buff[i + 1] & 0xFF));
@@ -60,16 +61,16 @@ public class CompilerIOUtil {
             return;
         }
 
-        final int len = s.length();
+        int len = s.length();
         stream.writeInt(len);
         if (len == 0) {
             return;
         }
 
         int charsWritten = 0;
-        final byte[] buff = myBuffer.get();
+        byte[] buff = myBuffer.get();
         while (charsWritten < len) {
-            final int bytesWritten = Math.min((len - charsWritten) * 2, buff.length);
+            int bytesWritten = Math.min((len - charsWritten) * 2, buff.length);
             for (int i = 0; i < bytesWritten; i += 2) {
                 char aChar = s.charAt(charsWritten++);
                 buff[i] = (byte) ((aChar >>> 8) & 0xFF);

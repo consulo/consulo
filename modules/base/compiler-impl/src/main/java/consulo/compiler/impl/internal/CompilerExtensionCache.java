@@ -36,7 +36,7 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 17/04/2023
+ * @since 2023-04-17
  */
 public class CompilerExtensionCache {
     private static final ExtensionPointCacheKey<Compiler, CompilerExtensionCache> KEY =
@@ -58,9 +58,7 @@ public class CompilerExtensionCache {
         walker.walk(compiler -> {
             compiler.registerCompilableFileTypes(myCompilableFileTypes::add);
 
-            if (compiler instanceof TranslatingCompiler) {
-                TranslatingCompiler translatingCompiler = (TranslatingCompiler) compiler;
-
+            if (compiler instanceof TranslatingCompiler translatingCompiler) {
                 translatingCompilers.add(translatingCompiler);
 
                 myTranslatingCompilerInputFileTypes.put(translatingCompiler, Arrays.asList(translatingCompiler.getInputFileTypes()));
@@ -71,7 +69,7 @@ public class CompilerExtensionCache {
             }
         });
 
-        final List<Chunk<TranslatingCompiler>> chunks = ModuleCompilerUtil.getSortedChunks(createCompilerGraph(translatingCompilers));
+        List<Chunk<TranslatingCompiler>> chunks = ModuleCompilerUtil.getSortedChunks(createCompilerGraph(translatingCompilers));
 
         for (Chunk<TranslatingCompiler> chunk : chunks) {
             myTranslatingCompilers.addAll(chunk.getNodes());
@@ -91,15 +89,15 @@ public class CompilerExtensionCache {
 
             @Override
             public Iterator<TranslatingCompiler> getIn(TranslatingCompiler compiler) {
-                final Collection<FileType> compilerInput = myTranslatingCompilerInputFileTypes.get(compiler);
+                Collection<FileType> compilerInput = myTranslatingCompilerInputFileTypes.get(compiler);
                 if (compilerInput == null || compilerInput.isEmpty()) {
                     return Collections.<TranslatingCompiler>emptySet().iterator();
                 }
 
-                final Set<TranslatingCompiler> inCompilers = new HashSet<>();
+                Set<TranslatingCompiler> inCompilers = new HashSet<>();
 
                 for (Map.Entry<TranslatingCompiler, Collection<FileType>> entry : myTranslatingCompilerOutputFileTypes.entrySet()) {
-                    final Collection<FileType> outputs = entry.getValue();
+                    Collection<FileType> outputs = entry.getValue();
                     TranslatingCompiler comp = entry.getKey();
                     if (outputs != null && ContainerUtil.intersects(compilerInput, outputs)) {
                         inCompilers.add(comp);
@@ -112,31 +110,31 @@ public class CompilerExtensionCache {
 
     @Nonnull
     public Collection<FileType> getRegisteredInputTypes(@Nonnull TranslatingCompiler compiler) {
-        final Collection<FileType> fileTypes = myTranslatingCompilerInputFileTypes.get(compiler);
+        Collection<FileType> fileTypes = myTranslatingCompilerInputFileTypes.get(compiler);
         return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
     }
 
     @Nonnull
     public Collection<FileType> getRegisteredOutputTypes(@Nonnull TranslatingCompiler compiler) {
-        final Collection<FileType> fileTypes = myTranslatingCompilerOutputFileTypes.get(compiler);
+        Collection<FileType> fileTypes = myTranslatingCompilerOutputFileTypes.get(compiler);
         return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
     }
 
     @Nonnull
     @SuppressWarnings("unchecked")
     public <T extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass, Predicate<Compiler> filter) {
-        final List<T> compilers = new ArrayList<>(myCompilers.size());
-        for (final Compiler item : myCompilers) {
+        List<T> compilers = new ArrayList<>(myCompilers.size());
+        for (Compiler item : myCompilers) {
             if (compilerClass.isAssignableFrom(item.getClass()) && filter.test(item)) {
                 compilers.add((T) item);
             }
         }
-        for (final Compiler item : myTranslatingCompilers) {
+        for (Compiler item : myTranslatingCompilers) {
             if (compilerClass.isAssignableFrom(item.getClass()) && filter.test(item)) {
                 compilers.add((T) item);
             }
         }
-        final T[] array = (T[]) Array.newInstance(compilerClass, compilers.size());
+        T[] array = (T[]) Array.newInstance(compilerClass, compilers.size());
         return compilers.toArray(array);
     }
 }

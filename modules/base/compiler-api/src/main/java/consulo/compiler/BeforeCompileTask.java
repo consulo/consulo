@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 
 /**
  * @author VISTALL
- * @since 11-Jul-22
+ * @since 2022-07-11
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface BeforeCompileTask extends CompileTask {

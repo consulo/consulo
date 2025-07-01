@@ -34,5 +34,5 @@ public interface CompilationStatusListener extends EventListener {
      * @param warnings       warning count
      * @param compileContext context for the finished compilation
      */
-    void compilationFinished(boolean aborted, int errors, int warnings, final CompileContext compileContext);
+    void compilationFinished(boolean aborted, int errors, int warnings, CompileContext compileContext);
 }

@@ -15,6 +15,7 @@
  */
 package consulo.compiler.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
@@ -52,48 +53,46 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
     public CompilerEncodingServiceImpl(@Nonnull Project project) {
         myProject = project;
         myModuleFileEncodings = CachedValuesManager.getManager(project).createCachedValue(
-            new CachedValueProvider<Map<Module, Set<Charset>>>() {
-                @Override
-                public Result<Map<Module, Set<Charset>>> compute() {
-                    Map<Module, Set<Charset>> result = computeModuleCharsetMap();
-                    return Result.create(result, ProjectRootManager.getInstance(myProject),
-                        EncodingProjectManager.getInstance(myProject).getModificationTracker()
-                    );
-                }
+            () -> {
+                Map<Module, Set<Charset>> result = computeModuleCharsetMap();
+                return CachedValueProvider.Result.create(result, ProjectRootManager.getInstance(myProject),
+                    EncodingProjectManager.getInstance(myProject).getModificationTracker()
+                );
             },
             false
         );
     }
 
+    @RequiredReadAction
     private Map<Module, Set<Charset>> computeModuleCharsetMap() {
-        final Map<Module, Set<Charset>> map = new HashMap<Module, Set<Charset>>();
-        final Map<? extends VirtualFile, ? extends Charset> mappings = EncodingProjectManager.getInstance(myProject).getAllMappings();
+        Map<Module, Set<Charset>> map = new HashMap<>();
+        Map<? extends VirtualFile, ? extends Charset> mappings = EncodingProjectManager.getInstance(myProject).getAllMappings();
         ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
-        final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
+        CompilerManager compilerManager = CompilerManager.getInstance(myProject);
         for (Map.Entry<? extends VirtualFile, ? extends Charset> entry : mappings.entrySet()) {
-            final VirtualFile file = entry.getKey();
-            final Charset charset = entry.getValue();
+            VirtualFile file = entry.getKey();
+            Charset charset = entry.getValue();
             if (file == null || charset == null
                 || (!file.isDirectory() && !compilerManager.isCompilableFileType(file.getFileType()))
                 || !index.isInSourceContent(file)) {
                 continue;
             }
 
-            final Module module = index.getModuleForFile(file);
+            Module module = index.getModuleForFile(file);
             if (module == null) {
                 continue;
             }
 
             Set<Charset> set = map.get(module);
             if (set == null) {
-                set = new LinkedHashSet<Charset>();
+                set = new LinkedHashSet<>();
                 map.put(module, set);
 
-                final VirtualFile sourceRoot = index.getSourceRootForFile(file);
+                VirtualFile sourceRoot = index.getSourceRootForFile(file);
                 VirtualFile current = file.getParent();
                 Charset parentCharset = null;
                 while (current != null) {
-                    final Charset currentCharset = mappings.get(current);
+                    Charset currentCharset = mappings.get(current);
                     if (currentCharset != null) {
                         parentCharset = currentCharset;
                     }
@@ -115,7 +114,7 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
                 if (encoding != null) {
                     Set<Charset> charsets = map.get(module);
                     if (charsets == null) {
-                        charsets = new LinkedHashSet<Charset>();
+                        charsets = new LinkedHashSet<>();
                         map.put(module, charsets);
                     }
                     charsets.add(encoding);
@@ -126,17 +125,17 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
         return map;
     }
 
-    @Override
     @Nullable
+    @Override
     public Charset getPreferredModuleEncoding(@Nonnull Module module) {
-        final Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
+        Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
         return ContainerUtil.getFirstItem(encodings, EncodingProjectManager.getInstance(myProject).getDefaultCharset());
     }
 
     @Nonnull
     @Override
     public Collection<Charset> getAllModuleEncodings(@Nonnull Module module) {
-        final Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
+        Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
         if (encodings != null) {
             return encodings;
         }

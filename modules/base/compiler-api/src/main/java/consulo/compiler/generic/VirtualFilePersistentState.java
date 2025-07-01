@@ -46,6 +46,5 @@ public class VirtualFilePersistentState {
         public VirtualFilePersistentState read(DataInput in) throws IOException {
             return new VirtualFilePersistentState(in.readLong());
         }
-
     }
 }

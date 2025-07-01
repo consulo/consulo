@@ -15,11 +15,9 @@
  */
 package consulo.compiler.impl.internal.artifact;
 
-import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
@@ -32,20 +30,21 @@ import consulo.compiler.generic.GenericCompilerInstance;
 import consulo.compiler.generic.GenericCompilerProcessingItem;
 import consulo.compiler.generic.VirtualFilePersistentState;
 import consulo.compiler.impl.internal.ArtifactCompilerUtil;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.util.CompilerUtil;
 import consulo.component.ProcessCanceledException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.ThrowableRunnable;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
@@ -76,10 +75,10 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         return getArtifactTargets(true);
     }
 
-    private List<ArtifactBuildTarget> getArtifactTargets(final boolean selectedOnly) {
-        final List<ArtifactBuildTarget> targets = new ArrayList<>();
-        AccessRule.read(() -> {
-            final Set<Artifact> artifacts;
+    private List<ArtifactBuildTarget> getArtifactTargets(boolean selectedOnly) {
+        List<ArtifactBuildTarget> targets = new ArrayList<>();
+        ReadAction.run(() -> {
+            Set<Artifact> artifacts;
             if (selectedOnly) {
                 artifacts = ArtifactCompileScope.getArtifactsToBuild(getProject(), myContext.getCompileScope(), true);
             }
@@ -116,12 +115,11 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     @Override
     public List<ArtifactCompilerCompileItem> getItems(@Nonnull ArtifactBuildTarget target) {
         myBuilderContext = new ArtifactsProcessingItemsBuilderContext(myContext);
-        final Artifact artifact = target.getArtifact();
+        Artifact artifact = target.getArtifact();
 
-        ThrowableComputable<Map<String, String>, RuntimeException> action =
-            () -> ArtifactSortingUtil.getInstance(getProject()).getArtifactToSelfIncludingNameMap();
-        final Map<String, String> selfIncludingArtifacts = AccessRule.read(action);
-        final String selfIncludingName = selfIncludingArtifacts.get(artifact.getName());
+        Map<String, String> selfIncludingArtifacts =
+            ReadAction.compute(() -> ArtifactSortingUtil.getInstance(getProject()).getArtifactToSelfIncludingNameMap());
+        String selfIncludingName = selfIncludingArtifacts.get(artifact.getName());
         if (selfIncludingName != null) {
             String name = selfIncludingName.equals(artifact.getName()) ? "it" : "'" + selfIncludingName + "' artifact";
             myContext.addMessage(
@@ -134,7 +132,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
             return Collections.emptyList();
         }
 
-        final String outputPath = artifact.getOutputPath();
+        String outputPath = artifact.getOutputPath();
         if (outputPath == null || outputPath.length() == 0) {
             myContext.addMessage(
                 CompilerMessageCategory.ERROR,
@@ -147,18 +145,16 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         }
 
         DumbService.getInstance(getProject()).waitForSmartMode();
-        AccessRule.read(() -> {
-            collectItems(artifact, outputPath);
-        });
+        ReadAction.run(() -> collectItems(artifact, outputPath));
         return new ArrayList<>(myBuilderContext.getProcessingItems());
     }
 
     private void collectItems(@Nonnull Artifact artifact, @Nonnull String outputPath) {
-        final CompositePackagingElement<?> rootElement = artifact.getRootElement();
-        final VirtualFile outputFile = LocalFileSystem.getInstance().findFileByPath(outputPath);
-        final CopyToDirectoryInstructionCreator instructionCreator =
+        CompositePackagingElement<?> rootElement = artifact.getRootElement();
+        VirtualFile outputFile = LocalFileSystem.getInstance().findFileByPath(outputPath);
+        CopyToDirectoryInstructionCreator instructionCreator =
             new CopyToDirectoryInstructionCreator(myBuilderContext, outputPath, outputFile);
-        final PackagingElementResolvingContext resolvingContext = ArtifactManager.getInstance(getProject()).getResolvingContext();
+        PackagingElementResolvingContext resolvingContext = ArtifactManager.getInstance(getProject()).getResolvingContext();
         FULL_LOG.debug("Collecting items for " + artifact.getName());
         rootElement.computeIncrementalCompilerInstructions(
             instructionCreator,
@@ -170,16 +166,16 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
     private boolean doBuild(
         @Nonnull Artifact artifact,
-        final List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems,
-        final Set<ArtifactCompilerCompileItem> processedItems,
-        final @Nonnull Set<String> writtenPaths,
-        final Set<String> deletedJars
+        List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems,
+        Set<ArtifactCompilerCompileItem> processedItems,
+        @Nonnull Set<String> writtenPaths,
+        Set<String> deletedJars
     ) {
         FULL_LOG.debug("Building " + artifact.getName());
-        final boolean testMode = ApplicationManager.getApplication().isUnitTestMode();
+        boolean testMode = Application.get().isUnitTestMode();
 
-        final FileFilter fileFilter = new IgnoredFileFilter();
-        final Set<ArchivePackageInfo> changedJars = new HashSet<>();
+        FileFilter fileFilter = new IgnoredFileFilter();
+        Set<ArchivePackageInfo> changedJars = new HashSet<>();
         for (String deletedJar : deletedJars) {
             ContainerUtil.addIfNotNull(changedJars, myBuilderContext.getJarInfo(deletedJar));
         }
@@ -191,18 +187,18 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
             }
 
             int i = 0;
-            for (final GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState> item : changedItems) {
-                final ArtifactCompilerCompileItem sourceItem = item.getItem();
+            for (GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState> item : changedItems) {
+                ArtifactCompilerCompileItem sourceItem = item.getItem();
                 myContext.getProgressIndicator().checkCanceled();
 
-                AccessRule.read(() -> {
-                    final VirtualFile sourceFile = sourceItem.getFile();
+                ReadAction.run(() -> {
+                    VirtualFile sourceFile = sourceItem.getFile();
                     for (DestinationInfo destination : sourceItem.getDestinations()) {
                         if (destination instanceof ExplodedDestinationInfo) {
-                            final ExplodedDestinationInfo explodedDestination = (ExplodedDestinationInfo) destination;
+                            ExplodedDestinationInfo explodedDestination = (ExplodedDestinationInfo) destination;
                             File toFile = new File(FileUtil.toSystemDependentName(explodedDestination.getOutputPath()));
                             if (sourceFile.isInLocalFileSystem()) {
-                                final File ioFromFile = VirtualFileUtil.virtualToIoFile(sourceFile);
+                                File ioFromFile = VirtualFileUtil.virtualToIoFile(sourceFile);
                                 if (ioFromFile.exists()) {
                                     DeploymentUtilImpl.copyFile(ioFromFile, toFile, myContext, writtenPaths, fileFilter);
                                 }
@@ -228,7 +224,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
             }
 
             ArchivesBuilder builder = new ArchivesBuilder(changedJars, fileFilter, myContext);
-            final boolean processed = builder.buildArchives(writtenPaths);
+            boolean processed = builder.buildArchives(writtenPaths);
             if (!processed) {
                 return false;
             }
@@ -281,19 +277,17 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         if (input == null) {
             return;
         }
-        final BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(toFile));
-        try {
+        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(toFile))) {
             FileUtil.copy(input, output);
         }
         finally {
             input.close();
-            output.close();
         }
     }
 
-    private void onBuildStartedOrFinished(@Nonnull Artifact artifact, final boolean finished) throws Exception {
+    private void onBuildStartedOrFinished(@Nonnull Artifact artifact, boolean finished) throws Exception {
         for (ArtifactPropertiesProvider provider : artifact.getPropertiesProviders()) {
-            final ArtifactProperties<?> properties = artifact.getProperties(provider);
+            ArtifactProperties<?> properties = artifact.getProperties(provider);
             if (finished) {
                 properties.onBuildFinished(artifact, myContext);
             }
@@ -309,29 +303,27 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
     @Override
     public void processItems(
-        @Nonnull final ArtifactBuildTarget target,
-        @Nonnull final List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems,
+        @Nonnull ArtifactBuildTarget target,
+        @Nonnull List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems,
         @Nonnull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
         @Nonnull OutputConsumer<ArtifactCompilerCompileItem> consumer
     ) {
+        Set<String> deletedJars = deleteFiles(obsoleteItems, changedItems);
 
-        final Set<String> deletedJars = deleteFiles(obsoleteItems, changedItems);
-
-        final Set<String> writtenPaths = createPathsHashSet();
-        final Ref<Boolean> built = Ref.create(false);
-        final Set<ArtifactCompilerCompileItem> processedItems = new HashSet<>();
-        CompilerUtil.runInContext(myContext, "Copying files", new ThrowableRunnable<>() {
-            @Override
-            public void run() throws RuntimeException {
-                built.set(doBuild(target.getArtifact(), changedItems, processedItems, writtenPaths, deletedJars));
-            }
-        });
+        Set<String> writtenPaths = createPathsHashSet();
+        SimpleReference<Boolean> built = SimpleReference.create(false);
+        Set<ArtifactCompilerCompileItem> processedItems = new HashSet<>();
+        CompilerUtil.runInContext(
+            myContext,
+            "Copying files",
+            () -> built.set(doBuild(target.getArtifact(), changedItems, processedItems, writtenPaths, deletedJars))
+        );
         if (!built.get()) {
             return;
         }
 
-        myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.updating.caches"));
-        myContext.getProgressIndicator().setText2("");
+        myContext.getProgressIndicator().setTextValue(CompilerLocalize.packagingCompilerMessageUpdatingCaches());
+        myContext.getProgressIndicator().setText2Value(LocalizeValue.empty());
         for (String path : writtenPaths) {
             consumer.addFileToRefresh(new File(path));
         }
@@ -346,18 +338,18 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
         List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems
     ) {
-        myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.deleting.outdated.files"));
+        myContext.getProgressIndicator().setTextValue(CompilerLocalize.packagingCompilerMessageDeletingOutdatedFiles());
 
-        final boolean testMode = ApplicationManager.getApplication().isUnitTestMode();
-        final Set<String> deletedJars = new HashSet<>();
-        final Set<String> notDeletedJars = new HashSet<>();
+        boolean testMode = Application.get().isUnitTestMode();
+        Set<String> deletedJars = new HashSet<>();
+        Set<String> notDeletedJars = new HashSet<>();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Deleting outdated files...");
         }
 
         Set<String> pathToDelete = new HashSet<>();
         for (GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState> item : changedItems) {
-            final ArtifactPackagingItemOutputState cached = item.getCachedOutputState();
+            ArtifactPackagingItemOutputState cached = item.getCachedOutputState();
             if (cached != null) {
                 for (Pair<String, Long> destination : cached.myDestinations) {
                     pathToDelete.add(destination.getFirst());
@@ -379,7 +371,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         List<File> filesToRefresh = new ArrayList<>();
 
         for (String fullPath : pathToDelete) {
-            int end = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
+            int end = fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
             boolean isJar = end != -1;
             String filePath = isJar ? fullPath.substring(0, end) : fullPath;
             boolean deleted = false;

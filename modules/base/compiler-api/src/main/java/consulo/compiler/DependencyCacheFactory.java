@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 11-Jul-22
+ * @since 2022-07-11
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface DependencyCacheFactory {

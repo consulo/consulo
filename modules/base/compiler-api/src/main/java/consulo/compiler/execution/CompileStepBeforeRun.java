@@ -161,7 +161,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
             boolean[] isTestCompile = new boolean[]{true};
             try {
                 isTestCompile[0] = DumbService.getInstance(myProject)
-                    .runWithAlternativeResolveEnabled(((RunProfileWithCompileBeforeLaunchOption) configuration)::includeTestScope);
+                    .runWithAlternativeResolveEnabled(runConfiguration::includeTestScope);
             }
             catch (IndexNotReadyException ignored) {
             }
@@ -179,9 +179,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
                         if (module == null) {
                             LOG.error(
                                 "RunConfiguration should not return null modules. Configuration=" + runConfiguration.getName() +
-                                    "; class=" + runConfiguration
-                                    .getClass()
-                                    .getName()
+                                    "; class=" + runConfiguration.getClass().getName()
                             );
                         }
                     }

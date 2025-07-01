@@ -37,7 +37,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 18:28/20.10.13
+ * @since 2013-10-20
  */
 @Singleton
 @ServiceImpl
@@ -163,7 +163,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
         }
 
         for (Map.Entry<String, VirtualFilePointer> tempEntry : myVirtualFilePointers.entrySet()) {
-            final Element elementForOutput = createElementForOutput(tempEntry.getValue());
+            Element elementForOutput = createElementForOutput(tempEntry.getValue());
             elementForOutput.setAttribute(TYPE, tempEntry.getKey());
             moduleElement.addContent(elementForOutput);
         }
@@ -172,7 +172,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     }
 
     private static Element createElementForOutput(VirtualFilePointer virtualFilePointer) {
-        final Element pathElement = new Element(OUTPUT_TAG);
+        Element pathElement = new Element(OUTPUT_TAG);
         pathElement.setAttribute(URL, virtualFilePointer.getUrl());
         return pathElement;
     }
@@ -183,8 +183,8 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
         myInheritOutput = false;
         myExcludeOutput = Boolean.valueOf(element.getAttributeValue(EXCLUDE, "true"));
         for (Element child2 : element.getChildren()) {
-            final String moduleUrl = child2.getAttributeValue(URL);
-            final String type = child2.getAttributeValue(TYPE);
+            String moduleUrl = child2.getAttributeValue(URL);
+            String type = child2.getAttributeValue(TYPE);
 
             myVirtualFilePointers.put(type, VirtualFilePointerManager.getInstance().create(moduleUrl, this, null));
         }

@@ -16,11 +16,9 @@
 package consulo.compiler.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.compiler.CompileContext;
-import consulo.compiler.CompileStatusNotification;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.action.CompileActionBase;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.dataContext.DataContext;
 import consulo.localHistory.LocalHistory;
 import consulo.project.Project;
@@ -33,22 +31,19 @@ import jakarta.annotation.Nonnull;
 public class CompileProjectAction extends CompileActionBase {
     @Override
     @RequiredUIAccess
-    protected void doAction(DataContext dataContext, final Project project) {
-        CompilerManager.getInstance(project).rebuild(new CompileStatusNotification() {
-            @Override
-            public void finished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {
-                if (aborted) {
-                    return;
-                }
-
-                String text = getTemplatePresentation().getText();
-                LocalHistory.getInstance().putSystemLabel(
-                    project,
-                    errors == 0
-                        ? CompilerBundle.message("rebuild.lvcs.label.no.errors", text)
-                        : CompilerBundle.message("rebuild.lvcs.label.with.errors", text)
-                );
+    protected void doAction(DataContext dataContext, Project project) {
+        CompilerManager.getInstance(project).rebuild((aborted, errors, warnings, compileContext) -> {
+            if (aborted) {
+                return;
             }
+
+            String text = getTemplatePresentation().getText();
+            LocalHistory.getInstance().putSystemLabel(
+                project,
+                errors == 0
+                    ? CompilerLocalize.rebuildLvcsLabelNoErrors(text).get()
+                    : CompilerLocalize.rebuildLvcsLabelWithErrors(text).get()
+            );
         });
     }
 

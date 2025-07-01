@@ -15,8 +15,6 @@
  */
 package consulo.compiler;
 
-import consulo.compiler.FileProcessingCompiler;
-
 /**
  * A tag interface indicating that the compiler will instrument java sources.
  * This affects the order of compiler calls:

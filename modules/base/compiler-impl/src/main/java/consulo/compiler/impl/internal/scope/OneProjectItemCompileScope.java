@@ -43,16 +43,16 @@ public class OneProjectItemCompileScope extends ExportableUserDataHolderBase imp
     public OneProjectItemCompileScope(Project project, VirtualFile file) {
         myProject = project;
         myFile = file;
-        final String url = file.getUrl();
+        String url = file.getUrl();
         myUrl = file.isDirectory() ? url + "/" : url;
     }
 
-    @Override
     @Nonnull
-    public VirtualFile[] getFiles(final FileType fileType) {
-        final List<VirtualFile> files = new ArrayList<>(1);
-        final FileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-        final ContentIterator iterator = new CompilerContentIterator(fileType, projectFileIndex, true, files);
+    @Override
+    public VirtualFile[] getFiles(FileType fileType) {
+        List<VirtualFile> files = new ArrayList<>(1);
+        FileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+        ContentIterator iterator = new CompilerContentIterator(fileType, projectFileIndex, true, files);
         if (myFile.isDirectory()) {
             projectFileIndex.iterateContentUnderDirectory(myFile, iterator);
         }
@@ -70,10 +70,10 @@ public class OneProjectItemCompileScope extends ExportableUserDataHolderBase imp
         return FileUtil.pathsEqual(url, myUrl);
     }
 
-    @Override
     @Nonnull
+    @Override
     public Module[] getAffectedModules() {
-        final Module module = ModuleUtilCore.findModuleForFile(myFile, myProject);
+        Module module = ModuleUtilCore.findModuleForFile(myFile, myProject);
         if (module == null) {
             LOG.error("Module is null for file " + myFile.getPresentableUrl());
             return Module.EMPTY_ARRAY;

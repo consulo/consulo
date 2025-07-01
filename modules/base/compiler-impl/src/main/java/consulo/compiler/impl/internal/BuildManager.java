@@ -23,7 +23,7 @@ import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 23:49/25.05.13
+ * @since 2013-05-25
  */
 @Deprecated
 @DeprecationInfo("Just drop")

@@ -15,22 +15,24 @@
  */
 package consulo.compiler;
 
+import consulo.compiler.localize.CompilerLocalize;
+
 /**
  * @author Eugene Zhuravlev
  * @since 2003-07-10
  */
 public class CacheCorruptedException extends Exception {
     public CacheCorruptedException(String message) {
-        super((message == null || message.length() == 0) ? CompilerBundle.message("error.dependency.info.on.disk.corrupted") : message);
+        super((message == null || message.length() == 0) ? CompilerLocalize.errorDependencyInfoOnDiskCorrupted().get() : message);
     }
 
     public CacheCorruptedException(Throwable cause) {
-        super(CompilerBundle.message("error.dependency.info.on.disk.corrupted"), cause);
+        super(CompilerLocalize.errorDependencyInfoOnDiskCorrupted().get(), cause);
     }
 
     public CacheCorruptedException(String message, Throwable cause) {
         super(
-            (message == null || message.length() == 0) ? CompilerBundle.message("error.dependency.info.on.disk.corrupted") : message,
+            (message == null || message.length() == 0) ? CompilerLocalize.errorDependencyInfoOnDiskCorrupted().get() : message,
             cause
         );
     }

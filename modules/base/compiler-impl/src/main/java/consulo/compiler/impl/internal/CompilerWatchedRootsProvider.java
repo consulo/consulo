@@ -15,6 +15,7 @@
  */
 package consulo.compiler.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompilerConfiguration;
 import consulo.project.content.WatchedRootsProvider;
@@ -26,7 +27,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 18-Jun-22
+ * @since 2022-06-18
  */
 @ExtensionImpl
 public class CompilerWatchedRootsProvider implements WatchedRootsProvider {
@@ -39,6 +40,7 @@ public class CompilerWatchedRootsProvider implements WatchedRootsProvider {
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public Set<String> getRootsToWatch() {
         return ((CompilerConfigurationImpl) myCompilerConfigurationProvider.get()).getRootsToWatch();
     }

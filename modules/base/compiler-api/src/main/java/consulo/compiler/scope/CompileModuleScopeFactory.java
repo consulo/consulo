@@ -24,10 +24,10 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 12:55/20.12.13
+ * @since 2013-12-20
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompileModuleScopeFactory {
     @Nullable
-    FileIndexCompileScope createScope(@Nonnull final Module module, boolean includeDependentModules, boolean includeTestScope);
+    FileIndexCompileScope createScope(@Nonnull Module module, boolean includeDependentModules, boolean includeTestScope);
 }

@@ -19,17 +19,16 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.*;
-import consulo.compiler.Compiler;
 import consulo.compiler.generic.GenericCompiler;
 import consulo.compiler.impl.internal.generic.GenericCompilerCache;
 import consulo.compiler.impl.internal.generic.GenericCompilerRunner;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -70,18 +69,20 @@ public class CompilerCacheManager implements Disposable {
         flushCaches();
     }
 
-    private File getCompilerRootDir(final Compiler compiler) {
-        final File dir = new File(myCachesRoot, getCompilerIdString(compiler));
+    private File getCompilerRootDir(Compiler compiler) {
+        File dir = new File(myCachesRoot, getCompilerIdString(compiler));
         dir.mkdirs();
         return dir;
     }
 
     public synchronized <Key, SourceState, OutputState> GenericCompilerCache<Key, SourceState, OutputState>
-    getGenericCompilerCache(final GenericCompiler<Key, SourceState, OutputState> compiler) throws IOException {
+    getGenericCompilerCache(GenericCompiler<Key, SourceState, OutputState> compiler) throws IOException {
         GenericCompilerCache<?, ?, ?> cache = myGenericCachesMap.get(compiler);
         if (cache == null) {
-            final GenericCompilerCache<?, ?, ?> genericCache = new GenericCompilerCache<>(compiler, GenericCompilerRunner
-                .getGenericCompilerCacheDir(myProject, compiler));
+            GenericCompilerCache<?, ?, ?> genericCache = new GenericCompilerCache<>(
+                compiler,
+                GenericCompilerRunner.getGenericCompilerCacheDir(myProject, compiler)
+            );
             myGenericCachesMap.put(compiler, genericCache);
             myCacheDisposables.add(() -> {
                 if (LOG.isDebugEnabled()) {
@@ -95,12 +96,12 @@ public class CompilerCacheManager implements Disposable {
         return (GenericCompilerCache<Key, SourceState, OutputState>) cache;
     }
 
-    public synchronized FileProcessingCompilerStateCache getFileProcessingCompilerCache(final FileProcessingCompiler compiler)
+    public synchronized FileProcessingCompilerStateCache getFileProcessingCompilerCache(FileProcessingCompiler compiler)
         throws IOException {
         Object cache = myCompilerToCacheMap.get(compiler);
         if (cache == null) {
-            final File compilerRootDir = getCompilerRootDir(compiler);
-            final FileProcessingCompilerStateCache stateCache = new FileProcessingCompilerStateCache(compilerRootDir, compiler);
+            File compilerRootDir = getCompilerRootDir(compiler);
+            FileProcessingCompilerStateCache stateCache = new FileProcessingCompilerStateCache(compilerRootDir, compiler);
             myCompilerToCacheMap.put(compiler, stateCache);
             myCacheDisposables.add(() -> {
                 if (LOG.isDebugEnabled()) {
@@ -120,7 +121,7 @@ public class CompilerCacheManager implements Disposable {
         Object cache = myCompilerToCacheMap.get(compiler);
         if (cache == null) {
             final File cacheDir = getCompilerRootDir(compiler);
-            final StateCache<ValidityState> stateCache = new StateCache<ValidityState>(new File(cacheDir, "timestamps")) {
+            StateCache<ValidityState> stateCache = new StateCache<>(new File(cacheDir, "timestamps")) {
                 @Override
                 public ValidityState read(DataInput stream) throws IOException {
                     return compiler.createValidityState(stream);
@@ -146,7 +147,7 @@ public class CompilerCacheManager implements Disposable {
     }
 
     public static String getCompilerIdString(Compiler compiler) {
-        @NonNls String description = compiler.getDescription();
+        String description = compiler.getDescription();
         return description.replaceAll("\\s+", "_").replaceAll("[\\.\\?]", "_").toLowerCase();
     }
 
@@ -164,16 +165,16 @@ public class CompilerCacheManager implements Disposable {
         myCompilerToCacheMap.clear();
     }
 
-    public void clearCaches(final CompileContext context) {
+    public void clearCaches(CompileContext context) {
         flushCaches();
-        final File[] children = myCachesRoot.listFiles();
+        File[] children = myCachesRoot.listFiles();
         if (children != null) {
-            for (final File child : children) {
-                final boolean deleteOk = FileUtil.delete(child);
+            for (File child : children) {
+                boolean deleteOk = FileUtil.delete(child);
                 if (!deleteOk) {
                     context.addMessage(
                         CompilerMessageCategory.ERROR,
-                        CompilerBundle.message("compiler.error.failed.to.delete", child.getPath()),
+                        CompilerLocalize.compilerErrorFailedToDelete(child.getPath()).get(),
                         null,
                         -1,
                         -1

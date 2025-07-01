@@ -133,10 +133,10 @@ public class TranslationCompilerProjectMonitor {
         for (Module module : ModuleManager.getInstance(myProject).getModules()) {
             ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
-            final VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
-            final String outputUrl = output == null ? null : output.getUrl();
-            final VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
-            final String testoutUrl = testsOutput == null ? null : testsOutput.getUrl();
+            VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
+            String outputUrl = output == null ? null : output.getUrl();
+            VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
+            String testoutUrl = testsOutput == null ? null : testsOutput.getUrl();
             map.put(module.getName(), Couple.of(outputUrl, testoutUrl));
         }
 

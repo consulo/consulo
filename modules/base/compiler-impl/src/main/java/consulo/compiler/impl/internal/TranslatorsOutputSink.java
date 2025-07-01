@@ -50,35 +50,35 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
     }
 
     @Override
-    public void add(final String outputRoot, final Collection<TranslatingCompiler.OutputItem> items, final VirtualFile[] filesToRecompile) {
+    public void add(String outputRoot, Collection<TranslatingCompiler.OutputItem> items, VirtualFile[] filesToRecompile) {
         for (TranslatingCompiler.OutputItem item : items) {
-            final VirtualFile file = item.getSourceFile();
+            VirtualFile file = item.getSourceFile();
             if (file != null) {
                 myCompiledSources.add(file);
             }
         }
-        final TranslatingCompiler compiler = myCompilers[myCurrentCompilerIdx];
+        TranslatingCompiler compiler = myCompilers[myCurrentCompilerIdx];
         if (compiler instanceof IntermediateOutputCompiler) {
-            final LocalFileSystem lfs = LocalFileSystem.getInstance();
-            final List<VirtualFile> outputs = new ArrayList<>();
+            LocalFileSystem lfs = LocalFileSystem.getInstance();
+            List<VirtualFile> outputs = new ArrayList<>();
             for (TranslatingCompiler.OutputItem item : items) {
-                final VirtualFile vFile = lfs.findFileByPath(item.getOutputPath());
+                VirtualFile vFile = lfs.findFileByPath(item.getOutputPath());
                 if (vFile != null) {
                     outputs.add(vFile);
                 }
             }
             myContext.markGenerated(outputs);
         }
-        final int nextCompilerIdx = myCurrentCompilerIdx + 1;
+        int nextCompilerIdx = myCurrentCompilerIdx + 1;
         try {
             TranslatingCompilerFilesMonitor translatingCompilerFilesMonitor = TranslatingCompilerFilesMonitor.getInstance();
 
             if (nextCompilerIdx < myCompilers.length) {
-                final Map<String, Collection<TranslatingCompiler.OutputItem>> updateNow = new HashMap<>();
+                Map<String, Collection<TranslatingCompiler.OutputItem>> updateNow = new HashMap<>();
                 // process postponed
                 for (Map.Entry<String, Collection<TranslatingCompiler.OutputItem>> entry : myPostponedItems.entrySet()) {
-                    final String outputDir = entry.getKey();
-                    final Collection<TranslatingCompiler.OutputItem> postponed = entry.getValue();
+                    String outputDir = entry.getKey();
+                    Collection<TranslatingCompiler.OutputItem> postponed = entry.getValue();
                     for (Iterator<TranslatingCompiler.OutputItem> it = postponed.iterator(); it.hasNext(); ) {
                         TranslatingCompiler.OutputItem item = it.next();
                         boolean shouldPostpone = false;
@@ -114,15 +114,15 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
                 }
 
                 if (updateNow.size() == 1) {
-                    final Map.Entry<String, Collection<TranslatingCompiler.OutputItem>> entry = updateNow.entrySet().iterator().next();
-                    final String outputDir = entry.getKey();
-                    final Collection<TranslatingCompiler.OutputItem> itemsToUpdate = entry.getValue();
+                    Map.Entry<String, Collection<TranslatingCompiler.OutputItem>> entry = updateNow.entrySet().iterator().next();
+                    String outputDir = entry.getKey();
+                    Collection<TranslatingCompiler.OutputItem> itemsToUpdate = entry.getValue();
                     translatingCompilerFilesMonitor.update(myContext, outputDir, itemsToUpdate, filesToRecompile);
                 }
                 else {
                     for (Map.Entry<String, Collection<TranslatingCompiler.OutputItem>> entry : updateNow.entrySet()) {
-                        final String outputDir = entry.getKey();
-                        final Collection<TranslatingCompiler.OutputItem> itemsToUpdate = entry.getValue();
+                        String outputDir = entry.getKey();
+                        Collection<TranslatingCompiler.OutputItem> itemsToUpdate = entry.getValue();
                         translatingCompilerFilesMonitor.update(myContext, outputDir, itemsToUpdate, VirtualFile.EMPTY_ARRAY);
                     }
                     if (filesToRecompile.length > 0) {
@@ -159,11 +159,11 @@ class TranslatorsOutputSink implements TranslatingCompiler.OutputSink {
     }
 
     public void flushPostponedItems() {
-        final TranslatingCompilerFilesMonitor filesMonitor = TranslatingCompilerFilesMonitor.getInstance();
+        TranslatingCompilerFilesMonitor filesMonitor = TranslatingCompilerFilesMonitor.getInstance();
         try {
             for (Map.Entry<String, Collection<TranslatingCompiler.OutputItem>> entry : myPostponedItems.entrySet()) {
-                final String outputDir = entry.getKey();
-                final Collection<TranslatingCompiler.OutputItem> items = entry.getValue();
+                String outputDir = entry.getKey();
+                Collection<TranslatingCompiler.OutputItem> items = entry.getValue();
                 filesMonitor.update(myContext, outputDir, items, VirtualFile.EMPTY_ARRAY);
             }
         }

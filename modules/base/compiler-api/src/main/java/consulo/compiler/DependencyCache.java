@@ -17,10 +17,8 @@ package consulo.compiler;
 
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
-import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

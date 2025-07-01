@@ -32,5 +32,5 @@ public interface CompileStatusNotification {
      * @param warnings       warning count
      * @param compileContext context for the finished compilation
      */
-    void finished(boolean aborted, int errors, int warnings, final CompileContext compileContext);
+    void finished(boolean aborted, int errors, int warnings, CompileContext compileContext);
 }

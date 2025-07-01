@@ -18,8 +18,8 @@ package consulo.compiler.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.Task;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.TranslatingCompilerFilesMonitor;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 17/04/2023
+ * @since 2023-04-17
  */
 @ExtensionImpl
 public class TranslationCompilerPostStartupActivity implements PostStartupActivity, DumbAware {
@@ -37,8 +37,11 @@ public class TranslationCompilerPostStartupActivity implements PostStartupActivi
 
         monitor.startAsyncScan(project);
 
-        Task.Backgroundable.queue(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false, indicator -> {
-            monitor.runScan(indicator, project);
-        });
+        Task.Backgroundable.queue(
+            project,
+            CompilerLocalize.compilerInitialScanningProgressText(),
+            false,
+            indicator -> monitor.runScan(indicator, project)
+        );
     }
 }

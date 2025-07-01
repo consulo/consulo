@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 12:57/10.06.13
+ * @since 2013-06-10
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CompilerConfiguration {

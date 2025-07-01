@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * created at Jan 3, 2002
- *
- * @author Jeka
- */
 package consulo.compiler.setting;
 
 import consulo.disposer.Disposable;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
+
+/**
+ * @author Jeka
+ * @since 2002-01-03
+ */
 public class ExcludeEntryDescription implements Disposable {
     private boolean myIsFile;
     private boolean myIncludeSubdirectories;
@@ -55,7 +53,7 @@ public class ExcludeEntryDescription implements Disposable {
     public void setPresentableUrl(String newUrl) {
         myFilePointer = VirtualFilePointerManager.getInstance()
             .create(VirtualFileUtil.pathToUrl(FileUtil.toSystemIndependentName(newUrl)), myParentDisposable, null);
-        final VirtualFile file = getVirtualFile();
+        VirtualFile file = getVirtualFile();
         if (file != null) {
             myIsFile = !file.isDirectory();
         }
@@ -90,27 +88,23 @@ public class ExcludeEntryDescription implements Disposable {
         return myFilePointer.isValid();
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ExcludeEntryDescription)) {
-            return false;
-        }
-        ExcludeEntryDescription entryDescription = (ExcludeEntryDescription) obj;
-        if (entryDescription.myIsFile != myIsFile) {
-            return false;
-        }
-        if (entryDescription.myIncludeSubdirectories != myIncludeSubdirectories) {
-            return false;
-        }
-        return Comparing.equal(entryDescription.getUrl(), getUrl());
+        return obj == this
+            || obj instanceof ExcludeEntryDescription that
+            && that.myIsFile == myIsFile
+            && that.myIncludeSubdirectories == myIncludeSubdirectories
+            && Objects.equals(that.getUrl(), getUrl());
     }
 
+    @Override
     public int hashCode() {
         int result = (myIsFile ? 1 : 0);
         result = 31 * result + (myIncludeSubdirectories ? 1 : 0);
-        result = 31 * result + getUrl().hashCode();
-        return result;
+        return 31 * result + getUrl().hashCode();
     }
 
+    @Override
     public void dispose() {
     }
 }

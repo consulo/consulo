@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 12-Feb-22
+ * @since 2022-02-12
  */
 module consulo.compiler.api {
     requires transitive consulo.execution.api;

@@ -45,9 +45,9 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
     }
 
     @Override
-    public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory, @jakarta.annotation.Nullable PackagingFileFilter filter) {
-        final ProjectFileIndex index = ProjectRootManager.getInstance(myContext.getCompileContext().getProject()).getFileIndex();
-        final boolean copyExcluded = index.isExcluded(directory);
+    public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory, @Nullable PackagingFileFilter filter) {
+        ProjectFileIndex index = ProjectRootManager.getInstance(myContext.getCompileContext().getProject()).getFileIndex();
+        boolean copyExcluded = index.isExcluded(directory);
         collectInstructionsRecursively(directory, this, filter, index, copyExcluded);
     }
 
@@ -77,7 +77,7 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
                         return false;
                     }
 
-                    final IncrementalCompilerInstructionCreatorBase creator = getCurrentValue();
+                    IncrementalCompilerInstructionCreatorBase creator = getCurrentValue();
                     if (filter != null && !filter.accept(child, creator.myContext.getCompileContext())) {
                         return false;
                     }
@@ -100,7 +100,7 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
 
     @Override
     public IncrementalCompilerInstructionCreator subFolderByRelativePath(@Nonnull String relativeDirectoryPath) {
-        final List<String> folders = StringUtil.split(relativeDirectoryPath, "/");
+        List<String> folders = StringUtil.split(relativeDirectoryPath, "/");
         IncrementalCompilerInstructionCreator current = this;
         for (String folder : folders) {
             current = current.subFolder(folder);
