@@ -15,8 +15,9 @@
  */
 package consulo.compiler.impl.internal.action;
 
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.impl.internal.CompilerConfigurable;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
@@ -30,11 +31,11 @@ import consulo.ui.ex.action.AnActionEvent;
  */
 public class CompilerPropertiesAction extends AnAction {
     public CompilerPropertiesAction() {
-        super(CompilerBundle.message("action.compiler.properties.text"), null, PlatformIconGroup.generalSettings());
+        super(CompilerLocalize.actionCompilerPropertiesText(), LocalizeValue.empty(), PlatformIconGroup.generalSettings());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {

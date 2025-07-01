@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * created at Jan 17, 2002
- *
- * @author Jeka
- */
 package consulo.compiler.util;
 
 import consulo.compiler.CompileContext;
@@ -28,16 +22,20 @@ import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+/**
+ * @author Jeka
+ * @since 2002-01-17
+ */
 public class MakeUtil {
     public static VirtualFile getSourceRoot(CompileContext context, Module module, VirtualFile file) {
-        final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
-        final VirtualFile root = fileIndex.getSourceRootForFile(file);
+        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
+        VirtualFile root = fileIndex.getSourceRootForFile(file);
         if (root != null) {
             return root;
         }
         // try to find among roots of generated files.
-        final VirtualFile[] sourceRoots = context.getSourceRoots(module);
-        for (final VirtualFile sourceRoot : sourceRoots) {
+        VirtualFile[] sourceRoots = context.getSourceRoots(module);
+        for (VirtualFile sourceRoot : sourceRoots) {
             if (fileIndex.isInSourceContent(sourceRoot)) {
                 continue; // skip content source roots, need only roots for generated files
             }

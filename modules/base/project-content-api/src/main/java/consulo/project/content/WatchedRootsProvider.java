@@ -15,6 +15,7 @@
  */
 package consulo.project.content;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionList;
@@ -25,10 +26,11 @@ import java.util.Set;
 
 /**
  * @author anna
- * @since 27-Dec-2007
+ * @since 2007-12-27
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface WatchedRootsProvider {
   @Nonnull
+  @RequiredReadAction
   Set<String> getRootsToWatch();
 }

@@ -23,7 +23,7 @@ import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 17.08.14
+ * @since 2014-08-17
  */
 public class ModuleRootCompilerContentIterator implements ContentIterator {
     private final FileType myFileType;

@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 13:36/06.11.13
+ * @since 2013-11-06
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TranslatingCompilerFilesMonitor {
@@ -54,7 +54,7 @@ public abstract class TranslatingCompilerFilesMonitor {
 
         @Override
         public Project get() {
-            final Project project = super.get();
+            Project project = super.get();
             if (project != null && project.isDisposed()) {
                 throw new ProjectClosedException();
             }

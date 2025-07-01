@@ -67,8 +67,8 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
         return myExcludeEntryDescriptions.contains(description);
     }
 
-    public void readExternal(final Element node) {
-        for (final Element element : node.getChildren()) {
+    public void readExternal(Element node) {
+        for (Element element : node.getChildren()) {
             String url = element.getAttributeValue(URL);
             if (url == null) {
                 continue;
@@ -85,8 +85,8 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
         }
     }
 
-    public void writeExternal(final Element element) {
-        for (final ExcludeEntryDescription description : getExcludeEntryDescriptions()) {
+    public void writeExternal(Element element) {
+        for (ExcludeEntryDescription description : getExcludeEntryDescriptions()) {
             if (description.isFile()) {
                 Element entry = new Element(FILE);
                 entry.setAttribute(URL, description.getUrl());
@@ -102,7 +102,7 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
     }
 
     public boolean isExcluded(VirtualFile virtualFile) {
-        for (final ExcludeEntryDescription entryDescription : getExcludeEntryDescriptions()) {
+        for (ExcludeEntryDescription entryDescription : getExcludeEntryDescriptions()) {
             VirtualFile descriptionFile = entryDescription.getVirtualFile();
             if (descriptionFile == null) {
                 continue;
@@ -142,7 +142,7 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
     }
 
     @Override
-    public void loadState(final ExcludedEntriesConfiguration state) {
+    public void loadState(ExcludedEntriesConfiguration state) {
         for (ExcludeEntryDescription description : state.getExcludeEntryDescriptions()) {
             addExcludeEntryDescription(description.copy(this));
         }

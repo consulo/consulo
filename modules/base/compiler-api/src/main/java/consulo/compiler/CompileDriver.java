@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 17/04/2023
+ * @since 2023-04-17
  */
 public interface CompileDriver {
     /**
@@ -34,14 +34,14 @@ public interface CompileDriver {
      * @return true if and only if the file existed and was successfully deleted
      * Note: the behaviour is different from FileUtil.delete() which returns true if the file absent on the disk
      */
-    boolean deleteFile(final File file);
+    boolean deleteFile(File file);
 
     void dropDependencyCache(CompileContextEx context);
 
     CompileScope attachIntermediateOutputDirectories(CompileScope originalScope, Predicate<Compiler> filter);
 
     @Nullable
-    VirtualFile getGenerationOutputDir(final IntermediateOutputCompiler compiler, final Module module, final boolean forTestSources);
+    VirtualFile getGenerationOutputDir(IntermediateOutputCompiler compiler, Module module, boolean forTestSources);
 
     Predicate<Compiler> getCompilerFilter();
 }

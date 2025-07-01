@@ -43,7 +43,7 @@ public abstract class CompilerEncodingService {
             if (service == null) {
                 service = getInstance(module.getProject());
             }
-            final Charset charset = service.getPreferredModuleEncoding(module);
+            Charset charset = service.getPreferredModuleEncoding(module);
             if (charset != null) {
                 return charset;
             }

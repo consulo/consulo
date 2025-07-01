@@ -49,7 +49,8 @@ public abstract class GenericCompiler<Key, SourceState, OutputState> implements 
     public abstract DataExternalizer<OutputState> getOutputStateExternalizer();
 
     @Nonnull
-    public abstract GenericCompilerInstance<?, ? extends CompileItem<Key, SourceState, OutputState>, Key, SourceState, OutputState> createInstance(
+    public abstract GenericCompilerInstance<?, ? extends CompileItem<Key, SourceState, OutputState>, Key, SourceState, OutputState>
+    createInstance(
         @Nonnull CompileContext context
     );
 

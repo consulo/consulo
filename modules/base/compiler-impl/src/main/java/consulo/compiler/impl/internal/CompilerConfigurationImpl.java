@@ -17,7 +17,7 @@ package consulo.compiler.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.content.ContentFolderTypeProvider;
@@ -45,7 +45,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 13:05/10.06.13
+ * @since 2013-06-10
  */
 @Singleton
 @ServiceImpl
@@ -82,7 +82,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     @Nonnull
     @RequiredReadAction
     protected Set<String> getRootsToWatch() {
-        final Set<String> rootsToWatch = new HashSet<>();
+        Set<String> rootsToWatch = new HashSet<>();
         ModuleManager moduleManager = ModuleManager.getInstance(myProject);
         for (Module module : moduleManager.getModules()) {
             ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
@@ -159,7 +159,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
             if (name == null) {
                 continue;
             }
-            Module module = AccessRule.read(() -> myModuleManager.findModuleByName(name));
+            Module module = ReadAction.compute(() -> myModuleManager.findModuleByName(name));
             if (module != null) {
                 ModuleCompilerPathsManagerImpl moduleCompilerPathsManager =
                     (ModuleCompilerPathsManagerImpl) ModuleCompilerPathsManager.getInstance(module);

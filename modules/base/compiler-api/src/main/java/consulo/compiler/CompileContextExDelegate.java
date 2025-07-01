@@ -52,12 +52,12 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public VirtualFile getSourceFileByOutputFile(final VirtualFile outputFile) {
+    public VirtualFile getSourceFileByOutputFile(VirtualFile outputFile) {
         return myDelegate.getSourceFileByOutputFile(outputFile);
     }
 
     @Override
-    public void addMessage(final CompilerMessage message) {
+    public void addMessage(CompilerMessage message) {
         myDelegate.addMessage(message);
     }
 
@@ -68,48 +68,54 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public boolean isInTestSourceContent(@Nonnull final VirtualFile fileOrDir) {
+    public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
         return myDelegate.isInTestSourceContent(fileOrDir);
     }
 
     @Override
-    public boolean isInSourceContent(@Nonnull final VirtualFile fileOrDir) {
+    public boolean isInSourceContent(@Nonnull VirtualFile fileOrDir) {
         return myDelegate.isInSourceContent(fileOrDir);
     }
 
     @Override
-    public void addScope(final CompileScope additionalScope) {
+    public void addScope(CompileScope additionalScope) {
         myDelegate.addScope(additionalScope);
     }
 
     @Override
     public void addMessage(
-        final CompilerMessageCategory category,
-        final String message, @Nullable final String url, final int lineNum, final int columnNum
+        CompilerMessageCategory category,
+        String message,
+        @Nullable String url,
+        int lineNum,
+        int columnNum
     ) {
         myDelegate.addMessage(category, message, url, lineNum, columnNum);
     }
 
     @Override
     public void addMessage(
-        final CompilerMessageCategory category, final String message, @jakarta.annotation.Nullable final String url,
-        final int lineNum,
-        final int columnNum,
-        final Navigatable navigatable
+        CompilerMessageCategory category,
+        String message,
+        @Nullable String url,
+        int lineNum,
+        int columnNum,
+        Navigatable navigatable
     ) {
         myDelegate.addMessage(category, message, url, lineNum, columnNum, navigatable);
     }
 
     @Override
-    public CompilerMessage[] getMessages(final CompilerMessageCategory category) {
+    public CompilerMessage[] getMessages(CompilerMessageCategory category) {
         return myDelegate.getMessages(category);
     }
 
     @Override
-    public int getMessageCount(final CompilerMessageCategory category) {
+    public int getMessageCount(CompilerMessageCategory category) {
         return myDelegate.getMessageCount(category);
     }
 
+    @Nonnull
     @Override
     public ProgressIndicator getProgressIndicator() {
         return myDelegate.getProgressIndicator();
@@ -121,17 +127,17 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public void requestRebuildNextTime(final String message) {
+    public void requestRebuildNextTime(String message) {
         myDelegate.requestRebuildNextTime(message);
     }
 
     @Override
-    public Module getModuleByFile(final VirtualFile file) {
+    public Module getModuleByFile(VirtualFile file) {
         return myDelegate.getModuleByFile(file);
     }
 
     @Override
-    public VirtualFile[] getSourceRoots(final Module module) {
+    public VirtualFile[] getSourceRoots(Module module) {
         return myDelegate.getSourceRoots(module);
     }
 
@@ -141,12 +147,12 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public VirtualFile getModuleOutputDirectory(final Module module) {
+    public VirtualFile getModuleOutputDirectory(Module module) {
         return myDelegate.getModuleOutputDirectory(module);
     }
 
     @Override
-    public VirtualFile getModuleOutputDirectoryForTests(final Module module) {
+    public VirtualFile getModuleOutputDirectoryForTests(Module module) {
         return myDelegate.getModuleOutputDirectoryForTests(module);
     }
 
@@ -172,12 +178,12 @@ public class CompileContextExDelegate implements CompileContextEx {
     }
 
     @Override
-    public <T> T getUserData(@Nonnull final Key<T> key) {
+    public <T> T getUserData(@Nonnull Key<T> key) {
         return myDelegate.getUserData(key);
     }
 
     @Override
-    public <T> void putUserData(@Nonnull final Key<T> key, final T value) {
+    public <T> void putUserData(@Nonnull Key<T> key, T value) {
         myDelegate.putUserData(key, value);
     }
 

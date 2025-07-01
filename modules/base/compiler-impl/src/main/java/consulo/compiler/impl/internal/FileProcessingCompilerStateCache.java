@@ -33,7 +33,7 @@ public class FileProcessingCompilerStateCache {
     private final StateCache<MyState> myCache;
 
     public FileProcessingCompilerStateCache(File storeDirectory, final ValidityStateFactory stateFactory) throws IOException {
-        myCache = new StateCache<MyState>(new File(storeDirectory, "timestamps")) {
+        myCache = new StateCache<>(new File(storeDirectory, "timestamps")) {
             @Override
             public MyState read(DataInput stream) throws IOException {
                 return new MyState(stream.readLong(), stateFactory.createValidityState(stream));
@@ -42,7 +42,7 @@ public class FileProcessingCompilerStateCache {
             @Override
             public void write(MyState state, DataOutput out) throws IOException {
                 out.writeLong(state.getTimestamp());
-                final ValidityState extState = state.getExtState();
+                ValidityState extState = state.getExtState();
                 if (extState != null) {
                     extState.save(out);
                 }
@@ -59,7 +59,7 @@ public class FileProcessingCompilerStateCache {
     }
 
     public long getTimestamp(File url) throws IOException {
-        final Serializable savedState = myCache.getState(url);
+        Serializable savedState = myCache.getState(url);
         if (savedState != null) {
             LOG.assertTrue(savedState instanceof MyState);
         }

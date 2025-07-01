@@ -47,23 +47,23 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
 
     @Nullable
     public static ArtifactsCompiler getInstance(@Nonnull Project project) {
-        final ArtifactsCompiler[] compilers = CompilerManager.getInstance(project).getCompilers(ArtifactsCompiler.class);
+        ArtifactsCompiler[] compilers = CompilerManager.getInstance(project).getCompilers(ArtifactsCompiler.class);
         return compilers.length == 1 ? compilers[0] : null;
     }
 
-    public static void addChangedArtifact(final CompileContext context, Artifact artifact) {
+    public static void addChangedArtifact(CompileContext context, Artifact artifact) {
         Set<Artifact> artifacts = context.getUserData(CHANGED_ARTIFACTS);
         if (artifacts == null) {
-            artifacts = new HashSet<Artifact>();
+            artifacts = new HashSet<>();
             context.putUserData(CHANGED_ARTIFACTS, artifacts);
         }
         artifacts.add(artifact);
     }
 
-    public static void addWrittenPaths(final CompileContext context, Set<String> writtenPaths) {
+    public static void addWrittenPaths(CompileContext context, Set<String> writtenPaths) {
         Set<String> paths = context.getUserData(WRITTEN_PATHS_KEY);
         if (paths == null) {
-            paths = new HashSet<String>();
+            paths = new HashSet<>();
             context.putUserData(WRITTEN_PATHS_KEY, paths);
         }
         paths.addAll(writtenPaths);
@@ -89,19 +89,25 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
 
     @Nonnull
     @Override
-    public GenericCompilerInstance<ArtifactBuildTarget, ? extends CompileItem<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>, String, VirtualFilePersistentState, ArtifactPackagingItemOutputState> createInstance(
-        @Nonnull CompileContext context
-    ) {
+    public GenericCompilerInstance<
+        ArtifactBuildTarget,
+        ? extends CompileItem<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>,
+        String,
+        VirtualFilePersistentState,
+        ArtifactPackagingItemOutputState
+    >
+    createInstance(@Nonnull CompileContext context) {
         return new ArtifactsCompilerInstance(context);
     }
 
+    @Override
     @Nonnull
     public String getDescription() {
         return "Artifacts Packaging Compiler";
     }
 
     @Nullable
-    public static Set<Artifact> getChangedArtifacts(final CompileContext compileContext) {
+    public static Set<Artifact> getChangedArtifacts(CompileContext compileContext) {
         return compileContext.getUserData(CHANGED_ARTIFACTS);
     }
 

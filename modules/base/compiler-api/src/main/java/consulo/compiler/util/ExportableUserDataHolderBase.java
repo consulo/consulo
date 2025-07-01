@@ -25,13 +25,13 @@ import java.util.*;
 public class ExportableUserDataHolderBase extends UserDataHolderBase implements ExportableUserDataHolder {
     private final Set<Key> myKeys = Collections.synchronizedSet(new HashSet<Key>());
 
-    @Override
     @Nonnull
+    @Override
     public final Map<Key, Object> exportUserData() {
-        final Map<Key, Object> result = new HashMap<Key, Object>();
+        Map<Key, Object> result = new HashMap<>();
         synchronized (myKeys) {
             for (Key<?> k : myKeys) {
-                final Object data = getUserData(k);
+                Object data = getUserData(k);
                 if (data != null) {
                     result.put(k, data);
                 }

@@ -33,7 +33,7 @@ import java.util.Map;
 public class VirtualFileWithDependenciesState {
     public static final DataExternalizer<VirtualFileWithDependenciesState> EXTERNALIZER = new VirtualFileWithDependenciesExternalizer();
     private long mySourceTimestamp;
-    private Map<String, Long> myDependencies = new HashMap<String, Long>();
+    private Map<String, Long> myDependencies = new HashMap<>();
 
     public VirtualFileWithDependenciesState(long sourceTimestamp) {
         mySourceTimestamp = sourceTimestamp;
@@ -50,7 +50,7 @@ public class VirtualFileWithDependenciesState {
 
         VirtualFileManager manager = VirtualFileManager.getInstance();
         for (Map.Entry<String, Long> entry : myDependencies.entrySet()) {
-            final VirtualFile file = manager.findFileByUrl(entry.getKey());
+            VirtualFile file = manager.findFileByUrl(entry.getKey());
             if (file == null || file.getTimeStamp() != entry.getValue()) {
                 return false;
             }
@@ -63,7 +63,7 @@ public class VirtualFileWithDependenciesState {
         @Override
         public void save(@Nonnull DataOutput out, VirtualFileWithDependenciesState value) throws IOException {
             out.writeLong(value.mySourceTimestamp);
-            final Map<String, Long> dependencies = value.myDependencies;
+            Map<String, Long> dependencies = value.myDependencies;
             out.writeInt(dependencies.size());
             for (Map.Entry<String, Long> entry : dependencies.entrySet()) {
                 IOUtil.writeUTF(out, entry.getKey());
@@ -73,11 +73,11 @@ public class VirtualFileWithDependenciesState {
 
         @Override
         public VirtualFileWithDependenciesState read(@Nonnull DataInput in) throws IOException {
-            final VirtualFileWithDependenciesState state = new VirtualFileWithDependenciesState(in.readLong());
+            VirtualFileWithDependenciesState state = new VirtualFileWithDependenciesState(in.readLong());
             int size = in.readInt();
             while (size-- > 0) {
-                final String url = IOUtil.readUTF(in);
-                final long timestamp = in.readLong();
+                String url = IOUtil.readUTF(in);
+                long timestamp = in.readLong();
                 state.myDependencies.put(url, timestamp);
             }
             return state;

@@ -44,7 +44,7 @@ public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstru
 
     @Override
     public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
-        final String pathInJar = childPathInJar(outputFileName);
+        String pathInJar = childPathInJar(outputFileName);
         if (myContext.addDestination(file, new ArchiveDestinationInfo(pathInJar, myArchivePackageInfo, myDestinationInfo))) {
             myArchivePackageInfo.addContent(pathInJar, file);
         }
@@ -62,12 +62,12 @@ public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstru
     @Nonnull
     @Override
     public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
-        final ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
-        final String outputPath = myDestinationInfo.getOutputPath() + "/" + archiveFileName;
+        ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
+        String outputPath = myDestinationInfo.getOutputPath() + "/" + archiveFileName;
         if (!myContext.registerJarFile(archivePackageInfo, outputPath)) {
             return new SkipAllInstructionCreator(myContext);
         }
-        final ArchiveDestinationInfo destination =
+        ArchiveDestinationInfo destination =
             new ArchiveDestinationInfo(childPathInJar(archiveFileName), myArchivePackageInfo, myDestinationInfo);
         archivePackageInfo.addDestination(destination);
         return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);

@@ -39,11 +39,11 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
     private final Module[] myAffectedModules;
     private final boolean myIncludeTestScope;
 
-    public FileSetCompileScope(final Collection<VirtualFile> files, Module[] modules) {
+    public FileSetCompileScope(Collection<VirtualFile> files, Module[] modules) {
         this(files, modules, true);
     }
 
-    public FileSetCompileScope(final Collection<VirtualFile> files, Module[] modules, boolean includeTestScope) {
+    public FileSetCompileScope(Collection<VirtualFile> files, Module[] modules, boolean includeTestScope) {
         myAffectedModules = modules;
         myIncludeTestScope = includeTestScope;
         ReadAction.run(() -> {
@@ -59,8 +59,8 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
         return myIncludeTestScope;
     }
 
-    @Override
     @Nonnull
+    @Override
     public Module[] getAffectedModules() {
         return myAffectedModules;
     }
@@ -69,10 +69,10 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
         return Collections.unmodifiableCollection(myRootFiles);
     }
 
-    @Override
     @Nonnull
-    public VirtualFile[] getFiles(final FileType fileType) {
-        final List<VirtualFile> files = new ArrayList<>();
+    @Override
+    public VirtualFile[] getFiles(FileType fileType) {
+        List<VirtualFile> files = new ArrayList<>();
         for (Iterator<VirtualFile> it = myRootFiles.iterator(); it.hasNext(); ) {
             VirtualFile file = it.next();
             if (!file.isValid()) {
@@ -82,10 +82,8 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
             if (file.isDirectory()) {
                 addRecursively(files, file, fileType);
             }
-            else {
-                if (fileType == null || fileType.equals(file.getFileType())) {
-                    files.add(file);
-                }
+            else if (fileType == null || fileType.equals(file.getFileType())) {
+                files.add(file);
             }
         }
         return VirtualFileUtil.toVirtualFileArray(files);

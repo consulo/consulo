@@ -18,6 +18,7 @@ package consulo.compiler.impl.internal;
 import consulo.compiler.CompileContext;
 import consulo.compiler.FileProcessingCompiler;
 import consulo.compiler.ValidityState;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 
@@ -50,6 +51,6 @@ public class FileProcessingCompilerAdapter {
         return myCompiler;
     }
 
-    public void processOutdatedItem(CompileContext context, File file, @jakarta.annotation.Nullable ValidityState state) {
+    public void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state) {
     }
 }

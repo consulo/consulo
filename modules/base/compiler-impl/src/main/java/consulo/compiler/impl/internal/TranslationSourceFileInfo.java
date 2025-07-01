@@ -40,9 +40,9 @@ public class TranslationSourceFileInfo {
     private static final FileAttribute ourSourceFileAttribute = new FileAttribute("_make_source_file_info_", 4, false);
 
     @Nullable
-    public static TranslationSourceFileInfo loadSourceInfo(final VirtualFile file) {
+    public static TranslationSourceFileInfo loadSourceInfo(VirtualFile file) {
         try {
-            final DataInputStream is = ourSourceFileAttribute.readAttribute(file);
+            DataInputStream is = ourSourceFileAttribute.readAttribute(file);
             if (is != null) {
                 try {
                     return new TranslationSourceFileInfo(is);
@@ -53,7 +53,7 @@ public class TranslationSourceFileInfo {
             }
         }
         catch (RuntimeException e) {
-            final Throwable cause = e.getCause();
+            Throwable cause = e.getCause();
             if (cause instanceof IOException) {
                 LOG.info(e); // ignore IOExceptions
             }
@@ -90,30 +90,30 @@ public class TranslationSourceFileInfo {
     }
 
     TranslationSourceFileInfo(@Nonnull DataInput in) throws IOException {
-        final int projCount = DataInputOutputUtil.readINT(in);
+        int projCount = DataInputOutputUtil.readINT(in);
         for (int idx = 0; idx < projCount; idx++) {
-            final int projectId = DataInputOutputUtil.readINT(in);
-            final long stamp = DataInputOutputUtil.readTIME(in);
+            int projectId = DataInputOutputUtil.readINT(in);
+            long stamp = DataInputOutputUtil.readTIME(in);
             updateTimestamp(projectId, stamp);
 
-            final int pathsCount = DataInputOutputUtil.readINT(in);
+            int pathsCount = DataInputOutputUtil.readINT(in);
             for (int i = 0; i < pathsCount; i++) {
-                final int path = in.readInt();
+                int path = in.readInt();
                 addOutputPath(projectId, path);
             }
         }
     }
 
-    public void save(@Nonnull final DataOutput out) throws IOException {
-        final Integer[] projects = getProjectIds().toArray(Integer[]::new);
+    public void save(@Nonnull DataOutput out) throws IOException {
+        Integer[] projects = getProjectIds().toArray(Integer[]::new);
         DataInputOutputUtil.writeINT(out, projects.length);
         for (int projectId : projects) {
             DataInputOutputUtil.writeINT(out, projectId);
             DataInputOutputUtil.writeTIME(out, getTimestamp(projectId));
-            final Object value = myProjectToOutputPathMap != null ? myProjectToOutputPathMap.get(projectId) : null;
-            if (value instanceof Integer) {
+            Object value = myProjectToOutputPathMap != null ? myProjectToOutputPathMap.get(projectId) : null;
+            if (value instanceof Integer intValue) {
                 DataInputOutputUtil.writeINT(out, 1);
-                out.writeInt(((Integer) value).intValue());
+                out.writeInt(intValue);
             }
             else if (value instanceof IntSet set) {
                 DataInputOutputUtil.writeINT(out, set.size());
@@ -132,7 +132,7 @@ public class TranslationSourceFileInfo {
         }
     }
 
-    public void updateTimestamp(final int projectId, final long stamp) {
+    public void updateTimestamp(int projectId, long stamp) {
         if (stamp > 0L) {
             if (myTimestamps == null) {
                 myTimestamps = new HashMap<>(1, 0.98f);
@@ -147,7 +147,7 @@ public class TranslationSourceFileInfo {
     }
 
     public Set<Integer> getProjectIds() {
-        final Set<Integer> result = new HashSet<>();
+        Set<Integer> result = new HashSet<>();
         if (myTimestamps != null) {
             result.addAll(myTimestamps.keySet());
         }
@@ -157,25 +157,25 @@ public class TranslationSourceFileInfo {
         return result;
     }
 
-    public void addOutputPath(final int projectId, @Nonnull VirtualFile outputPath) {
+    public void addOutputPath(int projectId, @Nonnull VirtualFile outputPath) {
         addOutputPath(projectId, FileBasedIndex.getFileId(outputPath));
     }
 
-    private void addOutputPath(final int projectId, final int outputPath) {
+    private void addOutputPath(int projectId, int outputPath) {
         if (myProjectToOutputPathMap == null) {
             myProjectToOutputPathMap = new HashMap<>(1, 0.98f);
             myProjectToOutputPathMap.put(projectId, outputPath);
         }
         else {
-            final Object val = myProjectToOutputPathMap.get(projectId);
+            Object val = myProjectToOutputPathMap.get(projectId);
             if (val == null) {
                 myProjectToOutputPathMap.put(projectId, outputPath);
             }
             else {
                 IntSet set;
-                if (val instanceof Integer) {
+                if (val instanceof Integer intVal) {
                     set = IntSets.newHashSet();
-                    set.add(((Integer) val).intValue());
+                    set.add(intVal);
                     myProjectToOutputPathMap.put(projectId, set);
                 }
                 else {
@@ -187,41 +187,42 @@ public class TranslationSourceFileInfo {
         }
     }
 
-    public boolean clearPaths(final int projectId) {
+    public boolean clearPaths(int projectId) {
         if (myProjectToOutputPathMap != null) {
-            final Object removed = myProjectToOutputPathMap.remove(projectId);
+            Object removed = myProjectToOutputPathMap.remove(projectId);
             return removed != null;
         }
         return false;
     }
 
-    long getTimestamp(final int projectId) {
+    long getTimestamp(int projectId) {
         return myTimestamps == null ? -1L : myTimestamps.getOrDefault(projectId, 0L);
     }
 
-    public void processOutputPaths(final int projectId, final TranslatingCompilerFilesMonitorImpl.Proc proc) {
+    public void processOutputPaths(int projectId, TranslatingCompilerFilesMonitorImpl.Proc proc) {
         if (myProjectToOutputPathMap != null) {
-            final Object val = myProjectToOutputPathMap.get(projectId);
-            if (val instanceof Integer) {
-                proc.execute(projectId, VirtualFileManager.getInstance().findFileById((Integer) val));
+            Object val = myProjectToOutputPathMap.get(projectId);
+            VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+            if (val instanceof Integer intVal) {
+                proc.execute(projectId, virtualFileManager.findFileById(intVal));
             }
-            else if (val instanceof IntSet) {
-                ((IntSet) val).forEach(value -> proc.execute(projectId, VirtualFileManager.getInstance().findFileById(value)));
+            else if (val instanceof IntSet intSet) {
+                intSet.forEach(value -> proc.execute(projectId, virtualFileManager.findFileById(value)));
             }
         }
     }
 
     public boolean isAssociated(int projectId, String outputPath) {
         if (myProjectToOutputPathMap != null) {
-            final Object val = myProjectToOutputPathMap.get(projectId);
-            if (val instanceof Integer) {
-                VirtualFile fileById = VirtualFileManager.getInstance().findFileById((Integer) val);
+            Object val = myProjectToOutputPathMap.get(projectId);
+            if (val instanceof Integer intVal) {
+                VirtualFile fileById = VirtualFileManager.getInstance().findFileById(intVal);
                 return FileUtil.pathsEqual(outputPath, fileById != null ? fileById.getPath() : "");
             }
-            if (val instanceof IntSet) {
+            if (val instanceof IntSet intSet) {
                 VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(outputPath);
                 int _outputPath = vf == null ? -1 : FileBasedIndex.getFileId(vf);
-                return ((IntSet) val).contains(_outputPath);
+                return intSet.contains(_outputPath);
             }
         }
         return false;

@@ -16,9 +16,9 @@
 package consulo.compiler.impl.internal.artifact;
 
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.localize.CompilerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.io.FilePermissionCopier;
@@ -34,14 +34,14 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 11:43/11.06.13
+ * @since 2013-06-11
  */
 public class DeploymentUtilImpl {
     private static final Logger LOG = Logger.getInstance(DeploymentUtilImpl.class);
 
     public static void copyFile(
-        @Nonnull final File fromFile,
-        @Nonnull final File toFile,
+        @Nonnull File fromFile,
+        @Nonnull File toFile,
         @Nonnull CompileContext context,
         @Nullable Set<String> writtenPaths,
         @Nullable FileFilter fileFilter
@@ -55,7 +55,7 @@ public class DeploymentUtilImpl {
         checkPathDoNotNavigatesUpFromFile(fromFile);
         checkPathDoNotNavigatesUpFromFile(toFile);
         if (fromFile.isDirectory()) {
-            final File[] fromFiles = fromFile.listFiles();
+            File[] fromFiles = fromFile.listFiles();
             toFile.mkdirs();
             for (File file : fromFiles) {
                 copyFile(file, new File(toFile, file.getName()), context, writtenPaths, fileFilter);
@@ -65,7 +65,7 @@ public class DeploymentUtilImpl {
         if (toFile.isDirectory()) {
             context.addMessage(
                 CompilerMessageCategory.ERROR,
-                CompilerBundle.message("message.text.destination.is.directory", createCopyErrorMessage(fromFile, toFile)),
+                CompilerLocalize.messageTextDestinationIsDirectory(createCopyErrorMessage(fromFile, toFile)).get(),
                 null,
                 -1,
                 -1
@@ -87,8 +87,8 @@ public class DeploymentUtilImpl {
             }
             return;
         }
-        context.getProgressIndicator().setText("Copying files");
-        context.getProgressIndicator().setText2(fromFile.getPath());
+        context.getProgressIndicator().setTextValue(LocalizeValue.localizeTODO("Copying files"));
+        context.getProgressIndicator().setText2Value(LocalizeValue.of(fromFile.getPath()));
         try {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Copy file '" + fromFile + "' to '" + toFile + "'");
@@ -125,7 +125,7 @@ public class DeploymentUtilImpl {
         }
     }
 
-    private static String createCopyErrorMessage(final File fromFile, final File toFile) {
+    private static String createCopyErrorMessage(File fromFile, File toFile) {
         return CompilerLocalize.messageTextErrorCopyingFileToFile(
             FileUtil.toSystemDependentName(fromFile.getPath()),
             FileUtil.toSystemDependentName(toFile.getPath())

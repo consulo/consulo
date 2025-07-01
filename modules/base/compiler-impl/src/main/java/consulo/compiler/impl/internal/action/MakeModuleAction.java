@@ -16,9 +16,9 @@
 package consulo.compiler.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.action.CompileActionBase;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
 import consulo.logging.Logger;
@@ -28,7 +28,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "MakeModule")
@@ -56,26 +55,25 @@ public class MakeModuleAction extends CompileActionBase {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();
         if (!presentation.isEnabled()) {
             return;
         }
-        final DataContext dataContext = event.getDataContext();
-        final Module module = dataContext.getData(Module.KEY);
+        DataContext dataContext = event.getDataContext();
+        Module module = dataContext.getData(Module.KEY);
         Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
-        final boolean isEnabled = module != null || modules != null;
+        boolean isEnabled = module != null || modules != null;
         presentation.setEnabled(isEnabled);
-        final String actionName = getTemplatePresentation().getTextWithMnemonic();
+        String actionName = getTemplatePresentation().getTextWithMnemonic();
 
         String presentationText;
         if (modules != null) {
             String text = actionName;
             for (int i = 0; i < modules.length; i++) {
                 if (text.length() > 30) {
-                    text = CompilerBundle.message("action.make.selected.modules.text");
+                    text = CompilerLocalize.actionMakeSelectedModulesText().get();
                     break;
                 }
                 Module toMake = modules[i];

@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl.internal;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.compiler.FileProcessingCompiler;
 import consulo.util.collection.Maps;
 import consulo.util.io.FileUtil;
@@ -31,8 +31,8 @@ class CacheDeferredUpdater {
     private final Map<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> myData =
         Maps.newHashMap(FileUtil.FILE_HASHING_STRATEGY);
 
-    public void addFileForUpdate(final FileProcessingCompiler.ProcessingItem item, FileProcessingCompilerStateCache cache) {
-        final File file = item.getFile();
+    public void addFileForUpdate(FileProcessingCompiler.ProcessingItem item, FileProcessingCompilerStateCache cache) {
+        File file = item.getFile();
         List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>> list = myData.get(file);
         if (list == null) {
             list = new ArrayList<>();
@@ -42,12 +42,13 @@ class CacheDeferredUpdater {
     }
 
     public void doUpdate() throws IOException {
-        final IOException[] ex = {null};
-        ApplicationManager.getApplication().runReadAction(() -> {
+        IOException[] ex = {null};
+        Application.get().runReadAction(() -> {
             try {
-                for (Map.Entry<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> entry : myData.entrySet()) {
+                for (Map.Entry<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> entry
+                    : myData.entrySet()) {
                     for (Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem> pair : entry.getValue()) {
-                        final FileProcessingCompiler.ProcessingItem item = pair.getSecond();
+                        FileProcessingCompiler.ProcessingItem item = pair.getSecond();
                         pair.getFirst().update(entry.getKey(), item.getValidityState());
                     }
                 }

@@ -41,7 +41,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
     private final Project myProject;
 
     @Inject
-    public ExcludeCompilerOutputPolicy(final Project project) {
+    public ExcludeCompilerOutputPolicy(Project project) {
         myProject = project;
     }
 
@@ -57,12 +57,12 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
 
     @Nonnull
     @Override
-    public VirtualFilePointer[] getExcludeRootsForModule(@Nonnull final ModuleRootLayer moduleRootLayer) {
+    public VirtualFilePointer[] getExcludeRootsForModule(@Nonnull ModuleRootLayer moduleRootLayer) {
         ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(moduleRootLayer.getModule());
-        List<VirtualFilePointer> result = new ArrayList<VirtualFilePointer>(3);
+        List<VirtualFilePointer> result = new ArrayList<>(3);
 
         if (manager.isInheritedCompilerOutput()) {
-            final VirtualFilePointer compilerOutputPointer = CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
+            VirtualFilePointer compilerOutputPointer = CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
             for (ContentEntry contentEntry : moduleRootLayer.getContentEntries()) {
                 if (compilerOutputPointer.getUrl().contains(contentEntry.getUrl())) {
                     result.add(compilerOutputPointer);

@@ -15,10 +15,11 @@
  */
 package consulo.compiler.impl.internal;
 
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Computable;
-import consulo.compiler.*;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompilerMessage;
+import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
@@ -27,8 +28,10 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.util.function.Supplier;
 
 public class DummyCompileContext implements CompileContext {
     protected DummyCompileContext() {
@@ -54,7 +57,7 @@ public class DummyCompileContext implements CompileContext {
     public void addMessage(
         CompilerMessageCategory category,
         String message,
-        @jakarta.annotation.Nullable String url,
+        @Nullable String url,
         int lineNum,
         int columnNum,
         Navigatable navigatable
@@ -101,14 +104,11 @@ public class DummyCompileContext implements CompileContext {
     }
 
     @Override
-    public VirtualFile getModuleOutputDirectory(final Module module) {
-        return ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
-            @Override
-            public VirtualFile compute() {
-                return ModuleCompilerPathsManager.getInstance(module)
-                    .getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
-            }
-        });
+    public VirtualFile getModuleOutputDirectory(Module module) {
+        return module.getApplication().runReadAction(
+            (Supplier<VirtualFile>) () -> ModuleCompilerPathsManager.getInstance(module)
+                .getCompilerOutput(ProductionContentFolderTypeProvider.getInstance())
+        );
     }
 
     @Override
@@ -121,7 +121,7 @@ public class DummyCompileContext implements CompileContext {
         return null;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
         return null;

@@ -17,7 +17,7 @@ package consulo.compiler;
 
 /**
  * @author VISTALL
- * @since 07/05/2023
+ * @since 2023-05-07
  */
 public record ModuleAdditionalOutputDirectory(String path, boolean testScope) {
 }

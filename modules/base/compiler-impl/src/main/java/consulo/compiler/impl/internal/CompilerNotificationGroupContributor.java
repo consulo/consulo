@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 2022-08-08
  */
 @ExtensionImpl
 public class CompilerNotificationGroupContributor implements NotificationGroupContributor {

@@ -27,9 +27,9 @@ import java.util.Set;
  * @author nik
  */
 public class DependentArchivesEvaluator {
-    private final Set<ArchivePackageInfo> myArchivePackageInfos = new LinkedHashSet<ArchivePackageInfo>();
+    private final Set<ArchivePackageInfo> myArchivePackageInfos = new LinkedHashSet<>();
 
-    public void addArchiveWithDependencies(final ArchivePackageInfo archivePackageInfo) {
+    public void addArchiveWithDependencies(ArchivePackageInfo archivePackageInfo) {
         if (myArchivePackageInfos.add(archivePackageInfo)) {
             for (ArchiveDestinationInfo destination : archivePackageInfo.getArchiveDestinations()) {
                 addArchiveWithDependencies(destination.getArchivePackageInfo());

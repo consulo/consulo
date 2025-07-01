@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 17/04/2023
+ * @since 2023-04-17
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface CompilerRunner {

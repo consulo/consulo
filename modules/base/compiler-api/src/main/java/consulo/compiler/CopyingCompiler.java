@@ -15,7 +15,8 @@
  */
 package consulo.compiler;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.scope.CompileScope;
 import consulo.index.io.data.IOUtil;
 import consulo.util.io.FilePermissionCopier;
@@ -23,6 +24,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -41,21 +43,21 @@ public abstract class CopyingCompiler implements PackagingCompiler {
     public abstract String getDestinationPath(CompileContext context, VirtualFile sourceFile);
 
     @Override
-    public final void processOutdatedItem(CompileContext context, File file, @jakarta.annotation.Nullable ValidityState state) {
+    public final void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state) {
         if (state != null) {
-            final String destinationPath = ((DestinationFileInfo) state).getDestinationPath();
+            String destinationPath = ((DestinationFileInfo) state).getDestinationPath();
             new File(destinationPath).delete();
         }
     }
 
     @Override
     @Nonnull
-    public final ProcessingItem[] getProcessingItems(final CompileContext context) {
-        return ApplicationManager.getApplication().runReadAction((Supplier<ProcessingItem[]>) () -> {
-            final VirtualFile[] filesToCopy = getFilesToCopy(context);
-            final ProcessingItem[] items = new ProcessingItem[filesToCopy.length];
+    public final ProcessingItem[] getProcessingItems(CompileContext context) {
+        return Application.get().runReadAction((Supplier<ProcessingItem[]>) () -> {
+            VirtualFile[] filesToCopy = getFilesToCopy(context);
+            ProcessingItem[] items = new ProcessingItem[filesToCopy.length];
             for (int idx = 0; idx < filesToCopy.length; idx++) {
-                final VirtualFile file = filesToCopy[idx];
+                VirtualFile file = filesToCopy[idx];
                 items[idx] = new CopyItem(file, getDestinationPath(context, file));
             }
             return items;
@@ -64,10 +66,10 @@ public abstract class CopyingCompiler implements PackagingCompiler {
 
     @Override
     public ProcessingItem[] process(CompileContext context, ProcessingItem[] items) {
-        final List<ProcessingItem> successfullyProcessed = new ArrayList<ProcessingItem>(items.length);
+        List<ProcessingItem> successfullyProcessed = new ArrayList<>(items.length);
         for (ProcessingItem item : items) {
-            final CopyItem copyItem = (CopyItem) item;
-            final String toPath = copyItem.getDestinationPath();
+            CopyItem copyItem = (CopyItem) item;
+            String toPath = copyItem.getDestinationPath();
             try {
                 if (isDirectoryCopying()) {
                     FileUtil.copyDir(copyItem.getFile(), new File(toPath), FilePermissionCopier.BY_NIO2);
@@ -81,7 +83,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
             catch (IOException e) {
                 context.addMessage(
                     CompilerMessageCategory.ERROR,
-                    CompilerBundle.message("error.copying", item.getFile().getPath(), toPath, e.getMessage()),
+                    CompilerLocalize.errorCopying(item.getFile().getPath(), toPath, e.getMessage()).get(),
                     null,
                     -1,
                     -1
@@ -98,7 +100,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
     @Override
     @Nonnull
     public String getDescription() {
-        return CompilerBundle.message("file.copying.compiler.description");
+        return CompilerLocalize.fileCopyingCompilerDescription().get();
     }
 
     @Override
@@ -147,11 +149,12 @@ public abstract class CopyingCompiler implements PackagingCompiler {
 
         @Override
         public boolean equalsTo(ValidityState otherState) {
-            if (!(otherState instanceof DestinationFileInfo)) {
+            //noinspection SimplifiableIfStatement
+            if (!(otherState instanceof DestinationFileInfo destinationFileInfo)) {
                 return false;
             }
-            DestinationFileInfo destinationFileInfo = (DestinationFileInfo) otherState;
-            return (myFileExists == destinationFileInfo.myFileExists) && (destinationPath.equals(destinationFileInfo.destinationPath));
+            return myFileExists == destinationFileInfo.myFileExists
+                && destinationPath.equals(destinationFileInfo.destinationPath);
         }
 
         @Override

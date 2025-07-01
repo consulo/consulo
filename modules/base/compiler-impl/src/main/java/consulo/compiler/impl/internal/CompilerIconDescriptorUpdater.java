@@ -16,8 +16,8 @@
 package consulo.compiler.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.compiler.CompilerManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import consulo.virtualFileSystem.VirtualFile;
@@ -51,12 +51,12 @@ public class CompilerIconDescriptorUpdater implements IconDescriptorUpdater {
         VirtualFile vFile = PsiUtilCore.getVirtualFile(element);
 
         if (vFile != null && myFileIndexFacade.isInSource(vFile) && myCompilerManager.isExcludedFromCompilation(vFile)) {
-            iconDescriptor.addLayerIcon(AllIcons.Nodes.ExcludedFromCompile);
+            iconDescriptor.addLayerIcon(PlatformIconGroup.nodesExcludedfromcompile());
         }
     }
 
     @Deprecated
-    public static boolean isExcluded(final VirtualFile vFile, final Project project) {
+    public static boolean isExcluded(VirtualFile vFile, Project project) {
         return vFile != null &&
             FileIndexFacade.getInstance(project).isInSource(vFile) &&
             CompilerManager.getInstance(project).isExcludedFromCompilation(vFile);

@@ -20,7 +20,6 @@ import consulo.index.io.PersistentHashMap;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.IOUtil;
 import consulo.util.io.FileUtil;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -57,7 +56,7 @@ public abstract class StateCache<T> {
     private PersistentHashMap<File, T> myMap;
     private final File myBaseFile;
 
-    public StateCache(@NonNls File storePath) throws IOException {
+    public StateCache(File storePath) throws IOException {
         myBaseFile = storePath;
         myMap = createMap(storePath);
     }
@@ -90,7 +89,7 @@ public abstract class StateCache<T> {
         return true;
     }
 
-    public void update(@NonNls File file, T state) throws IOException {
+    public void update(File file, T state) throws IOException {
         if (state != null) {
             myMap.put(file, state);
         }
@@ -116,15 +115,15 @@ public abstract class StateCache<T> {
     }
 
 
-    private PersistentHashMap<File, T> createMap(final File file) throws IOException {
+    private PersistentHashMap<File, T> createMap(File file) throws IOException {
         return new PersistentHashMap<>(file, FileKeyDescriptor.INSTANCE, new DataExternalizer<T>() {
             @Override
-            public void save(final DataOutput out, final T value) throws IOException {
+            public void save(DataOutput out, T value) throws IOException {
                 StateCache.this.write(value, out);
             }
 
             @Override
-            public T read(final DataInput in) throws IOException {
+            public T read(DataInput in) throws IOException {
                 return StateCache.this.read(in);
             }
         });

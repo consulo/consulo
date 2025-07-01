@@ -15,7 +15,7 @@
  */
 package consulo.compiler.scope;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.FileIndex;
 import consulo.module.Module;
@@ -29,7 +29,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -39,17 +38,19 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 /**
+ * This class is similar to {@link ModuleCompileScope} with one difference: it doesn't support source roots.
+ * Compilation works from module root.
+ *
  * @author VISTALL
- * @since 17.08.14
- * <p>
- * This class is looks like {@link ModuleCompileScope} with one different it dont supported source roots, compilation works from module root
+ * @since 2014-08-17
  */
 public class ModuleRootCompileScope extends FileIndexCompileScope {
     private final Project myProject;
     private final Set<Module> myScopeModules;
     private final Module[] myModules;
 
-    public ModuleRootCompileScope(final Module module, boolean includeDependentModules) {
+    @RequiredReadAction
+    public ModuleRootCompileScope(Module module, boolean includeDependentModules) {
         myProject = module.getProject();
         myScopeModules = new HashSet<>();
         if (includeDependentModules) {
@@ -61,7 +62,8 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
         myModules = ModuleManager.getInstance(myProject).getModules();
     }
 
-    public ModuleRootCompileScope(Project project, final Module[] modules, boolean includeDependentModules) {
+    @RequiredReadAction
+    public ModuleRootCompileScope(Project project, Module[] modules, boolean includeDependentModules) {
         myProject = project;
         myScopeModules = new HashSet<>();
         for (Module module : modules) {
@@ -80,7 +82,7 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
 
     private void buildScopeModulesSet(Module module) {
         myScopeModules.add(module);
-        final Module[] dependencies = ModuleRootManager.getInstance(module).getDependencies();
+        Module[] dependencies = ModuleRootManager.getInstance(module).getDependencies();
         for (Module dependency : dependencies) {
             if (!myScopeModules.contains(dependency)) { // may be in case of module circular dependencies
                 buildScopeModulesSet(dependency);
@@ -96,36 +98,36 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
 
     @Override
     protected FileIndex[] getFileIndices() {
-        final FileIndex[] indices = new FileIndex[myScopeModules.size()];
+        FileIndex[] indices = new FileIndex[myScopeModules.size()];
         int idx = 0;
-        for (final Module module : myScopeModules) {
+        for (Module module : myScopeModules) {
             indices[idx++] = ModuleRootManager.getInstance(module).getFileIndex();
         }
         return indices;
     }
 
-    @Override
     @Nonnull
-    public VirtualFile[] getFiles(final FileType fileType) {
-        final List<VirtualFile> files = new ArrayList<>();
-        final FileIndex[] fileIndices = getFileIndices();
-        for (final FileIndex fileIndex : fileIndices) {
+    @Override
+    public VirtualFile[] getFiles(FileType fileType) {
+        List<VirtualFile> files = new ArrayList<>();
+        FileIndex[] fileIndices = getFileIndices();
+        for (FileIndex fileIndex : fileIndices) {
             fileIndex.iterateContent(new ModuleRootCompilerContentIterator(fileType, files));
         }
         return VirtualFileUtil.toVirtualFileArray(files);
     }
 
     @Override
-    public boolean belongs(final String url) {
+    public boolean belongs(String url) {
         if (myScopeModules.isEmpty()) {
             return false; // optimization
         }
         Module candidateModule = null;
         int maxUrlLength = 0;
-        final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-        for (final Module module : myModules) {
-            final String[] contentRootUrls = getModuleContentUrls(module);
-            for (final String contentRootUrl : contentRootUrls) {
+        ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+        for (Module module : myModules) {
+            String[] contentRootUrls = getModuleContentUrls(module);
+            for (String contentRootUrl : contentRootUrls) {
                 if (contentRootUrl.length() < maxUrlLength) {
                     continue;
                 }
@@ -136,20 +138,15 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
                     if (candidateModule == null) {
                         candidateModule = module;
                     }
-                    else {
+                    else if (!candidateModule.equals(module)) {
                         // the same content root exists in several modules
-                        if (!candidateModule.equals(module)) {
-                            candidateModule = ApplicationManager.getApplication().runReadAction(new Supplier<Module>() {
-                                @Override
-                                public Module get() {
-                                    final VirtualFile contentRootFile = VirtualFileManager.getInstance().findFileByUrl(contentRootUrl);
-                                    if (contentRootFile != null) {
-                                        return projectFileIndex.getModuleForFile(contentRootFile);
-                                    }
-                                    return null;
-                                }
-                            });
-                        }
+                        candidateModule = module.getApplication().runReadAction((Supplier<Module>) () -> {
+                            VirtualFile contentRootFile = VirtualFileManager.getInstance().findFileByUrl(contentRootUrl);
+                            if (contentRootFile != null) {
+                                return projectFileIndex.getModuleForFile(contentRootFile);
+                            }
+                            return null;
+                        });
                     }
                 }
                 else {
@@ -177,11 +174,11 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
         return false;
     }
 
-    private static boolean isUrlUnderRoot(final String url, final String root) {
+    private static boolean isUrlUnderRoot(String url, String root) {
         return (url.length() > root.length()) && url.charAt(root.length()) == '/' && FileUtil.startsWith(url, root);
     }
 
-    private String[] getModuleContentUrls(final Module module) {
+    private String[] getModuleContentUrls(Module module) {
         return new String[]{module.getModuleDirUrl()};
     }
 }

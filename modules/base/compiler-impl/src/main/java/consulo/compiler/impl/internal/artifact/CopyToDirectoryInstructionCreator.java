@@ -54,12 +54,12 @@ public class CopyToDirectoryInstructionCreator extends IncrementalCompilerInstru
     @Override
     public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
         String jarOutputPath = myOutputPath + "/" + archiveFileName;
-        final ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
+        ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
         if (!myContext.registerJarFile(archivePackageInfo, jarOutputPath)) {
             return new SkipAllInstructionCreator(myContext);
         }
         VirtualFile outputFile = outputChild(archiveFileName);
-        final ExplodedDestinationInfo destination = new ExplodedDestinationInfo(jarOutputPath, outputFile);
+        ExplodedDestinationInfo destination = new ExplodedDestinationInfo(jarOutputPath, outputFile);
         archivePackageInfo.addDestination(destination);
         return new PackIntoArchiveInstructionCreator(myContext, archivePackageInfo, "", destination);
     }

@@ -27,7 +27,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 28/11/2021
+ * @since 2021-11-28
  */
 public class DummyProgressIndicator implements ProgressIndicatorEx {
     @Override

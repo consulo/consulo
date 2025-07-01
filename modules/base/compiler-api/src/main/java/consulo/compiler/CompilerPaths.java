@@ -33,10 +33,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -46,7 +43,7 @@ public class CompilerPaths {
     private static final Logger LOG = Logger.getInstance(CompilerPaths.class);
 
     private static volatile String ourSystemPath;
-    public static final Comparator<String> URLS_COMPARATOR = (o1, o2) -> o1.compareTo(o2);
+    public static final Comparator<String> URLS_COMPARATOR = String::compareTo;
     private static final String DEFAULT_GENERATED_DIR_NAME = "generated";
 
     /**
@@ -74,7 +71,7 @@ public class CompilerPaths {
      * @param project
      * @return a root directory where compiler caches for the given project are stored
      */
-    public static File getCacheStoreDirectory(final Project project) {
+    public static File getCacheStoreDirectory(Project project) {
         //noinspection HardCodedStringLiteral
         return new File(getCompilerSystemDirectory(project), ".caches");
     }
@@ -100,7 +97,7 @@ public class CompilerPaths {
     }
 
     @Nullable
-    private static String getPresentableName(final Project project) {
+    private static String getPresentableName(Project project) {
         if (project.isDefault()) {
             return project.getName();
         }
@@ -115,7 +112,7 @@ public class CompilerPaths {
             projectName = projectName.substring(0, projectName.length() - 1);
         }
 
-        final int lastSlash = projectName.lastIndexOf('/');
+        int lastSlash = projectName.lastIndexOf('/');
         if (lastSlash >= 0 && lastSlash + 1 < projectName.length()) {
             projectName = projectName.substring(lastSlash + 1);
         }
@@ -126,15 +123,15 @@ public class CompilerPaths {
 
     public static File getCompilerSystemDirectory() {
         //noinspection HardCodedStringLiteral
-        final String systemPath =
+        String systemPath =
             ourSystemPath != null ? ourSystemPath : (ourSystemPath = FileUtil.toCanonicalPath(ContainerPathManager.get().getSystemPath()));
         return new File(systemPath, "compiler");
     }
 
     @Nonnull
-    public static String getGenerationOutputPath(IntermediateOutputCompiler compiler, Module module, final boolean forTestSources) {
-        final String generatedCompilerDirectoryPath = getGeneratedDataDirectory(module.getProject(), compiler).getPath();
-        String moduleHash = null;
+    public static String getGenerationOutputPath(IntermediateOutputCompiler compiler, Module module, boolean forTestSources) {
+        String generatedCompilerDirectoryPath = getGeneratedDataDirectory(module.getProject(), compiler).getPath();
+        String moduleHash;
         String moduleDirPath = module.getModuleDirPath();
         if (moduleDirPath != null) {
             moduleHash = Integer.toHexString(moduleDirPath.hashCode());
@@ -142,11 +139,9 @@ public class CompilerPaths {
         else {
             moduleHash = module.getProject().getLocationHash();
         }
-        final String moduleDir = module.getName().replaceAll("\\s+", "_") + "" + moduleHash;
-        return generatedCompilerDirectoryPath.replace(
-            File.separatorChar,
-            '/'
-        ) + "/" + moduleDir + "/" + (forTestSources ? "test" : "production");
+        String moduleDir = module.getName().replaceAll("\\s+", "_") + "" + moduleHash;
+        return generatedCompilerDirectoryPath.replace(File.separatorChar, '/') +
+            "/" + moduleDir + "/" + (forTestSources ? "test" : "production");
     }
 
     /**
@@ -156,11 +151,11 @@ public class CompilerPaths {
      * Null is returned if output directory is not specified or is not valid
      */
     @Nullable
-    public static VirtualFile getModuleOutputDirectory(final Module module, boolean forTestClasses) {
-        final ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
+    public static VirtualFile getModuleOutputDirectory(Module module, boolean forTestClasses) {
+        ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
         VirtualFile outPath;
         if (forTestClasses) {
-            final VirtualFile path = manager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
+            VirtualFile path = manager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
             if (path != null) {
                 outPath = path;
             }
@@ -187,29 +182,31 @@ public class CompilerPaths {
      */
     @Nullable
     @Deprecated
-    public static String getModuleOutputPath(final Module module, final boolean forTestClasses) {
-        final String outPathUrl;
-        final Application application = Application.get();
-        final ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
+    public static String getModuleOutputPath(@Nonnull Module module, boolean forTestClasses) {
+        Application application = module.getApplication();
+        ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
 
+        String outPathUrl;
         if (application.isDispatchThread()) {
-            outPathUrl =
-                pathsManager.getCompilerOutputUrl(forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance());
+            outPathUrl = pathsManager.getCompilerOutputUrl(
+                forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()
+            );
         }
         else {
-            outPathUrl = application.runReadAction(
-                (Supplier<String>) () -> pathsManager.getCompilerOutputUrl(forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()));
+            outPathUrl = application.runReadAction((Supplier<String>) () -> pathsManager.getCompilerOutputUrl(
+                forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()
+            ));
         }
 
         return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
     }
 
     @Nullable
-    public static String getModuleOutputPath(final Module module, final ContentFolderTypeProvider contentFolderType) {
-        final String outPathUrl;
-        final Application application = Application.get();
-        final ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
+    public static String getModuleOutputPath(@Nonnull Module module, ContentFolderTypeProvider contentFolderType) {
+        Application application = module.getApplication();
+        ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
 
+        String outPathUrl;
         if (application.isDispatchThread()) {
             outPathUrl = pathsManager.getCompilerOutputUrl(contentFolderType);
         }
@@ -226,9 +223,11 @@ public class CompilerPaths {
             return ArrayUtil.EMPTY_STRING_ARRAY;
         }
 
-        final Set<String> outputPaths = new LinkedHashSet<>();
+        Set<String> outputPaths = new LinkedHashSet<>();
         for (Module module : modules) {
-            for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
+            List<ContentFolderTypeProvider> contentFolderTypes =
+                ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest());
+            for (ContentFolderTypeProvider contentFolderType : contentFolderTypes) {
                 String outputPathUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
                 if (outputPathUrl != null) {
                     outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
@@ -239,14 +238,16 @@ public class CompilerPaths {
         return ArrayUtil.toStringArray(outputPaths);
     }
 
-    public static VirtualFile[] getOutputDirectories(final Module[] modules) {
+    public static VirtualFile[] getOutputDirectories(Module[] modules) {
         if (modules.length == 0) {
             return VirtualFile.EMPTY_ARRAY;
         }
 
-        final Set<VirtualFile> dirs = new LinkedHashSet<>();
+        Set<VirtualFile> dirs = new LinkedHashSet<>();
         for (Module module : modules) {
-            for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
+            List<ContentFolderTypeProvider> contentFolderTypes =
+                ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest());
+            for (ContentFolderTypeProvider contentFolderType : contentFolderTypes) {
                 VirtualFile virtualFile = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
                 if (virtualFile != null) {
                     dirs.add(virtualFile);

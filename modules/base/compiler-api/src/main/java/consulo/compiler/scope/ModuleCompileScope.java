@@ -16,7 +16,7 @@
 package consulo.compiler.scope;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.FileIndex;
 import consulo.module.Module;
@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
@@ -48,7 +47,7 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     private final boolean myIncludeTestScope;
 
     @RequiredReadAction
-    public ModuleCompileScope(final Module module, boolean includeDependentModules, boolean includeTestScope) {
+    public ModuleCompileScope(Module module, boolean includeDependentModules, boolean includeTestScope) {
         myProject = module.getProject();
         myIncludeTestScope = includeTestScope;
         myScopeModules = new HashSet<>();
@@ -62,7 +61,7 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     }
 
     @RequiredReadAction
-    public ModuleCompileScope(Project project, final Module[] modules, boolean includeDependentModules, boolean includeTestScope) {
+    public ModuleCompileScope(Project project, Module[] modules, boolean includeDependentModules, boolean includeTestScope) {
         myProject = project;
         myScopeModules = new HashSet<>();
         myIncludeTestScope = includeTestScope;
@@ -82,7 +81,7 @@ public class ModuleCompileScope extends FileIndexCompileScope {
 
     private void buildScopeModulesSet(Module module) {
         myScopeModules.add(module);
-        final Module[] dependencies = ModuleRootManager.getInstance(module).getDependencies();
+        Module[] dependencies = ModuleRootManager.getInstance(module).getDependencies();
         for (Module dependency : dependencies) {
             if (!myScopeModules.contains(dependency)) { // may be in case of module circular dependencies
                 buildScopeModulesSet(dependency);
@@ -98,9 +97,9 @@ public class ModuleCompileScope extends FileIndexCompileScope {
 
     @Override
     protected FileIndex[] getFileIndices() {
-        final FileIndex[] indices = new FileIndex[myScopeModules.size()];
+        FileIndex[] indices = new FileIndex[myScopeModules.size()];
         int idx = 0;
-        for (final Module module : myScopeModules) {
+        for (Module module : myScopeModules) {
             indices[idx++] = ModuleRootManager.getInstance(module).getFileIndex();
         }
         return indices;
@@ -112,16 +111,16 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     }
 
     @Override
-    public boolean belongs(final String url) {
+    public boolean belongs(String url) {
         if (myScopeModules.isEmpty()) {
             return false; // optimization
         }
         Module candidateModule = null;
         int maxUrlLength = 0;
-        final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-        for (final Module module : myModules) {
-            final String[] contentRootUrls = getModuleContentUrls(module);
-            for (final String contentRootUrl : contentRootUrls) {
+        ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+        for (Module module : myModules) {
+            String[] contentRootUrls = getModuleContentUrls(module);
+            for (String contentRootUrl : contentRootUrls) {
                 if (contentRootUrl.length() < maxUrlLength) {
                     continue;
                 }
@@ -132,20 +131,15 @@ public class ModuleCompileScope extends FileIndexCompileScope {
                     if (candidateModule == null) {
                         candidateModule = module;
                     }
-                    else {
+                    else if (!candidateModule.equals(module)) {
                         // the same content root exists in several modules
-                        if (!candidateModule.equals(module)) {
-                            candidateModule = ApplicationManager.getApplication().runReadAction(new Supplier<Module>() {
-                                @Override
-                                public Module get() {
-                                    final VirtualFile contentRootFile = VirtualFileManager.getInstance().findFileByUrl(contentRootUrl);
-                                    if (contentRootFile != null) {
-                                        return projectFileIndex.getModuleForFile(contentRootFile);
-                                    }
-                                    return null;
-                                }
-                            });
-                        }
+                        candidateModule = Application.get().runReadAction((Supplier<Module>) () -> {
+                            VirtualFile contentRootFile = VirtualFileManager.getInstance().findFileByUrl(contentRootUrl);
+                            if (contentRootFile != null) {
+                                return projectFileIndex.getModuleForFile(contentRootFile);
+                            }
+                            return null;
+                        });
                     }
                 }
                 else {
@@ -156,14 +150,14 @@ public class ModuleCompileScope extends FileIndexCompileScope {
         }
 
         if (candidateModule != null && myScopeModules.contains(candidateModule)) {
-            final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(candidateModule);
-            final String[] excludeRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderTypeProvider.onlyExcluded());
+            ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(candidateModule);
+            String[] excludeRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderTypeProvider.onlyExcluded());
             for (String excludeRootUrl : excludeRootUrls) {
                 if (isUrlUnderRoot(url, excludeRootUrl)) {
                     return false;
                 }
             }
-            final String[] sourceRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderTypeProvider.allExceptExcluded());
+            String[] sourceRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderTypeProvider.allExceptExcluded());
             for (String sourceRootUrl : sourceRootUrls) {
                 if (isUrlUnderRoot(url, sourceRootUrl)) {
                     return true;
@@ -174,13 +168,13 @@ public class ModuleCompileScope extends FileIndexCompileScope {
         return false;
     }
 
-    private static boolean isUrlUnderRoot(final String url, final String root) {
+    private static boolean isUrlUnderRoot(String url, String root) {
         return (url.length() > root.length()) && url.charAt(root.length()) == '/' && FileUtil.startsWith(url, root);
     }
 
     private final Map<Module, String[]> myContentUrlsCache = new HashMap<>();
 
-    private String[] getModuleContentUrls(final Module module) {
+    private String[] getModuleContentUrls(Module module) {
         String[] contentRootUrls = myContentUrlsCache.get(module);
         if (contentRootUrls == null) {
             contentRootUrls = ModuleRootManager.getInstance(module).getContentRootUrls();

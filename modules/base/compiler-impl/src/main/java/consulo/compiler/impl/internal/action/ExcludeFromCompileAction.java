@@ -15,8 +15,8 @@
  */
 package consulo.compiler.impl.internal.action;
 
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.setting.ExcludeEntryDescription;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -25,7 +25,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
@@ -36,13 +36,13 @@ public abstract class ExcludeFromCompileAction extends AnAction {
     private final Project myProject;
 
     public ExcludeFromCompileAction(Project project) {
-        super(CompilerBundle.message("actions.exclude.from.compile.text"));
+        super(CompilerLocalize.actionsExcludeFromCompileText());
         myProject = project;
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         VirtualFile file = getFile();
 
         if (file != null && file.isValid()) {
@@ -55,11 +55,10 @@ public abstract class ExcludeFromCompileAction extends AnAction {
     @Nullable
     protected abstract VirtualFile getFile();
 
-    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
-        final Presentation presentation = e.getPresentation();
-        final boolean isApplicable = getFile() != null;
+        Presentation presentation = e.getPresentation();
+        boolean isApplicable = getFile() != null;
         presentation.setEnabled(isApplicable);
         presentation.setVisible(isApplicable);
     }

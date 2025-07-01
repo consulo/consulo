@@ -29,7 +29,7 @@ import java.util.Locale;
 
 /**
  * @author VISTALL
- * @since 18:27/20.10.13
+ * @since 2013-10-20
  */
 @ServiceAPI(ComponentScope.MODULE)
 public abstract class ModuleCompilerPathsManager {

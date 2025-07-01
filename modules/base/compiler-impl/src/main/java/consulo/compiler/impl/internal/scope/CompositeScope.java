@@ -52,8 +52,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     }
 
     private void addScope(CompileScope scope) {
-        if (scope instanceof CompositeScope) {
-            final CompositeScope compositeScope = (CompositeScope) scope;
+        if (scope instanceof CompositeScope compositeScope) {
             for (CompileScope childScope : compositeScope.myScopes) {
                 addScope(childScope);
             }
@@ -68,12 +67,12 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
         }
     }
 
-    @Override
     @Nonnull
+    @Override
     public VirtualFile[] getFiles(FileType fileType) {
         Set<VirtualFile> allFiles = new HashSet<>();
         for (CompileScope scope : myScopes) {
-            final VirtualFile[] files = scope.getFiles(fileType);
+            VirtualFile[] files = scope.getFiles(fileType);
             if (files.length > 0) {
                 ContainerUtil.addAll(allFiles, files);
             }
@@ -91,11 +90,11 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
         return false;
     }
 
-    @Override
     @Nonnull
+    @Override
     public Module[] getAffectedModules() {
         Set<Module> modules = new HashSet<>();
-        for (final CompileScope compileScope : myScopes) {
+        for (CompileScope compileScope : myScopes) {
             ContainerUtil.addAll(modules, compileScope.getAffectedModules());
         }
         return modules.toArray(new Module[modules.size()]);

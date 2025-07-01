@@ -21,7 +21,7 @@ import consulo.compiler.TranslatingCompiler;
  * Base interface for resource compiler implementation. Used for filtering compiler extensions
  *
  * @author VISTALL
- * @since 16/10/2022
+ * @since 2022-10-16
  */
 public interface ResourceCompiler extends TranslatingCompiler {
 }

@@ -32,7 +32,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 17:03/26.05.13
+ * @since 2013-05-26
  */
 @Deprecated
 @DeprecationInfo(value = "Use CompilerConfiguration for projects, and ModuleCompilerPathsManager for modules")
@@ -41,7 +41,7 @@ import jakarta.annotation.Nullable;
 @ServiceImpl
 public class CompilerPathsManager {
     @Nonnull
-    public static CompilerPathsManager getInstance(@Nonnull final Project project) {
+    public static CompilerPathsManager getInstance(@Nonnull Project project) {
         return project.getComponent(CompilerPathsManager.class);
     }
 

@@ -37,7 +37,8 @@ public class CompositeDependencyCache implements DependencyCache {
     private final List<DependencyCache> myDependencyCaches = new ArrayList<>();
 
     public CompositeDependencyCache(Project project, String cacheDir) {
-        project.getExtensionPoint(DependencyCacheFactory.class).forEach(factory -> myDependencyCaches.add(factory.create(cacheDir)));
+        project.getExtensionPoint(DependencyCacheFactory.class)
+            .forEach(factory -> myDependencyCaches.add(factory.create(cacheDir)));
     }
 
     @Override

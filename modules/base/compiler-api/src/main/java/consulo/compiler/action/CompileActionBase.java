@@ -40,11 +40,11 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
         super(text, description, icon);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final DataContext dataContext = e.getDataContext();
-        final Project project = e.getData(Project.KEY);
+        DataContext dataContext = e.getDataContext();
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
@@ -63,13 +63,12 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    protected abstract void doAction(final DataContext dataContext, final Project project);
+    protected abstract void doAction(DataContext dataContext, Project project);
 
-    @RequiredUIAccess
     @Override
-    public void update(@Nonnull final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null || !project.isInitialized()) {
             e.getPresentation().setEnabled(false);
         }
