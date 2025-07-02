@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.project.ui.wm.IdeFrame;
@@ -26,6 +23,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 @Deprecated
 @DeprecationInfo("Use WelcomeFrameManager")
 public class WelcomeFrame {

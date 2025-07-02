@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Vladimir Kondratyev
- */
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.project.ui.view.tree.ProjectViewNode;
@@ -25,6 +21,9 @@ import consulo.ui.ex.tree.NodeDescriptor;
 
 import java.util.Comparator;
 
+/**
+ * @author Vladimir Kondratyev
+ */
 public final class TodoFileDirAndModuleComparator implements Comparator<NodeDescriptor>{
   public static final TodoFileDirAndModuleComparator INSTANCE =new TodoFileDirAndModuleComparator();
 

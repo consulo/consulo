@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.language.Language;
@@ -32,6 +28,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author max
+ */
 public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements PsiFileStub<T> {
   public static final IStubFileElementType TYPE = new IStubFileElementType(Language.ANY);
   private volatile T myFile;

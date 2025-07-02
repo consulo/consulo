@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.file.inject;
 
 import consulo.document.DocumentWindow;
@@ -24,6 +20,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileDelegate;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public interface VirtualFileWindow extends VirtualFileDelegate {
   @Override
   @Nonnull

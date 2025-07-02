@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * class ViewerTreeStructure
- * created Aug 25, 2001
- * @author Jeka
- */
 package consulo.ide.impl.idea.internal.psiView;
 
 import consulo.ui.ex.tree.AbstractTreeStructure;
@@ -42,6 +36,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Jeka
+ * @since 2001-08-25
+ */
 public class ViewerTreeStructure extends AbstractTreeStructure {
   private boolean myShowWhiteSpaces = true;
   private boolean myShowTreeNodes = true;

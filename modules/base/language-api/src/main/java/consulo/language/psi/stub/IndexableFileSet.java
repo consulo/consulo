@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.content.ContentIterator;
@@ -24,8 +20,11 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public interface IndexableFileSet {
-  boolean isInSet(@Nonnull VirtualFile file);
+    boolean isInSet(@Nonnull VirtualFile file);
 
-  void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull ContentIterator iterator);
+    void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull ContentIterator iterator);
 }

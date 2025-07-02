@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 import consulo.index.io.data.DataInputOutputUtil;
@@ -26,6 +22,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * @author max
+ */
 public abstract class InlineKeyDescriptor<T> implements KeyDescriptor<T> {
   private final boolean myCompactFormat = isCompactFormat();
 

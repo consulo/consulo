@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 /**
  * Barely, a copy of java.io.Bits, which is for unknown reason package local.
+ *
+ * @author max
  */
 public class Bits {
 

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.completion;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -37,6 +33,9 @@ import consulo.language.version.LanguageVersionUtil;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface WordCompletionElementFilter extends LanguageExtension {
   ExtensionPointCacheKey<WordCompletionElementFilter, ByLanguageValue<WordCompletionElementFilter>> KEY =

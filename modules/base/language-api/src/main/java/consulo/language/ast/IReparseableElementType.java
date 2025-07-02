@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.ast;
 
 import consulo.language.Language;
@@ -31,6 +27,8 @@ import jakarta.annotation.Nullable;
  * that all the document's changes are inside an AST node with reparseable type,
  * {@link #isParsable(ASTNode, CharSequence, Language, Project)} is invoked, and if it's successful,
  * only the contents inside this element are reparsed instead of the whole file. This can speed up reparse dramatically.
+ *
+ * @author max
  */
 public class IReparseableElementType extends ILazyParseableElementType implements IReparseableElementTypeBase {
   public IReparseableElementType(@Nonnull @NonNls String debugName) {

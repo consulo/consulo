@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.impl;
 
 import consulo.dataContext.DataProvider;
@@ -27,6 +23,9 @@ import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class ModuleStructureComponent extends SimpleToolWindowPanel implements Disposable, DataProvider {
   private final ModuleStructurePane myStructurePane;
 

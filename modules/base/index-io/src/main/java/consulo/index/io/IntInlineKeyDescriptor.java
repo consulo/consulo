@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
+/**
+ * @author max
+ */
 public class IntInlineKeyDescriptor extends InlineKeyDescriptor<Integer> {
-  @Override
-  public Integer fromInt(int n) {
-    return Integer.valueOf(n);
-  }
+    @Override
+    public Integer fromInt(int n) {
+        return Integer.valueOf(n);
+    }
 
-  @Override
-  public int toInt(Integer integer) {
-    return integer.intValue();
-  }
+    @Override
+    public int toInt(Integer integer) {
+        return integer.intValue();
+    }
 }

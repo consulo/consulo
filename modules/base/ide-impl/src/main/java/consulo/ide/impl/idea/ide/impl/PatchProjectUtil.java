@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.impl;
 
 import consulo.application.ApplicationManager;
@@ -47,6 +43,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * @author max
+ */
 public class PatchProjectUtil {
   private PatchProjectUtil() {
   }

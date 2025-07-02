@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.util;
 
 import consulo.language.psi.PsiElement;
@@ -31,6 +27,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.function.Function;
 
+/**
+ * @author max
+ */
 public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair<Long, T>>> {
   private final Function<H, T> myFunction;
   /**

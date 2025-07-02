@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi;
 
 import consulo.document.util.TextRange;
 
 import java.util.List;
 
+/**
+ * @author max
+ */
 public interface MultiRangeReference extends PsiReference {
-  List<TextRange> getRanges();
+    List<TextRange> getRanges();
 }

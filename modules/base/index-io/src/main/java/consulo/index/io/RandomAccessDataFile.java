@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 import org.slf4j.Logger;
@@ -26,6 +22,9 @@ import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.nio.ByteBuffer;
 
+/**
+ * @author max
+ */
 public class RandomAccessDataFile implements Forceable, Closeable {
   protected static final Logger LOG = LoggerFactory.getLogger(RandomAccessDataFile.class);
 

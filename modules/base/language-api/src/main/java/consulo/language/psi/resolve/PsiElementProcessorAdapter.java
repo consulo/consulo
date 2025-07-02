@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.resolve;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -24,15 +20,18 @@ import consulo.application.util.ReadActionProcessor;
 import consulo.application.util.function.Processor;
 import consulo.language.psi.PsiElement;
 
+/**
+ * @author max
+ */
 public class PsiElementProcessorAdapter<T extends PsiElement> extends ReadActionProcessor<T> implements Processor<T> {
-  private final PsiElementProcessor<T> myProcessor;
+    private final PsiElementProcessor<T> myProcessor;
 
-  public PsiElementProcessorAdapter(final PsiElementProcessor<T> processor) {
-    myProcessor = processor;
-  }
+    public PsiElementProcessorAdapter(final PsiElementProcessor<T> processor) {
+        myProcessor = processor;
+    }
 
-  @RequiredReadAction
-  public boolean processInReadAction(final T t) {
-    return myProcessor.execute(t);
-  }
+    @RequiredReadAction
+    public boolean processInReadAction(final T t) {
+        return myProcessor.execute(t);
+    }
 }

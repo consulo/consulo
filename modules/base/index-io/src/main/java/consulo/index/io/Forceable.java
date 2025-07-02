@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
+/**
+ * @author max
+ */
 public interface Forceable {
-  boolean isDirty();
+    boolean isDirty();
 
-  void force();
+    void force();
 }

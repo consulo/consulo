@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.resolve;
 
 import consulo.util.dataholder.Key;
@@ -25,6 +21,9 @@ import consulo.util.dataholder.KeyWithDefaultValue;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author max
+ */
 @SuppressWarnings({"unchecked", "ConstantConditions"})
 public class ResolveState {
   private static final ResolveState ourInitialState = new ResolveState();

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -50,6 +46,9 @@ import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
+/**
+ * @author max
+ */
 public class ExternalLibrariesNode extends ProjectViewNode<String> {
     public ExternalLibrariesNode(Project project, ViewSettings viewSettings) {
         super(project, IdeLocalize.nodeProjectviewExternalLibraries().get(), viewSettings);

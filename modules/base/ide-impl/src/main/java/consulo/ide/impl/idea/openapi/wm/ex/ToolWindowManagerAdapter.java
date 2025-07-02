@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Vladimir Kondratyev
- */
 package consulo.ide.impl.idea.openapi.wm.ex;
 
 import consulo.project.ui.wm.ToolWindowManagerListener;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author Vladimir Kondratyev
+ */
 @Deprecated
 public abstract class ToolWindowManagerAdapter implements ToolWindowManagerListener {
   @Override

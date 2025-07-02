@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ComponentProfiles;
@@ -28,6 +24,9 @@ import jakarta.inject.Singleton;
 import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
+/**
+ * @author max
+ */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class DummyIconDeferrer extends IconDeferrer {

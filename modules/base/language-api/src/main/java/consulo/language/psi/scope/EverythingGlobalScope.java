@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.scope;
 
 import consulo.content.scope.SearchScope;
@@ -26,6 +22,9 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class EverythingGlobalScope extends GlobalSearchScope {
   public EverythingGlobalScope(Project project) {
     super(project);

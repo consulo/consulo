@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.psi.search.scope.packageSet.lexer;
 
 import consulo.language.ast.TokenType;
 import consulo.language.ast.IElementType;
 
+/**
+ * @author max
+ */
 public interface ScopeTokenTypes extends TokenType {
   IElementType IDENTIFIER = new ScopeTokenType("Scope.IDENTIFIER");
   IElementType INTEGER_LITERAL = new ScopeTokenType("Scope.INTEGER_LITERAL");

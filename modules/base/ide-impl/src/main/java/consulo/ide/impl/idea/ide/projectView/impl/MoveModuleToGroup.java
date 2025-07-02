@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -38,6 +34,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author cdr
+ */
 public class MoveModuleToGroup extends ActionGroup {
     private final ModuleGroup myModuleGroup;
 

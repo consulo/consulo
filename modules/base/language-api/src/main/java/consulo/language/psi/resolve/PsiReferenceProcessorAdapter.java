@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.resolve;
 
 import consulo.application.util.ReadActionProcessor;
 import consulo.language.psi.PsiReference;
 import consulo.annotation.access.RequiredReadAction;
 
+/**
+ * @author max
+ */
 public class PsiReferenceProcessorAdapter extends ReadActionProcessor<PsiReference> {
-  private final PsiReferenceProcessor myProcessor;
+    private final PsiReferenceProcessor myProcessor;
 
-  public PsiReferenceProcessorAdapter(final PsiReferenceProcessor processor) {
-    myProcessor = processor;
-  }
+    public PsiReferenceProcessorAdapter(final PsiReferenceProcessor processor) {
+        myProcessor = processor;
+    }
 
-  @RequiredReadAction
-  @Override
-  public boolean processInReadAction(final PsiReference psiReference) {
-    return myProcessor.execute(psiReference);
-  }
+    @RequiredReadAction
+    @Override
+    public boolean processInReadAction(final PsiReference psiReference) {
+        return myProcessor.execute(psiReference);
+    }
 }

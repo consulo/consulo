@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 
-// The only purpose of this action is to serve as placeholder for assigning keyboard shortcuts.
-// For actual tab switching code, see EditorComposite constructor.
+/**
+ * The only purpose of this action is to serve as placeholder for assigning keyboard shortcuts.
+ * For actual tab switching code, see EditorComposite constructor.
+ *
+ * @author max
+ */
 public class SelectPreviousEditorTabAction extends AnAction implements DumbAware {
   public void actionPerformed(final AnActionEvent e) {
   }

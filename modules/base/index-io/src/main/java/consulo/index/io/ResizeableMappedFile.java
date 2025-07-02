@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 import consulo.index.io.data.DataOutputStream;
@@ -29,6 +25,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.*;
 
+/**
+ * @author max
+ */
 public class ResizeableMappedFile implements Forceable {
   private static final Logger LOG = LoggerFactory.getLogger(ResizeableMappedFile.class);
 

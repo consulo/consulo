@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Yura Cangea
- */
 package consulo.ide.impl.idea.openapi.fileChooser.impl;
 
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileNodeDescriptor;
@@ -25,6 +21,9 @@ import consulo.ui.ex.tree.NodeDescriptor;
 
 import java.util.Comparator;
 
+/**
+ * @author Yura Cangea
+ */
 public final class FileComparator implements Comparator<NodeDescriptor> {
   private static final FileComparator INSTANCE = new FileComparator();
 

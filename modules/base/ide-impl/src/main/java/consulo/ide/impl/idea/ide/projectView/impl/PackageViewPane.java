@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -62,6 +58,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
 
+/**
+ * @author cdr
+ */
 @ExtensionImpl
 public final class PackageViewPane extends AbstractProjectViewPSIPane {
   public static final String ID = "PackagesPane";

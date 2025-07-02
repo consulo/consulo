@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
@@ -25,6 +21,9 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ChangeLocalityDetector {
   /**

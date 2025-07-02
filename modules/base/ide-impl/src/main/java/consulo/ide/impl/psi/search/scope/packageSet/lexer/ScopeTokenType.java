@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.psi.search.scope.packageSet.lexer;
 
 import consulo.language.Language;
@@ -24,8 +20,11 @@ import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class ScopeTokenType extends IElementType {
-  public ScopeTokenType(@Nonnull @NonNls final String debugName) {
-    super(debugName, Language.ANY);
-  }
+    public ScopeTokenType(@Nonnull @NonNls final String debugName) {
+        super(debugName, Language.ANY);
+    }
 }

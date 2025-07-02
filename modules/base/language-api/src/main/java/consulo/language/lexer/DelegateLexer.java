@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 public class DelegateLexer extends LexerBase {
     protected final Lexer myDelegate;
 

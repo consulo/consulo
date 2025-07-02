@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 import consulo.util.lang.CharArrayUtil;
 
+/**
+ * @author max
+ */
 public class PrefixSuffixStripperLexer extends LexerBase {
     private CharSequence myBuffer;
     private char[] myBufferArray;

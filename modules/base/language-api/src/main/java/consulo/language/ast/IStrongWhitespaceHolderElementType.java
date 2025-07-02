@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.ast;
 
+/**
+ * @author max
+ */
 public interface IStrongWhitespaceHolderElementType {
 }

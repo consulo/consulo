@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.util.io;
 
 import org.jetbrains.annotations.NonNls;
@@ -29,6 +25,9 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
+/**
+ * @author max
+ */
 public class SourceCodeCompressor {
   private final static VaultOutputStream OUTPUT;
   private final static byte[] PRESET_BUF;

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.index.io.EnumeratorStringDescriptor;
@@ -25,6 +21,9 @@ import consulo.language.psi.PsiElement;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public abstract class StringStubIndexExtension<Psi extends PsiElement> extends AbstractStubIndex<String, Psi> {
   @Override
   public int getVersion() {

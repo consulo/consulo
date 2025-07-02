@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.annotation;
 
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class AnnotationSession extends UserDataHolderBase {
   private final PsiFile myFile;
 

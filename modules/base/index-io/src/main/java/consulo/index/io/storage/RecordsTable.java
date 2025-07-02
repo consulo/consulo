@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io.storage;
 
 import consulo.index.io.PagePool;
@@ -24,6 +20,9 @@ import consulo.index.io.PagePool;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * @author max
+ */
 class RecordsTable extends AbstractRecordsTable {
   private static final int VERSION = 1;
 

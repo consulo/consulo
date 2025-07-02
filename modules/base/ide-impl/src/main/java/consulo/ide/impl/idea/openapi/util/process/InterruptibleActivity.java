@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.util.process;
 
 import consulo.application.Application;
@@ -29,6 +25,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * @author max
+ */
 public abstract class InterruptibleActivity {
   private static final Logger LOG = Logger.getInstance(InterruptibleActivity.class);
 

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.highlight;
 
 import consulo.annotation.UsedInPlugin;
@@ -25,6 +21,9 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 @UsedInPlugin
 public abstract class SingleLazyInstanceSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   private SyntaxHighlighter myValue;

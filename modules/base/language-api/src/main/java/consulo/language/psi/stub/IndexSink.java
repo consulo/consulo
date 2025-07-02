@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public interface IndexSink {
   <Psi extends PsiElement, K> void occurrence(@Nonnull StubIndexKey<K, Psi> indexKey, @Nonnull K value);
 }

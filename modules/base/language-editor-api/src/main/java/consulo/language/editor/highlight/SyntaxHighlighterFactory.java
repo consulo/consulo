@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.highlight;
 
 import consulo.annotation.component.ComponentScope;
@@ -35,6 +31,9 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SyntaxHighlighterFactory implements LanguageExtension {
   private static final ExtensionPointCacheKey<SyntaxHighlighterFactory, ByLanguageValue<SyntaxHighlighterFactory>> KEY =

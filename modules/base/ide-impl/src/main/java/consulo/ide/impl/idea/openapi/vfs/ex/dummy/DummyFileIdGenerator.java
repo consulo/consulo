@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author max
+ */
 public class DummyFileIdGenerator {
   private static final AtomicInteger ourId = new AtomicInteger(Integer.MAX_VALUE / 2);
 

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.psi.stubs;
 
 import consulo.language.psi.stub.StubIndexKey;
@@ -27,15 +23,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public class StubIndexState {
-  public List<String> registeredIndices = new ArrayList<>();
+    public List<String> registeredIndices = new ArrayList<>();
 
-  public StubIndexState() {
-  }
-
-  public StubIndexState(@Nonnull Collection<StubIndexKey<?, ?>> keys) {
-    for (StubIndexKey key : keys) {
-      registeredIndices.add(key.getName());
+    public StubIndexState() {
     }
-  }
+
+    public StubIndexState(@Nonnull Collection<StubIndexKey<?, ?>> keys) {
+        for (StubIndexKey key : keys) {
+            registeredIndices.add(key.getName());
+        }
+    }
 }

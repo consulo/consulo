@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiElement;
@@ -24,13 +20,16 @@ import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.KeyDescriptor;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public abstract class IntStubIndexExtension<Psi extends PsiElement> extends AbstractStubIndex<Integer, Psi> {
-  public int getVersion() {
-    return 1;
-  }
+    public int getVersion() {
+        return 1;
+    }
 
-  @Nonnull
-  public KeyDescriptor<Integer> getKeyDescriptor() {
-    return EnumeratorIntegerDescriptor.INSTANCE;
-  }
+    @Nonnull
+    public KeyDescriptor<Integer> getKeyDescriptor() {
+        return EnumeratorIntegerDescriptor.INSTANCE;
+    }
 }

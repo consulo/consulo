@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.application.impl.internal.performance.PerformanceWatcher;
@@ -36,6 +32,9 @@ import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
+/**
+ * @author max
+ */
 public class FileBasedIndexProjectHandler {
     private static final Logger LOG = Logger.getInstance(FileBasedIndexProjectHandler.class);
 

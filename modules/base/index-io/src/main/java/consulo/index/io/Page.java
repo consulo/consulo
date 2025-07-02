@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 import consulo.util.collection.LimitedPool;
@@ -25,6 +21,9 @@ import jakarta.annotation.Nullable;
 import java.nio.ByteBuffer;
 import java.util.BitSet;
 
+/**
+ * @author max
+ */
 public class Page {
   public static final int PAGE_SIZE = 4 * 1024;
 

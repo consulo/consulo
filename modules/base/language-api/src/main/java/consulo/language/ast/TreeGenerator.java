@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.ast;
 
 import consulo.annotation.component.ComponentScope;
@@ -28,6 +24,9 @@ import consulo.language.util.CharTable;
 
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TreeGenerator {
     ExtensionPointName<TreeGenerator> EP_NAME = ExtensionPointName.create(TreeGenerator.class);

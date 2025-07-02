@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.colorScheme.setting;
 
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorHighlighter;
 
+/**
+ * @author max
+ */
 public interface EditorHighlightingProvidingColorSettingsPage extends ColorSettingsPage {
-  EditorHighlighter createEditorHighlighter(final EditorColorsScheme scheme);
+    EditorHighlighter createEditorHighlighter(final EditorColorsScheme scheme);
 }

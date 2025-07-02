@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiElement;
@@ -24,6 +20,9 @@ import consulo.index.io.ID;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public final class StubIndexKey<K, Psi extends PsiElement> extends ID<K, Psi> {
   private StubIndexKey(@Nonnull String name) {
     super(name);

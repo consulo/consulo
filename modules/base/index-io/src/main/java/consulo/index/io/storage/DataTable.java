@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io.storage;
 
 import consulo.index.io.Forceable;
@@ -30,6 +26,9 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * @author max
+ */
 class DataTable implements Closeable, Forceable {
   private static final Logger LOG = LoggerFactory.getLogger(DataTable.class);
 

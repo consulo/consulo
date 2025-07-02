@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
+/**
+ * @author max
+ */
 @TopicAPI(ComponentScope.PROJECT)
 public interface NavBarModelListener {
   void modelChanged();

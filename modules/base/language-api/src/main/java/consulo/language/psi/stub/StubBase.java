@@ -1,10 +1,6 @@
 /*
  * Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.language.ast.IElementType;
@@ -21,6 +17,9 @@ import java.lang.invoke.VarHandle;
 import java.util.List;
 import java.util.function.IntFunction;
 
+/**
+ * @author max
+ */
 public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<StubElement> implements StubElement<T> {
   StubList myStubList;
   private volatile T myPsi;
