@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.ui.ex.action.ActionToolbar;
@@ -39,6 +35,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * @author max
+ */
 public class MnemonicChooser extends JPanel {
   private static final Color OCCUPIED_CELL_COLOR = new JBColor(new Color(250, 250, 139), new Color(103, 81, 51));
   private static final Color FREE_CELL_COLOR = new JBColor(LightColors.SLIGHTLY_GRAY, Gray._80);

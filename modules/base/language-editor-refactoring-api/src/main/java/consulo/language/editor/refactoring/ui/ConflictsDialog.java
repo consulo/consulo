@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * created at Sep 12, 2001
- *
- * @author Jeka
- */
 package consulo.language.editor.refactoring.ui;
 
 import consulo.fileEditor.FileEditorLocation;
@@ -46,6 +40,10 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
 
+/**
+ * @author Jeka
+ * @since 2001-09-12
+ */
 public class ConflictsDialog extends DialogWrapper {
     private static final int SHOW_CONFLICTS_EXIT_CODE = 4;
 

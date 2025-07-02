@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.codeEditor.impl;
 
 import consulo.codeEditor.IndentGuideDescriptor;
@@ -29,6 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author max
+ */
 public class IndentsModelImpl implements IndentsModel {
 
   private final Map<IntPair, IndentGuideDescriptor> myIndentsByLines = new HashMap<>();

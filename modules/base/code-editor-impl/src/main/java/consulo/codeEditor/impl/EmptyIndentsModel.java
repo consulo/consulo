@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.codeEditor.impl;
 
 import consulo.codeEditor.IndentGuideDescriptor;
@@ -24,6 +20,9 @@ import consulo.codeEditor.IndentsModel;
 
 import java.util.List;
 
+/**
+ * @author max
+ */
 public class EmptyIndentsModel implements IndentsModel {
 
   @Override

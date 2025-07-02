@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
@@ -32,6 +28,9 @@ import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
+/**
+ * @author max
+ */
 public class PruneEmptyDirectoriesAction extends AnAction {
     @Override
     @RequiredUIAccess

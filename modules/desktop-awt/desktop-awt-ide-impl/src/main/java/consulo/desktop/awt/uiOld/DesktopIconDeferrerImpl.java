@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.desktop.awt.uiOld;
 
 import consulo.annotation.component.ServiceImpl;
@@ -40,6 +36,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author max
+ */
 @Singleton
 @ServiceImpl
 public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable {

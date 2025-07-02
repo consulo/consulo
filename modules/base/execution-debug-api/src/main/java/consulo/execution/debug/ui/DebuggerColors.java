@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Yura Cangea
- */
 package consulo.execution.debug.ui;
 
 import consulo.colorScheme.EditorColorKey;
@@ -25,6 +21,9 @@ import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.ui.color.RGBColor;
 import consulo.util.dataholder.Key;
 
+/**
+ * @author Yura Cangea
+ */
 public interface DebuggerColors {
   TextAttributesKey BREAKPOINT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("BREAKPOINT_ATTRIBUTES");
   TextAttributesKey EXECUTIONPOINT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("EXECUTIONPOINT_ATTRIBUTES");

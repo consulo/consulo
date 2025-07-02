@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.find.ngrams;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -43,6 +39,9 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author max
+ */
 @ExtensionImpl
 public class TrigramIndex extends ScalarIndexExtension<Integer> implements CustomInputsIndexFileBasedIndexExtension<Integer>, DocumentChangeDependentIndex {
   public static final boolean ENABLED = SystemProperties.getBooleanProperty("idea.internal.trigramindex.enabled", true);

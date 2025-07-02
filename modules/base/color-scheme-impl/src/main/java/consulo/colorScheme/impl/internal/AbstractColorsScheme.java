@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Yura Cangea
- */
 package consulo.colorScheme.impl.internal;
 
 import consulo.application.ui.UISettings;
@@ -36,6 +32,9 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
+/**
+ * @author Yura Cangea
+ */
 public abstract class AbstractColorsScheme implements EditorColorsScheme {
     private static final int CURR_VERSION = 124;
 

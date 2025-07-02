@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.application.internal;
 
 import consulo.application.Application;
@@ -26,6 +22,9 @@ import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledExecutorService;
 
+/**
+ * @author max
+ */
 @Deprecated
 public abstract class JobScheduler {
   /**

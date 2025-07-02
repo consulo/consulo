@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * created at Nov 26, 2001
- *
- * @author Jeka
- */
 package consulo.language.editor.refactoring.move;
 
 import consulo.codeEditor.Editor;
@@ -44,6 +38,10 @@ import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Jeka
+ * @since 2001-11-26
+ */
 public class MoveHandler implements RefactoringActionHandler {
     public static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.moveTitle();
 

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -50,10 +46,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author max
+ */
 // TODO: remove duplication with BaseShowRecentFilesAction, there's quite a bit of it
-
 public class BookmarksAction extends AnAction implements DumbAware, MasterDetailPopupBuilder.Delegate {
-
   private JBPopup myPopup;
 
   @Override

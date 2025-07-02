@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.application.util.concurrent;
 
 import jakarta.annotation.Nonnull;
@@ -24,6 +20,9 @@ import jakarta.annotation.Nonnull;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * @author max
+ */
 public interface Job<T> {
   void cancel();
 

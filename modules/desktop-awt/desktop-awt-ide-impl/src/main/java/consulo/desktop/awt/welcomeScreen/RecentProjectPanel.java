@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.AllIcons;
@@ -70,6 +66,9 @@ import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author max
+ */
 public class RecentProjectPanel {
   private static final Logger LOG = Logger.getInstance(RecentProjectPanel.class);
 

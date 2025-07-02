@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.codeEditor.markup;
 
 import consulo.codeEditor.Editor;
@@ -29,6 +25,7 @@ import java.awt.*;
  *
  * @see RangeHighlighter#setCustomRenderer(CustomHighlighterRenderer)
  * @see RangeHighlighter#getCustomRenderer()
+ * @author max
  */
 public interface CustomHighlighterRenderer {
     void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g);

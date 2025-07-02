@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.concurrency;
 
 import java.util.concurrent.ForkJoinPool;
 
+/**
+ * @author max
+ */
 public abstract class JobSchedulerImpl {
   /**
    * a number of CPU cores

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Vladimir Kondratyev
- */
 package consulo.application.ui.event;
 
 import consulo.annotation.component.ComponentScope;
@@ -25,6 +21,9 @@ import consulo.application.ui.UISettings;
 
 import java.util.EventListener;
 
+/**
+ * @author Vladimir Kondratyev
+ */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface UISettingsListener extends EventListener {
   void uiSettingsChanged(UISettings source);

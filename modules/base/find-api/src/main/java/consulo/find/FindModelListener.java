@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.find;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
+/**
+ * @author max
+ */
 @TopicAPI(ComponentScope.PROJECT)
 public interface FindModelListener {
   void findNextModelChanged();

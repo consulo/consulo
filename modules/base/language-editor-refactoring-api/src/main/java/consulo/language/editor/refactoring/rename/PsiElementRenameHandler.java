@@ -49,9 +49,8 @@ import jakarta.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * created at Nov 13, 2001
- *
  * @author Jeka, dsl
+ * @since 2001-11-13
  */
 public class PsiElementRenameHandler implements RenameHandler {
     private static final Logger LOG = Logger.getInstance(PsiElementRenameHandler.class);

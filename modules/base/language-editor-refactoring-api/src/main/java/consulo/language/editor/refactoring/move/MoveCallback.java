@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * created at Nov 27, 2001
- * @author Jeka
- */
 package consulo.language.editor.refactoring.move;
 
+/**
+ * @author Jeka
+ * @since 2001-11-27
+ */
 public interface MoveCallback {
-  void refactoringCompleted();
+    void refactoringCompleted();
 }

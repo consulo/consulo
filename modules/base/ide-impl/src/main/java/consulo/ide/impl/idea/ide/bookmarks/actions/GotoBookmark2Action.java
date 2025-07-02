@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
+/**
+ * @author max
+ */
 public class GotoBookmark2Action extends GoToMnemonicBookmarkActionBase {
-  public GotoBookmark2Action() {
-    super(2);
-  }
+    public GotoBookmark2Action() {
+        super(2);
+    }
 }
