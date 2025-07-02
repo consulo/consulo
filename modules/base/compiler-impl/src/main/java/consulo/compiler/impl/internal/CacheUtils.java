@@ -16,9 +16,11 @@
 package consulo.compiler.impl.internal;
 
 import consulo.compiler.*;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -37,32 +39,32 @@ public class CacheUtils {
     private static final Logger LOG = Logger.getInstance(CacheUtils.class);
 
     public static Collection<VirtualFile> findDependentFiles(
-        final CompileContextEx context,
-        final Set<VirtualFile> compiledWithErrors,
-        final @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter
+        CompileContextEx context,
+        Set<VirtualFile> compiledWithErrors,
+        @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter
     ) throws CacheCorruptedException, ExitException {
+        context.getProgressIndicator().setTextValue(CompilerLocalize.progressCheckingDependencies());
 
-        context.getProgressIndicator().setText(CompilerBundle.message("progress.checking.dependencies"));
+        DependencyCache dependencyCache = context.getDependencyCache();
+        Set<VirtualFile> dependentFiles = new HashSet<>();
 
-        final DependencyCache dependencyCache = context.getDependencyCache();
-        final Set<VirtualFile> dependentFiles = new HashSet<VirtualFile>();
+        dependencyCache.findDependentFiles(context, new SimpleReference<>(), filter, dependentFiles, compiledWithErrors);
 
-        dependencyCache.findDependentFiles(context, new Ref<CacheCorruptedException>(), filter, dependentFiles, compiledWithErrors);
-
-        context.getProgressIndicator()
-            .setText(dependentFiles.size() > 0 ? CompilerBundle.message("progress.found.dependent.files", dependentFiles.size()) : "");
+        context.getProgressIndicator().setTextValue(
+            dependentFiles.size() > 0 ? CompilerLocalize.progressFoundDependentFiles(dependentFiles.size()) : LocalizeValue.empty()
+        );
 
         return dependentFiles;
     }
 
     @Nonnull
-    public static Set<VirtualFile> getFilesCompiledWithErrors(final CompileContextEx context) {
+    public static Set<VirtualFile> getFilesCompiledWithErrors(CompileContextEx context) {
         CompilerMessage[] messages = context.getMessages(CompilerMessageCategory.ERROR);
         Set<VirtualFile> compiledWithErrors = Collections.emptySet();
         if (messages.length > 0) {
-            compiledWithErrors = new HashSet<VirtualFile>(messages.length);
+            compiledWithErrors = new HashSet<>(messages.length);
             for (CompilerMessage message : messages) {
-                final VirtualFile file = message.getVirtualFile();
+                VirtualFile file = message.getVirtualFile();
                 if (file != null) {
                     compiledWithErrors.add(file);
                 }

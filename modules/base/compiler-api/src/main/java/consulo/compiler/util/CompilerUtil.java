@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * created at Jan 3, 2002
- *
- * @author Jeka
- */
 package consulo.compiler.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.application.util.AsyncFileService;
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerBundle;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.function.ThrowableRunnable;
@@ -48,6 +44,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.*;
 
+/**
+ * @author Jeka
+ * @since 2002-01-03
+ */
 public class CompilerUtil {
     private static final Logger LOG = Logger.getInstance(CompilerUtil.class);
 
@@ -60,7 +60,7 @@ public class CompilerUtil {
     }
 
     public static void collectFiles(Collection<File> container, File rootDir, FileFilter fileFilter) {
-        final File[] files = rootDir.listFiles(fileFilter);
+        File[] files = rootDir.listFiles(fileFilter);
         if (files == null) {
             return;
         }
@@ -79,47 +79,42 @@ public class CompilerUtil {
     }
 
 
-    public static Map<Module, List<VirtualFile>> buildModuleToFilesMap(final CompileContext context, final List<VirtualFile> files) {
+    public static Map<Module, List<VirtualFile>> buildModuleToFilesMap(CompileContext context, List<VirtualFile> files) {
         //assertion: all files are different
-        final Map<Module, List<VirtualFile>> map = new HashMap<Module, List<VirtualFile>>();
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            public void run() {
-                for (VirtualFile file : files) {
-                    final Module module = context.getModuleByFile(file);
+        Map<Module, List<VirtualFile>> map = new HashMap<>();
+        Application.get().runReadAction(() -> {
+            for (VirtualFile file : files) {
+                Module module = context.getModuleByFile(file);
 
-                    if (module == null) {
-                        continue; // looks like file invalidated
-                    }
-
-                    List<VirtualFile> moduleFiles = map.get(module);
-                    if (moduleFiles == null) {
-                        moduleFiles = new ArrayList<VirtualFile>();
-                        map.put(module, moduleFiles);
-                    }
-                    moduleFiles.add(file);
+                if (module == null) {
+                    continue; // looks like file invalidated
                 }
+
+                List<VirtualFile> moduleFiles = map.get(module);
+                if (moduleFiles == null) {
+                    moduleFiles = new ArrayList<>();
+                    map.put(module, moduleFiles);
+                }
+                moduleFiles.add(file);
             }
         });
         return map;
     }
 
-
     /**
      * must not be called inside ReadAction
-     *
-     * @param files
      */
-    public static void refreshIOFiles(@Nonnull final Collection<File> files) {
+    public static void refreshIOFiles(@Nonnull Collection<File> files) {
         if (!files.isEmpty()) {
             LocalFileSystem.getInstance().refreshIoFiles(files);
         }
     }
 
-    public static void refreshIODirectories(@Nonnull final Collection<File> files) {
-        final LocalFileSystem lfs = LocalFileSystem.getInstance();
-        final List<VirtualFile> filesToRefresh = new ArrayList<VirtualFile>();
+    public static void refreshIODirectories(@Nonnull Collection<File> files) {
+        LocalFileSystem lfs = LocalFileSystem.getInstance();
+        List<VirtualFile> filesToRefresh = new ArrayList<>();
         for (File file : files) {
-            final VirtualFile virtualFile = lfs.refreshAndFindFileByIoFile(file);
+            VirtualFile virtualFile = lfs.refreshAndFindFileByIoFile(file);
             if (virtualFile != null) {
                 filesToRefresh.add(virtualFile);
             }
@@ -129,33 +124,33 @@ public class CompilerUtil {
         }
     }
 
-    public static void refreshIOFile(final File file) {
-        final VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
+    public static void refreshIOFile(File file) {
+        VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
         if (vFile != null) {
             vFile.refresh(false, false);
         }
     }
 
-    public static void addLocaleOptions(final List<String> commandLine, final boolean launcherUsed) {
+    public static void addLocaleOptions(List<String> commandLine, boolean launcherUsed) {
         // need to specify default encoding so that javac outputs messages in 'correct' language
         //noinspection HardCodedStringLiteral
         commandLine.add((launcherUsed ? "-J" : "") + "-D" + CharsetToolkit.FILE_ENCODING_PROPERTY + "=" + CharsetToolkit.getDefaultSystemCharset()
             .name());
         // javac's VM should use the same default locale that IDEA uses in order for javac to print messages in 'correct' language
         //noinspection HardCodedStringLiteral
-        final String lang = System.getProperty("user.language");
+        String lang = System.getProperty("user.language");
         if (lang != null) {
             //noinspection HardCodedStringLiteral
             commandLine.add((launcherUsed ? "-J" : "") + "-Duser.language=" + lang);
         }
         //noinspection HardCodedStringLiteral
-        final String country = System.getProperty("user.country");
+        String country = System.getProperty("user.country");
         if (country != null) {
             //noinspection HardCodedStringLiteral
             commandLine.add((launcherUsed ? "-J" : "") + "-Duser.country=" + country);
         }
         //noinspection HardCodedStringLiteral
-        final String region = System.getProperty("user.region");
+        String region = System.getProperty("user.region");
         if (region != null) {
             //noinspection HardCodedStringLiteral
             commandLine.add((launcherUsed ? "-J" : "") + "-Duser.region=" + region);
@@ -177,14 +172,14 @@ public class CompilerUtil {
         }
     }
 
-    public static void logDuration(final String activityName, long duration) {
+    public static void logDuration(String activityName, long duration) {
         LOG.info(activityName + " took " + duration + " ms: " + duration / 60000 + " min " + (duration % 60000) / 1000 + "sec");
     }
 
-    public static void clearOutputDirectories(final Collection<File> outputDirectories) {
-        final long start = System.currentTimeMillis();
+    public static void clearOutputDirectories(Collection<File> outputDirectories) {
+        long start = System.currentTimeMillis();
         // do not delete directories themselves, or we'll get rootsChanged() otherwise
-        final Collection<File> filesToDelete = new ArrayList<File>(outputDirectories.size() * 2);
+        Collection<File> filesToDelete = new ArrayList<>(outputDirectories.size() * 2);
         for (File outputDirectory : outputDirectories) {
             File[] files = outputDirectory.listFiles();
             if (files != null) {
@@ -195,35 +190,29 @@ public class CompilerUtil {
             Application.get().getInstance(AsyncFileService.class).asyncDelete(filesToDelete);
 
             // ensure output directories exist
-            for (final File file : outputDirectories) {
+            for (File file : outputDirectories) {
                 file.mkdirs();
             }
-            final long clearStop = System.currentTimeMillis();
+            long clearStop = System.currentTimeMillis();
 
             refreshIODirectories(outputDirectories);
 
-            final long refreshStop = System.currentTimeMillis();
+            long refreshStop = System.currentTimeMillis();
 
             logDuration("Clearing output dirs", clearStop - start);
             logDuration("Refreshing output directories", refreshStop - clearStop);
         }
     }
 
-    public static void computeIntersectingPaths(
-        final Project project,
-        final Collection<VirtualFile> outputPaths,
-        final Collection<VirtualFile> result
-    ) {
+    @RequiredReadAction
+    public static void computeIntersectingPaths(Project project, Collection<VirtualFile> outputPaths, Collection<VirtualFile> result) {
         for (Module module : ModuleManager.getInstance(project).getModules()) {
-            final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-            final VirtualFile[] sourceRoots = rootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
-            for (final VirtualFile outputPath : outputPaths) {
+            ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+            VirtualFile[] sourceRoots = rootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
+            for (VirtualFile outputPath : outputPaths) {
                 for (VirtualFile sourceRoot : sourceRoots) {
-                    if (VirtualFileUtil.isAncestor(outputPath, sourceRoot, true) || VirtualFileUtil.isAncestor(
-                        sourceRoot,
-                        outputPath,
-                        false
-                    )) {
+                    if (VirtualFileUtil.isAncestor(outputPath, sourceRoot, true)
+                        || VirtualFileUtil.isAncestor(sourceRoot, outputPath, false)) {
                         result.add(outputPath);
                     }
                 }
@@ -231,23 +220,20 @@ public class CompilerUtil {
         }
     }
 
+    @RequiredUIAccess
     public static boolean askUserToContinueWithNoClearing(Project project, Collection<VirtualFile> affectedOutputPaths) {
-        final StringBuilder paths = new StringBuilder();
-        for (final VirtualFile affectedOutputPath : affectedOutputPaths) {
+        StringBuilder paths = new StringBuilder();
+        for (VirtualFile affectedOutputPath : affectedOutputPaths) {
             if (paths.length() > 0) {
                 paths.append(",\n");
             }
             paths.append(affectedOutputPath.getPath().replace('/', File.separatorChar));
         }
-        final int answer = Messages.showOkCancelDialog(project,
-            CompilerBundle.message("warning.sources.under.output.paths", paths.toString()),
-            CommonBundle.getErrorTitle(), Messages.getWarningIcon()
+        int answer = Messages.showOkCancelDialog(project,
+            CompilerLocalize.warningSourcesUnderOutputPaths(paths.toString()).get(),
+            CommonLocalize.titleError().get(),
+            UIUtil.getWarningIcon()
         );
-        if (answer == Messages.OK) { // ok
-            return true;
-        }
-        else {
-            return false;
-        }
+        return answer == Messages.OK;
     }
 }

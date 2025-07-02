@@ -23,6 +23,7 @@ import consulo.util.lang.Pair;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author nik
@@ -40,7 +41,7 @@ public class ArtifactPackagingItemExternalizer implements DataExternalizer<Artif
     @Override
     public ArtifactPackagingItemOutputState read(DataInput in) throws IOException {
         int size = in.readInt();
-        SmartList<Pair<String, Long>> destinations = new SmartList<Pair<String, Long>>();
+        List<Pair<String, Long>> destinations = new SmartList<>();
         while (size-- > 0) {
             String path = IOUtil.readUTF(in);
             long outputTimestamp = in.readLong();

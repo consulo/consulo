@@ -16,7 +16,7 @@
 package consulo.compiler.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.TranslatingCompiler;
 import consulo.compiler.TranslatingCompilerFilesMonitor;
@@ -32,7 +32,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
@@ -51,6 +51,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -113,8 +114,8 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
                     if (event instanceof VFileMoveEvent) {
                         markDirtyIfSource(event.getFile(), true);
                     }
-                    else if (event instanceof VFileDeleteEvent) {
-                        beforeFileDeletion((VFileDeleteEvent) event);
+                    else if (event instanceof VFileDeleteEvent deleteEvent) {
+                        beforeFileDeletion(deleteEvent);
                     }
                 }
             }
@@ -127,24 +128,24 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
                 });
 
                 for (VFileEvent event : afterEvents) {
-                    if (event instanceof VFileContentChangeEvent) {
-                        contentsChanged((VFileContentChangeEvent) event);
+                    if (event instanceof VFileContentChangeEvent contentChangeEvent) {
+                        contentsChanged(contentChangeEvent);
                     }
-                    else if (event instanceof VFilePropertyChangeEvent) {
-                        propertyChanged((VFilePropertyChangeEvent) event);
+                    else if (event instanceof VFilePropertyChangeEvent propertyChangeEvent) {
+                        propertyChanged(propertyChangeEvent);
                     }
                 }
             }
         };
     }
 
-    private void propertyChanged(@Nonnull final VFilePropertyChangeEvent event) {
+    private void propertyChanged(@Nonnull VFilePropertyChangeEvent event) {
         if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
             final VirtualFile eventFile = event.getFile();
             VirtualFile file = event.getFile();
             VirtualFile parent = file.getParent();
             if (parent != null) {
-                final String oldName = (String) event.getOldValue();
+                String oldName = (String) event.getOldValue();
                 final String root = parent.getPath() + "/" + oldName;
                 final Set<File> toMark = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
                 if (eventFile.isDirectory()) {
@@ -185,14 +186,14 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         }
     }
 
-    private void contentsChanged(@Nonnull final VFileContentChangeEvent event) {
+    private void contentsChanged(@Nonnull VFileContentChangeEvent event) {
         markDirtyIfSource(event.getFile(), false);
     }
 
-    private void beforeFileDeletion(@Nonnull final VFileDeleteEvent event) {
+    private void beforeFileDeletion(@Nonnull VFileDeleteEvent event) {
         final VirtualFile eventFile = event.getFile();
         if (LOG.isDebugEnabled() && eventFile.isDirectory() || TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
-            final String message = "Processing file deletion: " + eventFile.getPresentableUrl();
+            String message = "Processing file deletion: " + eventFile.getPresentableUrl();
             LOG.debug(message);
             if (TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
                 System.out.println(message);
@@ -203,123 +204,130 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
 
         TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
-        processRecursively(eventFile, true, new Consumer<VirtualFile>() {
-            private final IntList myAssociatedProjectIds = IntLists.newArrayList();
+        processRecursively(
+            eventFile,
+            true,
+            new Consumer<>() {
+                private final IntList myAssociatedProjectIds = IntLists.newArrayList();
 
-            @Override
-            public void accept(final VirtualFile file) {
-                final String filePath = file.getPath();
-                pathsToMark.add(new File(filePath));
-                myAssociatedProjectIds.clear();
-                try {
-                    final TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(file);
-                    if (outputInfo != null) {
-                        final VirtualFile srcFile = outputInfo.getSourceFile();
-                        if (srcFile != null) {
-                            final TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(srcFile);
-                            if (srcInfo != null) {
-                                final boolean srcWillBeDeleted = VirtualFileUtil.isAncestor(eventFile, srcFile, false);
-                                for (Integer projectId : srcInfo.getProjectIds().toArray(Integer[]::new)) {
+                @Override
+                public void accept(VirtualFile file) {
+                    String filePath = file.getPath();
+                    pathsToMark.add(new File(filePath));
+                    myAssociatedProjectIds.clear();
+                    try {
+                        TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(file);
+                        if (outputInfo != null) {
+                            VirtualFile srcFile = outputInfo.getSourceFile();
+                            if (srcFile != null) {
+                                TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(srcFile);
+                                if (srcInfo != null) {
+                                    boolean srcWillBeDeleted = VirtualFileUtil.isAncestor(eventFile, srcFile, false);
+                                    for (Integer projectId : srcInfo.getProjectIds().toArray(Integer[]::new)) {
+                                        if (monitor.isSuspended(projectId)) {
+                                            continue;
+                                        }
+                                        if (srcInfo.isAssociated(projectId, filePath)) {
+                                            myAssociatedProjectIds.add(projectId);
+                                            if (srcWillBeDeleted) {
+                                                if (LOG.isDebugEnabled() || TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
+                                                    String message =
+                                                        "Unschedule recompilation because of deletion " + srcFile.getPresentableUrl();
+                                                    LOG.debug(message);
+                                                    if (TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
+                                                        System.out.println(message);
+                                                    }
+                                                }
+                                                monitor.removeSourceForRecompilation(
+                                                    projectId,
+                                                    Math.abs(TranslatingCompilerFilesMonitorImpl.getFileId(srcFile))
+                                                );
+                                            }
+                                            else {
+                                                monitor.addSourceForRecompilation(projectId, srcFile, srcInfo);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
+                        if (srcInfo != null) {
+                            Set<Integer> projects = srcInfo.getProjectIds();
+                            if (!projects.isEmpty()) {
+                                TranslatingCompilerFilesMonitorImpl.ScheduleOutputsForDeletionProc deletionProc =
+                                    monitor.new ScheduleOutputsForDeletionProc(file.getUrl());
+                                deletionProc.setRootBeingDeleted(eventFile);
+                                int sourceFileId = Math.abs(TranslatingCompilerFilesMonitorImpl.getFileId(file));
+                                for (Integer projectId : projects.toArray(Integer[]::new)) {
                                     if (monitor.isSuspended(projectId)) {
                                         continue;
                                     }
                                     if (srcInfo.isAssociated(projectId, filePath)) {
                                         myAssociatedProjectIds.add(projectId);
-                                        if (srcWillBeDeleted) {
-                                            if (LOG.isDebugEnabled() || TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
-                                                final String message =
-                                                    "Unschedule recompilation because of deletion " + srcFile.getPresentableUrl();
-                                                LOG.debug(message);
-                                                if (TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
-                                                    System.out.println(message);
-                                                }
-                                            }
-                                            monitor.removeSourceForRecompilation(
-                                                projectId,
-                                                Math.abs(TranslatingCompilerFilesMonitorImpl.getFileId(srcFile))
-                                            );
-                                        }
-                                        else {
-                                            monitor.addSourceForRecompilation(projectId, srcFile, srcInfo);
+                                    }
+                                    // mark associated outputs for deletion
+                                    srcInfo.processOutputPaths(projectId, deletionProc);
+                                    if (LOG.isDebugEnabled() || TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
+                                        String message = "Unschedule recompilation because of deletion " + file.getPresentableUrl();
+                                        LOG.debug(message);
+                                        if (TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
+                                            System.out.println(message);
                                         }
                                     }
+                                    monitor.removeSourceForRecompilation(projectId, sourceFileId);
                                 }
                             }
                         }
                     }
-
-                    final TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
-                    if (srcInfo != null) {
-                        final Set<Integer> projects = srcInfo.getProjectIds();
-                        if (!projects.isEmpty()) {
-                            final TranslatingCompilerFilesMonitorImpl.ScheduleOutputsForDeletionProc deletionProc =
-                                monitor.new ScheduleOutputsForDeletionProc(file.getUrl());
-                            deletionProc.setRootBeingDeleted(eventFile);
-                            final int sourceFileId = Math.abs(TranslatingCompilerFilesMonitorImpl.getFileId(file));
-                            for (Integer projectId : projects.toArray(Integer[]::new)) {
-                                if (monitor.isSuspended(projectId)) {
-                                    continue;
-                                }
-                                if (srcInfo.isAssociated(projectId, filePath)) {
-                                    myAssociatedProjectIds.add(projectId);
-                                }
-                                // mark associated outputs for deletion
-                                srcInfo.processOutputPaths(projectId, deletionProc);
-                                if (LOG.isDebugEnabled() || TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
-                                    final String message = "Unschedule recompilation because of deletion " + file.getPresentableUrl();
-                                    LOG.debug(message);
-                                    if (TranslatingCompilerFilesMonitorImpl.DEBUG_MODE) {
-                                        System.out.println(message);
-                                    }
-                                }
-                                monitor.removeSourceForRecompilation(projectId, sourceFileId);
-                            }
-                        }
+                    finally {
+                        // it is important that update of myOutputsToDelete is done at the end
+                        // otherwise the filePath of the file that is about to be deleted may be re-scheduled for deletion
+                        // in addSourceForRecompilation()
+                        myAssociatedProjectIds.forEach(projectId -> monitor.unmarkOutputPathForDeletion(projectId, filePath));
                     }
-                }
-                finally {
-                    // it is important that update of myOutputsToDelete is done at the end
-                    // otherwise the filePath of the file that is about to be deleted may be re-scheduled for deletion in addSourceForRecompilation()
-                    myAssociatedProjectIds.forEach(projectId -> {
-                        monitor.unmarkOutputPathForDeletion(projectId, filePath);
-                    });
                 }
             }
-        });
+        );
 
         notifyFilesDeleted(pathsToMark);
     }
 
-    private void markDirtyIfSource(final VirtualFile file, final boolean fromMove) {
+    private void markDirtyIfSource(VirtualFile file, boolean fromMove) {
         TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
-        final Set<File> pathsToMark = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
-        processRecursively(file, false, file1 -> {
-            pathsToMark.add(new File(file1.getPath()));
-            final TranslationSourceFileInfo srcInfo = file1.isValid() ? TranslationSourceFileInfo.loadSourceInfo(file1) : null;
-            if (srcInfo != null) {
-                for (Integer projectId : srcInfo.getProjectIds().toArray(Integer[]::new)) {
-                    if (monitor.isSuspended(projectId)) {
-                        if (srcInfo.clearPaths(projectId)) {
-                            srcInfo.updateTimestamp(projectId, -1L);
-                            TranslationSourceFileInfo.saveSourceInfo(file1, srcInfo);
-                        }
-                    }
-                    else {
-                        monitor.addSourceForRecompilation(projectId, file1, srcInfo);
-                        // when the file is moved to a new location, we should 'forget' previous associations
-                        if (fromMove) {
+        Set<File> pathsToMark = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
+        processRecursively(
+            file,
+            false,
+            thisFile -> {
+                pathsToMark.add(new File(thisFile.getPath()));
+                TranslationSourceFileInfo srcInfo = thisFile.isValid() ? TranslationSourceFileInfo.loadSourceInfo(thisFile) : null;
+                if (srcInfo != null) {
+                    for (Integer projectId : srcInfo.getProjectIds().toArray(Integer[]::new)) {
+                        if (monitor.isSuspended(projectId)) {
                             if (srcInfo.clearPaths(projectId)) {
-                                TranslationSourceFileInfo.saveSourceInfo(file1, srcInfo);
+                                srcInfo.updateTimestamp(projectId, -1L);
+                                TranslationSourceFileInfo.saveSourceInfo(thisFile, srcInfo);
+                            }
+                        }
+                        else {
+                            monitor.addSourceForRecompilation(projectId, thisFile, srcInfo);
+                            // when the file is moved to a new location, we should 'forget' previous associations
+                            if (fromMove) {
+                                if (srcInfo.clearPaths(projectId)) {
+                                    TranslationSourceFileInfo.saveSourceInfo(thisFile, srcInfo);
+                                }
                             }
                         }
                     }
                 }
+                else {
+                    processNewFile(thisFile, false);
+                }
             }
-            else {
-                processNewFile(file1, false);
-            }
-        });
+        );
         if (fromMove) {
             notifyFilesDeleted(pathsToMark);
         }
@@ -328,59 +336,52 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         }
     }
 
-    private void processNewFile(final VirtualFile file, final boolean notifyServer) {
+    private void processNewFile(VirtualFile file, boolean notifyServer) {
         ProjectManager projectManager = getProjectManager();
         TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
-        final Ref<Boolean> isInContent = Ref.create(false);
+        SimpleReference<Boolean> isInContent = SimpleReference.create(false);
         // need read action to ensure that the project was not disposed during the iteration over the project list
-        ApplicationManager.getApplication().runReadAction(() -> {
-            for (final Project project : projectManager.getOpenProjects()) {
+        Application.get().runReadAction(() -> {
+            for (Project project : projectManager.getOpenProjects()) {
                 if (!project.isInitialized()) {
                     continue; // the content of this project will be scanned during its post-startup activities
                 }
-                final int projectId = monitor.getProjectId(project);
-                final boolean projectSuspended = monitor.isSuspended(projectId);
-                final ProjectRootManager rootManager = ProjectRootManager.getInstance(project);
+                int projectId = monitor.getProjectId(project);
+                boolean projectSuspended = monitor.isSuspended(projectId);
+                ProjectRootManager rootManager = ProjectRootManager.getInstance(project);
                 ProjectFileIndex fileIndex = rootManager.getFileIndex();
                 if (fileIndex.isInContent(file)) {
                     isInContent.set(true);
                 }
 
                 if (fileIndex.isInSourceContent(file)) {
-                    final TranslatingCompiler[] translators = CompilerManager.getInstance(project).getCompilers(TranslatingCompiler.class);
-                    processRecursively(file, false, new Consumer<VirtualFile>() {
-                        @Override
-                        public void accept(final VirtualFile file1) {
-                            if (!projectSuspended && isCompilable(file1)) {
-                                monitor.loadInfoAndAddSourceForRecompilation(projectId, file1);
+                    TranslatingCompiler[] translators = CompilerManager.getInstance(project).getCompilers(TranslatingCompiler.class);
+                    Predicate<VirtualFile> isCompilable = thisFile -> {
+                        for (TranslatingCompiler translator : translators) {
+                            if (translator.isCompilableFile(thisFile, DummyCompileContext.getInstance())) {
+                                return true;
                             }
                         }
-
-                        boolean isCompilable(VirtualFile file1) {
-                            for (TranslatingCompiler translator : translators) {
-                                if (translator.isCompilableFile(file1, DummyCompileContext.getInstance())) {
-                                    return true;
-                                }
+                        return false;
+                    };
+                    processRecursively(
+                        file,
+                        false,
+                        thisFile -> {
+                            if (!projectSuspended && isCompilable.test(thisFile)) {
+                                monitor.loadInfoAndAddSourceForRecompilation(projectId, thisFile);
                             }
-                            return false;
                         }
-                    });
+                    );
                 }
-                else {
-                    if (!projectSuspended && belongsToIntermediateSources(file, project)) {
-                        processRecursively(file, false, new Consumer<VirtualFile>() {
-                            @Override
-                            public void accept(final VirtualFile file1) {
-                                monitor.loadInfoAndAddSourceForRecompilation(projectId, file1);
-                            }
-                        });
-                    }
+                else if (!projectSuspended && belongsToIntermediateSources(file, project)) {
+                    processRecursively(file, false, thisFile -> monitor.loadInfoAndAddSourceForRecompilation(projectId, thisFile));
                 }
             }
         });
         if (notifyServer && !monitor.isIgnoredOrUnderIgnoredDirectory(projectManager, file)) {
-            final Set<File> pathsToMark = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
+            Set<File> pathsToMark = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
             boolean dbOnly = !isInContent.get();
             processRecursively(file, dbOnly, it -> pathsToMark.add(new File(it.getPath())));
             notifyFilesChanged(pathsToMark);
@@ -393,26 +394,29 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         }
 
         final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-        VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
-            @Nonnull
-            @Override
-            public Result visitFileEx(@Nonnull VirtualFile file) {
-                if (fileTypeManager.isFileIgnored(file)) {
-                    return SKIP_CHILDREN;
+        VirtualFileUtil.visitChildrenRecursively(
+            file,
+            new VirtualFileVisitor() {
+                @Nonnull
+                @Override
+                public Result visitFileEx(@Nonnull VirtualFile file) {
+                    if (fileTypeManager.isFileIgnored(file)) {
+                        return SKIP_CHILDREN;
+                    }
+
+                    if (!file.isDirectory()) {
+                        processor.accept(file);
+                    }
+                    return CONTINUE;
                 }
 
-                if (!file.isDirectory()) {
-                    processor.accept(file);
+                @Nullable
+                @Override
+                public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
+                    return file.isDirectory() && dbOnly ? ((NewVirtualFile) file).iterInDbChildren() : null;
                 }
-                return CONTINUE;
             }
-
-            @Nullable
-            @Override
-            public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
-                return file.isDirectory() && dbOnly ? ((NewVirtualFile) file).iterInDbChildren() : null;
-            }
-        });
+        );
     }
 
     private static void notifyFilesChanged(Collection<File> paths) {

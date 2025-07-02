@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.compiler.util;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.util.graph.GraphAlgorithms;
 import consulo.component.util.graph.*;
 import consulo.logging.Logger;
@@ -30,8 +28,8 @@ import consulo.module.content.layer.ModuleRootModel;
 import consulo.project.Project;
 import consulo.util.collection.Chunk;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.Pair;
-
+import consulo.util.lang.Couple;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
@@ -51,10 +49,12 @@ public final class ModuleCompilerUtil {
 
     public static Graph<Module> createModuleGraph(final Module[] modules) {
         return GraphGenerator.generate(new InboundSemiGraph<Module>() {
+            @Override
             public Collection<Module> getNodes() {
                 return Arrays.asList(modules);
             }
 
+            @Override
             public Iterator<Module> getIn(Module module) {
                 return Arrays.asList(getDependencies(module)).iterator();
             }
@@ -63,13 +63,13 @@ public final class ModuleCompilerUtil {
 
     @RequiredReadAction
     public static List<Chunk<Module>> getSortedModuleChunks(Project project, List<Module> modules) {
-        final Module[] allModules = ModuleManager.getInstance(project).getModules();
-        final List<Chunk<Module>> chunks = getSortedChunks(createModuleGraph(allModules));
+        Module[] allModules = ModuleManager.getInstance(project).getModules();
+        List<Chunk<Module>> chunks = getSortedChunks(createModuleGraph(allModules));
 
-        final Set<Module> modulesSet = new HashSet<Module>(modules);
+        Set<Module> modulesSet = new HashSet<>(modules);
         // leave only those chunks that contain at least one module from modules
         for (Iterator<Chunk<Module>> it = chunks.iterator(); it.hasNext(); ) {
-            final Chunk<Module> chunk = it.next();
+            Chunk<Module> chunk = it.next();
             if (!ContainerUtil.intersects(chunk.getNodes(), modulesSet)) {
                 it.remove();
             }
@@ -77,13 +77,13 @@ public final class ModuleCompilerUtil {
         return chunks;
     }
 
-    public static <Node> List<Chunk<Node>> getSortedChunks(final Graph<Node> graph) {
-        final Graph<Chunk<Node>> chunkGraph = toChunkGraph(graph);
-        final List<Chunk<Node>> chunks = new ArrayList<Chunk<Node>>(chunkGraph.getNodes().size());
-        for (final Chunk<Node> chunk : chunkGraph.getNodes()) {
+    public static <Node> List<Chunk<Node>> getSortedChunks(Graph<Node> graph) {
+        Graph<Chunk<Node>> chunkGraph = toChunkGraph(graph);
+        List<Chunk<Node>> chunks = new ArrayList<>(chunkGraph.getNodes().size());
+        for (Chunk<Node> chunk : chunkGraph.getNodes()) {
             chunks.add(chunk);
         }
-        DFSTBuilder<Chunk<Node>> builder = new DFSTBuilder<Chunk<Node>>(chunkGraph);
+        DFSTBuilder<Chunk<Node>> builder = new DFSTBuilder<>(chunkGraph);
         if (!builder.isAcyclic()) {
             LOG.error("Acyclic graph expected");
             return null;
@@ -93,17 +93,15 @@ public final class ModuleCompilerUtil {
         return chunks;
     }
 
-    public static <Node> Graph<Chunk<Node>> toChunkGraph(final Graph<Node> graph) {
+    public static <Node> Graph<Chunk<Node>> toChunkGraph(Graph<Node> graph) {
         return GraphAlgorithms.getInstance().computeSCCGraph(graph);
     }
 
-    public static void sortModules(final Project project, final List<Module> modules) {
-        final Application application = ApplicationManager.getApplication();
-        Runnable sort = new Runnable() {
-            public void run() {
-                Comparator<Module> comparator = ModuleManager.getInstance(project).moduleDependencyComparator();
-                Collections.sort(modules, comparator);
-            }
+    public static void sortModules(@Nonnull Project project, List<Module> modules) {
+        Application application = project.getApplication();
+        Runnable sort = () -> {
+            Comparator<Module> comparator = ModuleManager.getInstance(project).moduleDependencyComparator();
+            Collections.sort(modules, comparator);
         };
         if (application.isDispatchThread()) {
             sort.run();
@@ -115,14 +113,16 @@ public final class ModuleCompilerUtil {
 
 
     public static <T extends ModuleRootModel> GraphGenerator<T> createGraphGenerator(final Map<Module, T> models) {
-        return GraphGenerator.create(CachingSemiGraph.create(new GraphGenerator.SemiGraph<T>() {
+        return (GraphGenerator<T>)GraphGenerator.generate(CachingSemiGraph.cache(new InboundSemiGraph<T>() {
+            @Override
             public Collection<T> getNodes() {
                 return models.values();
             }
 
-            public Iterator<T> getIn(final ModuleRootModel model) {
-                final Module[] modules = model.getModuleDependencies();
-                final List<T> dependencies = new ArrayList<T>();
+            @Override
+            public Iterator<T> getIn(ModuleRootModel model) {
+                Module[] modules = model.getModuleDependencies();
+                List<T> dependencies = new ArrayList<>();
                 for (Module module : modules) {
                     T depModel = models.get(module);
                     if (depModel != null) {
@@ -139,11 +139,11 @@ public final class ModuleCompilerUtil {
      */
     @Nullable
     @RequiredReadAction
-    public static Pair<Module, Module> addingDependencyFormsCircularity(final Module currentModule, Module toDependOn) {
+    public static Couple<Module> addingDependencyFormsCircularity(Module currentModule, Module toDependOn) {
         assert currentModule != toDependOn;
         // whatsa lotsa of @&#^%$ codes-a!
 
-        final Map<Module, ModifiableRootModel> models = new LinkedHashMap<Module, ModifiableRootModel>();
+        Map<Module, ModifiableRootModel> models = new LinkedHashMap<>();
         Project project = currentModule.getProject();
         for (Module module : ModuleManager.getInstance(project).getModules()) {
             ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
@@ -164,7 +164,7 @@ public final class ModuleCompilerUtil {
             for (Chunk<ModifiableRootModel> chunk : nodesAfter) {
                 if (chunk.containsNode(toDependOnModel) && chunk.containsNode(currentModel)) {
                     Iterator<ModifiableRootModel> nodes = chunk.getNodes().iterator();
-                    return Pair.create(nodes.next().getModule(), nodes.next().getModule());
+                    return Couple.of(nodes.next().getModule(), nodes.next().getModule());
                 }
             }
         }
@@ -176,7 +176,7 @@ public final class ModuleCompilerUtil {
         return null;
     }
 
-    public static <T extends ModuleRootModel> Collection<Chunk<T>> buildChunks(final Map<Module, T> models) {
+    public static <T extends ModuleRootModel> Collection<Chunk<T>> buildChunks(Map<Module, T> models) {
         return toChunkGraph(createGraphGenerator(models)).getNodes();
     }
 }

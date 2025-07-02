@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class ArtifactCompilerCompileItem extends VirtualFileCompileItem<ArtifactPackagingItemOutputState> {
     public static final DataExternalizer<ArtifactPackagingItemOutputState> OUTPUT_EXTERNALIZER = new ArtifactPackagingItemExternalizer();
-    private final List<DestinationInfo> myDestinations = new SmartList<DestinationInfo>();
+    private final List<DestinationInfo> myDestinations = new SmartList<>();
 
     public ArtifactCompilerCompileItem(VirtualFile file) {
         super(file);
@@ -47,10 +47,10 @@ public class ArtifactCompilerCompileItem extends VirtualFileCompileItem<Artifact
     @Nonnull
     @Override
     public ArtifactPackagingItemOutputState computeOutputState() {
-        final SmartList<Pair<String, Long>> pairs = new SmartList<Pair<String, Long>>();
+        List<Pair<String, Long>> pairs = new SmartList<>();
         for (DestinationInfo destination : myDestinations) {
             destination.update();
-            final VirtualFile outputFile = destination.getOutputFile();
+            VirtualFile outputFile = destination.getOutputFile();
             long timestamp = outputFile != null ? outputFile.getTimeStamp() : -1;
             pairs.add(Pair.create(destination.getOutputPath(), timestamp));
         }
@@ -59,15 +59,15 @@ public class ArtifactCompilerCompileItem extends VirtualFileCompileItem<Artifact
 
     @Override
     public boolean isOutputUpToDate(@Nonnull ArtifactPackagingItemOutputState state) {
-        final SmartList<Pair<String, Long>> cachedDestinations = state.myDestinations;
+        List<Pair<String, Long>> cachedDestinations = state.myDestinations;
         if (cachedDestinations.size() != myDestinations.size()) {
             return false;
         }
 
         for (DestinationInfo info : myDestinations) {
-            final VirtualFile outputFile = info.getOutputFile();
+            VirtualFile outputFile = info.getOutputFile();
             long timestamp = outputFile != null ? outputFile.getTimeStamp() : -1;
-            final String path = info.getOutputPath();
+            String path = info.getOutputPath();
             boolean found = false;
             //todo[nik] use map if list contains many items
             for (Pair<String, Long> cachedDestination : cachedDestinations) {

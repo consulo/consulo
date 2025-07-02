@@ -4,7 +4,10 @@ package consulo.compiler.impl.internal;
 
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressIndicator;
-import consulo.build.ui.*;
+import consulo.build.ui.BuildDescriptor;
+import consulo.build.ui.BuildViewManager;
+import consulo.build.ui.DefaultBuildDescriptor;
+import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.impl.internal.event.FileNavigatable;
 import consulo.build.ui.issue.BuildIssue;
@@ -31,16 +34,15 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import java.io.File;
 import java.util.*;
 
 /**
+ * Based on consulo.ide.impl.idea.compiler.progress.BuildOutputService idea version but in our platform.
+ *
  * @author VISTALL
- * @since 28/11/2021
- * <p>
- * Based on consulo.ide.impl.idea.compiler.progress.BuildOutputService idea version but in our platform
+ * @since 2021-11-28
  */
 public class BuildViewServiceImpl implements BuildViewService {
     private static class ConsolePrinter {
@@ -52,7 +54,7 @@ public class BuildViewServiceImpl implements BuildViewService {
             this.progress = progress;
         }
 
-        private void print(@Nonnull @Nls String message, @Nonnull MessageEvent.Kind kind) {
+        private void print(@Nonnull String message, @Nonnull MessageEvent.Kind kind) {
             String text = wrapWithAnsiColor(kind, message);
             if (!isNewLinePosition && !StringUtil.startsWithChar(message, '\r')) {
                 text = '\n' + text;
@@ -61,8 +63,7 @@ public class BuildViewServiceImpl implements BuildViewService {
             progress.output(text, kind != MessageEvent.Kind.ERROR);
         }
 
-        @Nls
-        private static String wrapWithAnsiColor(MessageEvent.Kind kind, @Nls String message) {
+        private static String wrapWithAnsiColor(MessageEvent.Kind kind, String message) {
             if (kind == MessageEvent.Kind.SIMPLE) {
                 return message;
             }
@@ -76,7 +77,7 @@ public class BuildViewServiceImpl implements BuildViewService {
             else {
                 color = ANSI_BOLD;
             }
-            final String ansiReset = ANSI_RESET;
+            String ansiReset = ANSI_RESET;
             return color + message + ansiReset;
         }
     }
@@ -113,27 +114,27 @@ public class BuildViewServiceImpl implements BuildViewService {
                     myProject,
                     RegexpFilter.FILE_PATH_MACROS + ":" + RegexpFilter.LINE_MACROS + ":" + RegexpFilter.COLUMN_MACROS
                 ))
-                .withExecutionFilter(new UrlFilter(myProject)).withContextAction(node -> {
-                    return new ExcludeFromCompileAction(myProject) {
-                        @Override
-                        @Nullable
-                        protected VirtualFile getFile() {
-                            List<Navigatable> navigatables = node.getNavigatables();
-                            if (navigatables.size() != 1) {
-                                return null;
-                            }
-                            Navigatable navigatable = navigatables.get(0);
-                            if (navigatable instanceof OpenFileDescriptor) {
-                                return ((OpenFileDescriptor) navigatable).getFile();
-                            }
-                            else if (navigatable instanceof FileNavigatable fileNavigatable) {
-                                OpenFileDescriptor fileDescriptor = fileNavigatable.getFileDescriptor();
-                                return fileDescriptor != null ? fileDescriptor.getFile() : null;
-                            }
+                .withExecutionFilter(new UrlFilter(myProject))
+                .withContextAction(node -> new ExcludeFromCompileAction(myProject) {
+                    @Override
+                    @Nullable
+                    protected VirtualFile getFile() {
+                        List<Navigatable> navigatables = node.getNavigatables();
+                        if (navigatables.size() != 1) {
                             return null;
                         }
-                    };
-                }).withContextActions(contextActions.toArray(AnAction.EMPTY_ARRAY));
+                        Navigatable navigatable = navigatables.get(0);
+                        if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
+                            return openFileDescriptor.getFile();
+                        }
+                        else if (navigatable instanceof FileNavigatable fileNavigatable) {
+                            OpenFileDescriptor fileDescriptor = fileNavigatable.getFileDescriptor();
+                            return fileDescriptor != null ? fileDescriptor.getFile() : null;
+                        }
+                        return null;
+                    }
+                })
+                .withContextActions(contextActions.toArray(AnAction.EMPTY_ARRAY));
 
         myBuildProgress.start(new BuildProgressDescriptor() {
             @Nonnull
@@ -154,10 +155,10 @@ public class BuildViewServiceImpl implements BuildViewService {
     }
 
     private void addIndicatorDelegate(ProgressIndicator indicator) {
-        if (!(indicator instanceof ProgressIndicatorEx)) {
+        if (!(indicator instanceof ProgressIndicatorEx progressIndicatorEx)) {
             return;
         }
-        ((ProgressIndicatorEx) indicator).addStateDelegate(new DummyProgressIndicator() {
+        progressIndicatorEx.addStateDelegate(new DummyProgressIndicator() {
             private final Map<String, Set<String>> mySeenMessages = new HashMap<>();
             private LocalizeValue lastMessage = LocalizeValue.empty();
             private Stack<LocalizeValue> myTextStack;
@@ -186,7 +187,7 @@ public class BuildViewServiceImpl implements BuildViewService {
                 return stack;
             }
 
-            private void addIndicatorNewMessagesAsBuildOutput(@Nls LocalizeValue msg) {
+            private void addIndicatorNewMessagesAsBuildOutput(LocalizeValue msg) {
                 Stack<LocalizeValue> textStack = getTextStack();
                 if (!textStack.isEmpty() && msg.equals(textStack.peek())) {
                     textStack.pop();
@@ -276,9 +277,9 @@ public class BuildViewServiceImpl implements BuildViewService {
         String message = null;
         String[] messages = StringUtil.splitByLines(compilerMessage.getMessage());
         if (messages.length > 1) {
-            final String line0 = messages[0];
-            final String line1 = messages[1];
-            final int colonIndex = line1.indexOf(':');
+            String line0 = messages[0];
+            String line1 = messages[1];
+            int colonIndex = line1.indexOf(':');
             if (colonIndex > 0) {
                 String part1 = line1.substring(0, colonIndex).trim();
                 // extract symbol information from the compiler message of the following template:
@@ -323,18 +324,12 @@ public class BuildViewServiceImpl implements BuildViewService {
 
     @Nonnull
     private static MessageEvent.Kind convertCategory(@Nonnull CompilerMessageCategory category) {
-        switch (category) {
-            case ERROR:
-                return MessageEvent.Kind.ERROR;
-            case WARNING:
-                return MessageEvent.Kind.WARNING;
-            case INFORMATION:
-                return MessageEvent.Kind.INFO;
-            case STATISTICS:
-                return MessageEvent.Kind.STATISTICS;
-            default:
-                return MessageEvent.Kind.SIMPLE;
-        }
+        return switch (category) {
+            case ERROR -> MessageEvent.Kind.ERROR;
+            case WARNING -> MessageEvent.Kind.WARNING;
+            case INFORMATION -> MessageEvent.Kind.INFO;
+            case STATISTICS -> MessageEvent.Kind.STATISTICS;
+        };
     }
 
     @Override
@@ -344,6 +339,5 @@ public class BuildViewServiceImpl implements BuildViewService {
 
     @Override
     public void registerCloseAction(Runnable onClose) {
-
     }
 }

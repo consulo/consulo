@@ -16,20 +16,22 @@
 package consulo.compiler.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.ResourceCompilerExtension;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.resourceCompiler.ResourceCompiler;
 import consulo.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.util.CompilerUtil;
 import consulo.compiler.util.MakeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Chunk;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
@@ -65,10 +67,11 @@ public class ResourceCompilerImpl implements ResourceCompiler {
     @Override
     @Nonnull
     public String getDescription() {
-        return CompilerBundle.message("resource.compiler.description");
+        return CompilerLocalize.resourceCompilerDescription().get();
     }
 
     @Override
+    @RequiredUIAccess
     public boolean validateConfiguration(CompileScope scope) {
         myResourceCompilerConfiguration.convertPatterns();
         return true;
@@ -76,7 +79,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
 
     @Override
     public boolean isCompilableFile(VirtualFile file, CompileContext context) {
-        final Module module = context.getModuleByFile(file);
+        Module module = context.getModuleByFile(file);
         if (module == null) {
             return false;
         }
@@ -84,6 +87,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
         if (myProjectFileIndex.isInResource(file) || myProjectFileIndex.isInTestResource(file)) {
             return true;
         }
+        //noinspection SimplifiableIfStatement
         if (skipStandardResourceCompiler(module)) {
             return false;
         }
@@ -91,71 +95,71 @@ public class ResourceCompilerImpl implements ResourceCompiler {
     }
 
     @Override
-    public void compile(final CompileContext context, Chunk<Module> moduleChunk, final VirtualFile[] files, OutputSink sink) {
+    public void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink) {
         context.getProgressIndicator().pushState();
-        context.getProgressIndicator().setText(CompilerBundle.message("progress.copying.resources"));
+        context.getProgressIndicator().setTextValue(CompilerLocalize.progressCopyingResources());
 
-        final Map<String, Collection<OutputItem>> processed = new HashMap<String, Collection<OutputItem>>();
-        final LinkedList<CopyCommand> copyCommands = new LinkedList<CopyCommand>();
-        final Module singleChunkModule = moduleChunk.getNodes().size() == 1 ? moduleChunk.getNodes().iterator().next() : null;
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-                for (final VirtualFile file : files) {
-                    if (context.getProgressIndicator().isCanceled()) {
-                        break;
-                    }
-                    final Module module = singleChunkModule != null ? singleChunkModule : context.getModuleByFile(file);
-                    if (module == null) {
-                        continue; // looks like file invalidated
-                    }
-                    final VirtualFile fileRoot = MakeUtil.getSourceRoot(context, module, file);
-                    if (fileRoot == null) {
-                        continue;
-                    }
-                    final String sourcePath = file.getPath();
-                    final String relativePath = VirtualFileUtil.getRelativePath(file, fileRoot, '/');
-                    final VirtualFile outputDir = context.getOutputForFile(module, file);
-                    if (outputDir == null) {
-                        continue;
-                    }
-                    final String outputPath = outputDir.getPath();
+        Map<String, Collection<OutputItem>> processed = new HashMap<>();
+        LinkedList<CopyCommand> copyCommands = new LinkedList<>();
+        Module singleChunkModule = moduleChunk.getNodes().size() == 1 ? moduleChunk.getNodes().iterator().next() : null;
+        Application.get().runReadAction(() -> {
+            for (VirtualFile file : files) {
+                if (context.getProgressIndicator().isCanceled()) {
+                    break;
+                }
+                Module module = singleChunkModule != null ? singleChunkModule : context.getModuleByFile(file);
+                if (module == null) {
+                    continue; // looks like file invalidated
+                }
+                VirtualFile fileRoot = MakeUtil.getSourceRoot(context, module, file);
+                if (fileRoot == null) {
+                    continue;
+                }
+                String sourcePath = file.getPath();
+                String relativePath = VirtualFileUtil.getRelativePath(file, fileRoot, '/');
+                VirtualFile outputDir = context.getOutputForFile(module, file);
+                if (outputDir == null) {
+                    continue;
+                }
+                String outputPath = outputDir.getPath();
 
-                    final String packagePrefix = myProjectFileIndex.getPackageNameByDirectory(fileRoot);
-                    final String targetPath;
-                    if (packagePrefix != null && packagePrefix.length() > 0) {
-                        targetPath = outputPath + "/" + packagePrefix.replace('.', '/') + "/" + relativePath;
-                    }
-                    else {
-                        targetPath = outputPath + "/" + relativePath;
-                    }
-                    if (sourcePath.equals(targetPath)) {
-                        addToMap(processed, outputPath, new MyOutputItem(targetPath, file));
-                    }
-                    else {
-                        copyCommands.add(new CopyCommand(outputPath, sourcePath, targetPath, file));
-                    }
+                String packagePrefix = myProjectFileIndex.getPackageNameByDirectory(fileRoot);
+                String targetPath;
+                if (packagePrefix != null && packagePrefix.length() > 0) {
+                    targetPath = outputPath + "/" + packagePrefix.replace('.', '/') + "/" + relativePath;
+                }
+                else {
+                    targetPath = outputPath + "/" + relativePath;
+                }
+                if (sourcePath.equals(targetPath)) {
+                    addToMap(processed, outputPath, new MyOutputItem(targetPath, file));
+                }
+                else {
+                    copyCommands.add(new CopyCommand(outputPath, sourcePath, targetPath, file));
                 }
             }
         });
 
-        final List<File> filesToRefresh = new ArrayList<File>();
+        List<File> filesToRefresh = new ArrayList<>();
         // do actual copy outside of read action to reduce the time the application is locked on it
         while (!copyCommands.isEmpty()) {
-            final CopyCommand command = copyCommands.removeFirst();
+            CopyCommand command = copyCommands.removeFirst();
             if (context.getProgressIndicator().isCanceled()) {
                 break;
             }
             //context.getProgressIndicator().setFraction((idx++) * 1.0 / total);
-            context.getProgressIndicator().setText2("Copying " + command.getFromPath() + "...");
+            context.getProgressIndicator().setText2Value(LocalizeValue.localizeTODO("Copying " + command.getFromPath() + "..."));
             try {
-                final MyOutputItem outputItem = command.copy(filesToRefresh);
+                MyOutputItem outputItem = command.copy(filesToRefresh);
                 addToMap(processed, command.getOutputPath(), outputItem);
             }
             catch (IOException e) {
-                context.addMessage(CompilerMessageCategory.ERROR, CompilerBundle
-                        .message("error.copying", command.getFromPath(), command.getToPath(), ExceptionUtil.getThrowableText(e)),
-                    command.getSourceFileUrl(), -1, -1
+                context.addMessage(
+                    CompilerMessageCategory.ERROR,
+                    CompilerLocalize.errorCopying(command.getFromPath(), command.getToPath(), ExceptionUtil.getThrowableText(e)).get(),
+                    command.getSourceFileUrl(),
+                    -1,
+                    -1
                 );
             }
         }
@@ -185,7 +189,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
         return FileType.EMPTY_ARRAY;
     }
 
-    private boolean skipStandardResourceCompiler(final Module module) {
+    private boolean skipStandardResourceCompiler(Module module) {
         for (ResourceCompilerExtension extension : module.getApplication().getExtensionPoint(ResourceCompilerExtension.class)) {
             if (extension.skipStandardResourceCompiler(module)) {
                 return true;
@@ -220,7 +224,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Copying " + myFromPath + " to " + myToPath);
             }
-            final File targetFile = new File(myToPath);
+            File targetFile = new File(myToPath);
             FileUtil.copyContent(new File(myFromPath), targetFile, FilePermissionCopier.BY_NIO2);
             filesToRefresh.add(targetFile);
             return new MyOutputItem(myToPath, mySourceFile);

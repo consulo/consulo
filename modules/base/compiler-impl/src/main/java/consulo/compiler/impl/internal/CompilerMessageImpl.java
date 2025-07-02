@@ -15,37 +15,44 @@
  */
 package consulo.compiler.impl.internal;
 
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
+
 public final class CompilerMessageImpl implements CompilerMessage {
+    @Nonnull
     private final Project myProject;
+    @Nonnull
     private final CompilerMessageCategory myCategory;
     @Nullable
     private Navigatable myNavigatable;
+    @Nonnull
     private final String myMessage;
-    private VirtualFile myFile;
+    @Nullable
+    private final VirtualFile myFile;
     private final int myRow;
     private final int myColumn;
 
-    public CompilerMessageImpl(Project project, CompilerMessageCategory category, String message) {
+    public CompilerMessageImpl(@Nonnull Project project, @Nonnull CompilerMessageCategory category, @Nullable String message) {
         this(project, category, message, null, -1, -1, null);
     }
 
     public CompilerMessageImpl(
-        Project project,
-        CompilerMessageCategory category,
-        String message,
-        @Nullable final VirtualFile file,
+        @Nonnull Project project,
+        @Nonnull CompilerMessageCategory category,
+        @Nullable String message,
+        @Nullable VirtualFile file,
         int row,
         int column,
-        @Nullable final Navigatable navigatable
+        @Nullable Navigatable navigatable
     ) {
         myProject = project;
         myCategory = category;
@@ -56,24 +63,27 @@ public final class CompilerMessageImpl implements CompilerMessage {
         myFile = file;
     }
 
+    @Nonnull
     @Override
     public CompilerMessageCategory getCategory() {
         return myCategory;
     }
 
+    @Nonnull
     @Override
     public String getMessage() {
         return myMessage;
     }
 
+    @Nullable
     @Override
     public Navigatable getNavigatable() {
         if (myNavigatable != null) {
             return myNavigatable;
         }
-        final VirtualFile virtualFile = getVirtualFile();
+        VirtualFile virtualFile = getVirtualFile();
         if (virtualFile != null && virtualFile.isValid()) {
-            final int line = getLine() - 1; // editor lines are zero-based
+            int line = getLine() - 1; // editor lines are zero-based
             if (line >= 0) {
                 OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(myProject);
                 return myNavigatable = factory.newBuilder(virtualFile).line(line).column(Math.max(0, getColumn() - 1)).build();
@@ -90,7 +100,7 @@ public final class CompilerMessageImpl implements CompilerMessage {
     @Override
     public String getExportTextPrefix() {
         if (getLine() >= 0) {
-            return CompilerBundle.message("compiler.results.export.text.prefix", getLine());
+            return CompilerLocalize.compilerResultsExportTextPrefix(getLine()).get();
         }
         return "";
     }
@@ -115,43 +125,22 @@ public final class CompilerMessageImpl implements CompilerMessage {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof CompilerMessage)) {
-            return false;
-        }
-
-        final CompilerMessageImpl compilerMessage = (CompilerMessageImpl) o;
-
-        if (myColumn != compilerMessage.myColumn) {
-            return false;
-        }
-        if (myRow != compilerMessage.myRow) {
-            return false;
-        }
-        if (!myCategory.equals(compilerMessage.myCategory)) {
-            return false;
-        }
-        if (myFile != null ? !myFile.equals(compilerMessage.myFile) : compilerMessage.myFile != null) {
-            return false;
-        }
-        if (!myMessage.equals(compilerMessage.myMessage)) {
-            return false;
-        }
-
-        return true;
+        return this == o
+            || o instanceof CompilerMessageImpl that
+            && myColumn == that.myColumn
+            && myRow == that.myRow
+            && myCategory.equals(that.myCategory)
+            && Objects.equals(myFile, that.myFile)
+            && myMessage.equals(that.myMessage);
     }
 
     @Override
     public int hashCode() {
-        int result;
-        result = myCategory.hashCode();
+        int result = myCategory.hashCode();
         result = 29 * result + myMessage.hashCode();
         result = 29 * result + (myFile != null ? myFile.hashCode() : 0);
         result = 29 * result + myRow;
-        result = 29 * result + myColumn;
-        return result;
+        return 29 * result + myColumn;
     }
 
     @Override

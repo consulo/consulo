@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.compiler.impl.internal.artifact;
 
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.artifact.element.*;
 import consulo.compiler.impl.internal.ArtifactCompilerUtil;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.component.util.graph.CachingSemiGraph;
 import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.GraphGenerator;
+import consulo.component.util.graph.InboundSemiGraph;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -64,9 +66,9 @@ public class ArchivesBuilder {
     }
 
     public boolean buildArchives(Set<String> writtenPaths) throws IOException {
-        myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.building.archives"));
+        myContext.getProgressIndicator().setTextValue(CompilerLocalize.packagingCompilerMessageBuildingArchives());
 
-        final ArchivePackageInfo[] sortedArchives = sortArchives();
+        ArchivePackageInfo[] sortedArchives = sortArchives();
         if (sortedArchives == null) {
             return false;
         }
@@ -78,13 +80,12 @@ public class ArchivesBuilder {
                 buildArchive(archivePackageInfo);
             }
 
-            myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.copying.archives"));
+            myContext.getProgressIndicator().setTextValue(CompilerLocalize.packagingCompilerMessageCopyingArchives());
             copyJars(writtenPaths);
         }
         finally {
             deleteTemporaryJars();
         }
-
 
         return true;
     }
@@ -95,7 +96,7 @@ public class ArchivesBuilder {
         }
     }
 
-    private void copyJars(final Set<String> writtenPaths) throws IOException {
+    private void copyJars(Set<String> writtenPaths) throws IOException {
         for (Map.Entry<ArchivePackageInfo, File> entry : myBuiltArchives.entrySet()) {
             File fromFile = entry.getValue();
             boolean first = true;
@@ -117,24 +118,22 @@ public class ArchivesBuilder {
         }
     }
 
-    private static void renameFile(final File fromFile, final File toFile, final Set<String> writtenPaths) throws IOException {
+    private static void renameFile(File fromFile, File toFile, Set<String> writtenPaths) throws IOException {
         FileUtil.rename(fromFile, toFile, FilePermissionCopier.BY_NIO2);
         writtenPaths.add(toFile.getPath());
     }
 
     @Nullable
     private ArchivePackageInfo[] sortArchives() {
-        final DFSTBuilder<ArchivePackageInfo> builder =
-            new DFSTBuilder<>(GraphGenerator.create(CachingSemiGraph.create(new ArchivesGraph())));
+        DFSTBuilder<ArchivePackageInfo> builder =
+            new DFSTBuilder<>(GraphGenerator.generate(CachingSemiGraph.cache(new ArchivesGraph())));
         if (!builder.isAcyclic()) {
-            final consulo.util.lang.Pair<ArchivePackageInfo, ArchivePackageInfo> dependency = builder.getCircularDependency();
-            String message = CompilerBundle
-                .message(
-                    "packaging.compiler.error.cannot.build.circular.dependency.found.between.0.and.1",
-                    dependency.getFirst().getPresentableDestination(),
-                    dependency.getSecond().getPresentableDestination()
-                );
-            myContext.addMessage(CompilerMessageCategory.ERROR, message, null, -1, -1);
+            Couple<ArchivePackageInfo> dependency = builder.getCircularDependency();
+            LocalizeValue message = CompilerLocalize.packagingCompilerErrorCannotBuildCircularDependencyFoundBetween0And1(
+                dependency.getFirst().getPresentableDestination(),
+                dependency.getSecond().getPresentableDestination()
+            );
+            myContext.addMessage(CompilerMessageCategory.ERROR, message.get(), null, -1, -1);
             return null;
         }
 
@@ -149,7 +148,7 @@ public class ArchivesBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void buildArchive(final ArchivePackageInfo archive) throws IOException {
+    private <T> void buildArchive(ArchivePackageInfo archive) throws IOException {
         if (archive.getPackedFiles().isEmpty() && archive.getPackedArchives().isEmpty()) {
             myContext.addMessage(
                 CompilerMessageCategory.WARNING,
@@ -162,7 +161,7 @@ public class ArchivesBuilder {
         }
 
         myContext.getProgressIndicator()
-            .setText(CompilerBundle.message("packaging.compiler.message.building.0", archive.getPresentableDestination()));
+            .setTextValue(CompilerLocalize.packagingCompilerMessageBuilding0(archive.getPresentableDestination()));
         File tempFile = File.createTempFile("artifactCompiler", "tmp");
 
         myBuiltArchives.put(archive, tempFile);
@@ -181,9 +180,9 @@ public class ArchivesBuilder {
         }
 
         try {
-            final Set<String> writtenPaths = new HashSet<>();
+            Set<String> writtenPaths = new HashSet<>();
             for (Pair<String, VirtualFile> pair : archive.getPackedFiles()) {
-                final VirtualFile sourceFile = pair.getSecond();
+                VirtualFile sourceFile = pair.getSecond();
                 if (sourceFile.isInLocalFileSystem()) {
                     File file = VirtualFileUtil.virtualToIoFile(sourceFile);
                     addFileToArchive(archiveFile, packageWriter, file, pair.getFirst(), writtenPaths);
@@ -219,13 +218,13 @@ public class ArchivesBuilder {
         Set<String> writtenPaths
     ) throws IOException {
         relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
-        myContext.getProgressIndicator().setText2(relativePath);
+        myContext.getProgressIndicator().setText2Value(LocalizeValue.of(relativePath));
         if (!writtenPaths.add(relativePath)) {
             return;
         }
 
         Pair<InputStream, Long> streamLongPair = ArtifactCompilerUtil.getArchiveEntryInputStream(sourceFile, myContext);
-        final InputStream input = streamLongPair.getFirst();
+        InputStream input = streamLongPair.getFirst();
         if (input == null) {
             return;
         }
@@ -265,7 +264,7 @@ public class ArchivesBuilder {
 
         relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
 
-        myContext.getProgressIndicator().setText2(relativePath);
+        myContext.getProgressIndicator().setText2Value(LocalizeValue.of(relativePath));
 
         try (FileInputStream fileOutputStream = new FileInputStream(file)) {
             writer.addFile(archiveObject, fileOutputStream, relativePath, file.length(), file.lastModified());
@@ -295,14 +294,14 @@ public class ArchivesBuilder {
         return relativePath;
     }
 
-    private class ArchivesGraph implements GraphGenerator.SemiGraph<ArchivePackageInfo> {
+    private class ArchivesGraph implements InboundSemiGraph<ArchivePackageInfo> {
         @Override
         public Collection<ArchivePackageInfo> getNodes() {
             return myArchivesToBuild;
         }
 
         @Override
-        public Iterator<ArchivePackageInfo> getIn(final ArchivePackageInfo n) {
+        public Iterator<ArchivePackageInfo> getIn(ArchivePackageInfo n) {
             Set<ArchivePackageInfo> ins = new HashSet<>();
             for (ArchiveDestinationInfo destination : n.getArchiveDestinations()) {
                 ins.add(destination.getArchivePackageInfo());

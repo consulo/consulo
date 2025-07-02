@@ -16,15 +16,16 @@
 package consulo.compiler.impl.internal.artifact;
 
 import consulo.util.lang.Pair;
-import consulo.util.collection.SmartList;
+
+import java.util.List;
 
 /**
  * @author nik
  */
 public class ArtifactPackagingItemOutputState {
-    public final SmartList<Pair<String, Long>> myDestinations;
+    public final List<Pair<String, Long>> myDestinations;
 
-    public ArtifactPackagingItemOutputState(SmartList<Pair<String, Long>> destinations) {
+    public ArtifactPackagingItemOutputState(List<Pair<String, Long>> destinations) {
         myDestinations = destinations;
     }
 }

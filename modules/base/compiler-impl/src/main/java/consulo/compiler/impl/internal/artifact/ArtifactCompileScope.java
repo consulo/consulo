@@ -54,10 +54,11 @@ public class ArtifactCompileScope {
         @Nonnull Collection<? extends Artifact> artifacts
     ) {
         boolean[] includeTestScope = new boolean[1];
-        final Set<Module> modules = ArtifactUtil.getModulesIncludedInArtifacts(artifacts, project, includeTestScope);
+        Set<Module> modules = ArtifactUtil.getModulesIncludedInArtifacts(artifacts, project, includeTestScope);
         return new ModuleCompileScope(project, modules.toArray(new Module[modules.size()]), true, includeTestScope[0]);
     }
 
+    @RequiredReadAction
     public static CompileScope createArtifactsScope(
         @Nonnull Project project,
         @Nonnull Collection<Artifact> artifacts
@@ -65,16 +66,17 @@ public class ArtifactCompileScope {
         return createArtifactsScope(project, artifacts, false);
     }
 
+    @RequiredReadAction
     public static CompileScope createArtifactsScope(
         @Nonnull Project project,
         @Nonnull Collection<Artifact> artifacts,
-        final boolean forceArtifactBuild
+        boolean forceArtifactBuild
     ) {
         return createScopeWithArtifacts(createScopeForModulesInArtifacts(project, artifacts), artifacts, true, forceArtifactBuild);
     }
 
     public static CompileScope createScopeWithArtifacts(
-        final CompileScope baseScope,
+        CompileScope baseScope,
         @Nonnull Collection<Artifact> artifacts,
         boolean useCustomContentId
     ) {
@@ -82,10 +84,10 @@ public class ArtifactCompileScope {
     }
 
     public static CompileScope createScopeWithArtifacts(
-        final CompileScope baseScope,
+        CompileScope baseScope,
         @Nonnull Collection<Artifact> artifacts,
         boolean useCustomContentId,
-        final boolean forceArtifactBuild
+        boolean forceArtifactBuild
     ) {
         baseScope.putUserData(ARTIFACTS_KEY, artifacts.toArray(new Artifact[artifacts.size()]));
         if (useCustomContentId) {
@@ -97,26 +99,27 @@ public class ArtifactCompileScope {
         return baseScope;
     }
 
+    @RequiredReadAction
     public static Set<Artifact> getArtifactsToBuild(
-        final Project project,
-        final CompileScope compileScope,
-        final boolean addIncludedArtifactsWithOutputPathsOnly
+        Project project,
+        CompileScope compileScope,
+        boolean addIncludedArtifactsWithOutputPathsOnly
     ) {
-        final Artifact[] artifactsFromScope = getArtifacts(compileScope);
-        final ArtifactManager artifactManager = ArtifactManager.getInstance(project);
+        Artifact[] artifactsFromScope = getArtifacts(compileScope);
+        ArtifactManager artifactManager = ArtifactManager.getInstance(project);
         PackagingElementResolvingContext context = artifactManager.getResolvingContext();
         if (artifactsFromScope != null) {
             return addIncludedArtifacts(Arrays.asList(artifactsFromScope), context, addIncludedArtifactsWithOutputPathsOnly);
         }
 
-        final Set<Artifact> cached = compileScope.getUserData(CACHED_ARTIFACTS_KEY);
+        Set<Artifact> cached = compileScope.getUserData(CACHED_ARTIFACTS_KEY);
         if (cached != null) {
             return cached;
         }
 
         Set<Artifact> artifacts = new HashSet<>();
-        final Set<Module> modules = new HashSet<>(Arrays.asList(compileScope.getAffectedModules()));
-        final List<Module> allModules = Arrays.asList(ModuleManager.getInstance(project).getModules());
+        Set<Module> modules = new HashSet<>(Arrays.asList(compileScope.getAffectedModules()));
+        List<Module> allModules = Arrays.asList(ModuleManager.getInstance(project).getModules());
         for (Artifact artifact : artifactManager.getArtifacts()) {
             if (artifact.isBuildOnMake()) {
                 if (modules.containsAll(allModules)
@@ -139,16 +142,16 @@ public class ArtifactCompileScope {
         return Boolean.TRUE.equals(scope.getUserData(FORCE_ARTIFACT_BUILD));
     }
 
-    private static boolean containsModuleOutput(
-        Artifact artifact,
-        final Set<Module> modules,
-        final PackagingElementResolvingContext context
-    ) {
-        return !ArtifactUtil.processPackagingElements(artifact,
-            ProductionModuleOutputElementType.getInstance(), it -> {
-                final Module module = it.findModule(context);
+    private static boolean containsModuleOutput(Artifact artifact, Set<Module> modules, PackagingElementResolvingContext context) {
+        return !ArtifactUtil.processPackagingElements(
+            artifact,
+            ProductionModuleOutputElementType.getInstance(),
+            it -> {
+                Module module = it.findModule(context);
                 return module == null || !modules.contains(module);
-            }, context, true
+            },
+            context,
+            true
         );
     }
 
@@ -156,7 +159,7 @@ public class ArtifactCompileScope {
     private static Set<Artifact> addIncludedArtifacts(
         @Nonnull Collection<Artifact> artifacts,
         @Nonnull PackagingElementResolvingContext context,
-        final boolean withOutputPathOnly
+        boolean withOutputPathOnly
     ) {
         Set<Artifact> result = new HashSet<>();
         for (Artifact artifact : artifacts) {
@@ -167,10 +170,10 @@ public class ArtifactCompileScope {
 
     private static void collectIncludedArtifacts(
         Artifact artifact,
-        final PackagingElementResolvingContext context,
-        final Set<Artifact> processed,
-        final Set<Artifact> result,
-        final boolean withOutputPathOnly
+        PackagingElementResolvingContext context,
+        Set<Artifact> processed,
+        Set<Artifact> result,
+        boolean withOutputPathOnly
     ) {
         if (!processed.add(artifact)) {
             return;

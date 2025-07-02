@@ -15,11 +15,9 @@
  */
 package consulo.compiler.impl.internal;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.compiler.*;
-import consulo.compiler.Compiler;
 import consulo.compiler.impl.internal.scope.CompositeScope;
 import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
@@ -27,6 +25,7 @@ import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -82,6 +81,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     private final long myStartCompilationStamp;
     private final UUID mySessionId = UUID.randomUUID();
 
+    @RequiredReadAction
     public CompileContextImpl(
         @Nonnull Project project,
         CompilerTask compilerSession,
@@ -103,6 +103,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
+    @RequiredReadAction
     public void recalculateOutputDirs() {
         Module[] allModules = ModuleManager.getInstance(myProject).getModules();
 
@@ -166,39 +167,40 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         }) != null;
     }
 
-  /*
-  private JBZipFile lookupZip(String outputDir) {
-    synchronized (myOpenZipFiles) {
-      JBZipFile zip = myOpenZipFiles.get(outputDir);
-      if (zip == null) {
-        File zipFile = CompilerPathsEx.getZippedOutputPath(myProject, outputDir);
-        try {
-          try {
-            zip = new JBZipFile(zipFile);
-          }
-          catch (FileNotFoundException e) {
-            try {
-              zipFile.createNewFile();
-              zip = new JBZipFile(zipFile);
+    /*
+    private JBZipFile lookupZip(String outputDir) {
+        synchronized (myOpenZipFiles) {
+            JBZipFile zip = myOpenZipFiles.get(outputDir);
+            if (zip == null) {
+                File zipFile = CompilerPathsEx.getZippedOutputPath(myProject, outputDir);
+                try {
+                    try {
+                        zip = new JBZipFile(zipFile);
+                    }
+                    catch (FileNotFoundException e) {
+                        try {
+                            zipFile.createNewFile();
+                            zip = new JBZipFile(zipFile);
+                        }
+                        catch (IOException e1) {
+                            zipFile.getParentFile().mkdirs();
+                            zipFile.createNewFile();
+                            zip = new JBZipFile(zipFile);
+                        }
+                    }
+                    myOpenZipFiles.put(outputDir, zip);
+                }
+                catch (IOException e) {
+                    LOG.info(e);
+                    addMessage(CompilerMessageCategory.ERROR, "Cannot create zip file " + zipFile.getPath() + ": " + e.getMessage(), null, -1, -1);
+                }
             }
-            catch (IOException e1) {
-              zipFile.getParentFile().mkdirs();
-              zipFile.createNewFile();
-              zip = new JBZipFile(zipFile);
-            }
-          }
-          myOpenZipFiles.put(outputDir, zip);
+            return zip;
         }
-        catch (IOException e) {
-          LOG.info(e);
-          addMessage(CompilerMessageCategory.ERROR, "Cannot create zip file " + zipFile.getPath() + ": " + e.getMessage(), null, -1, -1);
-        }
-      }
-      return zip;
     }
-  }
-  */
+    */
 
+    @Nonnull
     @Override
     public Project getProject() {
         return myProject;
@@ -245,7 +247,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         if (file == null) {
             return null;
         }
-        return Application.get().runReadAction((Supplier<VirtualFile>)() -> {
+        return myProject.getApplication().runReadAction((Supplier<VirtualFile>)() -> {
             if (file.isValid()) {
                 for (Map.Entry<VirtualFile, Pair<SourceGeneratingCompiler, Module>> entry : myOutputRootToSourceGeneratorMap.entrySet()) {
                     VirtualFile root = entry.getKey();
@@ -266,17 +268,18 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         if (url == null) {
             return null;
         }
-        VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(url);
+        VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+        VirtualFile file = virtualFileManager.findFileByUrl(url);
         if (file == null) {
             // groovy stubs may be placed in completely random directories which aren't refreshed automatically
-            return VirtualFileManager.getInstance().refreshAndFindFileByUrl(url);
+            return virtualFileManager.refreshAndFindFileByUrl(url);
         }
         return file;
     }
 
     @Override
     public void addMessage(CompilerMessage msg) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (myProject.getApplication().isUnitTestMode()) {
             LOG.info("addMessage: " + msg + " this=" + this);
         }
 
@@ -302,26 +305,18 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         CompilerMessageCategory category = message.getCategory();
         int type = translateCategory(category);
         String[] text = ProblemsView.convertMessage(message.getMessage());
-        String groupName = file != null ? file.getPresentableUrl() : category.getPresentableText();
+        LocalizeValue groupName = file != null ? LocalizeValue.of(file.getPresentableUrl()) : category.getPresentableText();
         ProblemsView.getInstance(myProject)
-            .addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
+            .addMessage(type, text, groupName.get(), navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
     }
 
     private static int translateCategory(CompilerMessageCategory category) {
-        if (CompilerMessageCategory.ERROR.equals(category)) {
-            return MessageCategory.ERROR;
-        }
-        if (CompilerMessageCategory.WARNING.equals(category)) {
-            return MessageCategory.WARNING;
-        }
-        if (CompilerMessageCategory.STATISTICS.equals(category)) {
-            return MessageCategory.STATISTICS;
-        }
-        if (CompilerMessageCategory.INFORMATION.equals(category)) {
-            return MessageCategory.INFORMATION;
-        }
-        LOG.error("Unknown message category: " + category);
-        return 0;
+        return switch (category) {
+            case ERROR -> MessageCategory.ERROR;
+            case WARNING -> MessageCategory.WARNING;
+            case STATISTICS -> MessageCategory.STATISTICS;
+            case INFORMATION -> MessageCategory.INFORMATION;
+        };
     }
 
     @Override
@@ -512,7 +507,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public boolean isInTestSourceContent(@Nonnull final VirtualFile fileOrDir) {
+    public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
         if (TestSourcesFilter.isTestSources(fileOrDir, myProject) || myProjectFileIndex.isInTestResource(fileOrDir)) {
             return true;
         }
@@ -524,7 +519,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public boolean isInSourceContent(@Nonnull final VirtualFile fileOrDir) {
+    public boolean isInSourceContent(@Nonnull VirtualFile fileOrDir) {
         if (myProjectFileIndex.isInSourceContent(fileOrDir) || myProjectFileIndex.isInResource(fileOrDir)) {
             return true;
         }

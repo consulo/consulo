@@ -15,12 +15,13 @@
  */
 package consulo.compiler.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.action.CompileActionBase;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.internal.ArtifactBySourceFileFinder;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
@@ -44,11 +45,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static consulo.ui.ex.action.Presentation.NO_MNEMONIC;
+
 @ActionImpl(id = "Compile")
 public class CompileAction extends CompileActionBase {
+    @Override
     @RequiredUIAccess
     protected void doAction(DataContext dataContext, Project project) {
-        final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
+        Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
         if (module != null) {
             CompilerManager.getInstance(project).compile(module, null);
         }
@@ -60,7 +64,8 @@ public class CompileAction extends CompileActionBase {
         }
     }
 
-    @RequiredUIAccess
+    @Override
+    @RequiredReadAction
     public void update(@Nonnull AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();
@@ -69,7 +74,8 @@ public class CompileAction extends CompileActionBase {
         }
         DataContext dataContext = event.getDataContext();
 
-        presentation.setText(ActionLocalize.actionCompileText().get());
+        presentation.setTextValue(ActionLocalize.actionCompileText().map(NO_MNEMONIC));
+        presentation.setEnabled(true);
         presentation.setVisible(true);
 
         Project project = dataContext.getData(Project.KEY);
@@ -78,97 +84,69 @@ public class CompileAction extends CompileActionBase {
             return;
         }
 
-        final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
+        Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
 
-        final VirtualFile[] files = getCompilableFiles(project, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
+        VirtualFile[] files = getCompilableFiles(project, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
         if (module == null && files.length == 0) {
             presentation.setEnabled(false);
             presentation.setVisible(!ActionPlaces.isPopupPlace(event.getPlace()));
             return;
         }
 
-        String elementDescription = null;
         if (module != null) {
-            elementDescription = CompilerBundle.message("action.compile.description.module", module.getName());
+            presentation.setTextValue(CompilerLocalize.actionCompileModuleText(trimName(module.getName())));
         }
         else {
             PsiPackage aPackage = null;
             if (files.length == 1) {
-                final PsiDirectory directory = PsiManager.getInstance(project).findDirectory(files[0]);
+                PsiDirectory directory = PsiManager.getInstance(project).findDirectory(files[0]);
                 if (directory != null) {
                     aPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);
                 }
             }
             else {
                 PsiElement element = dataContext.getData(PsiElement.KEY);
-                if (element instanceof PsiPackage) {
-                    aPackage = (PsiPackage) element;
+                if (element instanceof PsiPackage psiPackage) {
+                    aPackage = psiPackage;
                 }
             }
 
             if (aPackage != null) {
                 String name = aPackage.getQualifiedName();
-                if (name.length() == 0) {
-                    //noinspection HardCodedStringLiteral
-                    name = "<default>";
-                }
-                elementDescription = "'" + name + "'";
+                presentation.setTextValue(
+                    StringUtil.isNotEmpty(name)
+                        ? CompilerLocalize.actionCompile0Text(trimName(name))
+                        : CompilerLocalize.actionCompileDefaultText()
+                );
             }
             else if (files.length == 1) {
-                final VirtualFile file = files[0];
+                VirtualFile file = files[0];
                 FileType fileType = file.getFileType();
                 if (CompilerManager.getInstance(project).isCompilableFileType(fileType) || isCompilableResourceFile(project, file)) {
-                    elementDescription = "'" + file.getName() + "'";
+                    presentation.setTextValue(CompilerLocalize.actionCompile0Text(trimName(file.getName())));
                 }
                 else {
-                    if (!ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
-                        // the action should be invisible in popups for non-java files
-                        presentation.setEnabled(false);
-                        presentation.setVisible(false);
-                        return;
-                    }
+                    presentation.setEnabled(false);
+                    // the action should be invisible in popups for non-java files
+                    presentation.setVisible(ActionPlaces.MAIN_MENU.equals(event.getPlace()));
                 }
             }
             else {
-                elementDescription = CompilerBundle.message("action.compile.description.selected.files");
+                presentation.setTextValue(CompilerLocalize.actionCompileSelectedFilesText());
             }
         }
-
-        if (elementDescription == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        presentation.setText(createPresentationText(elementDescription), true);
-        presentation.setEnabled(true);
     }
 
-    private static String createPresentationText(String elementDescription) {
-        StringBuilder buffer = new StringBuilder(40);
-        buffer.append(ActionLocalize.actionCompileText()).append(" ");
-        int length = elementDescription.length();
-        if (length > 23) {
-            if (StringUtil.startsWithChar(elementDescription, '\'')) {
-                buffer.append("'");
-            }
-            buffer.append("...");
-            buffer.append(elementDescription.substring(length - 20, length));
-        }
-        else {
-            buffer.append(elementDescription);
-        }
-        return buffer.toString();
-    }
-
+    @RequiredReadAction
     private static VirtualFile[] getCompilableFiles(Project project, VirtualFile[] files) {
         if (files == null || files.length == 0) {
             return VirtualFile.EMPTY_ARRAY;
         }
-        final PsiManager psiManager = PsiManager.getInstance(project);
-        final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-        final CompilerManager compilerManager = CompilerManager.getInstance(project);
-        final List<VirtualFile> filesToCompile = new ArrayList<>();
-        for (final VirtualFile file : files) {
+        PsiManager psiManager = PsiManager.getInstance(project);
+        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+        CompilerManager compilerManager = CompilerManager.getInstance(project);
+        List<VirtualFile> filesToCompile = new ArrayList<>();
+        for (VirtualFile file : files) {
             if (!fileIndex.isInSourceContent(file)) {
                 continue;
             }
@@ -176,7 +154,7 @@ public class CompileAction extends CompileActionBase {
                 continue;
             }
             if (file.isDirectory()) {
-                final PsiDirectory directory = psiManager.findDirectory(file);
+                PsiDirectory directory = psiManager.findDirectory(file);
                 if (directory == null || PsiPackageManager.getInstance(project).findAnyPackage(directory) == null) {
                     continue;
                 }
@@ -192,11 +170,16 @@ public class CompileAction extends CompileActionBase {
         return VirtualFileUtil.toVirtualFileArray(filesToCompile);
     }
 
-    private static boolean isCompilableResourceFile(final Project project, final VirtualFile file) {
+    private static String trimName(String name) {
+        int length = name.length();
+        return length > 23 ? '…' + name.substring(length - 20, length) : name;
+    }
+
+    private static boolean isCompilableResourceFile(Project project, VirtualFile file) {
         if (!ResourceCompilerConfiguration.getInstance(project).isResourceFile(file)) {
             return false;
         }
-        final Collection<? extends Artifact> artifacts = ArtifactBySourceFileFinder.getInstance(project).findArtifacts(file);
+        Collection<? extends Artifact> artifacts = ArtifactBySourceFileFinder.getInstance(project).findArtifacts(file);
         return artifacts.isEmpty();
     }
 }
