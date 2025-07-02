@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- * @author Evgeny Gerashchenko
- */
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
@@ -31,6 +26,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ * @author Evgeny Gerashchenko
+ */
 public abstract class NextPrevParameterAction extends CodeInsightAction {
     private final boolean myNext;
 

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.externalService.statistic.FeatureUsageTracker;
@@ -29,6 +25,7 @@ import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
+ * @author max
  * @author Konstantin Bulenkov
  */
 public class ShowRecentFilesAction extends DumbAwareAction {

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.externalService.plugin.PluginContants;
@@ -28,6 +24,9 @@ import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+/**
+ * @author max
+ */
 public class ShowPluginManagerAction extends DumbAwareAction {
     private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
 

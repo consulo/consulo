@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.application.internal;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public interface NonCancelableSection {
   void done();
 

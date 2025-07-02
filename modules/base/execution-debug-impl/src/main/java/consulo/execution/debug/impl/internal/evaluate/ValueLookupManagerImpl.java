@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Class ValueLookupManager
- * @author Jeka
- */
 package consulo.execution.debug.impl.internal.evaluate;
 
 import consulo.annotation.component.ServiceImpl;
@@ -42,6 +37,9 @@ import jakarta.inject.Singleton;
 import java.awt.*;
 import java.util.Objects;
 
+/**
+ * @author Jeka
+ */
 @Singleton
 @ServiceImpl
 public class ValueLookupManagerImpl implements ValueLookupManager, EditorMouseListener, EditorMouseMotionListener {

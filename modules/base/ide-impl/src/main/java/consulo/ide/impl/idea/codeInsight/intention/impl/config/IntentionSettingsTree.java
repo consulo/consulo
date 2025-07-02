@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.application.ui.wm.IdeFocusManager;
@@ -42,6 +38,9 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
+/**
+ * @author cdr
+ */
 public abstract class IntentionSettingsTree {
   private JComponent myComponent;
   private CheckboxTree myTree;

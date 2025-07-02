@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.desktop.awt.application.impl;
 
 import consulo.application.impl.internal.IdeaModalityState;
@@ -25,6 +21,9 @@ import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import java.util.function.BooleanSupplier;
 
+/**
+ * @author max
+ */
 public interface ModalityInvokator {
   /**
    * Causes <i>runnable.run()</i> to be executed asynchronously on the

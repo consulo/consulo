@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -28,6 +24,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
+/**
+ * @author max
+ */
 public abstract class GoToMnemonicBookmarkActionBase extends AnAction implements DumbAware {
   private final int myNumber;
 

@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.codeEditor;
 
 import jakarta.annotation.Nullable;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public interface IndentsModel {
   @Nullable
   IndentGuideDescriptor getCaretIndentGuide();

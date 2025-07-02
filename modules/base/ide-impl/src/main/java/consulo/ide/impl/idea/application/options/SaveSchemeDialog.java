@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Yura Cangea
- */
 package consulo.ide.impl.idea.application.options;
 
 import consulo.application.CommonBundle;
@@ -31,6 +27,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * @author Yura Cangea
+ */
 public class SaveSchemeDialog extends DialogWrapper {
   private final JTextField mySchemeName = new JTextField();
   private final List<String> myExistingNames;

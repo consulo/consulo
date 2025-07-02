@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
 import consulo.codeEditor.Editor;
@@ -25,8 +21,10 @@ import consulo.language.editor.moveUpDown.StatementUpDownMover;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author cdr
+ */
 class MoveStatementHandler extends BaseMoveHandler {
-
   public MoveStatementHandler(boolean down) {
     super(down);
   }

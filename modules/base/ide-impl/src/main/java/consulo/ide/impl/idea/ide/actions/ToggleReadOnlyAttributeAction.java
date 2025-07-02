@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Vladimir Kondratyev
- */
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
@@ -39,6 +35,9 @@ import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * @author Vladimir Kondratyev
+ */
 public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware {
     static VirtualFile[] getFiles(DataContext dataContext) {
         ArrayList<VirtualFile> filesList = new ArrayList<>();

@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * created at Sep 12, 2001
- * @author Jeka
- */
 package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -32,6 +27,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * @author Jeka
+ * @since 2001-09-12
+ */
 public class UnsafeUsagesDialog extends DialogWrapper {
   private JEditorPane myMessagePane;
   private final String[] myConflictDescriptions;

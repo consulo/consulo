@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * created at Sep 11, 2001
- * @author Jeka
- */
 package consulo.language.editor.refactoring.move;
 
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -26,6 +21,10 @@ import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author Jeka
+ * @since 2001-09-11
+ */
 public class MoveMemberViewDescriptor implements UsageViewDescriptor {
   private final PsiElement[] myElementsToMove;
 

@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
+/**
+ * @author max
+ */
 public class ToggleBookmark6Action extends ToggleNumberedBookmarkActionBase {
-  public ToggleBookmark6Action() {
-    super(6);
-  }
+    public ToggleBookmark6Action() {
+        super(6);
+    }
 }

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.project.Project;
@@ -25,6 +21,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess

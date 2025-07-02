@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Class ViewBreakpointsAction
- * @author Jeka
- */
 package consulo.execution.debug.impl.internal.action;
 
 import consulo.application.dumb.DumbAware;
@@ -34,6 +29,9 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
+/**
+ * @author Jeka
+ */
 public class ViewBreakpointsAction extends AnAction implements DumbAware {
     private Object myInitialBreakpoint;
 

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Vladimir Kondratyev
- */
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.ui.UISettings;
@@ -25,6 +21,9 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author Vladimir Kondratyev
+ */
 public class ViewStatusBarAction extends ToggleAction implements DumbAware {
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.codeStyle;
 
 import consulo.codeEditor.Editor;
@@ -33,6 +29,9 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 @Deprecated
 public interface CodeStyleFacade {
     public static CodeStyleFacade getInstance() {

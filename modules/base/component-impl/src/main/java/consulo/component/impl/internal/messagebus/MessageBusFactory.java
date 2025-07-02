@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.component.impl.internal.messagebus;
 
 import consulo.component.internal.inject.TopicBindingLoader;
@@ -26,6 +22,9 @@ import consulo.component.internal.inject.InjectingContainerOwner;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 public class MessageBusFactory {
   private MessageBusFactory() {}
 

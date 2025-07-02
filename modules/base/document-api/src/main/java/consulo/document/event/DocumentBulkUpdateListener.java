@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.document.event;
 
 import consulo.annotation.component.ComponentScope;
@@ -27,6 +23,8 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @deprecated Use {@link DocumentListener} instead
+ *
+ * @author max
  */
 @Deprecated
 @TopicAPI(ComponentScope.APPLICATION)

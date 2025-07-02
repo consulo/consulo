@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
@@ -67,6 +63,9 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * @author cdr
+ */
 public class ExportSettingsAction extends AnAction implements DumbAware {
     public static final String INSTALLED_TXT = "installed.txt";
 

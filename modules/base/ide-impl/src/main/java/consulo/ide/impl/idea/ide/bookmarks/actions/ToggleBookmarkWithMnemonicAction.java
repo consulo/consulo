@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.bookmark.Bookmark;
@@ -31,6 +27,9 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.style.StyleManager;
 
+/**
+ * @author max
+ */
 public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
   public ToggleBookmarkWithMnemonicAction() {
     getTemplatePresentation().setTextValue(IdeLocalize.actionBookmarkToggleMnemonic());

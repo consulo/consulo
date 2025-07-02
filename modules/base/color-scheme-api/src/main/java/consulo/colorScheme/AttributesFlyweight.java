@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.colorScheme;
 
 import consulo.logging.Logger;
@@ -39,6 +35,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * @author max
+ */
 public class AttributesFlyweight {
     private static final Logger LOG = Logger.getInstance(AttributesFlyweight.class);
 

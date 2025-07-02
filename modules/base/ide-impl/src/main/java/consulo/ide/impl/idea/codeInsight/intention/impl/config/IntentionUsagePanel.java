@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.application.Application;
@@ -37,6 +33,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author cdr
+ */
 class IntentionUsagePanel extends JPanel {
     private final EditorEx myEditor;
     private static final String SPOT_MARKER = "spot";

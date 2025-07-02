@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.component.messagebus;
 
 import jakarta.annotation.Nonnull;
@@ -25,6 +21,8 @@ import jakarta.annotation.Nonnull;
  * Aggregates multiple topic subscriptions for particular {@link MessageBus message bus}. I.e. every time a client wants to
  * listen for messages it should grab appropriate connection (or create a new one) and {@link #subscribe(Class, Object) subscribe}
  * to particular endpoint.
+ *
+ * @author max
  */
 public interface MessageBusConnection {
   /**

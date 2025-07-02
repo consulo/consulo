@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Yura Cangea
- */
 package consulo.colorScheme.impl.internal;
 
 import consulo.colorScheme.*;
@@ -28,6 +24,9 @@ import org.jdom.Element;
 
 import java.awt.*;
 
+/**
+ * @author Yura Cangea
+ */
 public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnlyColorsScheme {
   private String myName;
 
