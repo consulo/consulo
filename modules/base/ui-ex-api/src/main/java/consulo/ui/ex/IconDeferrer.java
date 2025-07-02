@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex;
 
 import consulo.annotation.component.ComponentScope;
@@ -28,6 +24,9 @@ import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
+/**
+ * @author max
+ */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class IconDeferrer {
   @Nonnull

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.virtualFileSystem;
 
 import jakarta.annotation.Nonnull;
@@ -25,6 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * @author max
+ */
 public interface FileSystemInterface {
   // default values for missing files (same as in corresponding java.io.File methods)
   long DEFAULT_LENGTH = 0;

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
@@ -26,6 +22,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public class BulkVirtualFileListenerAdapter implements BulkFileListener {
   private final VirtualFileListener myAdapted;
   private final VirtualFileSystem myFileSystem;

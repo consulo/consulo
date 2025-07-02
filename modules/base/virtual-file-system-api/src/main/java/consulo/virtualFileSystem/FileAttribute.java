@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.virtualFileSystem;
 
 import consulo.util.collection.Sets;
@@ -30,6 +26,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * @author max
+ */
 public class FileAttribute {
   private static final Set<String> ourRegisteredIds = Sets.newConcurrentHashSet();
   private static final int UNDEFINED_VERSION = -1;

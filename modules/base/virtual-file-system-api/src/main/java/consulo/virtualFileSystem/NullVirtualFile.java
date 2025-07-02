@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.virtualFileSystem;
 
+/**
+ * @author max
+ */
 public class NullVirtualFile extends StubVirtualFile {
-  public static final NullVirtualFile INSTANCE = new NullVirtualFile();
+    public static final NullVirtualFile INSTANCE = new NullVirtualFile();
 
-  private NullVirtualFile() {
-  }
+    private NullVirtualFile() {
+    }
 
-  @Override
-  public String toString() {
-    return "VirtualFile.NULL_OBJECT";
-  }
+    @Override
+    public String toString() {
+        return "VirtualFile.NULL_OBJECT";
+    }
 }

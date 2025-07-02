@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.psi;
 
 import consulo.annotation.DeprecationInfo;
@@ -28,6 +24,9 @@ import consulo.language.util.CharTable;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class DummyHolderFactory  {
   private static HolderFactory INSTANCE = new DefaultFactory();
 

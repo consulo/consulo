@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.virtualFileSystem.internal;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -26,6 +22,9 @@ import jakarta.annotation.Nonnull;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author max
+ */
 public class FlushingDaemon {
     public static final String NAME = "Flushing Daemon";
 

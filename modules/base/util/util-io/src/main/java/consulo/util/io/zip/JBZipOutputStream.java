@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.io.zip;
 
 import consulo.util.io.BufferExposingByteArrayOutputStream;
@@ -27,6 +23,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.zip.*;
 
+/**
+ * @author max
+ */
 class JBZipOutputStream {
   /**
    * Default compression level for deflated entries.

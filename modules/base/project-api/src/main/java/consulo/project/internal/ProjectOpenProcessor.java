@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.project.internal;
 
 import consulo.project.Project;
@@ -31,6 +27,9 @@ import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.function.Consumer;
 
+/**
+ * @author max
+ */
 public abstract class ProjectOpenProcessor {
   @Nonnull
   //@Language("HTML")

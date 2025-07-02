@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.io.zip;
 
 import consulo.util.collection.ArrayUtil;
@@ -56,6 +52,8 @@ import java.util.zip.ZipException;
  * <code>org.apache.tools.zip.ZipEntry</code> instances.</li>
  * <li>close is allowed to throw IOException.</li>
  * </ul>
+ *
+ * @author max
  */
 public class JBZipFile {
   private static final int HASH_SIZE = 509;

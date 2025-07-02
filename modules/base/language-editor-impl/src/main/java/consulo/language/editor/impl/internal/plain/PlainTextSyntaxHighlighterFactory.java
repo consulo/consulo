@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.impl.internal.plain;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -38,6 +34,7 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
+ * @author max
  * @author peter
  */
 @ExtensionImpl

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.psi;
 
 import consulo.content.scope.SearchScope;
@@ -49,6 +45,9 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public class LazyParseablePsiElement extends LazyParseableElement implements PsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance(LazyParseablePsiElement.class);
 

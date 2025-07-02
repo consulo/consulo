@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.virtualFileSystem;
 
 import org.jetbrains.annotations.NonNls;
@@ -27,6 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * @author max
+ */
 public class StubVirtualFile extends VirtualFile {
   @Override
   @Nonnull

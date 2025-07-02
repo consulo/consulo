@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.ast;
 
 import consulo.language.impl.ast.TokenWrapper;
@@ -27,14 +23,17 @@ import consulo.language.ast.ASTNode;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class ForeignLeafType extends TokenWrapper implements ILeafElementType {
-  public ForeignLeafType(IElementType delegate, CharSequence value) {
-    super(delegate, value);
-  }
+    public ForeignLeafType(IElementType delegate, CharSequence value) {
+        super(delegate, value);
+    }
 
-  @Override
-  @Nonnull
-  public ASTNode createLeafNode(CharSequence leafText) {
-    return new ForeignLeafPsiElement(this, getValue());
-  }
+    @Override
+    @Nonnull
+    public ASTNode createLeafNode(CharSequence leafText) {
+        return new ForeignLeafPsiElement(this, getValue());
+    }
 }

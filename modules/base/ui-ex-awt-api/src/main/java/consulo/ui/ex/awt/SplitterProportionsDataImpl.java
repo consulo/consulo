@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ui.ex.awt;
 
 import consulo.application.ApplicationPropertiesComponent;
@@ -35,6 +31,9 @@ import java.awt.*;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * @author cdr
+ */
 @Tag("splitter-proportions")
 public class SplitterProportionsDataImpl implements SplitterProportionsData {
     private static final String DATA_VERSION = "1";

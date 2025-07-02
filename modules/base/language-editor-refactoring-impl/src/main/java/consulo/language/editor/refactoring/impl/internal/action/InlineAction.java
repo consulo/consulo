@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * class InlineAction
- * created Aug 28, 2001
- *
- * @author Jeka
- */
 package consulo.language.editor.refactoring.impl.internal.action;
 
 import consulo.codeEditor.Editor;
@@ -39,8 +32,11 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 
+/**
+ * @author Jeka
+ * @since 2001-08-28
+ */
 public class InlineAction extends BasePlatformRefactoringAction {
-
   public InlineAction() {
     setInjectedContext(true);
   }

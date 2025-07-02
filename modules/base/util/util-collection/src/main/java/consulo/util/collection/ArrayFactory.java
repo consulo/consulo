@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.collection;
 
 import jakarta.annotation.Nonnull;
 import java.util.function.IntFunction;
 
+/**
+ * @author max
+ */
 @FunctionalInterface
 public interface ArrayFactory<T> extends IntFunction<T[]> {
   @Nonnull

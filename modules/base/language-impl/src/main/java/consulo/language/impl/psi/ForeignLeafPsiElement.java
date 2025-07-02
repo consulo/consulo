@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.psi;
 
 import consulo.language.ast.IElementType;
@@ -27,6 +23,9 @@ import consulo.language.psi.PsiElement;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class ForeignLeafPsiElement extends LeafPsiElement {
   private ForeignLeafType myForeignType;
 

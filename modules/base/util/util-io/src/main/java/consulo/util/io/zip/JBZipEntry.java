@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.io.zip;
-
 
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
@@ -34,6 +29,8 @@ import java.util.zip.ZipException;
 /**
  * Extension that adds better handling of extra fields and provides
  * access to the internal and external file attributes.
+ *
+ * @author max
  */
 @SuppressWarnings({"OctalInteger"})
 public class JBZipEntry implements Cloneable {

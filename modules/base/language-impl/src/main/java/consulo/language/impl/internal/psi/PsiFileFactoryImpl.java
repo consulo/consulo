@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.internal.psi;
 
 import consulo.annotation.component.ServiceImpl;
@@ -56,6 +52,9 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+/**
+ * @author max
+ */
 @Singleton
 @ServiceImpl
 public class PsiFileFactoryImpl implements PsiFileFactory {

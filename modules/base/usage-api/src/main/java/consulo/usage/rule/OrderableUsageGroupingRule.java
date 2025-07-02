@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.usage.rule;
 
+/**
+ * @author max
+ */
 public interface OrderableUsageGroupingRule extends UsageGroupingRule {
     @Override
     int getRank();

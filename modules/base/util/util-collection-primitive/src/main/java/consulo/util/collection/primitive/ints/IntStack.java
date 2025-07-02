@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.collection.primitive.ints;
 
 import jakarta.annotation.Nonnull;
 import java.util.EmptyStackException;
 import java.util.PrimitiveIterator;
 
+/**
+ * @author max
+ */
 public class IntStack implements IntCollection {
   private int[] data;
   private int size;

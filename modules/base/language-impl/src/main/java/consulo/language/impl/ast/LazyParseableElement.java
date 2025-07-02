@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.ast;
 
 import consulo.application.progress.ProgressManager;
@@ -35,6 +31,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
+/**
+ * @author max
+ */
 public class LazyParseableElement extends CompositeElement {
   private static final Logger LOG = Logger.getInstance(LazyParseableElement.class);
   private static final Supplier<CharSequence> NO_TEXT = () -> null;

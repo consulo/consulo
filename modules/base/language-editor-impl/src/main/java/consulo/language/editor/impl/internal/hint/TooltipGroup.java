@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.language.editor.impl.internal.hint;
 
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author cdr
+ */
 public class TooltipGroup implements Comparable<TooltipGroup> {
   private final String myName;
   // the higher priority the more probable this tooltip will overlap other tooltips

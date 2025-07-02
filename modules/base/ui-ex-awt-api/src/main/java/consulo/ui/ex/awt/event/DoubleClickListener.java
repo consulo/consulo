@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex.awt.event;
 
 import consulo.ui.ex.awt.ClickListener;
 
 import java.awt.event.MouseEvent;
 
+/**
+ * @author max
+ */
 public abstract class DoubleClickListener extends ClickListener {
   @Override
   public final boolean onClick(MouseEvent event, int clickCount) {

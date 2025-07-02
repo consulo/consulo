@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.plain;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -37,6 +33,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.version.LanguageVersion;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 @ExtensionImpl
 public class PlainTextParserDefinition implements ParserDefinition {
   public static final IFileElementType PLAIN_FILE_ELEMENT_TYPE = new IFileElementType(PlainTextLanguage.INSTANCE) {

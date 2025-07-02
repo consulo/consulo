@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author ven
- */
 package consulo.language.editor.template;
 
 import consulo.language.editor.completion.lookup.LookupElement;
 
+/**
+ * @author ven
+ */
 public class EmptyExpression extends Expression {
   @Override
   public Result calculateResult(ExpressionContext context) {

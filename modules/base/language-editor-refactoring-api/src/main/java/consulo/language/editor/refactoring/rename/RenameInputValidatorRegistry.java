@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Dmitry Avdeev
- */
 package consulo.language.editor.refactoring.rename;
 
 import consulo.language.psi.PsiElement;
@@ -26,6 +22,9 @@ import jakarta.annotation.Nullable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * @author Dmitry Avdeev
+ */
 public class RenameInputValidatorRegistry {
     private RenameInputValidatorRegistry() {
     }

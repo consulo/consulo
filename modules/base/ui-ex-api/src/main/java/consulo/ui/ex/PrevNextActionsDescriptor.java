@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex;
 
+/**
+ * @author max
+ */
 public class PrevNextActionsDescriptor {
   private final String myPrevActionId;
   private final String myNextActionId;

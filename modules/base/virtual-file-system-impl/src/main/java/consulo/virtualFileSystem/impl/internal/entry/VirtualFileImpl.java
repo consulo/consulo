@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.virtualFileSystem.impl.internal.entry;
 
 import consulo.application.Application;
@@ -45,8 +41,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public class VirtualFileImpl extends VirtualFileSystemEntry {
-
     VirtualFileImpl(int id, VfsData.Segment segment, VirtualDirectoryImpl parent) {
         super(id, segment, parent);
     }

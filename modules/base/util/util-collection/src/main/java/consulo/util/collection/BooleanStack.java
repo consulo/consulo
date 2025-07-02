@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.collection;
-
 
 import java.util.Arrays;
 import java.util.EmptyStackException;
 
+/**
+ * @author max
+ */
 public class BooleanStack {
   private boolean[] data;
   private int size;
