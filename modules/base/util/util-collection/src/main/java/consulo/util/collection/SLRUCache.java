@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.collection;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
   protected SLRUCache(final int protectedQueueSize, final int probationalQueueSize) {
     super(protectedQueueSize, probationalQueueSize);
@@ -52,5 +51,4 @@ public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
   public V getIfCached(K key) {
     return super.get(key);
   }
-
 }

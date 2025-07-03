@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.virtualFileSystem;
 
 import consulo.virtualFileSystem.event.*;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class VirtualFileFilteringListener implements VirtualFileListener {
   private final VirtualFileListener myDelegate;
   private final VirtualFileSystem myFilter;

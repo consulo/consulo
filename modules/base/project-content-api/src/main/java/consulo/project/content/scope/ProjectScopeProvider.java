@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.project.content.scope;
 
 import consulo.annotation.component.ComponentScope;
@@ -25,6 +21,9 @@ import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectScopeProvider {
   public static ProjectScopeProvider getInstance(Project project) {

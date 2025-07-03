@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author Eugene Zhuravlev
- */
 package consulo.ui.ex.awt;
 
 import javax.swing.*;
@@ -27,6 +23,7 @@ import javax.swing.*;
  * it will manage different selected/unselected states for each mode - enabled or disabled
  *
  * @see consulo.ui.ex.StateRestoringCheckBoxWrapper
+ * @author Eugene Zhuravlev
  */
 public class StateRestoringCheckBox extends JCheckBox {
   private boolean myIsSelectedWhenSelectable;

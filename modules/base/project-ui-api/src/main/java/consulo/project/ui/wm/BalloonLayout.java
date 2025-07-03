@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.project.ui.wm;
 
 import consulo.ui.ex.popup.Balloon;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 public interface BalloonLayout {
-  void add(@Nonnull Balloon balloon);
+    void add(@Nonnull Balloon balloon);
 
-  void add(@Nonnull Balloon balloon, @Nullable Object layoutData);
+    void add(@Nonnull Balloon balloon, @Nullable Object layoutData);
 
-  default boolean isForWelcomeFrame() {
-    return false;
-  }
+    default boolean isForWelcomeFrame() {
+        return false;
+    }
 }

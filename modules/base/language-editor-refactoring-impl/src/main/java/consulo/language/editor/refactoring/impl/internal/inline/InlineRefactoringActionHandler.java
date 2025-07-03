@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Jeka
- * @since 2001-11-21
- */
 package consulo.language.editor.refactoring.impl.internal.inline;
 
 import consulo.codeEditor.Editor;
@@ -41,6 +36,10 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 
+/**
+ * @author Jeka
+ * @since 2001-11-21
+ */
 public class InlineRefactoringActionHandler implements RefactoringActionHandler {
     private static final Logger LOG = Logger.getInstance(InlineRefactoringActionHandler.class);
     private static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.inlineTitle();

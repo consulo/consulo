@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.Gray;
@@ -25,6 +21,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * @author max
+ */
 public class ZoomingDelegate {
   private final JComponent myContentComponent;
   private final JComponent myViewportComponent;

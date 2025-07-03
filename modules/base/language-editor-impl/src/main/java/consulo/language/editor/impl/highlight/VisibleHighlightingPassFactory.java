@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.impl.highlight;
 
 import consulo.codeEditor.Editor;
@@ -26,6 +22,9 @@ import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
+/**
+ * @author max
+ */
 public abstract class VisibleHighlightingPassFactory  {
   @Nonnull
   public static ProperTextRange calculateVisibleRange(@Nonnull Editor editor) {

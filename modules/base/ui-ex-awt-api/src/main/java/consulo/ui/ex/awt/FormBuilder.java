@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex.awt;
 
 import jakarta.annotation.Nonnull;
@@ -30,6 +26,9 @@ import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_VGAP;
 import static java.awt.GridBagConstraints.*;
 
+/**
+ * @author max
+ */
 public class FormBuilder {
   private boolean myAlignLabelOnRight;
 

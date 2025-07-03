@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.io.zip;
 
 /**
  * Utility class that represents a four byte integer with conversion
  * rules for the big endian byte order of ZIP files.
+ *
+ * @author max
  */
 public final class ZipLong implements Cloneable {
 

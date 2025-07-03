@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex.awt;
 
 import consulo.application.ApplicationPropertiesComponent;
@@ -25,6 +21,9 @@ import consulo.util.lang.StringUtil;
 
 import java.util.ArrayList;
 
+/**
+ * @author max
+ */
 public class SearchTextFieldWithStoredHistory extends SearchTextField {
   private final String myPropertyName;
 

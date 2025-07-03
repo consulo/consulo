@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.psi;
 
 import consulo.language.Language;
@@ -27,6 +23,9 @@ import consulo.language.util.CharTable;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public interface HolderFactory {
   DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context);
   DummyHolder createHolder(@Nonnull PsiManager manager, CharTable table, boolean validity);

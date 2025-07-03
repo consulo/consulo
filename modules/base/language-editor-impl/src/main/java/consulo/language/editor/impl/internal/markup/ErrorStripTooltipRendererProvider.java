@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.impl.internal.markup;
 
 import consulo.codeEditor.Editor;
@@ -28,6 +24,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Collection;
 
+/**
+ * @author max
+ */
 public interface ErrorStripTooltipRendererProvider {
   @Nullable
   TooltipRenderer calcTooltipRenderer(@Nonnull Collection<? extends RangeHighlighter> highlighters);

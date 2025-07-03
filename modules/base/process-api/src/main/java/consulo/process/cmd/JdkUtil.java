@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.process.cmd;
 
 import consulo.logging.Logger;
@@ -28,6 +24,9 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
+/**
+ * @author max
+ */
 class JdkUtil {
   private static final Logger LOG = Logger.getInstance(JdkUtil.class);
 

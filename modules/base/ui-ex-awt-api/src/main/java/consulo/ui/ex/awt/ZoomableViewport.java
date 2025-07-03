@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex.awt;
 
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
+/**
+ * @author max
+ */
 public interface ZoomableViewport {
-  @Nullable
-  Magnificator getMagnificator();
-  void magnificationStarted(Point at);
-  void magnificationFinished(double magnification);
-  void magnify(double magnification);
+    @Nullable
+    Magnificator getMagnificator();
+
+    void magnificationStarted(Point at);
+
+    void magnificationFinished(double magnification);
+
+    void magnify(double magnification);
 }

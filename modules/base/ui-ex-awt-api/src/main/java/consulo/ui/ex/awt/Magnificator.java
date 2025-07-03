@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex.awt;
 
 import consulo.util.dataholder.Key;
 
 import java.awt.*;
 
+/**
+ * @author max
+ */
 public interface Magnificator {
   Key<Magnificator> CLIENT_PROPERTY_KEY = Key.create("MagnifiableComponent");
 

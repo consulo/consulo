@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex.awt;
 
 import consulo.component.util.Iconable;
@@ -50,6 +46,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * @author max
+ */
 public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     public interface Cloner<T> {
         T cloneOf(T t);

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.language.editor.internal.intention;
 
 import consulo.container.plugin.PluginId;
@@ -44,6 +40,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author cdr
+ */
 public final class IntentionActionMetaData {
   private static final Logger LOG = Logger.getInstance(IntentionActionMetaData.class);
   @Nonnull

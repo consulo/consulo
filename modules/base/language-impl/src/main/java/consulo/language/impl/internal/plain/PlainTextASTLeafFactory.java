@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.internal.plain;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -28,6 +24,9 @@ import consulo.language.ast.IElementType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 @ExtensionImpl
 public class PlainTextASTLeafFactory implements ASTLeafFactory {
   @Nonnull

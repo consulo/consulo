@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.io;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * @author max
+ */
 public class LimitedInputStream extends FilterInputStream {
   private final int myReadLimit;
   private int myBytesRead;

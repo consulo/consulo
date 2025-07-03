@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -42,6 +38,9 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public abstract class ASTDelegatePsiElement extends PsiElementBase implements PsiElementWithSubtreeChangeNotifier {
   private static final Logger LOG = Logger.getInstance(ASTDelegatePsiElement.class);
 

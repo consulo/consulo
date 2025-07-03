@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.collection;
 
+/**
+ * @author max
+ */
 public interface ShareableKey {
-  ShareableKey getStableCopy();
+    ShareableKey getStableCopy();
 }

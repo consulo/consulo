@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.internal.psi;
 
 import consulo.annotation.component.ComponentScope;
@@ -27,10 +23,13 @@ import consulo.language.psi.PsiFile;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface PsiDocumentTransactionListener {
-  void transactionStarted(@Nonnull Document document, @Nonnull PsiFile file);
+    void transactionStarted(@Nonnull Document document, @Nonnull PsiFile file);
 
-  default void transactionCompleted(@Nonnull Document document, @Nonnull PsiFile file) {
-  }
+    default void transactionCompleted(@Nonnull Document document, @Nonnull PsiFile file) {
+    }
 }

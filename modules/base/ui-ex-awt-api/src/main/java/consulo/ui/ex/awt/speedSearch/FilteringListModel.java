@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ui.ex.awt.speedSearch;
 
 import consulo.ui.ex.awt.util.ListUtil;

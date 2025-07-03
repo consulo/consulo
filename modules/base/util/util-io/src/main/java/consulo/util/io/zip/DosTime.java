@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.io.zip;
 
 import java.util.Date;
 
+/**
+ * @author max
+ */
 public class DosTime {
   private DosTime() {
   }

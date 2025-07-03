@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.virtualFileSystem.internal.matcher;
 
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.matcher.ExactFileNameMatcher;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class ExactFileNameMatcherImpl implements ExactFileNameMatcher {
   private final String myFileName;
   private final boolean myIgnoreCase;

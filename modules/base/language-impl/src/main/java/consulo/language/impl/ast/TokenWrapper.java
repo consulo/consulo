@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.impl.ast;
 
 import consulo.language.ast.IElementType;
 
+/**
+ * @author max
+ */
 public class TokenWrapper extends IElementType {
   private final IElementType myDelegate;
   private final CharSequence myValue;

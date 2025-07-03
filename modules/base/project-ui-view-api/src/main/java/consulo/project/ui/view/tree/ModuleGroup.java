@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.project.ui.view.tree;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -32,6 +28,9 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import java.util.*;
 
+/**
+ * @author cdr
+ */
 public class ModuleGroup {
   public static final Key<ModuleGroup[]> ARRAY_DATA_KEY = Key.create("moduleGroup.array");
 

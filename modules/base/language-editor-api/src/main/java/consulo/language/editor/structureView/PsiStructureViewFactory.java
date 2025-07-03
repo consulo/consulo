@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.structureView;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -36,6 +32,8 @@ import jakarta.annotation.Nullable;
 
 /**
  * Should be registered as language extension
+ *
+ * @author max
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiStructureViewFactory extends LanguageExtension {

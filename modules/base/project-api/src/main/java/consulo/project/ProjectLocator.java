@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.project;
 
 import consulo.annotation.component.ComponentScope;
@@ -31,6 +27,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author max
+ */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProjectLocator {
   public static ProjectLocator getInstance() {

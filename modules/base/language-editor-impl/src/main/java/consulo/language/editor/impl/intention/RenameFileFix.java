@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author ven
- */
 package consulo.language.editor.impl.intention;
 
 import consulo.codeEditor.Editor;
@@ -38,6 +34,9 @@ import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
+/**
+ * @author ven
+ */
 public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
     private final String myNewFileName;
 

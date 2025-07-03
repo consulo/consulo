@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.util.collection;
 
 import consulo.util.collection.impl.map.LinkedHashMap;
@@ -28,6 +24,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * @author max
+ */
 public class SLRUMap<K,V> {
   protected final Map<K,V> myProtectedQueue;
   protected final Map<K,V> myProbationalQueue;
