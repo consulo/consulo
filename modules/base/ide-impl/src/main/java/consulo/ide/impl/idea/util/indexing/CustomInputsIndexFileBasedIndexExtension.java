@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.index.io.data.DataExternalizer;
@@ -24,7 +20,10 @@ import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
+/**
+ * @author max
+ */
 public interface CustomInputsIndexFileBasedIndexExtension<K> {
-  @Nonnull
-  DataExternalizer<Collection<K>> createExternalizer();
+    @Nonnull
+    DataExternalizer<Collection<K>> createExternalizer();
 }

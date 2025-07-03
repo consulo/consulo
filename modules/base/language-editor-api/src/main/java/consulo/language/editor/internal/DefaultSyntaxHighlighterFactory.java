@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.internal;
 
 import consulo.language.Language;
@@ -28,6 +24,9 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 public class DefaultSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   @Override
   @Nonnull

@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.parser;
 
 import consulo.language.ast.IElementType;
 
+/**
+ * @author max
+ */
 public interface WhitespaceSkippedCallback {
     void onSkip(IElementType type, int start, int end);
 }

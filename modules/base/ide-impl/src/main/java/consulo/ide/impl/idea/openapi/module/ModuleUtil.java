@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.openapi.module;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.language.util.ModuleUtilCore;
 
+/**
+ * @author cdr
+ */
 @Deprecated
 @DeprecationInfo("Use ModuleUtilCore")
 public class ModuleUtil extends ModuleUtilCore {
-  private ModuleUtil() {
-  }
+    private ModuleUtil() {
+    }
 }

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -43,6 +39,9 @@ import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 @ExtensionImpl(order = "last")
 public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
   private static final Logger LOG = Logger.getInstance(PsiAwareTextEditorProviderImpl.class);

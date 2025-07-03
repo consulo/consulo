@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -26,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public class ReferenceRange {
   private ReferenceRange() {
   }

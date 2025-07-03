@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * class ViewerTreeBuilder
- * created Aug 25, 2001
- *
- * @author Jeka
- */
 package consulo.ide.impl.idea.internal.psiView;
 
 import consulo.project.Project;
@@ -29,6 +22,10 @@ import consulo.ui.ex.tree.IndexComparator;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
+/**
+ * @author Jeka
+ * @since 2001-08-25
+ */
 public class ViewerTreeBuilder extends AbstractTreeBuilder {
     public ViewerTreeBuilder(Project project, JTree tree) {
         super(tree, (DefaultTreeModel) tree.getModel(), new ViewerTreeStructure(project), IndexComparator.INSTANCE);

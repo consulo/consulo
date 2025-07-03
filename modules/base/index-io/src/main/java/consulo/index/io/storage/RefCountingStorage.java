@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io.storage;
 
 import consulo.index.io.PagePool;
@@ -37,6 +33,9 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
+/**
+ * @author max
+ */
 public class RefCountingStorage extends AbstractStorage {
   private final Map<Integer, Future<?>> myPendingWriteRequests = ContainerUtil.newConcurrentMap();
   private int myPendingWriteRequestsSize;

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
@@ -32,6 +28,9 @@ import jakarta.annotation.Nullable;
 
 import java.util.Map;
 
+/**
+ * @author max
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface BinaryFileStubBuilder {
     ExtensionPointCacheKey<BinaryFileStubBuilder, Map<FileType, BinaryFileStubBuilder>> KEY =

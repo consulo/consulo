@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.ast;
 
 import consulo.language.Language;
@@ -26,10 +22,13 @@ import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 public abstract class CustomParsingType extends IElementType implements ICustomParsingType {
-  public CustomParsingType(@Nonnull @NonNls String debugName, @Nullable Language language) {
-    super(debugName, language);
-  }
+    public CustomParsingType(@Nonnull @NonNls String debugName, @Nullable Language language) {
+        super(debugName, language);
+    }
 
-  public abstract ASTNode parse(CharSequence text, CharTable table);
+    public abstract ASTNode parse(CharSequence text, CharTable table);
 }

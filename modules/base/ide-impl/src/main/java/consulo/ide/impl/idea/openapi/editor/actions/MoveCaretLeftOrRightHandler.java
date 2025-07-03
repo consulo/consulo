@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.*;
@@ -24,6 +20,9 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.RealEditor;
 import consulo.dataContext.DataContext;
 
+/**
+ * @author max
+ */
 class MoveCaretLeftOrRightHandler extends EditorActionHandler {
   enum Direction {LEFT, RIGHT}
 

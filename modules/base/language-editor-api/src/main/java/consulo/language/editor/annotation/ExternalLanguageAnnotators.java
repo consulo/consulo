@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.annotation;
 
 import consulo.language.Language;
@@ -26,6 +22,9 @@ import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public class ExternalLanguageAnnotators {
   @Nonnull
   public static List<ExternalAnnotator> allForFile(Language language, final PsiFile file) {

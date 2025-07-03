@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
+/**
+ * @author max
+ */
 class FinalizationRequest {
   public final Page page;
   public final long finalizationId;

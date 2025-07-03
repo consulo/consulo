@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.util;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * @author max
+ */
 public class AdapterProcessor<T, S> implements Predicate<T> {
   private final Predicate<S> myAdaptee;
   private final Function<T, S> myConversion;

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 import consulo.util.lang.SystemProperties;
@@ -30,7 +26,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-
+/**
+ * @author max
+ */
 @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
 public class PagePool {
   private final Map<PoolPageKey, Page> myProtectedQueue;

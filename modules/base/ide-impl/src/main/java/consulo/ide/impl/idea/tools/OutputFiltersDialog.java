@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Yura Cangea
- */
 package consulo.ide.impl.idea.tools;
 
 import consulo.application.HelpManager;
@@ -30,6 +26,9 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Yura Cangea
+ */
 public class OutputFiltersDialog extends DialogWrapper {
   private final DefaultListModel myFiltersModel = new DefaultListModel();
   private final JList myFiltersList = new JBList(myFiltersModel);

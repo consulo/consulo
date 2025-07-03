@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * @author max
+ */
 public class MappedFileInputStream extends InputStream {
   private ResizeableMappedFile raf;
   private int cur;

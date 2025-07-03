@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Class DiffFragmentBuilder
- * @author Jeka
- */
 package consulo.ide.impl.idea.openapi.diff.impl;
 
 import consulo.ide.impl.idea.openapi.diff.ex.DiffFragment;
@@ -33,28 +28,31 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- Builds a sequence of DiffFragment objects thus diffing 2 files
- Parses the output of CVS 'diff' command assumed to be in the RCS Normal Format
- Format of the output chunks for the command: 'diff file1 file2':
- change-command
- < from-file-line
- < from-file-line...
- ---
- > to-file-line
- > to-file-line...
-
- Where:
- Change-Command -> Line a Range
- Change-Command -> Range c Range
- Change-Command -> Range d Line
- Range -> Line , Line
- Range -> Line
- Line -> number-of-line
-
- The commands are:
- a: append a range of lines from the file2 after line Line of the file1
- c: change the range of lines in the file1 to the range from file2
- d: Delete the lines in range Range from the file1; line Line is where they would have appeared in the file2 had they not been deleted
+ * Builds a sequence of DiffFragment objects thus diffing 2 files
+ * Parses the output of CVS 'diff' command assumed to be in the RCS Normal Format
+ * Format of the output chunks for the command: 'diff file1 file2':
+ * change-command
+ * < from-file-line
+ * < from-file-line...
+ * ---
+ * > to-file-line
+ * > to-file-line...
+ *
+ * Where:
+ * Change-Command -> Line a Range
+ * Change-Command -> Range c Range
+ * Change-Command -> Range d Line
+ * Range -> Line , Line
+ * Range -> Line
+ * Line -> number-of-line
+ *
+ * The commands are:
+ * a: append a range of lines from the file2 after line Line of the file1
+ * c: change the range of lines in the file1 to the range from file2
+ * d: Delete the lines in range Range from the file1; line Line is where they would have appeared in the file2 had they not been deleted
+ *
+ * Class DiffFragmentBuilder
+ * @author Jeka
  */
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 import org.jetbrains.annotations.NonNls;
@@ -30,6 +26,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author max
+ */
 public class OpenChannelsCache { // TODO: Will it make sense to have a background thread, that flushes the cache by timeout?
   private final int myCacheSizeLimit;
   private final String myAccessMode;

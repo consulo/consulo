@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.completion;
 
 import consulo.language.Language;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 class DefaultWordCompletionFilter implements WordCompletionElementFilter {
-  @Nonnull
-  @Override
-  public Language getLanguage() {
-    return Language.ANY;
-  }
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return Language.ANY;
+    }
 }

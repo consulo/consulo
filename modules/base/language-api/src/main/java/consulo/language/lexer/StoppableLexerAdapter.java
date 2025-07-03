@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 
+/**
+ * @author max
+ */
 public class StoppableLexerAdapter extends DelegateLexer {
     public interface StoppingCondition {
         boolean stopsAt(IElementType token, int start, int end);

@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiNamedElement;
 
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 public interface NamedStub<T extends PsiNamedElement> extends StubElement<T> {
-  @Nullable
-  String getName();
+    @Nullable
+    String getName();
 }

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io.storage;
 
 import consulo.index.io.Forceable;
@@ -33,6 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 
+/**
+ * @author max
+ */
 public abstract class AbstractRecordsTable implements Closeable, Forceable {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractRecordsTable.class);
 

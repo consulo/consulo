@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.util;
 
 import consulo.application.util.function.Computable;
 
 import jakarta.annotation.Nullable;
 
+/**
+ * @author max
+ */
 @Deprecated
 public interface NullableComputable<T> extends Computable<T> {
-  @Nullable
-  T compute();
+    @Nullable
+    T compute();
 }

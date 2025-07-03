@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -40,6 +36,9 @@ import jakarta.annotation.Nullable;
 
 import java.util.*;
 
+/**
+ * @author cdr
+ */
 public class MoveModuleToGroupTopLevel extends ActionGroup {
   @Override
   @RequiredUIAccess

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.dataContext.DataContext;
@@ -31,6 +27,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 
+/**
+ * @author cdr
+ */
 public class MoveModulesToSubGroupAction extends MoveModulesToGroupAction {
     public MoveModulesToSubGroupAction(ModuleGroup moduleGroup) {
         super(

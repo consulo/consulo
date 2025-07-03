@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.resolve;
 
 import consulo.util.io.FileUtil;
 
+/**
+ * @author max
+ */
 public abstract class SpecificNameItemProcessor implements PsiFileSystemItemProcessor {
   private final String myName;
 

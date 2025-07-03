@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi;
 
 import consulo.language.psi.scope.GlobalSearchScope;
 
+/**
+ * @author max
+ */
 public interface PsiCodeFragment extends PsiFile {
   /**
    * Force search scope for this fragment

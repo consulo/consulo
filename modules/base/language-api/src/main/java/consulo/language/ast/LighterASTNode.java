@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.ast;
 
 import consulo.util.collection.ArrayFactory;
 
+/**
+ * @author max
+ */
 public interface LighterASTNode {
   LighterASTNode[] EMPTY_ARRAY = new LighterASTNode[0];
 

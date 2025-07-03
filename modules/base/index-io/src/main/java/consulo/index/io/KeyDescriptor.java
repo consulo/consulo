@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 import consulo.index.io.data.DataExternalizer;
@@ -24,14 +20,17 @@ import consulo.util.collection.HashingStrategy;
 
 import java.util.Objects;
 
+/**
+ * @author max
+ */
 public interface KeyDescriptor<T> extends HashingStrategy<T>, DataExternalizer<T> {
-  @Override
-  default boolean equals(T o1, T o2) {
-    return Objects.equals(o1, o2);
-  }
+    @Override
+    default boolean equals(T o1, T o2) {
+        return Objects.equals(o1, o2);
+    }
 
-  @Override
-  default int hashCode(T object) {
-    return object.hashCode();
-  }
+    @Override
+    default int hashCode(T object) {
+        return object.hashCode();
+    }
 }

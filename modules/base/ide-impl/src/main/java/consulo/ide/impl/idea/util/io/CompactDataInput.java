@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.util.io;
 
 import consulo.index.io.data.DataInputOutputUtil;
@@ -27,6 +23,9 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * @author max
+ */
 public class CompactDataInput implements DataInput {
   private final InputStream in;
   private final byte[] readBuffer = IOUtil.allocReadWriteUTFBuffer();

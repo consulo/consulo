@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * class ViewerNodeDescriptor
- * created Aug 25, 2001
- * @author Jeka
- */
 package consulo.ide.impl.idea.internal.psiView;
 
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
+/**
+ * @author Jeka
+ * @since 2001-08-25
+ */
 public class ViewerNodeDescriptor extends NodeDescriptor {
   private final Object myElement;
 

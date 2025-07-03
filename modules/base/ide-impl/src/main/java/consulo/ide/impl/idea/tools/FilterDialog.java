@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author Yura Cangea
- */
 package consulo.ide.impl.idea.tools;
 
 import consulo.execution.ui.console.InvalidExpressionException;
@@ -34,6 +30,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author Yura Cangea
+ */
 class FilterDialog extends DialogWrapper {
   private final JTextField myRegexpField = new JTextField();
   private final JTextField myNameField = new JTextField();

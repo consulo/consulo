@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.ast;
 
 import consulo.annotation.component.ComponentScope;
@@ -25,11 +21,14 @@ import consulo.component.extension.ExtensionPointName;
 
 import java.util.Map;
 
+/**
+ * @author max
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TreeCopyHandler {
-  ExtensionPointName<TreeCopyHandler> EP_NAME = ExtensionPointName.create(TreeCopyHandler.class);
+    ExtensionPointName<TreeCopyHandler> EP_NAME = ExtensionPointName.create(TreeCopyHandler.class);
 
-  void encodeInformation(ASTNode element, ASTNode original, Map<Object, Object> encodingState);
+    void encodeInformation(ASTNode element, ASTNode original, Map<Object, Object> encodingState);
 
-  ASTNode decodeInformation(ASTNode element, Map<Object, Object> decodingState);
+    ASTNode decodeInformation(ASTNode element, Map<Object, Object> decodingState);
 }

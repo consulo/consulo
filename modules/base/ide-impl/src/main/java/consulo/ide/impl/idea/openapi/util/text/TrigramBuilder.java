@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.util.text;
 
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
@@ -24,6 +20,9 @@ import consulo.util.lang.StringUtil;
 
 import java.util.function.IntPredicate;
 
+/**
+ * @author max
+ */
 public class TrigramBuilder {
   private TrigramBuilder() {
   }

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.openapi.ui;
 
 import consulo.ui.ex.Gray;
@@ -27,6 +23,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
+/**
+ * @author max
+ */
 public final class TitlePanel extends JPanel {
   public TitlePanel(String title, String description) {
     super(new BorderLayout());

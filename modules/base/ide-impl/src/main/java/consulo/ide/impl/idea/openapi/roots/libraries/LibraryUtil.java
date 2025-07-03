@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package consulo.ide.impl.idea.openapi.roots.libraries;
 
 import consulo.content.internal.LibraryEx;
@@ -42,6 +38,9 @@ import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author cdr
+ */
 public class LibraryUtil {
   private LibraryUtil() {
   }

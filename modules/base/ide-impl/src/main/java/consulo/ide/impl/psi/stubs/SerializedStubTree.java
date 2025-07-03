@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.psi.stubs;
 
 import consulo.language.impl.DebugUtil;
@@ -40,6 +36,9 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author max
+ */
 public class SerializedStubTree {
   private static final Logger LOG = Logger.getInstance(SerializedStubTree.class);
   private static final ThreadLocalCachedValue<MessageDigest> HASHER = new ThreadLocalCachedValue<MessageDigest>() {

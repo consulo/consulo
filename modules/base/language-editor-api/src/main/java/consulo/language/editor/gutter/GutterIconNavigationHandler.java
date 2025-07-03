@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.editor.gutter;
 
 import consulo.language.psi.PsiElement;
@@ -24,7 +20,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.event.MouseEvent;
 
+/**
+ * @author max
+ */
 public interface GutterIconNavigationHandler<T extends PsiElement> {
-  @RequiredUIAccess
-  void navigate(MouseEvent e, T elt);
+    @RequiredUIAccess
+    void navigate(MouseEvent e, T elt);
 }

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.language.psi.stub.internal.StubSpine;
@@ -25,6 +21,9 @@ import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public class StubTree extends ObjectStubTree<StubElement<?>> {
   private final StubSpine mySpine = new StubSpine(this);
 

@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.tools;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -44,6 +40,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author max
+ */
 public class ScanSourceCommentsAction extends AnAction {
   private static final Logger LOG = Logger.getInstance(ScanSourceCommentsAction.class);
 

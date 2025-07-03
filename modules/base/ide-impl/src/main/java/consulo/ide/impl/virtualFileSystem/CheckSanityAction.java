@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package consulo.ide.impl.virtualFileSystem;
 
 import consulo.annotation.component.ActionImpl;
@@ -27,6 +23,9 @@ import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import jakarta.annotation.Nonnull;
 
+/**
+ * @author max
+ */
 @ActionImpl(id = "CheckVfsSanity")
 public class CheckSanityAction extends AnAction {
     public CheckSanityAction() {
