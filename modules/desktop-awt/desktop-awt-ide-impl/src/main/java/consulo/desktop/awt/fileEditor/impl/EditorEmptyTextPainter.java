@@ -17,6 +17,8 @@ package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
@@ -45,7 +47,7 @@ import java.awt.*;
 public class EditorEmptyTextPainter {
     public static EditorEmptyTextPainter ourInstance = new EditorEmptyTextPainter();
 
-    public void paintEmptyText(@Nonnull final JComponent splitters, @Nonnull Graphics g) {
+    public void paintEmptyText(@Nonnull JComponent splitters, @Nonnull Graphics g) {
         UISettingsUtil.setupAntialiasing(g);
         g.setColor(new JBColor(Gray._80, Gray._160));
         g.setFont(JBUI.Fonts.label(16f));
@@ -68,31 +70,31 @@ public class EditorEmptyTextPainter {
 
     protected void advertiseActions(@Nonnull JComponent splitters, @Nonnull UIUtil.TextPainter painter) {
         appendSearchEverywhere(painter);
-        appendToolWindow(painter, "Project View", ToolWindowId.PROJECT_VIEW, splitters);
-        appendAction(painter, "Go to File", getActionShortcutText("GotoFile"));
-        appendAction(painter, "Recent Files", getActionShortcutText(IdeActions.ACTION_RECENT_FILES));
-        appendAction(painter, "Navigation Bar", getActionShortcutText("ShowNavBar"));
+        appendToolWindow(painter, IdeLocalize.emptyTextProjectView(), ToolWindowId.PROJECT_VIEW, splitters);
+        appendAction(painter, IdeLocalize.emptyTextGoToFile(), getActionShortcutText("GotoFile"));
+        appendAction(painter, IdeLocalize.emptyTextRecentFiles(), getActionShortcutText(IdeActions.ACTION_RECENT_FILES));
+        appendAction(painter, IdeLocalize.emptyTextNavigationBar(), getActionShortcutText("ShowNavBar"));
         appendDnd(painter);
     }
 
     protected void appendDnd(@Nonnull UIUtil.TextPainter painter) {
-        appendLine(painter, "Drop files here to open");
+        appendLine(painter, IdeLocalize.emptyTextDropFilesToOpen());
     }
 
     protected void appendSearchEverywhere(@Nonnull UIUtil.TextPainter painter) {
         Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
         appendAction(
             painter,
-            "Search Everywhere",
+            IdeLocalize.emptyTextSearchEverywhere(),
             shortcuts.length == 0
-                ? "Double " + (Platform.current().os().isMac() ? MacKeymapUtil.SHIFT : "Shift")
+                ? IdeLocalize.doubleCtrlOrShiftShortcut(Platform.current().os().isMac() ? MacKeymapUtil.SHIFT : "Shift").get()
                 : KeymapUtil.getShortcutsText(shortcuts)
         );
     }
 
     protected void appendToolWindow(
         @Nonnull UIUtil.TextPainter painter,
-        @Nonnull String action,
+        @Nonnull LocalizeValue action,
         @Nonnull String toolWindowId,
         @Nonnull JComponent splitters
     ) {
@@ -102,14 +104,14 @@ public class EditorEmptyTextPainter {
         }
     }
 
-    protected void appendAction(@Nonnull UIUtil.TextPainter painter, @Nonnull String action, @Nullable String shortcut) {
+    protected void appendAction(@Nonnull UIUtil.TextPainter painter, @Nonnull LocalizeValue action, @Nullable String shortcut) {
         if (StringUtil.isEmpty(shortcut)) {
             return;
         }
-        appendLine(painter, action + " " + "<shortcut>" + shortcut + "</shortcut>");
+        appendLine(painter, LocalizeValue.join(action, LocalizeValue.space(), LocalizeValue.of("<shortcut>" + shortcut + "</shortcut>")));
     }
 
-    protected void appendLine(@Nonnull UIUtil.TextPainter painter, String line) {
+    protected void appendLine(@Nonnull UIUtil.TextPainter painter, @Nonnull LocalizeValue line) {
         painter.appendLine(line);
     }
 

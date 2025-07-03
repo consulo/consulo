@@ -815,6 +815,8 @@ dnd.with.alt.pressed.only:
     text: Drag-n-Drop with ALT pressed only
 dom.elements.tree.childs.contain.errors:
     text: Children contain errors
+double.ctrl.or.shift.shortcut:
+    text: Double {0}
 dumb.service.indexing.paused.due.to:
     text: Indexing paused due to {0}
 eap.configurable.name:
@@ -861,6 +863,18 @@ element.of.class:
     text: of class
 element.of.interface:
     text: of interface
+empty.text.drop.files.to.open:
+    text: Drop files here to open them
+empty.text.go.to.file:
+    text: Go to File
+empty.text.navigation.bar:
+    text: Navigation Bar
+empty.text.project.view:
+    text: Project View
+empty.text.recent.files:
+    text: Recent Files
+empty.text.search.everywhere:
+    text: Search Everywhere
 encoding.do.not.convert.message:
     text: Please do not convert to ''{0}''.
 encoding.name.system.default:

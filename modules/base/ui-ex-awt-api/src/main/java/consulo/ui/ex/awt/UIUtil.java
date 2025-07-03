@@ -22,6 +22,7 @@ import consulo.application.util.registry.Registry;
 import consulo.component.util.localize.BundleBase;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -2922,6 +2923,14 @@ public class UIUtil {
 
         public TextPainter withLineSpacing(float lineSpacing) {
             myLineSpacing = lineSpacing;
+            return this;
+        }
+
+        public TextPainter appendLine(@Nonnull LocalizeValue text) {
+            if (text == LocalizeValue.empty()) {
+                return this;
+            }
+            myLines.add(Pair.create(text.get(), new LineInfo()));
             return this;
         }
 
