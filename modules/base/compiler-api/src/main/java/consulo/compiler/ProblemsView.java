@@ -45,6 +45,7 @@ public abstract class ProblemsView {
         return project.getInstance(ProblemsView.class);
     }
 
+    @RequiredUIAccess
     public static void showCurrentFileProblems(@Nonnull Project project) {
         ToolWindow window = getToolWindow(project);
         if (window == null) {
@@ -79,7 +80,6 @@ public abstract class ProblemsView {
         @Nullable String rendererTextPrefix
     );
 
-
     @RequiredUIAccess
     public abstract void showOrHide(boolean hide);
 
@@ -93,11 +93,11 @@ public abstract class ProblemsView {
 
     public abstract void clearProgress();
 
-    public static String[] convertMessage(final String text) {
+    public static String[] convertMessage(String text) {
         if (!text.contains("\n")) {
             return new String[]{text};
         }
-        final List<String> lines = new ArrayList<>();
+        List<String> lines = new ArrayList<>();
         StringTokenizer tokenizer = new StringTokenizer(text, "\n", false);
         while (tokenizer.hasMoreTokens()) {
             lines.add(tokenizer.nextToken());

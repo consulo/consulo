@@ -18,12 +18,12 @@ package consulo.compiler.resourceCompiler;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
 import consulo.platform.Platform;
@@ -36,17 +36,15 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +55,7 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * @author VISTALL
- * @since 20:16/24.05.13
+ * @since 2013-05-24
  */
 @Singleton
 @State(name = "ResourceCompilerConfiguration", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml")})
@@ -91,17 +89,19 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         }
     }
 
+    @Nonnull
     private Project myProject;
     // extensions of the files considered as resource files
     private final List<Pattern> myRegexpResourcePatterns = new ArrayList<>();
-    // extensions of the files considered as resource files. If present, overrides patterns in old regexp format stored in myRegexpResourcePatterns
+    // extensions of the files considered as resource files.
+    // If present, overrides patterns in old regexp format stored in myRegexpResourcePatterns
     private final List<String> myWildcardPatterns = new ArrayList<>();
     private final List<CompiledPattern> myCompiledPatterns = new ArrayList<>();
     private final List<CompiledPattern> myNegatedCompiledPatterns = new ArrayList<>();
     private boolean myWildcardPatternsInitialized = false;
 
     @Inject
-    public ResourceCompilerConfiguration(Project project) {
+    public ResourceCompilerConfiguration(@Nonnull Project project) {
         myProject = project;
     }
 
@@ -118,7 +118,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     }
 
     private boolean isResourceFile(String name, @Nullable VirtualFile parent) {
-        final Ref<String> parentRef = Ref.create(null);
+        SimpleReference<String> parentRef = SimpleReference.create(null);
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < myCompiledPatterns.size(); i++) {
             if (matches(name, parent, parentRef, myCompiledPatterns.get(i))) {
@@ -139,7 +139,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         return true;
     }
 
-    private boolean matches(String name, VirtualFile parent, Ref<String> parentRef, CompiledPattern pair) {
+    private boolean matches(String name, VirtualFile parent, SimpleReference<String> parentRef, CompiledPattern pair) {
         if (!matches(name, pair.fileName)) {
             return false;
         }
@@ -191,16 +191,16 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
                 ok = false;
             }
             if (!ok) {
-                final String initialPatternString = patternsToString(getRegexpPatterns());
-                final String message = CompilerLocalize.messageResourcePatternsFormatChanged(
-                    Application.get().getName(),
+                String initialPatternString = patternsToString(getRegexpPatterns());
+                LocalizeValue message = CompilerLocalize.messageResourcePatternsFormatChanged(
+                    myProject.getApplication().getName(),
                     initialPatternString,
                     CommonLocalize.buttonOk(),
                     CommonLocalize.buttonCancel()
-                ).get();
-                final String wildcardPatterns = Messages.showInputDialog(
+                );
+                String wildcardPatterns = Messages.showInputDialog(
                     myProject,
-                    message,
+                    message.get(),
                     CompilerLocalize.patternConversionDialogTitle().get(),
                     UIUtil.getWarningIcon(),
                     initialPatternString,
@@ -214,7 +214,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
                         @Override
                         @RequiredUIAccess
                         public boolean canClose(String inputString) {
-                            final StringTokenizer tokenizer = new StringTokenizer(inputString, ";", false);
+                            StringTokenizer tokenizer = new StringTokenizer(inputString, ";", false);
                             StringBuilder malformedPatterns = new StringBuilder();
 
                             while (tokenizer.hasMoreTokens()) {
@@ -259,16 +259,14 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         addWildcardResourcePattern(namePattern);
     }
 
-    private void addWildcardResourcePattern(@NonNls final String wildcardPattern) throws PatternSyntaxException {
-        final CompiledPattern pattern = convertToRegexp(wildcardPattern);
-        if (pattern != null) {
-            myWildcardPatterns.add(wildcardPattern);
-            if (isPatternNegated(wildcardPattern)) {
-                myNegatedCompiledPatterns.add(pattern);
-            }
-            else {
-                myCompiledPatterns.add(pattern);
-            }
+    private void addWildcardResourcePattern(String wildcardPattern) throws PatternSyntaxException {
+        CompiledPattern pattern = convertToRegexp(wildcardPattern);
+        myWildcardPatterns.add(wildcardPattern);
+        if (isPatternNegated(wildcardPattern)) {
+            myNegatedCompiledPatterns.add(pattern);
+        }
+        else {
+            myCompiledPatterns.add(pattern);
         }
     }
 
@@ -279,21 +277,21 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     private String[] getRegexpPatterns() {
         String[] patterns = ArrayUtil.newStringArray(myRegexpResourcePatterns.size());
         int index = 0;
-        for (final Pattern myRegexpResourcePattern : myRegexpResourcePatterns) {
-            patterns[index++] = myRegexpResourcePattern.pattern();
+        for (Pattern pattern : myRegexpResourcePatterns) {
+            patterns[index++] = pattern.pattern();
         }
         return patterns;
     }
 
     private boolean doConvertPatterns() throws PatternSyntaxException {
-        final String[] regexpPatterns = getRegexpPatterns();
-        final List<String> converted = new ArrayList<>();
-        final Pattern multipleExtensionsPatternPattern = compilePattern("\\.\\+\\\\\\.\\((\\w+(?:\\|\\w+)*)\\)");
-        final Pattern singleExtensionPatternPattern = compilePattern("\\.\\+\\\\\\.(\\w+)");
-        for (final String regexpPattern : regexpPatterns) {
+        String[] regexpPatterns = getRegexpPatterns();
+        List<String> converted = new ArrayList<>();
+        Pattern multipleExtensionsPatternPattern = compilePattern("\\.\\+\\\\\\.\\((\\w+(?:\\|\\w+)*)\\)");
+        Pattern singleExtensionPatternPattern = compilePattern("\\.\\+\\\\\\.(\\w+)");
+        for (String regexpPattern : regexpPatterns) {
             Matcher matcher = multipleExtensionsPatternPattern.matcher(regexpPattern);
             if (matcher.find()) {
-                final StringTokenizer tokenizer = new StringTokenizer(matcher.group(1), "|", false);
+                StringTokenizer tokenizer = new StringTokenizer(matcher.group(1), "|", false);
                 while (tokenizer.hasMoreTokens()) {
                     converted.add("?*." + tokenizer.nextToken());
                 }
@@ -308,7 +306,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
                 }
             }
         }
-        for (final String aConverted : converted) {
+        for (String aConverted : converted) {
             addWildcardResourcePattern(aConverted);
         }
         return true;
@@ -322,6 +320,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         return wildcardPattern.length() > 1 && wildcardPattern.charAt(0) == '!';
     }
 
+    @Nonnull
     public static CompiledPattern convertToRegexp(String wildcardPattern) throws PatternSyntaxException {
         if (isPatternNegated(wildcardPattern)) {
             wildcardPattern = wildcardPattern.substring(1);
@@ -357,8 +356,8 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         wildcardPattern = normalizeWildcards(wildcardPattern);
         wildcardPattern = optimize(wildcardPattern);
 
-        final Pattern dirCompiled = dirPattern == null ? null : compilePattern(dirPattern);
-        final Pattern srcCompiled = srcRoot == null ? null : compilePattern(optimize(normalizeWildcards(srcRoot)));
+        Pattern dirCompiled = dirPattern == null ? null : compilePattern(dirPattern);
+        Pattern srcCompiled = srcRoot == null ? null : compilePattern(optimize(normalizeWildcards(srcRoot)));
         return new CompiledPattern(compilePattern(wildcardPattern), dirCompiled, srcCompiled);
     }
 
@@ -376,8 +375,8 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         return wildcardPattern;
     }
 
-    private static String patternsToString(final String[] patterns) {
-        final StringBuilder extensionsString = new StringBuilder();
+    private static String patternsToString(String[] patterns) {
+        StringBuilder extensionsString = new StringBuilder();
         for (int idx = 0; idx < patterns.length; idx++) {
             if (idx > 0) {
                 extensionsString.append(";");
@@ -395,14 +394,14 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
             return null;
         }
         Element state = new Element("state");
-        final Element newChild = addChild(state, RESOURCE_EXTENSIONS);
-        for (final String pattern : patterns) {
+        Element newChild = addChild(state, RESOURCE_EXTENSIONS);
+        for (String pattern : patterns) {
             addChild(newChild, ENTRY).setAttribute(NAME, pattern);
         }
 
         if (myWildcardPatternsInitialized || !myWildcardPatterns.isEmpty()) {
-            final Element wildcardPatterns = addChild(state, WILDCARD_RESOURCE_PATTERNS);
-            for (final String wildcardPattern : myWildcardPatterns) {
+            Element wildcardPatterns = addChild(state, WILDCARD_RESOURCE_PATTERNS);
+            for (String wildcardPattern : myWildcardPatterns) {
                 addChild(wildcardPatterns, ENTRY).setAttribute(NAME, wildcardPattern);
             }
         }
@@ -419,10 +418,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     }
 
     private void addRegexpPattern(String namePattern) throws PatternSyntaxException {
-        Pattern pattern = compilePattern(namePattern);
-        if (pattern != null) {
-            myRegexpResourcePatterns.add(pattern);
-        }
+        myRegexpResourcePatterns.add(compilePattern(namePattern));
     }
 
     public void readExternal(Element parentNode) {
@@ -430,7 +426,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
             removeRegexpPatterns();
             Element node = parentNode.getChild(RESOURCE_EXTENSIONS);
             if (node != null) {
-                for (final Element element : node.getChildren(ENTRY)) {
+                for (Element element : node.getChildren(ENTRY)) {
                     String pattern = element.getAttributeValue(NAME);
                     if (!StringUtil.isEmpty(pattern)) {
                         addRegexpPattern(pattern);
@@ -442,7 +438,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
             node = parentNode.getChild(WILDCARD_RESOURCE_PATTERNS);
             if (node != null) {
                 myWildcardPatternsInitialized = true;
-                for (final Element element : node.getChildren(ENTRY)) {
+                for (Element element : node.getChildren(ENTRY)) {
                     String pattern = element.getAttributeValue(NAME);
                     if (!StringUtil.isEmpty(pattern)) {
                         addWildcardResourcePattern(pattern);
@@ -455,8 +451,8 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         }
     }
 
-    private static Element addChild(Element parent, final String childName) {
-        final Element child = new Element(childName);
+    private static Element addChild(Element parent, String childName) {
+        Element child = new Element(childName);
         parent.addContent(child);
         return child;
     }

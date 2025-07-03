@@ -37,10 +37,11 @@ public final class TimestampValidityState implements ValidityState {
 
     @Override
     public boolean equalsTo(ValidityState otherState) {
-        if (!(otherState instanceof TimestampValidityState)) {
-            return false;
+        //noinspection SimplifiableIfStatement
+        if (otherState instanceof TimestampValidityState timestampValidityState) {
+            return myTimestamp == timestampValidityState.myTimestamp;
         }
-        return myTimestamp == ((TimestampValidityState) otherState).myTimestamp;
+        return false;
     }
 
     /**

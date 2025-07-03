@@ -19,19 +19,9 @@ package consulo.compiler;
  * @author Eugene Zhuravlev
  * @since 2011-11-24
  */
-public class ExitStatus {
-    private final String myName;
-
-    ExitStatus(String name) {
-        myName = name;
-    }
-
-    public String toString() {
-        return myName;
-    }
-
-    public static final ExitStatus CANCELLED = new ExitStatus("CANCELLED");
-    public static final ExitStatus ERRORS = new ExitStatus("ERRORS");
-    public static final ExitStatus SUCCESS = new ExitStatus("SUCCESS");
-    public static final ExitStatus UP_TO_DATE = new ExitStatus("UP_TO_DATE");
+public enum ExitStatus {
+    CANCELLED,
+    ERRORS,
+    SUCCESS,
+    UP_TO_DATE
 }

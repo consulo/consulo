@@ -18,6 +18,7 @@ package consulo.compiler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
@@ -39,6 +40,7 @@ public interface CompilerMessage {
      *
      * @return a category this message belongs to (error, warning, information).
      */
+    @Nonnull
     CompilerMessageCategory getCategory();
 
     /**
@@ -46,6 +48,7 @@ public interface CompilerMessage {
      *
      * @return message text
      */
+    @Nonnull
     String getMessage();
 
     /**

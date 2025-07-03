@@ -15,6 +15,10 @@
  */
 package consulo.compiler;
 
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+
 /**
  * A set of constants describing possible message categories.
  *
@@ -22,46 +26,20 @@ package consulo.compiler;
  * @see CompileContext#addMessage(CompilerMessageCategory, String, String, int, int)
  */
 public enum CompilerMessageCategory {
-    ERROR {
-        public String toString() {
-            return CompilerBundle.message("message.category.error");
-        }
+    ERROR(CompilerLocalize.messageCategoryError()),
+    WARNING(CompilerLocalize.messageCategoryWarning()),
+    INFORMATION(CompilerLocalize.messageCategoryInformation()),
+    STATISTICS(CompilerLocalize.messageCategoryStatistics());
 
-        @Override
-        public String getPresentableText() {
-            return toString();
-        }
-    },
-    WARNING {
-        public String toString() {
-            return CompilerBundle.message("message.category.warning");
-        }
+    @Nonnull
+    private final LocalizeValue myPresentableText;
 
-        @Override
-        public String getPresentableText() {
-            return toString();
-        }
-    },
-    INFORMATION {
-        public String toString() {
-            return CompilerBundle.message("message.category.information");
-        }
+    CompilerMessageCategory(@Nonnull LocalizeValue presentableText) {
+        myPresentableText = presentableText;
+    }
 
-        @Override
-        public String getPresentableText() {
-            return toString();
-        }
-    },
-    STATISTICS {
-        public String toString() {
-            return CompilerBundle.message("message.category.statistics");
-        }
-
-        @Override
-        public String getPresentableText() {
-            return toString();
-        }
-    };
-
-    public abstract String getPresentableText();
+    @Nonnull
+    public LocalizeValue getPresentableText() {
+        return myPresentableText;
+    }
 }

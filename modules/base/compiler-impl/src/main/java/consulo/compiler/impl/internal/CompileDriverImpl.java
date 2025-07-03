@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.compiler.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.Semaphore;
@@ -180,13 +179,19 @@ public class CompileDriverImpl implements CompileDriver {
         }
     }
 
+    @RequiredReadAction
     public boolean isUpToDate(CompileScope scope) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("isUpToDate operation started");
         }
         scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
 
-        CompilerTask task = new CompilerTask(myProject, "Classes up-to-date check", false, isCompilationStartedAutomatically(scope));
+        CompilerTask task = new CompilerTask(
+            myProject,
+            LocalizeValue.localizeTODO("Classes up-to-date check"),
+            false,
+            isCompilationStartedAutomatically(scope)
+        );
         CompositeDependencyCache cache = createDependencyCache();
         CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false);
 
@@ -254,8 +259,8 @@ public class CompileDriverImpl implements CompileDriver {
     }
 
     private static boolean containsFileIndexScopes(CompileScope scope) {
-        if (scope instanceof CompositeScope) {
-            for (CompileScope childScope : ((CompositeScope)scope).getScopes()) {
+        if (scope instanceof CompositeScope compositeScope) {
+            for (CompileScope childScope : compositeScope.getScopes()) {
                 if (containsFileIndexScopes(childScope)) {
                     return true;
                 }
@@ -436,9 +441,9 @@ public class CompileDriverImpl implements CompileDriver {
 
         LocalizeValue contentName =
             forceCompile ? CompilerLocalize.compilerContentNameCompile() : CompilerLocalize.compilerContentNameMake();
-        Application application = Application.get();
+        Application application = myProject.getApplication();
         boolean isUnitTestMode = application.isUnitTestMode();
-        CompilerTask compileTask = new CompilerTask(myProject, contentName.get(), true, isCompilationStartedAutomatically(scope));
+        CompilerTask compileTask = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope));
 
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
         FileDocumentManager.getInstance().saveAllDocuments();
@@ -519,7 +524,7 @@ public class CompileDriverImpl implements CompileDriver {
             status = doCompile(compileContext, isRebuild, forceCompile, false);
         }
         catch (Throwable ex) {
-            if (Application.get().isUnitTestMode()) {
+            if (myProject.getApplication().isUnitTestMode()) {
                 throw new RuntimeException(ex);
             }
 
@@ -543,7 +548,7 @@ public class CompileDriverImpl implements CompileDriver {
             dropDependencyCache(compileContext);
             CompilerCacheManager.getInstance(myProject).flushCaches();
             if (compileContext.isRebuildRequested()) {
-                Application.get().invokeLater(
+                myProject.getApplication().invokeLater(
                     () -> {
                         CompilerMessageImpl msg =
                             new CompilerMessageImpl(myProject, CompilerMessageCategory.INFORMATION, compileContext.getRebuildReason());
@@ -588,7 +593,7 @@ public class CompileDriverImpl implements CompileDriver {
             LocalFileSystem lfs = LocalFileSystem.getInstance();
             if (!outputs.isEmpty()) {
                 ProgressIndicator indicator = compileContext.getProgressIndicator();
-                indicator.setText("Synchronizing output directories...");
+                indicator.setTextValue(LocalizeValue.localizeTODO("Synchronizing output directories..."));
                 lfs.refreshIoFiles(outputs, _status == ExitStatus.CANCELLED, false, null);
                 indicator.setTextValue(LocalizeValue.empty());
             }
@@ -739,7 +744,7 @@ public class CompileDriverImpl implements CompileDriver {
 
                 //int totalCount = all.length + myGenerationCompilerModuleToOutputDirMap.size() * 2;
                 progressIndicator.pushState();
-                progressIndicator.setText("Inspecting output directories...");
+                progressIndicator.setTextValue(LocalizeValue.localizeTODO("Inspecting output directories..."));
                 try {
                     for (VirtualFile output : all) {
                         if (output.isValid()) {
@@ -836,7 +841,7 @@ public class CompileDriverImpl implements CompileDriver {
                     CompilerUtil.runInContext(context, "Generating classpath index...", () -> {
                         int count = 0;
                         for (VirtualFile file : allOutputDirs) {
-                            context.getProgressIndicator().setFraction((double)++count / allOutputDirs.length);
+                            context.getProgressIndicator().setFraction((double) ++count / allOutputDirs.length);
                             createClasspathIndex(file);
                         }
                     });
@@ -893,14 +898,14 @@ public class CompileDriverImpl implements CompileDriver {
 
             Set<Artifact> artifactsToBuild = ArtifactCompileScope.getArtifactsToBuild(myProject, context.getCompileScope(), true);
             for (Artifact artifact : artifactsToBuild) {
-                String outputFilePath = ((ArtifactImpl)artifact).getOutputDirectoryPathToCleanOnRebuild();
+                String outputFilePath = ((ArtifactImpl) artifact).getOutputDirectoryPathToCleanOnRebuild();
                 if (outputFilePath != null) {
                     result.add(new File(FileUtil.toSystemDependentName(outputFilePath)));
                 }
             }
             return result;
         };
-        List<File> scopeOutputs = AccessRule.read(action);
+        List<File> scopeOutputs = ReadAction.compute(action);
         if (!scopeOutputs.isEmpty()) {
             CompilerUtil.runInContext(
                 context,
@@ -926,7 +931,7 @@ public class CompileDriverImpl implements CompileDriver {
             public boolean visitFile(@Nonnull VirtualFile file) {
                 if (file.isDirectory()) {
                     context.getProgressIndicator().checkCanceled();
-                    context.getProgressIndicator().setText2(file.getPresentableUrl());
+                    context.getProgressIndicator().setText2Value(LocalizeValue.of(file.getPresentableUrl()));
                 }
                 return true;
             }
@@ -999,8 +1004,8 @@ public class CompileDriverImpl implements CompileDriver {
 
     private void dropScopesCaches() {
         // hack to be sure the classpath will include the output directories
-        Application.get()
-            .runReadAction(() -> ((ProjectRootManagerEx)ProjectRootManager.getInstance(myProject)).clearScopesCachesForModules());
+        myProject.getApplication()
+            .runReadAction(() -> ((ProjectRootManagerEx) ProjectRootManager.getInstance(myProject)).clearScopesCachesForModules());
     }
 
     private void pruneEmptyDirectories(CompileContextEx context, ProgressIndicator progress, Set<File> directories) {
@@ -1059,7 +1064,7 @@ public class CompileDriverImpl implements CompileDriver {
         }
 
         for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
-            String path = ((ArtifactImpl)artifact).getOutputDirectoryPathToCleanOnRebuild();
+            String path = ((ArtifactImpl) artifact).getOutputDirectoryPathToCleanOnRebuild();
             if (path != null) {
                 outputDirs.add(new File(FileUtil.toSystemDependentName(path)));
             }
@@ -1143,13 +1148,19 @@ public class CompileDriverImpl implements CompileDriver {
         return false;
     }
 
+    @RequiredReadAction
     public void executeCompileTask(
         CompileTask compileTask,
         CompileScope scope,
         String contentName,
         Runnable onTaskFinished
     ) {
-        CompilerTask task = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope));
+        CompilerTask task = new CompilerTask(
+            myProject,
+            LocalizeValue.localizeTODO(contentName),
+            true,
+            isCompilationStartedAutomatically(scope)
+        );
         CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, null, false, false);
 
         FileDocumentManager.getInstance().saveAllDocuments();
@@ -1247,7 +1258,7 @@ public class CompileDriverImpl implements CompileDriver {
 
             if (!isProjectCompilePathSpecified) {
                 LocalizeValue message = CompilerLocalize.errorProjectOutputNotSpecified();
-                if (Application.get().isUnitTestMode()) {
+                if (myProject.getApplication().isUnitTestMode()) {
                     LOG.error(message.get());
                 }
 
@@ -1358,7 +1369,7 @@ public class CompileDriverImpl implements CompileDriver {
         showConfigurationDialog(nameToSelect, editorNameToSelect);
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     private boolean validateOutputAndSourcePathsIntersection() {
         Module[] allModules = ModuleManager.getInstance(myProject).getModules();
         List<VirtualFile> allOutputs = new ArrayList<>();

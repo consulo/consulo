@@ -27,6 +27,7 @@ import consulo.compiler.ExitStatus;
 import consulo.component.ProcessCanceledException;
 import consulo.document.util.TextRange;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
@@ -63,7 +64,7 @@ public class CompilerTask extends Task.Backgroundable {
 
     public CompilerTask(
         @Nonnull Project project,
-        String contentName,
+        @Nonnull LocalizeValue contentName,
         boolean waitForPreviousSession,
         boolean compilationStartedAutomatically
     ) {
@@ -71,8 +72,8 @@ public class CompilerTask extends Task.Backgroundable {
         myWaitForPreviousSession = waitForPreviousSession;
         myCompilationStartedAutomatically = compilationStartedAutomatically;
         mySessionId = UUID.randomUUID();
-        myBuildViewService =
-            project.getApplication().getInstance(BuildViewServiceFactory.class).createBuildViewService(project, mySessionId, contentName);
+        myBuildViewService = project.getApplication().getInstance(BuildViewServiceFactory.class)
+            .createBuildViewService(project, mySessionId, contentName.get());
     }
 
     @Nonnull
@@ -85,32 +86,30 @@ public class CompilerTask extends Task.Backgroundable {
         myEndCompilationStamp = endCompilationStamp;
     }
 
-    @Override
     @Nullable
+    @Override
     public NotificationInfo getNotificationInfo() {
         return new NotificationInfo(
-            myErrorCount > 0 ? "Compiler (errors)" : "Compiler (success)",
-            "Compilation Finished",
-            myErrorCount + " Errors, " + myWarningCount + " Warnings",
+            myErrorCount > 0 ? LocalizeValue.localizeTODO("Compiler (errors)") : LocalizeValue.localizeTODO("Compiler (success)"),
+            LocalizeValue.localizeTODO("Compilation Finished"),
+            LocalizeValue.localizeTODO(myErrorCount + " Errors, " + myWarningCount + " Warnings"),
             true
         );
     }
 
     @Override
-    public void run(@Nonnull final ProgressIndicator indicator) {
+    public void run(@Nonnull ProgressIndicator indicator) {
         myIndicator = indicator;
 
         long startCompilationStamp = System.currentTimeMillis();
-
 
         indicator.setIndeterminate(false);
 
         myBuildViewService.onStart(mySessionId, startCompilationStamp, null, indicator);
 
-        final Semaphore semaphore = ((CompilerManagerImpl) CompilerManager.getInstance((Project) myProject)).getCompilationSemaphore();
+        Semaphore semaphore = ((CompilerManagerImpl) CompilerManager.getInstance((Project) myProject)).getCompilationSemaphore();
         boolean acquired = false;
         try {
-
             try {
                 while (!acquired) {
                     acquired = semaphore.tryAcquire(300, TimeUnit.MILLISECONDS);
@@ -150,10 +149,10 @@ public class CompilerTask extends Task.Backgroundable {
 
     private void addIndicatorDelegate() {
         ProgressIndicator indicator = myIndicator;
-        if (!(indicator instanceof ProgressIndicatorEx)) {
+        if (!(indicator instanceof ProgressIndicatorEx progressIndicatorEx)) {
             return;
         }
-        ((ProgressIndicatorEx) indicator).addStateDelegate(new AbstractProgressIndicatorExBase() {
+        progressIndicatorEx.addStateDelegate(new AbstractProgressIndicatorExBase() {
             @Override
             public void cancel() {
                 super.cancel();
@@ -169,24 +168,25 @@ public class CompilerTask extends Task.Backgroundable {
             private void stopAppIconProgress() {
                 UIUtil.invokeLaterIfNeeded(() -> {
                     AppIcon appIcon = AppIcon.getInstance();
-                    if (appIcon.hideProgress((Project) myProject, APP_ICON_ID)) {
+                    if (appIcon.hideProgress(myProject, APP_ICON_ID)) {
                         if (myErrorCount > 0) {
-                            appIcon.setErrorBadge((Project) myProject, String.valueOf(myErrorCount));
-                            appIcon.requestAttention((Project) myProject, true);
+                            appIcon.setErrorBadge(myProject, String.valueOf(myErrorCount));
+                            appIcon.requestAttention(myProject, true);
                         }
                         else if (!myCompilationStartedAutomatically) {
-                            appIcon.setOkBadge((Project) myProject, true);
-                            appIcon.requestAttention((Project) myProject, false);
+                            appIcon.setOkBadge(myProject, true);
+                            appIcon.requestAttention(myProject, false);
                         }
                     }
                 });
             }
 
             @Override
-            public void setFraction(final double fraction) {
+            public void setFraction(double fraction) {
                 super.setFraction(fraction);
-                UIUtil.invokeLaterIfNeeded(() -> AppIcon.getInstance()
-                    .setProgress((Project) myProject, APP_ICON_ID, AppIconScheme.Progress.BUILD, fraction, true));
+                UIUtil.invokeLaterIfNeeded(
+                    () -> AppIcon.getInstance().setProgress(myProject, APP_ICON_ID, AppIconScheme.Progress.BUILD, fraction, true)
+                );
             }
         });
     }
@@ -197,8 +197,8 @@ public class CompilerTask extends Task.Backgroundable {
         }
     }
 
-    public void addMessage(final CompilerMessage message) {
-        final CompilerMessageCategory messageCategory = message.getCategory();
+    public void addMessage(CompilerMessage message) {
+        CompilerMessageCategory messageCategory = message.getCategory();
         if (CompilerMessageCategory.WARNING.equals(messageCategory)) {
             myWarningCount += 1;
         }
@@ -210,7 +210,7 @@ public class CompilerTask extends Task.Backgroundable {
         myBuildViewService.addMessage(mySessionId, message);
     }
 
-    private void informWolf(final CompilerMessage message) {
+    private void informWolf(CompilerMessage message) {
         WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance((Project) myProject);
         VirtualFile file = getVirtualFile(message);
         wolf.queue(file);
@@ -221,21 +221,21 @@ public class CompilerTask extends Task.Backgroundable {
         queue();
     }
 
-    private static VirtualFile getVirtualFile(final CompilerMessage message) {
+    private static VirtualFile getVirtualFile(CompilerMessage message) {
         VirtualFile virtualFile = message.getVirtualFile();
         if (virtualFile == null) {
             Navigatable navigatable = message.getNavigatable();
-            if (navigatable instanceof OpenFileDescriptor) {
-                virtualFile = ((OpenFileDescriptor) navigatable).getFile();
+            if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
+                virtualFile = openFileDescriptor.getFile();
             }
         }
         return virtualFile;
     }
 
-    public static TextRange getTextRange(final CompilerMessage message) {
+    public static TextRange getTextRange(CompilerMessage message) {
         Navigatable navigatable = message.getNavigatable();
-        if (navigatable instanceof OpenFileDescriptor) {
-            int offset = ((OpenFileDescriptor) navigatable).getOffset();
+        if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
+            int offset = openFileDescriptor.getOffset();
             return new TextRange(offset, offset);
         }
         return TextRange.EMPTY_RANGE;

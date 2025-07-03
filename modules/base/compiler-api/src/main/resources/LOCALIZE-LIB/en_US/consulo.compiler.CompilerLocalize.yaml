@@ -1,7 +1,11 @@
-action.compile.description.module:
-    text: Module ''{0}''
-action.compile.description.selected.files:
-    text: Selected Files
+action.compile.0.text:
+    text: Compile ''{0}''
+action.compile.default.text:
+    text: Compile <default>
+action.compile.module.text:
+    text: Compile Module ''{0}''
+action.compile.selected.files.text:
+    text: Compile Selected Files
 action.compiler.properties.text:
     text: Compiler Properties
 action.description.package.file:
@@ -353,6 +357,8 @@ node.text.0.directory.content:
     text: '''''{0}'''' directory content'
 node.text.0.with.dependencies:
     text: '''''{0}'''' with dependencies'
+notification.group.compiler.display.name:
+    text: Compiler
 option.use.compiler.text:
     text: 'Use compiler:'
 packaging.compiler.error.cannot.build.circular.dependency.found.between.0.and.1:
@@ -433,12 +439,12 @@ status.compilation.completed.successfully.with.warnings.and.errors:
     text: Compilation completed with {0} {0,choice, 0#errors|1#error|2#errors} and {1} {1,choice, 0#warnings|1#warning|2#warnings}
 status.text.file.has.been.packaged:
     text: '{0, choice, 1#File|2#Files} {1} {0, choice, 1#has|2#have} been packaged at {2}.'
+toolwindow.build.display.name:
+    text: Build
 validation.display.name:
     text: Validation
 value.undefined:
     text: undefined
-toolwindow.build.display.name:
-    text: Build
 warning.compiler.running.on.project.close:
     text: The compiler is running. Proceed with project closing?
 warning.compiler.running.on.toolwindow.close:
