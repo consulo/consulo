@@ -1780,12 +1780,6 @@ action.ReverteOverrideFileTypeAction.text:
     text: Revert File Type Override
 action.ReverteOverrideFileTypeAction.verbose.description:
     text: Undo "Override File Type" action and restore the old file type for file ''{0}''{1,choice,0#|1# (and {1} more files)}
-action.RunAPT.1.text:
-    text: Process {0} _Annotations
-action.RunAPT.description:
-    text: Run Annotation Processors on the selected scope
-action.RunAPT.text:
-    text: Process _Annotations
 action.RunConfiguration.description:
     text: Select Run/Debug Configuration
 action.RunConfiguration.text:
