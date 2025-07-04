@@ -44,7 +44,6 @@ public class ContextFilterActionGroup extends DefaultActionGroup implements Dumb
         }
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);

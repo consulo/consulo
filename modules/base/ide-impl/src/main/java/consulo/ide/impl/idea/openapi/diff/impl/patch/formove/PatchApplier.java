@@ -204,13 +204,14 @@ public class PatchApplier<BinaryType extends FilePatch> {
             myRemainingPatches.addAll(myPatches);
 
             ApplyPatchStatus patchStatus = nonWriteActionPreCheck();
-            Label beforeLabel = LocalHistory.getInstance().putSystemLabel(myProject, "Before patch");
+            Label beforeLabel = LocalHistory.getInstance().putSystemLabel(myProject, LocalizeValue.localizeTODO("Before patch"));
             TriggerAdditionOrDeletion trigger = new TriggerAdditionOrDeletion(myProject);
             ApplyPatchStatus applyStatus = getApplyPatchStatus(trigger);
             myStatus = ApplyPatchStatus.SUCCESS.equals(patchStatus) ? applyStatus : ApplyPatchStatus.and(patchStatus, applyStatus);
             // listeners finished, all 'legal' file additions/deletions with VCS are done
             trigger.processIt();
-            LocalHistory.getInstance().putSystemLabel(myProject, "After patch"); // insert a label to be visible in local history dialog
+            // insert a label to be visible in local history dialog
+            LocalHistory.getInstance().putSystemLabel(myProject, LocalizeValue.localizeTODO("After patch"));
             if (myStatus == ApplyPatchStatus.FAILURE) {
                 suggestRollback(myProject, Collections.singletonList(PatchApplier.this), beforeLabel);
             }
@@ -302,7 +303,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
         for (PatchApplier patchApplier : group) {
             result = ApplyPatchStatus.and(result, patchApplier.nonWriteActionPreCheck());
         }
-        Label beforeLabel = LocalHistory.getInstance().putSystemLabel(project, "Before patch");
+        Label beforeLabel = LocalHistory.getInstance().putSystemLabel(project, LocalizeValue.localizeTODO("Before patch"));
         TriggerAdditionOrDeletion trigger = new TriggerAdditionOrDeletion(project);
         SimpleReference<ApplyPatchStatus> refStatus = new SimpleReference<>(result);
         try {
@@ -329,7 +330,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
         }
         finally {
             VcsFileListenerContextHelper.getInstance(project).clearContext();
-            LocalHistory.getInstance().putSystemLabel(project, "After patch");
+            LocalHistory.getInstance().putSystemLabel(project, LocalizeValue.localizeTODO("After patch"));
         }
         result = refStatus.get();
         result = result == null ? ApplyPatchStatus.FAILURE : result;

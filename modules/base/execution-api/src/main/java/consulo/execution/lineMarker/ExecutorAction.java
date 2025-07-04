@@ -67,7 +67,6 @@ public class ExecutorAction extends AnAction {
     copyFrom(origin);
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
@@ -75,8 +74,8 @@ public class ExecutorAction extends AnAction {
     e.getPresentation().setTextValue(activeText);
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     myOrigin.actionPerformed(e);
   }

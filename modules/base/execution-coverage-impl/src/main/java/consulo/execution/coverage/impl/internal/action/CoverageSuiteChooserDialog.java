@@ -366,8 +366,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             CheckedTreeNode[] selectedSuites = mySuitesTree.getSelectedNodes(CheckedTreeNode.class, null);
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(false);
@@ -401,7 +400,6 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             e.getPresentation().setVisible(collectEngines().size() > 1);

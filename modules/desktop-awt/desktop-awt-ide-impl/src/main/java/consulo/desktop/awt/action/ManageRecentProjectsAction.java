@@ -18,6 +18,7 @@ package consulo.desktop.awt.action;
 import consulo.desktop.awt.welcomeScreen.NewRecentProjectPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -36,13 +37,13 @@ public class ManageRecentProjectsAction extends DumbAwareAction {
     super(ActionLocalize.actionManagerecentprojectsText());
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Disposable disposable = Disposable.newDisposable();
     NewRecentProjectPanel panel = new NewRecentProjectPanel(disposable, false);
     JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel.getRootPanel(), panel.getList())
-      .setTitle("Recent Projects")
+      .setTitle(LocalizeValue.localizeTODO("Recent Projects"))
       .setFocusable(true)
       .setRequestFocus(true)
       .setMayBeParent(true)
@@ -53,7 +54,6 @@ public class ManageRecentProjectsAction extends DumbAwareAction {
     popup.showCenteredInCurrentWindow(project);
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);

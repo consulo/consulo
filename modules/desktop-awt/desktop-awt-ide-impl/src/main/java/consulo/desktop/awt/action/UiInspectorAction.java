@@ -151,13 +151,12 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
             DefaultActionGroup actions = new DefaultActionGroup();
             actions.addAction(new AnAction("Highlight") {
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {
                     setHighlightingEnabled(myHighlightComponent == null);
                 }
 
-                @RequiredUIAccess
                 @Override
                 public void update(@Nonnull AnActionEvent e) {
                     e.getPresentation().setEnabled(myInfo != null || (myComponent != null && myComponent.isVisible()));
@@ -167,14 +166,12 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             actions.addSeparator();
 
             actions.add(new DumbAwareAction("Refresh") {
-
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {
                     getCurrentTable().refresh();
                 }
 
-                @RequiredUIAccess
                 @Override
                 public void update(@Nonnull AnActionEvent e) {
                     e.getPresentation().setEnabled(myComponent != null && myComponent.isVisible());

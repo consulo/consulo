@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchMode;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangesViewManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,6 +31,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collections;
@@ -41,7 +43,7 @@ import java.util.Collections;
 @ActionImpl(id = "ShelveChanges.UnshelveWithDialog")
 public class UnshelveWithDialogAction extends AnAction {
   public UnshelveWithDialogAction() {
-    super("Unshelve...", "Correct paths where to apply patches and unshelve", null);
+    super(LocalizeValue.localizeTODO("Unshelve..."), LocalizeValue.localizeTODO("Correct paths where to apply patches and unshelve"));
   }
 
   @Override
@@ -73,8 +75,7 @@ public class UnshelveWithDialogAction extends AnAction {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Project project = e.getData(Project.KEY);
     final ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
     e.getPresentation().setEnabled(project != null && changes != null && changes.length == 1);

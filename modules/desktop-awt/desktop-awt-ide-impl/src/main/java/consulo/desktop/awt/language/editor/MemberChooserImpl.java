@@ -29,6 +29,7 @@ import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -782,17 +783,17 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return myShowClasses;
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       setShowClasses(flag);
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       Presentation presentation = e.getPresentation();
       presentation.setEnabled(myContainerNodes.size() > 1);
@@ -801,22 +802,24 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
 
   private class ExpandAllAction extends AnAction {
     public ExpandAllAction() {
-      super(IdeBundle.message("action.expand.all"), IdeBundle.message("action.expand.all"), AllIcons.Actions.Expandall);
+      super(IdeLocalize.actionExpandAll(), IdeLocalize.actionExpandAll(), PlatformIconGroup.actionsExpandall());
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       TreeUtil.expandAll(myTree);
     }
   }
 
   private class CollapseAllAction extends AnAction {
     public CollapseAllAction() {
-      super(IdeBundle.message("action.collapse.all"), IdeBundle.message("action.collapse.all"), AllIcons.Actions.Collapseall);
+      super(IdeLocalize.actionCollapseAll(), IdeLocalize.actionCollapseAll(), PlatformIconGroup.actionsCollapseall());
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       TreeUtil.collapseAll(myTree, 1);
     }
   }

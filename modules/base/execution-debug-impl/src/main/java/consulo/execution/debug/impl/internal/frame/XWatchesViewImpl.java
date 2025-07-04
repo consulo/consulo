@@ -206,14 +206,13 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             protected void addActions(ActionGroup.Builder builder, boolean showMultiline) {
                 AnAction addToWatchesAction =
                     new DumbAwareAction(ActionsBundle.actionText(XDebuggerActions.ADD_TO_WATCH), null, ExecutionDebugIconGroup.actionAddtowatch()) {
-                        @RequiredUIAccess
                         @Override
+                        @RequiredUIAccess
                         public void actionPerformed(@Nonnull AnActionEvent e) {
                             myEvaluateComboBox.saveTextInHistory();
                             addWatchExpression(getExpression(), -1, false);
                         }
 
-                        @RequiredUIAccess
                         @Override
                         public void update(@Nonnull AnActionEvent e) {
                             XExpression expression = getExpression();

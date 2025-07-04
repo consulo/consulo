@@ -19,10 +19,12 @@ import consulo.codeEditor.Editor;
 import consulo.execution.debug.XDebuggerActions;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,14 +69,16 @@ public class BreakpointEditor {
 
     final AnAction doneAction = new AnAction() {
       @Override
-      public void update(AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         boolean lookup = LookupManager.getInstance(e == null ? null : e.getData(Project.KEY)).getActiveLookup() != null;
         Editor editor = e.getData(Editor.KEY);
         e.getPresentation().setEnabled(!lookup && (editor == null || StringUtil.isEmpty(editor.getSelectionModel().getSelectedText())) );
       }
 
-      public void actionPerformed(AnActionEvent e) {
+      @Override
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         done();
       }
     };

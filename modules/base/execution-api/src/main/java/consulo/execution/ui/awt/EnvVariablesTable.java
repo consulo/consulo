@@ -159,7 +159,6 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         CopyPasteManager.getInstance().setContents(new StringSelection(sb.toString()));
       }
 
-      @RequiredUIAccess
       @Override
       public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(!getSelection().isEmpty());

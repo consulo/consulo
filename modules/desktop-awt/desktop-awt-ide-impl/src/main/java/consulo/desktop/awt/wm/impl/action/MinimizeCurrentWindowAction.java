@@ -25,10 +25,12 @@ import consulo.desktop.awt.wm.impl.MacMainFrameDecorator;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,9 +40,9 @@ import java.awt.*;
  */
 @ActionImpl(id = "MinimizeCurrentWindow", parents = @ActionParentRef(value = @ActionRef(id = "WindowMenu"), anchor = ActionRefAnchor.FIRST))
 public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
-
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
     if (focusOwner != null) {
       final Window window = focusOwner instanceof JFrame ? (Window) focusOwner : SwingUtilities.getWindowAncestor(focusOwner);
@@ -51,7 +53,7 @@ public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Presentation p = e.getPresentation();
     p.setVisible(Platform.current().os().isMac());
 

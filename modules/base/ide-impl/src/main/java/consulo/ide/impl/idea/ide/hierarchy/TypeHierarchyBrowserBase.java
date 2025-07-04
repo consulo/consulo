@@ -150,7 +150,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
                 return;
             }
             LocalHistoryAction a =
-                LocalHistory.getInstance().startAction(IdeLocalize.progressDeletingClass(getQualifiedName(aClass)).get());
+                LocalHistory.getInstance().startAction(IdeLocalize.progressDeletingClass(getQualifiedName(aClass)));
             try {
                 PsiElement[] elements = {aClass};
                 DeleteHandler.deletePsiElement(elements, myProject);

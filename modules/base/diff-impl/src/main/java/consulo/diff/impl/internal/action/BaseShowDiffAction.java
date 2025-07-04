@@ -34,7 +34,6 @@ public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
     setEnabledInModalContext(true);
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
@@ -45,8 +44,8 @@ public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
     }
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     DiffRequest request = getDiffRequest(e);

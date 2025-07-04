@@ -46,18 +46,17 @@ public abstract class XWatchesTreeActionBase extends AnAction {
     return list;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final XDebuggerTree tree = XDebuggerTree.getTree(e);
     XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
     boolean enabled = tree != null && watchesView != null && isEnabled(e, tree);
     e.getPresentation().setEnabled(enabled);
   }
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final XDebuggerTree tree = XDebuggerTree.getTree(e);
     XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
     if (tree != null && watchesView != null) {

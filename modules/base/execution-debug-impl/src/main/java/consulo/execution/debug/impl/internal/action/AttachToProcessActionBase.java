@@ -71,7 +71,6 @@ public abstract class AttachToProcessActionBase extends AnAction {
         myAttachHostProviderSupplier = attachHostProviderSupplier;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
@@ -80,8 +79,8 @@ public abstract class AttachToProcessActionBase extends AnAction {
         e.getPresentation().setEnabledAndVisible(enabled);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         if (project == null) {

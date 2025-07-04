@@ -103,7 +103,6 @@ public class ToggleBooleanProperty extends ToggleAction {
         protected abstract boolean isVisible();
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(isEnabled());

@@ -31,7 +31,7 @@ public class MuteBreakpointAction extends ToggleAction {
     private final XDebuggerMuteBreakpointsHandler myHandler = new XDebuggerMuteBreakpointsHandler();
 
     @Override
-    public boolean isSelected(final AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
             if (myHandler.isEnabled(project, e)) {
@@ -42,7 +42,7 @@ public class MuteBreakpointAction extends ToggleAction {
     }
 
     @Override
-    public void setSelected(final AnActionEvent e, final boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
             if (myHandler.isEnabled(project, e)) {
@@ -51,9 +51,8 @@ public class MuteBreakpointAction extends ToggleAction {
         }
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(@Nonnull final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         Project project = e.getData(Project.KEY);
         if (project != null) {

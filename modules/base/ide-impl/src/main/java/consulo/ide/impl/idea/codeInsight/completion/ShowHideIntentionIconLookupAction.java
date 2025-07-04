@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.language.editor.completion.lookup.LookupElementAction;
-import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 /**
  * @author Konstantin Bulenkov
@@ -26,7 +26,7 @@ public class ShowHideIntentionIconLookupAction extends LookupElementAction {
   static final String KEY = "completion.show.intention.icon";
 
   public ShowHideIntentionIconLookupAction() {
-    super(AllIcons.Actions.IntentionBulb, (shouldShowLookupHint() ? "Never show" : "Show") + " intention icon");
+    super(PlatformIconGroup.actionsIntentionbulb(), (shouldShowLookupHint() ? "Never show" : "Show") + " intention icon");
   }
 
   public static boolean shouldShowLookupHint() {

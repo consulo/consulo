@@ -1,6 +1,8 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.desktop.awt.os.mac.internal.touchBar;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -56,6 +58,7 @@ final class FNKeyAction extends DumbAwareAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         if (myAction == null || myIsActionDisabled) {
             Helpers.emulateKeyPress(KeyEvent.VK_F1 + myFN - 1);
@@ -67,7 +70,7 @@ final class FNKeyAction extends DumbAwareAction {
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(true); // FN-keys are always enabled and visible
-        e.getPresentation().setText("");
+        e.getPresentation().setTextValue(LocalizeValue.empty());
         myIsActionDisabled = false;
         myAction = null;
 

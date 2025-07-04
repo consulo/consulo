@@ -872,7 +872,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
       }
       final PsiElement[] elements = PsiUtilBase.toPsiElementArray(validElements);
 
-      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting().get());
+      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting());
       try {
         DeleteHandler.deletePsiElement(elements, myProject);
       }

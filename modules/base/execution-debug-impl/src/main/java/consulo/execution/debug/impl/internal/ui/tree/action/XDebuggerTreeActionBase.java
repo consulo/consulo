@@ -35,9 +35,9 @@ import java.util.List;
  * @author nik
  */
 public abstract class XDebuggerTreeActionBase extends AnAction {
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     XValueNodeImpl node = getSelectedNode(e.getDataContext());
     if (node != null) {
       String nodeName = node.getName();
@@ -49,9 +49,8 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
 
   protected abstract void perform(final XValueNodeImpl node, @Nonnull String nodeName, final AnActionEvent e);
 
-  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     XValueNodeImpl node = getSelectedNode(e.getDataContext());
     e.getPresentation().setEnabled(node != null && isEnabled(node, e));
   }

@@ -40,7 +40,6 @@ public class CompareFilesAction extends BaseShowDiffAction {
   public static final String LAST_USED_FILE_KEY = "two.files.diff.last.used.file";
   public static final String LAST_USED_FOLDER_KEY = "two.files.diff.last.used.folder";
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
