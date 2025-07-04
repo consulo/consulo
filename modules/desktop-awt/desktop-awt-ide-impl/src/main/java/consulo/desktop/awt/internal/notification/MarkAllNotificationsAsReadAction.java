@@ -17,14 +17,13 @@ public class MarkAllNotificationsAsReadAction extends DumbAwareAction {
         );
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(!EventLog.getLogModel(e.getData(Project.KEY)).getNotifications().isEmpty());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         EventLog.markAllAsRead(e.getData(Project.KEY));
     }

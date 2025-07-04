@@ -51,7 +51,6 @@ public class StickyLinesDisableAction extends StickyLinesAbstractAction {
         }
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(myEditorSettingsExternalizableProvider.get().isStickyLineShown());

@@ -30,7 +30,6 @@ public class ShowBreakpointsOverLineNumbersAction extends ToggleAction implement
         EditorFactory.getInstance().refreshAllEditors();
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);

@@ -18,8 +18,10 @@ package consulo.desktop.awt.internal.diff.dir.action.popup;
 import consulo.desktop.awt.internal.diff.dir.DirDiffTableModel;
 import consulo.diff.dir.DirDiffOperation;
 import consulo.diff.impl.internal.dir.DirDiffElementImpl;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,7 +31,8 @@ import javax.swing.*;
  */
 public class SetNoOperation extends AnAction {
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final DirDiffTableModel model = SetOperationToBase.getModel(e);
     final JTable table = SetOperationToBase.getTable(e);
     assert model != null && table != null;
@@ -40,7 +43,7 @@ public class SetNoOperation extends AnAction {
   }
 
   @Override
-  public final void update(AnActionEvent e) {
+  public final void update(@Nonnull AnActionEvent e) {
     final DirDiffTableModel model = SetOperationToBase.getModel(e);
     final JTable table = SetOperationToBase.getTable(e);
     if (table != null && model != null) {

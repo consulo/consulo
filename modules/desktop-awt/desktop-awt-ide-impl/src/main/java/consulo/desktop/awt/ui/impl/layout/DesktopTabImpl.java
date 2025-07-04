@@ -36,7 +36,7 @@ import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 12-Sep-17
+ * @since 2017-09-12
  */
 public class DesktopTabImpl implements Tab {
   private static class CloseAction extends DumbAwareAction {
@@ -49,17 +49,16 @@ public class DesktopTabImpl implements Tab {
       myTabInfo = tabInfo;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       myCloseHandler.accept(myTabInfo, myTabInfo.myComponent);
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setIcon(PlatformIconGroup.actionsCancel());
-      e.getPresentation().setText("Close");
+      e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Close"));
     }
   }
 

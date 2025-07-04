@@ -20,11 +20,12 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.desktop.awt.wm.FocusRequestInfo;
-import consulo.project.Project;
+import consulo.localize.LocalizeValue;import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;
@@ -76,10 +77,13 @@ public class FocusTracesAction extends AnAction implements DumbAware {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    presentation.setText(myActive ? "Stop Focus Tracing" : "Start Focus Tracing");
+  public void update(@Nonnull AnActionEvent e) {
+    Presentation presentation = e.getPresentation();
+    presentation.setTextValue(
+        myActive
+            ? LocalizeValue.localizeTODO("Stop Focus Tracing")
+            : LocalizeValue.localizeTODO("Start Focus Tracing")
+    );
     presentation.setEnabled(e.getData(Project.KEY) != null);
   }
 }

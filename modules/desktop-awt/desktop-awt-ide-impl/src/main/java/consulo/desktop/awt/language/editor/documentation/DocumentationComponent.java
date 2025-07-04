@@ -1339,7 +1339,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private class BackAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         BackAction() {
-            super(CodeInsightLocalize.javadocActionBack(), LocalizeValue.empty(), AllIcons.Actions.Back);
+            super(CodeInsightLocalize.javadocActionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
         }
 
         @Override
@@ -1349,7 +1349,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(!myBackStack.isEmpty());
@@ -1361,7 +1360,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private class ForwardAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         ForwardAction() {
-            super(CodeInsightLocalize.javadocActionForward(), LocalizeValue.empty(), AllIcons.Actions.Forward);
+            super(CodeInsightLocalize.javadocActionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
         }
 
         @Override
@@ -1371,7 +1370,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(!myForwardStack.isEmpty());
@@ -1419,7 +1417,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private class ExternalDocAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         private ExternalDocAction() {
-            super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.empty(), AllIcons.Actions.PreviousOccurence);
+            super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.empty(), PlatformIconGroup.actionsPreviousoccurence());
             registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
         }
 
@@ -1437,10 +1435,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
-            Presentation presentation = e.getPresentation();
-            presentation.setEnabled(hasExternalDoc());
+            e.getPresentation().setEnabled(hasExternalDoc());
         }
     }
 
@@ -1632,12 +1628,11 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         private final boolean myOnToolbar;
 
         MyShowSettingsAction(boolean onToolbar) {
-            super("Adjust font size...");
+            super(LocalizeValue.localizeTODO("Adjust font size..."));
             myOnToolbar = onToolbar;
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             if (myManager == null || myOnToolbar && myManager.getToolWindow() != null) {
                 e.getPresentation().setEnabledAndVisible(false);
@@ -1747,7 +1742,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private class ShowToolbarAction extends ToggleAction implements HintManagerImpl.ActionToIgnore {
         ShowToolbarAction() {
-            super("Show Toolbar");
+            super(LocalizeValue.localizeTODO("Show Toolbar"));
         }
 
         @Override
@@ -1764,6 +1759,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             Registry.get("documentation.show.toolbar").setValue(state);
             updateControlState();
@@ -1834,11 +1830,10 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private class ShowAsToolwindowAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         ShowAsToolwindowAction() {
-            super("Open as Tool Window");
+            super(LocalizeValue.localizeTODO("Open as Tool Window"));
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             if (myManager == null) {
@@ -1860,11 +1855,10 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     private class RestoreDefaultSizeAction extends AnAction implements HintManagerImpl.ActionToIgnore {
         RestoreDefaultSizeAction() {
-            super("Restore Size");
+            super(LocalizeValue.localizeTODO("Restore Size"));
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(myHint != null && (myManuallyResized || myHint.getDimensionServiceKey() != null));
         }

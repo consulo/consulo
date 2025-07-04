@@ -30,9 +30,8 @@ import java.util.List;
  * @author nik
  */
 public class XEditWatchAction extends XWatchesTreeActionBase {
-  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     XDebuggerTree tree = XDebuggerTree.getTree(e);
     e.getPresentation().setVisible(tree != null && getSelectedNodes(tree, WatchNodeImpl.class).size() == 1);
     super.update(e);

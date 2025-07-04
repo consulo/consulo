@@ -22,7 +22,7 @@ import consulo.language.editor.testIntegration.TestCreator;
 import consulo.language.editor.testIntegration.TestFinderHelper;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.Shortcut;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.keymap.Keymap;
@@ -73,7 +73,7 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
 
           @Override
           public Image getIcon() {
-            return AllIcons.Actions.IntentionBulb;
+            return PlatformIconGroup.actionsIntentionbulb();
           }
 
           @Override

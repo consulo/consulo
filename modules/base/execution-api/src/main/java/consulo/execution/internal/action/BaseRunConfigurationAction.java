@@ -132,9 +132,9 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     return true;
   }
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
     final RunnerAndConfigurationSettings existing = context.findExisting();
@@ -196,9 +196,8 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
 
   protected abstract void perform(ConfigurationContext context);
 
-  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     final ConfigurationContext context = ConfigurationContext.getFromContext(event.getDataContext());
     final Presentation presentation = event.getPresentation();
     final RunnerAndConfigurationSettings existing = context.findExisting();

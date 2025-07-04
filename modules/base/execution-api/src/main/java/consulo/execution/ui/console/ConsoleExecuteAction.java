@@ -81,7 +81,6 @@ public class ConsoleExecuteAction extends DumbAwareAction {
         EmptyAction.setupAction(this, emptyExecuteActionId, null);
     }
 
-    @RequiredUIAccess
     @Override
     public final void update(@Nonnull AnActionEvent e) {
         EditorEx editor = myConsoleView.getConsoleEditor();
@@ -98,8 +97,8 @@ public class ConsoleExecuteAction extends DumbAwareAction {
         e.getPresentation().setEnabled(enabled);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public final void actionPerformed(@Nonnull AnActionEvent e) {
         myExecuteActionHandler.runExecuteAction(myConsoleView);
     }

@@ -211,8 +211,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             VirtualFile baseFile = getContentFile(myBaseSide);
             VirtualFile targetFile = getContentFile(myBaseSide.other());
 

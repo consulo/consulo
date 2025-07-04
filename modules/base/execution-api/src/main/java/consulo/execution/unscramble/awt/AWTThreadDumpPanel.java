@@ -233,9 +233,9 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
             super(TYPE_LABEL);
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             final DefaultListModel model = (DefaultListModel) myThreadList.getModel();
             final ThreadState selected = (ThreadState) myThreadList.getSelectedValue();
             ArrayList<ThreadState> states = new ArrayList<ThreadState>();
@@ -256,9 +256,8 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
             update(e);
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setIcon(COMPARATOR == BY_TYPE ? AllIcons.ObjectBrowser.SortByType : AllIcons.ObjectBrowser.Sorted);
             e.getPresentation().setText(COMPARATOR == BY_TYPE ? TYPE_LABEL : NAME_LABEL);
         }

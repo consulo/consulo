@@ -28,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Jeka
@@ -36,11 +37,11 @@ public class ViewBreakpointsAction extends AnAction implements DumbAware {
     private Object myInitialBreakpoint;
 
     public ViewBreakpointsAction() {
-        super(ActionLocalize.actionViewbreakpointsText(), LocalizeValue.of(), ExecutionDebugIconGroup.actionViewbreakpoints());
+        super(ActionLocalize.actionViewbreakpointsText(), LocalizeValue.empty(), ExecutionDebugIconGroup.actionViewbreakpoints());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = dataContext.getData(Project.KEY);
@@ -59,9 +60,8 @@ public class ViewBreakpointsAction extends AnAction implements DumbAware {
         myInitialBreakpoint = null;
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getDataContext().getData(Project.KEY);
         if (project == null) {

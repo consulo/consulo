@@ -584,7 +584,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
             }
             final PsiElement[] elements = PsiUtilCore.toPsiElementArray(validElements);
 
-            LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting().get());
+            LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting());
             try {
                 DeleteHandler.deletePsiElement(elements, myProject);
             }

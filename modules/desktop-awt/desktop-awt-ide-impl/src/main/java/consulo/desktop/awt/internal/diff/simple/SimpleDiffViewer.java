@@ -542,7 +542,6 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             if (myShortcut) {
                 // consume shortcut even if there are nothing to do - avoid calling some other action
@@ -571,7 +570,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull final AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             Editor editor = e.getData(Editor.KEY);
             final Side side = assertNotNull(Side.fromValue(getEditors(), editor));
             final List<SimpleDiffChange> selectedChanges = getSelectedChanges(side);
@@ -586,7 +585,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
             DiffImplUtil.newWriteCommand()
                 .project(e.getData(Project.KEY))
                 .document(getEditor(myModifiedSide).getDocument())
-                .name(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
+                .name(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getTextValue()))
                 .run(() -> apply(selectedChanges));
         }
 

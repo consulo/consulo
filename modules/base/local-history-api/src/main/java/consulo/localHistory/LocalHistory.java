@@ -15,9 +15,11 @@
  */
 package consulo.localHistory;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
@@ -30,17 +32,41 @@ public abstract class LocalHistory {
     public static final Object VFS_EVENT_REQUESTOR = new Object();
 
     public static LocalHistory getInstance() {
-        return ApplicationManager.getApplication().getComponent(LocalHistory.class);
+        return Application.get().getInstance(LocalHistory.class);
     }
 
+    public LocalHistoryAction startAction(@Nonnull LocalizeValue name) {
+        return startAction(name.get());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public abstract LocalHistoryAction startAction(@Nullable String name);
 
-    public abstract Label putSystemLabel(Project p, @Nonnull String name, int color);
-
-    public Label putSystemLabel(Project p, @Nonnull String name) {
-        return putSystemLabel(p, name, -1);
+    public Label putSystemLabel(Project project, @Nonnull LocalizeValue name, int color) {
+        return putSystemLabel(project, name.get(), color);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public abstract Label putSystemLabel(Project project, @Nonnull String name, int color);
+
+    public Label putSystemLabel(Project project, @Nonnull LocalizeValue name) {
+        return putSystemLabel(project, name, -1);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public Label putSystemLabel(Project project, @Nonnull String name) {
+        return putSystemLabel(project, name, -1);
+    }
+
+    public Label putUserLabel(Project project, @Nonnull LocalizeValue name) {
+        return putUserLabel(project, name.get());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public abstract Label putUserLabel(Project p, @Nonnull String name);
 
     @Nullable

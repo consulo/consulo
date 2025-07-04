@@ -479,7 +479,7 @@ public class CommitHelper {
             clManager.showLocalChangesInvalidated();
 
             myAction = myProject.getApplication()
-                .runReadAction((Supplier<LocalHistoryAction>)() -> LocalHistory.getInstance().startAction(myActionName.get()));
+                .runReadAction((Supplier<LocalHistoryAction>)() -> LocalHistory.getInstance().startAction(myActionName));
         }
 
         @Override
@@ -545,7 +545,7 @@ public class CommitHelper {
                         null
                     );
 
-                    LocalHistory.getInstance().putSystemLabel(myProject, myActionName + ": " + myCommitMessage);
+                    LocalHistory.getInstance().putSystemLabel(myProject, LocalizeValue.localizeTODO(myActionName + ": " + myCommitMessage));
                 }
             };
         }

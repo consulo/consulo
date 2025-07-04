@@ -22,6 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -40,16 +41,15 @@ class ChangeCompareModeAction extends AnAction {
     myMode = mode;
   }
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     myModel.setCompareMode(myMode);
     myModel.reloadModel(false);
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final boolean on = myModel.getCompareMode() == myMode;
     e.getPresentation().setIcon(on ? ON : OFF);
     e.getPresentation().setSelectedIcon(on ? ON_SELECTED : OFF);

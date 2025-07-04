@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.desktop.awt.uiOld.debugger.extensions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.ServiceManager;
 import consulo.ui.ex.awt.Splitter;
@@ -180,16 +182,17 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
   private class SaveAction extends AnAction {
     private SaveAction() {
-      super("Save", "", AllIcons.Actions.Menu_saveall);
+      super(LocalizeValue.localizeTODO("Save"), LocalizeValue.empty(), PlatformIconGroup.actionsMenu_saveall());
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myChanged);
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       if (pathToFile() == null) {
         VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e == null ? null : e.getData(Project.KEY), null);
         if (selectedFile != null) {
@@ -201,12 +204,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
           return;
         }
       }
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          save();
-        }
-      });
+      Application.get().runWriteAction(PlaybackDebugger.this::save);
     }
   }
 
@@ -306,40 +304,37 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
   private class StopAction extends AnAction {
     private StopAction() {
-      super("Stop", null, AllIcons.Actions.Suspend);
+      super(LocalizeValue.localizeTODO("Stop"), LocalizeValue.empty(), PlatformIconGroup.actionsSuspend());
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myRunner != null);
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       if (myRunner != null) {
         myRunner.stop();
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            myRunner = null;
-          }
-        });
+        SwingUtilities.invokeLater(() -> myRunner = null);
       }
     }
   }
 
   private class ActivateFrameAndRun extends AnAction {
     private ActivateFrameAndRun() {
-      super("Activate Frame And Run", "", AllIcons.Nodes.Deploy);
+      super(LocalizeValue.localizeTODO("Activate Frame And Run"), LocalizeValue.empty(), PlatformIconGroup.nodesDeploy());
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       activateAndRun();
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myRunner == null);
     }
   }
@@ -347,16 +342,17 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
   private class RunOnFameActivationAction extends AnAction {
 
     private RunOnFameActivationAction() {
-      super("Run On Frame Activation", "", PlatformIconGroup.actionsExecute());
+      super(LocalizeValue.localizeTODO("Run On Frame Activation"), LocalizeValue.empty(), PlatformIconGroup.actionsExecute());
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myRunner == null);
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       runOnFrame();
     }
   }

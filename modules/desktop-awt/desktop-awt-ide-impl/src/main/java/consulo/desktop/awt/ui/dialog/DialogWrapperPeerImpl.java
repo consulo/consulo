@@ -604,8 +604,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     private class AnCancelAction extends AnAction implements DumbAware {
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             e.getPresentation().setEnabled(false);
             if (focusOwner instanceof JComponent && SpeedSearchBase.hasActiveSpeedSearch((JComponent)focusOwner)) {

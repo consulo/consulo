@@ -17,6 +17,7 @@ package consulo.execution.test;
 
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localHistory.LocalHistory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 
@@ -31,16 +32,16 @@ public class LvcsHelper {
   private static final Color GREEN = new JBColor(new Color(220, 250, 220), new Color(44, 66, 60));
 
   public static void addLabel(final TestFrameworkRunningModel model) {
-    String label;
+    LocalizeValue label;
     int color;
 
     if (model.getRoot().isDefect()) {
       color = RED.getRGB();
-      label = ExecutionLocalize.junitRuningInfoTestsFailedLabel().get();
+      label = ExecutionLocalize.junitRuningInfoTestsFailedLabel();
     }
     else {
       color = GREEN.getRGB();
-      label = ExecutionLocalize.junitRuningInfoTestsPassedLabel().get();
+      label = ExecutionLocalize.junitRuningInfoTestsPassedLabel();
     }
     final TestConsoleProperties consoleProperties = model.getProperties();
     String name = label + " " + consoleProperties.getConfiguration().getName();
@@ -48,6 +49,6 @@ public class LvcsHelper {
     Project project = consoleProperties.getProject();
     if (project.isDisposed()) return;
 
-    LocalHistory.getInstance().putSystemLabel(project, name, color);
+    LocalHistory.getInstance().putSystemLabel(project, LocalizeValue.localizeTODO(name), color);
   }
 }

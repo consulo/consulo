@@ -106,7 +106,7 @@ class UndoableGroup {
       LocalizeValue actionName = isUndo
         ? CommonLocalize.localVcsActionNameUndoCommand(myCommandName)
         : CommonLocalize.localVcsActionNameRedoCommand(myCommandName);
-      action = LocalHistory.getInstance().startAction(actionName.get());
+      action = LocalHistory.getInstance().startAction(actionName);
     }
     else {
       action = LocalHistoryAction.NULL;

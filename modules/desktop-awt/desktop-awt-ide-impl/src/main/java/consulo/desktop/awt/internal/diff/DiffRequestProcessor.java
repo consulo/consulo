@@ -553,7 +553,6 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             if (!ExternalDiffTool.isEnabled()) {
                 e.getPresentation().setEnabledAndVisible(false);
@@ -581,9 +580,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             setEnabledInModalContext(true);
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
 
             DiffTool activeTool = myState.getActiveTool();
@@ -643,18 +641,21 @@ public abstract class DiffRequestProcessor implements Disposable {
             EmptyAction.setupAction(this, "Diff.ShowSettingsPopup", null);
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(myPopupActionGroup != null && myPopupActionGroup.getChildrenCount() > 0);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             assert myPopupActionGroup != null;
-            ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup("Diff Actions", myPopupActionGroup, e.getDataContext(),
-                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false
+            ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+                "Diff Actions",
+                myPopupActionGroup,
+                e.getDataContext(),
+                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                false
             );
             popup.showInCenterOf(myPanel);
         }
@@ -673,12 +674,10 @@ public abstract class DiffRequestProcessor implements Disposable {
     @Nonnull
     private IterationState myIterationState = IterationState.NONE;
 
-    @RequiredUIAccess
     protected boolean hasNextChange() {
         return false;
     }
 
-    @RequiredUIAccess
     protected boolean hasPrevChange() {
         return false;
     }
@@ -691,13 +690,11 @@ public abstract class DiffRequestProcessor implements Disposable {
     protected void goToPrevChange(boolean fromDifferences) {
     }
 
-    @RequiredUIAccess
     protected boolean isNavigationEnabled() {
         return false;
     }
 
     protected class MyNextDifferenceAction extends NextDifferenceAction {
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -719,8 +716,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             e.getPresentation().setEnabled(false);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
             if (iterable != null && iterable.canGoNext()) {
@@ -744,7 +741,6 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     protected class MyPrevDifferenceAction extends PrevDifferenceAction {
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -766,8 +762,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             e.getPresentation().setEnabled(false);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             PrevNextDifferenceIterable iterable = e.getDataContext().getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
             if (iterable != null && iterable.canGoPrev()) {
@@ -851,7 +847,6 @@ public abstract class DiffRequestProcessor implements Disposable {
     // Iterate requests
 
     protected class MyNextChangeAction extends NextChangeAction {
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -868,8 +863,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             e.getPresentation().setEnabled(hasNextChange());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             if (!isNavigationEnabled() || !hasNextChange()) {
                 return;
@@ -880,7 +875,6 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     protected class MyPrevChangeAction extends PrevChangeAction {
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -897,8 +891,8 @@ public abstract class DiffRequestProcessor implements Disposable {
             e.getPresentation().setEnabled(hasPrevChange());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             if (!isNavigationEnabled() || !hasPrevChange()) {
                 return;

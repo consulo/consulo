@@ -174,12 +174,12 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     }
 
     @Override
-    public Label putSystemLabel(Project p, @Nonnull String name, int color) {
+    public Label putSystemLabel(Project project, @Nonnull String name, int color) {
         if (!isInitialized()) {
             return Label.NULL_INSTANCE;
         }
         myGateway.registerUnsavedDocuments(myVcs);
-        return label(myVcs.putSystemLabel(name, getProjectId(p), color));
+        return label(myVcs.putSystemLabel(name, getProjectId(project), color));
     }
 
     public void addVFSListenerAfterLocalHistoryOne(BulkFileListener virtualFileListener, Disposable disposable) {

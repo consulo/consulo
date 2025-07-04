@@ -653,7 +653,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         }
 
         @Override
-        public void update(@Nonnull final AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
         }
     }
@@ -666,7 +666,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(myInfo.isShowStripeButton());
         }
@@ -682,7 +681,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     private final class HideAction extends AnAction implements DumbAware {
-        @NonNls
         public static final String HIDE_ACTIVE_WINDOW_ACTION_ID = DesktopInternalDecorator.HIDE_ACTIVE_WINDOW_ACTION_ID;
 
         public HideAction() {
@@ -692,15 +690,13 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
         @Override
         @RequiredUIAccess
-        public final void actionPerformed(@Nonnull final AnActionEvent e) {
+        public final void actionPerformed(@Nonnull AnActionEvent e) {
             fireHidden();
         }
 
         @Override
-        @RequiredUIAccess
-        public final void update(@Nonnull final AnActionEvent event) {
-            final Presentation presentation = event.getPresentation();
-            presentation.setEnabled(myInfo.isVisible());
+        public final void update(@Nonnull AnActionEvent event) {
+            event.getPresentation().setEnabled(myInfo.isVisible());
         }
     }
 

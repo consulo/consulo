@@ -1066,7 +1066,6 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
 
             @Override
-            @RequiredUIAccess
             public void update(@Nonnull AnActionEvent e) {
                 if (myShortcut) {
                     // consume shortcut even if there are nothing to do - avoid calling some other action
@@ -1096,7 +1095,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull final AnActionEvent e) {
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 Editor editor = e.getData(Editor.KEY);
                 final ThreeSide side = getEditorSide(editor);
                 if (editor == null || side == null) {
@@ -1109,7 +1108,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                 }
 
                 newMergeCommand(selectedChanges)
-                    .name(DiffLocalize.messageDoInMergeCommand(e.getPresentation().getText()))
+                    .name(DiffLocalize.messageDoInMergeCommand(e.getPresentation().getTextValue()))
                     .inBulkUpdateIf(selectedChanges.size() > 1)
                     .run(() -> apply(side, selectedChanges));
             }
@@ -1330,8 +1329,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
 
             @Override
-            @RequiredUIAccess
-            public void update(AnActionEvent e) {
+            public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(getFirstUnresolvedChange(false, mySide) != null);
             }
 

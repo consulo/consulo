@@ -16,22 +16,29 @@
 
 package consulo.ide.impl.idea.history.integration.ui.actions;
 
-import consulo.localHistory.LocalHistory;
+import consulo.ide.impl.idea.history.integration.LocalHistoryBundle;import consulo.localHistory.LocalHistory;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.ui.NonEmptyInputValidator;
 import consulo.virtualFileSystem.VirtualFile;
 
-import static consulo.ide.impl.idea.history.integration.LocalHistoryBundle.message;
-
 public class PutLabelAction extends LocalHistoryActionWithDialog {
-  @Override
-  protected void showDialog(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
-    String labelName = Messages.showInputDialog(p, message("put.label.name"), message("put.label.dialog.title"),null,
-                                                "", new NonEmptyInputValidator());
-    if (labelName == null) return;
-    LocalHistory.getInstance().putUserLabel(p, labelName);
-  }
+    @Override
+    protected void showDialog(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
+        String labelName = Messages.showInputDialog(
+            p,
+            LocalHistoryBundle.message("put.label.name"),
+            LocalHistoryBundle.message("put.label.dialog.title"),
+            null,
+            "",
+            new NonEmptyInputValidator()
+        );
+        if (labelName == null) {
+            return;
+        }
+        LocalHistory.getInstance().putUserLabel(p, LocalizeValue.of(labelName));
+    }
 }

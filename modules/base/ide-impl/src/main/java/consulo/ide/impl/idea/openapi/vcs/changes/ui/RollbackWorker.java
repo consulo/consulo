@@ -209,7 +209,8 @@ public class RollbackWorker {
         action.finish();
         LocalHistory.getInstance().putSystemLabel(
           myProject,
-          (myLocalHistoryActionName == null) ? myOperationName : myLocalHistoryActionName, -1
+          LocalizeValue.localizeTODO(myLocalHistoryActionName == null ? myOperationName : myLocalHistoryActionName),
+          -1
         );
         final VcsDirtyScopeManager manager = project.getComponent(VcsDirtyScopeManager.class);
         VcsGuess vcsGuess = new VcsGuess(myProject);

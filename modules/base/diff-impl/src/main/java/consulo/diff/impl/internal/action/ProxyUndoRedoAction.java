@@ -15,20 +15,21 @@
  */
 package consulo.diff.impl.internal.action;
 
-import consulo.ui.ex.action.EmptyAction;
-import consulo.undoRedo.UndoManager;
 import consulo.codeEditor.Editor;
-import consulo.undoRedo.ApplicationUndoManager;
-import consulo.undoRedo.ProjectUndoManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.action.IdeActions;
-
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.UndoManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 public class ProxyUndoRedoAction extends DumbAwareAction {
@@ -54,12 +55,13 @@ public class ProxyUndoRedoAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(myUndo ? myUndoManager.isUndoAvailable(myEditor) : myUndoManager.isRedoAvailable(myEditor));
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     if (myUndo) {
       myUndoManager.undo(myEditor);
     }

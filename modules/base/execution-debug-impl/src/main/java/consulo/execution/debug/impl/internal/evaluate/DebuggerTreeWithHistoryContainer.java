@@ -15,12 +15,12 @@
  */
 package consulo.execution.debug.impl.internal.evaluate;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.debug.XDebuggerBundle;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -104,33 +104,32 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
 
   private class GoForwardAction extends AnAction {
     public GoForwardAction() {
-      super(CodeInsightBundle.message("quick.definition.forward"), null, AllIcons.Actions.Forward);
+      super(CodeInsightLocalize.quickDefinitionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       if (myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1) {
         myCurrentIndex++;
         updateTree();
       }
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1);
     }
   }
 
   private class GoBackwardAction extends AnAction {
     public GoBackwardAction() {
-      super(CodeInsightBundle.message("quick.definition.back"), null, AllIcons.Actions.Back);
+      super(CodeInsightLocalize.quickDefinitionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       if (myHistory.size() > 1 && myCurrentIndex > 0) {
         myCurrentIndex--;
         updateTree();
@@ -138,9 +137,8 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
     }
 
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myHistory.size() > 1 && myCurrentIndex > 0);
     }
   }
@@ -149,20 +147,23 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
     private final Tree myTree;
 
     public SetAsRootAction(Tree tree) {
-      super(XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"), XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"), PlatformIconGroup.actionsClose());
+      super(
+          XDebuggerLocalize.xdebuggerPopupValueTreeSetRootActionTooltip(),
+          XDebuggerLocalize.xdebuggerPopupValueTreeSetRootActionTooltip(),
+          PlatformIconGroup.actionsClose()
+      );
       myTree = tree;
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       TreePath path = myTree.getSelectionPath();
       e.getPresentation().setEnabled(path != null && path.getPathCount() > 1);
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       TreePath path = myTree.getSelectionPath();
       if (path != null) {
         Object node = path.getLastPathComponent();
@@ -170,12 +171,9 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
           @Override
           public void onSuccess(final D value) {
             if (value != null) {
-              ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                  addToHistory(value);
-                  updateTree(value);
-                }
+              Application.get().invokeLater(() -> {
+                addToHistory(value);
+                updateTree(value);
               });
             }
           }

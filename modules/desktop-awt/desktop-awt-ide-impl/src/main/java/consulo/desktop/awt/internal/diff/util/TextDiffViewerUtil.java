@@ -36,6 +36,7 @@ import consulo.disposer.Disposable;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ToggleActionButton;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -164,9 +165,8 @@ public class TextDiffViewerUtil {
             setEnabledInModalContext(true);
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setText(getText(getCurrentSetting()));
         }
@@ -365,7 +365,7 @@ public class TextDiffViewerUtil {
         protected final TextDiffSettings mySettings;
 
         public ReadOnlyLockAction(@Nonnull DiffContext context) {
-            super("Disable editing", null, PlatformIconGroup.ideReadonly());
+            super(LocalizeValue.localizeTODO("Disable Editing"), LocalizeValue.empty(), PlatformIconGroup.ideReadonly());
             myContext = context;
             mySettings = getTextSettings(context);
             setEnabledInModalContext(true);
@@ -377,7 +377,6 @@ public class TextDiffViewerUtil {
             }
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             if (!isVisible()) {

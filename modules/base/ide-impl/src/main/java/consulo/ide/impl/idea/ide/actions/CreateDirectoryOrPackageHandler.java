@@ -236,7 +236,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
             .run(() -> {
                 String dirPath = myDirectory.getVirtualFile().getPresentableUrl();
                 LocalizeValue actionName = IdeLocalize.progressCreatingDirectory(dirPath, File.separator, subDirName);
-                LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName.get());
+                LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName);
                 try {
                     if (createFile) {
                         CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(subDirName, myDirectory);

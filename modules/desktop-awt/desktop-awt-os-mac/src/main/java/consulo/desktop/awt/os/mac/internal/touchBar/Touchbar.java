@@ -185,8 +185,8 @@ public final class Touchbar {
             return ActionUpdateThread.EDT;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             if (action == null) {
                 button.doClick();
@@ -196,7 +196,6 @@ public final class Touchbar {
             action.actionPerformed(new ActionEvent(button, ActionEvent.ACTION_PERFORMED, null));
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(action == null ? button.isEnabled() : action.isEnabled());

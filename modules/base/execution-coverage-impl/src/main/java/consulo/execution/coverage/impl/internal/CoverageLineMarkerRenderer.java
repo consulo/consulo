@@ -307,8 +307,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             LocalizeValue nextChange = getNextChange();
             if (nextChange != LocalizeValue.empty()) {
@@ -335,8 +334,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             LocalizeValue nextChange = getNextChange();
             if (nextChange != LocalizeValue.empty()) {
@@ -414,8 +412,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(getLineEntry() != null);
         }
     }
@@ -435,8 +432,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setVisible(getLineData(myLineNumber) != null);
         }
 

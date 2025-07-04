@@ -10,6 +10,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -32,16 +33,14 @@ public class HideCoverageInfoAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setEnabled(false);
         presentation.setVisible(e.isFromActionToolbar());
         Project project = e.getData(Project.KEY);
         if (project != null) {
             CoverageSuitesBundle suitesBundle = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
-            presentation.setEnabled(suitesBundle != null);
-            presentation.setVisible(suitesBundle != null);
+            presentation.setEnabledAndVisible(suitesBundle != null);
         }
     }
 }

@@ -120,16 +120,15 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         mySwitchModeAction = new SwitchModeAction();
 
         new AnAction() {
-            @RequiredUIAccess
             @Override
-            public void update(AnActionEvent e) {
+            public void update(@Nonnull AnActionEvent e) {
                 Project project = e.getData(Project.KEY);
                 e.getPresentation().setEnabled(project != null && LookupManager.getInstance(project).getActiveLookup() == null);
             }
 
-            @RequiredUIAccess
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 //doOKAction(); // do not evaluate on add to watches
                 addToWatches();
             }

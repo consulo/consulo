@@ -42,7 +42,6 @@ public class CompileDirtyAction extends CompileActionBase {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();
@@ -56,12 +55,7 @@ public class CompileDirtyAction extends CompileActionBase {
         if (project != null) {
             ExtensionPoint<CompilerRunner> point = project.getExtensionPoint(CompilerRunner.class);
             CompilerRunner runner = point.findFirstSafe(CompilerRunner::isAvailable);
-            if (runner != null) {
-                presentation.setIcon(runner.getBuildIcon());
-            }
-            else {
-                presentation.setIcon(PlatformIconGroup.actionsCompile());
-            }
+            presentation.setIcon(runner != null ? runner.getBuildIcon() : PlatformIconGroup.actionsCompile());
         }
         else {
             presentation.setIcon(PlatformIconGroup.actionsCompile());

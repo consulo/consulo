@@ -127,9 +127,8 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         update(editor, presentation, dataContext);
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         DataContext dataContext = e.getDataContext();
         Editor editor = getEditor(dataContext);
