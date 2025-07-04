@@ -102,7 +102,7 @@ public class DeleteHandler {
             if (project == null) {
                 return;
             }
-            LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting().get());
+            LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting());
             try {
                 deletePsiElement(elements, project);
             }

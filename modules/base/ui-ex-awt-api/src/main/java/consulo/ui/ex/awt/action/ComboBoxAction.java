@@ -121,7 +121,6 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
     }
 

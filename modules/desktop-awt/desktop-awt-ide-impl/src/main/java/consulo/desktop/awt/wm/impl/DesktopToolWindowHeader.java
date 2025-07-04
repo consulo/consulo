@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFacto
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -71,24 +72,19 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     }
 
     private class HideAction extends DumbAwareAction {
+        private HideAction() {
+            super(UILocalize.toolWindowHideActionName(), LocalizeValue.empty(), PlatformIconGroup.generalHidetoolwindow());
+        }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             hideToolWindow();
         }
 
-        @RequiredUIAccess
         @Override
-        public final void update(@Nonnull final AnActionEvent event) {
-            Presentation presentation = event.getPresentation();
-
-            presentation.setTextValue(UILocalize.toolWindowHideActionName());
-            boolean visible = myToolWindow.isVisible();
-            presentation.setEnabled(visible);
-            if (visible) {
-                presentation.setIcon(PlatformIconGroup.generalHidetoolwindow());
-            }
+        public final void update(@Nonnull AnActionEvent event) {
+            event.getPresentation().setEnabled(myToolWindow.isVisible());
         }
     }
 

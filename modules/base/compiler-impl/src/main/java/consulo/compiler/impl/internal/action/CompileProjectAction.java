@@ -41,8 +41,8 @@ public class CompileProjectAction extends CompileActionBase {
             LocalHistory.getInstance().putSystemLabel(
                 project,
                 errors == 0
-                    ? CompilerLocalize.rebuildLvcsLabelNoErrors(text).get()
-                    : CompilerLocalize.rebuildLvcsLabelWithErrors(text).get()
+                    ? CompilerLocalize.rebuildLvcsLabelNoErrors(text)
+                    : CompilerLocalize.rebuildLvcsLabelWithErrors(text)
             );
         });
     }

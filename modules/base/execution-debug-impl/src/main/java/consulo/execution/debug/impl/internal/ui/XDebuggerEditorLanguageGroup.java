@@ -67,8 +67,8 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
             }
 
             result.add(new DumbAwareAction(language.getDisplayName(), null, icon) {
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {
                     myLanguageConsumer.accept(language);
                 }
@@ -78,7 +78,6 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
         return result.toArray(EMPTY_ARRAY);
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();

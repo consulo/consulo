@@ -34,6 +34,8 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.versionControlSystem.impl.internal.util.ZipperUpdater;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
@@ -662,8 +664,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       final List<AbstractFilePatchInProgress.PatchChange> selectedChanges = myChangesTreeList.getSelectedChanges();
       e.getPresentation().setEnabled(selectedChanges.size() >= 1 && sameBase(selectedChanges));
     }
@@ -1057,12 +1058,15 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
 
   private class StripDown extends AnAction {
     private StripDown() {
-      super("Restore Directory", "Restore Directory", AllIcons.Vcs.StripDown);
+      super(
+        LocalizeValue.localizeTODO("Restore Directory"),
+        LocalizeValue.localizeTODO("Restore Directory"),
+        PlatformIconGroup.vcsStripdown()
+      );
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(isEnabled());
     }
 
@@ -1089,12 +1093,11 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
 
   private class StripUp extends AnAction {
     private StripUp() {
-      super("Strip Directory", "Strip Directory", AllIcons.Vcs.StripUp);
+      super(LocalizeValue.localizeTODO("Strip Directory"), LocalizeValue.localizeTODO("Strip Directory"), PlatformIconGroup.vcsStripup());
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(isEnabled());
     }
 
@@ -1121,7 +1124,11 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
 
   private class ResetStrip extends AnAction {
     private ResetStrip() {
-      super("Reset Directories", "Reset Directories", AllIcons.Vcs.ResetStrip);
+      super(
+          LocalizeValue.localizeTODO("Reset Directories"),
+          LocalizeValue.localizeTODO("Reset Directories"),
+          PlatformIconGroup.vcsResetstrip()
+      );
     }
 
     @Override
@@ -1139,13 +1146,12 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     private final MyChangeComparator myMyChangeComparator;
 
     private MyShowDiff() {
-      super("Show Diff", "Show Diff", AllIcons.Actions.Diff);
+      super(LocalizeValue.localizeTODO("Show Diff"), LocalizeValue.localizeTODO("Show Diff"), PlatformIconGroup.actionsDiff());
       myMyChangeComparator = new MyChangeComparator();
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled((!myPatches.isEmpty()) && myContainBasedChanges);
     }
 

@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.codeInsight.lookup;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
@@ -88,7 +87,6 @@ class LookupUi {
             moreActionGroup.add(new HintAction());
             moreActionGroup.add(new ChangeSortingAction());
             moreActionGroup.add(new DelegatedAction(actionManager.getAction(IdeActions.ACTION_QUICK_JAVADOC)) {
-                @RequiredUIAccess
                 @Override
                 public void update(@Nonnull AnActionEvent e) {
                     e.getPresentation().setVisible(!CodeInsightSettings.getInstance().AUTO_POPUP_JAVADOC_INFO);
@@ -319,23 +317,22 @@ class LookupUi {
 
     private class HintAction extends DumbAwareAction {
         private HintAction() {
-            super(LocalizeValue.empty(), LocalizeValue.empty(), AllIcons.Actions.IntentionBulb);
+            super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsIntentionbulb());
 
             AnAction showIntentionAction = ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
             if (showIntentionAction != null) {
                 copyShortcutFrom(showIntentionAction);
-                getTemplatePresentation().setText("Click or Press");
+                getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Click or Press"));
             }
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setVisible(!myHintCalculating.get());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             myLookup.showElementActions(e.getInputEvent());
         }

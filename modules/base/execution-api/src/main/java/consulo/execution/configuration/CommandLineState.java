@@ -15,8 +15,7 @@
  */
 package consulo.execution.configuration;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.content.scope.SearchScope;
 import consulo.execution.DefaultExecutionResult;
@@ -32,6 +31,7 @@ import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
@@ -130,30 +130,25 @@ public abstract class CommandLineState implements RunProfileState {
     private final ConsoleView myConsole;
     private final ProcessHandler myProcessHandler;
 
-    public PauseOutputAction(final ConsoleView console, final ProcessHandler processHandler) {
-      super(ExecutionLocalize.runConfigurationPauseOutputActionName(), LocalizeValue.empty(), AllIcons.Actions.Pause);
+    public PauseOutputAction(ConsoleView console, ProcessHandler processHandler) {
+      super(ExecutionLocalize.runConfigurationPauseOutputActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsPause());
       myConsole = console;
       myProcessHandler = processHandler;
     }
 
     @Override
-    public boolean isSelected(final AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return myConsole.isOutputPaused();
     }
 
     @Override
-    public void setSelected(final AnActionEvent event, final boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       myConsole.setOutputPaused(flag);
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          update(event);
-        }
-      });
+      Application.get().invokeLater(() -> update(event));
     }
 
     @Override
-    public void update(final AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
       super.update(event);
       final Presentation presentation = event.getPresentation();
       final boolean isRunning = myProcessHandler != null && !myProcessHandler.isProcessTerminated();
@@ -170,12 +165,7 @@ public abstract class CommandLineState implements RunProfileState {
         }
         else {
           presentation.setEnabled(true);
-          myConsole.performWhenNoDeferredOutput(new Runnable() {
-            @Override
-            public void run() {
-              update(event);
-            }
-          });
+          myConsole.performWhenNoDeferredOutput(() -> update(event));
         }
       }
     }

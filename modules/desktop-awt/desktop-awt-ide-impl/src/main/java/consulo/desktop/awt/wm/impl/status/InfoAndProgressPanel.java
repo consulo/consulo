@@ -128,7 +128,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             }
         }
         else if (e.isPopupTrigger()) {
-            ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction("BackgroundTasks");
+            ActionGroup group = (ActionGroup) ActionManager.getInstance().getAction("BackgroundTasks");
             ActionManager.getInstance()
                 .createActionPopupMenu(ActionPlaces.UNKNOWN, group)
                 .getComponent()
@@ -176,11 +176,11 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         synchronized (myOriginals) {
             boolean veryFirst = !hasProgressIndicators();
 
-            myOriginals.add((ProgressIndicatorEx)original);
+            myOriginals.add((ProgressIndicatorEx) original);
             myInfos.add(info);
 
-            MyInlineProgressIndicator expanded = createInlineDelegate(info, (ProgressIndicatorEx)original, false);
-            MyInlineProgressIndicator compact = createInlineDelegate(info, (ProgressIndicatorEx)original, true);
+            MyInlineProgressIndicator expanded = createInlineDelegate(info, (ProgressIndicatorEx) original, false);
+            MyInlineProgressIndicator compact = createInlineDelegate(info, (ProgressIndicatorEx) original, true);
 
             myPopup.addIndicator(expanded);
 
@@ -339,7 +339,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     @RequiredUIAccess
     private void buildInInlineIndicator(@Nonnull MyInlineProgressIndicator inline) {
         removeAll();
-        
+
         JRootPane pane = getRootPane();
         if (pane == null) {
             return; // e.g. project frame is closed
@@ -477,8 +477,8 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                 super(LocalizeValue.of(), LocalizeValue.of(), PlatformIconGroup.actionsPause());
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 ProgressSuspender suspender = getSuspender();
                 if (suspender == null) {
@@ -495,7 +495,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                 //UIEventLogger.logUIEvent(suspender.isSuspended() ? UIEventId.ProgressPaused : UIEventId.ProgressResumed);
             }
 
-            @RequiredUIAccess
             @Override
             public void update(@Nonnull AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
@@ -518,6 +517,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             original.addStateDelegate(this);
             addStateDelegate(new AbstractProgressIndicatorExBase() {
                 @Override
+                @RequiredUIAccess
                 public void cancel() {
                     super.cancel();
                     updateProgress();
@@ -546,6 +546,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
 
         @Override
+        @RequiredUIAccess
         public void stop() {
             super.stop();
             updateProgress();
@@ -604,6 +605,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
         }
     }
 
+    @RequiredUIAccess
     private void runQuery() {
         if (getRootPane() == null) {
             return;

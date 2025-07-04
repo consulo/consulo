@@ -56,7 +56,7 @@ public abstract class ExcludeFromCompileAction extends AnAction {
     protected abstract VirtualFile getFile();
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         boolean isApplicable = getFile() != null;
         presentation.setEnabled(isApplicable);

@@ -518,7 +518,6 @@ class EventLogConsole {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             LogModel model = myConsole.myProjectModel;
             e.getPresentation().setEnabled(!model.getNotifications().isEmpty());

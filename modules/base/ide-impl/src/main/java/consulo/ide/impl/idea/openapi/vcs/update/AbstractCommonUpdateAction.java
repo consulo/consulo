@@ -367,8 +367,8 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             storeReloadManager.blockReloadingProjectOnExternalChanges();
             myProjectLevelVcsManager.startBackgroundVcsOperation();
 
-            myBefore = LocalHistory.getInstance().putSystemLabel(myProject, "Before update");
-            myLocalHistoryAction = LocalHistory.getInstance().startAction(LOCAL_HISTORY_ACTION.get());
+            myBefore = LocalHistory.getInstance().putSystemLabel(myProject, LocalizeValue.localizeTODO("Before update"));
+            myLocalHistoryAction = LocalHistory.getInstance().startAction(LOCAL_HISTORY_ACTION);
             ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
 
             try {
@@ -498,7 +498,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             StoreReloadManager storeReloadManager = StoreReloadManager.getInstance((Project) getProject());
             if (!myProject.isOpen() || myProject.isDisposed()) {
                 storeReloadManager.unblockReloadingProjectOnExternalChanges();
-                LocalHistory.getInstance().putSystemLabel(myProject, LOCAL_HISTORY_ACTION.get()); // TODO check why this label is needed
+                LocalHistory.getInstance().putSystemLabel(myProject, LOCAL_HISTORY_ACTION); // TODO check why this label is needed
                 return;
             }
             boolean continueChain = false;
@@ -516,7 +516,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             if (myLocalHistoryAction != null) {
                 myLocalHistoryAction.finish();
             }
-            myAfter = LocalHistory.getInstance().putSystemLabel(myProject, "After update");
+            myAfter = LocalHistory.getInstance().putSystemLabel(myProject, LocalizeValue.localizeTODO("After update"));
 
             if (myActionInfo.canChangeFileStatus()) {
                 List<VirtualFile> files = new ArrayList<>();

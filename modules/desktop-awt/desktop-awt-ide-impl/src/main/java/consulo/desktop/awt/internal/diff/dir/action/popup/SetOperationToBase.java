@@ -20,6 +20,7 @@ import consulo.desktop.awt.internal.diff.dir.DirDiffTableModel;
 import consulo.diff.dir.DirDiffElement;
 import consulo.diff.dir.DirDiffOperation;
 import consulo.diff.impl.internal.dir.DirDiffElementImpl;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
@@ -31,7 +32,8 @@ import javax.swing.*;
  */
 public abstract class SetOperationToBase extends AnAction {
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DirDiffOperation operation = getOperation();
     boolean setToDefault = operation == DirDiffOperation.NONE;
     final DirDiffTableModel model = getModel(e);
@@ -51,7 +53,7 @@ public abstract class SetOperationToBase extends AnAction {
   protected abstract DirDiffOperation getOperation();
 
   @Override
-  public final void update(AnActionEvent e) {
+  public final void update(@Nonnull AnActionEvent e) {
     final DirDiffTableModel model = getModel(e);
     final JTable table = getTable(e);
     if (table != null && model != null) {

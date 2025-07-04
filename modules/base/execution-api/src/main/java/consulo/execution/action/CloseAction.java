@@ -15,13 +15,13 @@
  */
 package consulo.execution.action;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.ExecutionManager;
 import consulo.execution.executor.Executor;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -38,7 +38,7 @@ public class CloseAction extends AnAction implements DumbAware {
     myProject = project;
     copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE));
     final Presentation templatePresentation = getTemplatePresentation();
-    templatePresentation.setIcon(AllIcons.Actions.Cancel);
+    templatePresentation.setIcon(PlatformIconGroup.actionsCancel());
     templatePresentation.setTextValue(ExecutionLocalize.closeTabActionName());
     templatePresentation.setDescriptionValue(LocalizeValue.empty());
   }

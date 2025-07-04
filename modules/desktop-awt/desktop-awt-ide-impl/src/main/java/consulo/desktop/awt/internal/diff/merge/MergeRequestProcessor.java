@@ -395,7 +395,6 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     private static class MyNextDifferenceAction extends NextDifferenceAction {
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
                 e.getPresentation().setEnabled(true);
@@ -423,7 +422,6 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     private static class MyPrevDifferenceAction extends PrevDifferenceAction {
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
                 e.getPresentation().setEnabled(true);

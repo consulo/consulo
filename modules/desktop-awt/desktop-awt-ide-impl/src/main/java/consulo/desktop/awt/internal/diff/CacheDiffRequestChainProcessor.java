@@ -166,7 +166,6 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
   // Navigation
   //
 
-  @RequiredUIAccess
   @Override
   protected boolean hasNextChange() {
     return myRequestChain.getIndex() < myRequestChain.getRequests().size() - 1;
@@ -192,7 +191,6 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
     updateRequest(false, fromDifferences ? ScrollToPolicy.LAST_CHANGE : null);
   }
 
-  @RequiredUIAccess
   @Override
   protected boolean isNavigationEnabled() {
     return myRequestChain.getRequests().size() > 1;

@@ -34,9 +34,8 @@ public class MarkObjectAction extends XDebuggerActionBase {
         super();
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         boolean enabled = false;
         Presentation presentation = event.getPresentation();
@@ -46,7 +45,10 @@ public class MarkObjectAction extends XDebuggerActionBase {
             if (myHandler.isEnabled(project, event)) {
                 enabled = true;
                 presentation.setTextValue(
-                    myHandler.isMarked(project, event) ? ActionLocalize.actionDebuggerMarkobjectUnmarkText() : ActionLocalize.actionDebuggerMarkobjectText());
+                    myHandler.isMarked(project, event)
+                        ? ActionLocalize.actionDebuggerMarkobjectUnmarkText()
+                        : ActionLocalize.actionDebuggerMarkobjectText()
+                );
             }
         }
         presentation.setVisible(!hidden && (!ActionPlaces.isPopupPlace(event.getPlace()) || enabled));

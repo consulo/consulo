@@ -51,9 +51,8 @@ public final class ShowLibraryFramesAction extends ToggleAction {
     myXDebuggerSettingsManagerProvider = provider;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(@Nonnull final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
     Presentation presentation = e.getPresentation();

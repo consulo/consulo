@@ -621,7 +621,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
             }
 
             newPatchCommand()
-                .name(VcsLocalize.patchApplyChangesInPatchResolve(e.getPresentation().getText()))
+                .name(VcsLocalize.patchApplyChangesInPatchResolve(e.getPresentation().getTextValue()))
                 .run(() -> apply(selectedChanges));
         }
 
@@ -689,8 +689,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             boolean enabled = ContainerUtil.exists(
                 myModelChanges,
                 c -> !c.isResolved() && c.getStatus() != AppliedTextPatch.HunkStatus.NOT_APPLIED

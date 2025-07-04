@@ -16,13 +16,15 @@
 package consulo.desktop.awt.wm.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.logging.Logger;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.UIUtil;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;
@@ -37,10 +39,12 @@ public class FocusDebuggerAction extends AnAction implements DumbAware {
   private FocusDrawer myFocusDrawer;
 
   public FocusDebuggerAction() {
-    super("Start Focus Debugger");
+    super(LocalizeValue.localizeTODO("Start Focus Debugger"));
   }
 
-  public void actionPerformed(final AnActionEvent e) {
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     if (myFocusDrawer == null) {
       myFocusDrawer = new FocusDrawer();
       myFocusDrawer.start();
@@ -53,12 +57,12 @@ public class FocusDebuggerAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(final AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
+  public void update(@Nonnull AnActionEvent e) {
+    Presentation presentation = e.getPresentation();
     if (myFocusDrawer == null) {
-      presentation.setText("Start Focus Debugger");
+      presentation.setTextValue(LocalizeValue.localizeTODO("Start Focus Debugger"));
     } else {
-      presentation.setText("Stop Focus Debugger");
+      presentation.setTextValue(LocalizeValue.localizeTODO("Stop Focus Debugger"));
     }
   }
 

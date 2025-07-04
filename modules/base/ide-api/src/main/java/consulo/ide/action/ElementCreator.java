@@ -94,7 +94,7 @@ public abstract class ElementCreator {
             .name(commandName)
             .undoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
             .compute(() -> {
-                LocalHistoryAction action = LocalHistory.getInstance().startAction(commandName.get());
+                LocalHistoryAction action = LocalHistory.getInstance().startAction(commandName);
                 try {
                     invokeCreate.run();
                     return null;

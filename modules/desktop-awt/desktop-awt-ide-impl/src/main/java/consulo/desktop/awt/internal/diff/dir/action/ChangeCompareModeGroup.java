@@ -52,13 +52,12 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
     myGroup = new DefaultActionGroup(actions.toArray(new ChangeCompareModeAction[actions.size()]));
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     myButton.showPopup();
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);

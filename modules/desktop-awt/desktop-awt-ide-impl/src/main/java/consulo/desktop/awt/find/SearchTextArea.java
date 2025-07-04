@@ -270,14 +270,13 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
             super(PlatformIconGroup.actionsCancel());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             myTextArea.putClientProperty(JUST_CLEARED_KEY, !myTextArea.getText().isEmpty());
             myTextArea.setText("");
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(!StringUtil.isEmpty(myTextArea.getText()));
@@ -291,13 +290,12 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
             getTemplatePresentation().setHoveredIcon(AllIcons.Actions.SearchNewLineHover);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             new DefaultEditorKit.InsertBreakAction().actionPerformed(new ActionEvent(myTextArea, 0, "action"));
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(myMultilineEnabled);

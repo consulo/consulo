@@ -38,7 +38,6 @@ public class InternalActionGroup extends DefaultActionGroup implements DumbAware
         super(LocalizeValue.localizeTODO("Internal"), true);
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(ApplicationProperties.isInternal());

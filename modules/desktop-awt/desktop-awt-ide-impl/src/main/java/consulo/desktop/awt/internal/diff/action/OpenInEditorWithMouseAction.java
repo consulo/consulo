@@ -53,7 +53,6 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     InputEvent inputEvent = e.getInputEvent();
     if (!(inputEvent instanceof MouseEvent)) {

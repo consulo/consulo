@@ -361,8 +361,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(!topElementIsSelected(myTreeStructure));
         }
     }

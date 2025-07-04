@@ -226,13 +226,12 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             return new StatusButton(this, presentation, place, myEditor.getColorsScheme(), () -> showNavigation);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             myPopupManager.showPopup(e.getInputEvent());
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
@@ -536,7 +535,6 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                     //ActionsCollector.getInstance().record(e.getProject(), this, e, null);
                 }
 
-                @RequiredUIAccess
                 @Override
                 public void update(@Nonnull AnActionEvent e) {
                     super.update(e);
@@ -613,7 +611,6 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         AnAction nextErrorAction = createAction("GotoNextError", AllIcons.Actions.FindAndShowNextMatchesSmall);
         AnAction prevErrorAction = createAction("GotoPreviousError", AllIcons.Actions.FindAndShowPrevMatchesSmall);
         DefaultActionGroup navigateGroup = new DefaultActionGroup(nextErrorAction, prevErrorAction) {
-            @RequiredUIAccess
             @Override
             public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabledAndVisible(showNavigation);

@@ -51,8 +51,7 @@ public abstract class XDebuggerActionBase extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(final AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         boolean hidden = isHidden(event);
         if (hidden) {
@@ -70,7 +69,7 @@ public abstract class XDebuggerActionBase extends AnAction {
         presentation.setEnabled(enabled);
     }
 
-    protected boolean isEnabled(final AnActionEvent e) {
+    protected boolean isEnabled(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         return project != null && isEnabled(project, e);
     }
@@ -84,7 +83,7 @@ public abstract class XDebuggerActionBase extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         performWithHandler(e);
     }
 

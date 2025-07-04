@@ -23,6 +23,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.impl.internal.ui.XDebuggerEditorBase;
 import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionEditorImpl;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBSplitter;
 import jakarta.annotation.Nonnull;
@@ -93,12 +94,13 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myForward ? myMultilineEditor.canGoForward() : myMultilineEditor.canGoBackward());
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       if (myForward) {
         myMultilineEditor.goForward();
       }

@@ -1123,7 +1123,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             }
 
             @Override
-            @RequiredUIAccess
             public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(enableStateProvider.produce());
                 Toggleable.setSelected(e.getPresentation(), state.get());
@@ -1789,7 +1788,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             return false;
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
@@ -1947,7 +1945,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(
                 e.getData(Editor.KEY) == null

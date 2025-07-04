@@ -43,7 +43,6 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
         OpenSourceUtil.navigate(myFocusEditor, getNavigatables(dataContext));
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         boolean inPopup = ActionPlaces.isPopupPlace(e.getPlace());

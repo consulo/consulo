@@ -193,11 +193,9 @@ public class RunContentExecutor implements Disposable {
             myRerunAction.run();
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
-            e.getPresentation().setVisible(myRerunAction != null);
-            e.getPresentation().setEnabled(myRerunAction != null);
+        public void update(@Nonnull AnActionEvent e) {
+            e.getPresentation().setEnabledAndVisible(myRerunAction != null);
         }
 
         @Override
@@ -211,15 +209,14 @@ public class RunContentExecutor implements Disposable {
             super(ActionLocalize.actionStopText(), ActionLocalize.actionStopText(), PlatformIconGroup.actionsSuspend());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             myStopAction.run();
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setVisible(myStopAction != null);
             e.getPresentation().setEnabled(myStopEnabled != null && myStopEnabled.getAsBoolean());
         }

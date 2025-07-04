@@ -38,7 +38,6 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
         myConfigurable = configurable;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
@@ -69,8 +68,8 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
             myScheme = scheme;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             myConfigurable.changeScheme(myScheme);
             ChangeSchemaCombo.this.getTemplatePresentation().setText(myScheme.getName());

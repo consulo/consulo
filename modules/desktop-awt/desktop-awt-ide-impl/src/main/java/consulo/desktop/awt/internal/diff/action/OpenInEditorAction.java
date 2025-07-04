@@ -43,7 +43,6 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
     myAfterRunnable = afterRunnable;
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     if (!e.isFromActionToolbar()) {
@@ -55,8 +54,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
     DiffContext context = e.getData(DiffDataKeys.DIFF_CONTEXT);
 
     if (DiffImplUtil.isUserDataFlagSet(DiffUserDataKeys.GO_TO_SOURCE_DISABLE, request, context)) {
-      e.getPresentation().setVisible(false);
-      e.getPresentation().setEnabled(false);
+      e.getPresentation().setEnabledAndVisible(false);
     }
 
     if (e.getData(Project.KEY) == null) {
