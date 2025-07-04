@@ -24,7 +24,6 @@ public class UndeployAction extends DumbAwareAction {
         super(RemoteServerLocalize.actionServersUndeployText(), RemoteServerLocalize.actionServersUndeployDescription(), PlatformIconGroup.nodesUndeploy());
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         DeploymentNode node = getDeploymentTarget(e);
@@ -33,8 +32,8 @@ public class UndeployAction extends DumbAwareAction {
         e.getPresentation().setEnabled(visible && node.isUndeployActionEnabled());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         DeploymentNode node = getDeploymentTarget(e);
         if (node != null) {

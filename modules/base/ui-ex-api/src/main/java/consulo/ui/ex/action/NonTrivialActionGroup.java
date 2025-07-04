@@ -16,8 +16,8 @@
 package consulo.ui.ex.action;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.util.ActionGroupUtil;
+import jakarta.annotation.Nonnull;
 
 /**
  * This group hides itself when there's no enabled and visible child.
@@ -31,9 +31,8 @@ public class NonTrivialActionGroup extends DefaultActionGroup implements DumbAwa
     super();
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
   }
 }

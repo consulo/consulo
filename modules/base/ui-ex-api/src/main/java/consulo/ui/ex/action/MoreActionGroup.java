@@ -16,12 +16,11 @@
 package consulo.ui.ex.action;
 
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 12.05.2024
+ * @since 2024-05-12
  */
 public class MoreActionGroup extends DefaultActionGroup {
     private final boolean myHorizontal;
@@ -34,7 +33,6 @@ public class MoreActionGroup extends DefaultActionGroup {
         myHorizontal = horizontal;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();

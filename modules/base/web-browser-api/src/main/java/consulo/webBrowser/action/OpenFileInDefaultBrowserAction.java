@@ -15,6 +15,7 @@
  */
 package consulo.webBrowser.action;
 
+import consulo.application.ReadAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
@@ -28,11 +29,10 @@ import jakarta.annotation.Nullable;
 
 public class OpenFileInDefaultBrowserAction extends DumbAwareAction {
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
-        Pair<OpenInBrowserRequest, WebBrowserUrlProvider> result = BaseOpenInBrowserAction.doUpdate(e);
+        Pair<OpenInBrowserRequest, WebBrowserUrlProvider> result = ReadAction.compute(() -> BaseOpenInBrowserAction.doUpdate(e));
         if (result == null) {
             return;
         }

@@ -23,10 +23,11 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.NonTrivialActionGroup;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAware {
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     VirtualFile file = e.getData(VirtualFile.KEY);
     PsiElement element = e.getData(PsiElement.KEY);

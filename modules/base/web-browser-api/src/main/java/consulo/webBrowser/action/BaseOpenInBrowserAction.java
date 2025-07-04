@@ -78,7 +78,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
             return;
         }
 
-        Pair<OpenInBrowserRequest, WebBrowserUrlProvider> result = doUpdate(e);
+        Pair<OpenInBrowserRequest, WebBrowserUrlProvider> result = ReadAction.compute(() -> doUpdate(e));
         if (result == null) {
             return;
         }

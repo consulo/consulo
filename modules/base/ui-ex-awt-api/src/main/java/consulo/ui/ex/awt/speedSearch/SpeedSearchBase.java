@@ -15,6 +15,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.AnAction;
@@ -98,6 +99,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
     new AnAction() {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
         final String prefix = getEnteredPrefix();
         assert prefix != null;

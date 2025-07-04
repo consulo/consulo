@@ -38,8 +38,8 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
     protected ComboBoxAction() {
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
         if (button == null) {

@@ -17,6 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -171,18 +172,17 @@ public class CommonActionsPanel extends JPanel {
   }
 
   private static void registerDeleteHook(final MyActionButton removeButton) {
-    new AnAction("Delete Hook") {
-      @RequiredUIAccess
+    new AnAction(LocalizeValue.localizeTODO("Delete Hook")) {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
         removeButton.actionPerformed(e);
       }
 
-      @RequiredUIAccess
       @Override
       public void update(@Nonnull AnActionEvent e) {
         final JComponent contextComponent = removeButton.getContextComponent();
-        if (contextComponent instanceof JTable && ((JTable)contextComponent).isEditing()) {
+        if (contextComponent instanceof JTable table && table.isEditing()) {
           e.getPresentation().setEnabled(false);
           return;
         }

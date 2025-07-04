@@ -695,15 +695,14 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Override
         @RequiredUIAccess
-        public final void actionPerformed(AnActionEvent e) {
+        public final void actionPerformed(@Nonnull AnActionEvent e) {
             doRefresh(false);
         }
 
         @Override
-        @RequiredUIAccess
-        public final void update(AnActionEvent event) {
+        public final void update(@Nonnull AnActionEvent event) {
             Presentation presentation = event.getPresentation();
-            presentation.setEnabled(isValidBase());
+            presentation.setEnabled(ReadAction.compute(() -> isValidBase()));
         }
     }
 

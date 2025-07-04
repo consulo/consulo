@@ -21,7 +21,9 @@ import consulo.configurable.MasterDetailsConfigurable;
 import consulo.configurable.NamedConfigurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
@@ -343,7 +345,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
 
     private class CopyAction extends DumbAwareAction {
         public CopyAction() {
-            super("Copy", "Copy", PlatformIconGroup.actionsCopy());
+            super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
             registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
         }
 
@@ -363,9 +365,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
             onItemCloned(clone);
         }
 
-
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent event) {
             super.update(event);
             event.getPresentation().setEnabled(getSelectedObject() != null);
@@ -377,7 +377,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
 
     private class AddAction extends DumbAwareAction {
         public AddAction() {
-            super("Add", "Add", PlatformIconGroup.generalAdd());
+            super(CommonLocalize.buttonAdd(), CommonLocalize.buttonAdd(), PlatformIconGroup.generalAdd());
             registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
         }
 

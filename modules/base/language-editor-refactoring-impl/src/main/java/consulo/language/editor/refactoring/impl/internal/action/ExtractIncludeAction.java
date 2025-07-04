@@ -16,6 +16,7 @@
 
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.application.ReadAction;
 import consulo.language.Language;
 import consulo.language.editor.refactoring.LanguageExtractIncludeHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
@@ -49,11 +50,10 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
     return true;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(@Nonnull final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    final RefactoringActionHandler handler = getHandler(e.getDataContext());
+    final RefactoringActionHandler handler = ReadAction.compute(() -> getHandler(e.getDataContext()));
     if (handler instanceof TitledHandler titledHandler) {
       e.getPresentation().setTextValue(titledHandler.getActionTitleValue());
     }

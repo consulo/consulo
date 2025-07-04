@@ -13,23 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.task.impl.internal.action.BaseTaskAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.execution.unscramble.AnalyzeStacktraceUtil;
 import consulo.project.Project;
 import consulo.task.Comment;
 import consulo.task.LocalTask;
 import consulo.task.Task;
-import consulo.execution.unscramble.AnalyzeStacktraceUtil;
+import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public class AnalyzeTaskStacktraceAction extends BaseTaskAction {
-
-  public void actionPerformed(AnActionEvent e) {
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final LocalTask activeTask = getActiveTask(e);
     final Project project = getProject(e);
     assert activeTask != null;
@@ -38,7 +40,7 @@ public class AnalyzeTaskStacktraceAction extends BaseTaskAction {
   }
 
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     if (event.getPresentation().isEnabled()) {
       Task activeTask = getActiveTask(event);
@@ -51,7 +53,6 @@ public class AnalyzeTaskStacktraceAction extends BaseTaskAction {
   }
 
   public static void analyzeStacktrace(Task task, Project project) {
-
     ChooseStacktraceDialog stacktraceDialog = new ChooseStacktraceDialog(project, task);
     stacktraceDialog.show();
     if (stacktraceDialog.isOK() && stacktraceDialog.getTraces().length > 0) {

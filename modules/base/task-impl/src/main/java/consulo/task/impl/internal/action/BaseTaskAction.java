@@ -20,10 +20,10 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
@@ -43,8 +43,7 @@ public abstract class BaseTaskAction extends AnAction implements DumbAware {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     event.getPresentation().setEnabled(getProject(event) != null);
   }
 

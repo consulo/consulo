@@ -255,8 +255,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(myBrowseButton.isVisible() && myBrowseButton.isEnabled());
         }
 

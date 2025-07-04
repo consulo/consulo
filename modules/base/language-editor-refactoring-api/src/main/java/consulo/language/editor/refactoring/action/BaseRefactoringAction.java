@@ -88,8 +88,8 @@ public abstract class BaseRefactoringAction extends AnAction {
     @Nullable
     protected abstract RefactoringActionHandler getHandler(@Nonnull DataContext dataContext);
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public final void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         final Project project = e.getData(Project.KEY);
@@ -158,7 +158,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         return false;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();

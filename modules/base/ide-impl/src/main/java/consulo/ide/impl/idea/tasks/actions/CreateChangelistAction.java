@@ -13,32 +13,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.task.impl.internal.action.BaseTaskAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.Messages;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
+import consulo.task.impl.internal.action.BaseTaskAction;
 import consulo.task.util.TaskUtil;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public class CreateChangelistAction extends BaseTaskAction {
-
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     if (event.getPresentation().isEnabled()) {
       TaskManager manager = getTaskManager(event);
       Presentation presentation = event.getPresentation();
 
       if (manager == null || !manager.isVcsEnabled()) {
-        presentation.setText(getTemplatePresentation().getText());
+        presentation.setTextValue(getTemplatePresentation().getTextValue());
         presentation.setEnabled(false);
       }
       else {
@@ -54,7 +54,8 @@ public class CreateChangelistAction extends BaseTaskAction {
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     TaskManagerImpl manager = (TaskManagerImpl)getTaskManager(e);
     assert manager != null;
     LocalTask activeTask = manager.getActiveTask();

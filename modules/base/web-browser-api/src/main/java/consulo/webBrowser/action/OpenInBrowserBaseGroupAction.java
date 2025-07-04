@@ -15,10 +15,9 @@
  */
 package consulo.webBrowser.action;
 
-import consulo.application.AllIcons;
 import consulo.component.util.ModificationTracker;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
@@ -31,7 +30,8 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
     private OpenFileInDefaultBrowserAction myDefaultBrowserAction;
 
     protected OpenInBrowserBaseGroupAction(boolean popup) {
-        super(WebBrowserLocalize.actionOpenInBrowserActionGroupText(),
+        super(
+            WebBrowserLocalize.actionOpenInBrowserActionGroupText(),
             WebBrowserLocalize.actionOpenInBrowserActionGroupDescription(),
             PlatformIconGroup.nodesPpweb()
         );
@@ -56,8 +56,8 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         if (addDefaultBrowser) {
             if (myDefaultBrowserAction == null) {
                 myDefaultBrowserAction = new OpenFileInDefaultBrowserAction();
-                myDefaultBrowserAction.getTemplatePresentation().setText("Default");
-                myDefaultBrowserAction.getTemplatePresentation().setIcon(AllIcons.Nodes.PpWeb);
+                myDefaultBrowserAction.getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Default"));
+                myDefaultBrowserAction.getTemplatePresentation().setIcon(PlatformIconGroup.nodesPpweb());
             }
             actions[0] = myDefaultBrowserAction;
         }
@@ -74,7 +74,6 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
             super(true);
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             String place = e.getPlace();
@@ -94,7 +93,6 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setVisible(!WebBrowserManager.getInstance().getBrowsers().isEmpty());
         }

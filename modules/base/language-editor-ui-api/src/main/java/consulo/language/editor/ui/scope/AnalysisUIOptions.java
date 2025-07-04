@@ -190,7 +190,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
       }
 
       @Override
-      public void update(@Nonnull final AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(SHOW_DIFF_WITH_PREVIOUS_RUN);
       }

@@ -161,9 +161,8 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                     EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ESCAPE);
                 if (!myAction.isShowInBalloon()) {
                     new AnAction() {
-                        @RequiredUIAccess
                         @Override
-                        public void update(AnActionEvent e) {
+                        public void update(@Nonnull AnActionEvent e) {
                             Editor editor = e.getDataContext().getData(Editor.KEY);
                             e.getPresentation().setEnabled(editor != null &&
                                 LookupManager.getActiveLookup(editor) == null &&
@@ -171,9 +170,9 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                                 (editorEscape == null || !editorEscape.isEnabled(editor, e.getDataContext())));
                         }
 
-                        @RequiredUIAccess
                         @Override
-                        public void actionPerformed(AnActionEvent e) {
+                        @RequiredUIAccess
+                        public void actionPerformed(@Nonnull AnActionEvent e) {
                             closeEditor();
                         }
                     }.registerCustomShortcutSet(CommonShortcuts.ESCAPE, event.getEditor().getContentComponent());

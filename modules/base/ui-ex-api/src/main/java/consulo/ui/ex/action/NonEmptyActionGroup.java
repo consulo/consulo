@@ -16,16 +16,15 @@
 package consulo.ui.ex.action;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 
 public class NonEmptyActionGroup extends DefaultActionGroup implements DumbAware {
   public NonEmptyActionGroup() {
     super();
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     presentation.setVisible(getChildrenCount() > 0);
   }

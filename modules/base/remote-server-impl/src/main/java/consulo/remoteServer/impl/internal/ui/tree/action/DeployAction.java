@@ -25,7 +25,6 @@ public class DeployAction extends DumbAwareAction {
         super(RemoteServerLocalize.actionServersDeployText(), RemoteServerLocalize.actionServersDeployDescription(), PlatformIconGroup.nodesDeploy());
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         DeploymentNode node = getDeploymentTarget(e);
