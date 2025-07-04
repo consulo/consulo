@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 import consulo.project.ProjectGroup;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.project.internal.RecentProjectsManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.InputValidatorEx;
@@ -34,6 +35,7 @@ import java.util.List;
  */
 public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBase {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final ProjectGroup group = ((PopupProjectGroupActionGroup)getSelectedElements(e).get(0)).getGroup();
     JList list = getList(e);
@@ -42,6 +44,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
     String name = Messages.showInputDialog(list, "Enter group name: ", "Change Group Name", null, group.getName(), new InputValidatorEx() {
       @Nullable
       @Override
+      @RequiredUIAccess
       public String getErrorText(String inputString) {
         inputString = inputString.trim();
         if (inputString.length() == 0) {
@@ -54,6 +57,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
       }
 
       @Override
+      @RequiredUIAccess
       public boolean checkInput(String inputString) {
         inputString = inputString.trim();
         if (inputString.equals(group.getName())) return true;
@@ -66,6 +70,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
       }
 
       @Override
+      @RequiredUIAccess
       public boolean canClose(String inputString) {
         return true;
       }

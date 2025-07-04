@@ -2029,7 +2029,6 @@ public abstract class JBTabsImpl extends JComponent
             setEnabledInModalContext(true);
         }
 
-        @RequiredUIAccess
         @Override
         public final void update(@Nonnull AnActionEvent e) {
             JBTabsImpl tabs = e.getData(NAVIGATION_ACTIONS_KEY);
@@ -2076,8 +2075,8 @@ public abstract class JBTabsImpl extends JComponent
 
         protected abstract void _update(AnActionEvent e, JBTabsImpl tabs, int selectedIndex);
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public final void actionPerformed(@Nonnull AnActionEvent e) {
             JBTabsImpl tabs = e.getData(NAVIGATION_ACTIONS_KEY);
             tabs = findNavigatableTabs(tabs);

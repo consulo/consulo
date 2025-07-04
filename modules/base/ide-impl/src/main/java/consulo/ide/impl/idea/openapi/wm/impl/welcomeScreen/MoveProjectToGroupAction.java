@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 import consulo.project.ProjectGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
@@ -36,6 +37,7 @@ public class MoveProjectToGroupAction extends RecentProjectsWelcomeScreenActionB
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final List<AnAction> elements = getSelectedElements(e);
     for (AnAction element : elements) {

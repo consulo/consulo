@@ -20,9 +20,11 @@ import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.pathMacro.MacroManager;
 import consulo.process.event.ProcessListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.List;
 
@@ -39,12 +41,13 @@ public class ToolAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     runTool(myActionId, e.getDataContext(), e, 0L, null);
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Tool tool = findTool(myActionId, e.getDataContext());
     if (tool != null) {
       e.getPresentation().setText(ToolRunProfile.expandMacrosInName(tool, e.getDataContext()));

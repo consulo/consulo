@@ -61,9 +61,8 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
     return false;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     if (Application.get().getExtensionPoint(GotoSuperActionHander.class).hasAnyExtensions()) {
       event.getPresentation().setVisible(true);
       super.update(event);

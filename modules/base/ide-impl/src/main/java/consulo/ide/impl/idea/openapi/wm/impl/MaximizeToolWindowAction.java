@@ -42,7 +42,6 @@ public class MaximizeToolWindowAction extends AnAction implements DumbAware {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(true);
     Project project = e.getData(Project.KEY);

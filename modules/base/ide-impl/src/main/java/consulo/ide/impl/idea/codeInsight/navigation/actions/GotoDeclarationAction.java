@@ -339,8 +339,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         InputEvent inputEvent = event.getInputEvent();
         boolean isMouseShortcut = inputEvent instanceof MouseEvent && ActionPlaces.MOUSE_SHORTCUT.equals(event.getPlace());
 

@@ -40,7 +40,6 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(myInfo != null && myInfo.isCancellable());
         }

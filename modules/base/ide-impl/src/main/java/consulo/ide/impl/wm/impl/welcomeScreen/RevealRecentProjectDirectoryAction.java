@@ -30,16 +30,15 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 03/05/2021
+ * @since 2021-05-03
  */
 public class RevealRecentProjectDirectoryAction extends RecentProjectsWelcomeScreenActionBase {
   public RevealRecentProjectDirectoryAction() {
     getTemplatePresentation().setText(RevealFileAction.getActionName(null));
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setText(RevealFileAction.getActionName(e.getPlace()));
 
@@ -48,8 +47,8 @@ public class RevealRecentProjectDirectoryAction extends RecentProjectsWelcomeScr
     presentation.setEnabledAndVisible(enable);
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     List<AnAction> elements = getSelectedElements(e);
     if (elements.size() != 1) {

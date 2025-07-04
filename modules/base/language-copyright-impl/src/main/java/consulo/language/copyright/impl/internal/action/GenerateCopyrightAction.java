@@ -36,6 +36,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "GenerateCopyright", parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_GENERATE)))
@@ -45,7 +46,7 @@ public class GenerateCopyrightAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext context = event.getDataContext();
         Project project = context.getData(Project.KEY);
@@ -72,8 +73,8 @@ public class GenerateCopyrightAction extends AnAction {
         return file;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {
         DataContext context = event.getDataContext();
         Project project = context.getData(Project.KEY);

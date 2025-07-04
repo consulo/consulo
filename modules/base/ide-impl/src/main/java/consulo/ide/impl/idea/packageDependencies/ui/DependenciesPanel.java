@@ -34,13 +34,13 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.packageDependency.DependencyRule;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
 import consulo.module.content.ProjectFileIndex;
@@ -50,7 +50,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.macro.ProjectPathMacroManager;
-import consulo.project.ui.wm.StatusBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -572,7 +571,11 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
     private final class ShowModuleGroupsAction extends ToggleAction {
         ShowModuleGroupsAction() {
-            super("Show module groups", "Show module groups", PlatformIconGroup.actionsGroupbymodulegroup());
+            super(
+                LocalizeValue.localizeTODO("Show module groups"),
+                LocalizeValue.localizeTODO("Show module groups"),
+                PlatformIconGroup.actionsGroupbymodulegroup()
+            );
         }
 
         @Override
@@ -588,7 +591,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(mySettings.UI_SHOW_MODULES);
@@ -614,12 +616,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             DependencyUISettings.getInstance().UI_GROUP_BY_SCOPE_TYPE = flag;
             mySettings.UI_GROUP_BY_SCOPE_TYPE = flag;
             rebuild();
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void update(@Nonnull AnActionEvent e) {
-            super.update(e);
         }
     }
 
@@ -731,7 +727,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             registerCustomShortcutSet(CommonShortcuts.getRerun(), comp);
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             boolean enabled = true;
@@ -741,8 +736,8 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             e.getPresentation().setEnabled(enabled);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             DependenciesToolWindow.getInstance(myProject).closeContent(myContent);
             mySettings.copyToApplicationDependencySettings();
@@ -789,7 +784,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
     private class ShowDetailedInformationAction extends AnAction {
         private ShowDetailedInformationAction() {
-            super("Show indirect dependencies");
+            super(LocalizeValue.localizeTODO("Show indirect dependencies"));
         }
 
         @Override
@@ -821,8 +816,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             boolean[] direct = new boolean[]{true};
             processDependencies(getSelectedScope(myLeftTree), getSelectedScope(myRightTree), path -> {
                 direct[0] = false;
@@ -834,18 +828,17 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
     private class RemoveFromScopeAction extends AnAction {
         private RemoveFromScopeAction() {
-            super("Remove from scope");
+            super(LocalizeValue.localizeTODO("Remove from scope"));
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(!getSelectedScope(myLeftTree).isEmpty());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             Set<PsiFile> selectedScope = getSelectedScope(myLeftTree);
             exclude(selectedScope);
@@ -859,11 +852,10 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
     private class AddToScopeAction extends AnAction {
         private AddToScopeAction() {
-            super("Add to scope");
+            super(LocalizeValue.localizeTODO("Add to scope"));
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(getScope() != null);
@@ -931,15 +923,14 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             );
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             PackageDependenciesNode node = myRightTree.getSelectedNode();
             e.getPresentation().setEnabled(node != null && node.canSelectInLeftTree(myDependencies));
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             PackageDependenciesNode node = myRightTree.getSelectedNode();
             if (node != null) {
@@ -977,8 +968,8 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             );
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             PackageDependenciesNode leftNode = myLeftTree.getSelectedNode();
             PackageDependenciesNode rightNode = myRightTree.getSelectedNode();
@@ -1042,8 +1033,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(false);
             PackageDependenciesNode leftNode = myLeftTree.getSelectedNode();
@@ -1077,7 +1067,6 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             return group;
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);

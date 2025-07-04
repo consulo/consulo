@@ -20,6 +20,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.ui.ShadowAction;
 import consulo.application.dumb.DumbAware;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -35,7 +36,7 @@ abstract class NavigationAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public final void update(final AnActionEvent e) {
+  public final void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(getHistory(e) != null);
     if (e.getPresentation().isEnabled()) {
       doUpdate(e);

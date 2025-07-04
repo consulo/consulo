@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ui;
 
 import consulo.application.dumb.DumbAware;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 
-/*
+/**
  * @author Anna.Kozlova
  */
 public class ClearTextAction extends AnAction implements DumbAware {
@@ -33,7 +34,9 @@ public class ClearTextAction extends AnAction implements DumbAware {
     setEnabledInModalContext(true);
   }
 
-  public void actionPerformed(AnActionEvent e) {
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (component instanceof JTextComponent) {
       final JTextComponent textComponent = (JTextComponent)component;
@@ -41,8 +44,8 @@ public class ClearTextAction extends AnAction implements DumbAware {
     }
   }
 
-
-  public void update(AnActionEvent e) {
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
     final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (component instanceof JTextComponent) {
       final JTextComponent textComponent = (JTextComponent)component;

@@ -37,9 +37,8 @@ public class GotoImplementationAction extends BaseCodeInsightAction implements D
     return true;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     if (!DefinitionsScopedSearch.INSTANCE.hasAnyExecutors()) {
       event.getPresentation().setVisible(false);
     }

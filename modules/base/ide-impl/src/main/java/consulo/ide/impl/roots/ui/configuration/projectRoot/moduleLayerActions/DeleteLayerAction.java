@@ -15,28 +15,29 @@
  */
 package consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions;
 
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
-import consulo.ide.impl.idea.util.IconUtil;
 import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
- * @since 30.07.14
+ * @since 2014-07-30
  */
 public class DeleteLayerAction extends AnAction {
   private ModuleEditor myModuleEditor;
 
   public DeleteLayerAction(ModuleEditor moduleEditor) {
-    super("Delete layer", null, IconUtil.getRemoveIcon());
+    super(LocalizeValue.localizeTODO("Delete layer"), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
     myModuleEditor = moduleEditor;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
 
@@ -45,7 +46,6 @@ public class DeleteLayerAction extends AnAction {
     modifiableRootModelProxy.removeLayer(currentLayerName, true);
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ScrollingUtil;
@@ -30,6 +31,7 @@ import javax.swing.*;
  */
 public class RemoveSelectedProjectsAction extends RecentProjectsWelcomeScreenActionBase {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     RecentProjectsManager mgr = RecentProjectsManager.getInstance();
     for (AnAction action : getSelectedElements(e)) {

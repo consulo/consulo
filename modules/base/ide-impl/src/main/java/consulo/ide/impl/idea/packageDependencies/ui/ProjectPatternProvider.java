@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.application.ReadAction;
 import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
@@ -26,8 +27,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiPackageSupportProviders;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
@@ -138,7 +139,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
       super(
         IdeLocalize.actionCompactEmptyMiddlePackages(),
         IdeLocalize.actionCompactEmptyMiddlePackages(),
-        AllIcons.ObjectBrowser.CompactEmptyPackages
+        PlatformIconGroup.objectbrowserCompactemptypackages()
       );
       myUpdate = update;
     }
@@ -155,15 +156,16 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(@Nonnull final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       Project eventProject = e.getData(Project.KEY);
       if (eventProject == null) {
         return;
       }
-      e.getPresentation()
-       .setVisible(FILE.equals(DependencyUISettings.getInstance().getScopeType()) && PsiPackageSupportProviders.isPackageSupported(eventProject));
+      e.getPresentation().setVisible(
+          FILE.equals(DependencyUISettings.getInstance().getScopeType())
+              && ReadAction.compute(() -> PsiPackageSupportProviders.isPackageSupported(eventProject))
+      );
     }
   }
 }

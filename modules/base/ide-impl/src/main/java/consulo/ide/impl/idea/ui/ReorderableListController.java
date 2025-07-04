@@ -90,7 +90,6 @@ public abstract class ReorderableListController<T> {
             }
 
             @Override
-            @RequiredUIAccess
             public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(ListUtil.canMoveSelectedItemsUp(myList));
             }
@@ -106,7 +105,6 @@ public abstract class ReorderableListController<T> {
             }
 
             @Override
-            @RequiredUIAccess
             public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(ListUtil.canMoveSelectedItemsDown(myList));
             }
@@ -205,7 +203,6 @@ public abstract class ReorderableListController<T> {
             }
 
             @Override
-            @RequiredUIAccess
             public void update(@Nonnull AnActionEvent e) {
                 myBehaviour.updateAction(e);
             }

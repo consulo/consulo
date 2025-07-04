@@ -15,15 +15,16 @@
  */
 package consulo.ide.impl.idea.ui.dualView;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.table.BaseTableView;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.table.SelectionProvider;
@@ -35,6 +36,7 @@ import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.component.util.config.Storage;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.localize.UILocalize;
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
@@ -381,28 +383,34 @@ public class DualView extends JPanel {
   }
 
   public AnAction getExpandAllAction() {
-    return new AnAction(UIBundle.message("tree.view.expand.all.action.name"), null, AllIcons.Actions.Expandall) {
-      public void update(AnActionEvent e) {
+    return new AnAction(UILocalize.treeViewExpandAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall()) {
+      @Override
+      public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setVisible(true);
         presentation.setEnabled(myCurrentView == myTreeView);
       }
 
-      public void actionPerformed(AnActionEvent e) {
+      @Override
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         expandAll();
       }
     };
   }
 
   public AnAction getCollapseAllAction() {
-    return new AnAction(UIBundle.message("tree.view.collapse.all.action.name"), null, AllIcons.Actions.Collapseall) {
-      public void update(AnActionEvent e) {
+    return new AnAction(UILocalize.treeViewCollapseAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall()) {
+      @Override
+      public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setVisible(true);
         presentation.setEnabled(myCurrentView == myTreeView);
       }
 
-      public void actionPerformed(AnActionEvent e) {
+      @Override
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         collapseAll();
       }
     };

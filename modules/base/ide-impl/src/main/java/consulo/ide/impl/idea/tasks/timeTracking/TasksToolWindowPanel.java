@@ -155,7 +155,6 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
                     }
 
                     @Override
-                    @RequiredUIAccess
                     public void update(@Nonnull AnActionEvent e) {
                         LocalTask localTask = myTable.getSelectedObject();
                         if (localTask == null) {
@@ -307,7 +306,6 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
     private class StartStopAction extends AnAction {
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             if (myTimeTrackingManager.getState().autoMode) {
                 e.getPresentation().setEnabled(false);

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
-import consulo.application.AllIcons;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.ConfigurationException;
@@ -53,7 +51,9 @@ import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.editor.ui.awt.HintUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -532,9 +532,12 @@ public class SingleInspectionProfilePanel extends JPanel {
 
     actions.add(actionManager.createExpandAllAction(myTreeExpander, myTreeTable));
     actions.add(actionManager.createCollapseAllAction(myTreeExpander, myTreeTable));
-    actions.add(new DumbAwareAction("Reset to Empty", "Reset to empty", AllIcons.General.Reset) {
+    actions.add(new DumbAwareAction(
+        LocalizeValue.localizeTODO("Reset to Empty"),
+        LocalizeValue.localizeTODO("Reset to empty"),
+        PlatformIconGroup.generalReset()
+    ) {
       @Override
-      @RequiredUIAccess
       public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(mySelectedProfile != null && mySelectedProfile.isExecutable(myProjectProfileManager.getProject()));
       }

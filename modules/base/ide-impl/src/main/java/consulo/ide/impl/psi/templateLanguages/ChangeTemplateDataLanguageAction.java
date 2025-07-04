@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.psi.templateLanguages;
 
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.LangBundle;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiManager;
+import consulo.language.template.ConfigurableTemplateLanguageFileViewProvider;
 import consulo.language.template.TemplateDataLanguageMappings;
+import consulo.language.template.TemplateLanguageFileViewProvider;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.template.ConfigurableTemplateLanguageFileViewProvider;
-import consulo.language.template.TemplateLanguageFileViewProvider;
-import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.psi.PsiManager;
-import consulo.language.file.FileViewProvider;
-import consulo.language.LangBundle;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class ChangeTemplateDataLanguageAction extends AnAction {
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setVisible(false);
 
     VirtualFile virtualFile = e.getData(VirtualFile.KEY);
