@@ -154,7 +154,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
   }
 
   @Override
-  public final void update(AnActionEvent e) {
+  public final void update(@Nonnull AnActionEvent e) {
     boolean myActionVisible = true;
     boolean myActionEnabled = true;
     if (myAction != null) {

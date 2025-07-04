@@ -33,8 +33,7 @@ import jakarta.annotation.Nonnull;
  */
 public class ShowTaskDescription extends BaseTaskAction {
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         super.update(event);
         if (event.getPresentation().isEnabled()) {
             final Presentation presentation = event.getPresentation();
@@ -49,8 +48,8 @@ public class ShowTaskDescription extends BaseTaskAction {
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = getProject(e);
         assert project != null;

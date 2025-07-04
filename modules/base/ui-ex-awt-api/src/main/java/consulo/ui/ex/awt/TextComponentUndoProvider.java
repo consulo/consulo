@@ -17,9 +17,11 @@
 package consulo.ui.ex.awt;
 
 import consulo.disposer.Disposable;
-import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -49,26 +51,28 @@ public class TextComponentUndoProvider implements Disposable {
 
     AnAction undoAction = new AnAction() {
       @Override
-      public void update(AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(canUndo());
       }
 
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         undo();
       }
     };
 
     AnAction redoAction = new AnAction() {
       @Override
-      public void update(AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(canRedo());
       }
 
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         redo();
       }
     };

@@ -17,7 +17,6 @@
 package consulo.language.inject.advanced.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.util.function.Processor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ProjectConfigurable;
@@ -36,8 +35,10 @@ import consulo.language.editor.LangDataKeys;
 import consulo.language.inject.advanced.*;
 import consulo.language.inject.advanced.internal.ProjectInjectionConfiguration;
 import consulo.language.plain.PlainTextFileType;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleColoredText;
@@ -139,23 +140,25 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         });
 
         final DefaultActionGroup group = new DefaultActionGroup();
-        final AnAction addAction = new AnAction("Add", "Add", PlatformIconGroup.generalAdd()) {
-            @RequiredUIAccess
+        AnAction addAction = new AnAction(CommonLocalize.buttonAdd(), CommonLocalize.buttonAdd(), PlatformIconGroup.generalAdd()) {
             @Override
-            public void update(final AnActionEvent e) {
+            public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(!myAddActions.isEmpty());
             }
 
-            @RequiredUIAccess
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 performAdd(e);
             }
         };
-        final AnAction removeAction = new AnAction("Remove", "Remove", PlatformIconGroup.generalRemove()) {
-            @RequiredUIAccess
+        AnAction removeAction = new AnAction(
+            CommonLocalize.buttonRemove(),
+            CommonLocalize.buttonRemove(),
+            PlatformIconGroup.generalRemove()
+        ) {
             @Override
-            public void update(final AnActionEvent e) {
+            public void update(@Nonnull AnActionEvent e) {
                 boolean enabled = false;
                 for (InjInfo info : getSelectedInjections()) {
                     if (!info.bundled) {
@@ -166,45 +169,51 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                 e.getPresentation().setEnabled(enabled);
             }
 
-            @RequiredUIAccess
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 performRemove();
             }
         };
 
-        final AnAction editAction = new AnAction("Edit", "Edit", PlatformIconGroup.actionsEdit()) {
-            @RequiredUIAccess
+        AnAction editAction = new AnAction(
+            CommonLocalize.buttonEdit(),
+            CommonLocalize.buttonEdit(),
+            PlatformIconGroup.actionsEdit()
+        ) {
             @Override
-            public void update(final AnActionEvent e) {
-                final AnAction action = getEditAction();
+            public void update(@Nonnull AnActionEvent e) {
+                AnAction action = getEditAction();
                 e.getPresentation().setEnabled(action != null);
                 if (action != null) {
                     action.update(e);
                 }
             }
 
-            @RequiredUIAccess
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 performEditAction(e);
             }
         };
-        final AnAction copyAction = new AnAction("Duplicate", "Duplicate", AllIcons.Actions.Copy) {
-            @RequiredUIAccess
+        AnAction copyAction = new AnAction(
+            LocalizeValue.localizeTODO("Duplicate"),
+            LocalizeValue.localizeTODO("Duplicate"),
+            PlatformIconGroup.actionsCopy()
+        ) {
             @Override
-            public void update(final AnActionEvent e) {
-                final AnAction action = getEditAction();
+            public void update(@Nonnull AnActionEvent e) {
+                AnAction action = getEditAction();
                 e.getPresentation().setEnabled(action != null);
                 if (action != null) {
                     action.update(e);
                 }
             }
 
-            @RequiredUIAccess
             @Override
-            public void actionPerformed(final AnActionEvent e) {
-                final InjInfo injection = getSelectedInjection();
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                InjInfo injection = getSelectedInjection();
                 if (injection != null) {
                     addInjection(injection.injection.copy());
                     //performEditAction(e);
@@ -221,35 +230,39 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         editAction.registerCustomShortcutSet(CommonShortcuts.ENTER, myInjectionsTable);
 
         group.addSeparator();
-        group.add(new AnAction("Enable Selected Injections", "Enable Selected Injections", AllIcons.Actions.Selectall) {
-            @RequiredUIAccess
+        group.add(new AnAction("Enable Selected Injections", "Enable Selected Injections", PlatformIconGroup.actionsSelectall()) {
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 performSelectedInjectionsEnabled(true);
             }
         });
-        group.add(new AnAction("Disable Selected Injections", "Disable Selected Injections", AllIcons.Actions.Unselectall) {
-            @RequiredUIAccess
+        group.add(new AnAction("Disable Selected Injections", "Disable Selected Injections", PlatformIconGroup.actionsUnselectall()) {
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 performSelectedInjectionsEnabled(false);
             }
         });
 
         new AnAction("Toggle") {
-            @RequiredUIAccess
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 performToggleAction();
             }
         }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0)), myInjectionsTable);
 
         if (myInfos.length > 1) {
             group.addSeparator();
-            final AnAction shareAction = new AnAction("Make Global", null, PlatformIconGroup.actionsImport()) {
-                @RequiredUIAccess
+            AnAction shareAction = new AnAction(
+                LocalizeValue.localizeTODO("Make Global"),
+                LocalizeValue.empty(),
+                PlatformIconGroup.actionsImport()
+            ) {
                 @Override
-                public void actionPerformed(final AnActionEvent e) {
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent e) {
                     final List<InjInfo> injections = getSelectedInjections();
                     final CfgInfo cfg = getTargetCfgInfo(injections);
                     if (cfg == null) {
@@ -270,9 +283,8 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                     TableUtil.selectRows(myInjectionsTable, selectedRows);
                 }
 
-                @RequiredUIAccess
                 @Override
-                public void update(final AnActionEvent e) {
+                public void update(@Nonnull AnActionEvent e) {
                     final CfgInfo cfg = getTargetCfgInfo(getSelectedInjections());
                     e.getPresentation().setEnabled(cfg != null);
                     e.getPresentation().setText(cfg == getDefaultCfgInfo() ? "Make Global" : "Move to Project");
@@ -308,18 +320,26 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             group.add(shareAction);
         }
         group.addSeparator();
-        group.add(new AnAction("Import", "Import", AllIcons.Actions.Install) {
-            @RequiredUIAccess
+        group.add(new AnAction(
+            LocalizeValue.localizeTODO("Import"),
+            LocalizeValue.localizeTODO("Import"),
+            PlatformIconGroup.actionsInstall()
+        ) {
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 doImportAction(e.getDataContext());
                 updateCountLabel();
             }
         });
-        group.add(new AnAction("Export", "Export", AllIcons.Actions.Export) {
-            @RequiredUIAccess
+        group.add(new AnAction(
+            LocalizeValue.localizeTODO("Export"),
+            LocalizeValue.localizeTODO("Export"),
+            PlatformIconGroup.actionsExport()
+        ) {
             @Override
-            public void actionPerformed(final AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 final List<BaseInjection> injections = getInjectionList(getSelectedInjections());
                 final VirtualFileWrapper wrapper =
                     FileChooserFactory.getInstance().createSaveFileDialog(new FileSaverDescriptor("Export Selected " + "Injections to File...", "", "xml"), myProject).save(null, null);
@@ -338,9 +358,8 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                 }
             }
 
-            @RequiredUIAccess
             @Override
-            public void update(final AnActionEvent e) {
+            public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(!getSelectedInjections().isEmpty());
             }
         });

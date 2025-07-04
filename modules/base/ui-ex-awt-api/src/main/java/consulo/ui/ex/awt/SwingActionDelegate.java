@@ -2,13 +2,14 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.dumb.DumbAware;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ public class SwingActionDelegate extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public final void actionPerformed(@Nonnull AnActionEvent event) {
     JComponent component = getComponent(event);
     Action action = getSwingAction(component);

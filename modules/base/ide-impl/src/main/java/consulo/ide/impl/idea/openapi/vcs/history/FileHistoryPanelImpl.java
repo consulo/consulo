@@ -1520,13 +1520,13 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     private class RefreshFileHistoryAction extends RefreshAction implements DumbAware {
         public RefreshFileHistoryAction() {
-            super(VcsLocalize.actionNameRefresh(), VcsLocalize.actionDesctiptionRefresh(), AllIcons.Actions.Refresh);
+            super(VcsLocalize.actionNameRefresh(), VcsLocalize.actionDesctiptionRefresh(), PlatformIconGroup.actionsRefresh());
             registerShortcutOn(FileHistoryPanelImpl.this);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             if (myInRefresh) {
                 return;
             }
@@ -1534,8 +1534,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(!myInRefresh);
         }

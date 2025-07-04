@@ -16,6 +16,7 @@
 
 package consulo.ui.ex.awt.speedSearch;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Cell;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
@@ -24,8 +25,8 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.ListIterator;
@@ -199,10 +200,15 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setEnabled(mySearch.isPopupActive() && myTable.getRowSelectionAllowed() && myTable.getSelectionModel().getSelectionMode() == MULTIPLE_INTERVAL_SELECTION);
+      e.getPresentation().setEnabled(
+        mySearch.isPopupActive()
+          && myTable.getRowSelectionAllowed()
+          && myTable.getSelectionModel().getSelectionMode() == MULTIPLE_INTERVAL_SELECTION
+      );
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       ListSelectionModel sm = myTable.getSelectionModel();
 

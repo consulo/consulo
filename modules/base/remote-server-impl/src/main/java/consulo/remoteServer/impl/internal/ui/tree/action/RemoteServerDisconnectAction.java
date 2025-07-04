@@ -21,7 +21,6 @@ public class RemoteServerDisconnectAction extends DumbAwareAction {
         super(RemoteServerLocalize.actionRemoteserversDisconnectserverText(), RemoteServerLocalize.actionRemoteserversDisconnectserverDescription(), PlatformIconGroup.actionsSuspend());
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         ServersTreeStructure.RemoteServerNode node = getRemoteServerTarget(e);
@@ -30,8 +29,8 @@ public class RemoteServerDisconnectAction extends DumbAwareAction {
         e.getPresentation().setEnabled(visible && node.isConnected());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         ServersTreeStructure.RemoteServerNode node = getRemoteServerTarget(e);
         ServerConnection<?> connection = node == null ? null : ServerConnectionManager.getInstance().getConnection(node.getValue());

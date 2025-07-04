@@ -827,9 +827,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
             myCondition = availableCondition;
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(false);
             TreePath[] selectionPath = myTree.getSelectionPaths();

@@ -42,8 +42,7 @@ public class OpenTaskInBrowserAction extends BaseTaskAction {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     if (event.getPresentation().isEnabled()) {
       Presentation presentation = event.getPresentation();
@@ -51,7 +50,7 @@ public class OpenTaskInBrowserAction extends BaseTaskAction {
       presentation.setEnabled(url != null);
       Project project = getProject(event);
       if (project == null || !TaskManager.getManager(project).getActiveTask().isIssue()) {
-        presentation.setText(getTemplatePresentation().getText());
+        presentation.setTextValue(getTemplatePresentation().getTextValue());
       } else {
         presentation.setText("Open '" + TaskManager.getManager(project).getActiveTask().getPresentableName() + "' In _Browser");
       }

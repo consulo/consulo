@@ -58,7 +58,6 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
             myServerType = serverType;
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             if (e.getPlace().equals(ActionPlaces.ACTION_SEARCH)) {
@@ -76,8 +75,8 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
             return ActionUpdateThread.EDT;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             if (project == null) {

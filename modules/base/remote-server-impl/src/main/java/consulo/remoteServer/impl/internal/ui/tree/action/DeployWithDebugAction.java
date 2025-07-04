@@ -16,13 +16,13 @@ import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.get
 @ActionImpl(id = "Servers.DeployWithDebug")
 public class DeployWithDebugAction extends DumbAwareAction {
     public DeployWithDebugAction() {
-        super(RemoteServerLocalize.actionServersDeploywithdebugText(),
+        super(
+            RemoteServerLocalize.actionServersDeploywithdebugText(),
             RemoteServerLocalize.actionServersDeploywithdebugDescription(),
             ExecutionDebugIconGroup.actionStartdebugger()
         );
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         DeploymentNode node = getDeploymentTarget(e);
@@ -31,8 +31,8 @@ public class DeployWithDebugAction extends DumbAwareAction {
         e.getPresentation().setEnabled(visible && node.isDeployActionEnabled());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         DeploymentNode node = getDeploymentTarget(e);
         if (node != null) {

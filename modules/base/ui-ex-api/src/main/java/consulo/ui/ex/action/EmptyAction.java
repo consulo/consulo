@@ -17,11 +17,12 @@ package consulo.ui.ex.action;
 
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -68,11 +69,12 @@ public final class EmptyAction extends AnAction {
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(myEnabled);
   }
 
@@ -119,12 +121,13 @@ public final class EmptyAction extends AnAction {
     }
 
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       myDelegate.update(e);
     }
 
     @Override
-    public void actionPerformed(final AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myDelegate.actionPerformed(e);
     }
 
@@ -166,7 +169,7 @@ public final class EmptyAction extends AnAction {
     }
 
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       myDelegate.update(e);
     }
 
@@ -176,7 +179,8 @@ public final class EmptyAction extends AnAction {
     }
 
     @Override
-    public void actionPerformed(final AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myDelegate.actionPerformed(e);
     }
 

@@ -16,21 +16,21 @@ import static consulo.remoteServer.impl.internal.ui.tree.ServersTreeActionUtils.
 @ActionImpl(id = "RemoteServers.ChooseServerDeploymentWithDebug")
 public class ChooseDeploymentWithDebugAction extends DumbAwareAction {
     public ChooseDeploymentWithDebugAction() {
-        super(RemoteServerLocalize.actionRemoteserversChooseserverdeploymentwithdebugText(),
+        super(
+            RemoteServerLocalize.actionRemoteserversChooseserverdeploymentwithdebugText(),
             RemoteServerLocalize.actionRemoteserversChooseserverdeploymentwithdebugDescription(),
             ExecutionDebugIconGroup.actionStartdebugger()
         );
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         ServersTreeStructure.RemoteServerNode node = getRemoteServerTarget(e);
         e.getPresentation().setEnabledAndVisible(node != null && node.getServer().getType().createDebugConnector() != null);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         ServersTreeStructure.RemoteServerNode node = getRemoteServerTarget(e);
         if (node != null) {

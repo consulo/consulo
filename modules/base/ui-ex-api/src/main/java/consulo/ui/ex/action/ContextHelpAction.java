@@ -15,13 +15,13 @@
  */
 package consulo.ui.ex.action;
 
-import consulo.application.AllIcons;
-import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ContextHelpAction extends AnAction implements DumbAware {
@@ -35,8 +35,8 @@ public class ContextHelpAction extends AnAction implements DumbAware {
     myHelpID = helpID;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     final String helpId = getHelpId(dataContext);
@@ -50,9 +50,8 @@ public class ContextHelpAction extends AnAction implements DumbAware {
     return myHelpID != null ? myHelpID : dataContext.getData(HelpManager.HELP_ID);
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
 
     if (ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
@@ -60,8 +59,8 @@ public class ContextHelpAction extends AnAction implements DumbAware {
       presentation.setEnabled(getHelpId(dataContext) != null);
     }
     else {
-      presentation.setIcon(AllIcons.Actions.Help);
-      presentation.setText(CommonBundle.getHelpButtonText());
+      presentation.setIcon(PlatformIconGroup.actionsHelp());
+      presentation.setTextValue(CommonLocalize.buttonHelp());
     }
   }
 }

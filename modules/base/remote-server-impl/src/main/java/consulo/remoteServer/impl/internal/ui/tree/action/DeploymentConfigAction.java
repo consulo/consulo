@@ -19,15 +19,14 @@ public class DeploymentConfigAction extends DumbAwareAction {
         super(RemoteServerLocalize.actionRemoteserversEditserverconfigText(), RemoteServerLocalize.actionRemoteserversEditserverconfigDescription(), PlatformIconGroup.actionsEdit());
     }
     
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         ServersTreeStructure.DeploymentNodeImpl node = getTarget(e, ServersTreeStructure.DeploymentNodeImpl.class);
         e.getPresentation().setEnabledAndVisible(node != null && node.isEditConfigurationActionVisible());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         ServersTreeStructure.DeploymentNodeImpl node = getTarget(e, ServersTreeStructure.DeploymentNodeImpl.class);
         if (node != null) {

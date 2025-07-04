@@ -65,7 +65,7 @@ public class CloseTaskAction extends BaseTaskAction
 	}
 
 	@Override
-	public void update(AnActionEvent event)
+	public void update(@Nonnull AnActionEvent event)
 	{
 		Presentation presentation = event.getPresentation();
 		Project project = getProject(event);

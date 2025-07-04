@@ -25,15 +25,15 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 13/12/2021
+ * @since 2021-12-13
  */
 public class DialogOkAction extends DumbAwareAction {
     public DialogOkAction(@Nonnull LocalizeValue actionText) {
         super(actionText, LocalizeValue.of(), null);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Dialog data = e.getRequiredData(Dialog.KEY);
 
@@ -45,7 +45,6 @@ public class DialogOkAction extends DumbAwareAction {
         }
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Dialog dialog = e.getData(Dialog.KEY);
