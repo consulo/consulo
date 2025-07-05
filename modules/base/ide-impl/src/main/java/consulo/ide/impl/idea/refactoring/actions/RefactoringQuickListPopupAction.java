@@ -98,7 +98,7 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setVisible(
       e.getPlace() == ActionPlaces.MAIN_MENU || e.getPlace() == ActionPlaces.ACTION_PLACE_QUICK_LIST_POPUP_ACTION

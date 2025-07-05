@@ -88,7 +88,6 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(e.getDataContext().getData(Project.KEY) != null);

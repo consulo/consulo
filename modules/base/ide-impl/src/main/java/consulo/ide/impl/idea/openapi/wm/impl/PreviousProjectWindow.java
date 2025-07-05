@@ -32,13 +32,12 @@ public class PreviousProjectWindow extends AnAction implements DumbAware {
     myActionManager = actionManager;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     WindowDressing.getWindowActionGroup(myActionManager).activatePreviousWindow(e);
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(WindowDressing.getWindowActionGroup(myActionManager).isEnabled());

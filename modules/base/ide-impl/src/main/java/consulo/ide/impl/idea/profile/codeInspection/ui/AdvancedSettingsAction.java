@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.profile.codeInspection.ui;
 
 import consulo.application.Application;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
@@ -36,6 +35,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -49,28 +49,26 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
   private Project myProject;
   private InspectionConfigTreeNode myRoot;
 
-  public AdvancedSettingsAction(final Project project, InspectionConfigTreeNode root) {
-    super("Advanced Settings");
-    getTemplatePresentation().setIcon(PlatformIconGroup.generalGearplain());
+  public AdvancedSettingsAction(Project project, InspectionConfigTreeNode root) {
+    super(LocalizeValue.localizeTODO("Advanced Settings"), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());
     myProject = project;
     myRoot = root;
     myCheckBoxIndent = calculateCheckBoxIndent();
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     final InspectionProfileImpl inspectionProfile = getInspectionProfile();
     final Image icon = PlatformIconGroup.generalGearplain();
     e.getPresentation().setIcon(
       (inspectionProfile != null && inspectionProfile.isProfileLocked())
-        ? ImageEffects.layered(icon, AllIcons.Nodes.Locked) : icon
+        ? ImageEffects.layered(icon, PlatformIconGroup.nodesLocked()) : icon
     );
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final ListPopupImpl actionGroupPopup = (ListPopupImpl)JBPopupFactory.getInstance().createListPopup(
       new BaseListPopupStep<MyAction>(

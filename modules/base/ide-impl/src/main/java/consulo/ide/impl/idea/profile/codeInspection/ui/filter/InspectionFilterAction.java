@@ -23,6 +23,7 @@ import consulo.application.AllIcons;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
@@ -63,7 +64,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().putClientProperty(Toggleable.SELECTED_PROPERTY, !myInspectionsFilter.isEmptyFilter());
   }
@@ -107,6 +108,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       myInspectionsFilter.reset();
     }

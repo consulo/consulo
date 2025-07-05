@@ -70,16 +70,15 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
         myEditor = consoleView.getEditor();
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         boolean isShown = myEditor.getGutter().isAnnotationsShown();
         e.getPresentation().setEnabled(!isShown && !myIsLoading);
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         myIsLoading = true;
 
         ProgressManager.getInstance().run(new Task.Backgroundable(myEditor.getProject(), "Getting File History", true) {

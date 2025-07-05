@@ -27,21 +27,17 @@ import jakarta.annotation.Nonnull;
  * @author gregsh
  */
 public class RerunSearchAction extends DumbAwareAction {
-
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
-    if (usageView instanceof UsageViewImpl) {
-      ((UsageViewImpl)usageView).refreshUsages();
+    if (e.getData(UsageView.USAGE_VIEW_KEY) instanceof UsageViewImpl usageView) {
+      usageView.refreshUsages();
     }
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
-    boolean enabled = usageView instanceof UsageViewImpl && ((UsageViewImpl)usageView).canPerformReRun();
+    boolean enabled = e.getData(UsageView.USAGE_VIEW_KEY) instanceof UsageViewImpl usageView && usageView.canPerformReRun();
     e.getPresentation().setEnabled(enabled);
   }
 }

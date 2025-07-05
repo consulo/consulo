@@ -38,7 +38,6 @@ public class PackageFileAction extends AnAction {
     );
   }
 
-  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     boolean visible = false;
@@ -82,8 +81,8 @@ public class PackageFileAction extends AnAction {
     return result;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent event) {
     final Project project = event.getData(Project.KEY);
     if (project == null) return;

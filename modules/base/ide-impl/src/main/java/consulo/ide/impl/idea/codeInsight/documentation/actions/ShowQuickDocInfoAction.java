@@ -71,8 +71,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
 
         Project project = event.getData(Project.KEY);

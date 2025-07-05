@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 26/06/2023
+ * @since 2023-06-26
  */
 public class NothingHereAction extends AnAction {
   public static final NothingHereAction INSTANCE = new NothingHereAction();
@@ -32,13 +32,11 @@ public class NothingHereAction extends AnAction {
     super(ApplicationLocalize.nothingHere());
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(false);

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.action.ComboBoxButtonImpl;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.action.CustomComponentAction;
@@ -27,7 +27,6 @@ import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.TaskSettings;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
@@ -46,21 +45,19 @@ public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
     return SwitchTaskAction.createPopup(context, onDispose, false);
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     Project project = e.getData(Project.KEY);
     if (project == null || project.isDefault() || project.isDisposed()) {
       presentation.setEnabled(false);
-      presentation.setText("");
+      presentation.setTextValue(LocalizeValue.empty());
       presentation.setIcon(null);
     }
     else {
       TaskManager taskManager = TaskManager.getManager(project);
       LocalTask activeTask = taskManager.getActiveTask();
-      presentation.setVisible(true);
-      presentation.setEnabled(true);
+      presentation.setEnabledAndVisible(true);
 
       if (isImplicit(activeTask) && taskManager.getAllRepositories().length == 0 && !TaskSettings.getInstance().ALWAYS_DISPLAY_COMBO) {
         presentation.setVisible(false);

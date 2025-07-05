@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -31,6 +32,7 @@ import java.util.List;
  */
 public class OpenSelectedProjectsAction extends RecentProjectsWelcomeScreenActionBase {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     List<AnAction> elements = getSelectedElements(e);
     e = new AnActionEvent(e.getInputEvent(), e.getDataContext(), e.getPlace(), e.getPresentation(), e.getActionManager(), InputEvent.SHIFT_MASK);

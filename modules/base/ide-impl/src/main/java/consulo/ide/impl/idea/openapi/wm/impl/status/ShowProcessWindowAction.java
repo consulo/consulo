@@ -20,14 +20,13 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
 
 public class ShowProcessWindowAction extends ToggleAction implements DumbAware {
     public ShowProcessWindowAction() {
-        super(ActionLocalize.actionShowprocesswindowText(), ActionLocalize.actionShowprocesswindowDescription(), null);
+        super(ActionLocalize.actionShowprocesswindowText(), ActionLocalize.actionShowprocesswindowDescription());
     }
 
     @Override
@@ -38,7 +37,6 @@ public class ShowProcessWindowAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(IdeFrameUtil.findFocusedRootIdeFrame() != null);

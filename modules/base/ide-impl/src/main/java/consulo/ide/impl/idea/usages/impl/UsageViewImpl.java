@@ -1162,7 +1162,6 @@ public class UsageViewImpl implements UsageViewEx {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(e.getData(Editor.KEY) == null);
         }

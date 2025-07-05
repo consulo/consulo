@@ -14,6 +14,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -80,8 +81,8 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
   }
 
   private static class HideCurrentWidgetAction extends DumbAwareAction {
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       StatusBarWidgetFactory factory = getFactory(e);
       if (factory == null) return;
@@ -92,14 +93,13 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
       }
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       StatusBarWidgetFactory factory = getFactory(e);
       e.getPresentation().setEnabledAndVisible(factory != null && factory.isConfigurable());
       if (factory != null) {
-        e.getPresentation().setText(UIBundle.message("status.bar.hide.widget.action.name", factory.getDisplayName()));
+        e.getPresentation().setTextValue(UILocalize.statusBarHideWidgetActionName(factory.getDisplayName()));
       }
     }
 

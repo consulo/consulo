@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.packageDependencies.actions;
 
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -34,11 +35,11 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
   public static final Key<GlobalSearchScope> TARGET_SCOPE_KEY = Key.create("MODULE_DEPENDENCIES_TARGET_SCOPE");
 
   public AnalyzeDependenciesOnSpecifiedTargetAction() {
-    super("Analyze Dependencies on Specified Target");
+    super(LocalizeValue.localizeTODO("Analyze Dependencies on Specified Target"));
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
     final GlobalSearchScope targetScope = e.getData(TARGET_SCOPE_KEY);
@@ -47,7 +48,6 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
     new AnalyzeDependenciesOnSpecifiedTargetHandler(module.getProject(), new AnalysisScope(module), targetScope).analyze();
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);

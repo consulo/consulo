@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
@@ -33,7 +33,7 @@ public final class GroupByScopeTypeAction extends ToggleAction {
         super(
             IdeLocalize.actionGroupByScopeType(),
             IdeLocalize.actionDescriptionGroupByScope(),
-            AllIcons.Actions.GroupByTestProduction
+            PlatformIconGroup.actionsGroupbytestproduction()
         );
         myUpdate = update;
     }
@@ -50,7 +50,7 @@ public final class GroupByScopeTypeAction extends ToggleAction {
     }
 
     @Override
-    public void update(@Nonnull final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setVisible(DependencyUISettings.getInstance().SCOPE_TYPE != ProjectPatternProvider.FILE);
     }

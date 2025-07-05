@@ -16,14 +16,17 @@
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.awt.action.CheckboxAction;
-import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-
+import consulo.ui.ex.awt.action.CheckboxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -80,43 +83,46 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
 
   private class CopyAction extends AnAction implements DumbAware {
     public CopyAction() {
-      super("Copy");
+      super(CommonLocalize.buttonCopy());
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myBuilder.copy();
     }
   }
 
   private class RenameAction extends AnAction implements DumbAware {
     public RenameAction() {
-      super("Rename");
+      super(LocalizeValue.localizeTODO("Rename"));
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myBuilder.rename();
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabledAndVisible(myBuilder.canRename());
     }
   }
 
   private class DeleteAction extends AnAction implements DumbAware {
     public DeleteAction() {
-      super("Delete");
+      super(CommonLocalize.buttonDelete());
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myBuilder.delete();
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabledAndVisible(myBuilder.canDelete());
     }
   }
@@ -127,7 +133,8 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myBuilder.editDescription();
     }
 
@@ -139,22 +146,24 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
 
   private class ExportAction extends AnAction implements DumbAware {
     public ExportAction() {
-      super("Export...");
+      super(LocalizeValue.localizeTODO("Export..."));
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myBuilder.export();
     }
   }
 
   private class ImportAction extends AnAction implements DumbAware {
     public ImportAction() {
-      super("Import...");
+      super(LocalizeValue.localizeTODO("Import..."));
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myBuilder.doImport();
     }
   }
