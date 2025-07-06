@@ -57,11 +57,11 @@ import java.util.Set;
 
 public class ShowRunningListAction extends AnAction {
     public ShowRunningListAction() {
-        super(ExecutionLocalize.showRunningListActionName(), ExecutionLocalize.showRunningListActionDescription(), null);
+        super(ExecutionLocalize.showRunningListActionName(), ExecutionLocalize.showRunningListActionDescription());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null || project.isDisposed()) {
@@ -184,7 +184,6 @@ public class ShowRunningListAction extends AnAction {
         return Pair.create(panel, state.toString());
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project[] projects = ProjectManager.getInstance().getOpenProjects();

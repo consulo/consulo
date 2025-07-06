@@ -49,9 +49,8 @@ public class StopAction extends DumbAwareAction {
       ActionPlaces.TOUCHBAR_GENERAL.equals(e.getPlace());
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(@Nonnull final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     boolean enable = false;
     Image icon = getTemplatePresentation().getIcon();
     LocalizeValue description = getTemplatePresentation().getDescriptionValue();
@@ -100,9 +99,9 @@ public class StopAction extends DumbAwareAction {
     presentation.setDescriptionValue(description);
   }
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     Project project = e.getData(Project.KEY);
     List<RunContentDescriptor> stoppableDescriptors = getActiveStoppableDescriptors(dataContext);

@@ -23,9 +23,9 @@ public final class RestoreLayoutAction extends DumbAwareAction {
         return e.getData(RunnerContentUi.KEY);
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(final @Nonnull AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         RunnerContentUi ui = getRunnerUi(e);
         if (ui != null) {
             ui.restoreLayout();
@@ -38,7 +38,7 @@ public final class RestoreLayoutAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(final @Nonnull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         RunnerContentUi runnerContentUi = getRunnerUi(e);
         boolean enabled = false;
         if (runnerContentUi != null) {

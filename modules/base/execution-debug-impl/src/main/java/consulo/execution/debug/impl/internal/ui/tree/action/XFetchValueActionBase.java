@@ -35,7 +35,6 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public abstract class XFetchValueActionBase extends AnAction {
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     for (XValueNodeImpl node : XDebuggerTreeActionBase.getSelectedNodes(e.getDataContext())) {
@@ -54,8 +53,8 @@ public abstract class XFetchValueActionBase extends AnAction {
     return false;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     List<XValueNodeImpl> nodes = XDebuggerTreeActionBase.getSelectedNodes(e.getDataContext());
     if (nodes.isEmpty()) {

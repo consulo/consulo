@@ -136,8 +136,8 @@ public abstract class ExecutorAction extends DumbAwareAction {
     }
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null) return;

@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.impl.internal.service.action;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.internal.ExternalSystemInternalAWTHelper;
@@ -24,6 +23,7 @@ import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -33,22 +33,21 @@ import jakarta.inject.Inject;
 
 /**
  * @author Denis Zhdanov
- * @since 6/14/13 1:28 PM
+ * @since 2013-06-14
  */
 public class AttachExternalProjectAction extends AnAction implements DumbAware {
-
     private final ExternalSystemInternalAWTHelper myAwtHelper;
 
     @Inject
     public AttachExternalProjectAction(ExternalSystemInternalAWTHelper awtHelper) {
         super(
             ExternalSystemLocalize.actionAttachExternalProjectText("external"),
-            ExternalSystemLocalize.actionAttachExternalProjectDescription("external")
+            ExternalSystemLocalize.actionAttachExternalProjectDescription("external"),
+            PlatformIconGroup.generalAdd()
         );
         myAwtHelper = awtHelper;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
@@ -57,8 +56,6 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
             e.getPresentation().setTextValue(ExternalSystemLocalize.actionAttachExternalProjectText(readableName));
             e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionAttachExternalProjectDescription(readableName));
         }
-
-        e.getPresentation().setIcon(AllIcons.General.Add);
     }
 
     @RequiredUIAccess

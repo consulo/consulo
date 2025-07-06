@@ -28,20 +28,26 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
-@ActionImpl(id = "AnalyzeStacktrace", parents =
-    @ActionParentRef(value = @ActionRef(id = IdeActions.ACTION_CODE_MENU), relatedToAction = @ActionRef(id = "AnalyzeMenu"), anchor = ActionRefAnchor.AFTER)
+@ActionImpl(
+    id = "AnalyzeStacktrace",
+    parents = @ActionParentRef(
+        value = @ActionRef(id = IdeActions.ACTION_CODE_MENU),
+        relatedToAction = @ActionRef(id = "AnalyzeMenu"),
+        anchor = ActionRefAnchor.AFTER
+    )
 )
 public class AnalyzeStacktraceAction extends AnAction implements DumbAware {
     public AnalyzeStacktraceAction() {
         super(ExecutionLocalize.actionAnalyzestacktraceText());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -52,9 +58,8 @@ public class AnalyzeStacktraceAction extends AnAction implements DumbAware {
         unscrambleService.showAsync();
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
     }
 }

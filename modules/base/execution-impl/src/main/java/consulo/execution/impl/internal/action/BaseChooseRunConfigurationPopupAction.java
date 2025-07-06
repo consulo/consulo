@@ -47,9 +47,7 @@ public abstract class BaseChooseRunConfigurationPopupAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        assert project != null;
-
+        Project project = e.getRequiredData(Project.KEY);
         new ChooseRunConfigurationPopup(project, getAdKey(), getDefaultExecutor(), getAlternativeExecutor()).show();
     }
 
@@ -60,8 +58,7 @@ public abstract class BaseChooseRunConfigurationPopupAction extends AnAction {
     protected abstract String getAdKey();
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         final Presentation presentation = e.getPresentation();
         final Project project = e.getData(Project.KEY);
 

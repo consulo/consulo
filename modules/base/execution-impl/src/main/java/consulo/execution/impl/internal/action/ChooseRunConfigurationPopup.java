@@ -688,7 +688,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             });
 
             if (settings.isTemporary() || dynamic) {
-                result.add(new ActionWrapper("Save configuration", AllIcons.Actions.Menu_saveall) {
+                result.add(new ActionWrapper("Save configuration", PlatformIconGroup.actionsMenu_saveall()) {
                     @Override
                     public void perform() {
                         final RunManagerEx manager = RunManagerEx.getInstanceEx(project);

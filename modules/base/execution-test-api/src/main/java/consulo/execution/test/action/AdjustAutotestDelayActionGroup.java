@@ -19,6 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.execution.test.autotest.AutoTestManager;
 import consulo.execution.ui.RunContentDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -38,19 +39,18 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
   private final DataContext myDataContext;
 
   public AdjustAutotestDelayActionGroup(@Nonnull JComponent parent) {
-    super("Set AutoTest Delay", true);
+    super(LocalizeValue.localizeTODO("Set AutoTest Delay"), true);
     myDataContext = DataManager.getInstance().getDataContext(parent);
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     RunContentDescriptor descriptor = myDataContext.getData(RunContentDescriptor.KEY);
     boolean visible = false;
     if (descriptor != null) {
       for (AnAction action : descriptor.getRestartActions()) {
-        if (action instanceof ToggleAutoTestAction) {
-          visible = ((ToggleAutoTestAction)action).isDelayApplicable();
+        if (action instanceof ToggleAutoTestAction toggleAutoTestAction) {
+          visible = toggleAutoTestAction.isDelayApplicable();
           break;
         }
       }

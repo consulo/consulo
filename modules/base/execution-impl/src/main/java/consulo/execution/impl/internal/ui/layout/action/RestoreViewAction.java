@@ -41,7 +41,7 @@ public final class RestoreViewAction extends DumbAwareToggleAction implements Vi
     }
 
     @Override
-    public void update(final @Nonnull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setText(myLayoutSettings.getDisplayName(), false);
         e.getPresentation().setEnabled(myLayoutSettings.isEnabled());

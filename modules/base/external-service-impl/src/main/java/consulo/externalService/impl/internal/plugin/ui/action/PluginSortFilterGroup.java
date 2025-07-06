@@ -48,7 +48,6 @@ public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAwa
         return false;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         PluginTab tab = e.getRequiredData(PluginTab.KEY);

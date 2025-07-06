@@ -3,26 +3,19 @@ package consulo.execution.impl.internal.service.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import static consulo.execution.impl.internal.service.ServiceViewActionProvider.getSelectedView;
 
 @ActionImpl(id = "ServiceView.AddService")
 public final class AddServiceActionGroup extends DefaultActionGroup implements DumbAware {
-
   public AddServiceActionGroup() {
-
-  }
-
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.generalAdd();
+    super(ActionLocalize.groupServiceviewAddserviceText(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
   }
 
   @Override
@@ -30,7 +23,7 @@ public final class AddServiceActionGroup extends DefaultActionGroup implements D
     return true;
   }
 
-  //  @Override
+//  @Override
 //  public @NotNull ActionUpdateThread getActionUpdateThread() {
 //    return ActionUpdateThread.BGT;
 //  }
