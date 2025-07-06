@@ -6,26 +6,24 @@ import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunManager;
 import consulo.execution.dashboard.RunDashboardRunConfigurationNode;
 import consulo.execution.localize.ExecutionLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "RunDashboard.EditConfiguration")
 public final class EditConfigurationAction extends AnAction {
+  public EditConfigurationAction() {
+    super(ActionLocalize.actionRundashboardEditconfigurationText(), LocalizeValue.empty(), PlatformIconGroup.actionsEditsource());
+  }
 
   @Nonnull
   @Override
   public ActionUpdateThread getActionUpdateThread() {
     return ActionUpdateThread.BGT;
-  }
-
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.actionsEditsource();
   }
 
   @Override
@@ -43,6 +41,7 @@ public final class EditConfigurationAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     RunDashboardRunConfigurationNode node = project == null ? null : RunDashboardActionUtils.getTarget(e);

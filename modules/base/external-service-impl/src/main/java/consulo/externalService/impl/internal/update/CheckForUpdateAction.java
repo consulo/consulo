@@ -45,7 +45,6 @@ public class CheckForUpdateAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         String place = e.getPlace();
 

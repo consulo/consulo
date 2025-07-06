@@ -76,8 +76,7 @@ public class ImportTestsGroup extends ActionGroup {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
     }
 }

@@ -39,15 +39,15 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 13.05.2024
+ * @since 2024-05-13
  */
 @ActionImpl(id = "RunDashboard.AddType", parents = @ActionParentRef(@ActionRef(type = AddServiceActionGroup.class)))
 public class AddRunConfigurationTypeAction extends DumbAwareAction {
   private static final Comparator<ConfigurationType> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
     (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName());
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null) {
@@ -114,7 +114,6 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
     popupOpener.accept(builder.createPopup());
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);

@@ -27,13 +27,12 @@ import jakarta.annotation.Nonnull;
  */
 public class XSetValueAction extends XDebuggerTreeActionBase {
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     XValueNodeImpl node = getSelectedNode(e.getDataContext());
     Presentation presentation = e.getPresentation();
     if (node instanceof WatchNode) {
-      presentation.setVisible(false);
-      presentation.setEnabled(false);
+      presentation.setEnabledAndVisible(false);
     }
     else {
       presentation.setVisible(true);

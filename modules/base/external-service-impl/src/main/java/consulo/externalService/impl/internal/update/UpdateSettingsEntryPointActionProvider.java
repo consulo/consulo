@@ -53,7 +53,6 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
             myIsPlatform = isPlatform;
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
@@ -76,8 +75,8 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
             myUpdateSettings = updateSettings;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             Application application = Application.get();
             application.restart();

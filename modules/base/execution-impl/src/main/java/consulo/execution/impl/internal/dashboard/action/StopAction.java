@@ -5,17 +5,18 @@ import consulo.annotation.component.ActionImpl;
 import consulo.execution.dashboard.RunDashboardRunConfigurationNode;
 import consulo.execution.impl.internal.ExecutionManagerImpl;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.content.Content;
-import consulo.ui.image.Image;
 import consulo.util.collection.JBIterable;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import static consulo.execution.impl.internal.dashboard.action.RunDashboardActionUtils.getLeafTargets;
 
@@ -24,18 +25,14 @@ import static consulo.execution.impl.internal.dashboard.action.RunDashboardActio
  */
 @ActionImpl(id = "RunDashboard.Stop")
 public final class StopAction extends DumbAwareAction {
+  public StopAction() {
+    super(ActionLocalize.actionRundashboardStopText(), LocalizeValue.empty(), PlatformIconGroup.actionsSuspend());
+  }
 
 //  @Override
 //  public @NotNull ActionUpdateThread getActionUpdateThread() {
 //    return ActionUpdateThread.BGT;
 //  }
-
-
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.actionsSuspend();
-  }
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
@@ -56,6 +53,7 @@ public final class StopAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null) return;

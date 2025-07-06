@@ -35,7 +35,6 @@ import java.util.List;
 
 public class StopBackgroundProcessesAction extends DumbAwareAction {
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(!getCancellableProcesses(e.getData(Project.KEY)).isEmpty());
   }

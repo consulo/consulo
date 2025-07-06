@@ -21,7 +21,6 @@ public final class ToggleShowTabLabelsAction extends DumbAwareToggleAction {
         return ActionUpdateThread.BGT;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(

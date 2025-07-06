@@ -17,7 +17,6 @@ import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 abstract class RunDashboardGroupingRuleToggleAction extends ToggleAction implements DumbAware {
-
 //  @Override
 //  public @NotNull ActionUpdateThread getActionUpdateThread() {
 //    return ActionUpdateThread.BGT;

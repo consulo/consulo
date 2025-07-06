@@ -48,7 +48,6 @@ public final class RunDashboardFilterActionGroup extends DefaultActionGroup impl
 //    return ActionUpdateThread.BGT;
 //  }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Set<ServiceViewContributor> contributors = e.getData(ServiceViewActionUtils.CONTRIBUTORS_KEY);

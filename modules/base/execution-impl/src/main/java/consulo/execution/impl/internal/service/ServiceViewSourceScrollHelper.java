@@ -1,14 +1,15 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.impl.internal.service;
 
-import consulo.application.AllIcons;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.ServiceViewManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -105,7 +106,7 @@ final class ServiceViewSourceScrollHelper {
       super(
         ExecutionLocalize.serviceViewScrollFromEditorActionName(),
         ExecutionLocalize.serviceViewScrollFromEditorActionDescription(),
-        AllIcons.General.Locate
+        PlatformIconGroup.generalLocate()
       );
       myScrollFromHandler = scrollFromHandler;
     }
@@ -126,6 +127,7 @@ final class ServiceViewSourceScrollHelper {
 //    }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Project project = e.getData(Project.KEY);
       if (project == null) return;

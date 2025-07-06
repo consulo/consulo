@@ -20,7 +20,6 @@ public class ClearConsoleAction extends DumbAwareAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     ConsoleView data = e.getData(ConsoleView.KEY);
     boolean enabled = data != null && data.getContentSize() > 0;
@@ -29,8 +28,8 @@ public class ClearConsoleAction extends DumbAwareAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final ConsoleView consoleView = e.getData(ConsoleView.KEY);
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    ConsoleView consoleView = e.getData(ConsoleView.KEY);
     if (consoleView != null) {
       consoleView.clear();
     }
