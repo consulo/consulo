@@ -32,6 +32,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nullable;
@@ -45,7 +46,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     if (!openDiff(e.getDataContext(), null)) {
       final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       Messages.showInfoMessage(component, "Comparison error was not found", "No Comparison Data Found");
@@ -89,9 +90,8 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
     return providers;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final boolean enabled;
     final DataContext dataContext = e.getDataContext();

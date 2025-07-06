@@ -15,7 +15,6 @@
  */
 package consulo.externalService.impl.internal.auth;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.builtinWebServer.BuiltInServerManager;
 import consulo.externalService.ExternalServiceConfiguration;
@@ -23,6 +22,7 @@ import consulo.externalService.impl.internal.ExternalServiceConfigurationImpl;
 import consulo.externalService.impl.internal.WebServiceApi;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -42,17 +42,16 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * @author VISTALL
- * @since 01-Mar-17
+ * @since 2017-03-01
  */
 public class LoginAction extends AnAction implements RightAlignedToolbarAction, DumbAware {
   private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
 
   public LoginAction(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
-    super("Login", null, AllIcons.Actions.LoginAvator);
+    super(LocalizeValue.localizeTODO("Login"), LocalizeValue.empty(), PlatformIconGroup.actionsLoginavatar());
     myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
@@ -62,13 +61,13 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
     String email = configuration.getEmail();
     if (email == null) {
       presentation.setText("Not authorized...");
-      presentation.setIcon(AllIcons.Actions.LoginAvator);
+      presentation.setIcon(PlatformIconGroup.actionsLoginavatar());
     }
     else {
       presentation.setTextValue(LocalizeValue.of(email));
 
       Image userIcon = configuration.getUserIcon();
-      presentation.setIcon(ObjectUtil.notNull(userIcon, AllIcons.Actions.LoginAvator));
+      presentation.setIcon(ObjectUtil.notNull(userIcon, PlatformIconGroup.actionsLoginavatar()));
     }
   }
 

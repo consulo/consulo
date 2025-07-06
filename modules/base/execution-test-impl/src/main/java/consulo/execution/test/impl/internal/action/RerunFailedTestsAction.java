@@ -22,32 +22,32 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.test.action.AbstractRerunFailedTestsAction;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 
 @ActionImpl(id = "RerunFailedTests")
 public class RerunFailedTestsAction extends AnAction {
-    @RequiredUIAccess
+    public RerunFailedTestsAction() {
+        super(
+            ActionLocalize.actionRerunfailedtestsText(),
+            ActionLocalize.actionRerunfailedtestsDescription(),
+            PlatformIconGroup.runconfigurationsRerunfailedtests()
+        );
+    }
+
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(getAction(e, false));
     }
 
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.runconfigurationsRerunfailedtests();
-    }
-
     @RequiredUIAccess
-    @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
         getAction(e, true);
     }
@@ -79,9 +79,9 @@ public class RerunFailedTestsAction extends AnAction {
         }
 
         for (AnAction action : actions) {
-            if (action instanceof AbstractRerunFailedTestsAction) {
+            if (action instanceof AbstractRerunFailedTestsAction rerunAction) {
                 if (execute) {
-                    ((AbstractRerunFailedTestsAction) action).execute(e, environment);
+                    rerunAction.execute(e, environment);
                 }
                 return true;
             }

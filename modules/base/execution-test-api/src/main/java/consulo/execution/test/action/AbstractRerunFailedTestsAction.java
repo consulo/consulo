@@ -63,7 +63,7 @@ import java.util.function.Supplier;
 
 /**
  * @author anna
- * @since 24-Dec-2008
+ * @since 2008-12-24
  */
 public class AbstractRerunFailedTestsAction extends AnAction {
   private static final Logger LOG = Logger.getInstance(AbstractRerunFailedTestsAction.class);
@@ -89,7 +89,6 @@ public class AbstractRerunFailedTestsAction extends AnAction {
     myModelProvider = modelProvider;
   }
 
-  @RequiredUIAccess
   @Override
   public final void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(isActive(e));
@@ -140,8 +139,8 @@ public class AbstractRerunFailedTestsAction extends AnAction {
     return Filter.FAILED_OR_INTERRUPTED.and(Filter.IGNORED.not());
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ExecutionEnvironment environment = e.getData(ExecutionEnvironment.KEY);
     if (environment == null) {

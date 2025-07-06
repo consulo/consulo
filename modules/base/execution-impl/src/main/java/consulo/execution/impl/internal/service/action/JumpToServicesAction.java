@@ -4,6 +4,8 @@ package consulo.execution.impl.internal.service.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.execution.impl.internal.service.ServiceView;
 import consulo.execution.impl.internal.service.ServiceViewModel;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
@@ -13,8 +15,12 @@ import static consulo.execution.impl.internal.service.ServiceViewActionProvider.
 
 @ActionImpl(id = "ServiceView.JumpToServices")
 public final class JumpToServicesAction extends DumbAwareAction {
+  public JumpToServicesAction() {
+    super(ActionLocalize.actionServiceviewJumptoservicesText());
+  }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ServiceView selectedView = getSelectedView(e);
     if (selectedView == null) return;

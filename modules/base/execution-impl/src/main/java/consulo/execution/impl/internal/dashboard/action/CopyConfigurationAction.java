@@ -10,36 +10,31 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.dashboard.RunDashboardRunConfigurationNode;
 import consulo.execution.impl.internal.configuration.RunnerAndConfigurationSettingsImpl;
 import consulo.execution.localize.ExecutionLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author konstantin.aleev
  */
 @ActionImpl(id = "RunDashboard.CopyConfiguration")
 public final class CopyConfigurationAction extends AnAction {
+    public CopyConfigurationAction() {
+        super(ActionLocalize.actionRundashboardCopyconfigurationText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy());
+    }
 
 //  @Override
 //  public @NotNull ActionUpdateThread getActionUpdateThread() {
 //    return ActionUpdateThread.BGT;
 //  }
 
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.actionsCopy();
-    }
-
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
@@ -54,8 +49,8 @@ public final class CopyConfigurationAction extends AnAction {
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         RunDashboardRunConfigurationNode node = project == null ? null : RunDashboardActionUtils.getTarget(e);

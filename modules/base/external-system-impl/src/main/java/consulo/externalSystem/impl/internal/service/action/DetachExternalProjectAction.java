@@ -15,9 +15,7 @@
  */
 package consulo.externalSystem.impl.internal.service.action;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
 import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
@@ -27,6 +25,7 @@ import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -38,25 +37,26 @@ import java.util.List;
 
 /**
  * @author Denis Zhdanov
- * @since 6/13/13 5:42 PM
+ * @since 2013-06-13
  */
 public class DetachExternalProjectAction extends AnAction implements DumbAware {
 
   public DetachExternalProjectAction() {
-    getTemplatePresentation().setTextValue(ExternalSystemLocalize.actionDetachExternalProjectText("external"));
-    getTemplatePresentation().setDescriptionValue(ExternalSystemLocalize.actionDetachExternalProjectDescription());
-    getTemplatePresentation().setIcon(AllIcons.General.Remove);
+    super(
+        ExternalSystemLocalize.actionDetachExternalProjectText("external"),
+        ExternalSystemLocalize.actionDetachExternalProjectDescription(),
+        PlatformIconGroup.generalRemove()
+    );
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
     e.getPresentation().setEnabled(info.externalProject != null);
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
     if (info.settings == null || info.localSettings == null || info.externalProject == null || info.ideProject == null
@@ -65,8 +65,8 @@ public class DetachExternalProjectAction extends AnAction implements DumbAware {
       return;
     }
     
-    e.getPresentation().setText(
-      ExternalSystemBundle.message("action.detach.external.project.text",info.externalSystemId.getReadableName())
+    e.getPresentation().setTextValue(
+        ExternalSystemLocalize.actionDetachExternalProjectText(info.externalSystemId.getReadableName())
     );
 
     ExternalSystemTasksTreeModel allTasksModel = e.getDataContext().getData(ExternalSystemDataKeys.ALL_TASKS_MODEL);

@@ -32,7 +32,6 @@ public class ShowFeatureUsageStatisticsAction extends AnAction implements DumbAw
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled((e.getData(Project.KEY)) != null);

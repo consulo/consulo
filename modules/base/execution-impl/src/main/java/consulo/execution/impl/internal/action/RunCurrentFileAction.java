@@ -14,8 +14,6 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 public class RunCurrentFileAction extends AnAction implements DumbAware {
-
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
@@ -34,8 +32,8 @@ public class RunCurrentFileAction extends AnAction implements DumbAware {
         return ActionUpdateThread.BGT;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {

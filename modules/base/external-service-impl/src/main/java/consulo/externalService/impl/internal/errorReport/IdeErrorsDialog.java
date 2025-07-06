@@ -229,15 +229,14 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             }
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             goForward();
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myIndex < myMergedMessages.size() - 1);
         }
@@ -252,15 +251,14 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             }
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             goBack();
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myIndex > 0);
         }

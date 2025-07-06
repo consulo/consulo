@@ -228,12 +228,12 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     private static class SaveTemporaryAction extends DumbAwareAction {
         public SaveTemporaryAction() {
             Presentation presentation = getTemplatePresentation();
-            presentation.setIcon(AllIcons.Actions.Menu_saveall);
+            presentation.setIcon(PlatformIconGroup.actionsMenu_saveall());
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(final AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             final Project project = e.getData(Project.KEY);
             if (project != null) {
                 RunnerAndConfigurationSettings settings = chooseTempSettings(project);
@@ -244,9 +244,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
             }
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(final AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             final Presentation presentation = e.getPresentation();
             final Project project = e.getData(Project.KEY);
             if (project == null) {
@@ -301,9 +300,9 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
             presentation.setSelectedIcon(selected ? ImageEffects.resize(AllIcons.Actions.Checked_selected, Image.DEFAULT_ICON_SIZE) : Image.empty(Image.DEFAULT_ICON_SIZE));
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             ExecutionTargetManager.setActiveTarget(myProject, myTarget);
             updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), RunManagerEx.getInstanceEx(myProject).getSelectedConfiguration(), myProject, e.getPresentation(), e.getPlace());
         }
@@ -331,16 +330,15 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
             setConfigurationIcon(presentation, myConfiguration, myProject);
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(final AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             RunManager.getInstance(myProject).setSelectedConfiguration(myConfiguration);
             updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), myConfiguration, myProject, e.getPresentation(), e.getPlace());
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(@Nonnull final AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             updateIcon(e.getPresentation());
         }

@@ -109,9 +109,6 @@ public class RunConfigurable extends BaseConfigurable {
         }
     };
 
-    private static final Image ADD_ICON = PlatformIconGroup.generalAdd();
-    private static final Image REMOVE_ICON = PlatformIconGroup.generalRemove();
-
     public static final String DIVIDER_PROPORTION = "dividerProportion";
     private static final Object DEFAULTS = new Object() {
         @Override
@@ -1185,13 +1182,13 @@ public class RunConfigurable extends BaseConfigurable {
             super(
                 ExecutionLocalize.addNewRunConfigurationAction2Name(),
                 ExecutionLocalize.addNewRunConfigurationAction2Name(),
-                ADD_ICON
+                PlatformIconGroup.generalAdd()
             );
             registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             showAddPopup(true);
         }
@@ -1295,19 +1292,18 @@ public class RunConfigurable extends BaseConfigurable {
     }
 
     private class MyRemoveAction extends AnAction implements AnActionButtonRunnable, AnActionButtonUpdater {
-
         public MyRemoveAction() {
             super(
                 ExecutionLocalize.removeRunConfigurationActionName(),
                 ExecutionLocalize.removeRunConfigurationActionName(),
-                REMOVE_ICON
+                PlatformIconGroup.generalRemove()
             );
             registerCustomShortcutSet(CommonShortcuts.getDelete(), myTree);
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             doRemove();
         }
 
@@ -1414,10 +1410,8 @@ public class RunConfigurable extends BaseConfigurable {
             }
         }
 
-
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             boolean enabled = isEnabled(e);
             e.getPresentation().setEnabled(enabled);
         }
@@ -1452,9 +1446,9 @@ public class RunConfigurable extends BaseConfigurable {
         }
 
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
             LOG.assertTrue(configuration != null);
             try {
@@ -1474,27 +1468,25 @@ public class RunConfigurable extends BaseConfigurable {
             }
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
             e.getPresentation().setEnabled(configuration != null && !(configuration.getConfiguration() instanceof UnknownRunConfiguration));
         }
     }
 
     private class MySaveAction extends AnAction {
-
         public MySaveAction() {
             super(
                 ExecutionLocalize.actionNameSaveConfiguration(),
                 LocalizeValue.empty(),
-                AllIcons.Actions.Menu_saveall
+                PlatformIconGroup.actionsMenu_saveall()
             );
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(final AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             final SingleConfigurationConfigurable<RunConfiguration> configurationConfigurable = getSelectedConfiguration();
             LOG.assertTrue(configurationConfigurable != null);
             try {
@@ -1511,9 +1503,8 @@ public class RunConfigurable extends BaseConfigurable {
             myTree.repaint();
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(final AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
             final Presentation presentation = e.getPresentation();
             final boolean enabled;
@@ -1534,8 +1525,6 @@ public class RunConfigurable extends BaseConfigurable {
      *
      * @return shift (positive) for move configuration "up" to other stable configurations. Zero means "there is nothing to change"
      */
-
-
     private int adjustOrder() {
         TreePath selectionPath = myTree.getSelectionPath();
         if (selectionPath == null) {
@@ -1574,9 +1563,9 @@ public class RunConfigurable extends BaseConfigurable {
             myDirection = direction;
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(final AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             doMove();
         }
 
@@ -1592,9 +1581,8 @@ public class RunConfigurable extends BaseConfigurable {
             doMove();
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(final AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(isEnabled(e));
         }
 
@@ -1609,13 +1597,13 @@ public class RunConfigurable extends BaseConfigurable {
             super(
                 ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsText(),
                 ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsDescription(),
-                AllIcons.General.Settings
+                PlatformIconGroup.generalSettings()
             );
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(final AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             TreeNode defaults = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot);
             if (defaults != null) {
                 final ConfigurationType configurationType = getSelectedConfigurationType();
@@ -1633,9 +1621,8 @@ public class RunConfigurable extends BaseConfigurable {
             }
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             boolean isEnabled = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot) != null;
             TreePath path = myTree.getSelectionPath();
             if (path != null) {
@@ -1657,13 +1644,13 @@ public class RunConfigurable extends BaseConfigurable {
             super(
                 ExecutionLocalize.runConfigurationCreateFolderText(),
                 ExecutionLocalize.runConfigurationCreateFolderDescription(),
-                AllIcons.Nodes.Folder
+                PlatformIconGroup.nodesFolder()
             );
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             final ConfigurationType type = getSelectedConfigurationType();
             if (type == null) {
                 return;
@@ -1694,9 +1681,8 @@ public class RunConfigurable extends BaseConfigurable {
             }
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             boolean isEnabled = false;
             boolean toMove = false;
             DefaultMutableTreeNode[] selectedNodes = getSelectedNodes();
@@ -1706,11 +1692,9 @@ public class RunConfigurable extends BaseConfigurable {
                 if (selectedType == null) {
                     selectedType = type;
                 }
-                else {
-                    if (!Comparing.equal(type, selectedType)) {
-                        isEnabled = false;
-                        break;
-                    }
+                else if (!Comparing.equal(type, selectedType)) {
+                    isEnabled = false;
+                    break;
                 }
                 NodeKind kind = getKind(node);
                 if (kind.isConfiguration() || (kind == CONFIGURATION_TYPE && node.getParent() == myRoot) || kind == FOLDER) {

@@ -26,11 +26,12 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 public class EditRunConfigurationsAction extends DumbAwareAction {
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(final AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
         if (project == null) {
@@ -43,9 +44,8 @@ public class EditRunConfigurationsAction extends DumbAwareAction {
         editor.editAll();
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setEnabled(true);
 
