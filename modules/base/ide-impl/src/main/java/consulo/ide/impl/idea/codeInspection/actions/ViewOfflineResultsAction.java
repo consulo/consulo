@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
@@ -45,6 +44,7 @@ import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -57,7 +57,6 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -71,12 +70,10 @@ import java.util.Set;
  */
 public class ViewOfflineResultsAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(ViewOfflineResultsAction.class);
-  @NonNls
   private static final String XML_EXTENSION = "xml";
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     final Presentation presentation = event.getPresentation();
     final Project project = event.getData(Project.KEY);
     presentation.setEnabled(project != null);
@@ -85,7 +82,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent event) {
+  public void actionPerformed(@Nonnull AnActionEvent event) {
     final Project project = event.getData(Project.KEY);
 
     LOG.assertTrue(project != null);
@@ -96,7 +93,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
         public Image getIcon(VirtualFile file) {
           if (file.isDirectory()) {
             if (file.findChild(InspectionApplication.DESCRIPTIONS + ".xml") != null) {
-              return AllIcons.Nodes.InspectionResults;
+              return PlatformIconGroup.nodesInspectionresults();
             }
           }
           return super.getIcon(file);

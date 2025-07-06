@@ -27,6 +27,7 @@ import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.localize.DaemonLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -75,7 +76,6 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
             myTooltipReloader.reload(state);
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(myEnabled);
@@ -88,7 +88,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         private final boolean myEnabled;
 
         private ShowActionsAction(TooltipReloader tooltipReloader, boolean enabled) {
-            super("Show Quick Fixes");
+            super(LocalizeValue.localizeTODO("Show Quick Fixes"));
             myTooltipReloader = tooltipReloader;
             myEnabled = enabled;
         }
@@ -104,7 +104,6 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
             myTooltipReloader.reload(myCurrentWidth > 0);
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(myEnabled);

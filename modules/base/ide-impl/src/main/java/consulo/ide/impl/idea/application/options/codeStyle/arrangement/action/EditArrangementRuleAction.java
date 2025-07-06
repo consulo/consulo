@@ -27,22 +27,21 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 10/29/12 11:01 AM
+ * @since 2012-10-29
  */
 public class EditArrangementRuleAction extends AbstractArrangementRuleAction implements DumbAware, Toggleable {
     public EditArrangementRuleAction() {
         super(ApplicationLocalize.arrangementActionRuleEditText(), ApplicationLocalize.arrangementActionRuleEditDescription(), PlatformIconGroup.actionsEdit());
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         ArrangementMatchingRulesControl control = getRulesControl(e);
         e.getPresentation().setEnabled(control != null && control.getSelectedModelRows().size() == 1);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         ArrangementMatchingRulesControl control = getRulesControl(e);
         if (control == null) {

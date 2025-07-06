@@ -15,27 +15,31 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
+import consulo.application.localize.ApplicationLocalize;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementGroupingRulesControl;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.ApplicationBundle;
 import consulo.application.dumb.DumbAware;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.table.DefaultTableModel;
 
 /**
  * @author Denis Zhdanov
- * @since 11/14/12 10:47 AM
+ * @since 2012-11-14
  */
 public class MoveArrangementGroupingRuleDownAction extends AnAction implements DumbAware {
 
   public MoveArrangementGroupingRuleDownAction() {
-    getTemplatePresentation().setText(ApplicationBundle.message("arrangement.action.rule.move.down.text"));
-    getTemplatePresentation().setDescription(ApplicationBundle.message("arrangement.action.rule.move.down.description"));
+    super(
+        ApplicationLocalize.arrangementActionRuleMoveDownText(),
+        ApplicationLocalize.arrangementActionRuleMoveDownDescription()
+    );
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     ArrangementGroupingRulesControl control = e.getData(ArrangementGroupingRulesControl.KEY);
     if (control == null) {
       e.getPresentation().setEnabled(false);
@@ -47,6 +51,7 @@ public class MoveArrangementGroupingRuleDownAction extends AnAction implements D
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     ArrangementGroupingRulesControl control = e.getData(ArrangementGroupingRulesControl.KEY);
     if (control == null) {

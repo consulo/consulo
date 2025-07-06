@@ -33,8 +33,8 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
     setEnabledInModalContext(true);
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     Project project = dataContext.getData(Project.KEY);
@@ -44,7 +44,6 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
     new IncrementalSearchHandler().invoke(project, editor);
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();

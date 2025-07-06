@@ -62,8 +62,8 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
 
     protected abstract boolean isFileToClose(FileEditorComposite editor, FileEditorWindow window);
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
         FileEditorWindow editorWindow = e.getData(FileEditorWindow.DATA_KEY);
@@ -80,9 +80,8 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
             });
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
         boolean inSplitter = editorWindow != null && editorWindow.inSplitter();

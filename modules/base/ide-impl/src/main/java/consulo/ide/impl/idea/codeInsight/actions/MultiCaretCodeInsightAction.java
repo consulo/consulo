@@ -79,7 +79,6 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         final Presentation presentation = e.getPresentation();
 

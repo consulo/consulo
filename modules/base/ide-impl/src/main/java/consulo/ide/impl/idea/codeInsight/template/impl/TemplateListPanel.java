@@ -676,8 +676,8 @@ public class TemplateListPanel extends JPanel implements Disposable {
             .disableDownAction()
             .disableUpAction()
             .addExtraAction(new AnAction(CodeInsightLocalize.actionAnactionbuttonTemplateListTextDuplicate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {
                     copyRow();
                 }
@@ -698,9 +698,8 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
     private void installPopup() {
         final DumbAwareAction rename = new DumbAwareAction(IdeLocalize.actionAnonymousTextRename()) {
-            @RequiredUIAccess
             @Override
-            public void update(AnActionEvent e) {
+            public void update(@Nonnull AnActionEvent e) {
                 final int selected = getSingleSelectedIndex();
                 final TemplateGroup templateGroup = getGroup(selected);
                 boolean enabled = templateGroup != null;
@@ -709,8 +708,8 @@ public class TemplateListPanel extends JPanel implements Disposable {
                 super.update(e);
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 renameGroup();
             }
@@ -718,9 +717,8 @@ public class TemplateListPanel extends JPanel implements Disposable {
         rename.registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_RENAME).getShortcutSet(), myTree);
 
         final DefaultActionGroup move = new DefaultActionGroup(CodeInsightLocalize.actionTextMove(), true) {
-            @RequiredUIAccess
             @Override
-            public void update(AnActionEvent e) {
+            public void update(@Nonnull AnActionEvent e) {
                 final Map<TemplateImpl, DefaultMutableTreeNode> templates = getSelectedTemplates();
                 boolean enabled = !templates.isEmpty();
                 e.getPresentation().setEnabled(enabled);

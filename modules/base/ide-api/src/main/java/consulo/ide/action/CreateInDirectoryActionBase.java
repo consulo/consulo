@@ -55,9 +55,8 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
     super(text, description, icon);
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (!e.getPresentation().isVisible()) {
       return;
     }

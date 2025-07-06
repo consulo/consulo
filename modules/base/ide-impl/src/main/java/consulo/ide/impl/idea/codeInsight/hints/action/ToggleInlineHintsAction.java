@@ -38,7 +38,6 @@ public class ToggleInlineHintsAction extends DumbAwareAction {
         return ActionUpdateThread.BGT;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
@@ -59,8 +58,8 @@ public class ToggleInlineHintsAction extends DumbAwareAction {
         presentation.setEnabledAndVisible(true);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         PsiFile file = e.getData(PsiFile.KEY);
         Project project = e.getData(Project.KEY);

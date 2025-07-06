@@ -30,11 +30,12 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 public class CodeInspectionOnEditorAction extends AnAction {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     Project project = dataContext.getData(Project.KEY);
     if (project == null){
@@ -59,8 +60,7 @@ public class CodeInspectionOnEditorAction extends AnAction {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Project project = dataContext.getData(Project.KEY);
     final PsiFile psiFile = dataContext.getData(PsiFile.KEY);

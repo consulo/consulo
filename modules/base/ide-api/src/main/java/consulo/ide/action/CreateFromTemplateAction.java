@@ -65,8 +65,8 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     super(text, description, icon);
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public final void actionPerformed(@Nonnull AnActionEvent e) {
     final IdeView view = e.getData(IdeView.KEY);
     if (view == null) {
@@ -125,7 +125,6 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     return null;
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     if (!e.getPresentation().isVisible()) {

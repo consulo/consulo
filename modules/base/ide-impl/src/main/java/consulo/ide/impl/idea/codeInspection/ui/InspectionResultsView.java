@@ -61,6 +61,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
@@ -82,7 +83,6 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -108,7 +108,6 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
   private OccurenceNavigator myOccurenceNavigator;
   private InspectionProfile myInspectionProfile;
   private final AnalysisScope myScope;
-  @NonNls
   private static final String HELP_ID = "reference.toolWindows.inspections";
   private final Map<HighlightDisplayLevel, InspectionSeverityGroupNode> mySeverityGroupNodes = new TreeMap<>(
     (o1, o2) -> {
@@ -288,8 +287,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
       }
 
       @Override
-      @RequiredUIAccess
-      public void update(@Nonnull final AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         final TreePath path = myTree.getSelectionPath();
         e.getPresentation().setEnabled(path != null && !myGlobalInspectionContext.getUIOptions().FILTER_RESOLVED_ITEMS);
       }
@@ -302,14 +300,13 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
       @Override
       @RequiredUIAccess
-      public void actionPerformed(@Nonnull final AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         ((InspectionTreeNode)myTree.getSelectionPath().getLastPathComponent()).ignoreElement();
         updateView(false);
       }
 
       @Override
-      @RequiredUIAccess
-      public void update(@Nonnull final AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         final TreePath path = myTree.getSelectionPath();
         e.getPresentation().setEnabled(path != null);
       }
@@ -888,13 +885,12 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
       super(
         InspectionLocalize.inspectionActionRerun(),
         InspectionLocalize.inspectionActionRerun(),
-        AllIcons.Actions.Rerun
+        PlatformIconGroup.actionsRerun()
       );
       registerCustomShortcutSet(CommonShortcuts.getRerun(), comp);
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(myScope.isValid());
     }

@@ -44,10 +44,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
-/*
+/**
  * @author mike
  * @since 2002-08-20
  */
@@ -58,7 +59,7 @@ public class SaveAsTemplateAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Editor editor = Objects.requireNonNull(dataContext.getData(Editor.KEY));
         PsiFile file = Objects.requireNonNull(dataContext.getData(PsiFile.KEY));
@@ -170,8 +171,7 @@ public class SaveAsTemplateAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Editor editor = dataContext.getData(Editor.KEY);
         PsiFile file = dataContext.getData(PsiFile.KEY);

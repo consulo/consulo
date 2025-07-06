@@ -48,7 +48,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull final AnActionEvent e) {
+    public final void actionPerformed(@Nonnull AnActionEvent e) {
         boolean state = !isSelected(e);
         setSelected(e, state);
         Presentation presentation = e.getPresentation();

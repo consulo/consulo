@@ -313,7 +313,7 @@ public class ConsoleHistoryController {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull final AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             String command;
             if (myNext) {
                 command = getModel().getHistoryNext();
@@ -329,7 +329,6 @@ public class ConsoleHistoryController {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             boolean enabled = myMultiline || !isUpDownKey(e) || canMoveInEditor(myNext);
@@ -364,8 +363,7 @@ public class ConsoleHistoryController {
 
     private class MyBrowseAction extends DumbAwareAction {
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             boolean enabled = hasHistory();
             e.getPresentation().setEnabled(enabled);
         }
