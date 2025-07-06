@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.impl.internal.highlight;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.PluginException;
 import consulo.document.util.TextRange;
@@ -38,7 +39,8 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     private ExternalAnnotator<?, ?> myExternalAnnotator;
 
     /**
-     * @deprecated Do not instantiate the AnnotationHolderImpl directly, please use the one provided to {@link Annotator#annotate(PsiElement, AnnotationHolder)} instead
+     * @deprecated Do not instantiate the AnnotationHolderImpl directly, please use the one provided to
+     * {@link Annotator#annotate(PsiElement, AnnotationHolder)} instead
      */
     @Deprecated
     public AnnotationHolderImpl(@Nonnull AnnotationSession session) {
@@ -60,6 +62,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
+    @RequiredReadAction
     public Annotation createErrorAnnotation(@Nonnull PsiElement elt, String message) {
         assertMyFile(elt);
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
@@ -341,14 +344,14 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
 
     @Nonnull
     @Override
-    public AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
-        return new B(this, severity, message, myCurrentElement, ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
+    public AnnotationBuilder newOfSeverity(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
+        return new AnnotationBuilderImpl(this, severity, message, myCurrentElement, ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
     }
 
     @Nonnull
     @Override
     public AnnotationBuilder newSilentAnnotation(@Nonnull HighlightSeverity severity) {
-        return new B(
+        return new AnnotationBuilderImpl(
             this,
             severity,
             LocalizeValue.of(),
@@ -376,9 +379,9 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     // to assert each AnnotationBuilder did call .create() in the end
-    private final List<B> myCreatedAnnotationBuilders = new ArrayList<>();
+    private final List<AnnotationBuilderImpl> myCreatedAnnotationBuilders = new ArrayList<>();
 
-    void annotationBuilderCreated(@Nonnull B builder) {
+    void annotationBuilderCreated(@Nonnull AnnotationBuilderImpl builder) {
         synchronized (myCreatedAnnotationBuilders) {
             myCreatedAnnotationBuilders.add(builder);
         }
@@ -387,7 +390,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     public void assertAllAnnotationsCreated() {
         synchronized (myCreatedAnnotationBuilders) {
             try {
-                for (B builder : myCreatedAnnotationBuilders) {
+                for (AnnotationBuilderImpl builder : myCreatedAnnotationBuilders) {
                     builder.assertAnnotationCreated();
                 }
             }
@@ -397,7 +400,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         }
     }
 
-    void annotationCreatedFrom(@Nonnull B builder) {
+    void annotationCreatedFrom(@Nonnull AnnotationBuilderImpl builder) {
         synchronized (myCreatedAnnotationBuilders) {
             myCreatedAnnotationBuilders.remove(builder);
         }

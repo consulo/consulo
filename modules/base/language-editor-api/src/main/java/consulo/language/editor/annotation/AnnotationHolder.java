@@ -206,7 +206,93 @@ public interface AnnotationHolder {
     @Contract(pure = true)
     @Nonnull
     default AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
+        return newOfSeverity(severity, message);
+    }
+
+    /**
+     * Begin constructing a new annotation.
+     * To finish construction and show the annotation on screen {@link AnnotationBuilder#create()} must be called.
+     * For example: <p>{@code holder.newOfSeverity(HighlightSeverity.WARNING, "My warning message").create();}</p>
+     *
+     * @param severity The severity of the annotation.
+     * @param message  The message this annotation will show in the status bar and the tooltip.
+     * @apiNote The builder created by this method is already initialized by the current element,
+     * i.e. the psiElement currently visited by inspection visitor. You'll need to call {@link AnnotationBuilder#range(TextRange)}
+     * or similar method explicitly only if target element differs from current element.
+     * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    default AnnotationBuilder newOfSeverity(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
         throw new IllegalStateException("Please do not override AnnotationHolder, use the standard provided one instead");
+    }
+
+    /**
+     * Begin constructing a new annotation with severity {@link HighlightSeverity#ERROR}.
+     * To finish construction and show the annotation on screen {@link AnnotationBuilder#create()} must be called.
+     * For example: <p>{@code holder.newError("My error message").create();}</p>
+     *
+     * @param message  The message this annotation will show in the status bar and the tooltip.
+     * @apiNote The builder created by this method is already initialized by the current element,
+     * i.e. the psiElement currently visited by inspection visitor. You'll need to call {@link AnnotationBuilder#range(TextRange)}
+     * or similar method explicitly only if target element differs from current element.
+     * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    default AnnotationBuilder newError(@Nonnull LocalizeValue message) {
+        return newOfSeverity(HighlightSeverity.ERROR, message);
+    }
+
+    /**
+     * Begin constructing a new annotation with severity {@link HighlightSeverity#WARNING}.
+     * To finish construction and show the annotation on screen {@link AnnotationBuilder#create()} must be called.
+     * For example: <p>{@code holder.newWarning("My warning message").create();}</p>
+     *
+     * @param message  The message this annotation will show in the status bar and the tooltip.
+     * @apiNote The builder created by this method is already initialized by the current element,
+     * i.e. the psiElement currently visited by inspection visitor. You'll need to call {@link AnnotationBuilder#range(TextRange)}
+     * or similar method explicitly only if target element differs from current element.
+     * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    default AnnotationBuilder newWarn(@Nonnull LocalizeValue message) {
+        return newOfSeverity(HighlightSeverity.WARNING, message);
+    }
+
+    /**
+     * Begin constructing a new annotation with severity {@link HighlightSeverity#WEAK_WARNING}.
+     * To finish construction and show the annotation on screen {@link AnnotationBuilder#create()} must be called.
+     * For example: <p>{@code holder.newWeakWarn("My warning message").create();}</p>
+     *
+     * @param message  The message this annotation will show in the status bar and the tooltip.
+     * @apiNote The builder created by this method is already initialized by the current element,
+     * i.e. the psiElement currently visited by inspection visitor. You'll need to call {@link AnnotationBuilder#range(TextRange)}
+     * or similar method explicitly only if target element differs from current element.
+     * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    default AnnotationBuilder newWeakWarn(@Nonnull LocalizeValue message) {
+        return newOfSeverity(HighlightSeverity.WEAK_WARNING, message);
+    }
+
+    /**
+     * Begin constructing a new annotation with severity {@link HighlightSeverity#INFORMATION}.
+     * To finish construction and show the annotation on screen {@link AnnotationBuilder#create()} must be called.
+     * For example: <p>{@code holder.newInfo("My warning message").create();}</p>
+     *
+     * @param message  The message this annotation will show in the status bar and the tooltip.
+     * @apiNote The builder created by this method is already initialized by the current element,
+     * i.e. the psiElement currently visited by inspection visitor. You'll need to call {@link AnnotationBuilder#range(TextRange)}
+     * or similar method explicitly only if target element differs from current element.
+     * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    default AnnotationBuilder newInfo(@Nonnull LocalizeValue message) {
+        return newOfSeverity(HighlightSeverity.INFORMATION, message);
     }
 
     /**
@@ -223,9 +309,9 @@ public interface AnnotationHolder {
     @Contract(pure = true)
     @Nonnull
     @Deprecated
-    @DeprecationInfo("Use newAnnotation(HighlightSeverity, LocalizeValue)")
+    @DeprecationInfo("Use newOfSeverity(HighlightSeverity, LocalizeValue)")
     default AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull String message) {
-        return newAnnotation(severity, LocalizeValue.of(message));
+        return newOfSeverity(severity, LocalizeValue.of(message));
     }
 
     /**

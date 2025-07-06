@@ -17,9 +17,12 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Function;
 
 public interface AnnotationBuilder {
     /**
@@ -160,6 +163,17 @@ public interface AnnotationBuilder {
     AnnotationBuilder withFix(@Nonnull IntentionAction fix);
 
     /**
+     * Registers quick fix for this annotation if it is not null.
+     * If you want to tweak the fix, e.g. modify its range, please use {@link #newFix(IntentionAction)} instead.
+     * This is an intermediate method in the creating new annotation pipeline.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    default AnnotationBuilder withOptionalFix(@Nullable IntentionAction fix) {
+        return fix != null ? withFix(fix) : this;
+    }
+
+    /**
      * Begin registration of the new quickfix associated with the annotation.
      * A typical code looks like this: <p>{@code holder.newFix(action).range(fixRange).registerFix()}</p>
      *
@@ -222,6 +236,14 @@ public interface AnnotationBuilder {
         @Contract(pure = true)
         @Nonnull
         AnnotationBuilder registerFix();
+    }
+
+    /**
+     * Applies user defined operation to this builder.
+     * This is an intermediate method in the creating new annotation pipeline.
+     */
+    default AnnotationBuilder apply(@Nonnull Function<AnnotationBuilder, AnnotationBuilder> builderFunction) {
+        return builderFunction.apply(this);
     }
 
     /**

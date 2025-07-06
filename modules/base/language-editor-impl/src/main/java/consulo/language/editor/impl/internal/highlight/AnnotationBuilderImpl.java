@@ -3,6 +3,7 @@ package consulo.language.editor.impl.internal.highlight;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationProperties;
+import consulo.application.ReadAction;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -29,9 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-class B implements AnnotationBuilder {
-    private static final BiFunction<LocalizeManager, String, String> TOOLTIP_ESCAPE = (localizeManager, message) ->
-        XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
+class AnnotationBuilderImpl implements AnnotationBuilder {
+    private static final BiFunction<LocalizeManager, String, String> TOOLTIP_ESCAPE =
+        (localizeManager, message) -> XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
 
     @Nonnull
     private final AnnotationHolderImpl myHolder;
@@ -52,12 +53,12 @@ class B implements AnnotationBuilder {
     private TextAttributesKey textAttributesKey;
     private ProblemHighlightType highlightType;
     private Boolean needsUpdateOnTyping;
-    private LocalizeValue myTooltip = LocalizeValue.of();
+    private LocalizeValue myTooltip = LocalizeValue.empty();
     private List<FixB> fixes;
     private boolean created;
     private final Throwable myDebugCreationPlace;
 
-    B(
+    AnnotationBuilderImpl(
         @Nonnull AnnotationHolderImpl holder,
         @Nonnull HighlightSeverity severity,
         @Nonnull LocalizeValue message,
@@ -152,7 +153,7 @@ class B implements AnnotationBuilder {
                 fixes = new ArrayList<>();
             }
             fixes.add(this);
-            return B.this;
+            return AnnotationBuilderImpl.this;
         }
 
         @Override
@@ -381,7 +382,7 @@ class B implements AnnotationBuilder {
             ", myCurrentElement=" + myCurrentElement + " (" + myCurrentElement.getClass() + ")" +
             ", myCurrentAnnotator=" + myCurrentAnnotator +
             ", severity=" + mySeverity +
-            ", range=" + (range == null ? "(implicit)" + myCurrentElement.getTextRange() : range) +
+            ", range=" + (range == null ? "(implicit)" + ReadAction.compute(myCurrentElement::getTextRange) : range) +
             omitIfEmpty(afterEndOfLine, "afterEndOfLine") +
             omitIfEmpty(fileLevel, "fileLevel") +
             omitIfEmpty(gutterIconRenderer, "gutterIconRenderer") +
