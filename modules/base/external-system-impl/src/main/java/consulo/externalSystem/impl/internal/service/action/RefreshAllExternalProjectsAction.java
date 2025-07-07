@@ -17,6 +17,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +31,14 @@ import java.util.List;
  */
 public class RefreshAllExternalProjectsAction extends AnAction implements DumbAware {
     public RefreshAllExternalProjectsAction() {
-        getTemplatePresentation().setTextValue(ExternalSystemLocalize.actionRefreshAllProjectsText("external"));
-        getTemplatePresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshAllProjectsDescription("external"));
+        super(
+            ExternalSystemLocalize.actionRefreshAllExternalProjectsText(),
+            ExternalSystemLocalize.actionRefreshAllExternalProjectsDescription()
+        );
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Project project = e.getDataContext().getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);
@@ -49,9 +51,9 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
             return;
         }
 
-        String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getReadableName().get(), ",");
-        e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshAllProjectsText(name));
-        e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshAllProjectsDescription(name));
+        String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getDisplayName().get(), ",");
+        e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshAllExternalProjects0Text(name));
+        e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshAllExternalProjects0Description(name));
 
         ExternalSystemProcessingManager processingManager = Application.get().getInstance(ExternalSystemProcessingManager.class);
         e.getPresentation().setEnabled(!processingManager.hasTaskOfTypeInProgress(ExternalSystemTaskType.RESOLVE_PROJECT, project));

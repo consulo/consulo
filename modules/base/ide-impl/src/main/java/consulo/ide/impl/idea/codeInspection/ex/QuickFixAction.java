@@ -76,7 +76,6 @@ public class QuickFixAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         final InspectionResultsView view = getInvoker(e);
         if (view == null) {
@@ -108,9 +107,9 @@ public class QuickFixAction extends AnAction {
         return getTemplatePresentation().getText();
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         final InspectionResultsView view = getInvoker(e);
         final InspectionTree tree = view.getTree();
         if (isProblemDescriptorsAcceptable()) {
@@ -123,7 +122,6 @@ public class QuickFixAction extends AnAction {
 
         doApplyFix(getSelectedElements(e), view);
     }
-
 
     protected void applyFix(
         @Nonnull Project project,

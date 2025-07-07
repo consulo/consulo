@@ -33,11 +33,9 @@ import jakarta.annotation.Nonnull;
  * Arranges content at the target file(s).
  *
  * @author Denis Zhdanov
- * @since 8/30/12 10:01 AM
+ * @since 2012-08-30
  */
 public class RearrangeCodeAction extends AnAction {
-
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     PsiFile file = e.getDataContext().getData(PsiFile.KEY);
@@ -45,8 +43,8 @@ public class RearrangeCodeAction extends AnAction {
     e.getPresentation().setEnabled(enabled);
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getData(Project.KEY);
     if (project == null) {

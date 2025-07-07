@@ -90,8 +90,8 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         return true;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 

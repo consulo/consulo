@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.execution.actions;
 
-import consulo.application.AllIcons;
 import consulo.execution.icon.ExecutionIconGroup;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.KillableProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessHandlerStopper;
@@ -36,13 +36,12 @@ public class StopProcessAction extends DumbAwareAction {
   private final ProcessHandler myProcessHandler;
 
   public StopProcessAction(@Nonnull String text, @Nullable String description, @Nonnull ProcessHandler processHandler) {
-    super(text, description, AllIcons.Actions.Suspend);
+    super(text, description, PlatformIconGroup.actionsSuspend());
     myProcessHandler = processHandler;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     update(e.getPresentation(), getTemplatePresentation(), myProcessHandler);
   }
 
@@ -69,9 +68,9 @@ public class StopProcessAction extends DumbAwareAction {
   }
 
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     ProcessHandlerStopper.stop(myProcessHandler);
   }
 }

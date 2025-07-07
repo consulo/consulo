@@ -28,7 +28,6 @@ public class DisableDeclarativeInlayAction extends AnAction implements DumbAware
         return ActionUpdateThread.BGT;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
         LocalizeValue providerName = e.getData(DeclarativeInlayHintsProvider.PROVIDER_NAME);

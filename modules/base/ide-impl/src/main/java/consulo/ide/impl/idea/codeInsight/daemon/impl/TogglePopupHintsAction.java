@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -50,9 +51,8 @@ public class TogglePopupHintsAction extends AnAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
-    PsiFile psiFile = getTargetFile(e.getDataContext());
+    PsiFile psiFile = ReadAction.compute(() -> getTargetFile(e.getDataContext()));
     e.getPresentation().setEnabled(psiFile != null);
   }
 
@@ -61,8 +61,7 @@ public class TogglePopupHintsAction extends AnAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     PsiFile psiFile = getTargetFile(e.getDataContext());
     LOG.assertTrue(psiFile != null);
-    Project project = e.getData(Project.KEY);
-    LOG.assertTrue(project != null);
+    Project project = e.getRequiredData(Project.KEY);
     DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
     codeAnalyzer.setImportHintsEnabled(psiFile, !codeAnalyzer.isImportHintsEnabled(psiFile));
   }

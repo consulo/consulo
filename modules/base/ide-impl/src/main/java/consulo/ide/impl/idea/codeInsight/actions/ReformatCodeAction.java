@@ -57,8 +57,8 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     private static final String HELP_ID = "editing.codeReformatting";
     protected static ReformatFilesOptions myTestOptions;
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent event) {
         DataContext dataContext = event.getDataContext();
         Project project = dataContext.getData(Project.KEY);
@@ -294,7 +294,6 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         return PsiUtilCore.toPsiFileArray(result);
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();

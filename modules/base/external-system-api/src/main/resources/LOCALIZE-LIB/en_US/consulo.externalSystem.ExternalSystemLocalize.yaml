@@ -50,26 +50,46 @@ error.resolve.with.reason:
 error.resolve.generic:
   text: Resolve error
 error.resolve.already.running:
-  text: 'Another ''refresh project'' task is currently running for the project:  {0}'
-action.refresh.all.projects.text:
-  text: Refresh all {0} projects
-action.refresh.all.projects.description:
+  text: 'Another ''refresh project'' task is currently running for the project: {0}'
+action.refresh.all.external.projects.text:
+  text: Refresh All External Projects
+action.refresh.all.external.projects.0.text:
+  text: Refresh All {0} Projects
+action.refresh.all.external.projects.description:
+  text: Force refresh all linked external projects
+action.refresh.all.external.projects.0.description:
   text: Force refresh all linked {0} projects
-action.refresh.project.text:
-  text: Refresh {0} project
-action.refresh.project.description:
+action.refresh.external.project.text:
+  text: Refresh External Project
+action.refresh.external.project.0.text:
+  text: Refresh {0} Project
+action.refresh.external.project.description:
+  text: Force refresh selected linked external project
+action.refresh.external.project.0.description:
   text: Force refresh selected linked {0} project
 action.attach.external.project.text:
-  text: Attach {0} project
+  text: Attach External Project
+action.attach.external.project.0.text:
+  text: Attach {0} Project
 action.attach.external.project.description:
-  text: Attach {0} project to the current ide project
+  text: Attach external project to the current IDE project
+action.attach.external.project.0.description:
+  text: Attach {0} project to the current IDE project
 action.detach.external.project.text:
-  text: Detach {0} project
+  text: Detach External Project
+action.detach.external.project.0.text:
+  text: Detach {0} Project
 action.detach.external.project.description:
   text: Detach selected external project
-action.open.config.text:
-  text: Open {0} config
-action.open.config.description:
+action.detach.external.project.0.description:
+  text: Detach selected {0} project
+action.open.external.config.text:
+  text: Open External Config
+action.open.external.config.0.text:
+  text: Open {0} Config
+action.open.external.config.description:
+  text: Allows to open project file of the linked external project at the editor
+action.open.external.config.0.description:
   text: Allows to open project file of the linked {0} project at the editor
 notification.project.refresh.fail.title:
   text: '{0} ''''{1}'''' project refresh failed'
