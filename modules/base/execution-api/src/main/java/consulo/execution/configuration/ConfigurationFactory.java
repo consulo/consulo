@@ -121,11 +121,11 @@ public abstract class ConfigurationFactory {
   }
 
   public boolean isConfigurationSingletonByDefault() {
-    return false;
+    return true;
   }
 
   public boolean canConfigurationBeSingleton() {
-    return true; // Configuration may be marked as singleton by default
+    return true;
   }
 
   public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {

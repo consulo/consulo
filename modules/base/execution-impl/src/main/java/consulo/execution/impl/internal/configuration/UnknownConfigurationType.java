@@ -62,7 +62,7 @@ public class UnknownConfigurationType implements ConfigurationType {
   public ConfigurationFactory[] getConfigurationFactories() {
     return new ConfigurationFactory[]{new ConfigurationFactory(new UnknownConfigurationType()) {
       @Override
-      public RunConfiguration createTemplateConfiguration(final Project project) {
+      public RunConfiguration createTemplateConfiguration(Project project) {
         return new UnknownRunConfiguration(this, project);
       }
 

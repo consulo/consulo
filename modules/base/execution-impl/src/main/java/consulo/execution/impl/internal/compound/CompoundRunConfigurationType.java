@@ -48,16 +48,6 @@ public class CompoundRunConfigurationType extends ConfigurationTypeBase {
         // this is hardcode string as id - never localize it
         return "Compound Run Configuration";
       }
-
-      @Override
-      public boolean isConfigurationSingletonByDefault() {
-        return true;
-      }
-
-      @Override
-      public boolean canConfigurationBeSingleton() {
-        return false;
-      }
     });
   }
 }
