@@ -49,7 +49,6 @@ public class ShowDiffWithLocalAction extends DumbAwareAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     VcsFileRevision[] selectedRevisions = e.getData(VcsDataKeys.VCS_FILE_REVISIONS);
     VirtualFile virtualFile = e.getData(VirtualFile.KEY);

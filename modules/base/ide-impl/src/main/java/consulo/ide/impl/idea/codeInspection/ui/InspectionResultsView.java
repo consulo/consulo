@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.ui;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -836,7 +835,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
       super(
         InspectionLocalize.inspectionActionEditSettings(),
         InspectionLocalize.inspectionActionEditSettings(),
-        AllIcons.General.Settings
+        PlatformIconGroup.generalSettings()
       );
     }
 
@@ -891,7 +890,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myScope.isValid());
     }
 

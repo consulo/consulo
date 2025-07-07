@@ -61,9 +61,8 @@ public abstract class MethodsBasedAction<T extends LanguageCodeInsightActionHand
         return codeInsightActionHandler != null && codeInsightActionHandler.isValidFor(editor, file);
     }
 
-    @RequiredUIAccess
     @Override
-    public final void update(AnActionEvent event) {
+    public final void update(@Nonnull AnActionEvent event) {
         if (myApplication.getExtensionPoint(myHandlerType).hasAnyExtensions()) {
             event.getPresentation().setVisible(true);
             super.update(event);

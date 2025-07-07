@@ -22,6 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.CopyPasteManager;
+import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -37,7 +38,7 @@ public class CopyQuickDocAction extends AnAction implements DumbAware, HintManag
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     String selected = e.getData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
     if (selected == null || selected.isEmpty()) {
       return;
@@ -47,7 +48,7 @@ public class CopyQuickDocAction extends AnAction implements DumbAware, HintManag
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     String selected = e.getData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
     e.getPresentation().setEnabled(selected != null && !selected.isEmpty());
   }

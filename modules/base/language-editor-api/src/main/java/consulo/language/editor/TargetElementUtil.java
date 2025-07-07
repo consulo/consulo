@@ -138,10 +138,8 @@ public class TargetElementUtil {
     }
 
     @Nullable
-    @RequiredUIAccess
+    @RequiredReadAction
     public static PsiElement findTargetElement(Editor editor, @Nonnull Set<String> flags) {
-        UIAccess.assertIsUIThread();
-
         int offset = editor.getCaretModel().getOffset();
         PsiElement result = findTargetElement(editor, flags, offset);
         if (result != null) {

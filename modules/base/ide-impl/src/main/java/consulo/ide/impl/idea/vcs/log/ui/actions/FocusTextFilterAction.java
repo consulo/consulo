@@ -32,7 +32,6 @@ public class FocusTextFilterAction extends DumbAwareAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     VcsLogUi ui = e.getData(VcsLogUi.KEY);

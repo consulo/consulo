@@ -53,8 +53,7 @@ public class GoToHashOrRefAction extends DumbAwareAction {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     VcsLog log = e.getData(VcsLog.KEY);
     VcsLogUi logUi = e.getData(VcsLogUi.KEY);
     e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null && log != null && logUi != null);

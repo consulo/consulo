@@ -68,7 +68,6 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         VirtualFile myFile = e.getData(VirtualFile.KEY);
         boolean enabled = myFile != null && checkEnabled(myFile);
@@ -78,7 +77,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull final AnActionEvent e) {
+    public final void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
 
         ListPopup popup = createPopup(dataContext);
@@ -131,7 +130,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     ) {
         return new ChooseFileEncodingAction(myFile) {
             @Override
-            public void update(@Nonnull final AnActionEvent e) {
+            public void update(@Nonnull AnActionEvent e) {
             }
 
             @Nonnull

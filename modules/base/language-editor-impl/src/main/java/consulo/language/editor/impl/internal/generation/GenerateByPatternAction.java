@@ -43,7 +43,6 @@ public class GenerateByPatternAction extends AnAction {
         myApplication = application;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);

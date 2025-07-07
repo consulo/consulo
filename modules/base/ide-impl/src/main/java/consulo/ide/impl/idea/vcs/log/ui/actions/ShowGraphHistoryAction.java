@@ -29,6 +29,7 @@ import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogManager;
 import consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog;
 import consulo.versionControlSystem.util.VcsUtil;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 
@@ -46,8 +47,7 @@ public class ShowGraphHistoryAction extends DumbAwareAction {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     if (!Registry.is("vcs.log.graph.history")) {
       presentation.setEnabledAndVisible(false);

@@ -32,14 +32,13 @@ import jakarta.annotation.Nullable;
 
 public class CloseLogTabAction extends CloseTabToolbarAction {
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     if (e.getData(Project.KEY) == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }
-    ContentManager contentManager = getContentManager(e.getData(Project.KEY));
+    ContentManager contentManager = getContentManager(e.getRequiredData(Project.KEY));
     if (contentManager == null || getTabbedContent(contentManager) == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;

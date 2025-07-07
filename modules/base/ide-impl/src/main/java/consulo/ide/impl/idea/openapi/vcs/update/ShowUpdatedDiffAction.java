@@ -54,7 +54,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     final DataContext dc = e.getDataContext();
@@ -75,8 +74,8 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     return iterable != null;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dc = e.getDataContext();
     if ((!isVisible(dc)) || (!isEnabled(dc))) return;

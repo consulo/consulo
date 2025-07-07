@@ -29,7 +29,7 @@ public class DisableDeclarativeInlayAction extends AnAction implements DumbAware
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         LocalizeValue providerName = e.getData(DeclarativeInlayHintsProvider.PROVIDER_NAME);
         if (providerName == null) {
             e.getPresentation().setEnabledAndVisible(false);
@@ -40,8 +40,8 @@ public class DisableDeclarativeInlayAction extends AnAction implements DumbAware
         e.getPresentation().setTextValue(CodeEditorLocalize.inlayHintsDeclarativeDisableActionText(providerName));
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {

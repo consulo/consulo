@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.dvcs.ui;
 
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.Repository;
-import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
@@ -30,14 +32,18 @@ public abstract class NewBranchAction<T extends Repository> extends DumbAwareAct
   protected final Project myProject;
 
   public NewBranchAction(@Nonnull Project project, @Nonnull List<T> repositories) {
-    super("New Branch", "Create and checkout new branch", AllIcons.General.Add);
+    super(
+        LocalizeValue.localizeTODO("New Branch"),
+        LocalizeValue.localizeTODO("Create and checkout new branch"),
+        PlatformIconGroup.generalAdd()
+    );
     myRepositories = repositories;
     myProject = project;
   }
 
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (DvcsUtil.anyRepositoryIsFresh(myRepositories)) {
       e.getPresentation().setEnabled(false);
       e.getPresentation().setDescription("Checkout of a new branch is not possible before the first commit");
@@ -45,5 +51,6 @@ public abstract class NewBranchAction<T extends Repository> extends DumbAwareAct
   }
 
   @Override
-  public abstract void actionPerformed(AnActionEvent e);
+  @RequiredUIAccess
+  public abstract void actionPerformed(@Nonnull AnActionEvent e);
 }

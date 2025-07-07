@@ -47,7 +47,6 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
   }
 
   @Override
-    @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     VcsLog log = e.getData(VcsLog.KEY);
