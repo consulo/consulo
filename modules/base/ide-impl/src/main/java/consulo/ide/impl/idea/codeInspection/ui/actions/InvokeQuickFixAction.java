@@ -20,10 +20,10 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionRVContentProvider;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.awt.Messages;
@@ -90,7 +90,8 @@ public class InvokeQuickFixAction extends AnAction {
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
     assert toolWrapper != null;
     final QuickFixAction[] quickFixes = myView.getProvider().getQuickFixes(toolWrapper, myView.getTree());
@@ -101,7 +102,7 @@ public class InvokeQuickFixAction extends AnAction {
     ActionGroup fixes = getFixes(quickFixes);
     DataContext dataContext = e.getDataContext();
     final ListPopup popup = JBPopupFactory.getInstance()
-                                          .createActionGroupPopup(InspectionsBundle.message("inspection.tree.popup.title"),
+                                          .createActionGroupPopup(InspectionLocalize.inspectionTreePopupTitle().get(),
                                                                   fixes,
                                                                   dataContext,
                                                                   JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,

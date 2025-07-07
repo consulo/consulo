@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.dvcs.ui;
 
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.versionControlSystem.distributed.DvcsUtil;
-import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
+import consulo.versionControlSystem.distributed.DvcsUtil;
+import consulo.versionControlSystem.distributed.repository.Repository;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -33,9 +33,9 @@ public abstract class NewBranchAction<T extends Repository> extends DumbAwareAct
 
   public NewBranchAction(@Nonnull Project project, @Nonnull List<T> repositories) {
     super(
-        LocalizeValue.localizeTODO("New Branch"),
-        LocalizeValue.localizeTODO("Create and checkout new branch"),
-        PlatformIconGroup.generalAdd()
+      LocalizeValue.localizeTODO("New Branch"),
+      LocalizeValue.localizeTODO("Create and checkout new branch"),
+      PlatformIconGroup.generalAdd()
     );
     myRepositories = repositories;
     myProject = project;
@@ -46,7 +46,7 @@ public abstract class NewBranchAction<T extends Repository> extends DumbAwareAct
   public void update(@Nonnull AnActionEvent e) {
     if (DvcsUtil.anyRepositoryIsFresh(myRepositories)) {
       e.getPresentation().setEnabled(false);
-      e.getPresentation().setDescription("Checkout of a new branch is not possible before the first commit");
+      e.getPresentation().setDescriptionValue(LocalizeValue.localizeTODO("Checkout of a new branch is not possible before the first commit"));
     }
   }
 

@@ -18,18 +18,21 @@ package consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
 import consulo.execution.test.sm.ui.SMTRunnerTestTreeView;
 import consulo.execution.test.sm.ui.TestResultsViewer;
 import consulo.execution.test.AbstractTestProxy;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
  */
 public class ShowStatisticsAction extends AnAction {
-
-  public void actionPerformed(final AnActionEvent e) {
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final SMTRunnerTestTreeView sender = e.getData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW);
     if (sender == null) {
       return;
@@ -42,7 +45,7 @@ public class ShowStatisticsAction extends AnAction {
   }
 
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
 
     // visible only in SMTRunnerTestTreeView 

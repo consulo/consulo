@@ -311,8 +311,8 @@ public class ReplaceInProjectManager {
                 setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)));
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 Set<Usage> usages = replaceContext.getUsageView().getUsages();
                 if (usages.isEmpty()) {
@@ -330,7 +330,6 @@ public class ReplaceInProjectManager {
                 }
             }
 
-            @RequiredUIAccess
             @Override
             public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(!replaceContext.getUsageView().getUsages().isEmpty());
@@ -342,13 +341,12 @@ public class ReplaceInProjectManager {
                 setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK)));
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 replaceUsagesUnderCommand(replaceContext, replaceContext.getUsageView().getSelectedUsages());
             }
 
-            @RequiredUIAccess
             @Override
             public void update(@Nonnull AnActionEvent e) {
                 Presentation presentation = e.getPresentation();

@@ -44,8 +44,7 @@ import java.util.List;
  */
 public class ShowRecentFindUsagesAction extends AnAction {
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
     Project project = e.getData(Project.KEY);
     e.getPresentation().setEnabled(usageView != null && project != null);
@@ -53,7 +52,7 @@ public class ShowRecentFindUsagesAction extends AnAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
     Project project = e.getData(Project.KEY);
     final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();

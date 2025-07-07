@@ -80,7 +80,6 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     return !(myOrigin instanceof ActionGroup) || ((ActionGroup)myOrigin).disableIfNoVisibleChildren();
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     AnActionEvent wrapped = wrapEvent(e);
@@ -107,8 +106,8 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     return pair.second;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     myOrigin.actionPerformed(wrapEvent(e));
   }

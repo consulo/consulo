@@ -1235,7 +1235,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             boolean enabled = myConsoleView.getContentSize() > 0;
             e.getPresentation().setEnabled(enabled);
@@ -1335,7 +1334,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         protected abstract void execute(@Nonnull ConsoleViewImpl console, @Nonnull DataContext context);
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             ConsoleViewImpl console = getRunningConsole(e.getDataContext());
             e.getPresentation().setEnabled(console != null);

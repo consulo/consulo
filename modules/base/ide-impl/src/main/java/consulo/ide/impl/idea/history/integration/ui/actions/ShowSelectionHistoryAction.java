@@ -49,8 +49,7 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (e.getData(Editor.KEY) == null) {
       e.getPresentation().setVisible(false);
     }

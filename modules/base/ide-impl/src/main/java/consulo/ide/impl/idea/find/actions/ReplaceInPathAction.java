@@ -48,7 +48,6 @@ public class ReplaceInPathAction extends FindReplaceInPathActionBase {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent event) {
     FindInPathAction.doUpdate(event);
   }

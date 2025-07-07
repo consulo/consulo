@@ -509,10 +509,8 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     protected abstract void doPerform(T model);
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
-      Presentation p = e.getPresentation();
-      p.setEnabled(isEnabled());
+    public void update(@Nonnull AnActionEvent e) {
+      e.getPresentation().setEnabled(isEnabled());
     }
 
     private boolean isEnabled() {

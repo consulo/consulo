@@ -62,12 +62,7 @@ public class GoToChangePopupBuilder {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      if (myChain.getRequests().size() <= 1) {
-        e.getPresentation().setEnabledAndVisible(false);
-        return;
-      }
-
-      e.getPresentation().setEnabledAndVisible(true);
+      e.getPresentation().setEnabledAndVisible(myChain.getRequests().size() > 1);
     }
 
     @Override

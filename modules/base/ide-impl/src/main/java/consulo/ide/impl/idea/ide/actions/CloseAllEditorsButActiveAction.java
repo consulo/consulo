@@ -50,7 +50,6 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);

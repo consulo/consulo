@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.find.actions;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
@@ -187,7 +188,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         myUsageViewSettings.GROUP_BY_SCOPE = false;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         FindUsagesInFileAction.updateFindUsagesAction(e);
@@ -200,8 +200,8 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         if (project == null) {

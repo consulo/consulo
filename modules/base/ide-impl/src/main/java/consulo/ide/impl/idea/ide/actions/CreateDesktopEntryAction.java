@@ -57,7 +57,6 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         boolean enabled = isAvailable();
         Presentation presentation = event.getPresentation();

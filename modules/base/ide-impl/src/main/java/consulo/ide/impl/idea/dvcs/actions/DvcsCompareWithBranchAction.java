@@ -111,8 +111,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         @Nonnull Project project,
         @Nonnull VirtualFile file,
         @Nonnull String branchToCompare
-    )
-        throws VcsException;
+    ) throws VcsException;
 
     private class OnBranchChooseRunnable implements Runnable {
         private final Project myProject;

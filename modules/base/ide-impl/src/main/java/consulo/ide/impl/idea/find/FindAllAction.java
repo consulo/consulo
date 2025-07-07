@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find;
 
-import consulo.application.AllIcons;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
@@ -11,6 +10,7 @@ import consulo.find.FindModel;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 
 public final class FindAllAction extends AnAction implements ShortcutProvider, DumbAware {
     public FindAllAction() {
-        super(IdeLocalize.showInFindWindowButtonName(), IdeLocalize.showInFindWindowButtonDescription(), null);
+        super(IdeLocalize.showInFindWindowButtonName(), IdeLocalize.showInFindWindowButtonDescription());
     }
 
     @Override
@@ -43,8 +43,8 @@ public final class FindAllAction extends AnAction implements ShortcutProvider, D
         );
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Editor editor = e.getRequiredData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         Project project = e.getRequiredData(Project.KEY);
@@ -79,8 +79,8 @@ public final class FindAllAction extends AnAction implements ShortcutProvider, D
     private static Image getIcon(@Nullable Project project) {
         ToolWindowManager toolWindowManager = project != null ? ToolWindowManager.getInstance(project) : null;
         if (toolWindowManager != null) {
-            return toolWindowManager.getLocationIcon(ToolWindowId.FIND, AllIcons.General.Pin_tab);
+            return toolWindowManager.getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab());
         }
-        return AllIcons.General.Pin_tab;
+        return PlatformIconGroup.generalPin_tab();
     }
 }
