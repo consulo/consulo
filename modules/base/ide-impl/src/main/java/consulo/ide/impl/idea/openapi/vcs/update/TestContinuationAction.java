@@ -136,7 +136,6 @@ public class TestContinuationAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
         final Project project = e.getDataContext().getData(Project.KEY);
         e.getPresentation().setEnabled(project != null);

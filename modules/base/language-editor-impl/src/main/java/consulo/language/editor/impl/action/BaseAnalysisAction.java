@@ -63,9 +63,8 @@ public abstract class BaseAnalysisAction extends AnAction {
         myAnalysisNoon = analysisNoon;
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         final DataContext dataContext = event.getDataContext();
         final Project project = event.getData(Project.KEY);
@@ -73,8 +72,8 @@ public abstract class BaseAnalysisAction extends AnAction {
         presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         final Project project = e.getData(Project.KEY);

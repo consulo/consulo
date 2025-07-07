@@ -500,15 +500,13 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     final ToggleShowDirectoriesAction directoriesAction = new ToggleShowDirectoriesAction();
     final ExpandAllAction expandAllAction = new ExpandAllAction(this) {
       @Override
-      @RequiredUIAccess
-      public void update(AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(!myShowFlatten || !myIsModelFlat);
       }
     };
     final CollapseAllAction collapseAllAction = new CollapseAllAction(this) {
       @Override
-      @RequiredUIAccess
-      public void update(AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(!myShowFlatten || !myIsModelFlat);
       }
     };

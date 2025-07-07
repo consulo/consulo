@@ -25,6 +25,7 @@ import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogManager;
 import consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
+import jakarta.annotation.Nonnull;
 
 public class OpenAnotherLogTabAction extends DumbAwareAction {
   public OpenAnotherLogTabAction() {
@@ -32,7 +33,7 @@ public class OpenAnotherLogTabAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null || !Registry.is("vcs.log.open.another.log.visible", false)) {
       e.getPresentation().setEnabledAndVisible(false);

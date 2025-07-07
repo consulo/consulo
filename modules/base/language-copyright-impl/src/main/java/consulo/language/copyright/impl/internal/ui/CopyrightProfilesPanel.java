@@ -27,6 +27,7 @@ import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
 import consulo.language.copyright.impl.internal.ExternalOptionHelper;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
@@ -170,7 +171,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
             }
         });
         result.add(new MyDeleteAction(forAll(Predicates.alwaysTrue())));
-        result.add(new AnAction("Copy", "Copy", PlatformIconGroup.actionsCopy()) {
+        result.add(new AnAction(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy()) {
             {
                 registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
             }
@@ -189,7 +190,6 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
             }
 
             @Override
-            @RequiredUIAccess
             public void update(@Nonnull AnActionEvent event) {
                 super.update(event);
                 event.getPresentation().setEnabled(getSelectedObject() != null);

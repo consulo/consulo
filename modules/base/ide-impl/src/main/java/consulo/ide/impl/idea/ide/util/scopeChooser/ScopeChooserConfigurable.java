@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.configurable.*;
 import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.content.scope.NamedScope;
@@ -528,7 +526,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
       super(
         ExecutionLocalize.actionNameSaveAsConfiguration(),
         ExecutionLocalize.actionNameSaveAsConfiguration(),
-        AllIcons.Actions.Menu_saveall
+        PlatformIconGroup.actionsMenu_saveall()
       );
     }
 

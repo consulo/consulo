@@ -1,5 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.application.AllIcons;
@@ -40,7 +39,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
   }
 
   @Override
-  public abstract void update(@Nonnull final AnActionEvent e);
+  public abstract void update(@Nonnull AnActionEvent e);
 
   private void fillCharsetActions(@Nonnull DefaultActionGroup group,
                                   @Nullable final VirtualFile virtualFile,
@@ -48,13 +47,12 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
                                   @Nonnull final Function<? super Charset, String> charsetFilter) {
     for (final Charset charset : charsets) {
       AnAction action = new DumbAwareAction(charset.displayName(), null, Image.empty(Image.DEFAULT_ICON_SIZE)) {
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
           chosen(virtualFile, charset);
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
           super.update(e);
@@ -128,6 +126,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
       String description = "Clear " + (myVirtualFile == null ? "default" : "file '" + myVirtualFile.getName() + "'") + " encoding.";
       group.add(new DumbAwareAction(clearItemText, description, null) {
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
           chosen(myVirtualFile, NO_ENCODING);
         }

@@ -15,15 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsDataKeys;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -31,13 +33,13 @@ import java.awt.datatransfer.StringSelection;
  * The action that copies a revision number text to clipboard
  */
 public class CopyRevisionNumberAction extends DumbAwareAction {
-
   public CopyRevisionNumberAction() {
-    super(VcsBundle.message("history.copy.revision.number"), VcsBundle.message("history.copy.revision.number"), PlatformIconGroup.actionsCopy());
+    super(VcsLocalize.historyCopyRevisionNumber(), VcsLocalize.historyCopyRevisionNumber(), PlatformIconGroup.actionsCopy());
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     VcsRevisionNumber revision = e.getData(VcsDataKeys.VCS_REVISION_NUMBER);
     if (revision == null) {
       VcsFileRevision fileRevision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
@@ -54,7 +56,7 @@ public class CopyRevisionNumberAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled((e.getData(VcsDataKeys.VCS_FILE_REVISION) != null
                                     || e.getData(VcsDataKeys.VCS_REVISION_NUMBER) != null));

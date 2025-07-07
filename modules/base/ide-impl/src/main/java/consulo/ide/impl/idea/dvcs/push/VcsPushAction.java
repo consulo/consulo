@@ -70,7 +70,6 @@ public class VcsPushAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         Project project = e.getData(Project.KEY);

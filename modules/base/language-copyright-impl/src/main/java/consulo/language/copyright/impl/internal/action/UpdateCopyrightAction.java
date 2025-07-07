@@ -48,7 +48,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
   }
 
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     final boolean enabled = isEnabled(event);
     event.getPresentation().setEnabled(enabled);
     if (ActionPlaces.isPopupPlace(event.getPlace())) {

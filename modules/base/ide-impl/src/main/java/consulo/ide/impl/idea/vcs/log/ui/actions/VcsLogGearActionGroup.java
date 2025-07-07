@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -34,6 +35,7 @@ public class VcsLogGearActionGroup extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DefaultActionGroup group = new DefaultActionGroup(ActionManager.getInstance().getAction(myActionGroup));
 

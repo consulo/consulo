@@ -36,14 +36,13 @@ public class RollbackLineStatusRangeAction extends RollbackLineStatusAction {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(true);
   }
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     rollback(myTracker, myEditor, myRange);
   }
 }

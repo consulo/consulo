@@ -87,7 +87,6 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         return vFiles[0];
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();

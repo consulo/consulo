@@ -508,8 +508,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(
                 myList.getSelectedRowCount() > 1 || myList.getSelectedRowCount() == 1 && myList.getSelectedObject() != myLocalRevision
             );
@@ -545,8 +544,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(myList.getSelectedRowCount() == 1 && myList.getSelectedObject() != myLocalRevision);
         }
 

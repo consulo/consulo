@@ -31,8 +31,8 @@ public class ConfigureInspectionsAction extends DumbAwareAction {
     super(DaemonLocalize.popupActionConfigureInspections());
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null) {
@@ -41,7 +41,6 @@ public class ConfigureInspectionsAction extends DumbAwareAction {
     LanguageEditorInternalHelper.getInstance().showInspectionsSettings(project);
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(e.getData(Project.KEY) != null);

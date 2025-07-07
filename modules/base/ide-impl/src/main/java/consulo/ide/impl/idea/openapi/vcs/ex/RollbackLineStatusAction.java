@@ -30,8 +30,7 @@ import java.util.List;
 
 public class RollbackLineStatusAction extends DumbAwareAction {
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Editor editor = e.getData(Editor.KEY);
         if (project == null || editor == null) {
@@ -57,7 +56,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Editor editor = e.getRequiredData(Editor.KEY);
         LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
