@@ -39,7 +39,7 @@ public class ToggleInlineHintsAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         if (!myApplication.getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions()) {
             presentation.setEnabledAndVisible(false);

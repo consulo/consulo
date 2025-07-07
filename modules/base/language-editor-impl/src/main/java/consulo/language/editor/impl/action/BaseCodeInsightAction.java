@@ -76,9 +76,8 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     return super.getEditor(dataContext, project, true);
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     Project project = dataContext.getData(Project.KEY);

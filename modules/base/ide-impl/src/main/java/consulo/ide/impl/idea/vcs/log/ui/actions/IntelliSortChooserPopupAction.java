@@ -67,7 +67,6 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);

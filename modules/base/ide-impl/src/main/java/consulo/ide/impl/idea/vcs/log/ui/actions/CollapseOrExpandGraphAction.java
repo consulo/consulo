@@ -47,7 +47,6 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     VcsLogUi ui = e.getData(VcsLogUi.KEY);
     VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
@@ -76,7 +75,6 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
   }
 
   protected abstract void executeAction(@Nonnull VcsLogUiImpl vcsLogUi);
-
 
   @Nonnull
   protected abstract String getPrefix();

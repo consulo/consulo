@@ -1272,8 +1272,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(@Nonnull final AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             final int selectionSize = getSelection().size();
             e.getPresentation().setEnabled(selectionSize > 0 && isEnabled());
@@ -1568,7 +1567,6 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setVisible(true);
             if (myFilePath.isNonLocal()) {

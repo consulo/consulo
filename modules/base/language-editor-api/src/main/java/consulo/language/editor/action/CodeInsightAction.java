@@ -86,7 +86,6 @@ public abstract class CodeInsightAction extends AnAction {
             });
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();

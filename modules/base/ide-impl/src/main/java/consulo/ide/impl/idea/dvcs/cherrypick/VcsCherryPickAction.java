@@ -56,7 +56,6 @@ public class VcsCherryPickAction extends DumbAwareAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setVisible(true);

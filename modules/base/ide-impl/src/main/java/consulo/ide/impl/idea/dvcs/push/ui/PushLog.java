@@ -282,7 +282,6 @@ public class PushLog extends JPanel implements DataProvider {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(getSelectedCommitNodes().size() == 1);
         }

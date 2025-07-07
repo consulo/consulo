@@ -10,8 +10,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class ToolWindowContextMenuActionBase extends AnAction {
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public final void actionPerformed(@Nonnull AnActionEvent e) {
     ToolWindow toolWindow = e.getDataContext().getData(ToolWindow.KEY);
     if (toolWindow == null) {
@@ -21,7 +21,6 @@ public abstract class ToolWindowContextMenuActionBase extends AnAction {
     actionPerformed(e, toolWindow, content);
   }
 
-  @RequiredUIAccess
   @Override
   public final void update(@Nonnull AnActionEvent e) {
     ToolWindow toolWindow = e.getDataContext().getData(ToolWindow.KEY);

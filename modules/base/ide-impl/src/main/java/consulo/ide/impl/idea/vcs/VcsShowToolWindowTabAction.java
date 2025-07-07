@@ -54,7 +54,6 @@ public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabledAndVisible(getToolWindow(e.getData(Project.KEY)) != null);

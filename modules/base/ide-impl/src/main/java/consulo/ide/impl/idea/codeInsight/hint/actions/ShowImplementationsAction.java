@@ -99,7 +99,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             e.getPresentation().setEnabled(false);

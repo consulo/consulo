@@ -25,6 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.ui.PanelWithActionsAndCloseButton;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshIncomingChangesAction;
@@ -429,7 +430,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
 
   private class MyGroupByPackagesAction extends ToggleAction implements DumbAware {
     public MyGroupByPackagesAction() {
-      super(VcsLocalize.actionNameGroupByPackages(), LocalizeValue.empty(), AllIcons.Actions.GroupByPackage);
+      super(VcsLocalize.actionNameGroupByPackages(), LocalizeValue.empty(), PlatformIconGroup.actionsGroupbypackage());
     }
 
     @Override
@@ -446,7 +447,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     }
 
     @Override
-    public void update(@Nonnull final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(!myGroupByChangeList);
     }
@@ -454,7 +455,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
 
   private class GroupByChangeListAction extends ToggleAction implements DumbAware {
     public GroupByChangeListAction() {
-      super(VcsLocalize.updateInfoGroupByChangelist(), LocalizeValue.empty(), AllIcons.Actions.ShowAsTree);
+      super(VcsLocalize.updateInfoGroupByChangelist(), LocalizeValue.empty(), PlatformIconGroup.actionsShowastree());
     }
 
     @Override
@@ -476,7 +477,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     }
 
     @Override
-    public void update(@Nonnull final AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setVisible(myCanGroupByChangeList);
     }

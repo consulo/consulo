@@ -34,6 +34,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -122,8 +123,7 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Boolean haveSelectedChanges = e.getData(VcsDataKeys.HAVE_SELECTED_CHANGES);
     Change[] changes;
     ChangeList[] data1 = e.getData(VcsDataKeys.CHANGE_LISTS);

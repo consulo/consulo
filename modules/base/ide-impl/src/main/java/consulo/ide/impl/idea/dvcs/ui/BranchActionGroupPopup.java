@@ -105,7 +105,9 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
                 return myToolbarActions.toArray(AnAction.EMPTY_ARRAY);
             }
         };
-        AnAction restoreSizeButton = new AnAction(DvcsBundle.message("action.BranchActionGroupPopup.Anonymous.text.restore.size"), null,
+        AnAction restoreSizeButton = new AnAction(
+            DvcsBundle.message("action.BranchActionGroupPopup.Anonymous.text.restore.size"),
+            null,
             PlatformIconGroup.generalCollapsecomponent()
         ) {
             @Override
@@ -117,7 +119,6 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
             }
 
             @Override
-            @RequiredUIAccess
             public void update(@Nonnull AnActionEvent e) {
                 e.getPresentation().setEnabled(myUserSizeChanged);
             }

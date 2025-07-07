@@ -18,9 +18,6 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 import consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutAction;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.localize.UILocalize;
@@ -65,7 +62,6 @@ public class WelcomeGetFromVcsAction extends WelcomePopupAction {
         return true;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(CheckoutProvider.EXTENSION_POINT_NAME.hasAnyExtensions());
