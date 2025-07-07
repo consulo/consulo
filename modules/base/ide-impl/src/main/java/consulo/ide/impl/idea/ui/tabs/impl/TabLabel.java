@@ -37,7 +37,7 @@ import consulo.ui.ex.awt.tab.UiDecorator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.util.lang.function.PairConsumer;
+import consulo.util.collection.primitive.ints.BiIntConsumer;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -92,12 +92,12 @@ public class TabLabel extends JPanel {
 
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(final MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (UIUtil.isCloseClick(e, MouseEvent.MOUSE_PRESSED)) {
                     return;
                 }
                 if (JBTabsImpl.isSelectionClick(e, false) && myInfo.isEnabled()) {
-                    final TabInfo selectedInfo = myTabs.getSelectedInfo();
+                    TabInfo selectedInfo = myTabs.getSelectedInfo();
                     if (selectedInfo != myInfo) {
                         myInfo.setPreviousSelection(selectedInfo);
                     }
@@ -113,12 +113,12 @@ public class TabLabel extends JPanel {
             }
 
             @Override
-            public void mouseClicked(final MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 handlePopup(e);
             }
 
             @Override
-            public void mouseReleased(final MouseEvent e) {
+            public void mouseReleased(MouseEvent e) {
                 myInfo.setPreviousSelection(null);
                 handlePopup(e);
             }
@@ -135,6 +135,14 @@ public class TabLabel extends JPanel {
         });
     }
 
+    public void updateVisibility() {
+        if (myActionPanel == null) {
+            return;
+        }
+
+        myActionPanel.updateVisibility(myTabs.isHoveredTab(this) || myTabs.getSelectedLabel() == this);
+    }
+
     private void setHovered(boolean value) {
         if (myTabs.isHoveredTab(this) == value) {
             return;
@@ -145,6 +153,11 @@ public class TabLabel extends JPanel {
         else {
             myTabs.unHover(this);
         }
+
+        updateVisibility();
+        
+        invalidate();
+        myTabs.repaint();
     }
 
     @Override
@@ -201,50 +214,50 @@ public class TabLabel extends JPanel {
         synchronized (getTreeLock()) {
             validateTree();
         }
-        doPaint(g);
+        doPaint(g, false);
     }
 
     @Override
-    public void paint(final Graphics g) {
+    public void paint(Graphics g) {
         if (myTabs.isDropTarget(myInfo)) {
             return;
         }
 
         if (myTabs.getSelectedInfo() != myInfo) {
-            doPaint(g);
+            doPaint(g, !myTabs.isHoveredTab(this));
         }
     }
 
-    public void paintImage(Graphics g) {
-        final Rectangle b = getBounds();
-        final Graphics lG = g.create(b.x, b.y, b.width, b.height);
+    public void paintImage(Graphics g, boolean inactive) {
+        Rectangle b = getBounds();
+        Graphics lG = g.create(b.x, b.y, b.width, b.height);
         try {
             lG.setColor(JBColor.red);
-            doPaint(lG);
+            doPaint(lG, inactive);
         }
         finally {
             lG.dispose();
         }
     }
 
-    public void doTranslate(PairConsumer<Integer, Integer> consumer) {
+    public void doTranslate(@Nonnull BiIntConsumer consumer) {
         if (!myTabs.isDropTarget(myInfo)) {
             if (myTabs.getSelectedInfo() != myInfo) {
-                consumer.consume(0, 0);
+                consumer.accept(0, 0);
             }
             else {
-                consumer.consume(0, 0);
+                consumer.accept(0, 0);
             }
         }
     }
 
-    private void doPaint(final Graphics g) {
+    private void doPaint(Graphics g, boolean inactive) {
         doTranslate(g::translate);
 
-        final Composite oldComposite = ((Graphics2D) g).getComposite();
-        //if (myTabs instanceof JBEditorTabs && !myTabs.isSingleRow() && myTabs.getSelectedInfo() != myInfo) {
-        //  ((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
-        //}
+        Composite oldComposite = ((Graphics2D) g).getComposite();
+        if (inactive) {
+          ((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+        }
         super.paint(g);
         ((Graphics2D) g).setComposite(oldComposite);
 
@@ -253,17 +266,17 @@ public class TabLabel extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        final Dimension size = super.getPreferredSize();
+        Dimension size = super.getPreferredSize();
         size.height = TabsUtil.getRealTabsHeight();
         if (myActionPanel != null && !myActionPanel.isVisible()) {
-            final Dimension actionPanelSize = myActionPanel.getPreferredSize();
+            Dimension actionPanelSize = myActionPanel.getPreferredSize();
             size.width += actionPanelSize.width;
         }
 
         return size;
     }
 
-    private void handlePopup(final MouseEvent e) {
+    private void handlePopup(MouseEvent e) {
         if (e.getClickCount() != 1 || !e.isPopupTrigger()) {
             return;
         }
@@ -276,7 +289,7 @@ public class TabLabel extends JPanel {
         place = place != null ? place : ActionPlaces.UNKNOWN;
         myTabs.myPopupInfo = myInfo;
 
-        final DefaultActionGroup toShow = new DefaultActionGroup();
+        DefaultActionGroup toShow = new DefaultActionGroup();
         if (myTabs.getPopupGroup() != null) {
             toShow.addAll(myTabs.getPopupGroup());
             toShow.addSeparator();
@@ -299,7 +312,7 @@ public class TabLabel extends JPanel {
     }
 
 
-    public void setText(final SimpleColoredText text) {
+    public void setText(SimpleColoredText text) {
         myLabel.change(() -> {
             myLabel.clear();
             myLabel.setIcon(hasIcons() ? buildLabelImage() : null);
@@ -334,7 +347,7 @@ public class TabLabel extends JPanel {
         myTabs.revalidateAndRepaint(false);
     }
 
-    public void setIcon(final Image icon) {
+    public void setIcon(Image icon) {
         setIcon(icon, 0);
     }
 
@@ -347,7 +360,7 @@ public class TabLabel extends JPanel {
         return false;
     }
 
-    private void setIcon(@Nullable final Image icon, int layer) {
+    private void setIcon(@Nullable Image icon, int layer) {
         IconInfo info = myIconInfos[layer];
         info.myImage = icon;
 
@@ -487,17 +500,17 @@ public class TabLabel extends JPanel {
     }
 
     @Override
-    protected void paintChildren(final Graphics g) {
+    protected void paintChildren(Graphics g) {
         super.paintChildren(g);
 
         if (myOverlayedIcon == null || getLabelComponent().getParent() == null) {
             return;
         }
 
-        final Rectangle textBounds = SwingUtilities.convertRectangle(getLabelComponent().getParent(), getLabelComponent().getBounds(), this);
+        Rectangle textBounds = SwingUtilities.convertRectangle(getLabelComponent().getParent(), getLabelComponent().getBounds(), this);
 
         if (isLayerIconEnabled(1)) {
-            final int top = (getSize().height - myOverlayedIcon.getHeight()) / 2;
+            int top = (getSize().height - myOverlayedIcon.getHeight()) / 2;
 
             TargetAWT.to(myOverlayedIcon).paintIcon(this, g, textBounds.x - myOverlayedIcon.getWidth() / 2, top);
         }

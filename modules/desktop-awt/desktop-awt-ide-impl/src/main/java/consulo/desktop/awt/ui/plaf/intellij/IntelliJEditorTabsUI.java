@@ -87,9 +87,9 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     protected Dimension computeSize(JBTabsImpl tabs, Function<JComponent, Dimension> transform, int tabCount) {
         Dimension size = new Dimension();
         for (TabInfo each : tabs.getVisibleInfos()) {
-            final JComponent c = each.getComponent();
+            JComponent c = each.getComponent();
             if (c != null) {
-                final Dimension eachSize = transform.apply(c);
+                Dimension eachSize = transform.apply(c);
                 size.width = Math.max(eachSize.width, size.width);
                 size.height = Math.max(eachSize.height, size.height);
             }
@@ -99,10 +99,10 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
         return size;
     }
 
-    protected void addHeaderSize(JBTabsImpl tabs, Dimension size, final int tabsCount) {
+    protected void addHeaderSize(JBTabsImpl tabs, Dimension size, int tabsCount) {
         Dimension header = computeHeaderPreferredSize(tabs, tabsCount);
 
-        final boolean horizontal = tabs.getTabsPosition() == JBTabsPosition.top || tabs.getTabsPosition() == JBTabsPosition.bottom;
+        boolean horizontal = tabs.getTabsPosition() == JBTabsPosition.top || tabs.getTabsPosition() == JBTabsPosition.bottom;
         if (horizontal) {
             size.height += header.height;
             size.width = Math.max(size.width, header.width);
@@ -112,24 +112,24 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
             size.width += header.width;
         }
 
-        final Insets insets = tabs.getLayoutInsets();
+        Insets insets = tabs.getLayoutInsets();
         size.width += insets.left + insets.right + 1;
         size.height += insets.top + insets.bottom + 1;
     }
 
     protected Dimension computeHeaderPreferredSize(JBTabsImpl tabs, int tabsCount) {
-        final Iterator<TabInfo> infos = tabs.myInfo2Label.keySet().iterator();
+        Iterator<TabInfo> infos = tabs.myInfo2Label.keySet().iterator();
         Dimension size = new Dimension();
         int currentTab = 0;
 
-        final boolean horizontal = tabs.getTabsPosition() == JBTabsPosition.top || tabs.getTabsPosition() == JBTabsPosition.bottom;
+        boolean horizontal = tabs.getTabsPosition() == JBTabsPosition.top || tabs.getTabsPosition() == JBTabsPosition.bottom;
 
         while (infos.hasNext()) {
-            final boolean canGrow = currentTab < tabsCount;
+            boolean canGrow = currentTab < tabsCount;
 
             TabInfo eachInfo = infos.next();
-            final TabLabel eachLabel = tabs.myInfo2Label.get(eachInfo);
-            final Dimension eachPrefSize = eachLabel.getPreferredSize();
+            TabLabel eachLabel = tabs.myInfo2Label.get(eachInfo);
+            Dimension eachPrefSize = eachLabel.getPreferredSize();
             if (horizontal) {
                 if (canGrow) {
                     size.width += eachPrefSize.width;
@@ -167,15 +167,15 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        final GraphicsConfig config = new GraphicsConfig(g2d);
+        GraphicsConfig config = new GraphicsConfig(g2d);
         config.setAntialiasing(true);
 
         try {
-            final Rectangle clip = g2d.getClipBounds();
+            Rectangle clip = g2d.getClipBounds();
 
             Runnable tabLineRunner = doPaintBackground(tabs, g2d, clip);
 
-            final TabInfo selected = tabs.getSelectedInfo();
+            TabInfo selected = tabs.getSelectedInfo();
 
             if (selected != null) {
                 Rectangle compBounds = selected.getComponent().getBounds();
@@ -192,9 +192,9 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
 
             doPaintActive(tabs, (Graphics2D) g);
 
-            final TabLabel selectedLabel = tabs.getSelectedLabel();
+            TabLabel selectedLabel = tabs.getSelectedLabel();
             if (selected != null) {
-                selectedLabel.paintImage(g);
+                selectedLabel.paintImage(g, false);
             }
 
             tabs.getSingleRowLayoutInternal().myMoreIcon.paintIcon(tabs, g);
@@ -221,10 +221,10 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
         }
     }
 
-    protected void paintNonSelectedTabs(JBTabsImpl t, final Graphics2D g2d) {
+    protected void paintNonSelectedTabs(JBTabsImpl t, Graphics2D g2d) {
         for (int eachRow = 0; eachRow < t.getLastLayoutPass().getRowCount(); eachRow++) {
             for (int eachColumn = t.getLastLayoutPass().getColumnCount(eachRow) - 1; eachColumn >= 0; eachColumn--) {
-                final TabInfo each = t.getLastLayoutPass().getTabAt(eachRow, eachColumn);
+                TabInfo each = t.getLastLayoutPass().getTabAt(eachRow, eachColumn);
                 if (t.getSelectedInfo() == each) {
                     continue;
                 }
@@ -237,12 +237,12 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     public void clearLastPaintedTab() {
     }
 
-    protected void paintNonSelected(JBTabsImpl t, final Graphics2D g2d, final TabInfo each) {
+    protected void paintNonSelected(JBTabsImpl t, Graphics2D g2d, TabInfo each) {
         if (t.getDropInfo() == each) {
             return;
         }
 
-        final TabLabel label = t.myInfo2Label.get(each);
+        TabLabel label = t.myInfo2Label.get(each);
         if (label.getBounds().width == 0) {
             return;
         }
@@ -253,7 +253,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     protected Runnable doPaintBackground(JBTabsImpl tabs, Graphics2D g2d, Rectangle clip) {
         List<TabInfo> visibleInfos = tabs.getVisibleInfos();
 
-        final boolean vertical = tabs.getTabsPosition() == JBTabsPosition.left || tabs.getTabsPosition() == JBTabsPosition.right;
+        boolean vertical = tabs.getTabsPosition() == JBTabsPosition.left || tabs.getTabsPosition() == JBTabsPosition.right;
 
         Insets insets = JBUI.emptyInsets();
 
@@ -294,7 +294,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
 
         doPaintAdditionalBackgroundIfFirstOffsetSet(tabs, g2d, clip);
 
-        final int finalMaxLength = maxLength;
+        int finalMaxLength = maxLength;
         return () -> {
             if (tabs.getPosition() == JBTabsPosition.top) {
                 g2d.setColor(JBColor.border());
@@ -423,7 +423,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     }
 
     protected ShapeInfo computeLabelShape(JBTabsImpl tabs, TabLabel tabLabel) {
-        final ShapeInfo shape = new ShapeInfo();
+        ShapeInfo shape = new ShapeInfo();
 
         shape.path = tabs.getEffectiveLayout().createShapeTransform(tabs.getSize());
         shape.insets = shape.path.transformInsets(tabs.getLayoutInsets());

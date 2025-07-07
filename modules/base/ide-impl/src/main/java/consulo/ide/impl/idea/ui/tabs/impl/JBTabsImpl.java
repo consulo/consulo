@@ -902,11 +902,25 @@ public abstract class JBTabsImpl extends JComponent
 
     private void fireSelectionChanged(@Nullable TabInfo oldInfo, TabInfo newInfo) {
         if (oldInfo != newInfo) {
+            updateTabInfoVisibility(oldInfo);
+            updateTabInfoVisibility(newInfo);
+
             for (TabsListener eachListener : myTabListeners) {
                 if (eachListener != null) {
                     eachListener.selectionChanged(oldInfo, newInfo);
                 }
             }
+        }
+    }
+
+    private void updateTabInfoVisibility(@Nullable TabInfo info) {
+        if (info == null) {
+            return;
+        }
+
+        TabLabel label = myInfo2Label.get(info);
+        if (label != null) {
+            label.updateVisibility();
         }
     }
 

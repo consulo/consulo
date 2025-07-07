@@ -17,31 +17,19 @@ package consulo.ui.ex.awt.tab;
 
 
 public interface TabsListener {
-
-  void selectionChanged(TabInfo oldSelection, TabInfo newSelection);
-
-  void beforeSelectionChanged(TabInfo oldSelection, TabInfo newSelection);
-
-  void tabRemoved(TabInfo tabToRemove);
-
-  void tabsMoved();
-
-  class Adapter implements TabsListener {
-    @Override
-    public void selectionChanged(TabInfo oldSelection, TabInfo newSelection) {
+    default void selectionChanged(TabInfo oldSelection, TabInfo newSelection) {
     }
 
-    @Override
-    public void beforeSelectionChanged(TabInfo oldSelection, TabInfo newSelection) {
+    default void beforeSelectionChanged(TabInfo oldSelection, TabInfo newSelection) {
     }
 
-    @Override
-    public void tabsMoved() {
+    default void tabRemoved(TabInfo tabToRemove) {
     }
 
-    @Override
-    public void tabRemoved(TabInfo tabToRemove) {
+    default void tabsMoved() {
     }
-  }
 
+    @Deprecated
+    class Adapter implements TabsListener {
+    }
 }

@@ -19,12 +19,11 @@ import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.ide.impl.ui.laf.JBEditorTabsUI;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -37,19 +36,10 @@ public class FlatEditorTabsUI extends IntelliJEditorTabsUI {
 
     @Override
     protected void fillInactiveTab(JBTabsImpl tabs, Graphics2D g2d, TabLabel label, ShapeInfo shape) {
-        g2d.setColor(UIUtil.getPanelBackground());
-
-        g2d.fill(shape.fillPath.getShape());
-
-        Color tabColor = label.getInfo().getTabColor();
-        if (tabs.isPaintFocus() && tabs.isHoveredTab(label)) {
-            tabColor = tabColor != null ? tabColor : JBColor.border();
-        }
-        else {
-            tabColor = tabColor != null ? ColorUtil.toAlpha(tabColor, 100) : UIUtil.getPanelBackground();
-        }
+        Color tabColor = Objects.requireNonNullElse(label.getInfo().getTabColor(), UIUtil.getPanelBackground());
 
         g2d.setColor(tabColor);
+
         g2d.fill(shape.fillPath.getShape());
     }
 
@@ -57,24 +47,10 @@ public class FlatEditorTabsUI extends IntelliJEditorTabsUI {
     protected void fillActiveTabWithColor(TabLabel label, JBTabsImpl tabs, Graphics2D g2d) {
         ShapeInfo shape = computeLabelShape(tabs, label);
 
-        g2d.setColor(UIUtil.getPanelBackground());
-
-        g2d.fill(shape.fillPath.getShape());
-
-        Color tabColor = label.getInfo().getTabColor();
-        if (tabs.isPaintFocus() && tabs.isHoveredTab(label)) {
-            tabColor = tabColor != null ? tabColor : JBColor.border();
-        }
-        else {
-            tabColor = tabColor != null ? tabColor : UIUtil.getPanelBackground();
-        }
+        Color tabColor = Objects.requireNonNullElse(label.getInfo().getTabColor(), UIUtil.getPanelBackground());
 
         g2d.setColor(tabColor);
-        g2d.fill(shape.fillPath.getShape());
 
-        if (tabs.isPaintFocus() && tabs.isHoveredTab(label) && tabColor != null) {
-            g2d.setColor(ColorUtil.toAlpha(JBColor.border(), 100));
-            g2d.fill(shape.fillPath.getShape());
-        }
+        g2d.fill(shape.fillPath.getShape());
     }
 }

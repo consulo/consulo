@@ -25,6 +25,7 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -37,6 +38,9 @@ public class ActionPanel extends NonOpaquePanel {
     private List<? extends AnAction> myVisibleActions = List.of();
 
     private final ActionToolbar myActionToolbar;
+    private final JComponent myComponent;
+
+    private boolean myPaintPanel = true;
 
     public ActionPanel(JBTabsImpl tabs, TabInfo tabInfo, TabLabel tabLabel) {
         myTabs = tabs;
@@ -53,13 +57,27 @@ public class ActionPanel extends NonOpaquePanel {
             topPadding = 4;
         }
 
-        JComponent component = myActionToolbar.getComponent();
-        component.setBorder(JBUI.Borders.empty(topPadding, leftPadding, 0, 0));
-        component.setOpaque(false);
+        myComponent = myActionToolbar.getComponent();
+        myComponent.setBorder(JBUI.Borders.empty(topPadding, leftPadding, 0, 0));
+        myComponent.setOpaque(false);
 
-        add(component);
+        add(myComponent);
 
         setVisible(false);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        if (!myPaintPanel) {
+            return;
+        }
+
+        super.paint(g);
+    }
+
+    public void updateVisibility(boolean visibility) {
+        // TODO need file issue with hovering issue
+        // myPaintPanel = visibility;
     }
 
     @Nonnull
