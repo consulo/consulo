@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.actions;
 
 import consulo.application.Application;
@@ -92,8 +91,8 @@ public class OptimizeImportsAction extends AnAction {
     updatePresentation(presentation, importOptimizers);
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent event) {
     actionPerformedImpl(event.getDataContext());
   }
@@ -207,7 +206,6 @@ public class OptimizeImportsAction extends AnAction {
     }
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();

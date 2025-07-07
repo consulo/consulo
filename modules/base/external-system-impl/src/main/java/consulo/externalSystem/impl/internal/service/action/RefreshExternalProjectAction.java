@@ -3,8 +3,8 @@ package consulo.externalSystem.impl.internal.service.action;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.impl.internal.util.ExternalSystemUtil;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
@@ -14,6 +14,7 @@ import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.service.project.manage.ProjectDataManager;
 import consulo.externalSystem.util.DisposeAwareProjectChange;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -25,27 +26,39 @@ import jakarta.annotation.Nullable;
 import java.util.Collections;
 
 /**
- * * Forces the ide to retrieve the most up-to-date info about the linked external project and updates project state if necessary
+ * Forces the ide to retrieve the most up-to-date info about the linked external project and updates project state if necessary
  * (e.g. imports missing libraries).
  *
  * @author Vladislav.Soroka
- * @since 9/18/13
+ * @since 2013-09-18
  */
 public class RefreshExternalProjectAction extends AnAction implements DumbAware {
 
   public RefreshExternalProjectAction() {
-    getTemplatePresentation().setText(ExternalSystemBundle.message("action.refresh.project.text", "external"));
-    getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.refresh.project.description", "external"));
+    super(
+        ExternalSystemLocalize.actionRefreshExternalProjectText(),
+        ExternalSystemLocalize.actionRefreshExternalProjectDescription()
+    );
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
     e.getPresentation().setEnabled(info.externalProject != null);
+    if (info.externalSystemId != null) {
+      LocalizeValue displayName = info.externalSystemId.getDisplayName();
+      e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshExternalProject0Text(displayName));
+      e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshExternalProject0Description(displayName));
+    }
+    else {
+      e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshExternalProjectText());
+      e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshExternalProjectDescription());
+    }
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
     if (info.settings == null || info.localSettings == null || info.externalProject == null || info.ideProject == null
         || info.externalSystemId == null)

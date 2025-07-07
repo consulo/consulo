@@ -1,19 +1,21 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
-import consulo.application.AllIcons;
 import consulo.application.util.AtomicClearableLazyValue;
 import consulo.build.ui.*;
 import consulo.build.ui.event.*;
 import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.util.containers.DisposableWrapperList;
-import consulo.language.LangBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.localize.LanguageLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SystemNotifications;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
@@ -240,7 +242,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
       String viewName = getViewName().split(" ")[0];
       String tabName = viewName + ": " + StringUtil.trimStart(title, viewName);
       if (buildsMap.size() > 1) {
-        return LangBundle.message("tab.title.more", tabName, buildsMap.size() - 1);
+        return LanguageLocalize.tabTitleMore(tabName, buildsMap.size() - 1).get();
       }
       return tabName;
     }
@@ -251,10 +253,12 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     private final Content myContent;
 
     PinBuildViewAction(MultipleBuildsView buildsView) {
+      super(PlatformIconGroup.generalPin_tab());
       myContent = buildsView.getContent();
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       boolean selected = !myContent.isPinned();
       if (selected) {
@@ -277,17 +281,16 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
       boolean isActiveTab = contentManager != null && contentManager.getSelectedContent() == myContent;
       boolean selected = myContent.isPinned();
 
-      e.getPresentation().setIcon(AllIcons.General.Pin_tab);
       Toggleable.setSelected(e.getPresentation(), selected);
 
-      String text;
+      LocalizeValue text;
       if (!isActiveTab) {
-        text = selected ? IdeBundle.message("action.unpin.active.tab") : IdeBundle.message("action.pin.active.tab");
+        text = selected ? IdeLocalize.actionUnpinActiveTab() : IdeLocalize.actionPinActiveTab();
       }
       else {
-        text = selected ? IdeBundle.message("action.unpin.tab") : IdeBundle.message("action.pin.tab");
+        text = selected ? IdeLocalize.actionUnpinTab() : IdeLocalize.actionPinTab();
       }
-      e.getPresentation().setText(text);
+      e.getPresentation().setTextValue(text);
       e.getPresentation().setEnabledAndVisible(true);
     }
   }

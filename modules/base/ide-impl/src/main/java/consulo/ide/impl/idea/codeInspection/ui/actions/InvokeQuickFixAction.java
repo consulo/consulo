@@ -21,6 +21,7 @@ import consulo.ide.impl.idea.codeInspection.ex.InspectionRVContentProvider;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
@@ -42,16 +43,18 @@ public class InvokeQuickFixAction extends AnAction {
   private final InspectionResultsView myView;
 
   public InvokeQuickFixAction(final InspectionResultsView view) {
-    super(InspectionsBundle.message("inspection.action.apply.quickfix"),
-          InspectionsBundle.message("inspection.action.apply.quickfix.description"),
-          PlatformIconGroup.actionsIntentionbulb());
+    super(
+        InspectionLocalize.inspectionActionApplyQuickfix(),
+        InspectionLocalize.inspectionActionApplyQuickfixDescription(),
+        PlatformIconGroup.actionsIntentionbulb()
+    );
     myView = view;
     registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS).getShortcutSet(),
                               myView.getTree());
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (!myView.isSingleToolInSelection()) {
       e.getPresentation().setEnabled(false);
       return;

@@ -30,6 +30,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 
 public class HighlightUsagesAction extends AnAction implements DumbAware {
     public HighlightUsagesAction() {
@@ -37,8 +38,7 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(final AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         final Presentation presentation = event.getPresentation();
         final DataContext dataContext = event.getDataContext();
         presentation.setEnabled(dataContext.getData(Project.KEY) != null && dataContext.getData(Editor.KEY) != null);

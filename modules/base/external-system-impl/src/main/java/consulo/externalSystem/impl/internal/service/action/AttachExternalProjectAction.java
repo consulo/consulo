@@ -41,8 +41,8 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
     @Inject
     public AttachExternalProjectAction(ExternalSystemInternalAWTHelper awtHelper) {
         super(
-            ExternalSystemLocalize.actionAttachExternalProjectText("external"),
-            ExternalSystemLocalize.actionAttachExternalProjectDescription("external"),
+            ExternalSystemLocalize.actionAttachExternalProjectText(),
+            ExternalSystemLocalize.actionAttachExternalProjectDescription(),
             PlatformIconGroup.generalAdd()
         );
         myAwtHelper = awtHelper;
@@ -52,9 +52,13 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
     public void update(@Nonnull AnActionEvent e) {
         ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId != null) {
-            LocalizeValue readableName = externalSystemId.getDisplayName();
-            e.getPresentation().setTextValue(ExternalSystemLocalize.actionAttachExternalProjectText(readableName));
-            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionAttachExternalProjectDescription(readableName));
+            LocalizeValue displayName = externalSystemId.getDisplayName();
+            e.getPresentation().setTextValue(ExternalSystemLocalize.actionAttachExternalProject0Text(displayName));
+            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionAttachExternalProject0Description(displayName));
+        }
+        else {
+            e.getPresentation().setTextValue(ExternalSystemLocalize.actionAttachExternalProjectText());
+            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionAttachExternalProjectDescription());
         }
     }
 

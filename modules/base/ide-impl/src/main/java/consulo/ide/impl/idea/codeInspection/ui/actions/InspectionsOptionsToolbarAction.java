@@ -48,7 +48,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final DefaultActionGroup options = new DefaultActionGroup();
     final List<AnAction> actions = createActions();
     for (AnAction action : actions) {
@@ -71,8 +71,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (!myView.isSingleToolInSelection()) {
       e.getPresentation().setEnabled(false);
       return;
@@ -107,15 +106,14 @@ public class InspectionsOptionsToolbarAction extends AnAction {
     result.add(new AnAction(InspectionLocalize.runInspectionOnFileIntentionText()) {
       @Override
       @RequiredUIAccess
-      public void actionPerformed(final AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         final PsiElement psiElement = getPsiElement(tree);
         assert psiElement != null;
         new RunInspectionIntention(toolWrapper).invoke(myView.getProject(), null, psiElement.getContainingFile());
       }
 
       @Override
-      @RequiredUIAccess
-      public void update(AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(getPsiElement(tree) != null);
       }
 

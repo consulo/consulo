@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.navigation;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
@@ -45,12 +46,13 @@ public abstract class AbstractDocumentationTooltipAction extends AnAction {
   }
   
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setVisible(getDocInfo() != null);
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Pair<PsiElement, PsiElement> info = getDocInfo();
     if (info == null) {
       return;

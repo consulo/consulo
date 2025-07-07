@@ -28,12 +28,11 @@ import jakarta.annotation.Nonnull;
  * @since 2013-10-15
  */
 public class ShowDiagramAction extends AnAction {
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         boolean state = EarlyAccessProgramManager.is(DiagramSupportEapDescriptor.class);

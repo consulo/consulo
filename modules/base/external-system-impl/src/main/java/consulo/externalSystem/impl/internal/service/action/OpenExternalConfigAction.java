@@ -9,6 +9,7 @@ import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
 import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.fileEditor.FileEditorManager;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -26,23 +27,27 @@ import jakarta.annotation.Nullable;
  */
 public class OpenExternalConfigAction extends AnAction implements DumbAware {
     public OpenExternalConfigAction() {
-        super(ExternalSystemLocalize.actionOpenConfigText("external"), ExternalSystemLocalize.actionOpenConfigDescription("external"));
+        super(ExternalSystemLocalize.actionOpenExternalConfigText(), ExternalSystemLocalize.actionOpenExternalConfigDescription());
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
         ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
-        if (externalSystemId == null) {
-            e.getPresentation().setEnabled(false);
-            return;
+        if (externalSystemId != null) {
+            LocalizeValue displayName = externalSystemId.getDisplayName();
+            e.getPresentation().setTextValue(ExternalSystemLocalize.actionOpenExternalConfig0Text(displayName));
+            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionOpenExternalConfig0Description(displayName));
+            e.getPresentation().setIcon(ExternalSystemUiUtil.getUiAware(externalSystemId).getProjectIcon());
+
+            VirtualFile config = getExternalConfig(e.getDataContext());
+            e.getPresentation().setEnabled(config != null);
         }
-
-        e.getPresentation().setTextValue(ExternalSystemLocalize.actionOpenConfigText(externalSystemId.getReadableName()));
-        e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionOpenConfigDescription(externalSystemId.getReadableName()));
-        e.getPresentation().setIcon(ExternalSystemUiUtil.getUiAware(externalSystemId).getProjectIcon());
-
-        VirtualFile config = getExternalConfig(e.getDataContext());
-        e.getPresentation().setEnabled(config != null);
+        else {
+            e.getPresentation().setTextValue(ExternalSystemLocalize.actionOpenExternalConfigText());
+            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionOpenExternalConfigDescription());
+            e.getPresentation().setIcon(null);
+            e.getPresentation().setEnabled(false);
+        }
     }
 
     @Override

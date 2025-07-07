@@ -2,6 +2,7 @@ package consulo.ide.impl.idea.codeInspection.ui.actions;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionTreeNode;
@@ -131,7 +132,6 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(InspectionManagerImpl.getSuppressActions(myToolWrapper) != null);
@@ -169,10 +169,11 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull final AnActionEvent e) {
-            Application.get().invokeLater(() -> CommandProcessor.getInstance().newCommand()
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            CommandProcessor.getInstance().newCommand()
                 .project(myProject)
                 .name(getTemplatePresentation().getTextValue())
+                .inLater()
                 .run(() -> {
                     for (InspectionTreeNode node : myNodesToSuppress) {
                         final Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
@@ -196,15 +197,13 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
                         context.refreshViews();
                     }
                     CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
-                })
-            );
+                });
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
-            if (!isAvailable()) {
+            if (!ReadAction.compute(this::isAvailable)) {
                 e.getPresentation().setVisible(false);
             }
         }

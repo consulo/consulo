@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.hint.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.ThrowableComputable;
@@ -98,7 +99,6 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -110,14 +110,12 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         Editor editor = getEditor(dataContext);
 
         PsiFile file = dataContext.getData(PsiFile.KEY);
-        PsiElement element = dataContext.getData(PsiElement.KEY);
-        element = getElement(project, file, editor, element);
+        PsiElement element = ReadAction.compute(() -> getElement(project, file, editor, dataContext.getData(PsiElement.KEY)));
 
         PsiFile containingFile = element != null ? element.getContainingFile() : file;
         boolean enabled = !(containingFile == null || !containingFile.getViewProvider().isPhysical());
         e.getPresentation().setEnabled(enabled);
     }
-
 
     protected static Editor getEditor(@Nonnull DataContext dataContext) {
         Editor editor = dataContext.getData(Editor.KEY);
@@ -211,7 +209,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         showImplementations(impls, project, text, editor, file, element, isInvokedFromEditor, invokedByShortcut);
     }
 
-    @RequiredUIAccess
+    @RequiredReadAction
     protected static PsiElement getElement(@Nonnull Project project, PsiFile file, Editor editor, PsiElement element) {
         if (element == null && editor != null) {
             element = TargetElementUtil.findTargetElement(editor, TargetElementUtil.getAllAccepted());

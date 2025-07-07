@@ -23,6 +23,7 @@ import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -40,10 +41,9 @@ import java.util.List;
  * @since 2013-06-13
  */
 public class DetachExternalProjectAction extends AnAction implements DumbAware {
-
   public DetachExternalProjectAction() {
     super(
-        ExternalSystemLocalize.actionDetachExternalProjectText("external"),
+        ExternalSystemLocalize.actionDetachExternalProjectText(),
         ExternalSystemLocalize.actionDetachExternalProjectDescription(),
         PlatformIconGroup.generalRemove()
     );
@@ -53,6 +53,15 @@ public class DetachExternalProjectAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
     e.getPresentation().setEnabled(info.externalProject != null);
+    if (info.externalSystemId != null) {
+      LocalizeValue displayName = info.externalSystemId.getDisplayName();
+      e.getPresentation().setTextValue(ExternalSystemLocalize.actionDetachExternalProject0Text(displayName));
+      e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionDetachExternalProject0Description(displayName));
+    }
+    else {
+      e.getPresentation().setTextValue(ExternalSystemLocalize.actionDetachExternalProjectText());
+      e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionDetachExternalProjectDescription());
+    }
   }
 
   @Override
@@ -64,10 +73,6 @@ public class DetachExternalProjectAction extends AnAction implements DumbAware {
     {
       return;
     }
-    
-    e.getPresentation().setTextValue(
-        ExternalSystemLocalize.actionDetachExternalProjectText(info.externalSystemId.getReadableName())
-    );
 
     ExternalSystemTasksTreeModel allTasksModel = e.getDataContext().getData(ExternalSystemDataKeys.ALL_TASKS_MODEL);
     if (allTasksModel != null) {

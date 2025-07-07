@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -40,7 +39,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
-
     @Nonnull
     @Override
     protected CodeInsightActionHandler getHandler() {

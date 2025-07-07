@@ -579,7 +579,6 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }
 
         @Override
-        @RequiredUIAccess
         public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myIndex > 0);
@@ -598,7 +597,6 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }
 
         @Override
-        @RequiredUIAccess
         public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myElements != null && myIndex < myElements.length - 1);
@@ -635,7 +633,6 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }
 
         @Override
-        @RequiredUIAccess
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myFileChooser == null || !myFileChooser.isPopupVisible());
         }

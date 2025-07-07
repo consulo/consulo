@@ -60,7 +60,6 @@ public class GoToChangePopupBuilder {
       myOnSelected = onSelected;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       if (myChain.getRequests().size() <= 1) {
@@ -71,8 +70,8 @@ public class GoToChangePopupBuilder {
       e.getPresentation().setEnabledAndVisible(true);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       JBPopup popup = createPopup(e);
 

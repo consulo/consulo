@@ -32,9 +32,8 @@ import javax.swing.*;
 import java.io.FileNotFoundException;
 
 public class ExportToHTMLAction extends AnAction {
-
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     Project project = dataContext.getData(Project.KEY);
@@ -54,7 +53,6 @@ public class ExportToHTMLAction extends AnAction {
     }
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();

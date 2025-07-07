@@ -7,6 +7,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.ComponentContainer;
@@ -157,8 +158,8 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
   private final class SwitchViewAction extends ToggleAction implements DumbAware {
     SwitchViewAction() {
       super(
-        IdeLocalize.actionToggleactionTextToggleView().get(),
-        null,
+        IdeLocalize.actionToggleactionTextToggleView(),
+        LocalizeValue.empty(),
         PlatformIconGroup.actionsChangeview()
       );
     }

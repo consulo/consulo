@@ -23,11 +23,11 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 public class PrintAction extends AnAction implements DumbAware {
   public PrintAction() {
@@ -46,8 +46,7 @@ public class PrintAction extends AnAction implements DumbAware {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event){
+  public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     VirtualFile file = ReadAction.compute(() -> dataContext.getData(VirtualFile.KEY));
