@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.find.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditor;
@@ -48,7 +48,7 @@ public class FindUsagesInFileAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         final Project project = dataContext.getData(Project.KEY);
         if (project == null) {
@@ -78,7 +78,6 @@ public class FindUsagesInFileAction extends AnAction {
     }
 
     @Override
-    @RequiredReadAction
     public void update(@Nonnull AnActionEvent event) {
         updateFindUsagesAction(event);
     }

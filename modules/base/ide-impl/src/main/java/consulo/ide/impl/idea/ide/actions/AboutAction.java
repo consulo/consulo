@@ -43,15 +43,14 @@ public class AboutAction extends AnAction implements DumbAware {
         myApplication = application;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setVisible(!Platform.current().os().isEnabledTopMenu());
         e.getPresentation().setDescription("Show information about " + myApplication.getName());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Window window = myWindowManager.get().suggestParentWindow(e.getData(Project.KEY));
 

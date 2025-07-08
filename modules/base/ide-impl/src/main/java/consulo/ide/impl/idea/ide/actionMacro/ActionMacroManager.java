@@ -295,15 +295,14 @@ public class ActionMacroManager implements Disposable {
             getTemplatePresentation().setText(macro.getName(), false);
         }
 
-        @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             IdeEventQueueProxy.getInstance().doWhenReady(() -> getInstance().playMacro(myMacro));
         }
 
-        @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(!getInstance().isPlaying());
         }

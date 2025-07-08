@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.StringUtil;
@@ -72,12 +73,13 @@ public class RunIdeConsoleAction extends DumbAwareAction {
   private static final Logger LOG = Logger.getInstance(RunIdeConsoleAction.class);
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     List<String> languages = IdeScriptEngineManager.getInstance().getLanguages();
     if (languages.size() == 1) {
       runConsole(e, languages.iterator().next());
@@ -87,6 +89,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     DefaultActionGroup actions =
             new DefaultActionGroup(ContainerUtil.map(languages, (NotNullFunction<String, AnAction>)language -> new DumbAwareAction(language) {
               @Override
+              @RequiredUIAccess
               public void actionPerformed(@Nonnull AnActionEvent e1) {
                 runConsole(e1, language);
               }

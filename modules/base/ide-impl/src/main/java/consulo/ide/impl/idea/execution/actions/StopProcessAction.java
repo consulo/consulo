@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.execution.actions;
 
 import consulo.execution.icon.ExecutionIconGroup;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.KillableProcessHandler;
 import consulo.process.ProcessHandler;
@@ -35,7 +36,7 @@ public class StopProcessAction extends DumbAwareAction {
 
   private final ProcessHandler myProcessHandler;
 
-  public StopProcessAction(@Nonnull String text, @Nullable String description, @Nonnull ProcessHandler processHandler) {
+  public StopProcessAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull ProcessHandler processHandler) {
     super(text, description, PlatformIconGroup.actionsSuspend());
     myProcessHandler = processHandler;
   }

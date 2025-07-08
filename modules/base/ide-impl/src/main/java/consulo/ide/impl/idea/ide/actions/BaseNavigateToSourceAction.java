@@ -36,8 +36,8 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
         myFocusEditor = focusEditor;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         OpenSourceUtil.navigate(myFocusEditor, getNavigatables(dataContext));

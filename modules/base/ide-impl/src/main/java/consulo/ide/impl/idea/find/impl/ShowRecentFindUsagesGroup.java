@@ -39,16 +39,13 @@ import java.util.List;
  */
 public class ShowRecentFindUsagesGroup extends ActionGroup {
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    e.getPresentation().setEnabled(project != null);
-    e.getPresentation().setVisible(project != null);
+  public void update(@Nonnull AnActionEvent e) {
+    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
   }
 
   @Override
   @Nonnull
-  public AnAction[] getChildren(@Nullable final AnActionEvent e) {
+  public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;
     Project project = e.getData(Project.KEY);
     if (project == null) return EMPTY_ARRAY;

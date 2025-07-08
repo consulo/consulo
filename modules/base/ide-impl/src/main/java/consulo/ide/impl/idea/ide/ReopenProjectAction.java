@@ -84,7 +84,6 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         presentation.setEnabled(!opened);
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
@@ -97,8 +96,8 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         //Force move focus to IdeFrame
         IdeEventQueueProxy.getInstance().closeAllPopups();

@@ -38,7 +38,6 @@ public class AssociateFileTypeAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         VirtualFile file = e.getData(VirtualFile.KEY);

@@ -25,7 +25,6 @@ import jakarta.annotation.Nonnull;
 
 public class CloseAction extends AnAction implements DumbAware {
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setIcon(e.isFromActionToolbar() ? AllIcons.Actions.Cancel : null);
 

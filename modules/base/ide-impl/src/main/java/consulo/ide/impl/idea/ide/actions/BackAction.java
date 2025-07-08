@@ -26,8 +26,8 @@ import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class BackAction extends AnAction implements DumbAware {
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -36,7 +36,6 @@ public class BackAction extends AnAction implements DumbAware {
         IdeDocumentHistory.getInstance(project).back();
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();

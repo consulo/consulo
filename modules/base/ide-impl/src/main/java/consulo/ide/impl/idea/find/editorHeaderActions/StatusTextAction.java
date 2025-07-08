@@ -16,7 +16,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class StatusTextAction extends DumbAwareAction implements CustomComponentAction {
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     SearchSession search = e.getData(SearchSession.KEY);
@@ -26,8 +25,8 @@ public class StatusTextAction extends DumbAwareAction implements CustomComponent
     label.setForeground(search == null ? UIUtil.getLabelForeground() : search.getComponent().getStatusColor());
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
   }
 

@@ -25,18 +25,18 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
+import jakarta.annotation.Nonnull;
 
 public class AssociateFileType extends AnAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         VirtualFile file = e.getData(VirtualFile.KEY);
         FileTypeChooser.associateFileType(file.getName());
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         VirtualFile file = e.getData(VirtualFile.KEY);
         Project project = e.getData(Project.KEY);

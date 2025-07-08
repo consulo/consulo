@@ -17,15 +17,20 @@ package consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
 
 import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.sm.ui.statistic.StatisticsPanel;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
  */
 public class ShowTestProxy extends AnAction {
-  public void actionPerformed(final AnActionEvent e) {
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final StatisticsPanel sender = e.getData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS);
     if (sender == null) {
       return;
@@ -35,7 +40,7 @@ public class ShowTestProxy extends AnAction {
   }
 
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
 
     // visible only in StatisticsTableView
@@ -44,7 +49,7 @@ public class ShowTestProxy extends AnAction {
     presentation.setEnabled(getSelectedTestProxy(e) != null);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static Object getSelectedTestProxy(final AnActionEvent e) {
     return e.getData(AbstractTestProxy.KEY);
   }

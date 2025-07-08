@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.find.actions;
 
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.find.FindManager;
 import consulo.find.localize.FindLocalize;
@@ -43,7 +43,8 @@ public class FindUsagesAction extends AnAction {
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -74,7 +75,7 @@ public class FindUsagesAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         FindUsagesInFileAction.updateFindUsagesAction(event);
     }
 

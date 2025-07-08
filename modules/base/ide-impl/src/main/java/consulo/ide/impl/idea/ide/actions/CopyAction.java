@@ -23,22 +23,20 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 public class CopyAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         CopyProvider provider = e.getData(CopyProvider.KEY);
-        if (provider == null) {
-            return;
+        if (provider != null) {
+            provider.performCopy(e.getDataContext());
         }
-        provider.performCopy(dataContext);
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();
         CopyProvider provider = event.getData(CopyProvider.KEY);

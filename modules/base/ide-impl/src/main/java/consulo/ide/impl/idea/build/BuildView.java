@@ -320,8 +320,8 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     AnAction stopAction = null;
     if (myBuildDescriptor.getProcessHandler() != null) {
       stopAction = new StopProcessAction(
-        IdeLocalize.actionDumbawareBuildviewTextStop().get(),
-        IdeLocalize.actionDumbawareCopyrightprofilespanelDescriptionStop().get(),
+        IdeLocalize.actionDumbawareBuildviewTextStop(),
+        IdeLocalize.actionDumbawareCopyrightprofilespanelDescriptionStop(),
         myBuildDescriptor.getProcessHandler()
       );
       ActionImplUtil.copyFrom(stopAction, IdeActions.ACTION_STOP_PROGRAM);

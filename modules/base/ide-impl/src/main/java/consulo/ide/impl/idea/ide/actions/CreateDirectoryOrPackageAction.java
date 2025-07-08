@@ -56,11 +56,11 @@ import java.util.function.Consumer;
 
 public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
     public CreateDirectoryOrPackageAction() {
-        super(IdeLocalize.actionCreateNewDirectoryOrPackage(), IdeLocalize.actionCreateNewDirectoryOrPackage(), null);
+        super(IdeLocalize.actionCreateNewDirectoryOrPackage(), IdeLocalize.actionCreateNewDirectoryOrPackage());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         IdeView view = e.getData(IdeView.KEY);
         Project project = e.getData(Project.KEY);
@@ -133,33 +133,28 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
 
         Project project = event.getData(Project.KEY);
         if (project == null) {
-            presentation.setVisible(false);
-            presentation.setEnabled(false);
+            presentation.setEnabledAndVisible(false);
             return;
         }
 
         IdeView view = event.getData(IdeView.KEY);
         if (view == null) {
-            presentation.setVisible(false);
-            presentation.setEnabled(false);
+            presentation.setEnabledAndVisible(false);
             return;
         }
 
         PsiDirectory[] directories = view.getDirectories();
         if (directories.length == 0) {
-            presentation.setVisible(false);
-            presentation.setEnabled(false);
+            presentation.setEnabledAndVisible(false);
             return;
         }
 
-        presentation.setVisible(true);
-        presentation.setEnabled(true);
+        presentation.setEnabledAndVisible(true);
 
         // is more that one directories not show package support
         if (directories.length > 1) {
