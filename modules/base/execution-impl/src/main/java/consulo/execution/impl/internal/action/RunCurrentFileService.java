@@ -15,10 +15,10 @@
  */
 package consulo.execution.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
@@ -33,13 +33,13 @@ import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.RunnerRegistry;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -138,6 +138,7 @@ public class RunCurrentFileService {
     }
 
     @Nonnull
+    @RequiredReadAction
     public RunCurrentFileActionStatus getRunCurrentFileActionStatus(
         @Nonnull Executor executor,
         @Nonnull AnActionEvent e,
@@ -174,6 +175,7 @@ public class RunCurrentFileService {
         return getRunCurrentFileActionStatus(executor, psiFile, resetCache, e);
     }
 
+    @RequiredReadAction
     private @Nonnull RunCurrentFileActionStatus getRunCurrentFileActionStatus(
         @Nonnull Executor executor,
         @Nonnull PsiFile psiFile,
@@ -204,15 +206,14 @@ public class RunCurrentFileService {
             // Other icons are the most preferred ones (like ExecutionUtil.getLiveIndicator())
             for (RunnerAndConfigurationSettings config : runnableConfigs) {
                 Image anotherIcon = ExecutorAction.getInformativeIcon(psiFile.getProject(), executor, config);
-                if (icon == executor.getIcon() || (anotherIcon != executor.getIcon() && anotherIcon != AllIcons.Actions.Restart)) {
+                if (icon == executor.getIcon()
+                    || (anotherIcon != executor.getIcon() && anotherIcon != PlatformIconGroup.actionsRestart())) {
                     icon = anotherIcon;
                 }
             }
         }
 
-        return RunCurrentFileActionStatus.createEnabled(executor.getStartActiveText(psiFile.getName()), icon,
-            runnableConfigs
-        );
+        return RunCurrentFileActionStatus.createEnabled(executor.getStartActiveText(psiFile.getName()), icon, runnableConfigs);
     }
 
     @Nonnull
@@ -226,6 +227,7 @@ public class RunCurrentFileService {
         );
     }
 
+    @RequiredReadAction
     public static List<RunnerAndConfigurationSettings> getRunConfigsForCurrentFile(@Nonnull PsiFile psiFile, boolean resetCache) {
         if (resetCache) {
             psiFile.putUserData(CURRENT_FILE_RUN_CONFIGS_KEY, null);
