@@ -92,7 +92,13 @@ public class RunCurrentFileService {
             .createPopupChooserBuilder(runConfigs)
             .setRenderer(new ColoredListCellRenderer<RunnerAndConfigurationSettings>() {
                 @Override
-                protected void customizeCellRenderer(@Nonnull JList list, RunnerAndConfigurationSettings runConfig, int index, boolean selected, boolean hasFocus) {
+                protected void customizeCellRenderer(
+                    @Nonnull JList list,
+                    RunnerAndConfigurationSettings runConfig,
+                    int index,
+                    boolean selected,
+                    boolean hasFocus
+                ) {
                     setIcon(runConfig.getConfiguration().getIcon());
                     append(runConfig.getName());
                 }
@@ -117,10 +123,12 @@ public class RunCurrentFileService {
         }
     }
 
-    protected void doRunCurrentFile(@Nonnull Project project,
-                                    @Nonnull Executor executor,
-                                    @Nonnull RunnerAndConfigurationSettings runConfig,
-                                    @Nonnull DataContext dataContext) {
+    protected void doRunCurrentFile(
+        @Nonnull Project project,
+        @Nonnull Executor executor,
+        @Nonnull RunnerAndConfigurationSettings runConfig,
+        @Nonnull DataContext dataContext
+    ) {
 
         ExecutionEnvironmentBuilder builder = ExecutionEnvironmentBuilder.createOrNull(executor, runConfig);
         if (builder == null) {
@@ -130,9 +138,11 @@ public class RunCurrentFileService {
     }
 
     @Nonnull
-    public RunCurrentFileActionStatus getRunCurrentFileActionStatus(@Nonnull Executor executor,
-                                                                    @Nonnull AnActionEvent e,
-                                                                    boolean resetCache) {
+    public RunCurrentFileActionStatus getRunCurrentFileActionStatus(
+        @Nonnull Executor executor,
+        @Nonnull AnActionEvent e,
+        boolean resetCache
+    ) {
         Project project = Objects.requireNonNull(e.getData(Project.KEY));
 
         VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
@@ -164,10 +174,12 @@ public class RunCurrentFileService {
         return getRunCurrentFileActionStatus(executor, psiFile, resetCache, e);
     }
 
-    private @Nonnull RunCurrentFileActionStatus getRunCurrentFileActionStatus(@Nonnull Executor executor,
-                                                                              @Nonnull PsiFile psiFile,
-                                                                              boolean resetCache,
-                                                                              @Nonnull AnActionEvent e) {
+    private @Nonnull RunCurrentFileActionStatus getRunCurrentFileActionStatus(
+        @Nonnull Executor executor,
+        @Nonnull PsiFile psiFile,
+        boolean resetCache,
+        @Nonnull AnActionEvent e
+    ) {
         List<RunnerAndConfigurationSettings> runConfigs = getRunConfigsForCurrentFile(psiFile, resetCache);
         if (runConfigs.isEmpty()) {
             LocalizeValue tooltip = ExecutionLocalize.runButtonOnToolbarTooltipCurrentFileNotRunnable();
@@ -176,8 +188,10 @@ public class RunCurrentFileService {
 
         List<RunnerAndConfigurationSettings> runnableConfigs = filterConfigsThatHaveRunner(executor, runConfigs);
         if (runnableConfigs.isEmpty()) {
-            return RunCurrentFileActionStatus.createDisabled(executor.getStartActiveText(psiFile.getName()),
-                executor.getIcon());
+            return RunCurrentFileActionStatus.createDisabled(
+                executor.getStartActiveText(psiFile.getName()),
+                executor.getIcon()
+            );
         }
 
         Image icon = executor.getIcon();
@@ -197,13 +211,19 @@ public class RunCurrentFileService {
         }
 
         return RunCurrentFileActionStatus.createEnabled(executor.getStartActiveText(psiFile.getName()), icon,
-            runnableConfigs);
+            runnableConfigs
+        );
     }
 
     @Nonnull
-    private List<RunnerAndConfigurationSettings> filterConfigsThatHaveRunner(@Nonnull Executor executor,
-                                                                             @Nonnull List<? extends RunnerAndConfigurationSettings> runConfigs) {
-        return ContainerUtil.filter(runConfigs, config -> RunnerRegistry.getInstance().getRunner(executor.getId(), config.getConfiguration()) != null);
+    private List<RunnerAndConfigurationSettings> filterConfigsThatHaveRunner(
+        @Nonnull Executor executor,
+        @Nonnull List<? extends RunnerAndConfigurationSettings> runConfigs
+    ) {
+        return ContainerUtil.filter(
+            runConfigs,
+            config -> RunnerRegistry.getInstance().getRunner(executor.getId(), config.getConfiguration()) != null
+        );
     }
 
     public static List<RunnerAndConfigurationSettings> getRunConfigsForCurrentFile(@Nonnull PsiFile psiFile, boolean resetCache) {
@@ -234,8 +254,7 @@ public class RunCurrentFileService {
 
             List<RunnerAndConfigurationSettings> runConfigs = configurationsFromContext == null
                 ? List.of()
-                : ContainerUtil.map(configurationsFromContext,
-                ConfigurationFromContext::getConfigurationSettings);
+                : ContainerUtil.map(configurationsFromContext, ConfigurationFromContext::getConfigurationSettings);
 
             VirtualFile vFile = psiFile.getVirtualFile();
             if (!runConfigs.isEmpty()) {
