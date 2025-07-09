@@ -55,7 +55,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
     private RunnerAndConfigurationSettings myConfiguration;
     protected boolean isClone;
 
-    public RuntimeConfigurationProducer(final ConfigurationType configurationType) {
+    public RuntimeConfigurationProducer(ConfigurationType configurationType) {
         this(configurationType.getConfigurationFactories()[0]);
     }
 
@@ -63,24 +63,24 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
         myConfigurationFactory = configurationFactory;
     }
 
-    public RuntimeConfigurationProducer createProducer(final Location location, final ConfigurationContext context) {
-        final RuntimeConfigurationProducer result = clone();
+    public RuntimeConfigurationProducer createProducer(Location location, ConfigurationContext context) {
+        RuntimeConfigurationProducer result = clone();
         result.myConfiguration = location != null ? result.createConfigurationByElement(location, context) : null;
 
         if (result.myConfiguration != null) {
-            final PsiElement psiElement = result.getSourceElement();
-            final Location<PsiElement> _location = PsiLocation.fromPsiElement(psiElement, location != null ? location.getModule() : null);
+            PsiElement psiElement = result.getSourceElement();
+            Location<PsiElement> _location = PsiLocation.fromPsiElement(psiElement, location != null ? location.getModule() : null);
             if (_location != null) {
                 // replace with existing configuration if any
-                final RunManager runManager = RunManager.getInstance(context.getProject());
-                final ConfigurationType type = result.myConfiguration.getType();
-                final List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(type);
-                final RunnerAndConfigurationSettings configuration = result.findExistingByElement(_location, configurations, context);
+                RunManager runManager = RunManager.getInstance(context.getProject());
+                ConfigurationType type = result.myConfiguration.getType();
+                List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(type);
+                RunnerAndConfigurationSettings configuration = result.findExistingByElement(_location, configurations, context);
                 if (configuration != null) {
                     result.myConfiguration = configuration;
                 }
                 else {
-                    final ArrayList<String> currentNames = new ArrayList<>();
+                    List<String> currentNames = new ArrayList<>();
                     for (RunnerAndConfigurationSettings configurationSettings : configurations) {
                         currentNames.add(configurationSettings.getName());
                     }
@@ -95,8 +95,8 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
     @Nullable
     public RunnerAndConfigurationSettings findExistingConfiguration(@Nonnull Location location, ConfigurationContext context) {
         assert isClone;
-        final RunManager runManager = RunManager.getInstance(location.getProject());
-        final List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(getConfigurationType());
+        RunManager runManager = RunManager.getInstance(location.getProject());
+        List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(getConfigurationType());
         return findExistingByElement(location, configurations, context);
     }
 
@@ -117,8 +117,8 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
 
     @Nullable
     protected RunnerAndConfigurationSettings findExistingByElement(
-        final Location location,
-        @Nonnull final List<RunnerAndConfigurationSettings> existingConfigurations,
+        Location location,
+        @Nonnull List<RunnerAndConfigurationSettings> existingConfigurations,
         ConfigurationContext context
     ) {
         assert isClone;
@@ -139,14 +139,14 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
     }
 
     protected RunnerAndConfigurationSettings cloneTemplateConfiguration(
-        final Project project,
-        @Nullable final ConfigurationContext context
+        Project project,
+        @Nullable ConfigurationContext context
     ) {
         if (context != null) {
-            final RunConfiguration original = context.getOriginalConfiguration(myConfigurationFactory.getType());
+            RunConfiguration original = context.getOriginalConfiguration(myConfigurationFactory.getType());
             if (original != null) {
-                final RunConfiguration c =
-                    original instanceof DelegatingRuntimeConfiguration ? ((DelegatingRuntimeConfiguration) original).getPeer() : original;
+                RunConfiguration c = original instanceof DelegatingRuntimeConfiguration delegatingRuntimeConfiguration
+                    ? delegatingRuntimeConfiguration.getPeer() : original;
                 return RunManager.getInstance(project).createConfiguration(c.clone(), myConfigurationFactory);
             }
         }
@@ -165,15 +165,15 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
         performRunnable.run();
     }
 
-    public static <T extends RuntimeConfigurationProducer> T getInstance(final Class<T> aClass) {
+    public static <T extends RuntimeConfigurationProducer> T getInstance(Class<T> aClass) {
         return RUNTIME_CONFIGURATION_PRODUCER.findExtension(aClass);
     }
 
     private static class ProducerComparator implements Comparator<RuntimeConfigurationProducer> {
         @Override
-        public int compare(final RuntimeConfigurationProducer producer1, final RuntimeConfigurationProducer producer2) {
-            final PsiElement psiElement1 = producer1.getSourceElement();
-            final PsiElement psiElement2 = producer2.getSourceElement();
+        public int compare(RuntimeConfigurationProducer producer1, RuntimeConfigurationProducer producer2) {
+            PsiElement psiElement1 = producer1.getSourceElement();
+            PsiElement psiElement2 = producer2.getSourceElement();
             if (doesContain(psiElement1, psiElement2)) {
                 return -PREFERED;
             }
@@ -183,7 +183,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable<Runtime
             return producer1.compareTo(producer2);
         }
 
-        private static boolean doesContain(final PsiElement container, PsiElement element) {
+        private static boolean doesContain(PsiElement container, PsiElement element) {
             while ((element = element.getParent()) != null) {
                 if (container.equals(element)) {
                     return true;
