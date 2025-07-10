@@ -2,7 +2,9 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.*;
+import consulo.application.AccessRule;
+import consulo.application.Application;
+import consulo.application.HelpManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.application.internal.ProgressIndicatorUtils;
@@ -10,7 +12,6 @@ import consulo.application.internal.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
-import consulo.awt.hacking.BasicTreeUIHacking;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataManager;
@@ -43,7 +44,10 @@ import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.tree.*;
+import consulo.ui.ex.awt.tree.SmartExpander;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
 import consulo.undoRedo.CommandProcessor;
@@ -68,10 +72,10 @@ import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.plaf.TreeUI;
-import javax.swing.plaf.basic.BasicTreeUI;
-import javax.swing.tree.TreeNode;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -542,46 +546,6 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @RequiredUIAccess
-    private void clearRendererCache() {
-        UIAccess.assertIsUIThread();
-        if (myExpandingCollapsing) {
-            return; // to avoid quadratic row enumeration
-        }
-        // clear renderer cache of node preferred size
-        TreeUI ui = myTree.getUI();
-        if (ui instanceof BasicTreeUI basicTreeUI) {
-            AbstractLayoutCache treeState = BasicTreeUIHacking.getTreeState(basicTreeUI);
-            Rectangle visibleRect = myTree.getVisibleRect();
-            int rowForLocation = myTree.getClosestRowForLocation(0, visibleRect.y);
-            int visibleRowCount = getVisibleRowCount();
-            List<Node> toUpdate = new ArrayList<>();
-            for (int i = rowForLocation + visibleRowCount + 1; i >= rowForLocation; i--) {
-                TreePath eachPath = myTree.getPathForRow(i);
-                if (eachPath == null) {
-                    continue;
-                }
-
-                treeState.invalidatePathBounds(eachPath);
-                Object node = eachPath.getLastPathComponent();
-                if (node instanceof UsageNode usageNode) {
-                    toUpdate.add(usageNode);
-                }
-            }
-            queueUpdateBulk(
-                toUpdate,
-                () -> {
-                    if (!isDisposed()) {
-                        myTree.repaint(visibleRect);
-                    }
-                }
-            );
-        }
-        else {
-            myTree.setCellRenderer(myUsageViewTreeCellRenderer);
-        }
-    }
-
-    @RequiredUIAccess
     private int getVisibleRowCount() {
         UIAccess.assertIsUIThread();
         return TreeUtil.getVisibleRowCount(myTree);
@@ -592,10 +556,6 @@ public class UsageViewImpl implements UsageViewEx {
         UIAccess.assertIsUIThread();
 
         JScrollPane treePane = ScrollPaneFactory.createScrollPane(myTree);
-        // add reaction to scrolling:
-        // since the UsageViewTreeCellRenderer ignores invisible nodes (outside the viewport), their preferred size is incorrect
-        // and we need to recalculate them when the node scrolled into the visible rectangle
-        treePane.getViewport().addChangeListener(__ -> clearRendererCache());
         myPreviewSplitter = new OnePixelSplitter(false, 0.5f, 0.1f, 0.9f);
         myPreviewSplitter.setFirstComponent(treePane);
 
@@ -756,8 +716,6 @@ public class UsageViewImpl implements UsageViewEx {
             @Override
             @RequiredUIAccess
             public void treeExpanded(TreeExpansionEvent event) {
-                clearRendererCache();
-
                 TreePath path = event.getPath();
                 Object component = path.getLastPathComponent();
                 if (component instanceof Node node && !myExpandingCollapsing && node.needsUpdate()) {
@@ -770,7 +728,6 @@ public class UsageViewImpl implements UsageViewEx {
             @Override
             @RequiredUIAccess
             public void treeCollapsed(TreeExpansionEvent event) {
-                clearRendererCache();
             }
         });
 
@@ -1070,7 +1027,6 @@ public class UsageViewImpl implements UsageViewEx {
         finally {
             myExpandingCollapsing = false;
         }
-        clearRendererCache();
     }
 
     @RequiredUIAccess

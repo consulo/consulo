@@ -22,12 +22,11 @@ import consulo.navigation.ItemPresentation;
 import consulo.ui.ex.DarculaColors;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.FontUtil;
-import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.util.TextAttributesUtil;
-import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
 import consulo.usage.*;
 import consulo.util.lang.StringUtil;
@@ -49,26 +48,18 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   private static final SimpleTextAttributes ourNumberOfUsagesAttribute = TextAttributesUtil.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.NUMBER_OF_USAGES));
   private static final SimpleTextAttributes ourInvalidAttributesDarcula =
           new SimpleTextAttributes(null, DarculaColors.RED, null, ourInvalidAttributes.getStyle());
-  private static final Insets STANDARD_IPAD_NOWIFI = new Insets(1, 2, 1, 2);
-  private boolean myRowBoundsCalled;
+  private static final Insets STANDARD_IPAD_NOWIFI = JBUI.insets(1, 2);
 
   private final UsageViewPresentation myPresentation;
   private final UsageView myView;
-  private boolean myCalculated;
-  private int myRowHeight = Image.DEFAULT_ICON_SIZE + 2;
 
   UsageViewTreeCellRenderer(@Nonnull UsageView view) {
     myView = view;
     myPresentation = view.getPresentation();
+    setIpad(STANDARD_IPAD_NOWIFI);
   }
 
   private Dimension cachedPreferredSize;
-
-  @Nonnull
-  @Override
-  public Dimension getPreferredSize() {
-    return myCalculated ? super.getPreferredSize() : new Dimension(10, myRowHeight);
-  }
 
   @Override
   public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
@@ -86,29 +77,9 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
       }
     }
 
-    myCalculated = false;
     if (value instanceof DefaultMutableTreeNode) {
       DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)value;
       Object userObject = treeNode.getUserObject();
-
-      Rectangle visibleRect = ((JViewport)tree.getParent()).getViewRect();
-      if (!visibleRect.isEmpty()) {
-        //Protection against SOE on some OSes and JDKs IDEA-120631
-        RowLocation visible = myRowBoundsCalled ? RowLocation.INSIDE_VISIBLE_RECT : isRowVisible(row, visibleRect);
-        myRowBoundsCalled = false;
-        if (visible != RowLocation.INSIDE_VISIBLE_RECT) {
-          // for the node outside visible rect do not compute (expensive) presentation
-          return;
-        }
-        if (!getIpad().equals(STANDARD_IPAD_NOWIFI)) {
-          // for the visible node, return its ipad to the standard value
-          setIpad(STANDARD_IPAD_NOWIFI);
-        }
-      }
-
-      // we can be called recursively via isRowVisible()
-      if (myCalculated) return;
-      myCalculated = true;
 
       if (userObject instanceof UsageTarget) {
         UsageTarget usageTarget = (UsageTarget)userObject;
@@ -119,12 +90,12 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
           return;
         }
 
-        final ItemPresentation presentation = usageTarget.getPresentation();
+        ItemPresentation presentation = usageTarget.getPresentation();
         LOG.assertTrue(presentation != null);
         if (showAsReadOnly) {
           append(UsageViewBundle.message("node.readonly") + " ", ourReadOnlyAttributes);
         }
-        final String text = presentation.getPresentableText();
+        String text = presentation.getPresentableText();
         append(text == null ? "" : text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
         setIcon(presentation.getIcon());
       }
@@ -195,12 +166,12 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
       if (userObject instanceof UsageTarget) {
         UsageTarget usageTarget = (UsageTarget)userObject;
         if (usageTarget.isValid()) {
-          final ItemPresentation presentation = usageTarget.getPresentation();
+          ItemPresentation presentation = usageTarget.getPresentation();
           LOG.assertTrue(presentation != null);
           if (showAsReadOnly) {
             result.append(UsageViewBundle.message("node.readonly")).append(" ");
           }
-          final String text = presentation.getPresentableText();
+          String text = presentation.getPresentableText();
           result.append(text == null ? "" : text);
         }
         else {
@@ -263,13 +234,9 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
       pref = cachedPreferredSize;
     }
     pref.width = Math.max(visibleRect.width, pref.width);
-    myRowBoundsCalled = true;
     JTree tree = getTree();
-    final Rectangle bounds = tree == null ? null : tree.getRowBounds(row);
-    myRowBoundsCalled = false;
-    if (bounds != null) {
-      myRowHeight = bounds.height;
-    }
+    Rectangle bounds = tree == null ? null : tree.getRowBounds(row);
+
     int y = bounds == null ? 0 : bounds.y;
     TextRange vis = TextRange.from(Math.max(0, visibleRect.y - pref.height), visibleRect.height + pref.height * 2);
     boolean inside = vis.contains(y);
@@ -298,7 +265,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     return original;
   }
 
-  static String getTooltipFromPresentation(final Object value) {
+  static String getTooltipFromPresentation(Object value) {
     if (value instanceof DefaultMutableTreeNode) {
       DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)value;
       if (treeNode instanceof UsageNode) {

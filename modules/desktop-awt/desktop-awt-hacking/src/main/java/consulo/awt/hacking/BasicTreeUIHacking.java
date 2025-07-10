@@ -16,11 +16,9 @@
 package consulo.awt.hacking;
 
 import consulo.awt.hacking.util.AWTHackingUtil;
-import consulo.awt.hacking.util.FieldAccessor;
 
 import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
-import javax.swing.tree.AbstractLayoutCache;
 import javax.swing.tree.TreePath;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -32,8 +30,6 @@ import java.lang.reflect.Method;
 public class BasicTreeUIHacking {
   private static final Method ourGetRowX = AWTHackingUtil.findMethodSilent(BasicTreeUI.class, "getRowX", int.class, int.class);
   private static final Method ourIsLocationInExpandControl = AWTHackingUtil.findMethodSilent(BasicTreeUI.class, "isLocationInExpandControl", TreePath.class, int.class, int.class);
-
-  private static final FieldAccessor<BasicTreeUI, AbstractLayoutCache> ourTreeState = new FieldAccessor<>(BasicTreeUI.class, "treeState", AbstractLayoutCache.class);
 
   public static int getRowX(TreeUI treeUI, int row, int depth) {
     if (!(treeUI instanceof BasicTreeUI) || ourGetRowX == null) {
@@ -58,9 +54,5 @@ public class BasicTreeUIHacking {
     catch (IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  public static AbstractLayoutCache getTreeState(BasicTreeUI ui) {
-    return ourTreeState.isAvailable() ? ourTreeState.get(ui) : null;
   }
 }
