@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.usages.actions;
 
+import consulo.application.ReadAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.usage.UsageView;
@@ -22,6 +23,8 @@ import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.Objects;
 
 /**
  * @author gregsh
@@ -37,7 +40,8 @@ public class RerunSearchAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    boolean enabled = e.getData(UsageView.USAGE_VIEW_KEY) instanceof UsageViewImpl usageView && usageView.canPerformReRun();
+    boolean enabled = e.getData(UsageView.USAGE_VIEW_KEY) instanceof UsageViewImpl usageView
+        && Objects.equals(ReadAction.compute(usageView::canPerformReRun), Boolean.TRUE);
     e.getPresentation().setEnabled(enabled);
   }
 }

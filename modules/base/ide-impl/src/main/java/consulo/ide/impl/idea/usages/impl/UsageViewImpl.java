@@ -1686,6 +1686,7 @@ public class UsageViewImpl implements UsageViewEx {
         addButtonToLowerPane(runnable, shortDescription);
     }
 
+    @RequiredReadAction
     private boolean allTargetsAreValid() {
         for (UsageTarget target : myTargets) {
             if (!target.isValid()) {
@@ -1702,6 +1703,7 @@ public class UsageViewImpl implements UsageViewEx {
         return myPresentation;
     }
 
+    @RequiredReadAction
     public boolean canPerformReRun() {
         if (myRerunAction != null && myRerunAction.isEnabled()) {
             return allTargetsAreValid();
