@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.impl.internal.action;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
@@ -69,8 +67,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         return ActionPlaces.RUN_CONFIGURATIONS_COMBOBOX;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
@@ -90,8 +88,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                     Set<Image> defaultRunImages = new SmartHashSet<>();
                     
                     for (Executor executor : myApplication.getExtensionPoint(Executor.class).getOrBuildCache(RunCurrentFileExecutor.CACHE_KEY)) {
-                        RunCurrentFileActionStatus status =
-                            myRunCurrentFileService.getRunCurrentFileActionStatus(executor, e, false);
+                        RunCurrentFileActionStatus status = myRunCurrentFileService.getRunCurrentFileActionStatus(executor, e, false);
 
                         for (RunnerAndConfigurationSettings runConfig : status.runConfigs()) {
                             defaultRunImages.add(runConfig.getConfiguration().getType().getIcon());
@@ -118,7 +115,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         @Nullable RunnerAndConfigurationSettings settings,
         @Nullable Project project,
         @Nonnull Presentation presentation,
-        @Nullable String actionPlace) {
+        @Nullable String actionPlace
+    ) {
         if (project != null && target != null && settings != null) {
             String name = settings.getName();
             if (target != DefaultExecutionTarget.INSTANCE) {
@@ -158,7 +156,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         }
     }
 
-    private static void setConfigurationIcon(final Presentation presentation, final RunnerAndConfigurationSettings settings, final Project project) {
+    private static void setConfigurationIcon(Presentation presentation, RunnerAndConfigurationSettings settings, Project project) {
         try {
             Image icon = RunManagerEx.getInstanceEx(project).getConfigurationIcon(settings);
             ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
@@ -180,13 +178,13 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         return true;
     }
 
-    @Override
     @Nonnull
+    @Override
     public ActionGroup createPopupActionGroup(JComponent button) {
-        final ActionGroup.Builder allActionsGroup = ActionGroup.newImmutableBuilder();
-        final Project project = DataManager.getInstance().getDataContext(button).getData(Project.KEY);
+        ActionGroup.Builder allActionsGroup = ActionGroup.newImmutableBuilder();
+        Project project = DataManager.getInstance().getDataContext(button).getData(Project.KEY);
         if (project != null) {
-            final RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
+            RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
 
             allActionsGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS));
             allActionsGroup.add(new SaveTemporaryAction());
@@ -203,13 +201,13 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                 allActionsGroup.addSeparator();
             }
 
-            final List<ConfigurationType> types = runManager.getConfigurationFactories();
+            List<ConfigurationType> types = runManager.getConfigurationFactories();
             for (ConfigurationType type : types) {
-                final DefaultActionGroup actionGroup = new DefaultActionGroup();
+                DefaultActionGroup actionGroup = new DefaultActionGroup();
                 Map<String, List<RunnerAndConfigurationSettings>> structure = runManager.getStructure(type);
                 for (Map.Entry<String, List<RunnerAndConfigurationSettings>> entry : structure.entrySet()) {
                     DefaultActionGroup group = entry.getKey() != null ? new DefaultActionGroup(LocalizeValue.of(entry.getKey()), true) : actionGroup;
-                    group.getTemplatePresentation().setIcon(AllIcons.Nodes.Folder);
+                    group.getTemplatePresentation().setIcon(PlatformIconGroup.nodesFolder());
                     for (RunnerAndConfigurationSettings settings : entry.getValue()) {
                         group.add(new SelectConfigAction(settings, project));
                     }
@@ -234,11 +232,11 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final Project project = e.getData(Project.KEY);
+            Project project = e.getData(Project.KEY);
             if (project != null) {
                 RunnerAndConfigurationSettings settings = chooseTempSettings(project);
                 if (settings != null) {
-                    final RunManager runManager = RunManager.getInstance(project);
+                    RunManager runManager = RunManager.getInstance(project);
                     runManager.makeStable(settings);
                 }
             }
@@ -246,8 +244,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
         @Override
         public void update(@Nonnull AnActionEvent e) {
-            final Presentation presentation = e.getPresentation();
-            final Project project = e.getData(Project.KEY);
+            Presentation presentation = e.getPresentation();
+            Project project = e.getData(Project.KEY);
             if (project == null) {
                 disable(presentation);
                 return;
@@ -266,7 +264,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
             }
         }
 
-        private static void disable(final Presentation presentation) {
+        private static void disable(Presentation presentation) {
             presentation.setEnabled(false);
             presentation.setVisible(false);
         }
@@ -286,7 +284,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         private final Project myProject;
         private final ExecutionTarget myTarget;
 
-        public SelectTargetAction(final Project project, final ExecutionTarget target, boolean selected) {
+        public SelectTargetAction(Project project, ExecutionTarget target, boolean selected) {
             myProject = project;
             myTarget = target;
 
@@ -296,8 +294,16 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
             presentation.setTextValue(LocalizeValue.of(name));
             presentation.setDescriptionValue(LocalizeValue.localizeTODO("Select " + name));
 
-            presentation.setIcon(selected ? ImageEffects.resize(AllIcons.Actions.Checked, Image.DEFAULT_ICON_SIZE) : Image.empty(Image.DEFAULT_ICON_SIZE));
-            presentation.setSelectedIcon(selected ? ImageEffects.resize(AllIcons.Actions.Checked_selected, Image.DEFAULT_ICON_SIZE) : Image.empty(Image.DEFAULT_ICON_SIZE));
+            presentation.setIcon(
+                selected
+                    ? ImageEffects.resize(PlatformIconGroup.actionsChecked(), Image.DEFAULT_ICON_SIZE)
+                    : Image.empty(Image.DEFAULT_ICON_SIZE)
+            );
+            presentation.setSelectedIcon(
+                selected
+                    ? ImageEffects.resize(PlatformIconGroup.actionsChecked_selected(), Image.DEFAULT_ICON_SIZE)
+                    : Image.empty(Image.DEFAULT_ICON_SIZE)
+            );
         }
 
         @Override
@@ -312,21 +318,21 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         private final RunnerAndConfigurationSettings myConfiguration;
         private final Project myProject;
 
-        public SelectConfigAction(final RunnerAndConfigurationSettings configuration, final Project project) {
+        public SelectConfigAction(RunnerAndConfigurationSettings configuration, Project project) {
             myConfiguration = configuration;
             myProject = project;
             String name = StringUtil.notNullize(configuration.getName());
-            final Presentation presentation = getTemplatePresentation();
+            Presentation presentation = getTemplatePresentation();
             presentation.setDisabledMnemonic(true);
             presentation.setTextValue(LocalizeValue.of(name));
-            final ConfigurationType type = configuration.getType();
+            ConfigurationType type = configuration.getType();
             if (type != null) {
                 presentation.setDescriptionValue(LocalizeValue.localizeTODO("Select " + type.getConfigurationTypeDescription() + " '" + name + "'"));
             }
             updateIcon(presentation);
         }
 
-        private void updateIcon(final Presentation presentation) {
+        private void updateIcon(Presentation presentation) {
             setConfigurationIcon(presentation, myConfiguration, myProject);
         }
 
