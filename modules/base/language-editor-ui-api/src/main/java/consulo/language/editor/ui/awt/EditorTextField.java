@@ -313,7 +313,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
 
     @RequiredUIAccess
-    public void setText(@Nullable final String text) {
+    public void setText(@Nullable String text) {
         CommandProcessor.getInstance().newCommand()
             .project(getProject())
             .document(getDocument())
@@ -321,7 +321,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
             .run(() -> {
                 myDocument.replaceString(0, myDocument.getTextLength(), text == null ? "" : text);
                 if (myEditor != null) {
-                    final CaretModel caretModel = myEditor.getCaretModel();
+                    CaretModel caretModel = myEditor.getCaretModel();
                     if (caretModel.getOffset() >= myDocument.getTextLength()) {
                         caretModel.moveToOffset(myDocument.getTextLength());
                     }
@@ -457,7 +457,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
         // todo IMHO this should be removed completely
         if (myProject != null && !myProject.isDisposed() && myIsViewer) {
-            final PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
+            PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
             if (psiFile != null) {
                 DaemonCodeAnalyzer.getInstance(myProject).setHighlightingEnabled(psiFile, true);
             }
@@ -502,21 +502,20 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         return myOneLineMode;
     }
 
-    private void initOneLineMode(final EditorEx editor) {
-        final boolean isOneLineMode = isOneLineMode();
+    private void initOneLineMode(EditorEx editor) {
+        boolean isOneLineMode = isOneLineMode();
 
         // set mode in editor
         editor.setOneLineMode(isOneLineMode);
 
         EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-        final EditorColorsScheme defaultScheme = StyleManager.get().getCurrentStyle().isDark()
+        EditorColorsScheme defaultScheme = StyleManager.get().getCurrentStyle().isDark()
             ? colorsManager.getGlobalScheme()
-            : colorsManager.getScheme(EditorColorsManager.DEFAULT_SCHEME_NAME);
+            : colorsManager.getScheme(EditorColorsScheme.DEFAULT_SCHEME_NAME);
         EditorColorsScheme customGlobalScheme = isOneLineMode ? defaultScheme : null;
 
         editor.setColorsScheme(editor.createBoundColorSchemeDelegate(customGlobalScheme));
 
-        EditorColorsScheme colorsScheme = editor.getColorsScheme();
         editor.getSettings().setCaretRowShown(false);
 
         // color scheme settings:
@@ -531,12 +530,12 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     protected EditorEx createEditor() {
         LOG.assertTrue(myDocument != null);
 
-        final EditorFactory factory = EditorFactory.getInstance();
+        EditorFactory factory = EditorFactory.getInstance();
         EditorEx editor =
             (EditorEx)(myIsViewer ? factory.createViewer(myDocument, myProject) : factory.createEditor(myDocument, myProject));
         editor.putUserData(MANAGED_BY_FIELD, Boolean.TRUE);
 
-        final EditorSettings settings = editor.getSettings();
+        EditorSettings settings = editor.getSettings();
         settings.setAdditionalLinesCount(0);
         settings.setAdditionalColumnsCount(1);
         settings.setRightMarginShown(false);
@@ -611,7 +610,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         return Objects.equals(editor.getUserData(MANAGED_BY_FIELD), Boolean.TRUE);
     }
 
-    private void setupEditorFont(final EditorEx editor) {
+    private void setupEditorFont(EditorEx editor) {
         if (myInheritSwingFont) {
             editor.setUseEditorAntialiasing(false);
             editor.getColorsScheme().setEditorFontName(getFont().getFontName());
@@ -683,7 +682,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
         Dimension size = new Dimension(100, 20);
         if (myEditor != null) {
-            final Dimension preferredSize = new Dimension(myEditor.getComponent().getPreferredSize());
+            Dimension preferredSize = new Dimension(myEditor.getComponent().getPreferredSize());
 
             if (myPreferredWidth != -1) {
                 preferredSize.width = myPreferredWidth;
@@ -783,7 +782,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     @Override
     public boolean requestFocusInWindow() {
         if (myEditor != null) {
-            final boolean b = myEditor.getContentComponent().requestFocusInWindow();
+            boolean b = myEditor.getContentComponent().requestFocusInWindow();
             myEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
             return b;
         }

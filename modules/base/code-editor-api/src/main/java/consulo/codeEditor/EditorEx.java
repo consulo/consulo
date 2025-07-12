@@ -364,4 +364,7 @@ public interface EditorEx extends Editor {
     default boolean isAd() {
         return false;
     }
+
+    default void updateUI() {
+    }
 }

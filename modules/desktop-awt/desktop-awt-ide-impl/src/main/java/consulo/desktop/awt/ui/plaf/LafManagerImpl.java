@@ -19,9 +19,12 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.application.ui.UIFontManager;
 import consulo.application.ui.UISettings;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.internal.EditorColorsManagerInternal;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -55,7 +58,6 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.style.Style;
 import consulo.util.collection.impl.map.LinkedHashMap;
-import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -122,7 +124,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @Override
-    public void addLafManagerListener(@Nonnull final LafManagerListener l) {
+    public void addLafManagerListener(@Nonnull LafManagerListener l) {
         myListenerList.addListener(l);
     }
 
@@ -132,7 +134,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @Override
-    public void removeLafManagerListener(@Nonnull final LafManagerListener l) {
+    public void removeLafManagerListener(@Nonnull LafManagerListener l) {
         myListenerList.removeListener(l);
     }
 
@@ -147,7 +149,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
         DesktopStyleImpl style = myCurrentStyle;
         
         if (style != null) {
-            final DesktopStyleImpl laf = myStyles.get(style.getId());
+            DesktopStyleImpl laf = myStyles.get(style.getId());
             if (laf != null) {
                 BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager) IconLibraryManager.get();
                 boolean fromStyle = iconLibraryManager.isFromStyle();
@@ -167,7 +169,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
     }
 
     @Override
-    public void loadState(final Element element) {
+    public void loadState(Element element) {
         String oldLafClassName = null;
 
         Element lafElement = element.getChild(ELEMENT_LAF);
@@ -303,7 +305,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
             myCurrentStyle = style;
 
             if (targetClassLoader != null) {
-                final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
+                UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
 
                 uiDefaults.put("ClassLoader", targetClassLoader);
             }
@@ -317,10 +319,10 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
             if (wantChangeScheme) {
                 if (lookAndFeelInfo instanceof LafWithColorScheme) {
-                    EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
+                    EditorColorsManagerInternal editorColorsManager = (EditorColorsManagerInternal) EditorColorsManager.getInstance();
                     EditorColorsScheme editorColorsScheme = editorColorsManager.getScheme(((LafWithColorScheme) lookAndFeelInfo).getColorSchemeName());
                     if (editorColorsScheme != null) {
-                        editorColorsManager.setGlobalScheme(editorColorsScheme);
+                        editorColorsManager.setGlobalSchemeNoRefreshUI(editorColorsScheme);
                     }
                 }
             }
@@ -350,9 +352,20 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     @RequiredUIAccess
     private void fireUpdate() {
+        updateUI();
+
         UISettings.getInstance().fireUISettingsChanged();
 
-        EditorFactory.getInstance().refreshAllEditors();
+        EditorFactory factory = EditorFactory.getInstance();
+
+        for (Editor editor : factory.getAllEditors()) {
+            if (editor instanceof EditorEx editorEx) {
+                editorEx.updateUI();
+            }
+        }
+        
+        factory.refreshAllEditors();
+
 
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         for (Project openProject : openProjects) {
@@ -394,16 +407,16 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     public static void updateToolWindows() {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-            final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             for (String id : toolWindowManager.getToolWindowIds()) {
-                final ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
+                ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
                 for (Content content : toolWindow.getContentManager().getContents()) {
-                    final JComponent component = content.getComponent();
+                    JComponent component = content.getComponent();
                     if (component != null) {
                         IJSwingUtilities.updateComponentTreeUI(component);
                     }
                 }
-                final JComponent c = toolWindow.getComponent();
+                JComponent c = toolWindow.getComponent();
                 if (c != null) {
                     IJSwingUtilities.updateComponentTreeUI(c);
                 }

@@ -17,9 +17,9 @@ package consulo.colorScheme.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.colorScheme.*;
 import consulo.colorScheme.event.EditorColorsListener;
+import consulo.colorScheme.internal.EditorColorsManagerInternal;
 import consulo.colorScheme.internal.ReadOnlyColorsScheme;
 import consulo.component.persist.*;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
@@ -53,7 +53,7 @@ import java.util.Map;
     // make roamingType per platform, due user can use light laf on one platform, and dark on other
     storages = @Storage(value = "colors.scheme.xml", roamingType = RoamingType.PER_OS), additionalExportFile = EditorColorsManagerImpl.FILE_SPEC)
 @ServiceImpl
-public class EditorColorsManagerImpl extends EditorColorsManager implements PersistentStateComponent<EditorColorsManagerImpl.State> {
+public class EditorColorsManagerImpl implements EditorColorsManagerInternal, PersistentStateComponent<EditorColorsManagerImpl.State> {
     private static final Logger LOG = Logger.getInstance(EditorColorsManagerImpl.class);
 
     private static final String SCHEME_NODE_NAME = "scheme";
@@ -80,7 +80,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
                 }
 
                 @Override
-                public Element writeScheme(@Nonnull final EditorColorsSchemeImpl scheme) {
+                public Element writeScheme(@Nonnull EditorColorsSchemeImpl scheme) {
                     Element root = new Element(SCHEME_NODE_NAME);
                     try {
                         scheme.writeExternal(root);
@@ -99,7 +99,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
                 }
 
                 @Override
-                public void onCurrentSchemeChanged(final EditorColorsSchemeImpl newCurrentScheme) {
+                public void onCurrentSchemeChanged(EditorColorsSchemeImpl newCurrentScheme) {
                     fireChanges(mySchemeManager.getCurrentScheme());
                 }
 
@@ -130,7 +130,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
                 if (resource == null) {
                     throw new IllegalArgumentException("Can't find resource: " + colorSchemeFile);
                 }
-                
+
                 mySchemeManager.loadBundledScheme(resource, element -> {
                     DefaultColorsScheme defaultColorsScheme = new DefaultColorsScheme(EditorColorsManagerImpl.this);
                     defaultColorsScheme.readExternal(element);
@@ -269,9 +269,20 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
 
     @Override
     public void setGlobalScheme(@Nullable EditorColorsScheme scheme) {
+        setGlobalScheme(scheme, true);
+    }
+
+    @Override
+    public void setGlobalSchemeNoRefreshUI(EditorColorsScheme scheme) {
+        setGlobalScheme(scheme, false);
+    }
+
+    private void setGlobalScheme(@Nullable EditorColorsScheme scheme, boolean refreshUI) {
         setGlobalSchemeInner(scheme);
 
-        StyleManager.get().refreshUI();
+        if (refreshUI) {
+            StyleManager.get().refreshUI();
+        }
 
         fireChanges(scheme);
     }
@@ -304,7 +315,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
 
     private void fireChanges(EditorColorsScheme scheme) {
         // we need to push events to components that use editor font, e.g. HTML editor panes
-        ApplicationManager.getApplication().getMessageBus().syncPublisher(EditorColorsListener.class).globalSchemeChange(scheme);
+        Application.get().getMessageBus().syncPublisher(EditorColorsListener.class).globalSchemeChange(scheme);
 
         myTreeDispatcher.getMulticaster().globalSchemeChange(scheme);
     }
@@ -324,7 +335,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     public State getState() {
         if (mySchemeManager.getCurrentScheme() != null) {
             String name = mySchemeManager.getCurrentScheme().getName();
-            myState.colorScheme = "Default".equals(name) ? null : name;
+            myState.colorScheme = EditorColorsScheme.DEFAULT_SCHEME_NAME.equals(name) ? null : name;
         }
         return myState;
     }

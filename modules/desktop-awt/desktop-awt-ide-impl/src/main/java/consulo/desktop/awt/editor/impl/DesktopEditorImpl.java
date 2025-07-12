@@ -748,6 +748,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
+    public void updateUI() {
+        IJSwingUtilities.updateComponentTreeUI(getComponent());
+    }
+
+    @Override
     public void reinitViewSettings() {
         myView.reinitSettings();
     }
@@ -800,10 +805,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
         getCaretModel().doWithCaretMerging(() -> myCaretModel.getAllCarets().forEach(caret -> caret.moveToOffset(caret.getOffset())));
 
         if (myVirtualFile != null && myProject != null) {
-            final EditorNotifications editorNotifications = EditorNotifications.getInstance(myProject);
-            if (editorNotifications != null) {
-                editorNotifications.updateNotifications(myVirtualFile);
-            }
+            EditorNotifications editorNotifications = EditorNotifications.getInstance(myProject);
+            editorNotifications.updateNotifications(myVirtualFile);
         }
 
         if (myFocusModeModel != null) {
