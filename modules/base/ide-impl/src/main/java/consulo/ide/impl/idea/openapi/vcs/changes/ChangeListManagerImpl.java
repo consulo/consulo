@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -26,11 +27,13 @@ import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.idea.openapi.vcs.VcsConnectionProblem;
@@ -49,6 +52,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.DirectoryIndexExcludePolicy;
 import consulo.project.Project;
+import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.notification.NotificationType;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
@@ -116,6 +120,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     private final Object myDataLock = new Object();
 
+    private final Disposable myUpdateDisposable = Disposable.newDisposable();
+
     private final List<CommitExecutor> myExecutors = new ArrayList<>();
 
     private final IgnoredFilesComponent myIgnoredFilesComponent;
@@ -162,7 +168,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         myFileStatusManager = FileStatusManager.getInstance(myProject);
         myComposite = new FileHolderComposite(project);
         myIgnoredFilesComponent = new IgnoredFilesComponent(myProject, true);
-        myUpdater = new UpdateRequestsQueue(myProject, myScheduler, new ActualUpdater());
+        myUpdater = new UpdateRequestsQueue(myProject, myScheduler, this::updateImmediately);
 
         myWorker = new ChangeListWorker(myProject, new MyChangesDeltaForwarder(myProject, myScheduler));
         myDelayedNotificator = new DelayedNotificator(myListeners, myScheduler);
@@ -241,6 +247,19 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             @Override
             public void changeListUpdateDone() {
                 topic().changeListUpdateDone();
+            }
+        });
+
+        Disposer.register(this, myUpdateDisposable); // register defensively, in case "projectClosing" won't be called
+
+        MessageBusConnection connection = project.getApplication().getMessageBus().connect(this);
+        connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
+            @Override
+            public void projectClosing(@Nonnull Project project) {
+                if (project == ChangeListManagerImpl.this.myProject) {
+                    // Can't use Project disposable - it will be called after pending tasks are finished
+                    Disposer.dispose(myUpdateDisposable);
+                }
             }
         });
     }
@@ -499,13 +518,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         myUpdater.schedule();
     }
 
-    private class ActualUpdater implements Runnable {
-        @Override
-        public void run() {
-            updateImmediately();
-        }
-    }
-
     private void filterOutIgnoredFiles(List<VcsDirtyScope> scopes) {
         Set<VirtualFile> refreshFiles = new HashSet<>();
         try {
@@ -555,6 +567,13 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     private boolean updateImmediately() {
+        return BackgroundTaskUtil.runUnderDisposeAwareIndicator(myUpdateDisposable, this::updateImmediatelyImpl);
+    }
+
+    /**
+     * @return false if update was re-scheduled due to new 'markEverythingDirty' event, true otherwise.
+     */
+    private boolean updateImmediatelyImpl() {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
         if (!vcsManager.hasActiveVcss()) {
             return true;
@@ -671,7 +690,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     private void iterateScopes(DataHolder dataHolder, List<? extends VcsModifiableDirtyScope> scopes, boolean wasEverythingDirty) {
         ChangeListManagerGate gate = dataHolder.getChangeListWorker().createSelfGate();
         // do actual requests about file statuses
-        Supplier<Boolean> disposedGetter = () -> myProject.isDisposed() || myUpdater.getIsStoppedGetter().get();
+        Supplier<Boolean> disposedGetter = () -> myProject.isDisposed() || myUpdater.isStopped();
         UpdatingChangeListBuilder builder =
             new UpdatingChangeListBuilder(dataHolder.getChangeListWorker(), dataHolder.getComposite(), disposedGetter, this, gate);
 

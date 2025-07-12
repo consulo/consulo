@@ -18,25 +18,25 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.application.ApplicationManager;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.util.Semaphore;
-import consulo.project.impl.internal.StartupManagerImpl;
-import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.impl.internal.StartupManagerImpl;
 import consulo.project.startup.StartupManager;
 import consulo.ui.ModalityState;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.impl.internal.change.ChangeListScheduler;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * ChangeListManager updates scheduler.
@@ -62,9 +62,8 @@ public class UpdateRequestsQueue {
   //private final ScheduledSlowlyClosingAlarm mySharedExecutor;
   private final StartupManager myStartupManager;
   private final boolean myTrackHeavyLatch;
-  private final Getter<Boolean> myIsStoppedGetter;
 
-  public UpdateRequestsQueue(final Project project, @Nonnull ChangeListScheduler scheduler, final Runnable delegate) {
+  public UpdateRequestsQueue(Project project, @Nonnull ChangeListScheduler scheduler, Runnable delegate) {
     myProject = project;
     myScheduler = scheduler;
 
@@ -78,21 +77,11 @@ public class UpdateRequestsQueue {
     // not initialized
     myStarted = false;
     myStopped = false;
-    myIsStoppedGetter = new Getter<Boolean>() {
-      @Override
-      public Boolean get() {
-        return isStopped();
-      }
-    };
   }
 
   public void initialized() {
     LOG.debug("Initialized for project: " + myProject.getName());
     myStarted = true;
-  }
-
-  public Getter<Boolean> getIsStoppedGetter() {
-    return myIsStoppedGetter;
   }
 
   public boolean isStopped() {
@@ -105,7 +94,7 @@ public class UpdateRequestsQueue {
 
       if (! myStopped) {
         if (! myRequestSubmitted) {
-          final MyRunnable runnable = new MyRunnable();
+          MyRunnable runnable = new MyRunnable();
           myRequestSubmitted = true;
           myScheduler.schedule(runnable, 300, TimeUnit.MILLISECONDS);
           LOG.debug("Scheduled for project: " + myProject.getName() + ", runnable: " + runnable.hashCode());
@@ -138,7 +127,7 @@ public class UpdateRequestsQueue {
 
   public void stop() {
     LOG.debug("Calling stop for project: " + myProject.getName());
-    final List<Runnable> waiters = new ArrayList<>(myWaitingUpdateCompletionQueue.size());
+    List<Runnable> waiters = new ArrayList<>(myWaitingUpdateCompletionQueue.size());
     synchronized (myLock) {
       myStopped = true;
       waiters.addAll(myWaitingUpdateCompletionQueue);
@@ -155,7 +144,7 @@ public class UpdateRequestsQueue {
   @TestOnly
   public void waitUntilRefreshed() {
     while (true) {
-      final Semaphore semaphore = new Semaphore();
+      Semaphore semaphore = new Semaphore();
       synchronized (myLock) {
         if (!myRequestSubmitted && !myRequestRunning) {
           return;
@@ -190,7 +179,7 @@ public class UpdateRequestsQueue {
                                 @Nullable Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
                                 @Nullable ModalityState state) {
     LOG.debug("invokeAfterUpdate for project: " + myProject.getName());
-    final CallbackData data = CallbackData.create(myProject, mode, afterUpdate, title, state);
+    CallbackData data = CallbackData.create(myProject, mode, afterUpdate, title, state);
 
     if (dirtyScopeManagerFiller != null) {
       VcsDirtyScopeManagerProxy managerProxy = new VcsDirtyScopeManagerProxy();
@@ -237,7 +226,7 @@ public class UpdateRequestsQueue {
 
   private class MyRunnable implements Runnable {
     public void run() {
-      final List<Runnable> copy = new ArrayList<>(myWaitingUpdateCompletionQueue.size());
+      List<Runnable> copy = new ArrayList<>(myWaitingUpdateCompletionQueue.size());
       try {
         synchronized (myLock) {
           if (!myRequestSubmitted) return;
