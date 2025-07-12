@@ -59,7 +59,6 @@ import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.util.TextAttributesUtil;
-import consulo.ui.style.StyleManager;
 import consulo.util.collection.JBIterable;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -71,7 +70,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.plaf.PanelUI;
 import javax.swing.tree.TreeNode;
@@ -120,9 +118,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
 
         installPopupHandler(this, -1);
         setOpaque(false);
-        if (!docked && StyleManager.get().getCurrentStyle().isDark()) {
-            setBorder(new LineBorder(Gray._120, 1));
-        }
+
         myUpdateQueue.queueModelUpdateFromFocus();
         myUpdateQueue.queueRebuildUi();
 

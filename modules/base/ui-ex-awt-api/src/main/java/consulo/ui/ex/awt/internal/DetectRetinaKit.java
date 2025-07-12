@@ -14,7 +14,6 @@ import java.util.Map;
 /**
  * Utility class for retina routine
  */
-//@ApiStatus.Internal
 public final class DetectRetinaKit {
   private static final Map<GraphicsDevice, Boolean> devicesToRetinaSupportCacheMap = ContainerUtil.createWeakMap();
 

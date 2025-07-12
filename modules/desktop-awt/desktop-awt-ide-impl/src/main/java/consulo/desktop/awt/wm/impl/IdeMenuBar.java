@@ -26,7 +26,6 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.impl.status.ClockPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
@@ -36,15 +35,12 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.Gray;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Animator;
-import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -138,11 +134,6 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     //avoid moving lines
     if (myState == State.EXPANDING || myState == State.COLLAPSING) {
       return new EmptyBorder(0, 0, 0, 0);
-    }
-
-    //fix for Darcula double border
-    if (myState == State.TEMPORARY_EXPANDED && StyleManager.get().getCurrentStyle().isDark()) {
-      return new CustomLineBorder(Gray._75, 0, 0, 1, 0);
     }
 
     //save 1px for mouse handler
