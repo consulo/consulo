@@ -115,7 +115,7 @@ public class InlaySettingsPanel extends JPanel {
             protected void installSpeedSearch() {
                 TreeSpeedSearch.installOn(this, true,
                     node -> getNameImpl((DefaultMutableTreeNode) node.getLastPathComponent(),
-                        (DefaultMutableTreeNode) node.getParentPath().getLastPathComponent()));
+                        (DefaultMutableTreeNode) node.getParentPath().getLastPathComponent()).get());
             }
         };
         this.tree.addTreeSelectionListener(e -> updateRightPanel((DefaultMutableTreeNode) e.getNewLeadSelectionPath().getLastPathComponent()));
@@ -144,13 +144,13 @@ public class InlaySettingsPanel extends JPanel {
         return ft;
     }
 
-    protected String getNameImpl(DefaultMutableTreeNode node, DefaultMutableTreeNode parent) {
+    protected LocalizeValue getNameImpl(DefaultMutableTreeNode node, DefaultMutableTreeNode parent) {
         Object obj = node.getUserObject();
         if (obj instanceof InlayGroupSettingProvider) {
-            return ((InlayGroupSettingProvider) obj).getGroup().title().get();
+            return ((InlayGroupSettingProvider) obj).getGroup().title();
         }
         if (obj instanceof InlayGroup) {
-            return ((InlayGroup) obj).title().get();
+            return ((InlayGroup) obj).title();
         }
         if (obj instanceof Language) {
             return ((Language) obj).getDisplayName();
@@ -163,7 +163,7 @@ public class InlaySettingsPanel extends JPanel {
         if (obj instanceof ImmediateConfigurable.Case) {
             return ((ImmediateConfigurable.Case) obj).getName();
         }
-        return "";
+        return LocalizeValue.empty();
     }
 
     private DefaultMutableTreeNode addModelNode(InlayProviderSettingsModel model,
@@ -484,7 +484,7 @@ public class InlaySettingsPanel extends JPanel {
         }
         return () -> {
             DefaultMutableTreeNode node = TreeUtil.findNode((DefaultMutableTreeNode) tree.getModel().getRoot(),
-                n -> getNameImpl(n, (DefaultMutableTreeNode) n.getParent()).toLowerCase().startsWith(option.toLowerCase()));
+                n -> getNameImpl(n, (DefaultMutableTreeNode) n.getParent()).get().toLowerCase().startsWith(option.toLowerCase()));
             if (node != null) {
                 TreeUtil.selectNode(tree, node);
             }
@@ -526,8 +526,8 @@ public class InlaySettingsPanel extends JPanel {
             if (!(value instanceof DefaultMutableTreeNode defaultMutableTreeNode)) {
                 return;
             }
-            String name = getNameImpl(defaultMutableTreeNode, (DefaultMutableTreeNode) ((DefaultMutableTreeNode) value).getParent());
 
+            LocalizeValue name = getNameImpl(defaultMutableTreeNode, (DefaultMutableTreeNode) ((DefaultMutableTreeNode) value).getParent());
             getTextRenderer().append(name);
         }
     }

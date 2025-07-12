@@ -17,7 +17,6 @@
 package consulo.language.inject.advanced.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.util.function.Processor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.SearchableConfigurable;
@@ -656,27 +655,21 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
             }.installOn(this);
 
             final String[] maxName = new String[]{""};
-            ContainerUtil.process(injections, new Processor<InjInfo>() {
-                @Override
-                public boolean process(final InjInfo injection) {
-                    String languageId = injection.injection.getInjectedLanguageId();
-                    Language language = InjectedLanguage.findLanguageById(languageId);
-                    String displayName = language == null ? languageId : language.getDisplayName();
-                    if (maxName[0].length() < displayName.length()) {
-                        maxName[0] = displayName;
-                    }
-                    return true;
+            ContainerUtil.process(injections, injection -> {
+                String languageId = injection.injection.getInjectedLanguageId();
+                Language language = InjectedLanguage.findLanguageById(languageId);
+                String displayName = language == null ? languageId : language.getDisplayName().get();
+                if (maxName[0].length() < displayName.length()) {
+                    maxName[0] = displayName;
                 }
+                return true;
             });
-            ContainerUtil.process(InjectedLanguage.getAvailableLanguages(), new Processor<Language>() {
-                @Override
-                public boolean process(final Language language) {
-                    String displayName = language.getDisplayName();
-                    if (maxName[0].length() < displayName.length()) {
-                        maxName[0] = displayName;
-                    }
-                    return true;
+            ContainerUtil.process(InjectedLanguage.getAvailableLanguages(), language -> {
+                String displayName = language.getDisplayName().get();
+                if (maxName[0].length() < displayName.length()) {
+                    maxName[0] = displayName;
                 }
+                return true;
             });
             Image icon = PlainTextFileType.INSTANCE.getIcon();
             int preferred = (int) (new JLabel(maxName[0], TargetAWT.to(icon), SwingConstants.LEFT).getPreferredSize().width * 1.1);
@@ -823,7 +816,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
                 final Language language = InjectedLanguage.findLanguageById(languageId);
                 final FileType fileType = language == null ? null : language.getAssociatedFileType();
                 myLabel.setIcon(fileType == null ? null : TargetAWT.to(fileType.getIcon()));
-                myLabel.setText(language == null ? languageId : language.getDisplayName());
+                myLabel.setText(language == null ? languageId : language.getDisplayName().get());
                 setLabelColors(myLabel, table, isSelected, row);
                 return myLabel;
             }

@@ -32,6 +32,7 @@ import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.plain.PlainTextFileType;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.util.ProjectUIUtil;
 import consulo.ui.ex.awt.JBMenuItem;
@@ -317,14 +318,9 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     @SuppressWarnings("UnnecessaryFullyQualifiedName") java.util.List<JMenuItem> langItems = new ArrayList<>();
     for (final Language lang : languages) {
       if (!lang.equals(getDefaultLanguage())) {
-        final String langName = LanguageCodeStyleSettingsProvider.getLanguageName(lang);
-        JMenuItem langItem = new JBMenuItem(langName);
-        langItem.addActionListener(new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            applyLanguageSettings(lang);
-          }
-        });
+        LocalizeValue langName = LanguageCodeStyleSettingsProvider.getLanguageName(lang);
+        JMenuItem langItem = new JBMenuItem(langName.get());
+        langItem.addActionListener(e -> applyLanguageSettings(lang));
         langItems.add(langItem);
       }
     }
@@ -348,8 +344,8 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
   }
 
   private PredefinedCodeStyle[] getPredefinedStyles() {
-    final Language language = getDefaultLanguage();
-    final List<PredefinedCodeStyle> result = new ArrayList<>();
+    Language language = getDefaultLanguage();
+    List<PredefinedCodeStyle> result = new ArrayList<>();
 
     for (PredefinedCodeStyle codeStyle : Application.get().getExtensionList(PredefinedCodeStyle.class)) {
       if (codeStyle.getLanguage().equals(language)) {
@@ -361,7 +357,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
 
 
   private void applyLanguageSettings(Language lang) {
-    final Project currProject = ProjectUIUtil.guessCurrentProject(getPanel());
+    Project currProject = ProjectUIUtil.guessCurrentProject(getPanel());
     CodeStyleSettings rootSettings = CodeStyle.getSettings(currProject);
     CodeStyleSettings targetSettings = getSettings();
 
@@ -512,7 +508,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
 
   @Override
   public Set<String> processListOptions() {
-    final Set<String> result = new HashSet<>();
+    Set<String> result = new HashSet<>();
     for (CodeStyleAbstractPanel tab : myTabs) {
       result.addAll(tab.processListOptions());
     }

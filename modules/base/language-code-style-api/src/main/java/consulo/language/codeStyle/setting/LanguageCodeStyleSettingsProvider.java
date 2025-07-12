@@ -9,6 +9,7 @@ import consulo.language.Language;
 import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 
@@ -62,9 +63,9 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      *
      * @return The language name to show in preview tab (null by default).
      */
-    @Nullable
-    public String getLanguageName() {
-        return null;
+    @Nonnull
+    public LocalizeValue getLanguageName() {
+        return LocalizeValue.empty();
     }
 
     /**
@@ -146,20 +147,6 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
     public abstract Language getLanguage();
 
     @Nullable
-    public static Language getLanguage(String langName) {
-        for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
-            String name = provider.getLanguageName();
-            if (name == null) {
-                name = provider.getLanguage().getDisplayName();
-            }
-            if (langName.equals(name)) {
-                return provider.getLanguage();
-            }
-        }
-        return null;
-    }
-
-    @Nullable
     public static CommonCodeStyleSettings getDefaultCommonSettings(Language lang) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getDefaultCommonSettings() : null;
@@ -180,10 +167,10 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * language's own display name.
      */
     @Nonnull
-    public static String getLanguageName(Language lang) {
+    public static LocalizeValue getLanguageName(Language lang) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
-        String providerLangName = provider != null ? provider.getLanguageName() : null;
-        return providerLangName != null ? providerLangName : lang.getDisplayName();
+        LocalizeValue providerLangName = provider != null ? provider.getLanguageName() : LocalizeValue.empty();
+        return providerLangName != LocalizeValue.empty() ? providerLangName : lang.getDisplayName();
     }
 
     @Nullable

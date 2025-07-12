@@ -79,7 +79,7 @@ public class LastRunReformatCodeOptionsProvider {
   }
 
   private static String getRearrangeCodeKeyFor(@Nonnull Language language) {
-    return REARRANGE_ENTRIES_KEY + language.getDisplayName();
+    return REARRANGE_ENTRIES_KEY + language.getID();
   }
 
 }

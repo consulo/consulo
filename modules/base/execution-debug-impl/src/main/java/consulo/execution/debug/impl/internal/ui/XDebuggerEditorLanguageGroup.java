@@ -20,6 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -66,7 +67,7 @@ public class XDebuggerEditorLanguageGroup extends ActionGroup implements DumbAwa
                 icon = PlatformIconGroup.filetypesText();
             }
 
-            result.add(new DumbAwareAction(language.getDisplayName(), null, icon) {
+            result.add(new DumbAwareAction(language.getDisplayName(), LocalizeValue.of(), icon) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {

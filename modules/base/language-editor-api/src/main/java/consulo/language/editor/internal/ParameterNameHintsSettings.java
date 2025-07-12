@@ -163,7 +163,7 @@ public class ParameterNameHintsSettings implements PersistentStateComponent<Elem
     }
 
     public void setEnabledForLanguage(boolean enabled, Language language) {
-        String key = language.getDisplayName();
+        String key = language.getID();
         if (!enabled) {
             disabledLanguages.add(key);
         }
@@ -173,7 +173,7 @@ public class ParameterNameHintsSettings implements PersistentStateComponent<Elem
     }
 
     public boolean isEnabledForLanguage(Language language) {
-        return !disabledLanguages.contains(language.getDisplayName());
+        return !disabledLanguages.contains(language.getID());
     }
 
     public Boolean getOption(String optionId) {
@@ -190,19 +190,19 @@ public class ParameterNameHintsSettings implements PersistentStateComponent<Elem
     }
 
     private Set<String> getAddedPatterns(Language language) {
-        return addedPatterns.getOrDefault(language.getDisplayName(), Collections.emptySet());
+        return addedPatterns.getOrDefault(language.getID(), Collections.emptySet());
     }
 
     private Set<String> getRemovedPatterns(Language language) {
-        return removedPatterns.getOrDefault(language.getDisplayName(), Collections.emptySet());
+        return removedPatterns.getOrDefault(language.getID(), Collections.emptySet());
     }
 
     private void setAddedPatterns(Language language, Set<String> patterns) {
-        addedPatterns.put(language.getDisplayName(), patterns);
+        addedPatterns.put(language.getID(), patterns);
     }
 
     private void setRemovedPatterns(Language language, Set<String> patterns) {
-        removedPatterns.put(language.getDisplayName(), patterns);
+        removedPatterns.put(language.getID(), patterns);
     }
 
     private static Set<String> extractPatterns(Element parent, String tag) {

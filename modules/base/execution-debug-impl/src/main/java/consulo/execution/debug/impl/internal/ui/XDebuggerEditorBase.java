@@ -101,10 +101,10 @@ public abstract class XDebuggerEditorBase {
     }
 
     private ListPopup createLanguagePopup() {
-        DefaultActionGroup actions = new DefaultActionGroup();
+        ActionGroup.Builder actions = ActionGroup.newImmutableBuilder();
         for (Language language : getSupportedLanguages()) {
             //noinspection ConstantConditions
-            actions.add(new AnAction(language.getDisplayName(), null, language.getAssociatedFileType().getIcon()) {
+            actions.add(new AnAction(language.getDisplayName(), LocalizeValue.of(), language.getAssociatedFileType().getIcon()) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -116,7 +116,7 @@ public abstract class XDebuggerEditorBase {
         }
 
         DataContext dataContext = DataManager.getInstance().getDataContext(getComponent());
-        return JBPopupFactory.getInstance().createActionGroupPopup("Choose Language", actions, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+        return JBPopupFactory.getInstance().createActionGroupPopup("Choose Language", actions.build(), dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     }
 
     @Nonnull

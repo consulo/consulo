@@ -78,7 +78,7 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
       StructureViewBuilder builder = getBuilder(ObjectUtil.notNull(psiFile), language);
       if (builder == null) continue;
       StructureView structureView = builder.createStructureView(fileEditor, project);
-      String title = language.getDisplayName();
+      String title = language.getDisplayName().get();
       Image icon = ObjectUtil.notNull(LanguageUtil.getLanguageFileType(language), UnknownFileType.INSTANCE).getIcon();
       viewDescriptors.add(new StructureViewComposite.StructureViewDescriptor(title, structureView, icon));
     }
@@ -111,7 +111,7 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
       StructureViewBuilder builder = getBuilder(psiFile, language);
       if (!(builder instanceof TreeBasedStructureViewBuilder)) continue;
       StructureViewModel model = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(editor);
-      String title = language.getDisplayName();
+      String title = language.getDisplayName().get();
       Image icon = ObjectUtil.notNull(LanguageUtil.getLanguageFileType(language), UnknownFileType.INSTANCE).getIcon();
       viewDescriptors.add(new StructureViewComposite.StructureViewDescriptor(title, model, icon));
     }

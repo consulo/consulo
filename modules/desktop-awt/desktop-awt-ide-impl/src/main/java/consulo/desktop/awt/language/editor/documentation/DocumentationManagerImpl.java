@@ -1237,7 +1237,7 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
             : type instanceof ArchiveFileType
             ? "Archive"
             : type.getId();
-        String languageName = type.isBinary() ? "" : psiFile.getLanguage().getDisplayName();
+        String languageName = type.isBinary() ? "" : psiFile.getLanguage().getDisplayName().get();
         return (
             withUrl
                 ? DocumentationMarkup.DEFINITION_START + file.getPresentableUrl() + DocumentationMarkup.DEFINITION_END +

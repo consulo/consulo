@@ -54,8 +54,8 @@ public interface FileType {
   }
 
   @Nonnull
-  default String getDisplayName() {
-    return getId();
+  default LocalizeValue getDisplayName() {
+    return LocalizeValue.of(getId());
   }
 
   /**
@@ -63,7 +63,6 @@ public interface FileType {
    *
    * @return The file type description.
    */
-
   @Nonnull
   LocalizeValue getDescription();
 
@@ -72,7 +71,6 @@ public interface FileType {
    *
    * @return The extension, not including the leading '.'.
    */
-
   @Nonnull
   default String getDefaultExtension() {
     return "";

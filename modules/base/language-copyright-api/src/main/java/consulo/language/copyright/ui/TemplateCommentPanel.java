@@ -44,10 +44,9 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.EventListenerList;
@@ -350,12 +349,11 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   }
 
   @Override
-  @Nls
   public String getDisplayName() {
     if (myFileType instanceof LanguageFileType) {
-      return ((LanguageFileType)myFileType).getLanguage().getDisplayName();
+      return ((LanguageFileType)myFileType).getLanguage().getDisplayName().get();
     }
-    return myFileType.getDisplayName();
+    return myFileType.getDisplayName().get();
   }
 
   @RequiredUIAccess

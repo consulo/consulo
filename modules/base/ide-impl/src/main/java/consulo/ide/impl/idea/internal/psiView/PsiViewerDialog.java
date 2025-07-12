@@ -221,7 +221,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         }
         else {
             setTitle(LocalizeValue.localizeTODO("PSI Context Viewer: " + myCurrentFile.getName()));
-            myFileType = myCurrentFile.getLanguage().getDisplayName();
+            myFileType = myCurrentFile.getLanguage().getID();
             if (currentEditor != null) {
                 myInitText = currentEditor.getSelectionModel().getSelectedText();
             }

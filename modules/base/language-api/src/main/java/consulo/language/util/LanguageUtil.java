@@ -42,8 +42,7 @@ import jakarta.annotation.Nullable;
 import java.util.*;
 
 public final class LanguageUtil {
-    public static final Comparator<Language> LANGUAGE_COMPARATOR =
-        (o1, o2) -> StringUtil.naturalCompare(o1.getDisplayName(), o2.getDisplayName());
+    public static final Comparator<Language> LANGUAGE_COMPARATOR = Comparator.comparing(Language::getDisplayName);
 
     private LanguageUtil() {
     }
@@ -161,6 +160,7 @@ public final class LanguageUtil {
         return ParserDefinition.forLanguage(language) != null;
     }
 
+    // FIXME [VISTALL] we really need this?
     public static boolean isFileLanguage(@Nonnull Language language) {
         if (language instanceof InjectableLanguage) {
             return false;
@@ -172,7 +172,7 @@ public final class LanguageUtil {
         if (type == null || StringUtil.isEmpty(type.getDefaultExtension())) {
             return false;
         }
-        String name = language.getDisplayName();
+        String name = language.getDisplayName().get();
         if (StringUtil.isEmpty(name) || name.startsWith("<") || name.startsWith("[")) {
             return false;
         }

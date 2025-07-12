@@ -266,7 +266,7 @@ public class ScratchFileActions {
                 return;
             }
             Set<Language> languages = files.filter(isScratch).map(fileLanguage(project)).filter(notNull()).addAllTo(new LinkedHashSet<>());
-            String langName = languages.size() == 1 ? languages.iterator().next().getDisplayName() : languages.size() + " different";
+            LocalizeValue langName = languages.size() == 1 ? languages.iterator().next().getDisplayName() : LocalizeValue.localizeTODO(languages.size() + " different");
             e.getPresentation().setText(String.format("Change %s (%s)...", getLanguageTerm(), langName));
             e.getPresentation().setEnabledAndVisible(true);
         }

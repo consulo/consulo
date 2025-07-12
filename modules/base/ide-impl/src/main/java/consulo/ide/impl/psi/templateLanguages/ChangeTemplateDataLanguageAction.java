@@ -16,8 +16,8 @@
 package consulo.ide.impl.psi.templateLanguages;
 
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.LangBundle;
 import consulo.language.file.FileViewProvider;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiManager;
 import consulo.language.template.ConfigurableTemplateLanguageFileViewProvider;
 import consulo.language.template.TemplateDataLanguageMappings;
@@ -51,7 +51,7 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
     if (provider instanceof ConfigurableTemplateLanguageFileViewProvider) {
       final TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider)provider;
 
-      e.getPresentation().setText(LangBundle.message("quickfix.change.template.data.language.text", viewProvider.getTemplateDataLanguage().getDisplayName()));
+      e.getPresentation().setTextValue(LanguageLocalize.quickfixChangeTemplateDataLanguageText(viewProvider.getTemplateDataLanguage().getDisplayName()));
       e.getPresentation().setEnabled(true);
       e.getPresentation().setVisible(true);
     }

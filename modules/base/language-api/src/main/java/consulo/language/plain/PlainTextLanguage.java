@@ -17,20 +17,23 @@
 package consulo.language.plain;
 
 import consulo.language.Language;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
  */
 public class PlainTextLanguage extends Language {
 
-  public static final PlainTextLanguage INSTANCE = new PlainTextLanguage();
+    public static final PlainTextLanguage INSTANCE = new PlainTextLanguage();
 
-  private PlainTextLanguage() {
-    super("TEXT", "text/plain");
-  }
+    private PlainTextLanguage() {
+        super("TEXT", "text/plain");
+    }
 
-  @Override
-  public String getDisplayName() {
-    return "Plain text";
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Plain text");
+    }
 }

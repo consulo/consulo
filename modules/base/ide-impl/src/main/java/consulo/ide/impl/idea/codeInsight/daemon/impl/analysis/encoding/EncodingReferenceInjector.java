@@ -22,6 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.util.ProcessingContext;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -43,7 +44,7 @@ public class EncodingReferenceInjector extends ReferenceInjector {
 
   @Nonnull
   @Override
-  public String getDisplayName() {
-    return "Encoding Name";
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Encoding Name");
   }
 }

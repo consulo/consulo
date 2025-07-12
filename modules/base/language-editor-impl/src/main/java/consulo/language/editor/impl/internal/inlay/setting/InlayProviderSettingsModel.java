@@ -8,8 +8,10 @@ import consulo.language.Language;
 import consulo.language.editor.inlay.InlayGroup;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -51,7 +53,8 @@ public abstract class InlayProviderSettingsModel {
         this.onChangeListener = listener;
     }
 
-    public abstract String getName();
+    @Nonnull
+    public abstract LocalizeValue getName();
 
     public InlayGroup getGroup() {
         return InlayGroup.OTHER_GROUP;
@@ -103,6 +106,6 @@ public abstract class InlayProviderSettingsModel {
 
     @Override
     public String toString() {
-        return "InlayProviderSettingsModel[" + language.getDisplayName() + ", " + id + ", isEnabled=" + isEnabled + "]";
+        return "InlayProviderSettingsModel[" + language.getID() + ", " + id + ", isEnabled=" + isEnabled + "]";
     }
 }

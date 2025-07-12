@@ -51,7 +51,7 @@ public class ArrangementUtil {
     public static ArrangementSettings readExternal(@Nonnull Element element, @Nonnull Language language) {
         ArrangementSettingsSerializer serializer = getSerializer(language);
         if (serializer == null) {
-            LOG.error("Can't find serializer for language: " + language.getDisplayName() + "(" + language.getID() + ")");
+            LOG.error("Can't find serializer for language: " + language.getID());
             return null;
         }
 
@@ -61,7 +61,7 @@ public class ArrangementUtil {
     public static void writeExternal(@Nonnull Element element, @Nonnull ArrangementSettings settings, @Nonnull Language language) {
         ArrangementSettingsSerializer serializer = getSerializer(language);
         if (serializer == null) {
-            LOG.error("Can't find serializer for language: " + language.getDisplayName() + "(" + language.getID() + ")");
+            LOG.error("Can't find serializer for language: " + language.getID());
             return;
         }
 

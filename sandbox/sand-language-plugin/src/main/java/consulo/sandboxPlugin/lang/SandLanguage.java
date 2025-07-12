@@ -16,20 +16,23 @@
 package consulo.sandboxPlugin.lang;
 
 import consulo.language.Language;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
 public class SandLanguage extends Language {
-  public static SandLanguage INSTANCE = new SandLanguage();
+    public static SandLanguage INSTANCE = new SandLanguage();
 
-  private SandLanguage() {
-    super("SAND");
-  }
+    private SandLanguage() {
+        super("SAND");
+    }
 
-  @Override
-  public String getDisplayName() {
-    return "Sand";
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.of("Sand");
+    }
 }

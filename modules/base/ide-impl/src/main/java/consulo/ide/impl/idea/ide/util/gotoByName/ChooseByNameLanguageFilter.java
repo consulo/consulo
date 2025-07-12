@@ -42,7 +42,7 @@ public class ChooseByNameLanguageFilter extends ChooseByNameFilter<Language> {
 
   @Override
   protected String textForFilterValue(@Nonnull Language value) {
-    return value.getDisplayName();
+    return value.getDisplayName().get();
   }
 
   @Nullable

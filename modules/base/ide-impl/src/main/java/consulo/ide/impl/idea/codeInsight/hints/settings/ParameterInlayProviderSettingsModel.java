@@ -10,6 +10,7 @@ import consulo.language.editor.inlay.Option;
 import consulo.language.editor.internal.ParameterNameHintsSettings;
 import consulo.language.editor.localize.LanguageEditorLocalize;
 import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,14 +42,15 @@ public class ParameterInlayProviderSettingsModel extends InlayProviderSettingsMo
                 option.getId(),
                 () -> state.state,
                 newValue -> state.state = newValue,
-                option.getExtendedDescription() != LocalizeValue.of() ? option.getExtendedDescription().get() : null
+                option.getExtendedDescription()
             );
         }).collect(Collectors.toList());
     }
 
+    @Nonnull
     @Override
-    public String getName() {
-        return LanguageEditorLocalize.settingsInlayParameterHintsPanelName().get();
+    public LocalizeValue getName() {
+        return LanguageEditorLocalize.settingsInlayParameterHintsPanelName();
     }
 
     @Override

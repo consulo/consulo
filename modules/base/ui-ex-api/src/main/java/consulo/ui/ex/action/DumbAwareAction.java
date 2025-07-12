@@ -30,67 +30,81 @@ import java.util.function.Consumer;
  */
 public abstract class DumbAwareAction extends AnAction implements DumbAware {
 
-  @Nonnull
-  public static DumbAwareAction create(@RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
-    return new DumbAwareAction() {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        actionPerformed.accept(e);
-      }
-    };
-  }
+    @Nonnull
+    public static DumbAwareAction create(@RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
+        return new DumbAwareAction() {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                actionPerformed.accept(e);
+            }
+        };
+    }
 
-  @Nonnull
-  public static DumbAwareAction create(@Nullable String text,
-                                       @Nullable Image image,
-                                       @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
-    return new DumbAwareAction(text, null, image) {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        actionPerformed.accept(e);
-      }
-    };
-  }
+    @Nonnull
+    @Deprecated
+    public static DumbAwareAction create(@Nullable String text,
+                                         @Nullable Image image,
+                                         @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
+        return new DumbAwareAction(text, null, image) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                actionPerformed.accept(e);
+            }
+        };
+    }
 
-  @Nonnull
-  public static DumbAwareAction create(@Nullable String text, @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
-    return new DumbAwareAction(text) {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        actionPerformed.accept(e);
-      }
-    };
-  }
+    @Nonnull
+    @Deprecated
+    public static DumbAwareAction create(@Nullable String text, @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
+        return new DumbAwareAction(text) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                actionPerformed.accept(e);
+            }
+        };
+    }
 
-  protected DumbAwareAction() {
-  }
+    @Nonnull
+    public static DumbAwareAction create(@Nonnull LocalizeValue text,
+                                         @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
+        return new DumbAwareAction(text) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                actionPerformed.accept(e);
+            }
+        };
+    }
 
-  protected DumbAwareAction(Image icon) {
-    super(icon);
-  }
+    protected DumbAwareAction() {
+    }
 
-  @Deprecated
-  protected DumbAwareAction(@Nullable String text) {
-    super(text);
-  }
+    protected DumbAwareAction(Image icon) {
+        super(icon);
+    }
 
-  @Deprecated
-  protected DumbAwareAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
+    @Deprecated
+    protected DumbAwareAction(@Nullable String text) {
+        super(text);
+    }
 
-  protected DumbAwareAction(@Nonnull LocalizeValue text) {
-    super(text);
-  }
+    @Deprecated
+    protected DumbAwareAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 
-  protected DumbAwareAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-    super(text, description);
-  }
+    protected DumbAwareAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
 
-  protected DumbAwareAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
+    protected DumbAwareAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
+    protected DumbAwareAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 }

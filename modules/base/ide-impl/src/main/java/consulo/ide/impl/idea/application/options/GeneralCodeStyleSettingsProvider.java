@@ -18,12 +18,13 @@ package consulo.ide.impl.idea.application.options;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.Configurable;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -42,8 +43,9 @@ public class GeneralCodeStyleSettingsProvider extends CodeStyleSettingsProvider 
     };
   }
 
+  @Nonnull
   @Override
-  public String getConfigurableDisplayName() {
-    return ApplicationBundle.message("title.general");
+  public LocalizeValue getConfigurableDisplayName() {
+    return ApplicationLocalize.titleGeneral();
   }
 }

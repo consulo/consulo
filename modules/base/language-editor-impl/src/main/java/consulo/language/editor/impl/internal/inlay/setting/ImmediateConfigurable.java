@@ -2,6 +2,9 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.impl.internal.inlay.setting;
 
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
@@ -19,17 +22,17 @@ public interface ImmediateConfigurable {
     }
 
     class Case {
-        private final String name;
+        private final LocalizeValue name;
         private final String id;
         private final BooleanSupplier loadFromSettings;
         private final Consumer<Boolean> onUserChanged;
-        private final String extendedDescription;
+        private final LocalizeValue extendedDescription;
 
-        public Case(String name,
+        public Case(@Nonnull LocalizeValue name,
                     String id,
                     BooleanSupplier loadFromSettings,
                     Consumer<Boolean> onUserChanged,
-                    String extendedDescription) {
+                    @Nonnull LocalizeValue extendedDescription) {
             this.name = name;
             this.id = id;
             this.loadFromSettings = loadFromSettings;
@@ -37,7 +40,8 @@ public interface ImmediateConfigurable {
             this.extendedDescription = extendedDescription;
         }
 
-        public String getName() {
+        @Nonnull
+        public LocalizeValue getName() {
             return name;
         }
 
@@ -53,7 +57,8 @@ public interface ImmediateConfigurable {
             onUserChanged.accept(value);
         }
 
-        public String getExtendedDescription() {
+        @Nonnull
+        public LocalizeValue getExtendedDescription() {
             return extendedDescription;
         }
     }

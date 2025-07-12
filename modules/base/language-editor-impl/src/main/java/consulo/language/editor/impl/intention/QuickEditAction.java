@@ -74,31 +74,31 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
 
   @Nullable
   @RequiredReadAction
-  protected Pair<PsiElement, TextRange> getRangePair(final PsiFile file, final Editor editor) {
-    final int offset = editor.getCaretModel().getOffset();
-    final PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiLanguageInjectionHost.class, false);
+  protected Pair<PsiElement, TextRange> getRangePair(PsiFile file, Editor editor) {
+    int offset = editor.getCaretModel().getOffset();
+    PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiLanguageInjectionHost.class, false);
     if (host == null || ElementManipulators.getManipulator(host) == null) return null;
-    final List<Pair<PsiElement, TextRange>> injections = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
+    List<Pair<PsiElement, TextRange>> injections = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
     if (injections == null || injections.isEmpty()) return null;
-    final int offsetInElement = offset - host.getTextRange().getStartOffset();
-    final Pair<PsiElement, TextRange> rangePair = ContainerUtil.find(injections, pair -> pair.second.containsRange(offsetInElement, offsetInElement));
+    int offsetInElement = offset - host.getTextRange().getStartOffset();
+    Pair<PsiElement, TextRange> rangePair = ContainerUtil.find(injections, pair -> pair.second.containsRange(offsetInElement, offsetInElement));
     if (rangePair != null) {
-      final Language language = rangePair.first.getContainingFile().getLanguage();
-      final Object action = language.getUserData(EDIT_ACTION_AVAILABLE);
+      Language language = rangePair.first.getContainingFile().getLanguage();
+      Object action = language.getUserData(EDIT_ACTION_AVAILABLE);
       if (action != null && action.equals(false)) return null;
 
-      myLastLanguageName = language.getDisplayName();
+      myLastLanguageName = language.getDisplayName().get();
     }
     return rangePair;
   }
 
   @Override
-  public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     invokeImpl(project, editor, file);
   }
 
   @RequiredReadAction
-  public QuickEditHandler invokeImpl(@Nonnull final Project project, final Editor editor, PsiFile file) throws IncorrectOperationException {
+  public QuickEditHandler invokeImpl(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     int offset = editor.getCaretModel().getOffset();
     Pair<PsiElement, TextRange> pair = ObjectUtil.assertNotNull(getRangePair(file, editor));
 
@@ -162,8 +162,8 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
   }
 
   public static Balloon.Position getBalloonPosition(Editor editor) {
-    final int line = editor.getCaretModel().getVisualPosition().line;
-    final Rectangle area = editor.getScrollingModel().getVisibleArea();
+    int line = editor.getCaretModel().getVisualPosition().line;
+    Rectangle area = editor.getScrollingModel().getVisibleArea();
     int startLine = area.y / editor.getLineHeight() + 1;
     return (line - startLine) * editor.getLineHeight() < 200 ? Balloon.Position.below : Balloon.Position.above;
   }

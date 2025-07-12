@@ -114,7 +114,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
         PsiFileFactory factory = PsiFileFactory.getInstance(project);
         String text = InjectedLanguageManager.getInstance(project).getUnescapedText(injectedFile);
-        String newFileName = StringUtil.notNullize(language.getDisplayName(), "Injected") +
+        String newFileName = StringUtil.notNullize(language.getDisplayName().get(), "Injected") +
             " Fragment " +
             "(" +
             origFile.getName() +

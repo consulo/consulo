@@ -192,7 +192,7 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
         return new PersistentSearchEverywhereContributorFilter<>(
             items,
             persistentConfig,
-            Language::getDisplayName,
+            language -> language.getDisplayName().get(),
             language -> {
                 LanguageFileType fileType = language.getAssociatedFileType();
                 return fileType != null ? fileType.getIcon() : null;

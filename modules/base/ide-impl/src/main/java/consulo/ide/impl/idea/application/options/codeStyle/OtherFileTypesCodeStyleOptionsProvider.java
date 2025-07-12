@@ -17,9 +17,11 @@ package consulo.ide.impl.idea.application.options.codeStyle;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.Configurable;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,9 +39,9 @@ public class OtherFileTypesCodeStyleOptionsProvider extends CodeStyleSettingsPro
     return new OtherFileTypesCodeStyleConfigurable(settings, clonedSettings);
   }
 
-  @Nullable
+  @Nonnull
   @Override
-  public String getConfigurableDisplayName() {
-    return ApplicationBundle.message("code.style.other.file.types");
+  public LocalizeValue getConfigurableDisplayName() {
+    return ApplicationLocalize.codeStyleOtherFileTypes();
   }
 }

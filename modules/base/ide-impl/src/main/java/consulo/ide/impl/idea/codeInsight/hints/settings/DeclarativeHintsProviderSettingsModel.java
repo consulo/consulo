@@ -16,6 +16,7 @@ import consulo.language.editor.inlay.InlayGroup;
 import consulo.language.editor.inlay.DeclarativeInlayHintsCustomSettingsProvider;
 import consulo.language.editor.inlay.DeclarativeInlayOptionInfo;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -55,11 +56,11 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
         this.options = loadOptionsFromSettings();
         this.cases = options.stream()
             .map(option -> new ImmediateConfigurable.Case(
-                option.description.name().get(),
+                option.description.name(),
                 option.description.id(),
                 () -> option.isEnabled,
                 newValue -> option.isEnabled = newValue,
-                option.description.description().get()))
+                option.description.description()))
             .collect(Collectors.toList());
     }
 
@@ -84,9 +85,10 @@ public class DeclarativeHintsProviderSettingsModel extends InlayProviderSettings
         return providerDescription.getGroup();
     }
 
+    @Nonnull
     @Override
-    public String getName() {
-        return providerDescription.getName().get();
+    public LocalizeValue getName() {
+        return providerDescription.getName();
     }
 
     @Override

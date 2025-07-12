@@ -55,8 +55,9 @@ public class Option {
         return id;
     }
 
-    public String getName() {
-        return nameSupplier.get();
+    @Nonnull
+    public LocalizeValue getName() {
+        return nameSupplier;
     }
 
     public boolean isEnabled() {

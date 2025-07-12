@@ -30,13 +30,13 @@ public class MultilanguageDuplocatorSettings implements PersistentStateComponent
 
   public void registerState(@Nonnull Language language, @Nonnull ExternalizableDuplocatorState state) {
     synchronized (mySettingsMap) {
-      mySettingsMap.put(language.getDisplayName(), state);
+      mySettingsMap.put(language.getID(), state);
     }
   }
 
   public ExternalizableDuplocatorState getState(@Nonnull Language language) {
     synchronized (mySettingsMap) {
-      return mySettingsMap.get(language.getDisplayName());
+      return mySettingsMap.get(language.getID());
     }
   }
 

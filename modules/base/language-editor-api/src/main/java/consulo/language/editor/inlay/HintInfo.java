@@ -94,7 +94,8 @@ public abstract sealed class HintInfo permits HintInfo.MethodInfo, HintInfo.Opti
             option.set(!current);
         }
 
-        public String getOptionName() {
+        @Nonnull
+        public LocalizeValue getOptionName() {
             return option.getName();
         }
 

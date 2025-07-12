@@ -83,11 +83,11 @@ public class InjectLanguageAction implements IntentionAction {
 
     @Override
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-        final PsiLanguageInjectionHost host = findInjectionHost(editor, file);
+        PsiLanguageInjectionHost host = findInjectionHost(editor, file);
         if (host == null) {
             return false;
         }
-        final List<Pair<PsiElement, TextRange>> injectedPsi = InjectedLanguageManager.getInstance(project).getInjectedPsiFiles(host);
+        List<Pair<PsiElement, TextRange>> injectedPsi = InjectedLanguageManager.getInstance(project).getInjectedPsiFiles(host);
         if (injectedPsi == null || injectedPsi.isEmpty()) {
             return !InjectedReferencesContributor.isInjected(file.findReferenceAt(editor.getCaretModel().getOffset()));
         }
@@ -99,8 +99,8 @@ public class InjectLanguageAction implements IntentionAction {
         if (editor instanceof EditorWindow) {
             return null;
         }
-        final int offset = editor.getCaretModel().getOffset();
-        final PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiLanguageInjectionHost.class, false);
+        int offset = editor.getCaretModel().getOffset();
+        PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiLanguageInjectionHost.class, false);
         if (host == null) {
             return null;
         }
@@ -108,7 +108,7 @@ public class InjectLanguageAction implements IntentionAction {
     }
 
     @Override
-    public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         doChooseLanguageToInject(editor, injectable -> {
             project.getApplication().runReadAction(() -> {
                 if (!project.isDisposed()) {
@@ -119,8 +119,8 @@ public class InjectLanguageAction implements IntentionAction {
     }
 
     @RequiredUIAccess
-    public static void invokeImpl(Project project, Editor editor, final PsiFile file, Injectable injectable) {
-        final PsiLanguageInjectionHost host = findInjectionHost(editor, file);
+    public static void invokeImpl(Project project, Editor editor, PsiFile file, Injectable injectable) {
+        PsiLanguageInjectionHost host = findInjectionHost(editor, file);
         if (host == null) {
             return;
         }
@@ -137,11 +137,11 @@ public class InjectLanguageAction implements IntentionAction {
                 }
             }
             if (TemporaryPlacesRegistry.getInstance(project).getLanguageInjectionSupport().addInjectionInPlace(language, host)) {
-                final Predicate<PsiLanguageInjectionHost> data = host.getUserData(LanguageInjectionSupport.FIX_KEY);
-                String text = StringUtil.escapeXml(language.getDisplayName()) + " was temporarily injected.";
+                Predicate<PsiLanguageInjectionHost> data = host.getUserData(LanguageInjectionSupport.FIX_KEY);
+                String text = StringUtil.escapeXml(language.getDisplayName().get()) + " was temporarily injected.";
                 if (data != null) {
-                    final SmartPsiElementPointer<PsiLanguageInjectionHost> pointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(host);
-                    final TextRange range = host.getTextRange();
+                    SmartPsiElementPointer<PsiLanguageInjectionHost> pointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(host);
+                    TextRange range = host.getTextRange();
                     HintManager.getInstance().showQuestionHint(editor, text +
                             "<br>Do you want to insert annotation? " +
                             KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS)),
@@ -163,12 +163,12 @@ public class InjectLanguageAction implements IntentionAction {
         }
     }
 
-    private static boolean defaultFunctionalityWorked(final PsiLanguageInjectionHost host, String id) {
+    private static boolean defaultFunctionalityWorked(PsiLanguageInjectionHost host, String id) {
         return Configuration.getProjectInstance(host.getProject()).setHostInjectionEnabled(host, Collections.singleton(id), true);
     }
 
     private static boolean doChooseLanguageToInject(Editor editor, Consumer<Injectable> onChosen) {
-        final List<Injectable> injectables = getAllInjectables();
+        List<Injectable> injectables = getAllInjectables();
 
         IPopupChooserBuilder<Injectable> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(injectables);
         builder = builder.setRenderer(new ColoredListCellRenderer<Injectable>() {
@@ -182,9 +182,9 @@ public class InjectLanguageAction implements IntentionAction {
                 }
             }
         });
-        builder = builder.setNamerForFiltering(language -> language.getDisplayName());
+        builder = builder.setNamerForFiltering(language -> language.getDisplayName().get());
 
-        final String lastInjected = ApplicationPropertiesComponent.getInstance().getValue(LAST_INJECTED_LANGUAGE);
+        String lastInjected = ApplicationPropertiesComponent.getInstance().getValue(LAST_INJECTED_LANGUAGE);
         if (lastInjected != null) {
             Injectable injectable = ContainerUtil.find(injectables, it -> lastInjected.equals(it.getId()));
             builder = builder.setSelectedValue(injectable, true);

@@ -56,7 +56,7 @@ public class FileTypePatternDialog {
       myLanguageCombo.setRenderer(new ListCellRendererWrapper() {
         @Override
         public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-          setText(value == null ? "" : ((Language) value).getDisplayName());
+          setText(value == null ? "" : ((Language) value).getDisplayName().get());
           if (value != null) {
             final FileType type = ((Language)value).getAssociatedFileType();
             if (type != null) {

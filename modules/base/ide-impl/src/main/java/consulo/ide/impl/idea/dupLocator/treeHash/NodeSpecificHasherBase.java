@@ -142,7 +142,7 @@ public class NodeSpecificHasherBase extends NodeSpecificHasher {
       }
     }
     if (language == null) language = node.getLanguage();
-    if ((myForIndexing || mySettings.SELECTED_PROFILES.contains(language.getDisplayName())) &&
+    if ((myForIndexing || mySettings.SELECTED_PROFILES.contains(language.getID())) &&
         myDuplicatesProfile.isMyLanguage(language)) {
 
       myTreeHasher.hash(node, this);

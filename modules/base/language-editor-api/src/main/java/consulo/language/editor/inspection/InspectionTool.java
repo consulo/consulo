@@ -16,6 +16,7 @@
 package consulo.language.editor.inspection;
 
 import consulo.language.Language;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.internal.inspection.DummyInspectionToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
@@ -92,12 +93,12 @@ public abstract class InspectionTool implements BatchSuppressableTool {
     public String[] getGroupPath() {
         String groupDisplayName = getGroupDisplayName();
         if (groupDisplayName.isEmpty()) {
-            groupDisplayName = InspectionsBundle.message("inspection.general.tools.group.name");
+            groupDisplayName = InspectionLocalize.inspectionGeneralToolsGroupName().get();
         }
 
         Language language = getLanguage();
         if (language != null) {
-            return new String[]{language.getDisplayName(), groupDisplayName};
+            return new String[]{language.getDisplayName().get(), groupDisplayName};
         }
         else {
             return new String[]{groupDisplayName};

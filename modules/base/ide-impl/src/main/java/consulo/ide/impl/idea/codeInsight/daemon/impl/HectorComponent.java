@@ -245,7 +245,7 @@ public class HectorComponent extends JPanel {
 
             JPanel borderPanel = new JPanel(new BorderLayout());
             slider.setPreferredSize(JBUI.size(100, 100));
-            borderPanel.add(new JLabel(language.getDisplayName()), BorderLayout.NORTH);
+            borderPanel.add(new JLabel(language.getDisplayName().get()), BorderLayout.NORTH);
             borderPanel.add(slider, BorderLayout.CENTER);
             panel.add(
                 borderPanel,

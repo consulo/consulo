@@ -62,7 +62,7 @@ public class AlignmentHelper {
         Language language = node != null ? node.getPsi().getLanguage() : null;
         LoggerUtil.error(
             LOG,
-            (language != null ? language.getDisplayName() + ": " : "") +
+            (language != null ? language.getID() + ": " : "") +
                 "Can't align block " + context.targetBlock, context.document.getText()
         );
     }

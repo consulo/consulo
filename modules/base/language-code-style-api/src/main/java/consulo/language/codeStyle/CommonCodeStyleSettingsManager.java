@@ -105,14 +105,14 @@ class CommonCodeStyleSettingsManager {
      * sometimes (for example, in plug-ins which do not depend on a specific language support) language settings can be
      * obtained by name.
      *
-     * @param langName The display name of the language whose settings must be returned.
+     * @param languageId The id of the language whose settings must be returned.
      * @return Common code style settings for the given language or a new instance with default values if not found.
      */
     @Nonnull
-    public CommonCodeStyleSettings getCommonSettings(@Nonnull String langName) {
+    public CommonCodeStyleSettings getCommonSettings(@Nonnull String languageId) {
         Map<Language, CommonCodeStyleSettings> map = getCommonSettingsMap();
         for (Map.Entry<Language, CommonCodeStyleSettings> entry : map.entrySet()) {
-            if (langName.equals(entry.getKey().getDisplayName())) {
+            if (languageId.equals(entry.getKey().getID())) {
                 return entry.getValue();
             }
         }

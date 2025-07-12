@@ -16,6 +16,7 @@
 package consulo.language.inject;
 
 import consulo.language.Language;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ui.image.Image;
 
@@ -27,13 +28,11 @@ import jakarta.annotation.Nullable;
  * @since 2013-08-01
  */
 public abstract class Injectable implements Comparable<Injectable> {
-
-  /** Unique ID among injected language and reference injector IDs */
   @Nonnull
   public abstract String getId();
 
   @Nonnull
-  public abstract String getDisplayName();
+  public abstract LocalizeValue getDisplayName();
 
   @Nullable
   public String getAdditionalDescription() {
@@ -58,8 +57,9 @@ public abstract class Injectable implements Comparable<Injectable> {
 
   public Language toLanguage() {
     return getLanguage() == null ? new Language(getId(), false) {
+      @Nonnull
       @Override
-      public String getDisplayName() {
+      public LocalizeValue getDisplayName() {
         return Injectable.this.getDisplayName();
       }
     } : getLanguage();
@@ -75,7 +75,7 @@ public abstract class Injectable implements Comparable<Injectable> {
 
       @Nonnull
       @Override
-      public String getDisplayName() {
+      public LocalizeValue getDisplayName() {
         return language.getDisplayName();
       }
 

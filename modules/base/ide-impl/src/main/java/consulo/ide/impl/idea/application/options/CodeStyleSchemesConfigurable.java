@@ -30,12 +30,12 @@ import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.impl.internal.CodeStyleSchemeImpl;
 import consulo.language.codeStyle.impl.internal.CodeStyleSchemesModelImpl;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -339,12 +339,11 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     }
 
     @Override
-    @Nls
     public String getDisplayName() {
-      String displayName = myProvider.getConfigurableDisplayName();
-      if (displayName != null) return displayName;
+      LocalizeValue displayName = myProvider.getConfigurableDisplayName();
+      if (displayName != LocalizeValue.empty()) return displayName.get();
 
-      return ensurePanel().getDisplayName();  // fallback for 8.0 API compatibility
+      return ensurePanel().getDisplayName();
     }
 
     @Override

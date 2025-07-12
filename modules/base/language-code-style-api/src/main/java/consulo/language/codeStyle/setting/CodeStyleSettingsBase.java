@@ -19,7 +19,7 @@ import consulo.configurable.Configurable;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -27,38 +27,38 @@ import jakarta.annotation.Nullable;
  * @author peter
  */
 public interface CodeStyleSettingsBase {
-  @Nullable
-  default CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {
-    return null;
-  }
+    @Nullable
+    default CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {
+        return null;
+    }
 
-  @Nonnull
-  public abstract Configurable createSettingsPage(CodeStyleSettings settings, final CodeStyleSettings originalSettings);
+    @Nonnull
+    public abstract Configurable createSettingsPage(CodeStyleSettings settings, final CodeStyleSettings originalSettings);
 
-  /**
-   * Returns the name of the configurable page without creating a Configurable instance.
-   *
-   * @return the display name of the configurable page.
-   */
-  @Nullable
-  default String getConfigurableDisplayName() {
-    Language lang = getLanguage();
-    return lang == null ? null : lang.getDisplayName();
-  }
+    /**
+     * Returns the name of the configurable page without creating a Configurable instance.
+     *
+     * @return the display name of the configurable page.
+     */
+    @Nonnull
+    default LocalizeValue getConfigurableDisplayName() {
+        Language lang = getLanguage();
+        return lang == null ? LocalizeValue.empty() : lang.getDisplayName();
+    }
 
-  default boolean hasSettingsPage() {
-    return true;
-  }
+    default boolean hasSettingsPage() {
+        return true;
+    }
 
-  /**
-   * Specifies a language this provider applies to. If the language is not null, its display name will
-   * be used as a configurable name by default if <code>getConfigurableDisplayName()</code> is not
-   * overridden.
-   *
-   * @return null by default.
-   */
-  @Nullable
-  default Language getLanguage() {
-    return null;
-  }
+    /**
+     * Specifies a language this provider applies to. If the language is not null, its display name will
+     * be used as a configurable name by default if <code>getConfigurableDisplayName()</code> is not
+     * overridden.
+     *
+     * @return null by default.
+     */
+    @Nullable
+    default Language getLanguage() {
+        return null;
+    }
 }

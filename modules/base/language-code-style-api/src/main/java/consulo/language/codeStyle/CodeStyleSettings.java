@@ -1390,12 +1390,12 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     }
 
     /**
-     * @param langName The language name.
+     * @param languageId The language id.
      * @return Language-specific code style settings or shared settings if not found.
      * @see CommonCodeStyleSettingsManager#getCommonSettings
      */
-    public CommonCodeStyleSettings getCommonSettings(String langName) {
-        return myCommonSettingsManager.getCommonSettings(langName);
+    public CommonCodeStyleSettings getCommonSettings(String languageId) {
+        return myCommonSettingsManager.getCommonSettings(languageId);
     }
 
     /**
@@ -1582,7 +1582,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
      */
     public void setSoftMargins(@Nonnull Language language, List<Integer> softMargins) {
         CommonCodeStyleSettings languageSettings = myCommonSettingsManager.getCommonSettings(language);
-        assert languageSettings != null : "Settings for language " + language.getDisplayName() + " do not exist";
+        assert languageSettings != null : "Settings for language " + language.getID() + " do not exist";
         languageSettings.setSoftMargins(softMargins);
     }
 

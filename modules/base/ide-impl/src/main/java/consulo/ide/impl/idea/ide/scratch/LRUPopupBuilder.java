@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide.scratch;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.Language;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.LanguageFileType;
 import consulo.language.localize.LanguageLocalize;
@@ -116,7 +115,7 @@ public abstract class LRUPopupBuilder<T> {
         return new LRUPopupBuilder<Language>(project, title) {
             @Override
             public String getDisplayName(Language language) {
-                return language.getDisplayName();
+                return language.getDisplayName().get();
             }
 
             @Override
