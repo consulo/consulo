@@ -13,6 +13,8 @@ import consulo.ui.ex.internal.SettingsEntryPointActionProvider;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +24,27 @@ import java.util.List;
  */
 public final class SettingsEntryPointAction extends DumbAwareActionGroup implements RightAlignedToolbarAction {
     public enum IconState {
-        Default,
-        ApplicationUpdate,
-        ApplicationComponentUpdate,
-        RestartRequired
+        Default(PlatformIconGroup.generalGearplain()),
+        ApplicationUpdate(PlatformIconGroup.ideNotificationIdeupdate()),
+        ApplicationComponentUpdate(PlatformIconGroup.ideNotificationPluginupdate()),
+        RestartRequired(PlatformIconGroup.ideNotificationRestartrequiredupdate());
+
+        private final Image myIcon;
+
+        IconState(Image icon) {
+            myIcon = icon;
+        }
     }
 
-    private static IconState ourIconState = IconState.Default;
+    private final Application myApplication;
+    private final Provider<UpdateSettings> myUpdateSettingsProvider;
 
-    public SettingsEntryPointAction() {
+    @Inject
+    public SettingsEntryPointAction(Application application,
+                                    Provider<UpdateSettings> updateSettingsProvider) {
         super(IdeLocalize.settingsEntryPointTooltip(), IdeLocalize.settingsEntryPointTooltip(), PlatformIconGroup.generalGearplain());
+        myApplication = application;
+        myUpdateSettingsProvider = updateSettingsProvider;
         setPopup(true);
     }
 
@@ -40,13 +53,9 @@ public final class SettingsEntryPointAction extends DumbAwareActionGroup impleme
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         List<AnAction> groups = new ArrayList<>();
 
-        Application.get().getExtensionPoint(SettingsEntryPointActionProvider.class).forEachExtensionSafe(provider -> {
+        myApplication.getExtensionPoint(SettingsEntryPointActionProvider.class).forEachExtensionSafe(provider -> {
             groups.add(provider.getUpdateActionOrGroup());
         });
-
-        if (groups.isEmpty()) {
-            resetActionIcon();
-        }
 
         ActionGroup templateGroup = (ActionGroup) ActionManager.getInstance().getAction("SettingsEntryPointGroup");
         if (templateGroup != null) {
@@ -60,8 +69,8 @@ public final class SettingsEntryPointAction extends DumbAwareActionGroup impleme
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
-        presentation.setIcon(getActionIcon(ourIconState));
-        updateState(UpdateSettings.getInstance());
+        IconState state = getState((UpdateSettingsEx) myUpdateSettingsProvider.get());
+        presentation.setIcon(state.myIcon);
     }
 
     @Override
@@ -70,46 +79,18 @@ public final class SettingsEntryPointAction extends DumbAwareActionGroup impleme
     }
 
     @RequiredUIAccess
-    public static void updateState(UpdateSettings updateSettings) {
-        UpdateSettingsEx updateSettingsEx = (UpdateSettingsEx)updateSettings;
-
+    public static IconState getState(UpdateSettingsEx updateSettingsEx) {
         PlatformOrPluginUpdateResultType lastCheckResult = updateSettingsEx.getLastCheckResult();
 
         switch (lastCheckResult) {
             case PLATFORM_UPDATE:
-                updateState(IconState.ApplicationUpdate);
-                break;
+                return IconState.ApplicationUpdate;
             case RESTART_REQUIRED:
-                updateState(IconState.RestartRequired);
-                break;
+                return IconState.RestartRequired;
             case PLUGIN_UPDATE:
-                updateState(IconState.ApplicationComponentUpdate);
-                break;
+                return IconState.ApplicationComponentUpdate;
             default:
-                resetActionIcon();
-                break;
+                return IconState.Default;
         }
-    }
-
-    @RequiredUIAccess
-    public static void updateState(IconState state) {
-        ourIconState = state;
-    }
-
-    private static void resetActionIcon() {
-        ourIconState = IconState.Default;
-    }
-
-    @Nonnull
-    private static Image getActionIcon(IconState iconState) {
-        switch (iconState) {
-            case ApplicationUpdate:
-                return PlatformIconGroup.ideNotificationIdeupdate();
-            case ApplicationComponentUpdate:
-                return PlatformIconGroup.ideNotificationPluginupdate();
-            case RestartRequired:
-                return PlatformIconGroup.ideNotificationRestartrequiredupdate();
-        }
-        return PlatformIconGroup.generalGearplain();
     }
 }
