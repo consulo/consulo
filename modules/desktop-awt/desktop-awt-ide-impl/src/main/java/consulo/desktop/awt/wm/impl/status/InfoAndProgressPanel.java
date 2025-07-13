@@ -468,7 +468,6 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
 
     @Override
     public void install(@Nonnull StatusBar statusBar) {
-
     }
 
     private class MyInlineProgressIndicator extends InlineProgressIndicator {
