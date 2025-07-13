@@ -6,6 +6,7 @@ import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.internal.AbstractProgressIndicatorExBase;
 import consulo.application.internal.ProgressIndicatorEx;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.application.util.registry.Registry;
@@ -473,7 +474,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
     private class MyInlineProgressIndicator extends InlineProgressIndicator {
         private class SuspendAction extends DumbAwareAction {
             public SuspendAction() {
-                super(LocalizeValue.of(), LocalizeValue.of(), PlatformIconGroup.actionsPause());
+                super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsPause());
             }
 
             @Override
@@ -502,7 +503,11 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
                 presentation.setEnabledAndVisible(suspender != null);
                 if (suspender != null) {
                     presentation.setIcon(suspender.isSuspended() ? PlatformIconGroup.actionsResume() : PlatformIconGroup.actionsPause());
-                    presentation.setText(suspender.isSuspended() ? "Resume" : "Pause");
+                    presentation.setTextValue(
+                        suspender.isSuspended()
+                            ? ApplicationLocalize.actionResumeText()
+                            : ApplicationLocalize.actionPauseText()
+                    );
                 }
             }
         }

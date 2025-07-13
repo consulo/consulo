@@ -34,13 +34,13 @@ import static java.util.Calendar.*;
  * @author Vassiliy.Kudryashov
  */
 public class ClockPanel extends JComponent {
-    private static final int TOP = 1 << 0 | 1 << 2 | 1 << 3 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9;
-    private static final int TOP_LEFT = 1 << 0 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 8 | 1 << 9;
-    private static final int TOP_RIGHT = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 7 | 1 << 8 | 1 << 9;
-    private static final int MIDDLE = 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 8 | 1 << 9;
-    private static final int BOTTOM_LEFT = 1 << 0 | 1 << 2 | 1 << 6 | 1 << 8;
-    private static final int BOTTOM_RIGHT = 1 << 0 | 1 << 1 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9;
-    private static final int BOTTOM = 1 << 0 | 1 << 2 | 1 << 3 | 1 << 5 | 1 << 6 | 1 << 8 | 1 << 9;
+    private static final int TOP          = 0b1111101101;
+    private static final int TOP_LEFT     = 0b1101110001;
+    private static final int TOP_RIGHT    = 0b1110011111;
+    private static final int MIDDLE       = 0b1101111100;
+    private static final int BOTTOM_LEFT  = 0b0101000101;
+    private static final int BOTTOM_RIGHT = 0b1111111011;
+    private static final int BOTTOM       = 0b1101101101;
     //              top
     //              ---
     //    top-left |   | top-right

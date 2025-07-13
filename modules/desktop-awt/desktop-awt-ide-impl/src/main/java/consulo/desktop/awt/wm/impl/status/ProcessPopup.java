@@ -15,15 +15,15 @@
  */
 package consulo.desktop.awt.wm.impl.status;
 
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
 import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -32,6 +32,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.util.collection.ArrayUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,13 +53,13 @@ public class ProcessPopup {
 
     private final Wrapper myRootContent = new Wrapper();
 
-    private final Set<InlineProgressIndicator> myIndicators = new HashSet<InlineProgressIndicator>();
+    private final Set<InlineProgressIndicator> myIndicators = new HashSet<>();
 
-    public ProcessPopup(final InfoAndProgressPanel progressPanel) {
+    public ProcessPopup(InfoAndProgressPanel progressPanel) {
         myProgressPanel = progressPanel;
 
         buildActiveContent();
-        myInactiveContentComponent = new JLabel(IdeBundle.message("progress.window.empty.text"), null, JLabel.CENTER) {
+        myInactiveContentComponent = new JLabel(IdeLocalize.progressWindowEmptyText().get(), null, JLabel.CENTER) {
             @Override
             public Dimension getPreferredSize() {
                 return getEmptyPreferredSize();
@@ -108,9 +109,9 @@ public class ProcessPopup {
         }
     }
 
-    private void removeExtraSeparator(final InlineProgressIndicator indicator) {
-        final Component[] all = myProcessBox.getComponents();
-        final int index = ArrayUtil.indexOf(all, indicator.getComponent());
+    private void removeExtraSeparator(InlineProgressIndicator indicator) {
+        Component[] all = myProcessBox.getComponents();
+        int index = ArrayUtil.indexOf(all, indicator.getComponent());
         if (index == -1) {
             return;
         }
@@ -129,24 +130,24 @@ public class ProcessPopup {
         JComponent toFocus =
             myRootContent.getTargetComponent() == myActiveContentComponent ? myActiveFocusedContent : myInactiveContentComponent;
 
-        final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(myRootContent, toFocus);
-        builder.addListener(new JBPopupAdapter() {
-            @Override
-            public void onClosed(LightweightWindowEvent event) {
-                myProgressPanel.hideProcessPopup();
-            }
-        });
-        builder.setMovable(true);
-        builder.setResizable(true);
-        builder.setTitle(IdeLocalize.progressWindowTitle());
-        builder.setDimensionServiceKey(null, "ProcessPopupWindow", true);
-        builder.setMinSize(getMinSize());
-        builder.setCancelOnClickOutside(false);
-        builder.setRequestFocus(requestFocus);
-        builder.setBelongsToGlobalPopupStack(false);
-        builder.setLocateByContent(true);
-
-        builder.setCancelButton(PlatformIconGroup.generalHidetoolwindow(), LocalizeValue.localizeTODO("Hide"));
+        ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(myRootContent, toFocus)
+            .addListener(new JBPopupAdapter() {
+                @Override
+                @RequiredUIAccess
+                public void onClosed(LightweightWindowEvent event) {
+                    myProgressPanel.hideProcessPopup();
+                }
+            })
+            .setMovable(true)
+            .setResizable(true)
+            .setTitle(IdeLocalize.progressWindowTitle())
+            .setDimensionServiceKey(null, "ProcessPopupWindow", true)
+            .setMinSize(getMinSize())
+            .setCancelOnClickOutside(false)
+            .setRequestFocus(requestFocus)
+            .setBelongsToGlobalPopupStack(false)
+            .setLocateByContent(true)
+            .setCancelButton(PlatformIconGroup.generalHidetoolwindow(), LocalizeValue.localizeTODO("Hide"));
 
         JFrame frame = (JFrame) UIUtil.findUltimateParent(myProgressPanel);
         Dimension contentSize = myRootContent.getPreferredSize();
@@ -160,7 +161,7 @@ public class ProcessPopup {
             builder.setMinSize(new Dimension(width, height));
             myPopup = builder.createPopup();
 
-            consulo.ui.Window uiWindow = TargetAWT.from(frame);
+            Window uiWindow = TargetAWT.from(frame);
 
             IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
             assert ideFrame != null;
@@ -168,7 +169,6 @@ public class ProcessPopup {
             if (sb.isVisible()) {
                 y -= sb.getSize().height;
             }
-
 
             myPopup.showInScreenCoordinates(myProgressPanel.getRootPane(), new Point(x - 5, y - 5));
         }
@@ -181,12 +181,12 @@ public class ProcessPopup {
     private void buildActiveContent() {
         myActiveFocusedContent = new ActiveContent();
 
-        final JPanel wrapper = new JPanel(new BorderLayout());
+        JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.add(myProcessBox, BorderLayout.NORTH);
 
         myActiveFocusedContent.add(wrapper, BorderLayout.CENTER);
 
-        final JScrollPane scrolls = new JBScrollPane(myActiveFocusedContent) {
+        JScrollPane scrolls = new JBScrollPane(myActiveFocusedContent) {
             @Override
             public Dimension getPreferredSize() {
                 if (myProcessBox.getComponentCount() > 0) {
@@ -203,14 +203,14 @@ public class ProcessPopup {
     }
 
     private static Dimension getEmptyPreferredSize() {
-        final Dimension size = ScreenUtil.getMainScreenBounds().getSize();
+        Dimension size = ScreenUtil.getMainScreenBounds().getSize();
         size.width *= 0.3d;
         size.height *= 0.3d;
         return size;
     }
 
     private static Dimension getMinSize() {
-        final Dimension size = ScreenUtil.getMainScreenBounds().getSize();
+        Dimension size = ScreenUtil.getMainScreenBounds().getSize();
         size.width *= 0.1d;
         size.height *= 0.1d;
         return size;
@@ -218,7 +218,7 @@ public class ProcessPopup {
 
     public void hide() {
         if (myPopup != null) {
-            final JBPopup popup = myPopup;
+            JBPopup popup = myPopup;
             myPopup = null;
             popup.cancel();
         }
@@ -247,12 +247,12 @@ public class ProcessPopup {
         }
 
         @Override
-        public int getScrollableUnitIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
             return myLabel.getPreferredSize().height;
         }
 
         @Override
-        public int getScrollableBlockIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
             return myLabel.getPreferredSize().height;
         }
 
