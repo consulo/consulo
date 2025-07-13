@@ -4,16 +4,10 @@ package consulo.ui.ex.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataContext;
-
 import jakarta.annotation.Nonnull;
-
-import java.util.Collection;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SettingsEntryPointActionProvider {
-    String ICON_KEY = "Update_Type_Icon_Key";
-
     @Nonnull
-    Collection<AnAction> getUpdateActions(@Nonnull DataContext context);
+    AnAction getUpdateActionOrGroup();
 }

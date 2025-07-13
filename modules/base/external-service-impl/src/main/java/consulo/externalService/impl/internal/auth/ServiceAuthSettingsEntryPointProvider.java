@@ -16,16 +16,14 @@
 package consulo.externalService.impl.internal.auth;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataContext;
 import consulo.externalService.ExternalServiceConfiguration;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.internal.SettingsEntryPointActionProvider;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -44,10 +42,10 @@ public class ServiceAuthSettingsEntryPointProvider implements SettingsEntryPoint
 
   @Nonnull
   @Override
-  public Collection<AnAction> getUpdateActions(@Nonnull DataContext context) {
+  public AnAction getUpdateActionOrGroup() {
     if (myLoginAction == null) {
       myLoginAction = new LoginAction(myExternalServiceConfigurationProvider);
     }
-    return List.of(myLoginAction);
+    return ActionGroup.of(myLoginAction, AnSeparator.create());
   }
 }

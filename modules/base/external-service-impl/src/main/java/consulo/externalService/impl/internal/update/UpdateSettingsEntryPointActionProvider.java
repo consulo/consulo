@@ -17,7 +17,6 @@ package consulo.externalService.impl.internal.update;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.dataContext.DataContext;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.localize.ExternalServiceLocalize;
@@ -28,11 +27,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.SettingsEntryPointActionProvider;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -98,18 +95,33 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
 
     @Nonnull
     @Override
-    public Collection<AnAction> getUpdateActions(@Nonnull DataContext context) {
-        UpdateSettings updateSettings = myUpdateSettingsProvider.get();
+    public ActionGroup getUpdateActionOrGroup() {
+        return new DumbAwareActionGroup() {
+            @Nonnull
+            @Override
+            public AnAction[] getChildren(@Nullable AnActionEvent e) {
+                AnAction action = createAction();
+                if (action != null) {
+                    return new AnAction[]{action, AnSeparator.create()};
+                }
+                return AnAction.EMPTY_ARRAY;
+            }
 
-        PlatformOrPluginUpdateResultType type = ((UpdateSettingsEx) updateSettings).getLastCheckResult();
-        return switch (type) {
-            case NO_UPDATE -> List.of(myActionManagerProvider.get().getAction("CheckForUpdate"));
-            case RESTART_REQUIRED -> List.<AnAction>of(new RestartConsuloAction(updateSettings));
-            case PLATFORM_UPDATE, PLUGIN_UPDATE -> List.<AnAction>of(new IconifiedCheckForUpdateAction(
-                myUpdateSettingsProvider,
-                type == PlatformOrPluginUpdateResultType.PLATFORM_UPDATE
-            ));
-            default -> List.<AnAction>of();
+            @Nullable
+            private AnAction createAction() {
+                UpdateSettings updateSettings = myUpdateSettingsProvider.get();
+
+                PlatformOrPluginUpdateResultType type = ((UpdateSettingsEx) updateSettings).getLastCheckResult();
+                return switch (type) {
+                    case NO_UPDATE -> myActionManagerProvider.get().getAction("CheckForUpdate");
+                    case RESTART_REQUIRED -> new RestartConsuloAction(updateSettings);
+                    case PLATFORM_UPDATE, PLUGIN_UPDATE -> new IconifiedCheckForUpdateAction(
+                        myUpdateSettingsProvider,
+                        type == PlatformOrPluginUpdateResultType.PLATFORM_UPDATE
+                    );
+                    default -> null;
+                };
+            }
         };
     }
 }

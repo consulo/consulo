@@ -17,10 +17,13 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.externalService.plugin.PluginContants;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -33,6 +36,12 @@ public class ShowPluginManagerAction extends DumbAwareAction {
     @Inject
     public ShowPluginManagerAction(Provider<ShowSettingsUtil> showSettingsUtilProvider) {
         myShowSettingsUtilProvider = showSettingsUtilProvider;
+    }
+
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.nodesPlugin();
     }
 
     @Override

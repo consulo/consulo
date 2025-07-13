@@ -258,8 +258,7 @@
         <action id="RunAnything" icon="consulo.platform.base.PlatformIconGroup@actions.run_anything"
                 class="consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction" text="Run anything"
                 description="Allows to execute any command"/>
-        <action id="SettingsEntryPoint" class="consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction"
-                icon="consulo.platform.base.PlatformIconGroup@general.gearplain"/>
+        <action id="SettingsEntryPoint" class="consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction"/>
 
         <group id="TemplateParametersNavigation">
             <action id="NextTemplateParameter" class="consulo.ide.impl.idea.codeInsight.completion.NextPrevParameterAction$Next"
