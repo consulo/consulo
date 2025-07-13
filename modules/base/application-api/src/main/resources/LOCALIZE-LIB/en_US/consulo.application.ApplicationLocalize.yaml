@@ -4,8 +4,12 @@ action.apply.editor.font.settings:
     text: Apply editor font settings
 action.edit:
     text: Edit
+action.pause.text:
+    text: Pause
 action.remove:
     text: R&emove
+action.resume.text:
+    text: Resume
 application.save.settings.error:
     text: 'Could not save application settings: {0}'
 arrangement.action.rule.add.description:
