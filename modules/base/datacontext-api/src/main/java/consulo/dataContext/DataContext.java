@@ -50,6 +50,29 @@ public interface DataContext {
     @Nullable
     <T> T getData(@Nonnull Key<T> key);
 
+    /**
+     * Returns not null value corresponding to the specified data key.
+     *
+     * @param key the data key for which the value is requested.
+     * @return not null value, or throws {@link AssertionError}.
+     */
+    @Nonnull
+    default <T> T getRequiredData(@Nonnull Key<T> key) {
+        T data = getData(key);
+        assert data != null;
+        return data;
+    }
+
+    /**
+     * Checks if the data exists.
+     *
+     * @param key the data key for which the value is requested.
+     * @return {@code true} if not null data exists, {@code false} otherwise.
+     */
+    default <T> boolean hasData(@Nonnull Key<T> key) {
+        return getData(key) != null;
+    }
+
     @Nonnull
     public static Builder builder() {
         return new Builder(null);
