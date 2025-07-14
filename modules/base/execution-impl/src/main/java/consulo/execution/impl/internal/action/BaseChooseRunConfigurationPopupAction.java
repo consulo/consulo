@@ -59,23 +59,7 @@ public abstract class BaseChooseRunConfigurationPopupAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final Presentation presentation = e.getPresentation();
-        final Project project = e.getData(Project.KEY);
-
-        presentation.setEnabled(true);
-        if (project == null || project.isDisposed()) {
-            presentation.setEnabled(false);
-            presentation.setVisible(false);
-            return;
-        }
-
-        if (null == getDefaultExecutor()) {
-            presentation.setEnabled(false);
-            presentation.setVisible(false);
-            return;
-        }
-
-        presentation.setEnabled(true);
-        presentation.setVisible(true);
+        Project project = e.getData(Project.KEY);
+        e.getPresentation().setEnabledAndVisible(project != null && !project.isDisposed() && getDefaultExecutor() != null);
     }
 }

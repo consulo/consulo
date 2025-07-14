@@ -65,7 +65,7 @@ public class ResumeAction extends XDebuggerActionBase implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         if (!performWithHandler(e)) {
-            Project project = e == null ? null : e.getData(Project.KEY);
+            Project project = e.getData(Project.KEY);
             if (project != null && !DumbService.isDumb(project)) {
                 new ChooseDebugConfigurationPopupAction().actionPerformed(e);
             }

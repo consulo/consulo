@@ -94,14 +94,13 @@ public class ExportTestResultsAction extends DumbAwareAction {
   }
 
   private boolean isEnabled(DataContext dataContext) {
-    return myModel != null && dataContext.getData(Project.KEY) != null && !myModel.getRoot().isInProgress();
+    return myModel != null && dataContext.hasData(Project.KEY) && !myModel.getRoot().isInProgress();
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getDataContext().getData(Project.KEY);
-    LOG.assertTrue(project != null);
+    final Project project = e.getDataContext().getRequiredData(Project.KEY);
     final ExportTestResultsConfiguration config = ExportTestResultsConfiguration.getInstance(project);
 
     final LocalizeValue name = ExecutionLocalize.exportTestResultsFilename(PathUtil.suggestFileName(myRunConfiguration.getName()));

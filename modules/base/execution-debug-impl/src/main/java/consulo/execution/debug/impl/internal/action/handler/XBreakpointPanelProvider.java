@@ -38,6 +38,7 @@ import consulo.execution.debug.impl.internal.breakpoint.ui.group.XBreakpointCust
 import consulo.execution.debug.impl.internal.breakpoint.ui.group.XBreakpointFileGroupingRule;
 import consulo.execution.debug.impl.internal.breakpoint.ui.group.XBreakpointGroupingByTypeRule;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.Lists;
@@ -181,8 +182,9 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
         }
 
         @Override
-        public void actionPerformed(AnActionEvent e) {
-            myType.addBreakpoint(e == null ? null : e.getData(Project.KEY), null);
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            myType.addBreakpoint(e.getData(Project.KEY), null);
         }
     }
 }

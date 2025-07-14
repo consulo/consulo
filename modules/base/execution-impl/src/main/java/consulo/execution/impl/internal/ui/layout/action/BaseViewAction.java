@@ -71,7 +71,7 @@ public abstract class BaseViewAction extends DumbAwareAction {
 
   @Nullable
   private Content[] getContent(final AnActionEvent e) {
-    return e.getData(ViewContext.CONTENT_KEY);
+    return e.getData(Content.KEY_OF_ARRAY);
   }
 
   @Nullable

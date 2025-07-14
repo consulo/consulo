@@ -118,7 +118,7 @@ public final class MacroManagerImpl implements MacroManager {
   }
 
   private static DataContext getCorrectContext(DataContext dataContext) {
-    if (dataContext.getData(FileEditor.KEY) != null) {
+    if (dataContext.hasData(FileEditor.KEY)) {
       return dataContext;
     }
     Project project = dataContext.getData(Project.KEY);

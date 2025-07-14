@@ -48,14 +48,12 @@ public class CompileProjectAction extends CompileActionBase {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();
         if (!presentation.isEnabled()) {
             return;
         }
-        Project project = event.getData(Project.KEY);
-        presentation.setEnabled(project != null);
+        presentation.setEnabled(event.hasData(Project.KEY));
     }
 }

@@ -43,6 +43,6 @@ public class ConfigureInspectionsAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 }

@@ -20,6 +20,7 @@ import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,62 +34,89 @@ import java.util.Map;
  * @see DataProvider
  */
 public interface DataContext {
-  DataContext EMPTY_CONTEXT = new DataContext() {
-    @Override
-    public <T> T getData(@Nonnull Key<T> key) {
-      return null;
+    DataContext EMPTY_CONTEXT = new DataContext() {
+        @Override
+        public <T> T getData(@Nonnull Key<T> key) {
+            return null;
+        }
+    };
+
+    /**
+     * Returns the value corresponding to the specified data key.
+     *
+     * @param key the data key for which the value is requested.
+     * @return the value, or null if no value is available in the current context for this identifier.
+     */
+    @Nullable
+    <T> T getData(@Nonnull Key<T> key);
+
+    /**
+     * Returns not null value corresponding to the specified data key.
+     *
+     * @param key the data key for which the value is requested.
+     * @return not null value, or throws {@link AssertionError}.
+     */
+    @Nonnull
+    default <T> T getRequiredData(@Nonnull Key<T> key) {
+        T data = getData(key);
+        assert data != null;
+        return data;
     }
-  };
 
-  /**
-   * Returns the value corresponding to the specified data key.
-   *
-   * @param key the data key for which the value is requested.
-   * @return the value, or null if no value is available in the current context for this identifier.
-   */
-  @Nullable
-  <T> T getData(@Nonnull Key<T> key);
-
-  @Nonnull
-  public static Builder builder() {
-    return new Builder(null);
-  }
-
-  public final static class Builder {
-    private DataContext myParent;
-    private Map<Key, Object> myMap;
-
-    Builder(DataContext parent) {
-      myParent = parent;
-    }
-
-    public Builder parent(@Nullable DataContext parent) {
-      myParent = parent;
-      return this;
+    /**
+     * Checks if the data exists.
+     *
+     * @param key the data key for which the value is requested.
+     * @return {@code true} if not null data exists, {@code false} otherwise.
+     */
+    default <T> boolean hasData(@Nonnull Key<T> key) {
+        return getData(key) != null;
     }
 
     @Nonnull
-    public <T> Builder add(@Nonnull Key<? super T> dataKey, @Nullable T value) {
-      if (value != null) {
-        if (myMap == null) myMap = new HashMap<>();
-        myMap.put(dataKey, value);
-      }
-      return this;
+    public static Builder builder() {
+        return new Builder(null);
     }
 
-    @Nonnull
-    public Builder addAll(@Nonnull DataContext dataContext, @Nonnull Key<?>... keys) {
-      for (Key<?> key : keys) {
-        //noinspection unchecked
-        add((Key<Object>)key, dataContext.getData(key));
-      }
-      return this;
-    }
+    public final static class Builder {
+        private DataContext myParent;
+        private Map<Key, Object> myMap;
 
-    @Nonnull
-    public DataContext build() {
-      if (myMap == null && myParent == null) return EMPTY_CONTEXT;
-      return new BuilderDataContext(myMap != null ? myMap : Map.of(), myParent);
+        Builder(DataContext parent) {
+            myParent = parent;
+        }
+
+        public Builder parent(@Nullable DataContext parent) {
+            myParent = parent;
+            return this;
+        }
+
+        @Nonnull
+        public <T> Builder add(@Nonnull Key<? super T> dataKey, @Nullable T value) {
+            if (value != null) {
+                if (myMap == null) {
+                    myMap = new HashMap<>();
+                }
+                myMap.put(dataKey, value);
+            }
+            return this;
+        }
+
+        @Nonnull
+        public Builder addAll(@Nonnull DataContext dataContext, @Nonnull Key<?>... keys) {
+            for (Key<?> key : keys) {
+                //noinspection unchecked
+                add((Key<Object>) key, dataContext.getData(key));
+            }
+            return this;
+        }
+
+        @Nonnull
+        public DataContext build() {
+            if (myMap == null && myParent == null) {
+                return EMPTY_CONTEXT;
+            }
+            return new BuilderDataContext(myMap != null ? myMap : Map.of(), myParent);
+        }
     }
-  }
 }

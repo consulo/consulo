@@ -126,12 +126,12 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
         myPasswordSafe = passwordSafe;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         LocalizeValue action = e.getPresentation().getTextValue();
 
-        Dialog dialog = myDialogService.build(e.getData(Project.KEY), new CredentialStorageDialogDescriptor(action, myPasswordSafe));
+        Dialog dialog = myDialogService.build(e.getRequiredData(Project.KEY), new CredentialStorageDialogDescriptor(action, myPasswordSafe));
 
         dialog.showAsync();
     }

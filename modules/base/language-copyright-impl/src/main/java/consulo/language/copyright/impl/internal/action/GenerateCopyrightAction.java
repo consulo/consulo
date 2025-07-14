@@ -36,6 +36,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -77,16 +78,19 @@ public class GenerateCopyrightAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {
         DataContext context = event.getDataContext();
-        Project project = context.getData(Project.KEY);
-        assert project != null;
+        Project project = context.getRequiredData(Project.KEY);
         Module module = context.getData(Module.KEY);
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
         PsiFile file = getFile(context, project);
         assert file != null;
         if (CopyrightManager.getInstance(project).getCopyrightOptions(file) == null) {
-            if (Messages.showOkCancelDialog(project, "No copyright configured for current file. Would you like to edit copyright settings?", "No Copyright Available", Messages.getQuestionIcon()) ==
-                DialogWrapper.OK_EXIT_CODE) {
+            if (Messages.showOkCancelDialog(
+                project,
+                "No copyright configured for current file. Would you like to edit copyright settings?",
+                "No Copyright Available",
+                UIUtil.getQuestionIcon()
+            ) == DialogWrapper.OK_EXIT_CODE) {
                 project.getApplication().getInstance(ShowConfigurableService.class).showAndSelect(project, CopyrightProjectConfigurable.class);
             }
             else {

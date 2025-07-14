@@ -33,7 +33,7 @@ public class ShowTrackedAction extends ToggleAction implements DumbAware {
 
     @Override
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-        if (e.getData(Project.KEY) != null) {
+        if (e.hasData(Project.KEY)) {
             MemoryViewManager.getInstance().setShowTrackedOnly(state);
         }
     }

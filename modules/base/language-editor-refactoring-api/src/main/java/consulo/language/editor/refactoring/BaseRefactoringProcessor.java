@@ -328,7 +328,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     }
 
     protected boolean isGlobalUndoAction() {
-        return DataManager.getInstance().getDataContext().getData(Editor.KEY) == null;
+        return !DataManager.getInstance().getDataContext().hasData(Editor.KEY);
     }
 
     @Nonnull

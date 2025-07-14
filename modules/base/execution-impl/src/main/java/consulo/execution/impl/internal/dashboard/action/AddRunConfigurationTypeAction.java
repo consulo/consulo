@@ -116,6 +116,6 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
+    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
   }
 }

@@ -58,7 +58,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
     public void update(@Nonnull AnActionEvent e) {
         final Editor editor = e.getData(Editor.KEY);
 
-        final boolean enabled = e.getData(ConsoleView.KEY) != null && editor != null && getSingleLineSelection(editor) != null;
+        final boolean enabled = e.hasData(ConsoleView.KEY) && editor != null && getSingleLineSelection(editor) != null;
         e.getPresentation().setEnabled(enabled);
         e.getPresentation().setVisible(enabled);
     }

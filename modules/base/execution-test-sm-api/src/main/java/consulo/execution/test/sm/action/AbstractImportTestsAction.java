@@ -111,7 +111,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 
     @Nullable
@@ -120,8 +120,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        LOG.assertTrue(project != null);
+        Project project = e.getRequiredData(Project.KEY);
         VirtualFile file = getFile(project);
         if (file != null) {
             try {

@@ -75,10 +75,10 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     return CreateFileAction.class.equals(getClass());
   }
 
-  @Override
   @Nonnull
+  @Override
   @RequiredUIAccess
-  protected void invokeDialog(final Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer) {
+  protected void invokeDialog(@Nonnull Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer) {
     MyInputValidator validator = new MyValidator(project, directory);
     if (project.getApplication().isUnitTestMode()) {
       try {

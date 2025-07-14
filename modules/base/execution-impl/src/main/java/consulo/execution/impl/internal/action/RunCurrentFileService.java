@@ -77,7 +77,7 @@ public class RunCurrentFileService {
     }
 
     public void runCurrentFile(@Nonnull Executor executor, @Nonnull AnActionEvent e) {
-        Project project = Objects.requireNonNull(e.getData(Project.KEY));
+        Project project = e.getRequiredData(Project.KEY);
         List<RunnerAndConfigurationSettings> runConfigs = getRunCurrentFileActionStatus(executor, e, true).runConfigs();
         if (runConfigs.isEmpty()) {
             return;
@@ -144,7 +144,7 @@ public class RunCurrentFileService {
         @Nonnull AnActionEvent e,
         boolean resetCache
     ) {
-        Project project = Objects.requireNonNull(e.getData(Project.KEY));
+        Project project = e.getRequiredData(Project.KEY);
 
         VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
         if (files.length == 1) {

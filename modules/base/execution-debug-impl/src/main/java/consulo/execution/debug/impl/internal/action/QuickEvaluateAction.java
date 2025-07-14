@@ -66,7 +66,7 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
             }
 
             Editor editor = event.getData(Editor.KEY);
-            return editor != null && event.getData(EditorGutter.KEY) == null;
+            return editor != null && !event.hasData(EditorGutter.KEY);
         }
     }
 }

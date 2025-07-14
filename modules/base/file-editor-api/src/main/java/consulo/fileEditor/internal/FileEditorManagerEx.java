@@ -33,7 +33,7 @@ import java.util.List;
 public abstract class FileEditorManagerEx extends FileEditorManager implements BusyObject {
   protected final List<EditorDataProvider> myDataProviders = new ArrayList<>();
 
-  public static FileEditorManagerEx getInstanceEx(Project project) {
+  public static FileEditorManagerEx getInstanceEx(@Nonnull Project project) {
     return (FileEditorManagerEx)getInstance(project);
   }
 
