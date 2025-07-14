@@ -24,36 +24,37 @@ import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.RefreshAction;
+import consulo.ui.ex.action.configurable.ConfigurableAction;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import jakarta.annotation.Nonnull;
 
-public class RefreshLogAction extends RefreshAction {
+public class RefreshLogAction extends ConfigurableAction {
     private static final Logger LOG = Logger.getInstance(RefreshLogAction.class);
 
-    public RefreshLogAction() {
-        super(
-            LocalizeValue.localizeTODO("Refresh"),
-            LocalizeValue.localizeTODO("Check for new commits and refresh Log if necessary"),
-            PlatformIconGroup.actionsRefresh()
-        );
+    private ValidData<VcsLogManager> myLogManager;
+    private ValidData<VcsLogUi> myUi;
+
+    @Override
+    protected void init(@Nonnull Builder builder) {
+        builder.text(LocalizeValue.localizeTODO("Refresh"))
+            .description(LocalizeValue.localizeTODO("Check for new commits and refresh Log if necessary"))
+            .icon(PlatformIconGroup.actionsRefresh());
+        myLogManager = builder.invisibleAndDisabledIfAbsent(VcsLogInternalDataKeys.LOG_MANAGER);
+        myUi = builder.invisibleAndDisabledIfAbsent(VcsLogUi.KEY);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    protected void performAction(@Nonnull AnActionEvent e) {
         VcsLogUtil.triggerUsage(e);
 
-        VcsLogManager logManager = e.getRequiredData(VcsLogInternalDataKeys.LOG_MANAGER);
-
         // diagnostic for possible refresh problems
-        VcsLogUi ui = e.getRequiredData(VcsLogUi.KEY);
-        if (ui instanceof VcsLogUiImpl) {
-            VcsLogFilterer filterer = ((VcsLogUiImpl) ui).getFilterer();
+        if (myUi.get() instanceof VcsLogUiImpl vcsLogUi) {
+            VcsLogFilterer filterer = vcsLogUi.getFilterer();
             if (!filterer.isValid()) {
                 String message = "Trying to refresh invalid log tab.";
-                if (!logManager.getDataManager().getProgress().isRunning()) {
+                if (!myLogManager.get().getDataManager().getProgress().isRunning()) {
                     LOG.error(message);
                 }
                 else {
@@ -63,12 +64,6 @@ public class RefreshLogAction extends RefreshAction {
             }
         }
 
-        logManager.getDataManager().refreshSoftly();
-    }
-
-    @Override
-    public void update(@Nonnull AnActionEvent e) {
-        VcsLogManager logManager = e.getData(VcsLogInternalDataKeys.LOG_MANAGER);
-        e.getPresentation().setEnabledAndVisible(logManager != null && e.getData(VcsLogUi.KEY) != null);
+        myLogManager.get().getDataManager().refreshSoftly();
     }
 }
