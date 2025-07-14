@@ -41,11 +41,11 @@ public class EditBreakpointAction extends XDebuggerActionBase {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            final Editor editor = e.getDataContext().getData(Editor.KEY);
+            final Editor editor = e.getData(Editor.KEY);
             if (editor == null) {
                 return;
             }
-            XDebuggerEditBreakpointActionHandler.INSTANCE.editBreakpoint(e.getData(Project.KEY), editor, myBreakpoint, myRenderer);
+            XDebuggerEditBreakpointActionHandler.INSTANCE.editBreakpoint(e.getRequiredData(Project.KEY), editor, myBreakpoint, myRenderer);
         }
     }
 

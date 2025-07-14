@@ -40,8 +40,8 @@ public class EOFAction extends DumbAwareAction {
   public void update(@Nonnull AnActionEvent e) {
     RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
     ProcessHandler handler = descriptor != null ? descriptor.getProcessHandler() : null;
-    e.getPresentation().setEnabledAndVisible(e.getData(ConsoleView.KEY) != null
-                                               && e.getData(Editor.KEY) != null
+    e.getPresentation().setEnabledAndVisible(e.hasData(ConsoleView.KEY)
+                                               && e.hasData(Editor.KEY)
                                                && handler != null
                                                && !handler.isProcessTerminated());
   }

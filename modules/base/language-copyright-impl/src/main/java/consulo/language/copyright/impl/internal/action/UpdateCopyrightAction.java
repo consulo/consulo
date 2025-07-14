@@ -87,26 +87,24 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
       }
 
     }
-    else {
-      if ((files == null || files.length != 1) &&
-          context.getData(LangDataKeys.MODULE_CONTEXT) == null &&
-          context.getData(LangDataKeys.MODULE_CONTEXT_ARRAY) == null &&
-          context.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
-        final PsiElement[] elems = context.getData(PsiElement.KEY_OF_ARRAY);
-        if (elems != null) {
-          boolean copyrightEnabled = false;
-          for (PsiElement elem : elems) {
-            if (!(elem instanceof PsiDirectory)) {
-              final PsiFile file = elem.getContainingFile();
-              if (file == null || !UpdateCopyrightsProvider.hasExtension(file.getVirtualFile())) {
-                copyrightEnabled = true;
-                break;
-              }
+    else if ((files == null || files.length != 1)
+      && !context.hasData(LangDataKeys.MODULE_CONTEXT)
+      && !context.hasData(LangDataKeys.MODULE_CONTEXT_ARRAY)
+      && !context.hasData(PlatformDataKeys.PROJECT_CONTEXT)) {
+      final PsiElement[] elems = context.getData(PsiElement.KEY_OF_ARRAY);
+      if (elems != null) {
+        boolean copyrightEnabled = false;
+        for (PsiElement elem : elems) {
+          if (!(elem instanceof PsiDirectory)) {
+            final PsiFile file = elem.getContainingFile();
+            if (file == null || !UpdateCopyrightsProvider.hasExtension(file.getVirtualFile())) {
+              copyrightEnabled = true;
+              break;
             }
           }
-          if (!copyrightEnabled){
-            return false;
-          }
+        }
+        if (!copyrightEnabled) {
+          return false;
         }
       }
     }

@@ -48,12 +48,12 @@ public abstract class BaseTaskAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  public static Project getProject(@Nullable AnActionEvent event) {
-    return event == null ? null : event.getData(Project.KEY);
+  public static Project getProject(@Nonnull AnActionEvent event) {
+    return event.getData(Project.KEY);
   }
 
   @Nullable
-  public static TaskManager getTaskManager(AnActionEvent event) {
+  public static TaskManager getTaskManager(@Nonnull AnActionEvent event) {
     Project project = getProject(event);
     if (project == null) {
       return null;
@@ -62,7 +62,7 @@ public abstract class BaseTaskAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  public static LocalTask getActiveTask(AnActionEvent event) {
+  public static LocalTask getActiveTask(@Nonnull AnActionEvent event) {
     TaskManager manager = getTaskManager(event);
     return manager == null ? null : manager.getActiveTask();
   }

@@ -14,16 +14,13 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 public class RunCurrentFileAction extends AnAction implements DumbAware {
+    public RunCurrentFileAction() {
+        super(ExecutionLocalize.runConfigurationsComboRunCurrentFileItemInDropdown(), ExecutionLocalize.runConfigurationsComboRunCurrentFileDescription(), Image.empty(Image.DEFAULT_ICON_SIZE));
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-
-        Presentation presentation = e.getPresentation();
-        
-        presentation.setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
-        presentation.setTextValue(ExecutionLocalize.runConfigurationsComboRunCurrentFileItemInDropdown());
-        presentation.setDescriptionValue(ExecutionLocalize.runConfigurationsComboRunCurrentFileDescription());
-        presentation.setEnabledAndVisible(project != null);
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 
     @Override

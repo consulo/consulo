@@ -58,7 +58,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
     super(text, description, icon);
   }
 
-  protected abstract void invokeDialog(Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer);
+  protected abstract void invokeDialog(@Nonnull Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer);
 
   /**
    * @return created elements. Never null.
@@ -81,13 +81,12 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
       return;
     }
 
-    final Project project = e.getData(Project.KEY);
+    final Project project = e.getRequiredData(Project.KEY);
 
     final PsiDirectory dir = view.getOrChooseDirectory();
     if (dir == null) return;
 
     invokeDialog(project, dir, elements -> {
-
       for (PsiElement createdElement : elements) {
         view.selectElement(createdElement);
       }

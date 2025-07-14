@@ -36,6 +36,7 @@ import consulo.language.inject.advanced.internal.ProjectInjectionConfiguration;
 import consulo.language.plain.PlainTextFileType;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -892,7 +893,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         descriptor.setDescription("Please select the configuration file (usually named IntelliLang.xml) to import.");
         descriptor.setTitle("Import Configuration");
 
-        descriptor.putUserData(LangDataKeys.MODULE_CONTEXT, dataContext.getData(LangDataKeys.MODULE));
+        descriptor.putUserData(LangDataKeys.MODULE_CONTEXT, dataContext.getData(Module.KEY));
 
         final SplitterProportionsData splitterData = new SplitterProportionsDataImpl();
         splitterData.externalizeFromDimensionService("IntelliLang.ImportSettingsKey.SplitterProportions");

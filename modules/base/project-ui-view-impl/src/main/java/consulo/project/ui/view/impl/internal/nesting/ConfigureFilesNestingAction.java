@@ -32,8 +32,8 @@ public class ConfigureFilesNestingAction extends DumbAwareAction {
         return ActionUpdateThread.BGT;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         if (project == null) {

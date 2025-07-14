@@ -23,10 +23,7 @@ public final class ToggleShowTabLabelsAction extends DumbAwareToggleAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(
-            !ActionPlaces.DEBUGGER_TOOLBAR.equals(e.getPlace())
-                && e.getData(RunnerContentUi.KEY) != null
-        );
+        e.getPresentation().setEnabledAndVisible(!ActionPlaces.DEBUGGER_TOOLBAR.equals(e.getPlace()) && e.hasData(RunnerContentUi.KEY));
         super.update(e);
     }
 
@@ -41,7 +38,7 @@ public final class ToggleShowTabLabelsAction extends DumbAwareToggleAction {
 
     @Override
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-        RunnerContentUi runnerUI = Objects.requireNonNull(e.getData(RunnerContentUi.KEY));
+        RunnerContentUi runnerUI = e.getRequiredData(RunnerContentUi.KEY);
         runnerUI.getLayoutSettings().setTabLabelsHidden(!state);
         runnerUI.updateTabsUI(true);
     }

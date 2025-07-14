@@ -43,7 +43,6 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -53,7 +52,7 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
         if (file != null && editor != null && !DumbService.getInstance(project).isDumb()) {
             DaemonCodeAnalyzer.getInstance(project).autoImportReferenceAtCursor(editor, file); //let autoimport complete
         }
-        doAction(dataContext, project);
+        doAction(e.getDataContext(), project);
     }
 
     @Nonnull

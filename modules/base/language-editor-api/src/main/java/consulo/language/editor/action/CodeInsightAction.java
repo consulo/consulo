@@ -27,8 +27,8 @@ import jakarta.annotation.Nullable;
  * @author Dmitry Avdeev
  */
 public abstract class CodeInsightAction extends AnAction {
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {

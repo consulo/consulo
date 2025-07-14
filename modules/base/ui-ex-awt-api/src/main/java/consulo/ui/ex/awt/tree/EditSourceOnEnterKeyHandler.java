@@ -37,8 +37,7 @@ public class EditSourceOnEnterKeyHandler{
           if (KeyEvent.VK_ENTER == e.getKeyCode()) {
             DataContext dataContext = DataManager.getInstance().getDataContext(tree);
 
-            Project project = dataContext.getData(Project.KEY);
-            if (project == null) return;
+            if (!dataContext.hasData(Project.KEY)) return;
 
             OpenSourceUtil.openSourcesFrom(dataContext, false);
           }

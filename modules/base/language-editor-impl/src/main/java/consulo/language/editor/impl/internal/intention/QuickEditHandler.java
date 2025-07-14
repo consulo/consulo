@@ -163,7 +163,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                     new AnAction() {
                         @Override
                         public void update(@Nonnull AnActionEvent e) {
-                            Editor editor = e.getDataContext().getData(Editor.KEY);
+                            Editor editor = e.getData(Editor.KEY);
                             e.getPresentation().setEnabled(editor != null &&
                                 LookupManager.getActiveLookup(editor) == null &&
                                 TemplateManager.getInstance(myProject).getActiveTemplate(editor) == null &&

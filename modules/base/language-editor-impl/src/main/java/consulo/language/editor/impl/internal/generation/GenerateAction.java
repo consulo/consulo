@@ -47,13 +47,11 @@ public class GenerateAction extends DumbAwareAction {
     popup.showInBestPositionFor(dataContext);
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     if (ActionPlaces.isPopupPlace(event.getPlace())) {
-      Editor editor = event.getData(Editor.KEY);
-      presentation.setEnabledAndVisible(isEnabled(event) && editor != null);
+      presentation.setEnabledAndVisible(isEnabled(event) && event.hasData(Editor.KEY));
     }
     else {
       presentation.setEnabled(isEnabled(event));
@@ -124,8 +122,7 @@ public class GenerateAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      final Project project = e.getData(Project.KEY);
-      assert project != null;
+      final Project project = e.getRequiredData(Project.KEY);
       final DumbService dumbService = DumbService.getInstance(project);
       try {
         dumbService.setAlternativeResolveEnabled(true);

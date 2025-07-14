@@ -68,6 +68,6 @@ public class WhatsNewAction extends AnAction implements DumbAware {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setVisible(e.getData(Project.KEY) != null);
+        e.getPresentation().setVisible(e.hasData(Project.KEY));
     }
 }

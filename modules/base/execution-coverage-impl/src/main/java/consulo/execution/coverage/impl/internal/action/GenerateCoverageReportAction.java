@@ -31,8 +31,7 @@ public class GenerateCoverageReportAction extends AnAction implements DumbAware 
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
-        assert project != null;
+        Project project = dataContext.getRequiredData(Project.KEY);
         CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
         CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
 

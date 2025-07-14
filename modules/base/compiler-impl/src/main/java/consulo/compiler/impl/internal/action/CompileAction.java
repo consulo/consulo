@@ -75,8 +75,7 @@ public class CompileAction extends CompileActionBase {
         DataContext dataContext = event.getDataContext();
 
         presentation.setTextValue(ActionLocalize.actionCompileText().map(NO_MNEMONIC));
-        presentation.setEnabled(true);
-        presentation.setVisible(true);
+        presentation.setEnabledAndVisible(true);
 
         Project project = dataContext.getData(Project.KEY);
         if (project == null) {
@@ -104,11 +103,8 @@ public class CompileAction extends CompileActionBase {
                     aPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);
                 }
             }
-            else {
-                PsiElement element = dataContext.getData(PsiElement.KEY);
-                if (element instanceof PsiPackage psiPackage) {
-                    aPackage = psiPackage;
-                }
+            else if (dataContext.getData(PsiElement.KEY) instanceof PsiPackage psiPackage) {
+                aPackage = psiPackage;
             }
 
             if (aPackage != null) {

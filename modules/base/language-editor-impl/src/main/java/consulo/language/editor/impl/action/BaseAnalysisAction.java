@@ -140,7 +140,7 @@ public abstract class BaseAnalysisAction extends AnAction {
 
     @Nullable
     private AnalysisScope getInspectionScope(@Nonnull DataContext dataContext) {
-        if (dataContext.getData(Project.KEY) == null) {
+        if (!dataContext.hasData(Project.KEY)) {
             return null;
         }
 

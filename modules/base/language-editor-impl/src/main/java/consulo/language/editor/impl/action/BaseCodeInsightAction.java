@@ -79,8 +79,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
+    Project project = event.getData(Project.KEY);
     if (project == null){
       presentation.setEnabled(false);
       return;

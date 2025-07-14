@@ -319,7 +319,7 @@ public final class ActionMenu extends JMenu {
         else {
             @SuppressWarnings("deprecation") DataContext contextFromFocus = DataManager.getInstance().getDataContext();
             context = contextFromFocus;
-            if (context.getData(UIExAWTDataKey.CONTEXT_COMPONENT) == null) {
+            if (!context.hasData(UIExAWTDataKey.CONTEXT_COMPONENT)) {
                 IdeFrame frame = DesktopIdeFrameUtil.findIdeFrameFromParent(this);
                 context = DataManager.getInstance().getDataContext(IdeFocusManager.getGlobalInstance().getLastFocusedFor(frame));
             }
