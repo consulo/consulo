@@ -28,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.configurable.ConfigurableAction;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -41,25 +42,18 @@ import jakarta.annotation.Nonnull;
         anchor = ActionRefAnchor.AFTER
     )
 )
-public class AnalyzeStacktraceAction extends AnAction implements DumbAware {
-    public AnalyzeStacktraceAction() {
-        super(ExecutionLocalize.actionAnalyzestacktraceText());
+public class AnalyzeStacktraceAction extends ConfigurableAction implements DumbAware {
+    private ValidData<Project> myProject;
+
+    @Override
+    protected void init(@Nonnull Builder builder) {
+        builder.text(ExecutionLocalize.actionAnalyzestacktraceText());
+        myProject = builder.disabledIfAbsent(Project.KEY);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-
-        UnscrambleService unscrambleService = project.getInstance(UnscrambleService.class);
-        unscrambleService.showAsync();
-    }
-
-    @Override
-    public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+    protected void performAction(@Nonnull AnActionEvent e) {
+        myProject.get().getInstance(UnscrambleService.class).showAsync();
     }
 }
