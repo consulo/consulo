@@ -21,10 +21,11 @@ import consulo.ide.impl.presentationAssistant.PresentationAssistant;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 21-Aug-17
+ * @since 2017-08-21
  */
 public class TogglePresentationAssistantAction extends ToggleAction {
   public TogglePresentationAssistantAction() {
@@ -32,12 +33,12 @@ public class TogglePresentationAssistantAction extends ToggleAction {
   }
 
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     return PresentationAssistant.getInstance().getConfiguration().myShowActionDescriptions;
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     PresentationAssistant.getInstance().setShowActionsDescriptions(state, e.getData(Project.KEY));
   }
 }

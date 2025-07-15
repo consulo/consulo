@@ -33,13 +33,13 @@ import consulo.language.editor.internal.CompositeFoldingBuilder;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.undoRedo.CommandProcessor;
@@ -54,9 +54,13 @@ import java.util.Set;
  * @author Rustam Vishnyakov
  */
 public class GotoCustomRegionAction extends AnAction implements DumbAware, PopupAction {
-    @RequiredUIAccess
+    public GotoCustomRegionAction(@Nonnull LocalizeValue text) {
+        super(IdeLocalize.gotoCustomRegionMenuItem());
+    }
+
     @Override
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         final Editor editor = e.getData(Editor.KEY);
         if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
@@ -83,16 +87,9 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
         }
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        presentation.setTextValue(IdeLocalize.gotoCustomRegionMenuItem());
-        final Editor editor = e.getData(Editor.KEY);
-        final Project project = e.getData(Project.KEY);
-        boolean isAvailable = editor != null && project != null;
-        presentation.setEnabled(isAvailable);
-        presentation.setVisible(isAvailable);
+        e.getPresentation().setEnabledAndVisible(e.hasData(Editor.KEY) && e.hasData(Project.KEY));
     }
 
     @Nonnull

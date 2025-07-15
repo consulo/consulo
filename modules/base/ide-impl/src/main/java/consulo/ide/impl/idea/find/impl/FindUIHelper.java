@@ -81,6 +81,7 @@ public class FindUIHelper implements Disposable {
             }
 
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 ui.saveSettings();
                 myModel.copyFrom(FindManager.getInstance(myProject).getFindInProjectModel());
@@ -108,7 +109,6 @@ public class FindUIHelper implements Disposable {
 
         }.registerCustomShortcutSet(action.getShortcutSet(), component);
     }
-
 
     public boolean canSearchThisString() {
         return myUI != null && (!StringUtil.isEmpty(myUI.getStringToFind()) || !myModel.isReplaceState() && !myModel.isFindAllEnabled() && myUI.getFileTypeMask() != null);

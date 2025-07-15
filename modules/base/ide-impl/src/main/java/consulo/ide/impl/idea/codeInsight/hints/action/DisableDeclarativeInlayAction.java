@@ -31,13 +31,12 @@ public class DisableDeclarativeInlayAction extends AnAction implements DumbAware
     @Override
     public void update(@Nonnull AnActionEvent e) {
         LocalizeValue providerName = e.getData(DeclarativeInlayHintsProvider.PROVIDER_NAME);
-        if (providerName == null) {
-            e.getPresentation().setEnabledAndVisible(false);
-            e.getPresentation().setTextValue(CodeEditorLocalize.inlayHintsDeclarativeDisableActionNoProviderText());
-            return;
-        }
-        e.getPresentation().setEnabledAndVisible(true);
-        e.getPresentation().setTextValue(CodeEditorLocalize.inlayHintsDeclarativeDisableActionText(providerName));
+        e.getPresentation().setEnabledAndVisible(providerName != null);
+        e.getPresentation().setTextValue(
+            providerName != null
+                ? CodeEditorLocalize.inlayHintsDeclarativeDisableActionText(providerName)
+                : CodeEditorLocalize.inlayHintsDeclarativeDisableActionNoProviderText()
+        );
     }
 
     @Override

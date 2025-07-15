@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.internal.tree;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -29,6 +30,7 @@ import java.awt.*;
  */
 public class ExpandAll extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final Component c = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (c != null) {

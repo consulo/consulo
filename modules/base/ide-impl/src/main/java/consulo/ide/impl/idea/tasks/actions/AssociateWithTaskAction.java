@@ -45,7 +45,7 @@ public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
     if (lists == null) {
       return false;
     }
-    Project project = e.getData(Project.KEY);
+    Project project = e.getRequiredData(Project.KEY);
     TaskManager manager = TaskManager.getManager(project);
     for (ChangeList list : lists) {
       if (list instanceof LocalChangeList localChangeList && manager.getAssociatedTask(localChangeList) == null) {
@@ -61,7 +61,7 @@ public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
     if (lists == null) {
       return;
     }
-    Project project = e.getData(Project.KEY);
+    Project project = e.getRequiredData(Project.KEY);
     TaskManager manager = TaskManager.getManager(project);
     for (ChangeList list : lists) {
       if (list instanceof LocalChangeList localChangeList) {

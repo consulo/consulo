@@ -39,8 +39,7 @@ public class CloseTaskAction extends BaseTaskAction
 	@RequiredUIAccess
 	public void actionPerformed(@Nonnull AnActionEvent e)
 	{
-		Project project = e.getData(Project.KEY);
-		assert project != null;
+		Project project = e.getRequiredData(Project.KEY);
 		TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(project);
 		LocalTask task = taskManager.getActiveTask();
 		CloseTaskDialog dialog = new CloseTaskDialog(project, task);

@@ -26,6 +26,6 @@ public class RecentChangesAction extends LocalHistoryAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    new RecentChangesPopup(e == null ? null : e.getData(Project.KEY), getGateway(), getVcs()).show();
+    new RecentChangesPopup(e.getData(Project.KEY), getGateway(), getVcs()).show();
   }
 }

@@ -41,32 +41,29 @@ public class DumpDirectoryInfoAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
+    final Project project = e.getRequiredData(Project.KEY);
     final DirectoryIndex index = DirectoryIndex.getInstance(project);
-    if (project != null) {
-      final VirtualFile root = e.getData(VirtualFile.KEY);
-      ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
-        final ContentIterator contentIterator = fileOrDir -> {
-          LOG.info(fileOrDir.getPath());
+    final VirtualFile root = e.getData(VirtualFile.KEY);
+    ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
+      final ContentIterator contentIterator = fileOrDir -> {
+        LOG.info(fileOrDir.getPath());
 
-          final DirectoryInfo directoryInfo = index.getInfoForDirectory(fileOrDir);
-          if (directoryInfo != null) {
-            LOG.info(directoryInfo.toString());
-          }
-          return true;
-        };
-        if (root != null) {
-          ProjectRootManager.getInstance(project).getFileIndex().iterateContentUnderDirectory(root, contentIterator);
-        } else {
-          ProjectRootManager.getInstance(project).getFileIndex().iterateContent(contentIterator);
+        final DirectoryInfo directoryInfo = index.getInfoForDirectory(fileOrDir);
+        if (directoryInfo != null) {
+          LOG.info(directoryInfo.toString());
         }
-      }, "Dumping directory index", true, project);
-    }
+        return true;
+      };
+      if (root != null) {
+        ProjectRootManager.getInstance(project).getFileIndex().iterateContentUnderDirectory(root, contentIterator);
+      } else {
+        ProjectRootManager.getInstance(project).getFileIndex().iterateContent(contentIterator);
+      }
+    }, "Dumping directory index", true, project);
   }
 
   @Override
-  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 }

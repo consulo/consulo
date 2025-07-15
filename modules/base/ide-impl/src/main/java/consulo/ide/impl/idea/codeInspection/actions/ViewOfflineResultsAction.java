@@ -75,17 +75,14 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent event) {
     final Presentation presentation = event.getPresentation();
-    final Project project = event.getData(Project.KEY);
-    presentation.setEnabled(project != null);
+    presentation.setEnabled(event.hasData(Project.KEY));
     presentation.setVisible(ActionPlaces.MAIN_MENU.equals(event.getPlace()));
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent event) {
-    final Project project = event.getData(Project.KEY);
-
-    LOG.assertTrue(project != null);
+    final Project project = event.getRequiredData(Project.KEY);
 
     final FileChooserDescriptor descriptor =
       new FileChooserDescriptor(false, true, false, false, false, false) {

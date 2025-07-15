@@ -74,7 +74,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
+    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
   }
 
   @Override
@@ -255,6 +255,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
       Project project = e.getData(Project.KEY);
       Editor editor = e.getDataContext().getData(Editor.KEY);

@@ -27,6 +27,7 @@ import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -382,6 +383,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Project project = e.getRequiredData(Project.KEY);
       VcsLogDataPack dataPack = myFilterModel.getDataPack();
@@ -409,7 +411,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
+      e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
   }
 

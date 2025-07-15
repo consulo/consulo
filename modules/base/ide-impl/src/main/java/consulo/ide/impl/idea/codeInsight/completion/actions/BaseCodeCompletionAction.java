@@ -26,8 +26,7 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction implement
   }
 
   protected void invokeCompletion(AnActionEvent e, CompletionType type, int time) {
-    Editor editor = e.getData(Editor.KEY);
-    assert editor != null;
+    Editor editor = e.getRequiredData(Editor.KEY);
     Project project = editor.getProject();
     assert project != null;
     InputEvent inputEvent = e.getInputEvent();
@@ -47,10 +46,9 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction implement
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
     e.getPresentation().setEnabled(false);
 
-    Editor editor = dataContext.getData(Editor.KEY);
+    Editor editor = e.getData(Editor.KEY);
     if (editor == null) return;
 
     Project project = editor.getProject();

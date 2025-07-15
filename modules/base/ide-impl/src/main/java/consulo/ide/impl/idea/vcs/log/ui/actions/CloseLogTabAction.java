@@ -34,7 +34,7 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    if (e.getData(Project.KEY) == null) {
+    if (!e.hasData(Project.KEY)) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }
@@ -49,10 +49,7 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    assert project != null;
-
-    ContentManager contentManager = getContentManager(project);
+    ContentManager contentManager = getContentManager(e.getRequiredData(Project.KEY));
     if (contentManager == null) return;
     Content selectedContent = getTabbedContent(contentManager);
     if (selectedContent != null) {

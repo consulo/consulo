@@ -44,7 +44,7 @@ public class ShowTestProxy extends AnAction {
     final Presentation presentation = e.getPresentation();
 
     // visible only in StatisticsTableView
-    presentation.setVisible(e.getData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS) != null);
+    presentation.setVisible(e.hasData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS));
     // enabled if some proxy is selected
     presentation.setEnabled(getSelectedTestProxy(e) != null);
   }

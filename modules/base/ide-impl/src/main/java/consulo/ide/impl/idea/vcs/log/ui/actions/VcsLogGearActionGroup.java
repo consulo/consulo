@@ -58,8 +58,6 @@ public class VcsLogGearActionGroup extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    VcsLogUi logUi = e.getData(VcsLogUi.KEY);
-    e.getPresentation().setEnabledAndVisible(project != null && logUi != null);
+    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(VcsLogUi.KEY));
   }
 }
