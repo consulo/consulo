@@ -23,6 +23,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -34,17 +35,16 @@ public abstract class ToggleNumberedBookmarkActionBase extends AnAction implemen
     myNumber = n;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    e.getPresentation().setEnabled(project != null);
+  public void update(@Nonnull AnActionEvent e) {
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(Project.KEY);
+    Project project = e.getRequiredData(Project.KEY);
 
     BookmarksAction.BookmarkInContextInfo info = new BookmarksAction.BookmarkInContextInfo(dataContext, project).invoke();
     if (info.getFile() == null) return;

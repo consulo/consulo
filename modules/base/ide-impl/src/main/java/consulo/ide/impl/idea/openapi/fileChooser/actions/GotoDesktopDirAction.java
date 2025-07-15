@@ -24,6 +24,7 @@ import consulo.process.local.ExecUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
@@ -38,7 +39,7 @@ public class GotoDesktopDirAction extends FileChooserAction {
   };
 
   @Override
-  protected void actionPerformed(final FileSystemTree tree, AnActionEvent e) {
+  protected void actionPerformed(final FileSystemTree tree, @Nonnull AnActionEvent e) {
     final VirtualFile dir = myDesktopDirectory.getValue();
     if (dir != null) {
       tree.select(dir, new Runnable() {
@@ -51,7 +52,7 @@ public class GotoDesktopDirAction extends FileChooserAction {
   }
 
   @Override
-  protected void update(FileSystemTree tree, AnActionEvent e) {
+  protected void update(@Nonnull FileSystemTree tree, @Nonnull AnActionEvent e) {
     VirtualFile dir = myDesktopDirectory.getValue();
     e.getPresentation().setEnabled(dir != null && tree.isUnderRoots(dir));
   }

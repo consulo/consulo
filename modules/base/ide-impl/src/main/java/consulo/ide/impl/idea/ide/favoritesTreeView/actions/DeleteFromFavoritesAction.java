@@ -56,9 +56,9 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
         registerCustomShortcutSet(CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE), null);
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
         FavoritesViewTreeBuilder builder = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
@@ -103,7 +103,6 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setTextValue(getTemplatePresentation().getTextValue());
         DataContext dataContext = e.getDataContext();

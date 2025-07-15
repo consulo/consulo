@@ -12,7 +12,6 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.find.FindModel;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.ide.actions.NextOccurenceToolbarAction;
 import consulo.ide.impl.idea.ide.actions.PreviousOccurenceToolbarAction;
@@ -655,12 +654,12 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   public static final class MyShowPackagesAction extends ToggleAction {
     public MyShowPackagesAction() {
-      super(IdeBundle.message("action.group.by.packages"), null, AllIcons.Actions.GroupByPackage);
+      super(IdeLocalize.actionGroupByPackages(), LocalizeValue.empty(), PlatformIconGroup.actionsGroupbypackage());
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setEnabled(e.getData(TODO_PANEL_DATA_KEY) != null);
+      e.getPresentation().setEnabled(e.hasData(TODO_PANEL_DATA_KEY));
       super.update(e);
     }
 
@@ -682,12 +681,12 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   public static final class MyShowModulesAction extends ToggleAction {
     public MyShowModulesAction() {
-      super(IdeLocalize.actionGroupByModules(), LocalizeValue.empty(), AllIcons.Actions.GroupByModule);
+      super(IdeLocalize.actionGroupByModules(), LocalizeValue.empty(), PlatformIconGroup.actionsGroupbymodule());
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setEnabled(e.getData(TODO_PANEL_DATA_KEY) != null);
+      e.getPresentation().setEnabled(e.hasData(TODO_PANEL_DATA_KEY));
       super.update(e);
     }
 

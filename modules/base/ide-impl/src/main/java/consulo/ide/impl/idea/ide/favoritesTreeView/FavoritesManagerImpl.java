@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -252,7 +251,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         return Pair.create(url, className);
     }
 
-    @RequiredWriteAction
+    @RequiredReadAction
     public boolean addRoots(String name, Collection<AbstractTreeNode> nodes) {
         Collection<TreeItem<Pair<AbstractUrl, String>>> list = getFavoritesListRootUrls(name);
 
@@ -273,7 +272,7 @@ public class FavoritesManagerImpl implements FavoritesManager, PersistentStateCo
         return true;
     }
 
-    @RequiredWriteAction
+    @RequiredReadAction
     private void appendChildNodes(AbstractTreeNode node, TreeItem<Pair<AbstractUrl, String>> treeItem) {
         Collection<? extends AbstractTreeNode> children = node.getChildren();
         for (AbstractTreeNode child : children) {

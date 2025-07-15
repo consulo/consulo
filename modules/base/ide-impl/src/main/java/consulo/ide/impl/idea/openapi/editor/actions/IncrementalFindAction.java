@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.Editor;
@@ -91,8 +90,7 @@ public class IncrementalFindAction extends EditorAction {
             if (SEARCH_DISABLED.get(editor, false)) {
                 return false;
             }
-            Project project = dataContext.getData(Project.KEY);
-            return project != null && !editor.isOneLineMode();
+            return dataContext.hasData(Project.KEY) && !editor.isOneLineMode();
         }
     }
 

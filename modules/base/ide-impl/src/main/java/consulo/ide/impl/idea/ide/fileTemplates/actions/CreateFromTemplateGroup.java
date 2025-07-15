@@ -39,7 +39,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Project project = event.getData(Project.KEY);
@@ -56,8 +55,8 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
     presentation.setEnabled(false);
   }
 
-  @Override
   @Nonnull
+  @Override
   @RequiredUIAccess
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;

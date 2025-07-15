@@ -42,7 +42,6 @@ public class PasteFromX11Action extends EditorAction {
         super(new Handler());
     }
 
-    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();

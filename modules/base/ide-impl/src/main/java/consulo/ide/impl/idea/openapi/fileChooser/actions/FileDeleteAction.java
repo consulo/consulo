@@ -34,13 +34,10 @@ public class FileDeleteAction extends DeleteAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
     final Boolean available = event.getData(FileChooserKeys.DELETE_ACTION_AVAILABLE);
     if (available != null && !available) {
-      presentation.setEnabled(false);
-      presentation.setVisible(false);
+      event.getPresentation().setEnabledAndVisible(false);
       return;
     }
 

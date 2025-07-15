@@ -83,7 +83,7 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
               if (file != null) {
                 final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
                 if (archiveRoot != null) {
-                  extracted.add(PackagingElementFactory.getInstance(e.getData(Project.KEY)).createExtractedDirectory(archiveRoot));
+                  extracted.add(PackagingElementFactory.getInstance(e.getRequiredData(Project.KEY)).createExtractedDirectory(archiveRoot));
                 }
               }
             }

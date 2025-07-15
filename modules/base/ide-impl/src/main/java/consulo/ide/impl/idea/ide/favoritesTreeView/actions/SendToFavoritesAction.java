@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.bookmark.ui.view.FavoritesListNode;
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.project.Project;
@@ -25,6 +25,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 
@@ -42,16 +43,11 @@ public class SendToFavoritesAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Project project = e.getData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
         FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
 
-        FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
-        if (roots == null) {
-            return;
-        }
-
+        FavoritesTreeNodeDescriptor[] roots = e.getRequiredData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
         for (FavoritesTreeNodeDescriptor root : roots) {
             FavoritesTreeNodeDescriptor listNode = root.getFavoritesRoot();
             if (listNode != null && listNode != root && listNode.getElement() instanceof FavoritesListNode favoritesListNode) {
@@ -60,6 +56,7 @@ public class SendToFavoritesAction extends AnAction {
         }
     }
 
+    @RequiredReadAction
     public void doSend(FavoritesManagerImpl favoritesManager, FavoritesTreeNodeDescriptor[] roots, String listName) {
         for (FavoritesTreeNodeDescriptor root : roots) {
             AbstractTreeNode rootElement = root.getElement();
@@ -73,18 +70,14 @@ public class SendToFavoritesAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(isEnabled(e));
     }
 
-    static boolean isEnabled(AnActionEvent e) {
+    static boolean isEnabled(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return false;
-        }
-        FavoritesTreeNodeDescriptor[] roots = e.getDataContext().getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
-        if (roots == null || roots.length == 0) {
+        FavoritesTreeNodeDescriptor[] roots = e.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
+        if (project == null || roots == null || roots.length == 0) {
             return false;
         }
         for (FavoritesTreeNodeDescriptor root : roots) {

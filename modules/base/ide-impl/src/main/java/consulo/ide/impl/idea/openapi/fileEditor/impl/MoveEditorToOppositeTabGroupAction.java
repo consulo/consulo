@@ -30,37 +30,31 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
  * @since 2005-04-18
  */
 public class MoveEditorToOppositeTabGroupAction extends AnAction implements DumbAware {
-
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(final AnActionEvent event) {
-    final VirtualFile vFile = event.getData(VirtualFile.KEY);
-    final Project project = event.getData(Project.KEY);
-    if (vFile == null || project == null) {
-      return;
-    }
-    final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
-    if (window != null) {
-      final FileEditorWindow[] siblings = window.findSiblings();
-      if (siblings.length == 1) {
-        final FileEditorWithProviderComposite editorComposite = window.getSelectedEditor();
-        final HistoryEntry entry = FileEditorHistoryUtil.currentStateAsHistoryEntry(editorComposite);
-        ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project))
-          .openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
-        window.closeFile(vFile);
-      }
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent event) {
+    final VirtualFile vFile = event.getRequiredData(VirtualFile.KEY);
+    final Project project = event.getRequiredData(Project.KEY);
+    final FileEditorWindow window = event.getRequiredData(FileEditorWindow.DATA_KEY);
+    final FileEditorWindow[] siblings = window.findSiblings();
+    if (siblings.length == 1) {
+      final FileEditorWithProviderComposite editorComposite = window.getSelectedEditor();
+      final HistoryEntry entry = FileEditorHistoryUtil.currentStateAsHistoryEntry(editorComposite);
+      ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project))
+        .openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
+      window.closeFile(vFile);
     }
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final VirtualFile vFile = e.getData(VirtualFile.KEY);
     final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);

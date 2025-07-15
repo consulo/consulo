@@ -75,7 +75,7 @@ public class AddToFavoritesAction extends AnAction {
         Collection<AbstractTreeNode> nodesToAdd = getNodesToAdd(dataContext, true);
 
         if (nodesToAdd != null && !nodesToAdd.isEmpty()) {
-            Project project = e.getData(Project.KEY);
+            Project project = e.getRequiredData(Project.KEY);
             FavoritesManagerImpl.getInstance(project).addRoots(myFavoritesListName, nodesToAdd);
         }
     }
@@ -115,18 +115,17 @@ public class AddToFavoritesAction extends AnAction {
 
     @RequiredReadAction
     public static boolean canCreateNodes(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        if (e.getData(Project.KEY) == null) {
+        if (!e.hasData(Project.KEY)) {
             return false;
         }
         String place = e.getPlace();
         if (ActionPlaces.FAVORITES_VIEW_POPUP.equals(place)
-            && dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY) == null) {
+            && !e.hasData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY)) {
             return false;
         }
         boolean inProjectView = POPUP_PLACES_IN_PROJECT_VIEW.contains(place);
         //consulo.ide.impl.idea.openapi.actionSystem.ActionPlaces.USAGE_VIEW_TOOLBAR
-        return getNodesToAdd(dataContext, inProjectView) != null;
+        return getNodesToAdd(e.getDataContext(), inProjectView) != null;
     }
 
     static Object retrieveData(Object object, Object data) {

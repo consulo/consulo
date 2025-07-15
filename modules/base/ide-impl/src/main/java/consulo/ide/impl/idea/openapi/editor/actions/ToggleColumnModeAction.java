@@ -110,11 +110,9 @@ public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e){
     EditorEx editor = getEditor(e);
     if (editor == null || editor.isOneLineMode()) {
-      e.getPresentation().setEnabled(false);
-      e.getPresentation().setVisible(false);
+      e.getPresentation().setEnabledAndVisible(false);
     } else {
-      e.getPresentation().setEnabled(true);
-      e.getPresentation().setVisible(true);
+      e.getPresentation().setEnabledAndVisible(true);
       super.update(e);
     }
   }

@@ -20,6 +20,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
@@ -47,7 +48,7 @@ public abstract class EditorToggleDecorationAction extends ToggleAction implemen
   }
 
   @Override
-  public final void update(AnActionEvent e) {
+  public final void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled(getEditor(e) != null);
   }

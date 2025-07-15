@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy.actions;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -67,8 +66,8 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
         myHierarchyClass = hierarchyClass;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public final void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
@@ -97,7 +96,7 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
         @Nonnull HierarchyProvider provider,
         @Nonnull PsiElement target,
         @Nonnull Consumer<HierarchyBrowser> afterInit
-        ) {
+    ) {
         HierarchyBrowser hierarchyBrowser = provider.createHierarchyBrowser(target);
 
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.HIERARCHY);
@@ -131,26 +130,19 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        Application application = Application.get();
-        if (!application.getExtensionPoint(myHierarchyClass).hasAnyExtensions()) {
+        if (!Application.get().getExtensionPoint(myHierarchyClass).hasAnyExtensions()) {
             e.getPresentation().setVisible(false);
         }
         else {
             boolean enabled = isEnabled(e);
-            if (ActionPlaces.isPopupPlace(e.getPlace())) {
-                e.getPresentation().setVisible(enabled);
-            }
-            else {
-                e.getPresentation().setVisible(true);
-            }
+            e.getPresentation().setVisible(enabled || !ActionPlaces.isPopupPlace(e.getPlace()));
             e.getPresentation().setEnabled(enabled);
         }
     }
 
     @RequiredReadAction
-    private boolean isEnabled(AnActionEvent e) {
+    private boolean isEnabled(@Nonnull AnActionEvent e) {
         HierarchyProvider provider = getProvider(e);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Using provider " + provider);
@@ -167,7 +159,7 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
 
     @Nullable
     @RequiredReadAction
-    private HierarchyProvider getProvider(AnActionEvent e) {
+    private HierarchyProvider getProvider(@Nonnull AnActionEvent e) {
         return findProvider(myHierarchyClass, e.getData(PsiElement.KEY), e.getData(PsiFile.KEY), e.getDataContext());
     }
 

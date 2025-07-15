@@ -46,7 +46,7 @@ class AddToNewFavoritesListAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         Collection<AbstractTreeNode> nodesToAdd = AddToFavoritesAction.getNodesToAdd(e.getDataContext(), true);
         if (nodesToAdd != null) {
             String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
@@ -57,7 +57,6 @@ class AddToNewFavoritesListAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
     }

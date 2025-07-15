@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.bookmark.icon.BookmarkIconGroup;
@@ -22,6 +21,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -38,7 +38,7 @@ class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getData(Project.KEY));
         if (newName != null) {
             new AddAllOpenFilesToFavorites(newName).actionPerformed(e);
@@ -46,14 +46,8 @@ class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        if (project == null) {
-            e.getPresentation().setEnabled(false);
-        }
-        else {
-            e.getPresentation().setEnabled(!AddAllOpenFilesToFavorites.getFilesToAdd(project).isEmpty());
-        }
+        e.getPresentation().setEnabled(project != null && !AddAllOpenFilesToFavorites.getFilesToAdd(project).isEmpty());
     }
 }

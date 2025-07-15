@@ -23,11 +23,12 @@ import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public final class GotoModuleDirectory extends FileChooserAction {
   @Override
-  protected void actionPerformed(final FileSystemTree fileSystemTree, final AnActionEvent e) {
+  protected void actionPerformed(final FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     final VirtualFile moduleDir = getModuleDir(e);
     if (moduleDir != null) {
       fileSystemTree.select(moduleDir, new Runnable() {
@@ -40,7 +41,7 @@ public final class GotoModuleDirectory extends FileChooserAction {
   }
 
   @Override
-  protected void update(final FileSystemTree fileSystemTree, final AnActionEvent e) {
+  protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final VirtualFile moduleDir = getModuleDir(e);
     presentation.setEnabled(moduleDir != null && fileSystemTree.isUnderRoots(moduleDir));
