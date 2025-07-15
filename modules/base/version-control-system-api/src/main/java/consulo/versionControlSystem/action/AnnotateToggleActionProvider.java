@@ -19,44 +19,21 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.collection.ContainerUtil;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.annotate.AnnotationProvider;
-
 import jakarta.annotation.Nonnull;
-import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AnnotateToggleActionProvider {
-  boolean isEnabled(AnActionEvent e);
+    boolean isEnabled(AnActionEvent e);
 
-  boolean isSuspended(AnActionEvent e);
+    boolean isSuspended(AnActionEvent e);
 
-  boolean isAnnotated(AnActionEvent e);
+    boolean isAnnotated(AnActionEvent e);
 
-  void perform(AnActionEvent e, boolean selected);
+    void perform(AnActionEvent e, boolean selected);
 
-  @Nonnull
-  default LocalizeValue getActionName(@Nonnull AnActionEvent e) {
-    return ActionLocalize.actionAnnotateText();
-  }
-
-  @Nonnull
-  private static LocalizeValue getVcsActionName(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    LocalizeValue defaultName = ActionLocalize.actionAnnotateText();
-    if (project == null) return defaultName;
-
-    Set<LocalizeValue> names = ContainerUtil.map2Set(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss(), vcs -> {
-      AnnotationProvider provider = vcs.getAnnotationProvider();
-      if (provider != null) {
-        return provider.getActionName();
-      }
-      return defaultName;
-    });
-
-    return ContainerUtil.getOnlyItem(names, defaultName);
-  }
+    @Nonnull
+    default LocalizeValue getActionName(@Nonnull AnActionEvent e) {
+        return ActionLocalize.actionAnnotateText();
+    }
 }

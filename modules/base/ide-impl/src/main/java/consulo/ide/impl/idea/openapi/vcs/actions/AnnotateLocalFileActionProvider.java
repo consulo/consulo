@@ -16,28 +16,36 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.action.AnnotateToggleActionProvider;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class AnnotateLocalFileActionProvider implements AnnotateToggleActionProvider {
-  @Override
-  public boolean isEnabled(AnActionEvent e) {
-    return AnnotateLocalFileAction.isEnabled(e);
-  }
+    @Override
+    public boolean isEnabled(AnActionEvent e) {
+        return AnnotateLocalFileAction.isEnabled(e);
+    }
 
-  @Override
-  public boolean isSuspended(AnActionEvent e) {
-    return AnnotateLocalFileAction.isSuspended(e);
-  }
+    @Override
+    public boolean isSuspended(AnActionEvent e) {
+        return AnnotateLocalFileAction.isSuspended(e);
+    }
 
-  @Override
-  public boolean isAnnotated(AnActionEvent e) {
-    return AnnotateLocalFileAction.isAnnotated(e);
-  }
+    @Override
+    public boolean isAnnotated(AnActionEvent e) {
+        return AnnotateLocalFileAction.isAnnotated(e);
+    }
 
-  @Override
-  public void perform(AnActionEvent e, boolean selected) {
-    AnnotateLocalFileAction.perform(e, selected);
-  }
+    @Override
+    public void perform(AnActionEvent e, boolean selected) {
+        AnnotateLocalFileAction.perform(e, selected);
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getActionName(@Nonnull AnActionEvent e) {
+        return AnnotateVcsVirtualFileActionProvider.getActionNameImpl(e);
+    }
 }
