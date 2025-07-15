@@ -35,6 +35,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -45,19 +46,18 @@ import javax.swing.*;
 public class ChangeListDetailsAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    if (changeLists != null && changeLists.length > 0 && changeLists[0] instanceof CommittedChangeList committedChangeList) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
+    ChangeList[] changeLists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
+    if (changeLists.length > 0 && changeLists[0] instanceof CommittedChangeList committedChangeList) {
       showDetailsPopup(project, committedChangeList);
     }
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
+  public void update(@Nonnull AnActionEvent e) {
+    Project project = e.getData(Project.KEY);
+    ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
     e.getPresentation().setEnabled(
       project != null && changeLists != null && changeLists.length == 1
         && changeLists[0] instanceof CommittedChangeList

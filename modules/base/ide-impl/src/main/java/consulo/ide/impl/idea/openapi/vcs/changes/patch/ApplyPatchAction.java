@@ -72,7 +72,6 @@ public class ApplyPatchAction extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(ApplyPatchAction.class);
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (isProjectOrScopeView(e.getPlace())) {

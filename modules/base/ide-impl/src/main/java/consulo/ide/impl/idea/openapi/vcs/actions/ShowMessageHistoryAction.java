@@ -48,7 +48,6 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
@@ -60,8 +59,7 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
     }
 
     if (project == null || panel == null) {
-      e.getPresentation().setVisible(false);
-      e.getPresentation().setEnabled(false);
+      e.getPresentation().setEnabledAndVisible(false);
     }
     else {
       e.getPresentation().setVisible(true);
@@ -74,11 +72,11 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final DataContext dc = e.getDataContext();
-    final Project project = dc.getData(Project.KEY);
+    final Project project = dc.getRequiredData(Project.KEY);
     final Refreshable panel = dc.getData(CheckinProjectPanel.PANEL_KEY);
     CommitMessageI commitMessageI = panel instanceof CommitMessageI cmtMsgI ? cmtMsgI : dc.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
 
-    if (commitMessageI != null && project != null) {
+    if (commitMessageI != null) {
       final VcsConfiguration configuration = VcsConfiguration.getInstance(project);
 
       if (!configuration.getRecentMessages().isEmpty()) {

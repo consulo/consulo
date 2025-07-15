@@ -30,9 +30,9 @@ public class ExportToTextFileAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        Project project = e.getData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         ExporterToTextFile exporterToTextFile = getExporter(dataContext);
-        if (project == null || exporterToTextFile == null) {
+        if (exporterToTextFile == null) {
             return;
         }
         if (!exporterToTextFile.canExport()) {

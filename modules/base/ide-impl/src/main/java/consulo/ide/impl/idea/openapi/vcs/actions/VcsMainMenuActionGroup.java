@@ -27,7 +27,6 @@ import jakarta.annotation.Nonnull;
 
 // from kotlin
 public class VcsMainMenuActionGroup extends DefaultActionGroup implements DumbAware {
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 import consulo.application.progress.ProgressManager;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -41,20 +42,18 @@ import java.util.List;
  */
 public class ImportIntoShelfAction extends DumbAwareAction {
   public ImportIntoShelfAction() {
-    super("Import patches...", "Copies patch file to shelf", null);
+    super(LocalizeValue.localizeTODO("Import patches..."), LocalizeValue.localizeTODO("Copies patch file to shelf"));
   }
 
   @Override
   public void update(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(Project.KEY);
-    e.getPresentation().setEnabled(project != null);
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getDataContext().getData(Project.KEY);
-    if (project == null) return;
+    final Project project = e.getRequiredData(Project.KEY);
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true);
     FileChooser.chooseFiles(descriptor, project, null).doWhenDone(files -> {
       //gatherPatchFiles

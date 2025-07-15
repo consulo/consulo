@@ -28,6 +28,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.internal.ChangesBrowserApi;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -41,11 +42,11 @@ public class RollbackDialogAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     FileDocumentManager.getInstance().saveAllDocuments();
-    Change[] changes = e.getData(VcsDataKeys.CHANGES);
-    Project project = e.getData(Project.KEY);
-    final ChangesBrowserApi browser = e.getData(ChangesBrowserApi.DATA_KEY);
+    Change[] changes = e.getRequiredData(VcsDataKeys.CHANGES);
+    Project project = e.getRequiredData(Project.KEY);
+    ChangesBrowserApi browser = e.getData(ChangesBrowserApi.DATA_KEY);
     if (browser != null) {
       browser.setDataIsDirty(true);
     }
@@ -58,8 +59,7 @@ public class RollbackDialogAction extends AnAction implements DumbAware {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
     Project project = e.getData(Project.KEY);
     boolean enabled = changes != null && project != null;

@@ -19,42 +19,29 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 
 public class DeleteAlreadyUnshelvedAction extends AnAction {
-  private final String myText;
-
   public DeleteAlreadyUnshelvedAction() {
-    myText = VcsLocalize.deleteAllAlreadyUnshelved().get();
+    super(VcsLocalize.deleteAllAlreadyUnshelved());
   }
 
   @Override
-  public void update(final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final Presentation presentation = e.getPresentation();
-    if (project == null) {
-      presentation.setEnabled(false);
-      presentation.setVisible(false);
-    }
-    presentation.setEnabled(true);
-    presentation.setVisible(true);
-    presentation.setText(myText);
+  public void update(@Nonnull AnActionEvent e) {
+    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
   }
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
-    }
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    final Project project = e.getRequiredData(Project.KEY);
     final int result = Messages.showYesNoDialog(
       project,
       VcsLocalize.deleteAllAlreadyUnshelvedConfirmation().get(),
-      myText,
+      VcsLocalize.deleteAllAlreadyUnshelved().get(),
       UIUtil.getWarningIcon()
     );
     if (result == Messages.YES) {

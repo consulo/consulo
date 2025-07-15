@@ -17,18 +17,17 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.image.Image;
 import consulo.util.collection.Streams;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.IgnoreUnversionedDialog;
 import consulo.versionControlSystem.internal.ChangesBrowserApi;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,10 +39,12 @@ import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesLi
  * @since 2006-12-20
  */
 public class IgnoreUnversionedAction extends AnAction {
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.filetypesIgnored();
+    public IgnoreUnversionedAction() {
+        super(
+            ActionLocalize.actionChangesviewIgnoreText(),
+            ActionLocalize.actionChangesviewIgnoreDescription(),
+            PlatformIconGroup.filetypesIgnored()
+        );
     }
 
     @Override
@@ -65,8 +66,7 @@ public class IgnoreUnversionedAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabled(e.getData(Project.KEY) != null && !Streams.isEmpty(e.getData(UNVERSIONED_FILES_DATA_KEY)));
+        e.getPresentation().setEnabled(e.hasData(Project.KEY) && !Streams.isEmpty(e.getData(UNVERSIONED_FILES_DATA_KEY)));
     }
 }

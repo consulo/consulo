@@ -20,26 +20,23 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 
 public class RestoreShelvedChange extends AnAction {
   public RestoreShelvedChange() {
-    super("Restore");
+    super(VcsLocalize.vcsShelfActionRestoreText(), VcsLocalize.vcsShelfActionRestoreDescription());
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
+  public void update(@Nonnull AnActionEvent e) {
     final ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
-    e.getPresentation().setTextValue(VcsLocalize.vcsShelfActionRestoreText());
-    e.getPresentation().setDescriptionValue(VcsLocalize.vcsShelfActionRestoreDescription());
-    e.getPresentation().setEnabled((project != null) && ((recycledChanges != null) && (recycledChanges.length == 1)));
+    e.getPresentation().setEnabled(e.hasData(Project.KEY) && recycledChanges != null && recycledChanges.length == 1);
   }
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    final Project project = e.getRequiredData(Project.KEY);
     final ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
     if (recycledChanges != null && recycledChanges.length == 1) {
       ShelveChangesManager.getInstance(project).restoreList(recycledChanges[0]);

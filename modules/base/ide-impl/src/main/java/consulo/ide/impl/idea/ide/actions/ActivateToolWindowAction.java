@@ -70,7 +70,6 @@ public class ActivateToolWindowAction extends DumbAwareAction {
         }
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
@@ -90,22 +89,17 @@ public class ActivateToolWindowAction extends DumbAwareAction {
         }
     }
 
-    @RequiredUIAccess
     private void updatePresentation(@Nonnull Presentation presentation, @Nonnull ToolWindow toolWindow) {
         LocalizeValue title = toolWindow.getDisplayName();
         presentation.setTextValue(title);
         presentation.setDescriptionValue(IdeLocalize.actionActivateToolWindow(title));
-        Image icon = toolWindow.getIcon();
-        presentation.setIcon(icon);
+        presentation.setIcon(toolWindow.getIcon());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+        Project project = e.getRequiredData(Project.KEY);
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
         if (windowManager.isEditorComponentActive() || !myToolWindowId.equals(windowManager.getActiveToolWindowId())) {
             windowManager.getToolWindow(myToolWindowId).activate(null);

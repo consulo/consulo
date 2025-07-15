@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesFilte
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -38,10 +39,9 @@ import consulo.virtualFileSystem.VirtualFile;
 public class BrowseChangesAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        VirtualFile vFile = e.getData(VirtualFile.KEY);
-        assert vFile != null;
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        VirtualFile vFile = e.getRequiredData(VirtualFile.KEY);
         AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(vFile);
         assert vcs != null;
         final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
@@ -76,18 +76,14 @@ public class BrowseChangesAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(isActionEnabled(e));
     }
 
-    private static boolean isActionEnabled(final AnActionEvent e) {
+    private static boolean isActionEnabled(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return false;
-        }
         VirtualFile vFile = e.getData(VirtualFile.KEY);
-        if (vFile == null) {
+        if (project == null || vFile == null) {
             return false;
         }
         AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(vFile);

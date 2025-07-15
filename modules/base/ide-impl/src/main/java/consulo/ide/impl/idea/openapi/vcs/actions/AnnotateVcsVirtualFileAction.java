@@ -137,7 +137,7 @@ public class AnnotateVcsVirtualFileAction {
 
         if (!exceptionRef.isNull()) {
           LOG.warn(exceptionRef.get());
-          AbstractVcsHelper.getInstance(project).showErrors(Collections.singletonList(exceptionRef.get()), VcsLocalize.messageTitleAnnotate().get());
+          AbstractVcsHelper.getInstance(project).showErrors(Collections.singletonList(exceptionRef.get()), VcsLocalize.messageTitleAnnotate());
         }
 
         if (!fileAnnotationRef.isNull()) {

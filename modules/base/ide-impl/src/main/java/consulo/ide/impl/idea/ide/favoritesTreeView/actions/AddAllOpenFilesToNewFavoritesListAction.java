@@ -39,7 +39,7 @@ class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getData(Project.KEY));
+        String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getRequiredData(Project.KEY));
         if (newName != null) {
             new AddAllOpenFilesToFavorites(newName).actionPerformed(e);
         }

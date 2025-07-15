@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.TypeSafeDataProviderAdapter;
@@ -110,19 +109,18 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
   }
 
   private class MyEditSourceAction extends EditSourceAction {
-    @RequiredUIAccess
+    private MyEditSourceAction() {
+      getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Edit Source"));
+      getTemplatePresentation().setIcon(PlatformIconGroup.actionsEditsource());
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent event) {
       super.update(event);
-      event.getPresentation().setIcon(AllIcons.Actions.EditSource);
-      event.getPresentation().setText("Edit Source");
       boolean isModalContext = Objects.equals(event.getData(PlatformDataKeys.IS_MODAL_CONTEXT), Boolean.TRUE);
-      if (isModalContext || CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))) {
-        event.getPresentation().setEnabled(false);
-      }
-      else {
-        event.getPresentation().setEnabled(true);
-      }
+      event.getPresentation().setEnabled(
+          !isModalContext && !CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))
+      );
     }
 
     @Override

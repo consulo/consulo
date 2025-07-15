@@ -75,10 +75,6 @@ public class AddAllOpenFilesToFavorites extends AnAction {
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        if (project == null) {
-            e.getPresentation().setEnabled(false);
-            return;
-        }
-        e.getPresentation().setEnabled(!getFilesToAdd(project).isEmpty());
+        e.getPresentation().setEnabled(project != null && !getFilesToAdd(project).isEmpty());
     }
 }
