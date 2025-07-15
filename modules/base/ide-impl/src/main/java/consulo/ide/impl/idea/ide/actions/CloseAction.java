@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,16 +26,14 @@ import jakarta.annotation.Nonnull;
 public class CloseAction extends AnAction implements DumbAware {
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setIcon(e.isFromActionToolbar() ? AllIcons.Actions.Cancel : null);
-
-        CloseTarget closeTarget = e.getData(CloseTarget.KEY);
-        e.getPresentation().setEnabled(closeTarget != null);
+        e.getPresentation().setIcon(e.isFromActionToolbar() ? PlatformIconGroup.actionsCancel() : null);
+        e.getPresentation().setEnabled(e.hasData(CloseTarget.KEY));
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        e.getData(CloseTarget.KEY).close();
+        e.getRequiredData(CloseTarget.KEY).close();
     }
 
     public interface CloseTarget {

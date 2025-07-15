@@ -38,7 +38,7 @@ public class SetShortcutAction extends AnAction implements DumbAware {
         }
 
         KeymapManager km = KeymapManager.getInstance();
-        Keymap activeKeymap = km != null ? km.getActiveKeymap() : null;
+        Keymap activeKeymap = km.getActiveKeymap();
         if (activeKeymap == null) {
             return;
         }
@@ -55,7 +55,6 @@ public class SetShortcutAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
@@ -67,14 +66,12 @@ public class SetShortcutAction extends AnAction implements DumbAware {
         }
 
         KeymapManager km = KeymapManager.getInstance();
-        Keymap activeKeymap = km != null ? km.getActiveKeymap() : null;
+        Keymap activeKeymap = km.getActiveKeymap();
         if (activeKeymap == null) {
             presentation.setEnabled(false);
             return;
         }
 
-        AnAction action = e.getData(SELECTED_ACTION);
-        Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        presentation.setEnabled(action != null && component != null);
+        presentation.setEnabled(e.hasData(SELECTED_ACTION) && e.hasData(UIExAWTDataKey.CONTEXT_COMPONENT));
     }
 }

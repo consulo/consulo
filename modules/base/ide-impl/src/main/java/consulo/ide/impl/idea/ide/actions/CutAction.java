@@ -38,7 +38,6 @@ public class CutAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();

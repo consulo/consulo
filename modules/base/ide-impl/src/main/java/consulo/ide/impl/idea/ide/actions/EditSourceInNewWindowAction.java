@@ -31,7 +31,7 @@ public class EditSourceInNewWindowAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        FileEditorManager manager = FileEditorManager.getInstance(e.getData(Project.KEY));
+        FileEditorManager manager = FileEditorManager.getInstance(e.getRequiredData(Project.KEY));
         ((FileEditorManagerImpl)manager).openFileInNewWindow(getVirtualFiles(e)[0]);
     }
 
@@ -46,8 +46,7 @@ public class EditSourceInNewWindowAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null && getVirtualFiles(e).length == 1);
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && getVirtualFiles(e).length == 1);
     }
 }

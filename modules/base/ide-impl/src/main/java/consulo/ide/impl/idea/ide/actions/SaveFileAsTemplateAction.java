@@ -49,10 +49,7 @@ public class SaveFileAsTemplateAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        VirtualFile file = e.getData(VirtualFile.KEY);
-        String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
-        e.getPresentation().setEnabled(fileText != null && file != null);
+        e.getPresentation().setEnabled(e.hasData(PlatformDataKeys.FILE_TEXT) && e.hasData(VirtualFile.KEY));
     }
 }

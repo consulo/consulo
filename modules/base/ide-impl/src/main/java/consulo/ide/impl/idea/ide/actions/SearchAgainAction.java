@@ -59,7 +59,6 @@ public class SearchAgainAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);

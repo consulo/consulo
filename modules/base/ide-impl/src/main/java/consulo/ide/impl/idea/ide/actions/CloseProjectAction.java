@@ -57,6 +57,6 @@ public class CloseProjectAction extends AnAction implements DumbAware {
 
     @Override
     public void update(@Nonnull AnActionEvent event) {
-        event.getPresentation().setEnabled(event.getData(Project.KEY) != null);
+        event.getPresentation().setEnabled(event.hasData(Project.KEY));
     }
 }

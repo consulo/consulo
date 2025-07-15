@@ -66,7 +66,6 @@ public class DeleteAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent event) {
         String place = event.getPlace();
         Presentation presentation = event.getPresentation();

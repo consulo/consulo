@@ -37,8 +37,7 @@ public class ShowRecentFilesAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 }

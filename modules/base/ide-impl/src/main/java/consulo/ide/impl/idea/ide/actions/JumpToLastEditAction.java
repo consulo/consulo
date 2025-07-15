@@ -35,7 +35,6 @@ public class JumpToLastEditAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);

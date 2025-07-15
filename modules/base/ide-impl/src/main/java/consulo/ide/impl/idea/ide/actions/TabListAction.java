@@ -36,7 +36,6 @@ public class TabListAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(isTabListAvailable(e));
     }

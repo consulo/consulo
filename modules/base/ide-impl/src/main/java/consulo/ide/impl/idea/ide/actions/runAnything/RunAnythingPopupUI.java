@@ -852,7 +852,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
         myCurrentWorker = ActionCallback.DONE;
         myVirtualFile = actionEvent.getData(VirtualFile.KEY);
 
-        myProject = ObjectUtil.notNull(myActionEvent.getData(Project.KEY));
+        myProject = myActionEvent.getRequiredData(Project.KEY);
         myModule = myActionEvent.getData(Module.KEY);
 
         init();

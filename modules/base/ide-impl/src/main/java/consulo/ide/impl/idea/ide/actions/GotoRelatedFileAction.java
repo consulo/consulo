@@ -20,6 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.awt.popup.PopupListElementRenderer;
@@ -41,6 +42,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.Ref;
 
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,12 +51,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author Dmitry Avdeev
  */
 public class GotoRelatedFileAction extends AnAction {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext context = e.getDataContext();
         Editor editor = context.getData(Editor.KEY);
@@ -109,10 +113,9 @@ public class GotoRelatedFileAction extends AnAction {
         Object[] elements,
         Map<PsiElement, GotoRelatedItem> itemsMap,
         String title,
-        Processor<Object> processor
+        Predicate<Object> processor
     ) {
-        Ref<Boolean> hasMnemonic = Ref.create(false);
-        Ref<ListCellRenderer> rendererRef = Ref.create(null);
+        SimpleReference<Boolean> hasMnemonic = SimpleReference.create(false);
 
         DefaultPsiElementCellRenderer renderer = new DefaultPsiElementCellRenderer() {
             @Override
@@ -216,7 +219,7 @@ public class GotoRelatedFileAction extends AnAction {
 
             @Override
             public PopupStep onChosen(Object selectedValue, boolean finalChoice) {
-                processor.process(selectedValue);
+                processor.test(selectedValue);
                 return super.onChosen(selectedValue, finalChoice);
             }
         }) {
@@ -330,21 +333,21 @@ public class GotoRelatedFileAction extends AnAction {
 
     @Override
     public void update(AnActionEvent e) {
-        e.getPresentation().setEnabled(e.getDataContext().getData(PsiFile.KEY) != null);
+        e.getPresentation().setEnabled(e.getDataContext().hasData(PsiFile.KEY));
     }
 
     private static Action createNumberAction(
         int mnemonic,
         ListPopupImpl listPopup,
         Map<PsiElement, GotoRelatedItem> itemsMap,
-        Processor<Object> processor
+        Predicate<Object> processor
     ) {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (Object item : listPopup.getListStep().getValues()) {
                     if (getMnemonic(item, itemsMap) == mnemonic) {
-                        listPopup.setFinalRunnable(() -> processor.process(item));
+                        listPopup.setFinalRunnable(() -> processor.test(item));
                         listPopup.closeOk(null);
                     }
                 }

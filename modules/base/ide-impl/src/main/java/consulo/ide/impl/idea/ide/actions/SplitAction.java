@@ -40,7 +40,7 @@ public abstract class SplitAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {
-        Project project = event.getData(Project.KEY);
+        Project project = event.getRequiredData(Project.KEY);
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
 

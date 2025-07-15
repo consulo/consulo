@@ -23,14 +23,14 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public abstract class SplitterActionBase extends AnAction implements DumbAware {
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         Presentation presentation = event.getPresentation();
         boolean enabled = project != null && isActionEnabled(project);

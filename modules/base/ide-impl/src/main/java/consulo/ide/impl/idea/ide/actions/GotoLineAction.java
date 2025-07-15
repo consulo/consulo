@@ -44,15 +44,7 @@ public class GotoLineAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabledAndVisible(false);
-            return;
-        }
-        Editor editor = event.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
-        presentation.setEnabledAndVisible(editor != null);
+        event.getPresentation().setEnabledAndVisible(event.hasData(Project.KEY) && event.hasData(EditorKeys.EDITOR_EVEN_IF_INACTIVE));
     }
 }

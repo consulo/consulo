@@ -63,12 +63,11 @@ public class CopyPathProvider extends DumbAwareAction {
     }
 
     private DataContext createCustomDataContext(DataContext dataContext) {
-        Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        if (!(component instanceof TabLabel)) {
+        if (!(dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof TabLabel tabLabel)) {
             return dataContext;
         }
 
-        Object file = ((TabLabel) component).getInfo().getObject();
+        Object file = tabLabel.getInfo().getObject();
         if (!(file instanceof VirtualFile)) {
             return dataContext;
         }

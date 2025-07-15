@@ -78,9 +78,9 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
         myApplicationStore = applicationStore;
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nullable AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         myApplication.saveSettings();
 
         ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(
@@ -135,7 +135,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
                 ZipUtil.addFileToZip(output, magicFile, ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER, writtenItemRelativePaths, null);
             }
             ShowFilePathAction.showDialog(
-                e == null ? null : e.getData(Project.KEY),
+                e.getData(Project.KEY),
                 IdeLocalize.messageSettingsExportedSuccessfully().get(),
                 IdeLocalize.titleExportSuccessful().get(),
                 saveFile,

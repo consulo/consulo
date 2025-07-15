@@ -117,9 +117,8 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     private static void processScopes(@Nonnull DataContext dataContext, @Nonnull Predicate<? super ScopeDescriptor> processor) {
-        Project project = ObjectUtil.notNull(dataContext.getData(Project.KEY));
         ScopeChooserCombo.processScopes(
-            project,
+            dataContext.getRequiredData(Project.KEY),
             dataContext,
             ScopeChooserCombo.OPT_LIBRARIES | ScopeChooserCombo.OPT_EMPTY_SCOPES,
             processor

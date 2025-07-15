@@ -137,7 +137,7 @@ public abstract class GotoActionBase extends AnAction {
         public abstract void elementChosen(ChooseByNamePopup popup, Object element);
     }
 
-    protected static Pair<String, Integer> getInitialText(boolean useEditorSelection, AnActionEvent e) {
+    protected static Pair<String, Integer> getInitialText(boolean useEditorSelection, @Nonnull AnActionEvent e) {
         String predefined = e.getData(PlatformDataKeys.PREDEFINED_TEXT);
         if (!StringUtil.isEmpty(predefined)) {
             return Pair.create(predefined, 0);
@@ -157,7 +157,7 @@ public abstract class GotoActionBase extends AnAction {
             return Pair.create(query, 0);
         }
 
-        Project project = e == null ? null : e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         Component focusOwner = ProjectIdeFocusManager.getInstance(project).getFocusOwner();
         if (focusOwner instanceof JComponent jComponent) {
             SpeedSearchSupply supply = SpeedSearchSupply.getSupply(jComponent);
@@ -229,7 +229,7 @@ public abstract class GotoActionBase extends AnAction {
     }
 
     protected <T> void showNavigationPopup(
-        AnActionEvent e,
+        @Nonnull AnActionEvent e,
         ChooseByNameModel model,
         GotoActionCallback<T> callback,
         @Nullable String findUsagesTitle,
@@ -237,7 +237,7 @@ public abstract class GotoActionBase extends AnAction {
         boolean allowMultipleSelection,
         DefaultChooseByNameItemProvider itemProvider
     ) {
-        Project project = e.getData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         boolean mayRequestOpenInCurrentWindow =
             model.willOpenEditor() && FileEditorManagerEx.getInstanceEx(project).hasSplitOrUndockedWindows();
         Pair<String, Integer> start = getInitialText(useSelectionFromEditor, e);

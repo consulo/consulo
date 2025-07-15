@@ -52,13 +52,13 @@ public class ToolWindowTabRenameActionBase extends ToolWindowContextMenuActionBa
     @Override
     public void update(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
         String id = toolWindow.getId();
-        e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null && myToolWindowId.equals(id) && content != null);
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && myToolWindowId.equals(id) && content != null);
     }
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
         Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        if (component == null || content == null || e.getData(Content.KEY) == null) {
+        if (component == null || content == null || !e.hasData(Content.KEY)) {
             return;
         }
 

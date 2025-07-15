@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.language.editor.PlatformDataKeys;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ide.impl.idea.ide.util.ExportToFileUtil;
 import consulo.dataContext.DataContext;
@@ -25,6 +26,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class ExportToTextFileAction extends AnAction {
+    @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
@@ -39,6 +42,7 @@ public class ExportToTextFileAction extends AnAction {
         export(project, exporterToTextFile);
     }
 
+    @RequiredUIAccess
     public static void export(Project project, ExporterToTextFile exporter) {
         final ExportToFileUtil.ExportDialogBase dlg = new ExportToFileUtil.ExportDialogBase(project, exporter);
 
@@ -55,10 +59,11 @@ public class ExportToTextFileAction extends AnAction {
         return dataContext.getData(PlatformDataKeys.EXPORTER_TO_TEXT_FILE);
     }
 
+    @Override
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();
         ExporterToTextFile exporterToTextFile = getExporter(dataContext);
-        presentation.setEnabled(event.getData(Project.KEY) != null && exporterToTextFile != null && exporterToTextFile.canExport());
+        presentation.setEnabled(event.hasData(Project.KEY) && exporterToTextFile != null && exporterToTextFile.canExport());
     }
 }

@@ -54,10 +54,7 @@ public class ShowModulePropertiesAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
-        e.getPresentation().setVisible(project != null && module != null);
+        e.getPresentation().setVisible(e.hasData(Project.KEY) && e.hasData(LangDataKeys.MODULE_CONTEXT));
     }
 }

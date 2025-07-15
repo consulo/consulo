@@ -20,6 +20,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,7 +30,7 @@ import javax.swing.*;
 public class ScrollTreeToCenterAction extends AnAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         if (e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTree tree) {
             int[] selection = tree.getSelectionRows();
             if (selection != null && selection.length > 0) {
@@ -39,8 +40,7 @@ public class ScrollTreeToCenterAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTree);
     }
 }
