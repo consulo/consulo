@@ -53,10 +53,8 @@ import java.util.stream.Stream;
  */
 public class ScheduleForAdditionAction extends AnAction implements DumbAware {
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
-    boolean enabled =
-      e.getData(Project.KEY) != null && !Streams.isEmpty(getUnversionedFiles(e, e.getData(Project.KEY)));
+    boolean enabled = e.hasData(Project.KEY) && !Streams.isEmpty(getUnversionedFiles(e, e.getRequiredData(Project.KEY)));
 
     e.getPresentation().setEnabled(enabled);
     if (ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION.equals(e.getPlace()) || ActionPlaces.CHANGES_VIEW_POPUP.equals(e.getPlace())) {

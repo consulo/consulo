@@ -9,6 +9,7 @@ import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.application.impl.internal.progress.ProgressWindow;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -32,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AnnotateRevisionActionBase extends AnAction {
-  public AnnotateRevisionActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+  public AnnotateRevisionActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
     super(text, description, icon);
   }
 
@@ -56,14 +57,12 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(isEnabled(e));
   }
 
-  @RequiredUIAccess
   public boolean isEnabled(@Nonnull AnActionEvent e) {
-    if (e.getData(Project.KEY) == null) return false;
+    if (!e.hasData(Project.KEY)) return false;
 
     VcsFileRevision fileRevision = getFileRevision(e);
     if (fileRevision == null) return false;
@@ -82,7 +81,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final VcsFileRevision fileRevision = getFileRevision(e);
     final VirtualFile file = getFile(e);
     final AbstractVcs vcs = getVcs(e);

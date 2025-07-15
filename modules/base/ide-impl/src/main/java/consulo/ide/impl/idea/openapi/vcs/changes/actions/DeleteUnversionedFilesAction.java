@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.util.IconUtil;
 
 /**
  * @author yole
@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.util.IconUtil;
  */
 public class DeleteUnversionedFilesAction extends AnAction {
   public DeleteUnversionedFilesAction() {
-    super("Delete", "Delete", IconUtil.getRemoveIcon());
+    super("Delete", "Delete", PlatformIconGroup.generalRemove());
   }
 
   @Override
@@ -39,7 +39,6 @@ public class DeleteUnversionedFilesAction extends AnAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(AnActionEvent e) {
     DeleteProvider deleteProvider = e.getData(DeleteProvider.KEY);
     e.getPresentation().setVisible(deleteProvider != null && deleteProvider.canDeleteElement(e.getDataContext()));

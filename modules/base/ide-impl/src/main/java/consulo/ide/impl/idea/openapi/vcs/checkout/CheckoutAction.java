@@ -22,6 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
+import jakarta.annotation.Nonnull;
 
 public class CheckoutAction extends DumbAwareAction {
     private final CheckoutProvider myProvider;
@@ -33,7 +34,7 @@ public class CheckoutAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         project = (project == null) ? ProjectManager.getInstance().getDefaultProject() : project;
         myProvider.doCheckout(project, ProjectLevelVcsManager.getInstance(project).getCompositeCheckoutListener());

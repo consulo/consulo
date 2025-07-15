@@ -54,10 +54,10 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     final Change[] changes = e.getData(VcsDataKeys.CHANGES);
-    if ((changes == null) || (changes.length == 0)) return;
+    if (changes == null || changes.length == 0) return;
     String commitMessage = null;
     ShelvedChangeList[] shelvedChangeLists = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
     if (shelvedChangeLists != null && shelvedChangeLists.length > 0) {

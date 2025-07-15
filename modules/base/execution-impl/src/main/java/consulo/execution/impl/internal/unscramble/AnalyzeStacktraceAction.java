@@ -49,13 +49,8 @@ public class AnalyzeStacktraceAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-
-        UnscrambleService unscrambleService = project.getInstance(UnscrambleService.class);
-        unscrambleService.showAsync();
+        Project project = e.getRequiredData(Project.KEY);
+        project.getInstance(UnscrambleService.class).showAsync();
     }
 
     @Override

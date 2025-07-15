@@ -1456,7 +1456,11 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     private class MyAnnotateAction extends AnnotateRevisionActionBase implements DumbAware {
         public MyAnnotateAction() {
-            super(VcsLocalize.annotateActionName().get(), VcsLocalize.annotateActionDescription().get(), AllIcons.Actions.Annotate);
+            super(
+                VcsLocalize.annotateActionName(),
+                VcsLocalize.annotateActionDescription(),
+                PlatformIconGroup.actionsAnnotate()
+            );
             setShortcutSet(ActionManager.getInstance().getAction("Annotate").getShortcutSet());
         }
 

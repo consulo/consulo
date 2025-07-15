@@ -20,6 +20,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.document.FileDocumentManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackProgressModifier;
@@ -57,7 +58,8 @@ import static consulo.ui.ex.awt.Messages.showYesNoDialog;
  * @since 2006-11-02
  */
 public class RollbackAction extends AnAction implements DumbAware {
-  public void update(AnActionEvent e) {
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     final boolean visible = project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss();
     e.getPresentation().setEnabledAndVisible(visible);
@@ -93,12 +95,10 @@ public class RollbackAction extends AnAction implements DumbAware {
     return list != null && !list.getChanges().isEmpty();
   }
 
-  @NonNls
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
-    }
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
     final String title = ActionPlaces.CHANGES_VIEW_TOOLBAR.equals(e.getPlace())
       ? null : "Can not " + RollbackUtil.getRollbackOperationName(project) + " now";
     if (ChangeListManager.getInstance(project).isFreezedWithNotification(title)) {
@@ -218,7 +218,7 @@ public class RollbackAction extends AnAction implements DumbAware {
       if (!exceptions.isEmpty()) {
         AbstractVcsHelper.getInstance(project).showErrors(
           exceptions,
-          VcsLocalize.rollbackModifiedWithoutCheckoutErrorTab(operationName).get()
+          VcsLocalize.rollbackModifiedWithoutCheckoutErrorTab(operationName)
         );
       }
 

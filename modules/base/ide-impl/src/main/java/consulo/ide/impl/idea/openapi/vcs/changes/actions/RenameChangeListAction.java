@@ -26,6 +26,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -33,8 +34,7 @@ import consulo.versionControlSystem.change.LocalChangeList;
  */
 public class RenameChangeListAction extends AnAction implements DumbAware {
   @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
     final boolean visible =
       lists != null && lists.length == 1 && lists[0] instanceof LocalChangeList localChangeList && !localChangeList.isReadOnly();
@@ -48,11 +48,10 @@ public class RenameChangeListAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    assert lists != null;
-    final LocalChangeList list = ChangeListManager.getInstance(project).findChangeList(lists[0].getName());
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
+    ChangeList[] lists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
+    LocalChangeList list = ChangeListManager.getInstance(project).findChangeList(lists[0].getName());
     if (list != null) {
       new EditChangelistDialog(project, list).show();
     }

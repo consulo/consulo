@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 public class CleanUnshelvedAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
-  public void update(@Nonnull final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     final Project project = e.getData(Project.KEY);
     final Presentation presentation = e.getPresentation();

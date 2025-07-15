@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
@@ -27,13 +28,16 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.NewChangelistDialog;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  * @since 2006-11-02
  */
 public class AddChangeListAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     NewChangelistDialog dlg = new NewChangelistDialog(project);
     dlg.show();
@@ -63,7 +67,8 @@ public class AddChangeListAction extends AnAction implements DumbAware {
     return unnamedcount == 0 ? "Unnamed" : "Unnamed (" + unnamedcount + ")";
   }
 
-  public void update(AnActionEvent e) {
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
     if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
       ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
       e.getPresentation().setVisible(lists != null && lists.length > 0);

@@ -35,7 +35,7 @@ import jakarta.annotation.Nonnull;
 public class RefreshAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -43,7 +43,7 @@ public class RefreshAction extends AnAction implements DumbAware {
         doRefresh(project);
     }
 
-    public static void doRefresh(final Project project) {
+    public static void doRefresh(@Nonnull Project project) {
         if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
             return;
         }

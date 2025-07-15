@@ -31,7 +31,7 @@ public class AssociateFileType extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        VirtualFile file = e.getData(VirtualFile.KEY);
+        VirtualFile file = e.getRequiredData(VirtualFile.KEY);
         FileTypeChooser.associateFileType(file.getName());
     }
 
