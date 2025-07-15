@@ -47,10 +47,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+        Project project = e.getRequiredData(Project.KEY);
         VirtualFile virtualFile = e.getData(VirtualFile.KEY);
 
         final ModuleManager moduleManager = ModuleManager.getInstance(project);
@@ -84,10 +81,9 @@ public class NewModuleAction extends AnAction implements DumbAware {
         });
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 }

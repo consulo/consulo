@@ -43,7 +43,7 @@ public class ShowAddPackagingElementPopupAction extends DumbAwareAction {
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DefaultActionGroup group = new DefaultActionGroup();
-    for (PackagingElementType type : PackagingElementFactory.getInstance(e.getData(Project.KEY)).getAllElementTypes()) {
+    for (PackagingElementType type : PackagingElementFactory.getInstance(e.getRequiredData(Project.KEY)).getAllElementTypes()) {
       group.add(new AddNewPackagingElementAction((PackagingElementType<?>)type, myArtifactEditor));
     }
     final DataContext dataContext = e.getDataContext();

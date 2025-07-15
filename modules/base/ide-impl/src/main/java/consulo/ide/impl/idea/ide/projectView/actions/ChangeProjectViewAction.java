@@ -23,29 +23,25 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 public final class ChangeProjectViewAction extends AnAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        Project project = e.getDataContext().getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
         ProjectView projectView = ProjectView.getInstance(project);
         projectView.changeView();
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getDataContext().getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent event) {
+        Project project = event.getData(Project.KEY);
         if (project == null) {
-            presentation.setEnabled(false);
+            event.getPresentation().setEnabled(false);
             return;
         }
         String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
-        presentation.setEnabled(ToolWindowId.PROJECT_VIEW.equals(id));
+        event.getPresentation().setEnabled(ToolWindowId.PROJECT_VIEW.equals(id));
     }
 }

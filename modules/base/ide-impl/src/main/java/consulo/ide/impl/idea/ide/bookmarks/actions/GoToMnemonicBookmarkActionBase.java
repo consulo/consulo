@@ -35,20 +35,16 @@ public abstract class GoToMnemonicBookmarkActionBase extends AnAction implements
   }
 
   @Override
-  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    e.getPresentation().setEnabled(project != null);
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
+    Project project = e.getRequiredData(Project.KEY);
 
-    final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic((char)('0' + myNumber));
+    Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic((char)('0' + myNumber));
     if (bookmark != null) {
       bookmark.navigate(true);
     }

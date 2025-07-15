@@ -66,7 +66,7 @@ public class DeleteHandler {
     public static class DefaultDeleteProvider implements DeleteProvider {
         @Override
         public boolean canDeleteElement(@Nonnull DataContext dataContext) {
-            if (dataContext.getData(Project.KEY) == null) {
+            if (!dataContext.hasData(Project.KEY)) {
                 return false;
             }
             final PsiElement[] elements = getPsiElements(dataContext);
@@ -229,7 +229,7 @@ public class DeleteHandler {
                 }
 
                 // deleted from project view or something like that.
-                if (DataManager.getInstance().getDataContext().getData(Editor.KEY) == null) {
+                if (!DataManager.getInstance().getDataContext().hasData(Editor.KEY)) {
                     CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
                 }
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -55,7 +56,8 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
     final LayoutTreeSelection selection = treeComponent.getSelection();
     final CompositePackagingElement<?> parent = selection.getCommonParentElement();
@@ -67,7 +69,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
       return;
     }
 
-    final CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(e.getData(Project.KEY)).getCompositeElementTypes();
+    final CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(e.getRequiredData(Project.KEY)).getCompositeElementTypes();
     final List<PackagingElement<?>> selected = selection.getElements();
     if (types.length == 1) {
       surroundWith(types[0], parent, selected, treeComponent);

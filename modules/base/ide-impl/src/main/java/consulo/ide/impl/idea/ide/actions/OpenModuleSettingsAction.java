@@ -40,12 +40,6 @@ public class OpenModuleSettingsAction extends EditSourceAction {
         }
     }
 
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return null;
-    }
-
     protected static boolean isModuleInProjectViewPopup(@Nonnull AnActionEvent e) {
         return ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace()) && isModuleInContext(e);
     }

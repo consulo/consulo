@@ -54,19 +54,14 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   private JBPopup myPopup;
 
   @Override
-  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    e.getPresentation().setEnabled(project != null);
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    if (project == null) return;
+    final Project project = e.getRequiredData(Project.KEY);
 
     if (myPopup != null && myPopup.isVisible()) return;
 

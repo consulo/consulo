@@ -87,7 +87,6 @@ public class FileListPasteProvider implements FilePasteProvider {
 
   @Override
   public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
-    return dataContext.getData(IdeView.KEY) != null &&
-           FileCopyPasteUtil.isFileListFlavorAvailable();
+    return dataContext.hasData(IdeView.KEY) && FileCopyPasteUtil.isFileListFlavorAvailable();
   }
 }

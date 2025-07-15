@@ -23,6 +23,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 public abstract class FileChooserAction extends AnAction implements DumbAware {
   protected FileChooserAction() {
@@ -43,14 +44,13 @@ public abstract class FileChooserAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  final public void actionPerformed(AnActionEvent e) {
-    FileSystemTree tree = e.getData(FileSystemTree.DATA_KEY);
+  final public void actionPerformed(@Nonnull AnActionEvent e) {
+    FileSystemTree tree = e.getRequiredData(FileSystemTree.DATA_KEY);
     actionPerformed(tree, e);
   }
 
   @Override
-  @RequiredUIAccess
-  final public void update(AnActionEvent e) {
+  final public void update(@Nonnull AnActionEvent e) {
     FileSystemTree tree = e.getData(FileSystemTree.DATA_KEY);
     if (tree != null) {
       e.getPresentation().setEnabled(true);
@@ -61,7 +61,7 @@ public abstract class FileChooserAction extends AnAction implements DumbAware {
     }
   }
 
-  protected abstract void update(FileSystemTree fileChooser, AnActionEvent e);
+  protected abstract void update(FileSystemTree fileChooser, @Nonnull AnActionEvent e);
 
-  protected abstract void actionPerformed(FileSystemTree fileChooser, AnActionEvent e);
+  protected abstract void actionPerformed(@Nonnull FileSystemTree fileChooser, @Nonnull AnActionEvent e);
 }

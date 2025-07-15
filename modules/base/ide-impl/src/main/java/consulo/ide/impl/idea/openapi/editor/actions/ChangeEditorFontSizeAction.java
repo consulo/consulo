@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.RealEditor;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.colorScheme.EditorFontsConstants;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -63,13 +63,13 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
 
   public static class IncreaseEditorFontSize extends ChangeEditorFontSizeAction {
     public IncreaseEditorFontSize() {
-      super(EditorBundle.message("increase.editor.font"), 1);
+      super(CodeEditorLocalize.increaseEditorFont().get(), 1);
     }
   }
 
   public static class DecreaseEditorFontSize extends ChangeEditorFontSizeAction {
     public DecreaseEditorFontSize() {
-      super(EditorBundle.message("decrease.editor.font"), -1);
+      super(CodeEditorLocalize.decreaseEditorFont().get(), -1);
     }
   }
 }

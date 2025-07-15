@@ -19,6 +19,7 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev
@@ -26,8 +27,8 @@ import consulo.ui.ex.action.AnActionEvent;
 public final class UnsplitAllAction extends SplitterActionBase {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent event) {
-        Project project = event.getData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent event) {
+        Project project = event.getRequiredData(Project.KEY);
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         //VirtualFile file = fileEditorManager.getSelectedFiles()[0];
         fileEditorManager.unsplitAllWindow();

@@ -224,7 +224,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
         }
         // todo context.getDaemonAnalyzer().queueUpdate(LibraryProjectStructureElement.this);
 
-        Settings settings = Objects.requireNonNull(dataContext.getData(Settings.KEY));
+        Settings settings = dataContext.getRequiredData(Settings.KEY);
         ProjectLibrariesConfigurable librariesConfigurable = settings.findConfigurable(ProjectLibrariesConfigurable.class);
 
         navigate(myProject).doWhenDone(() -> {

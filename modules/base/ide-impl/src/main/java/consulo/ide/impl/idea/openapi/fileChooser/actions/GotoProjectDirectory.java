@@ -21,11 +21,12 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public final class GotoProjectDirectory extends FileChooserAction {
   @Override
-  protected void actionPerformed(final FileSystemTree fileSystemTree, final AnActionEvent e) {
+  protected void actionPerformed(FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     final VirtualFile projectPath = getProjectDir(e);
     if (projectPath != null) {
       fileSystemTree.select(projectPath, () -> fileSystemTree.expand(projectPath, null));
@@ -33,7 +34,7 @@ public final class GotoProjectDirectory extends FileChooserAction {
   }
 
   @Override
-  protected void update(final FileSystemTree fileSystemTree, final AnActionEvent e) {
+  protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     presentation.setIcon(Application.get().getIcon());
     final VirtualFile projectPath = getProjectDir(e);

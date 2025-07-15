@@ -24,6 +24,7 @@ import consulo.project.ui.wm.NavBarRootPaneExtension;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Anna Kozlova
@@ -32,11 +33,11 @@ import consulo.ui.ex.action.AnActionEvent;
 public class ActivateNavigationBarAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getDataContext().getData(Project.KEY);
-        if (project != null && UISettings.getInstance().SHOW_NAVIGATION_BAR) {
-            final IdeFrame frame = WindowManagerEx.getInstance().getIdeFrame(project);
-            final NavBarRootPaneExtension navBarExt = frame.getNorthExtension(NavBarRootPaneExtension.class);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        if (UISettings.getInstance().SHOW_NAVIGATION_BAR) {
+            IdeFrame frame = WindowManagerEx.getInstance().getIdeFrame(project);
+            NavBarRootPaneExtension navBarExt = frame.getNorthExtension(NavBarRootPaneExtension.class);
             if (navBarExt != null) {
                 navBarExt.rebuildAndSelectTail();
             }
@@ -44,11 +45,10 @@ public class ActivateNavigationBarAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
-        final Project project = e.getDataContext().getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         UISettings settings = UISettings.getInstance();
-        final boolean enabled = project != null && settings.SHOW_NAVIGATION_BAR && !settings.PRESENTATION_MODE;
+        boolean enabled = project != null && settings.SHOW_NAVIGATION_BAR && !settings.PRESENTATION_MODE;
         e.getPresentation().setEnabled(enabled);
     }
 }

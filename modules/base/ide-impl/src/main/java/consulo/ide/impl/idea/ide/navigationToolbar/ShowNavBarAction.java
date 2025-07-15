@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.application.dumb.DumbAware;
@@ -24,6 +23,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -31,24 +31,19 @@ import consulo.ui.ex.action.AnActionEvent;
 public class ShowNavBarAction extends AnAction implements DumbAware, PopupAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        final DataContext context = e.getDataContext();
-        final Project project = context.getData(Project.KEY);
-        if (project != null) {
-            UISettings uiSettings = UISettings.getInstance();
-            if (uiSettings.SHOW_NAVIGATION_BAR && !uiSettings.PRESENTATION_MODE) {
-                new SelectInNavBarTarget(project).select(null, false);
-            }
-            else {
-                project.getInstance(EmbeddedNavService.class).show(context);
-            }
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        UISettings uiSettings = UISettings.getInstance();
+        if (uiSettings.SHOW_NAVIGATION_BAR && !uiSettings.PRESENTATION_MODE) {
+            new SelectInNavBarTarget(project).select(null, false);
+        }
+        else {
+            project.getInstance(EmbeddedNavService.class).show(e.getDataContext());
         }
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(final AnActionEvent e) {
-        final boolean enabled = e.getData(Project.KEY) != null;
-        e.getPresentation().setEnabled(enabled);
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 }

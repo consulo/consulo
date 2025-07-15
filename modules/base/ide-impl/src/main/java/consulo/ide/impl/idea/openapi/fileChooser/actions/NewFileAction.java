@@ -26,9 +26,11 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 
 public class NewFileAction extends FileChooserAction {
-  protected void update(FileSystemTree fileSystemTree, AnActionEvent e) {
+  @Override
+  protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     final FileType fileType = e.getData(FileChooserKeys.NEW_FILE_TYPE);
     if (fileType != null) {
@@ -42,7 +44,8 @@ public class NewFileAction extends FileChooserAction {
     }
   }
 
-  protected void actionPerformed(FileSystemTree fileSystemTree, AnActionEvent e) {
+  @Override
+  protected void actionPerformed(FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     final FileType fileType = e.getData(FileChooserKeys.NEW_FILE_TYPE);
     final String initialContent = e.getData(FileChooserKeys.NEW_FILE_TEMPLATE_TEXT);
     if (fileType != null && initialContent != null) {

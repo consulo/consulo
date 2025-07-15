@@ -27,6 +27,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 public class NewFolderAction extends FileChooserAction {
   public NewFolderAction() {
@@ -43,7 +44,7 @@ public class NewFolderAction extends FileChooserAction {
   }
 
   @Override
-  protected void update(FileSystemTree fileSystemTree, AnActionEvent e) {
+  protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     VirtualFile parent = fileSystemTree.getNewFileParent();
     presentation.setEnabled(parent != null && parent.isDirectory());
@@ -52,7 +53,7 @@ public class NewFolderAction extends FileChooserAction {
 
   @Override
   @RequiredUIAccess
-  protected void actionPerformed(FileSystemTree fileSystemTree, AnActionEvent e) {
+  protected void actionPerformed(FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     createNewFolder(fileSystemTree);
   }
 

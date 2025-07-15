@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
@@ -46,7 +45,7 @@ public class AddAllToFavoritesActionGroup extends ActionGroup {
         }
         List<String> listNames = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
         List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
-        availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
+        availableFavoritesLists.remove(e.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
         if (availableFavoritesLists.isEmpty()) {
             return new AnAction[]{new AddAllOpenFilesToNewFavoritesListAction()};
         }
@@ -62,7 +61,6 @@ public class AddAllToFavoritesActionGroup extends ActionGroup {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));

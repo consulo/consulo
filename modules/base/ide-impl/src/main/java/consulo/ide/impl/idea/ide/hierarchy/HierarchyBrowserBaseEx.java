@@ -615,8 +615,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         @Override
         @RequiredUIAccess
         public final void actionPerformed(@Nonnull AnActionEvent event) {
-            DataContext dataContext = event.getDataContext();
-            HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx) dataContext.getData(myBrowserDataKey);
+            HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx) event.getData(myBrowserDataKey);
             if (browser == null) {
                 return;
             }
@@ -647,7 +646,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         @Override
-        @RequiredUIAccess
         public final void update(@Nonnull AnActionEvent event) {
             Presentation presentation = event.getPresentation();
 
@@ -656,21 +654,19 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             DataContext dataContext = event.getDataContext();
             HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx) dataContext.getData(myBrowserDataKey);
             if (browser == null) {
-                presentation.setVisible(false);
-                presentation.setEnabled(false);
+                presentation.setEnabledAndVisible(false);
+                return;
+            }
+
+            PsiElement selectedElement = browser.getSelectedElement();
+            if (selectedElement == null || !browser.isApplicableElement(selectedElement)) {
+                presentation.setEnabledAndVisible(false);
                 return;
             }
 
             presentation.setVisible(true);
-
-            PsiElement selectedElement = browser.getSelectedElement();
-            if (selectedElement == null || !browser.isApplicableElement(selectedElement)) {
-                presentation.setEnabled(false);
-                presentation.setVisible(false);
-                return;
-            }
-
             presentation.setEnabled(isEnabled(browser, selectedElement));
+
             LocalizeValue nonDefaultText = getNonDefaultText(browser, selectedElement);
             if (nonDefaultText != LocalizeValue.empty()) {
                 presentation.setTextValue(nonDefaultText);
@@ -682,7 +678,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
             return !element.equals(browser.mySmartPsiElementPointer.getElement()) && element.isValid();
         }
 
-        @Nullable
+        @Nonnull
         protected LocalizeValue getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
             return LocalizeValue.empty();
         }
@@ -701,14 +697,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Override
         public final void update(@Nonnull AnActionEvent event) {
-            Presentation presentation = event.getPresentation();
-            presentation.setEnabled(ReadAction.compute(() -> isValidBase()));
+            event.getPresentation().setEnabled(ReadAction.compute(() -> isValidBase()));
         }
     }
 
     public class ChangeScopeAction extends ComboBoxAction {
         @Override
-        @RequiredUIAccess
         public final void update(@Nonnull AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             Project project = e.getData(Project.KEY);
@@ -796,8 +790,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
                 myScope = scope;
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public final void actionPerformed(@Nonnull AnActionEvent e) {
                 selectScope(myScope);
             }
@@ -808,8 +802,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
                 super(LocalizeValue.localizeTODO("Configure..."));
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 EditScopesDialog.showDialog(myProject, null);
                 if (!getValidScopes().contains(myType2ScopeMap.get(myCurrentViewType))) {

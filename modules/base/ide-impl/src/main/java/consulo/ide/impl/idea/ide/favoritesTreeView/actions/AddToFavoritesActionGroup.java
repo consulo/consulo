@@ -45,7 +45,7 @@ public class AddToFavoritesActionGroup extends ActionGroup {
             return AnAction.EMPTY_ARRAY;
         }
         List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
-        availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
+        availableFavoritesLists.remove(e.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
         if (availableFavoritesLists.isEmpty()) {
             return new AnAction[]{new AddToNewFavoritesListAction()};
         }
@@ -61,7 +61,6 @@ public class AddToFavoritesActionGroup extends ActionGroup {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setVisible(AddToFavoritesAction.canCreateNodes(e));

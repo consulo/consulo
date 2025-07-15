@@ -69,7 +69,6 @@ public abstract class WindowAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public final void update(@Nonnull AnActionEvent event) {
         Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
         boolean enabled = isEnabledFor(window);

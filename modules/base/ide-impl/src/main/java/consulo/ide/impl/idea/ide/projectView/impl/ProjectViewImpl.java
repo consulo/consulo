@@ -673,14 +673,12 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             }
 
             @Override
-            @RequiredUIAccess
+            @RequiredReadAction
             public void update(@Nonnull AnActionEvent e) {
                 super.update(e);
-                Project project = e.getData(Project.KEY);
-                assert project != null;
-                Presentation presentation = e.getPresentation();
+                Project project = e.getRequiredData(Project.KEY);
                 if (!PsiPackageSupportProviders.isPackageSupported(project)) {
-                    presentation.setVisible(false);
+                    e.getPresentation().setVisible(false);
                 }
             }
         }).setAsSecondary(true);
@@ -705,18 +703,12 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             }
 
             @Override
-            @RequiredUIAccess
+            @RequiredReadAction
             public void update(@Nonnull AnActionEvent e) {
                 super.update(e);
-                Project project = e.getData(Project.KEY);
-                assert project != null;
+                Project project = e.getRequiredData(Project.KEY);
                 Presentation presentation = e.getPresentation();
-                if (!PsiPackageSupportProviders.isPackageSupported(project)) {
-                    presentation.setVisible(false);
-                }
-                else {
-                    presentation.setVisible(isFlattenPackages(myCurrentViewId));
-                }
+                presentation.setVisible(PsiPackageSupportProviders.isPackageSupported(project) && isFlattenPackages(myCurrentViewId));
             }
         }
         myActionGroup.addAction(new HideEmptyMiddlePackagesAction()).setAsSecondary(true);
@@ -1717,13 +1709,11 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             return getGlobalOptions().isHideEmptyPackages();
         }
 
-        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             Presentation presentation = e.getPresentation();
-            Project project = e.getData(Project.KEY);
-            assert project != null;
+            Project project = e.getRequiredData(Project.KEY);
             if (!PsiPackageSupportProviders.isPackageSupported(project)) {
                 presentation.setVisible(false);
                 return;

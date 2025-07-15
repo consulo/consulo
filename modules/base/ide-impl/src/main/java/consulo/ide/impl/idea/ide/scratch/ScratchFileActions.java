@@ -78,7 +78,6 @@ public class ScratchFileActions {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             getTemplatePresentation().setTextValue(myActionText.getValue());
 
@@ -124,21 +123,15 @@ public class ScratchFileActions {
     }
 
     public static class NewBufferAction extends DumbAwareAction {
-
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
-            boolean enabled = e.getData(Project.KEY) != null && Registry.intValue("ide.scratch.buffers") > 0;
-            e.getPresentation().setEnabledAndVisible(enabled);
+            e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && Registry.intValue("ide.scratch.buffers") > 0);
         }
 
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            Project project = e.getData(Project.KEY);
-            if (project == null) {
-                return;
-            }
+            Project project = e.getRequiredData(Project.KEY);
             ScratchFileCreationHelper.Context context = createContext(e, project);
             context.filePrefix = "buffer";
             context.createOption = ScratchFileService.Option.create_if_missing;
@@ -251,7 +244,6 @@ public class ScratchFileActions {
 
     public static class LanguageAction extends DumbAwareAction {
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             JBIterable<VirtualFile> files = JBIterable.of(e.getData(VirtualFile.KEY_OF_ARRAY));
@@ -279,9 +271,9 @@ public class ScratchFileActions {
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            Project project = e.getData(Project.KEY);
+            Project project = e.getRequiredData(Project.KEY);
             JBIterable<VirtualFile> files = JBIterable.of(e.getData(VirtualFile.KEY_OF_ARRAY)).filter(fileFilter(project));
-            if (project == null || files.isEmpty()) {
+            if (files.isEmpty()) {
                 return;
             }
             actionPerformedImpl(e, project, "Change " + getLanguageTerm(), files);

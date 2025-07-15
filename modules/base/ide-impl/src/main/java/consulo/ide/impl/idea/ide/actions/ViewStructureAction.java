@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -55,10 +54,7 @@ public class ViewStructureAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+        Project project = e.getRequiredData(Project.KEY);
         FileEditor fileEditor = e.getData(FileEditor.KEY);
         if (fileEditor == null) {
             return;
@@ -112,7 +108,6 @@ public class ViewStructureAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
