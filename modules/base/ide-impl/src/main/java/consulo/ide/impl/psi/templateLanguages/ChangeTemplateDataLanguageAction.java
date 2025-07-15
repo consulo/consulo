@@ -52,10 +52,8 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
       final TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider)provider;
 
       e.getPresentation().setTextValue(LanguageLocalize.quickfixChangeTemplateDataLanguageText(viewProvider.getTemplateDataLanguage().getDisplayName()));
-      e.getPresentation().setEnabled(true);
-      e.getPresentation().setVisible(true);
+      e.getPresentation().setEnabledAndVisible(true);
     }
-
   }
 
   @Override

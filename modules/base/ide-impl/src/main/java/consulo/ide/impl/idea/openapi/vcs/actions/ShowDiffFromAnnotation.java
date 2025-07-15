@@ -30,6 +30,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesComparator;
 import consulo.ide.impl.idea.util.containers.CacheOneStepIterator;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.Pair;
@@ -79,14 +80,15 @@ class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumb
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final int number = currentLine;
     e.getPresentation().setVisible(myEnabled);
     e.getPresentation().setEnabled(myEnabled && number >= 0 && number < myFileAnnotation.getLineCount());
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final int actualNumber = currentLine;
     if (actualNumber < 0) return;
 

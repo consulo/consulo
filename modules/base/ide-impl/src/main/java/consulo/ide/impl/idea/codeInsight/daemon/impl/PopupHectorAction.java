@@ -31,13 +31,12 @@ public class PopupHectorAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final PsiFile file = dataContext.getData(PsiFile.KEY);
-    new HectorComponent(file).showComponent(JBPopupFactory.getInstance().guessBestPopupLocation(dataContext));
+    PsiFile file = e.getRequiredData(PsiFile.KEY);
+    new HectorComponent(file).showComponent(JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext()));
   }
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getDataContext().getData(PsiFile.KEY) != null);
+    e.getPresentation().setEnabled(e.hasData(PsiFile.KEY));
   }
 }

@@ -20,14 +20,13 @@ public class SwitchCoverageSuiteAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getDataContext().getData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         new CoverageSuiteChooserDialog(project).show();
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        Project project = e.getDataContext().getData(Project.KEY);
-        e.getPresentation().setEnabled(project != null);
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 }

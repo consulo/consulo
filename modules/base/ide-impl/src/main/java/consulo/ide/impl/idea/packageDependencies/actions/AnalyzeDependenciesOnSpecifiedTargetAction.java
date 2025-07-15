@@ -41,10 +41,8 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
-    final GlobalSearchScope targetScope = e.getData(TARGET_SCOPE_KEY);
-    if (module == null || targetScope == null) return;
-
+    Module module = e.getRequiredData(LangDataKeys.MODULE_CONTEXT);
+    GlobalSearchScope targetScope = e.getRequiredData(TARGET_SCOPE_KEY);
     new AnalyzeDependenciesOnSpecifiedTargetHandler(module.getProject(), new AnalysisScope(module), targetScope).analyze();
   }
 

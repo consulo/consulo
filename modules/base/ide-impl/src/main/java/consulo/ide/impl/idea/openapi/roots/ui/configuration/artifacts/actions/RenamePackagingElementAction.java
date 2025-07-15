@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -24,6 +25,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTree
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.RenameablePackagingElement;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 
@@ -40,16 +42,17 @@ public class RenamePackagingElementAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
-    final PackagingElement<?> element = selection.getElementIfSingle();
-    final boolean visible = element instanceof RenameablePackagingElement && ((RenameablePackagingElement)element).canBeRenamed();
-    e.getPresentation().setEnabled(visible);
-    e.getPresentation().setVisible(visible);
+    e.getPresentation().setEnabledAndVisible(
+        selection.getElementIfSingle() instanceof RenameablePackagingElement renameablePackagingElement
+            && renameablePackagingElement.canBeRenamed()
+    );
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
     final PackagingElementNode<?> node = selection.getNodeIfSingle();
     final PackagingElement<?> element = selection.getElementIfSingle();

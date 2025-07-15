@@ -51,7 +51,7 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getDataContext().getData(Project.KEY);
+    Project project = e.getRequiredData(Project.KEY);
     String m = "Started loading content";
     LOG.info(m);
     System.out.println(m);

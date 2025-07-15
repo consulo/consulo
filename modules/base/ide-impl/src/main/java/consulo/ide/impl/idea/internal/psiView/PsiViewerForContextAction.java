@@ -17,22 +17,18 @@ import jakarta.annotation.Nonnull;
 public class PsiViewerForContextAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Editor editor = e.getDataContext().getData(Editor.KEY);
-    PsiFile currentFile = e.getDataContext().getData(PsiFile.KEY);
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Editor editor = e.getRequiredData(Editor.KEY);
+    PsiFile currentFile = e.getRequiredData(PsiFile.KEY);
     new PsiViewerDialog(currentFile.getProject(), false, currentFile, editor).show();
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     if (!Application.get().isInternal()) {
-      e.getPresentation().setVisible(false);
-      e.getPresentation().setEnabled(false);
+      e.getPresentation().setEnabledAndVisible(false);
       return;
     }
-    final Project project = e.getDataContext().getData(Project.KEY);
-    PsiFile currentFile = e.getDataContext().getData(PsiFile.KEY);
-    e.getPresentation().setEnabled(project != null && currentFile != null);
+    e.getPresentation().setEnabled(e.hasData(Project.KEY) && e.hasData(PsiFile.KEY));
   }
 }

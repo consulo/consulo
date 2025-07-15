@@ -20,10 +20,12 @@ import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -45,34 +47,45 @@ public class NewFileAction extends FileChooserAction {
   }
 
   @Override
-  protected void actionPerformed(FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
-    final FileType fileType = e.getData(FileChooserKeys.NEW_FILE_TYPE);
+  @RequiredUIAccess
+  protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+    FileType fileType = e.getRequiredData(FileChooserKeys.NEW_FILE_TYPE);
     final String initialContent = e.getData(FileChooserKeys.NEW_FILE_TEMPLATE_TEXT);
-    if (fileType != null && initialContent != null) {
+    if (initialContent != null) {
       createNewFile(fileSystemTree, fileType, initialContent);
     }
   }
 
+  @RequiredUIAccess
   private static void createNewFile(FileSystemTree fileSystemTree, final FileType fileType, final String initialContent) {
     final VirtualFile file = fileSystemTree.getNewFileParent();
     if (file == null || !file.isDirectory()) return;
 
     String newFileName;
     while (true) {
-      newFileName = Messages.showInputDialog(UIBundle.message("create.new.file.enter.new.file.name.prompt.text"),
-                                               UIBundle.message("new.file.dialog.title"), Messages.getQuestionIcon());
+      newFileName = Messages.showInputDialog(
+          UILocalize.createNewFileEnterNewFileNamePromptText().get(),
+          UILocalize.newFileDialogTitle().get(),
+          UIUtil.getQuestionIcon()
+      );
       if (newFileName == null) {
         return;
       }
       if ("".equals(newFileName.trim())) {
-        Messages.showMessageDialog(UIBundle.message("create.new.file.file.name.cannot.be.empty.error.message"),
-                                   UIBundle.message("error.dialog.title"), Messages.getErrorIcon());
+        Messages.showMessageDialog(
+            UILocalize.createNewFileFileNameCannotBeEmptyErrorMessage().get(),
+            UILocalize.errorDialogTitle().get(),
+            UIUtil.getErrorIcon()
+        );
         continue;
       }
       Exception failReason = ((FileSystemTreeImpl)fileSystemTree).createNewFile(file, newFileName, fileType, initialContent);
       if (failReason != null) {
-        Messages.showMessageDialog(UIBundle.message("create.new.file.could.not.create.file.error.message", newFileName),
-                                   UIBundle.message("error.dialog.title"), Messages.getErrorIcon());
+        Messages.showMessageDialog(
+            UILocalize.createNewFileCouldNotCreateFileErrorMessage(newFileName).get(),
+            UILocalize.errorDialogTitle().get(),
+            UIUtil.getErrorIcon()
+        );
         continue;
       }
       return;

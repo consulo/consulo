@@ -38,7 +38,7 @@ import jakarta.annotation.Nonnull;
 public class RearrangeCodeAction extends AnAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    PsiFile file = e.getDataContext().getData(PsiFile.KEY);
+    PsiFile file = e.getData(PsiFile.KEY);
     boolean enabled = file != null && Rearranger.forLanguage(file.getLanguage()) != null;
     e.getPresentation().setEnabled(enabled);
   }

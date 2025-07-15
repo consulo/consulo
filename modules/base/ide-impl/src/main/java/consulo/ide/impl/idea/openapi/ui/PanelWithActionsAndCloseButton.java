@@ -108,7 +108,6 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
 
   private class MyCloseAction extends CloseTabToolbarAction {
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setVisible(myCloseEnabled);

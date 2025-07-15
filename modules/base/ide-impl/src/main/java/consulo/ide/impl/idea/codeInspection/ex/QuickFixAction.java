@@ -83,8 +83,7 @@ public class QuickFixAction extends AnAction {
             return;
         }
 
-        e.getPresentation().setVisible(false);
-        e.getPresentation().setEnabled(false);
+        e.getPresentation().setEnabledAndVisible(false);
 
         final InspectionTree tree = view.getTree();
         final InspectionToolWrapper toolWrapper = tree.getSelectedToolWrapper();
@@ -94,8 +93,7 @@ public class QuickFixAction extends AnAction {
 
         if (!isProblemDescriptorsAcceptable() && tree.getSelectedElements().length > 0 ||
             isProblemDescriptorsAcceptable() && tree.getSelectedDescriptors().length > 0) {
-            e.getPresentation().setVisible(true);
-            e.getPresentation().setEnabled(true);
+            e.getPresentation().setEnabledAndVisible(true);
         }
     }
 

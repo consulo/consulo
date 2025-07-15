@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import consulo.util.lang.StringUtil;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +37,7 @@ public class PutSourceItemIntoDefaultLocationAction extends PutIntoDefaultLocati
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final List<PackagingSourceItem> items = mySourceItemsTree.getSelectedItems();
     boolean enabled = false;
     final Presentation presentation = e.getPresentation();
@@ -52,12 +54,12 @@ public class PutSourceItemIntoDefaultLocationAction extends PutIntoDefaultLocati
       }
       presentation.setText("Put into " + PutIntoDefaultLocationActionBase.getTargetLocationText(paths));
     }
-    presentation.setVisible(enabled);
-    presentation.setEnabled(enabled);
+    presentation.setEnabledAndVisible(enabled);
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     myArtifactEditor.getLayoutTreeComponent().putIntoDefaultLocations(mySourceItemsTree.getSelectedItems());
   }
 }

@@ -32,7 +32,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
+        ProjectSystemId externalSystemId = e.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId != null) {
             LocalizeValue displayName = externalSystemId.getDisplayName();
             e.getPresentation().setTextValue(ExternalSystemLocalize.actionOpenExternalConfig0Text(displayName));
@@ -52,8 +52,8 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        Project project = e.getDataContext().getData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }

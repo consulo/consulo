@@ -22,7 +22,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -46,11 +45,6 @@ public class ShowTestProxy extends AnAction {
     // visible only in StatisticsTableView
     presentation.setVisible(e.hasData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS));
     // enabled if some proxy is selected
-    presentation.setEnabled(getSelectedTestProxy(e) != null);
-  }
-
-  @Nullable
-  private static Object getSelectedTestProxy(final AnActionEvent e) {
-    return e.getData(AbstractTestProxy.KEY);
+    presentation.setEnabled(e.hasData(AbstractTestProxy.KEY));
   }
 }

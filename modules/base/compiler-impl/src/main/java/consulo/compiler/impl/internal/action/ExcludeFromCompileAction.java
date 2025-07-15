@@ -57,9 +57,6 @@ public abstract class ExcludeFromCompileAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        boolean isApplicable = getFile() != null;
-        presentation.setEnabled(isApplicable);
-        presentation.setVisible(isApplicable);
+        e.getPresentation().setEnabledAndVisible(getFile() != null);
     }
 }

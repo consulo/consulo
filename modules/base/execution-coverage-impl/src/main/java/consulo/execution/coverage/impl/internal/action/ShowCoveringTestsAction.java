@@ -31,6 +31,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -62,7 +63,7 @@ public class ShowCoveringTestsAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext context = e.getDataContext();
         Project project = context.getData(Project.KEY);
         LOG.assertTrue(project != null);
@@ -167,11 +168,11 @@ public class ShowCoveringTestsAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setEnabled(false);
         if (myLineData != null && myLineData.getStatus() != LineCoverage.NONE) {
-            Project project = e.getDataContext().getData(Project.KEY);
+            Project project = e.getData(Project.KEY);
             if (project != null) {
                 File[] files = getTraceFiles(project);
                 if (files != null && files.length > 0) {
