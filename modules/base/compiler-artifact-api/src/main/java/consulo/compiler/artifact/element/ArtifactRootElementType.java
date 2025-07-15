@@ -18,6 +18,7 @@ package consulo.compiler.artifact.element;
 import consulo.application.AllIcons;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
@@ -29,7 +30,7 @@ public class ArtifactRootElementType extends PackagingElementType<ArtifactRootEl
   public static final ArtifactRootElementType INSTANCE = new ArtifactRootElementType();
 
   private ArtifactRootElementType() {
-    super("root", "");
+    super("root", LocalizeValue.of());
   }
 
   @Nonnull

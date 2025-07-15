@@ -19,7 +19,9 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
@@ -39,7 +41,7 @@ public class ExtractedDirectoryElementType extends PackagingElementType<Extracte
   }
 
   public ExtractedDirectoryElementType() {
-    super("extracted-dir", "Extracted Directory");
+    super("extracted-dir", LocalizeValue.localizeTODO("Extracted Directory"));
   }
 
   @Nonnull
@@ -48,25 +50,28 @@ public class ExtractedDirectoryElementType extends PackagingElementType<Extracte
     return AllIcons.Nodes.ExtractedFolder;
   }
 
+  @Override
   @Nonnull
   public List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
                                                              @Nonnull CompositePackagingElement<?> parent) {
-    final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, true, false, true, true) {
+    FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, true, false, true, true) {
+      @RequiredUIAccess
       @Override
       public boolean isFileSelectable(VirtualFile file) {
         if (file.isInLocalFileSystem() && file.isDirectory()) return false;
         return super.isFileSelectable(file);
       }
     };
-    final VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
-    final List<PackagingElement<?>> list = new ArrayList<PackagingElement<?>>();
-    final PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
+    VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
+    List<PackagingElement<?>> list = new ArrayList<>();
+    PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
     for (VirtualFile file : files) {
       list.add(factory.createExtractedDirectory(file));
     }
     return list;
   }
 
+  @Override
   @Nonnull
   public ExtractedDirectoryPackagingElement createEmpty(@Nonnull Project project) {
     return new ExtractedDirectoryPackagingElement();

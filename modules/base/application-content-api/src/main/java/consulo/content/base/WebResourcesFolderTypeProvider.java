@@ -17,9 +17,10 @@
 package consulo.content.base;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -56,19 +57,19 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
   @Nonnull
   @Override
   public Image getIcon() {
-    return AllIcons.Modules.WebRoot;
+    return PlatformIconGroup.modulesWebroot();
   }
 
   @Nonnull
   @Override
   public Image getChildDirectoryIcon() {
-    return AllIcons.Nodes.WebFolder;
+    return PlatformIconGroup.modulesWebroot();
   }
 
   @Nonnull
   @Override
-  public String getName() {
-    return ProjectLocalize.moduleToggleWebResourcesAction().get();
+  public LocalizeValue getName() {
+    return ProjectLocalize.moduleToggleWebResourcesAction();
   }
 
   @Nonnull

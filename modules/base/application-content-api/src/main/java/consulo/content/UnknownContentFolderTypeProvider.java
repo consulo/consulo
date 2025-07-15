@@ -16,6 +16,7 @@
 package consulo.content;
 
 import consulo.application.AllIcons;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
@@ -39,8 +40,8 @@ public class UnknownContentFolderTypeProvider extends ContentFolderTypeProvider 
 
   @Nonnull
   @Override
-  public String getName() {
-    return "Unknown";
+  public LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("Unknown");
   }
 
   @Nonnull

@@ -20,8 +20,10 @@ import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.base.BuiltInGeneratedIconOwner;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
@@ -74,8 +76,8 @@ public class ProductionContentFolderTypeProvider extends PackageBasedContentFold
 
     @Nonnull
     @Override
-    public String getName() {
-        return ProjectBundle.message("module.toggle.sources.action");
+    public LocalizeValue getName() {
+        return ProjectLocalize.moduleToggleSourcesAction();
     }
 
     @Nonnull

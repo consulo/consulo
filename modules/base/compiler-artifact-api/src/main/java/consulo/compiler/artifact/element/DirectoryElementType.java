@@ -20,6 +20,7 @@ import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
@@ -38,7 +39,7 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
   }
 
   public DirectoryElementType() {
-    super("directory", CompilerBundle.message("element.type.name.directory"));
+    super("directory", CompilerLocalize.elementTypeNameDirectory());
   }
 
   @Nonnull

@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.Artifact;
@@ -39,7 +40,7 @@ public class FileCopyElementType extends PackagingElementType<FileCopyPackagingE
   }
 
   public FileCopyElementType() {
-    super("file-copy", "File");
+    super("file-copy", LocalizeValue.localizeTODO("File"));
   }
 
   @Nonnull
@@ -48,18 +49,20 @@ public class FileCopyElementType extends PackagingElementType<FileCopyPackagingE
     return AllIcons.FileTypes.Text;
   }
 
+  @Override
   @Nonnull
   public List<? extends FileCopyPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
                                                                   @Nonnull CompositePackagingElement<?> parent) {
-    final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, true);
-    final VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
-    final List<FileCopyPackagingElement> list = new ArrayList<FileCopyPackagingElement>();
+    FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, true);
+    VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
+    List<FileCopyPackagingElement> list = new ArrayList<>();
     for (VirtualFile file : files) {
       list.add(new FileCopyPackagingElement(file.getPath()));
     }
     return list;
   }
 
+  @Override
   @Nonnull
   public FileCopyPackagingElement createEmpty(@Nonnull Project project) {
     return new FileCopyPackagingElement();

@@ -17,15 +17,14 @@ package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -40,7 +39,7 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
   }
 
   public ZipArchiveElementType() {
-    super("zip-archive", CompilerBundle.message("element.type.name.zip.archive"));
+    super("zip-archive", CompilerLocalize.elementTypeNameZipArchive());
   }
 
   @Nonnull

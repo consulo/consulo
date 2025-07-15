@@ -21,6 +21,7 @@ import consulo.application.Application;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -34,9 +35,9 @@ import java.util.List;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PackagingElementType<E extends PackagingElement<?>> {
     private final String myId;
-    private final String myPresentableName;
+    private final LocalizeValue myPresentableName;
 
-    protected PackagingElementType(@Nonnull String id, @Nonnull String presentableName) {
+    protected PackagingElementType(@Nonnull String id, @Nonnull LocalizeValue presentableName) {
         myId = id;
         myPresentableName = presentableName;
     }
@@ -45,7 +46,8 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
         return myId;
     }
 
-    public String getPresentableName() {
+    @Nonnull
+    public LocalizeValue getPresentableName() {
         return myPresentableName;
     }
 

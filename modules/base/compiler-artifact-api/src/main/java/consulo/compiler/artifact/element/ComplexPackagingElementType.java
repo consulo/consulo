@@ -17,6 +17,7 @@
 package consulo.compiler.artifact.element;
 
 import consulo.component.util.ModificationTracker;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
@@ -26,7 +27,7 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public abstract class ComplexPackagingElementType<E extends ComplexPackagingElement<?>> extends PackagingElementType<E> {
-  protected ComplexPackagingElementType(@Nonnull String id, @Nonnull String presentableName) {
+  protected ComplexPackagingElementType(@Nonnull String id, @Nonnull LocalizeValue presentableName) {
     super(id, presentableName);
   }
 

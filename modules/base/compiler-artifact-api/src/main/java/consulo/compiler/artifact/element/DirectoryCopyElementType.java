@@ -20,6 +20,7 @@ import consulo.application.AllIcons;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.Artifact;
@@ -40,7 +41,7 @@ public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopy
   }
 
   public DirectoryCopyElementType() {
-    super("dir-copy", "Directory Content");
+    super("dir-copy", LocalizeValue.localizeTODO("Directory Content"));
   }
 
   @Nonnull

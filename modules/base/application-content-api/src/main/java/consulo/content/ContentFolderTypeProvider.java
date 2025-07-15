@@ -21,6 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -90,7 +91,7 @@ public abstract class ContentFolderTypeProvider {
     public abstract Image getIcon();
 
     @Nonnull
-    public abstract String getName();
+    public abstract LocalizeValue getName();
 
     @Nonnull
     public abstract ColorValue getGroupColor();

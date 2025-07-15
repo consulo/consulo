@@ -15,29 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.application.ApplicationManager;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElementType;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
-import consulo.compiler.artifact.ArtifactUtil;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.ApplicationManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
-
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -46,7 +46,7 @@ import java.util.List;
 public class SurroundElementWithAction extends LayoutTreeActionBase {
   public SurroundElementWithAction(ArtifactEditorEx artifactEditor) {
     super("Surround With...", artifactEditor);
-    final CustomShortcutSet shortcutSet = new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts("SurroundWith"));
+    CustomShortcutSet shortcutSet = new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts("SurroundWith"));
     registerCustomShortcutSet(shortcutSet, artifactEditor.getLayoutTreeComponent().getLayoutTree());
   }
 
@@ -59,10 +59,10 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
-    final LayoutTreeSelection selection = treeComponent.getSelection();
+    LayoutTreeSelection selection = treeComponent.getSelection();
     final CompositePackagingElement<?> parent = selection.getCommonParentElement();
     if (parent == null) return;
-    final PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
+    PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
     if (parentNode == null) return;
 
     if (!treeComponent.checkCanModifyChildren(parent, parentNode, selection.getNodes())) {
@@ -84,11 +84,11 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
         @Nonnull
         @Override
         public String getTextFor(CompositePackagingElementType value) {
-          return value.getPresentableName();
+          return value.getPresentableName().get();
         }
 
         @Override
-        public PopupStep onChosen(final CompositePackagingElementType selectedValue, boolean finalChoice) {
+        public PopupStep onChosen(CompositePackagingElementType selectedValue, boolean finalChoice) {
           ApplicationManager.getApplication().invokeLater(() -> surroundWith(selectedValue, parent, selected, treeComponent));
           return FINAL_CHOICE;
         }
@@ -96,14 +96,14 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
     }
   }
 
-  private void surroundWith(final CompositePackagingElementType<?> type, final CompositePackagingElement<?> parent, final List<PackagingElement<?>> selected,
+  private void surroundWith(CompositePackagingElementType<?> type, CompositePackagingElement<?> parent, List<PackagingElement<?>> selected,
                             LayoutTreeComponent treeComponent) {
     if (myArtifactEditor.isDisposed() || selected.isEmpty()) return;
 
-    final Project project = myArtifactEditor.getContext().getProject();
-    final String elementName = ContainerUtil.getFirstItem(selected, null).createPresentation(myArtifactEditor.getContext()).getPresentableName();
-    final String baseName = PathUtil.suggestFileName(elementName);
-    final CompositePackagingElement<?> newParent = type.createComposite(parent, baseName, myArtifactEditor.getContext());
+    Project project = myArtifactEditor.getContext().getProject();
+    String elementName = ContainerUtil.getFirstItem(selected, null).createPresentation(myArtifactEditor.getContext()).getPresentableName();
+    String baseName = PathUtil.suggestFileName(elementName);
+    CompositePackagingElement<?> newParent = type.createComposite(parent, baseName, myArtifactEditor.getContext());
     if (newParent != null) {
       treeComponent.editLayout(() -> {
         for (PackagingElement<?> element : selected) {

@@ -15,10 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.compiler.artifact.element.PackagingElementType;
+import jakarta.annotation.Nonnull;
 
 /**
 * @author nik
@@ -28,13 +31,14 @@ public class AddNewPackagingElementAction extends DumbAwareAction {
   private final ArtifactEditorEx myArtifactEditor;
 
   public AddNewPackagingElementAction(PackagingElementType<?> type, ArtifactEditorEx artifactEditor) {
-    super(type.getPresentableName(), null, type.getIcon());
+    super(type.getPresentableName(), LocalizeValue.of(), type.getIcon());
     myType = type;
     myArtifactEditor = artifactEditor;
   }
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     myArtifactEditor.addNewPackagingElement(myType);
   }
 }

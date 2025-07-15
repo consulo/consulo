@@ -23,6 +23,7 @@ import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;
@@ -42,7 +43,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
 
   @Inject
   public ArtifactElementType() {
-    super("artifact", CompilerBundle.message("element.type.name.artifact"));
+    super("artifact", CompilerLocalize.elementTypeNameArtifact());
   }
 
   @Nonnull
@@ -60,7 +61,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
   @Nonnull
   public List<? extends ArtifactPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
     List<Artifact> artifacts = context.chooseArtifacts(getAvailableArtifacts(context, artifact, false), CompilerBundle.message("dialog.title.choose.artifacts"));
-    final List<ArtifactPackagingElement> elements = new ArrayList<>();
+    List<ArtifactPackagingElement> elements = new ArrayList<>();
     for (Artifact selected : artifacts) {
       ArtifactPointerManager pointerManager = ArtifactPointerManager.getInstance(context.getProject());
       elements.add(new ArtifactPackagingElement(pointerManager, pointerManager.create(selected, context.getArtifactModel())));
@@ -69,8 +70,8 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
   }
 
   @Nonnull
-  public static List<? extends Artifact> getAvailableArtifacts(@Nonnull final ArtifactEditorContext context, @Nonnull final Artifact artifact, final boolean notIncludedOnly) {
-    final Set<Artifact> result = new HashSet<>(Arrays.asList(context.getArtifactModel().getArtifacts()));
+  public static List<? extends Artifact> getAvailableArtifacts(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, boolean notIncludedOnly) {
+    Set<Artifact> result = new HashSet<>(Arrays.asList(context.getArtifactModel().getArtifacts()));
     if (notIncludedOnly) {
       ArtifactUtil.processPackagingElements(artifact, getInstance(), artifactPackagingElement -> {
         result.remove(artifactPackagingElement.findArtifact(context));
@@ -78,15 +79,15 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
       }, context, true);
     }
     result.remove(artifact);
-    final Iterator<Artifact> iterator = result.iterator();
+    Iterator<Artifact> iterator = result.iterator();
     while (iterator.hasNext()) {
       Artifact another = iterator.next();
-      final boolean notContainThis = ArtifactUtil.processPackagingElements(another, getInstance(), element -> !artifact.getName().equals(element.getArtifactName()), context, true);
+      boolean notContainThis = ArtifactUtil.processPackagingElements(another, getInstance(), element -> !artifact.getName().equals(element.getArtifactName()), context, true);
       if (!notContainThis) {
         iterator.remove();
       }
     }
-    final ArrayList<Artifact> list = new ArrayList<>(result);
+    ArrayList<Artifact> list = new ArrayList<>(result);
     Collections.sort(list, ArtifactManager.ARTIFACT_COMPARATOR);
     return list;
   }

@@ -18,6 +18,7 @@ package consulo.content.base;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
@@ -62,8 +63,8 @@ public final class ExcludedContentFolderTypeProvider extends ContentFolderTypePr
 
     @Nonnull
     @Override
-    public String getName() {
-        return ProjectLocalize.moduleToggleExcludedAction().get();
+    public LocalizeValue getName() {
+        return ProjectLocalize.moduleToggleExcludedAction();
     }
 
     @Nonnull

@@ -15,15 +15,13 @@
  */
 package consulo.compiler.artifact.ui;
 
-import consulo.compiler.CompilerBundle;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -87,7 +85,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
       moduleName = "<unknown>";
     }
 
-    presentationData.addText(CompilerBundle.message("node.text.0.1.compile.output", moduleName, StringUtil.toLowerCase(myContentFolderType.getName())),
+    presentationData.addText(CompilerLocalize.nodeText01CompileOutput(moduleName, myContentFolderType.getName().toLowerCase()).get(),
                              module != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
@@ -38,12 +39,8 @@ import java.util.List;
 public abstract class ContentEntryEditingAction extends ToggleAction implements DumbAware {
   protected final JTree myTree;
 
-  protected ContentEntryEditingAction(JTree tree) {
-    this(tree, null, null);
-  }
-
-  protected ContentEntryEditingAction(JTree tree, @Nullable String text, @Nullable Image image) {
-    super(text, null, image);
+  protected ContentEntryEditingAction(JTree tree, @Nonnull LocalizeValue text, @Nullable Image image) {
+    super(text, LocalizeValue.of(), image);
     myTree = tree;
     getTemplatePresentation().setEnabled(true);
   }
@@ -51,9 +48,9 @@ public abstract class ContentEntryEditingAction extends ToggleAction implements 
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    final Presentation presentation = e.getPresentation();
+    Presentation presentation = e.getPresentation();
     presentation.setEnabled(true);
-    final VirtualFile[] files = getSelectedFiles();
+    VirtualFile[] files = getSelectedFiles();
     if (files.length == 0) {
       presentation.setEnabled(false);
       return;
@@ -68,11 +65,11 @@ public abstract class ContentEntryEditingAction extends ToggleAction implements 
 
   @Nonnull
   protected final VirtualFile[] getSelectedFiles() {
-    final TreePath[] selectionPaths = myTree.getSelectionPaths();
+    TreePath[] selectionPaths = myTree.getSelectionPaths();
     if (selectionPaths == null) {
       return VirtualFile.EMPTY_ARRAY;
     }
-    final List<VirtualFile> selected = new ArrayList<VirtualFile>();
+    List<VirtualFile> selected = new ArrayList<>();
     for (TreePath treePath : selectionPaths) {
       VirtualFile file = FileSystemTreeImpl.getVirtualFile(treePath);
       if (file != null) {

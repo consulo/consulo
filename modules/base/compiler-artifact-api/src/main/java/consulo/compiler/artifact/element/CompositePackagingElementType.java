@@ -18,6 +18,7 @@ package consulo.compiler.artifact.element;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Collections;
@@ -27,7 +28,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class CompositePackagingElementType<E extends CompositePackagingElement<?>> extends PackagingElementType<E> {
-  protected CompositePackagingElementType(@Nonnull String id, @Nonnull String presentableName) {
+  protected CompositePackagingElementType(@Nonnull String id, @Nonnull LocalizeValue presentableName) {
     super(id, presentableName);
   }
 

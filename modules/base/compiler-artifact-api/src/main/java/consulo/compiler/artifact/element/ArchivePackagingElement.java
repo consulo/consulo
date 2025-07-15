@@ -30,8 +30,6 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public abstract class ArchivePackagingElement extends CompositePackagingElement<ArchivePackagingElement> {
-
-  @NonNls
   public static final String NAME_ATTRIBUTE = "name";
 
   protected String myArchiveFileName;
@@ -65,7 +63,6 @@ public abstract class ArchivePackagingElement extends CompositePackagingElement<
     return myArchiveFileName;
   }
 
-  @NonNls
   @Override
   public String toString() {
     return "archive:" + myArchiveFileName;

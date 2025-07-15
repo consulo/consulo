@@ -95,7 +95,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
             }
 
             JComponent sourcesComponent = createFolderGroupComponent(
-                provider.getName(),
+                provider.getName().get(),
                 folders,
                 TargetAWT.to(provider.getGroupColor()),
                 provider

@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.compiler.artifact.element.CompositePackagingElementType;
+import consulo.compiler.artifact.element.PackagingElementFactory;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.ProjectBundle;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import consulo.compiler.artifact.element.CompositePackagingElementType;
-import consulo.compiler.artifact.element.PackagingElementFactory;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class AddCompositeElementAction extends DumbAwareAction {
   private final CompositePackagingElementType<?> myElementType;
 
   public AddCompositeElementAction(ArtifactEditorEx artifactEditor, CompositePackagingElementType elementType) {
-    super(ProjectBundle.message("artifacts.create.action", elementType.getPresentableName()));
+    super(ProjectLocalize.artifactsCreateAction(elementType.getPresentableName()));
     myArtifactEditor = artifactEditor;
     myElementType = elementType;
     getTemplatePresentation().setIcon(elementType.getIcon());

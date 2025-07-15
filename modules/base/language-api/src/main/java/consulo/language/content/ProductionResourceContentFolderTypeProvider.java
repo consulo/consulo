@@ -20,7 +20,8 @@ import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.ResourceLikeContentFolderTypeProvider;
-import consulo.project.ProjectBundle;
+import consulo.localize.LocalizeValue;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
@@ -60,8 +61,8 @@ public class ProductionResourceContentFolderTypeProvider extends ContentFolderTy
 
     @Nonnull
     @Override
-    public String getName() {
-        return ProjectBundle.message("module.toggle.resources.action");
+    public LocalizeValue getName() {
+        return ProjectLocalize.moduleToggleResourcesAction();
     }
 
     @Nonnull

@@ -41,7 +41,7 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
   }
 
   public LibraryElementType() {
-    super("library", CompilerLocalize.elementTypeNameLibraryFiles().get());
+    super("library", CompilerLocalize.elementTypeNameLibraryFiles());
   }
 
   @Nonnull
@@ -59,8 +59,8 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
   @Nonnull
   public List<? extends LibraryPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
                                                                  @Nonnull CompositePackagingElement<?> parent) {
-    final List<Library> selected = context.chooseLibraries(ProjectLocalize.dialogTitlePackagingChooseLibrary().get());
-    final List<LibraryPackagingElement> elements = new ArrayList<>();
+    List<Library> selected = context.chooseLibraries(ProjectLocalize.dialogTitlePackagingChooseLibrary().get());
+    List<LibraryPackagingElement> elements = new ArrayList<>();
     for (Library library : selected) {
       elements.add(new LibraryPackagingElement(library.getTable().getTableLevel(), library.getName(), null));
     }
