@@ -24,21 +24,20 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
+import jakarta.annotation.Nonnull;
 
 public class GoToLinkTargetAction extends DumbAwareAction {
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
-        Project project = e == null ? null : e.getData(Project.KEY);
-        VirtualFile file = e.getDataContext().getData(VirtualFile.KEY);
-        e.getPresentation().setEnabledAndVisible(project != null && file != null && file.is(VFileProperty.SYMLINK));
+    public void update(@Nonnull AnActionEvent e) {
+        VirtualFile file = e.getData(VirtualFile.KEY);
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && file != null && file.is(VFileProperty.SYMLINK));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        Project project = e == null ? null : e.getData(Project.KEY);
-        VirtualFile file = e.getDataContext().getData(VirtualFile.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        VirtualFile file = e.getData(VirtualFile.KEY);
         if (project != null && file != null && file.is(VFileProperty.SYMLINK)) {
             VirtualFile target = file.getCanonicalFile();
             if (target != null) {

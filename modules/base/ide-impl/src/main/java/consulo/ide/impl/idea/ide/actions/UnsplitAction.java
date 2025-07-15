@@ -27,7 +27,7 @@ public class UnsplitAction extends SplitterActionBase {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {
-        Project project = event.getData(Project.KEY);
+        Project project = event.getRequiredData(Project.KEY);
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         //VirtualFile file = fileEditorManager.getSelectedFiles()[0];
         fileEditorManager.unsplitWindow();

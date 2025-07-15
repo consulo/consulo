@@ -49,8 +49,7 @@ public class StartStopMacroRecordingAction extends AnAction implements DumbAware
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    e.getPresentation().setEnabledAndVisible(project != null);
+    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
 
     boolean isRecording = ActionMacroManager.getInstance().isRecording();
 

@@ -41,9 +41,7 @@ public final class RestoreDefaultLayoutAction extends AnAction implements DumbAw
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        presentation.setEnabled(event.getData(Project.KEY) != null);
+        event.getPresentation().setEnabled(event.hasData(Project.KEY));
     }
 }

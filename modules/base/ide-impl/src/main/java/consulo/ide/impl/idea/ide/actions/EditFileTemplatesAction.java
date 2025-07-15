@@ -30,7 +30,7 @@ public class EditFileTemplatesAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(e.getDataContext().getData(Project.KEY));
+        ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(e.getData(Project.KEY));
         dialog.show();
     }
 }

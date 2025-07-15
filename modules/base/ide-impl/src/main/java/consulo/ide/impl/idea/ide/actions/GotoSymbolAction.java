@@ -12,11 +12,13 @@ import consulo.language.Language;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 public class GotoSymbolAction extends GotoActionBase implements DumbAware {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {

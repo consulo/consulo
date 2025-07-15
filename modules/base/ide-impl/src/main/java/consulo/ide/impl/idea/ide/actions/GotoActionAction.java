@@ -53,8 +53,9 @@ import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapSho
 
 public class GotoActionAction extends GotoActionBase implements DumbAware {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        if (e.getData(Project.KEY) != null) {
+        if (e.hasData(Project.KEY)) {
             showInSearchEverywherePopup(ActionSearchEverywhereContributor.class.getSimpleName(), e, false, true);
         }
         else {

@@ -42,7 +42,6 @@ public class PrevSplitAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         Presentation presentation = event.getPresentation();

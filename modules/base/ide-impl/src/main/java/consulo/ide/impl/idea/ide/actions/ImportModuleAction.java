@@ -48,8 +48,7 @@ public class ImportModuleAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        assert project != null;
+        Project project = e.getRequiredData(Project.KEY);
         executeImportAction(project, null);
     }
 
@@ -76,16 +75,8 @@ public class ImportModuleAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-
-        if (e.getData(Project.KEY) == null) {
-            presentation.setEnabledAndVisible(false);
-            return;
-        }
-
-        presentation.setEnabledAndVisible(!ModuleImportProviders.getExtensions(true).isEmpty());
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && !ModuleImportProviders.getExtensions(true).isEmpty());
     }
 
     @Override

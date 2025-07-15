@@ -21,10 +21,10 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class StartUseVcsAction extends AnAction implements DumbAware {
@@ -33,18 +33,14 @@ public class StartUseVcsAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        boolean enabled = isEnabled(project);
-
-        Presentation presentation = e.getPresentation();
-        presentation.setEnabledAndVisible(enabled);
+        e.getPresentation().setEnabledAndVisible(isEnabled(project));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         if (!isEnabled(project)) {
             return;

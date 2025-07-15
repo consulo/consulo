@@ -65,7 +65,6 @@ public class OpenInRightSplitAction extends DumbAwareAction {
         }
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);

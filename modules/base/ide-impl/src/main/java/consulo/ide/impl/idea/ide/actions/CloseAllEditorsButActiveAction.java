@@ -32,7 +32,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         VirtualFile selectedFile;
         FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);

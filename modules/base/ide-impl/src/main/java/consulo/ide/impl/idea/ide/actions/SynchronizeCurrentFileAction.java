@@ -21,20 +21,13 @@ import java.util.List;
 
 public class SynchronizeCurrentFileAction extends AnAction implements DumbAware {
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         List<VirtualFile> files = getFiles(e).take(2).toList();
-        Project project = e.getData(Project.KEY);
-        if (project == null || files.isEmpty()) {
-            e.getPresentation().setEnabledAndVisible(false);
-        }
-        else {
-            e.getPresentation().setEnabledAndVisible(true);
-        }
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && !files.isEmpty());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         List<VirtualFile> files = getFiles(e).toList();

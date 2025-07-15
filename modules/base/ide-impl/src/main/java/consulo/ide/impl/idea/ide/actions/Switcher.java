@@ -103,9 +103,8 @@ public class Switcher extends AnAction implements DumbAware {
     private static final Color ON_MOUSE_OVER_BG_COLOR = new JBColor(new Color(231, 242, 249), new Color(77, 80, 84));
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 
     @Override
@@ -218,7 +217,6 @@ public class Switcher extends AnAction implements DumbAware {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             e.getPresentation().setEnabledAndVisible(SWITCHER_KEY.get(project) != null);

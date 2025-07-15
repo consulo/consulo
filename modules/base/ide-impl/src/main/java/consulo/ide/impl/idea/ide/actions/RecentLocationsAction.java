@@ -220,7 +220,7 @@ public class RecentLocationsAction extends DumbAwareAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabled((e == null ? null : e.getData(Project.KEY)) != null);
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 
     static void clearSelectionInEditor(@Nonnull Editor editor) {
