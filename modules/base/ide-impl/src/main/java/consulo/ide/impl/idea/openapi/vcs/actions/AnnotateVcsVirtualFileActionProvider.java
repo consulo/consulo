@@ -60,7 +60,9 @@ public class AnnotateVcsVirtualFileActionProvider implements AnnotateToggleActio
     public static LocalizeValue getActionNameImpl(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         LocalizeValue defaultName = ActionLocalize.actionAnnotateText();
-        if (project == null) return defaultName;
+        if (project == null) {
+            return defaultName;
+        }
 
         Set<LocalizeValue> names = ContainerUtil.map2Set(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss(), vcs -> {
             AnnotationProvider provider = vcs.getAnnotationProvider();
