@@ -77,17 +77,15 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       Project project = e.getData(Project.KEY);
       return project != null && AutoTestManager.getInstance(project).getDelay() == myDelay;
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-      Project project = e.getData(Project.KEY);
-      if (project != null) {
-        AutoTestManager.getInstance(project).setDelay(myDelay);
-      }
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+      Project project = e.getRequiredData(Project.KEY);
+      AutoTestManager.getInstance(project).setDelay(myDelay);
     }
   }
 }

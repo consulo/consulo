@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -30,7 +31,7 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
   private int currentLine;
 
   public AnnotateRevisionAction(@Nullable String text, @Nullable String description, @Nullable Image icon, @Nonnull FileAnnotation annotation, @Nonnull AbstractVcs vcs) {
-    super(text, description, icon);
+    super(LocalizeValue.ofNullable(text), LocalizeValue.ofNullable(description), icon);
     myAnnotation = annotation;
     myVcs = vcs;
   }

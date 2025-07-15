@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ui.annotation.RequiredUIAccess;
@@ -23,6 +22,7 @@ import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,10 +30,10 @@ import consulo.virtualFileSystem.VirtualFile;
 public class MarkFileDirtyAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final VirtualFile file = e.getData(VirtualFile.KEY);
     if (file != null) {
+      final Project project = e.getRequiredData(Project.KEY);
       VcsDirtyScopeManager.getInstance(project).fileDirty(file);
     }
   }

@@ -21,6 +21,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -28,18 +29,15 @@ import consulo.ui.ex.action.AnActionEvent;
 public class FilterCommittedAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
-      assert panel != null;
-      panel.setChangesFilter();
-    }
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
+    CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
+    assert panel != null;
+    panel.setChangesFilter();
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project != null) {
       CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);

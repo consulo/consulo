@@ -21,6 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -28,11 +29,9 @@ import consulo.versionControlSystem.impl.internal.change.commited.CommittedChang
 public class RefreshIncomingChangesAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      doRefresh(project);
-    }
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
+    doRefresh(project);
   }
 
   public static void doRefresh(final Project project) {
@@ -47,8 +46,7 @@ public class RefreshIncomingChangesAction extends AnAction implements DumbAware 
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     e.getPresentation().setEnabled(project != null && !CommittedChangesCache.getInstance(project).isRefreshingIncomingChanges());
   }

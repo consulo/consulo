@@ -23,6 +23,8 @@ import consulo.execution.dashboard.RunDashboardManager;
 import consulo.execution.impl.internal.configuration.ConfigurationTypeSelector;
 import consulo.execution.impl.internal.service.action.AddServiceActionGroup;
 import consulo.execution.localize.ExecutionLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -46,13 +48,14 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
   private static final Comparator<ConfigurationType> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
     (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName());
 
+  public AddRunConfigurationTypeAction() {
+    super(ActionLocalize.actionRundashboardAddtypeText());
+  }
+
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
-    }
+    Project project = e.getRequiredData(Project.KEY);
     RunDashboardManager runDashboardManager = RunDashboardManager.getInstance(project);
     Set<String> addedTypes = runDashboardManager.getTypes();
     showAddPopup(project, addedTypes, newTypes -> {

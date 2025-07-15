@@ -471,6 +471,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Change change = e.getRequiredData(VcsDataKeys.CURRENT_CHANGE);
       askAndMove(myProject, Collections.singletonList(change), Collections.<VirtualFile>emptyList());

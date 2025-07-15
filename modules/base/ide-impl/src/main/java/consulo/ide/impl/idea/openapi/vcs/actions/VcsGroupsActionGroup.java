@@ -27,13 +27,11 @@ import jakarta.annotation.Nonnull;
 
 // from kotlin
 public class VcsGroupsActionGroup extends DefaultActionGroup implements DumbAware {
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
     Project project = e.getData(Project.KEY);
     if (project != null) {
-      presentation.setTextValue(ProjectLevelVcsManager.getInstance(project).getConsolidatedVcsName());
+      e.getPresentation().setTextValue(ProjectLevelVcsManager.getInstance(project).getConsolidatedVcsName());
     }
   }
 }

@@ -28,21 +28,9 @@ import jakarta.annotation.Nonnull;
  */
 public class VcsActionGroup extends DefaultActionGroup implements DumbAware {
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent event) {
     super.update(event);
-
-    Presentation presentation = event.getPresentation();
-    Project project = event.getDataContext().getData(Project.KEY);
-    if (project == null){
-      presentation.setVisible(false);
-      presentation.setEnabled(false);
-    } else if (!project.isOpen()) {
-      presentation.setVisible(false);
-      presentation.setEnabled(false);
-    } else {
-      presentation.setVisible(true);
-      presentation.setEnabled(true);
-    }
+    Project project = event.getData(Project.KEY);
+    event.getPresentation().setEnabledAndVisible(project != null && project.isOpen());
   }
 }

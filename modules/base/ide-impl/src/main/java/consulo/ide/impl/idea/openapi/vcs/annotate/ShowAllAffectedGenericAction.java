@@ -68,14 +68,8 @@ public class ShowAllAffectedGenericAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-        final VcsKey vcsKey = e.getData(VcsDataKeys.VCS);
-        if (vcsKey == null) {
-            return;
-        }
+        Project project = e.getRequiredData(Project.KEY);
+        VcsKey vcsKey = e.getRequiredData(VcsDataKeys.VCS);
         final VcsFileRevision revision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
         VirtualFile revisionVirtualFile = e.getData(VcsDataKeys.VCS_VIRTUAL_FILE);
         final Boolean isNonLocal = e.getData(VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION);
@@ -196,7 +190,6 @@ public class ShowAllAffectedGenericAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         final VcsKey vcsKey = e.getData(VcsDataKeys.VCS);
@@ -206,7 +199,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
         }
         final Boolean isNonLocal = e.getData(VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION);
         final VirtualFile revisionVirtualFile = e.getData(VcsDataKeys.VCS_VIRTUAL_FILE);
-        boolean enabled = (e.getData(VcsDataKeys.VCS_FILE_REVISION) != null) && (revisionVirtualFile != null);
+        boolean enabled = e.hasData(VcsDataKeys.VCS_FILE_REVISION) && revisionVirtualFile != null;
         enabled = enabled && (!Boolean.TRUE.equals(isNonLocal) || canPresentNonLocal(project, vcsKey, revisionVirtualFile));
         e.getPresentation().setEnabled(enabled);
     }

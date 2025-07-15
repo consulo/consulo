@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 import consulo.bookmark.icon.BookmarkIconGroup;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
@@ -26,8 +27,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -37,12 +36,11 @@ import java.util.List;
  */
 public class AddNewFavoritesListAction extends AnAction {
     public AddNewFavoritesListAction() {
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return BookmarkIconGroup.actionAddbookmarkslist();
+        super(
+            ActionLocalize.actionAddnewfavoriteslistText(),
+            ActionLocalize.actionAddnewfavoriteslistDescription(),
+            BookmarkIconGroup.actionAddbookmarkslist()
+        );
     }
 
     @Override

@@ -31,6 +31,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -42,10 +43,9 @@ public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    Change[] changes = e.getData(VcsDataKeys.SELECTED_CHANGES);
-    assert changes != null;
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
+    Change[] changes = e.getRequiredData(VcsDataKeys.SELECTED_CHANGES);
     for (Change change: changes) {
       ContentRevision revision = change.getAfterRevision();
       if (revision == null || revision.getFile().isDirectory()) continue;
@@ -56,8 +56,7 @@ public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     Change[] changes = e.getData(VcsDataKeys.SELECTED_CHANGES);
     e.getPresentation().setEnabled(

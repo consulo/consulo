@@ -39,21 +39,17 @@ import java.util.List;
  */
 public abstract class AbstractMissingFilesAction extends AnAction implements DumbAware {
   @Override
-  @RequiredUIAccess
   public void update(AnActionEvent e) {
     List<FilePath> files = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
     boolean enabled = files != null && !files.isEmpty();
-    e.getPresentation().setEnabled(enabled);
-    e.getPresentation().setVisible(enabled);
+    e.getPresentation().setEnabledAndVisible(enabled);
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final List<FilePath> files = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
-    if (files == null) return;
-
+    final Project project = e.getRequiredData(Project.KEY);
+    final List<FilePath> files = e.getRequiredData(ChangesListView.MISSING_FILES_DATA_KEY);
     final ProgressManager progressManager = ProgressManager.getInstance();
     final Runnable action = () -> {
       final List<VcsException> allExceptions = new ArrayList<>();
