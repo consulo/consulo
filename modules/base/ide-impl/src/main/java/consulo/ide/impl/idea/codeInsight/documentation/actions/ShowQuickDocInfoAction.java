@@ -97,7 +97,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
         }
         else {
             if (editor != null) {
-                if (event.getData(EditorGutter.KEY) != null) {
+                if (event.hasData(EditorGutter.KEY)) {
                     presentation.setEnabled(false);
                     return;
                 }

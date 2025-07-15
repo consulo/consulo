@@ -60,7 +60,6 @@ class ExportToHTMLManager {
       psiDirectory = directory;
     }
     final PsiFile psiFile = dataContext.getData(PsiFile.KEY);
-    Project project = dataContext.getData(Project.KEY);
     String shortFileName = null;
     String directoryName = null;
     if (psiFile != null || psiDirectory != null) {
@@ -80,6 +79,7 @@ class ExportToHTMLManager {
     if (editor != null && editor.getSelectionModel().hasSelection()) {
       isSelectedTextEnabled = true;
     }
+    Project project = dataContext.getRequiredData(Project.KEY);
     ExportToHTMLDialog exportToHTMLDialog = new ExportToHTMLDialog(shortFileName, directoryName, isSelectedTextEnabled, project);
 
     ExportToHTMLSettings exportToHTMLSettings = ExportToHTMLSettings.getInstance(project);

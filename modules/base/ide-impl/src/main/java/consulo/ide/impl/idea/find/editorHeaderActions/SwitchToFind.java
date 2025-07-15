@@ -35,8 +35,7 @@ public class SwitchToFind extends AnAction implements DumbAware {
       ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_NEXT).update(e);
     }
     else {
-      EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
-      e.getPresentation().setEnabledAndVisible(search != null);
+      e.getPresentation().setEnabledAndVisible(e.hasData(EditorSearchSession.SESSION_KEY));
     }
   }
 

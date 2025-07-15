@@ -19,10 +19,11 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesA
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
+import jakarta.annotation.Nonnull;
 
 public class VcsLogCreatePatchAction extends CreatePatchFromChangesAction {
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Change[] changes;
     e.getPresentation().setEnabled((changes = e.getData(VcsDataKeys.CHANGES)) != null && changes.length > 0);
   }

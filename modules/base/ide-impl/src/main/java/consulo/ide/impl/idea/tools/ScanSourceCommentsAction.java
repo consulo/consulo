@@ -49,7 +49,7 @@ public class ScanSourceCommentsAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project p = e.getDataContext().getData(Project.KEY);
+    final Project p = e.getData(Project.KEY);
     final String file = Messages.showInputDialog(
       p,
       "Enter path to the file comments will be extracted to",

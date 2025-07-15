@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.find.actions;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;

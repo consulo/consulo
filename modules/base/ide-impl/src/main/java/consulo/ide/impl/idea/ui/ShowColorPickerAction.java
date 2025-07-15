@@ -33,8 +33,7 @@ public class ShowColorPickerAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    JComponent root = rootComponent(project);
+    JComponent root = rootComponent(e.getData(Project.KEY));
     if (root != null) {
       ColorChooser.chooseColor(root, "Color Picker", null, true, true, color -> {
       });

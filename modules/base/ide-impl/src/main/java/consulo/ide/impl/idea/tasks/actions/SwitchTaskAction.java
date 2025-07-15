@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
@@ -53,9 +53,9 @@ import java.util.List;
  * @author Dmitry Avdeev
  */
 public class SwitchTaskAction extends BaseTaskAction {
-
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     final Project project = e.getData(Project.KEY);
     assert project != null;

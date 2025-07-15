@@ -36,9 +36,8 @@ import java.util.Collections;
 public class ShowGraphHistoryAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    assert project != null;
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
     VirtualFile file = e.getRequiredData(VirtualFile.KEY);
     VcsLogManager logManager = VcsProjectLog.getInstance(project).getLogManager();
     assert logManager != null;

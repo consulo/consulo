@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.internal.ApplicationManagerEx;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
@@ -26,7 +27,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VFileProperty;
-import org.jetbrains.annotations.NonNls;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,8 +49,8 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
   AtomicLong totalSize = new AtomicLong();
 
   @Override
-  @NonNls
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getDataContext().getData(Project.KEY);
     String m = "Started loading content";
     LOG.info(m);
@@ -79,7 +80,7 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(final AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+  public void update(@Nonnull AnActionEvent e) {
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 }

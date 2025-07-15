@@ -53,9 +53,9 @@ import java.util.*;
 public class LoadContextAction extends BaseTaskAction {
   private static final int MAX_ROW_COUNT = 10;
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = getProject(e);
     assert project != null;
     DefaultActionGroup group = new DefaultActionGroup();

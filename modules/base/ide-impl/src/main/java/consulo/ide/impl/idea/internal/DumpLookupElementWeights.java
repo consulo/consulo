@@ -42,16 +42,15 @@ import java.util.Map;
 public class DumpLookupElementWeights extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(DumpLookupElementWeights.class);
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Editor editor = e.getData(Editor.KEY);
     dumpLookupElementWeights(LookupManager.getActiveLookup(editor));
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(@Nonnull final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final Editor editor = e.getData(Editor.KEY);
     presentation.setEnabled(editor != null && LookupManager.getActiveLookup(editor) != null);

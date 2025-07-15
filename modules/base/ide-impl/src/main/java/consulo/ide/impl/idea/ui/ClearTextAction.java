@@ -37,22 +37,17 @@ public class ClearTextAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (component instanceof JTextComponent) {
-      final JTextComponent textComponent = (JTextComponent)component;
+    if (e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTextComponent textComponent) {
       textComponent.setText("");
     }
   }
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (component instanceof JTextComponent) {
-      final JTextComponent textComponent = (JTextComponent)component;
-      e.getPresentation().setEnabled(textComponent.getText().length() > 0 && ((JTextComponent)component).isEditable());
-    }
-    else {
-      e.getPresentation().setEnabled(false);
-    }
+    e.getPresentation().setEnabled(
+        e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTextComponent textComponent
+            && textComponent.getText().length() > 0
+            && textComponent.isEditable()
+    );
   }
 }

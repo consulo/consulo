@@ -60,7 +60,7 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null) return;
 

@@ -346,7 +346,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
         Project project = event.getData(Project.KEY);
 
         if (project == null ||
-            event.getData(EditorGutter.KEY) != null ||
+            event.hasData(EditorGutter.KEY) ||
             !isMouseShortcut && Boolean.TRUE.equals(event.getData(EditorKeys.EDITOR_VIRTUAL_SPACE))) {
             event.getPresentation().setEnabled(false);
             return;

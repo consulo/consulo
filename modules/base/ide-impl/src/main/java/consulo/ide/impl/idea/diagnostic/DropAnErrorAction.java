@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.diagnostic;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 
@@ -31,6 +32,8 @@ public class DropAnErrorAction extends DumbAwareAction {
     super("Drop an error");
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     /*
     Project p = (Project)e.getDataContext().getData(DataConstants.PROJECT);
@@ -38,7 +41,7 @@ public class DropAnErrorAction extends DumbAwareAction {
     bar.fireNotificationPopup(new JLabel("<html><body><br><b>       Notifier      </b><br><br></body></html>"));
     */
 
-    ArtifactManager.getInstance(e.getData(Project.KEY));
+    ArtifactManager.getInstance(e.getRequiredData(Project.KEY));
     Logger.getInstance("test").error("Test");
   }
 }

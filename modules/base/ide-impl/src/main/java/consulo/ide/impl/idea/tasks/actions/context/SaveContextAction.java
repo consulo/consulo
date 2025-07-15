@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package consulo.ide.impl.idea.tasks.actions.context;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.StringUtil;
@@ -26,14 +26,15 @@ import consulo.task.impl.internal.action.BaseTaskAction;
 import consulo.task.impl.internal.context.WorkingContextManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public class SaveContextAction extends BaseTaskAction {
-
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = getProject(e);
     saveContext(project);
   }

@@ -49,7 +49,7 @@ public class ShowStatisticsAction extends AnAction {
     final Presentation presentation = e.getPresentation();
 
     // visible only in SMTRunnerTestTreeView 
-    presentation.setVisible(e.getData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW) != null);
+    presentation.setVisible(e.hasData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW));
     // enabled if some proxy is selected
     presentation.setEnabled(getSelectedTestProxy(e) != null);
   }

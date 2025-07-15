@@ -20,6 +20,8 @@ import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.usages.impl.rules.ReadAccessFilteringRule;
 import consulo.ide.impl.idea.usages.impl.rules.WriteAccessFilteringRule;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -27,6 +29,7 @@ import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewBundle;
+import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.usage.rule.UsageFilteringRuleProvider;
@@ -123,7 +126,7 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
 
   private class ShowWriteAccessUsagesAction extends ToggleAction implements DumbAware {
     private ShowWriteAccessUsagesAction() {
-      super(UsageViewBundle.message("action.show.write.access"), null, AllIcons.Actions.ShowWriteAccess);
+      super(UsageLocalize.actionShowWriteAccess(), LocalizeValue.empty(), PlatformIconGroup.actionsShowwriteaccess());
     }
 
     @Override

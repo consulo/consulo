@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.filter;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -130,6 +131,7 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Project project = e.getData(Project.KEY);
       if (project == null) {

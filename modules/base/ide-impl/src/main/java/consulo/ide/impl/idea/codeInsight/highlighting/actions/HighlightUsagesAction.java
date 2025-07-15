@@ -41,14 +41,14 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
     public void update(@Nonnull AnActionEvent event) {
         final Presentation presentation = event.getPresentation();
         final DataContext dataContext = event.getDataContext();
-        presentation.setEnabled(dataContext.getData(Project.KEY) != null && dataContext.getData(Editor.KEY) != null);
+        presentation.setEnabled(dataContext.hasData(Project.KEY) && dataContext.hasData(Editor.KEY));
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Editor editor = e.getDataContext().getData(Editor.KEY);
-        final Project project = e.getDataContext().getData(Project.KEY);
+        final Editor editor = e.getData(Editor.KEY);
+        final Project project = e.getData(Project.KEY);
         if (editor == null || project == null) {
             return;
         }

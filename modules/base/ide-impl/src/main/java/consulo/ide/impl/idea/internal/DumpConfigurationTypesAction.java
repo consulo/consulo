@@ -22,6 +22,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class DumpConfigurationTypesAction extends AnAction implements DumbAware 
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(Project.KEY);
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    final Project project = e.getRequiredData(Project.KEY);
     final List<ConfigurationType> factories = RunManager.getInstance(project).getConfigurationFactories();
     for (ConfigurationType factory : factories) {
       System.out.println(factory.getDisplayName() + " : " + factory.getId());
@@ -45,8 +46,7 @@ public class DumpConfigurationTypesAction extends AnAction implements DumbAware 
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+  public void update(@Nonnull AnActionEvent e) {
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 }

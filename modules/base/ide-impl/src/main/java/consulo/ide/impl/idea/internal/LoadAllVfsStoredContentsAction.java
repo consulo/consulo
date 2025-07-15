@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.internal;
 
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.internal.ApplicationEx;
@@ -38,6 +38,7 @@ public class LoadAllVfsStoredContentsAction extends AnAction implements DumbAwar
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ApplicationEx application = ApplicationManagerEx.getApplicationEx();
     String m = "Started loading content";
@@ -90,7 +91,7 @@ public class LoadAllVfsStoredContentsAction extends AnAction implements DumbAwar
   }
 
   @Override
-  public void update(@Nonnull final AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
+  public void update(@Nonnull AnActionEvent e) {
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 }
