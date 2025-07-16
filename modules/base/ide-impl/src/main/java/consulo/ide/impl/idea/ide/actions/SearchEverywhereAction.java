@@ -46,7 +46,6 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
         modifierKeyDoubleClickHandler.registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().putClientProperty(CustomTooltipBuilder.KEY, (tooltip, presentation) -> {

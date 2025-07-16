@@ -24,10 +24,10 @@ import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class ShowStructureSettingsAction extends AnAction implements DumbAware {
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getDataContext().getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             project = ProjectManager.getInstance().getDefaultProject();
         }

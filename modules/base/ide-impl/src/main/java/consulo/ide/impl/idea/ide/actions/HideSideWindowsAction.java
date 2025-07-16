@@ -23,16 +23,13 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.internal.ToolWindowEx;
+import jakarta.annotation.Nonnull;
 
 public class HideSideWindowsAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
         ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
         String id = toolWindowManager.getActiveToolWindowId();
         if (id == null) {
@@ -42,8 +39,7 @@ public class HideSideWindowsAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);
         if (project == null) {

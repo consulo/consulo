@@ -162,7 +162,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
             return jComponent;
         }
         else {
-            return safeCast(event.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT), JComponent.class);
+            return safeCast(event.getData(UIExAWTDataKey.CONTEXT_COMPONENT), JComponent.class);
         }
     }
 

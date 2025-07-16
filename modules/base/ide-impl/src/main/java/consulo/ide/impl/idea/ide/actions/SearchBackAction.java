@@ -26,8 +26,8 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 
 public class SearchBackAction extends AnAction implements DumbAware {
     public SearchBackAction() {
@@ -53,14 +53,7 @@ public class SearchBackAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-        FileEditor editor = event.getData(FileEditor.KEY);
-        presentation.setEnabled(editor instanceof TextEditor);
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY) && e.getData(FileEditor.KEY) instanceof TextEditor);
     }
 }

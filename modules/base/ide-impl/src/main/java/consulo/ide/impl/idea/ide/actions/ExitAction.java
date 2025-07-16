@@ -33,7 +33,6 @@ public class ExitAction extends AnAction implements DumbAware {
         myApplication = application;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setVisible(!Platform.current().os().isEnabledTopMenu());

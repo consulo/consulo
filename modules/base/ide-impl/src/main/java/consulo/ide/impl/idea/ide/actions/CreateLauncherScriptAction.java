@@ -59,12 +59,8 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        boolean canCreateScript = isAvailable();
-        Presentation presentation = e.getPresentation();
-        presentation.setVisible(canCreateScript);
-        presentation.setEnabled(canCreateScript);
+        e.getPresentation().setEnabledAndVisible(isAvailable());
     }
 
     @Override

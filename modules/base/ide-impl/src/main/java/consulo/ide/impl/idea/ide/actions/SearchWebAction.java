@@ -29,14 +29,11 @@ public class SearchWebAction extends AnAction implements DumbAware {
         myWebSearchOptions = webSearchOptions;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        CopyProvider provider = dataContext.getData(CopyProvider.KEY);
-        if (provider == null) {
-            return;
-        }
+        CopyProvider provider = dataContext.getRequiredData(CopyProvider.KEY);
         provider.performCopy(dataContext);
         String content = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
         if (StringUtil.isNotEmpty(content)) {
@@ -45,19 +42,16 @@ public class SearchWebAction extends AnAction implements DumbAware {
         }
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         DataContext dataContext = e.getDataContext();
         CopyProvider provider = e.getData(CopyProvider.KEY);
         boolean available = provider != null && provider.isCopyEnabled(dataContext) && provider.isCopyVisible(dataContext);
-        presentation.setEnabled(available);
-        presentation.setVisible(available);
+        presentation.setEnabledAndVisible(available);
 
-        WebSearchEngine engine = myWebSearchOptions.getEngine();
-
-        presentation.setTextValue(ActionLocalize.action$searchweb0Text(engine.getPresentableName()));
-        presentation.setDescriptionValue(ActionLocalize.action$searchweb0Description(engine.getPresentableName()));
+        String engineName = myWebSearchOptions.getEngine().getPresentableName();
+        presentation.setTextValue(ActionLocalize.action$searchweb0Text(engineName));
+        presentation.setDescriptionValue(ActionLocalize.action$searchweb0Description(engineName));
     }
 }

@@ -32,10 +32,7 @@ public class StoreDefaultLayoutAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+        Project project = e.getRequiredData(Project.KEY);
         ToolWindowLayout layout = ToolWindowManagerEx.getInstanceEx(project).getLayout();
         WindowManagerEx.getInstanceEx().setLayout(layout);
     }

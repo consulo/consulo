@@ -29,10 +29,7 @@ public class BackAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+        Project project = e.getRequiredData(Project.KEY);
         IdeDocumentHistory.getInstance(project).back();
     }
 
@@ -40,10 +37,6 @@ public class BackAction extends AnAction implements DumbAware {
     public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);
-        if (project == null || project.isDisposed()) {
-            presentation.setEnabled(false);
-            return;
-        }
-        presentation.setEnabled(IdeDocumentHistory.getInstance(project).isBackAvailable());
+        presentation.setEnabled(project != null && !project.isDisposed() && IdeDocumentHistory.getInstance(project).isBackAvailable());
     }
 }

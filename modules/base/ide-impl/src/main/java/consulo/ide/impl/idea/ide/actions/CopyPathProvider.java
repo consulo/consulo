@@ -44,8 +44,8 @@ import java.util.Optional;
 public class CopyPathProvider extends DumbAwareAction {
     public static final Key<String> QUALIFIED_NAME = Key.of("QUALIFIED_NAME");
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         DataContext dataContext = e.getDataContext();
@@ -78,7 +78,6 @@ public class CopyPathProvider extends DumbAwareAction {
             .build();
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();

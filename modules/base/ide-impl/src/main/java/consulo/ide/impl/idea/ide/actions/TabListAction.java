@@ -19,6 +19,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
+import jakarta.annotation.Nonnull;
 
 /**
  * Shows the popup of all tabs when single row editor tab layout is used and all tabs don't fit on the screen.
@@ -28,15 +29,13 @@ import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 public class TabListAction extends AnAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        JBTabsImpl tabs = e.getData(JBTabsImpl.NAVIGATION_ACTIONS_KEY);
-        if (tabs != null) {
-            tabs.showMorePopup(null);
-        }
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        JBTabsImpl tabs = e.getRequiredData(JBTabsImpl.NAVIGATION_ACTIONS_KEY);
+        tabs.showMorePopup(null);
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(isTabListAvailable(e));
     }
 

@@ -29,10 +29,7 @@ public class CopyAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        CopyProvider provider = e.getData(CopyProvider.KEY);
-        if (provider != null) {
-            provider.performCopy(e.getDataContext());
-        }
+        e.getRequiredData(CopyProvider.KEY).performCopy(e.getDataContext());
     }
 
     @Override

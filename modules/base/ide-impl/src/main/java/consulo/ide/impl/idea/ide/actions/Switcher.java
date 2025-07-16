@@ -110,11 +110,7 @@ public class Switcher extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-
+        Project project = e.getRequiredData(Project.KEY);
         SwitcherPanel switcher = SWITCHER_KEY.get(project);
 
         boolean isNewSwitcher = false;

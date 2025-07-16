@@ -41,7 +41,6 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         if (Platform.current().os().isMac() && e.getPlace().equals(ActionPlaces.MAIN_MENU)) {
             // It's called from Preferences in App menu.

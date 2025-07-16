@@ -55,18 +55,8 @@ public class SelectInAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-
-        if (SelectInContextImpl.createContext(event) == null) {
-            presentation.setEnabled(false);
-            presentation.setVisible(false);
-        }
-        else {
-            presentation.setEnabled(true);
-            presentation.setVisible(true);
-        }
+    public void update(@Nonnull AnActionEvent event) {
+        event.getPresentation().setEnabledAndVisible(SelectInContextImpl.createContext(event) != null);
     }
 
     private static void invoke(DataContext dataContext, SelectInContext context) {

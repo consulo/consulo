@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -28,8 +27,8 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 
 public class SearchAgainAction extends AnAction implements DumbAware {
     public SearchAgainAction() {
@@ -38,12 +37,9 @@ public class SearchAgainAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        FileEditor editor = e.getData(FileEditor.KEY);
-        if (editor == null || project == null) {
-            return;
-        }
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        FileEditor editor = e.getRequiredData(FileEditor.KEY);
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .name(IdeLocalize.commandFindNext())
@@ -59,14 +55,7 @@ public class SearchAgainAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-        FileEditor editor = event.getData(FileEditor.KEY);
-        presentation.setEnabled(editor instanceof TextEditor);
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY) && e.getData(FileEditor.KEY) instanceof TextEditor);
     }
 }

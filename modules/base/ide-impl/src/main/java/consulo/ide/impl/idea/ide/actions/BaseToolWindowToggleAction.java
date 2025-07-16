@@ -63,7 +63,6 @@ public abstract class BaseToolWindowToggleAction extends ToggleAction implements
     protected abstract void setSelected(ToolWindow window, boolean state);
 
     @Override
-    @RequiredUIAccess
     public final void update(@Nonnull AnActionEvent e) {
         super.update(e);
         Presentation presentation = e.getPresentation();

@@ -34,7 +34,7 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .name(IdeLocalize.commandCloseAllEditors())

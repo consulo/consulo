@@ -40,7 +40,7 @@ public class RevealFileAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
+        VirtualFile file = ShowFilePathAction.findLocalFile(e.getRequiredData(VirtualFile.KEY));
         if (file != null) {
             ShowFilePathAction.openFile(new File(file.getPresentableUrl()));
         }

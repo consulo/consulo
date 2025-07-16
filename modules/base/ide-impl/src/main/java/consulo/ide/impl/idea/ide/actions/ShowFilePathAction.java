@@ -162,24 +162,26 @@ public class ShowFilePathAction extends AnAction {
             ':' + StringUtil.defaultIfEmpty(dataDirs, "/usr/local/share:/usr/share");
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         boolean visible = !Platform.current().os().isMac() && isSupported();
         e.getPresentation().setVisible(visible);
         if (visible) {
-            VirtualFile file = getFile(e);
+            VirtualFile file = e.getData(VirtualFile.KEY);
             e.getPresentation().setEnabled(file != null);
             e.getPresentation().setTextValue(ActionLocalize.actionShowfilepathTuned(file != null && file.isDirectory() ? 1 : 0));
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        show(getFile(e), popup -> DataManager.getInstance()
-            .getDataContextFromFocus()
-            .doWhenDone(popup::showInBestPositionFor));
+        show(
+            e.getRequiredData(VirtualFile.KEY),
+            popup -> DataManager.getInstance()
+                .getDataContextFromFocus()
+                .doWhenDone(popup::showInBestPositionFor)
+        );
     }
 
     public static void show(VirtualFile file, MouseEvent e) {
@@ -412,11 +414,6 @@ public class ShowFilePathAction extends AnAction {
                 LOG.warn(e);
             }
         });
-    }
-
-    @Nullable
-    private static VirtualFile getFile(AnActionEvent e) {
-        return e.getData(VirtualFile.KEY);
     }
 
     @RequiredUIAccess
