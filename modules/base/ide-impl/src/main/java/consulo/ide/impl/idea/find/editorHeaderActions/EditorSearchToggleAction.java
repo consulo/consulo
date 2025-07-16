@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.find.SearchSession;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
@@ -48,6 +49,7 @@ public abstract class EditorSearchToggleAction extends ToggleAction implements E
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean selected) {
         SearchSession search = e.getData(SearchSession.KEY);
         if (search != null) {

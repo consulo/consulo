@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
@@ -60,6 +61,7 @@ public abstract class BooleanPropertyToggleAction extends ToggleAction implement
   }
 
   @Override
+  @RequiredUIAccess
   public void setSelected(AnActionEvent e, boolean state) {
     VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
     if (properties != null && properties.exists(getProperty())) {

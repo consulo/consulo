@@ -39,7 +39,7 @@ public class PackageFileAction extends AnAction {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     boolean visible = false;
     final Project project = e.getData(Project.KEY);
     if (project != null) {
@@ -83,10 +83,8 @@ public class PackageFileAction extends AnAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent event) {
-    final Project project = event.getData(Project.KEY);
-    if (project == null) return;
-
+  public void actionPerformed(@Nonnull AnActionEvent event) {
+    Project project = event.getRequiredData(Project.KEY);
     FileDocumentManager.getInstance().saveAllDocuments();
     final List<VirtualFile> files = getFilesToPackage(event, project);
     Artifact[] allArtifacts = ArtifactManager.getInstance(project).getArtifacts();

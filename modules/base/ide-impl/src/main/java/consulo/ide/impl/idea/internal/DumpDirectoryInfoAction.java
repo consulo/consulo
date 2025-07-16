@@ -26,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -40,7 +41,7 @@ public class DumpDirectoryInfoAction extends AnAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getRequiredData(Project.KEY);
     final DirectoryIndex index = DirectoryIndex.getInstance(project);
     final VirtualFile root = e.getData(VirtualFile.KEY);
@@ -63,7 +64,7 @@ public class DumpDirectoryInfoAction extends AnAction {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 }

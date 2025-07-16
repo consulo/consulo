@@ -30,11 +30,7 @@ public class ShowTestProxy extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final StatisticsPanel sender = e.getData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS);
-    if (sender == null) {
-      return;
-    }
-
+    StatisticsPanel sender = e.getRequiredData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS);
     sender.showSelectedProxyInTestsTree();
   }
 

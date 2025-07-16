@@ -24,6 +24,7 @@ import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
@@ -50,7 +51,8 @@ public final class UseConsoleInputAction extends ToggleAction implements DumbAwa
   }
 
   @Override
-  public void setSelected(AnActionEvent event, boolean state) {
+  @RequiredUIAccess
+  public void setSelected(@Nonnull AnActionEvent event, boolean state) {
     useProcessStdIn = !state;
 
     LanguageConsoleView consoleView = (LanguageConsoleView)event.getData(ConsoleView.KEY);

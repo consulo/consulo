@@ -49,8 +49,8 @@ public class RefreshLogAction extends RefreshAction {
 
         // diagnostic for possible refresh problems
         VcsLogUi ui = e.getRequiredData(VcsLogUi.KEY);
-        if (ui instanceof VcsLogUiImpl) {
-            VcsLogFilterer filterer = ((VcsLogUiImpl) ui).getFilterer();
+        if (ui instanceof VcsLogUiImpl vcsLogUi) {
+            VcsLogFilterer filterer = vcsLogUi.getFilterer();
             if (!filterer.isValid()) {
                 String message = "Trying to refresh invalid log tab.";
                 if (!logManager.getDataManager().getProgress().isRunning()) {
@@ -68,7 +68,6 @@ public class RefreshLogAction extends RefreshAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        VcsLogManager logManager = e.getData(VcsLogInternalDataKeys.LOG_MANAGER);
-        e.getPresentation().setEnabledAndVisible(logManager != null && e.getData(VcsLogUi.KEY) != null);
+        e.getPresentation().setEnabledAndVisible(e.hasData(VcsLogInternalDataKeys.LOG_MANAGER) && e.hasData(VcsLogUi.KEY));
     }
 }

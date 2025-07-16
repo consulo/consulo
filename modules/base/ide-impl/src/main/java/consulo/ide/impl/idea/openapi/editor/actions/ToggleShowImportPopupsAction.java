@@ -31,30 +31,22 @@ import jakarta.annotation.Nullable;
 public class ToggleShowImportPopupsAction extends ToggleAction {
   @Override
   public boolean isSelected(@Nonnull AnActionEvent e) {
-    PsiFile file = getFile(e);
+    PsiFile file = e.getData(PsiFile.KEY);
     return file != null && DaemonCodeAnalyzer.getInstance(file.getProject()).isImportHintsEnabled(file);
   }
 
   @Override
+  @RequiredUIAccess
   public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-    PsiFile file = getFile(e);
+    PsiFile file = e.getData(PsiFile.KEY);
     if (file != null) {
       DaemonCodeAnalyzer.getInstance(file.getProject()).setImportHintsEnabled(file, state);
     }
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    boolean works = getFile(e) != null;
-    e.getPresentation().setEnabled(works);
-    e.getPresentation().setVisible(works);
+    e.getPresentation().setEnabledAndVisible(e.hasData(Editor.KEY) && e.hasData(PsiFile.KEY));
     super.update(e);
-  }
-
-  @Nullable
-  private static PsiFile getFile(AnActionEvent e) {
-    Editor editor = e.getData(Editor.KEY);
-    return editor == null ? null : e.getData(PsiFile.KEY);
   }
 }

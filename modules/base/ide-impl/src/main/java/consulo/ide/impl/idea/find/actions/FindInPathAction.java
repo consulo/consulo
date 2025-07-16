@@ -41,7 +41,7 @@ public class FindInPathAction extends FindReplaceInPathActionBase {
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = e.getData(Project.KEY);
+    Project project = e.getRequiredData(Project.KEY);
 
     FindInProjectManager findManager = FindInProjectManager.getInstance(project);
     if (!findManager.isEnabled()) {

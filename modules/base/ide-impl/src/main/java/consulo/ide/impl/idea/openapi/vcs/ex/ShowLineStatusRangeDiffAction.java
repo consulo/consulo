@@ -44,9 +44,9 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
     return true;
   }
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DiffManager.getInstance().showDiff(e.getData(Project.KEY), createDiffData());
   }
 

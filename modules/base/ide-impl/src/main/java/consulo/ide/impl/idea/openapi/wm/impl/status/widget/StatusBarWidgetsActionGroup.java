@@ -72,6 +72,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       StatusBarWidgetSettings.getInstance().setEnabled(myWidgetFactory, state);
       for (Project project : ProjectManager.getInstance().getOpenProjects()) {

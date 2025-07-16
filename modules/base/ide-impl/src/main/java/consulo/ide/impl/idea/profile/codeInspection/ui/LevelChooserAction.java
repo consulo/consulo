@@ -66,9 +66,9 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
     }
     group.addSeparator();
     group.add(new DumbAwareAction("Edit severities...") {
-      @RequiredUIAccess
       @Override
-      public void actionPerformed(@Nonnull final AnActionEvent e) {
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         final SeverityEditorDialog dlg = new SeverityEditorDialog(e.getData(Project.KEY), myChosen, mySeverityRegistrar);
         if (dlg.showAndGet()) {
           final HighlightInfoType type = dlg.getSelectedType();
@@ -120,7 +120,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       final HighlightSeverity severity = getSeverity();
       setChosen(severity);
       onChosen(severity);

@@ -56,10 +56,8 @@ public class SwitchTaskAction extends BaseTaskAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(Project.KEY);
-    assert project != null;
-    ListPopupImpl popup = createPopup(dataContext, null, true);
+    Project project = e.getRequiredData(Project.KEY);
+    ListPopupImpl popup = createPopup(e.getDataContext(), null, true);
     popup.showCenteredInCurrentWindow(project);
   }
 
