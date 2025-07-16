@@ -58,8 +58,8 @@ public abstract class XWatchesTreeActionBase extends AnAction {
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final XDebuggerTree tree = XDebuggerTree.getTree(e);
-    XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
-    if (tree != null && watchesView != null) {
+    XWatchesView watchesView = e.getRequiredData(XWatchesView.DATA_KEY);
+    if (tree != null) {
       perform(e, tree, watchesView);
     }
   }

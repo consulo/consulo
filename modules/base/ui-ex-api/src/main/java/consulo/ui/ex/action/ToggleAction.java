@@ -69,6 +69,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
      * @param e     the action event which caused the state change.
      * @param state the new selected state of the action.
      */
+    @RequiredUIAccess
     public abstract void setSelected(@Nonnull AnActionEvent e, boolean state);
 
     @Override

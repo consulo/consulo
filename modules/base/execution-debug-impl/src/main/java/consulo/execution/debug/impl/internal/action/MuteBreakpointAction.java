@@ -15,39 +15,42 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
+@ActionImpl(id = "XDebugger.MuteBreakpoints")
 public class MuteBreakpointAction extends ToggleAction {
     private final XDebuggerMuteBreakpointsHandler myHandler = new XDebuggerMuteBreakpointsHandler();
+
+    public MuteBreakpointAction() {
+        super(
+            ActionLocalize.actionXdebuggerMutebreakpointsText(),
+            ActionLocalize.actionXdebuggerMutebreakpointsDescription(),
+            ExecutionDebugIconGroup.actionMutebreakpoints()
+        );
+    }
 
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
-        if (project != null) {
-            if (myHandler.isEnabled(project, e)) {
-                return myHandler.isSelected(project, e);
-            }
-        }
-        return false;
+        return project != null && myHandler.isEnabled(project, e) && myHandler.isSelected(project, e);
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         Project project = e.getData(Project.KEY);
-        if (project != null) {
-            if (myHandler.isEnabled(project, e)) {
-                myHandler.setSelected(project, e, state);
-            }
+        if (project != null && myHandler.isEnabled(project, e)) {
+            myHandler.setSelected(project, e, state);
         }
     }
 
@@ -55,18 +58,6 @@ public class MuteBreakpointAction extends ToggleAction {
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         Project project = e.getData(Project.KEY);
-        if (project != null) {
-            if (myHandler.isEnabled(project, e)) {
-                e.getPresentation().setEnabled(true);
-                return;
-            }
-        }
-        e.getPresentation().setEnabled(false);
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return ExecutionDebugIconGroup.actionMutebreakpoints();
+        e.getPresentation().setEnabled(project != null && myHandler.isEnabled(project, e));
     }
 }

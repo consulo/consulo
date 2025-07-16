@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.presentationAssistant.action;
-
 
 import consulo.ide.impl.presentationAssistant.PresentationAssistant;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
@@ -38,6 +37,7 @@ public class TogglePresentationAssistantAction extends ToggleAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     PresentationAssistant.getInstance().setShowActionsDescriptions(state, e.getData(Project.KEY));
   }

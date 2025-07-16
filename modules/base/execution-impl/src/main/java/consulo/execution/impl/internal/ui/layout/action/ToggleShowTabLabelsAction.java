@@ -30,13 +30,11 @@ public final class ToggleShowTabLabelsAction extends DumbAwareToggleAction {
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
         var runnerUI = e.getData(RunnerContentUi.KEY);
-        if (runnerUI == null) {
-            return false;
-        }
-        return !runnerUI.getLayoutSettings().isTabLabelsHidden();
+        return runnerUI != null && !runnerUI.getLayoutSettings().isTabLabelsHidden();
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         RunnerContentUi runnerUI = e.getRequiredData(RunnerContentUi.KEY);
         runnerUI.getLayoutSettings().setTabLabelsHidden(!state);

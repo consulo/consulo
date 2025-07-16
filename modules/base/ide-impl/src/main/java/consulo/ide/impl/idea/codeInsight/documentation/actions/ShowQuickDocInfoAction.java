@@ -88,12 +88,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
         }
 
         if (LookupManager.getInstance(project).getActiveLookup() != null) {
-            if (!isValidForLookup()) {
-                presentation.setEnabled(false);
-            }
-            else {
-                presentation.setEnabled(true);
-            }
+            presentation.setEnabled(isValidForLookup());
         }
         else {
             if (editor != null) {
@@ -128,11 +123,11 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         final Editor editor = e.getData(Editor.KEY);
         final PsiElement element = e.getData(PsiElement.KEY);
 
-        if (project != null && editor != null) {
+        if (editor != null) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_FEATURE);
             final LookupEx lookup = LookupManager.getInstance(project).getActiveLookup();
             if (lookup != null) {
@@ -141,7 +136,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
             }
             actionPerformedImpl(project, editor);
         }
-        else if (project != null && element != null) {
+        else if (element != null) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE);
             CommandProcessor.getInstance().newCommand()
                 .project(project)

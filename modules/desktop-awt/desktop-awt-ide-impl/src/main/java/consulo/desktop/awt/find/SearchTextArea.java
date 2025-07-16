@@ -254,11 +254,11 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
             registerCustomShortcutSet(KeymapUtil.getActiveKeymapShortcuts("ShowSearchHistory"), myTextArea);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed("find.recent.search");
-            FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(e.getData(Project.KEY));
+            FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(e.getRequiredData(Project.KEY));
             String[] recent = mySearchMode ? findInProjectSettings.getRecentFindStrings() : findInProjectSettings.getRecentReplaceStrings();
             JBList<String> historyList = new JBList<>(ArrayUtil.reverseArray(recent));
             Utils.showCompletionPopup(SearchTextArea.this, historyList, null, myTextArea, null);

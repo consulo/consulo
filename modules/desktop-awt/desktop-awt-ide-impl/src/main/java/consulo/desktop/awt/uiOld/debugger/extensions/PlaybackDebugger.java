@@ -16,7 +16,6 @@
 package consulo.desktop.awt.uiOld.debugger.extensions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.IdeaFileChooser;
@@ -194,7 +193,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       if (pathToFile() == null) {
-        VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e == null ? null : e.getData(Project.KEY), null);
+        VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e.getData(Project.KEY), null);
         if (selectedFile != null) {
           myState.currentScript = selectedFile.getPresentableUrl();
           myCurrentScript.setText(myState.currentScript);
@@ -224,14 +223,14 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
   }
 
   private class SetScriptFileAction extends AnAction {
-
     private SetScriptFileAction() {
-      super("Set Script File", "", AllIcons.Actions.Menu_open);
+      super("Set Script File", "", PlatformIconGroup.actionsMenu_open());
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
-      VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e == null ? null : e.getData(Project.KEY), pathToFile());
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e.getData(Project.KEY), pathToFile());
       if (selectedFile != null) {
         myState.currentScript = selectedFile.getPresentableUrl();
         loadFrom(selectedFile);
@@ -246,7 +245,8 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myState.currentScript = "";
       myCurrentScript.setText(myState.currentScript);
       fillDocument("");

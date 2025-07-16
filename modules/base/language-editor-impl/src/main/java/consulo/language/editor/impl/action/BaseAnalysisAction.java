@@ -74,13 +74,10 @@ public abstract class BaseAnalysisAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        final Project project = e.getData(Project.KEY);
+        final Project project = e.getRequiredData(Project.KEY);
         final Module module = e.getData(Module.KEY);
-        if (project == null) {
-            return;
-        }
         AnalysisScope scope = getInspectionScope(dataContext);
         LOG.assertTrue(scope != null);
         final boolean rememberScope = e.getPlace().equals(ActionPlaces.MAIN_MENU);

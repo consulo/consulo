@@ -43,8 +43,8 @@ public final class EditConfigurationAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    RunDashboardRunConfigurationNode node = project == null ? null : RunDashboardActionUtils.getTarget(e);
+    Project project = e.getRequiredData(Project.KEY);
+    RunDashboardRunConfigurationNode node = RunDashboardActionUtils.getTarget(e);
     if (node == null) return;
 
     RunConfigurationEditor.getInstance(project)

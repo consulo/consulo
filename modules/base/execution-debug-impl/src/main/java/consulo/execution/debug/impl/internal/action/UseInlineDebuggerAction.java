@@ -15,10 +15,13 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
@@ -26,14 +29,20 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "XDebugger.Inline")
 public class UseInlineDebuggerAction extends ToggleAction implements DumbAware {
+  public UseInlineDebuggerAction() {
+    super(ActionLocalize.actionXdebuggerInlineText(), ActionLocalize.actionXdebuggerInlineDescription());
+  }
+
   @Override
   public boolean isSelected(@Nonnull AnActionEvent e) {
     return XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().isShowValuesInline();
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
+  @RequiredUIAccess
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setShowValuesInline(state);
     XDebuggerUtil.getInstance().rebuildAllSessionsViews(e.getData(Project.KEY));
   }

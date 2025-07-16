@@ -1,23 +1,28 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-
-/*
- * Class NewWatchAction
- * @author Jeka
- */
 package consulo.execution.impl.internal.ui.layout.action;
 
 import consulo.execution.icon.ExecutionIconGroup;
 import consulo.execution.internal.layout.RunnerContentUi;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+/**
+ * @author Jeka
+ */
 public final class RestoreLayoutAction extends DumbAwareAction {
+    public RestoreLayoutAction() {
+        super(
+            ActionLocalize.actionRunnerRestorelayoutText(),
+            ActionLocalize.actionRunnerRestorelayoutDescription(),
+            ExecutionIconGroup.actionRestorelayout()
+        );
+    }
 
     public static @Nullable RunnerContentUi getRunnerUi(@Nonnull AnActionEvent e) {
         return e.getData(RunnerContentUi.KEY);
@@ -26,10 +31,8 @@ public final class RestoreLayoutAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        RunnerContentUi ui = getRunnerUi(e);
-        if (ui != null) {
-            ui.restoreLayout();
-        }
+        RunnerContentUi ui = e.getRequiredData(RunnerContentUi.KEY);
+        ui.restoreLayout();
     }
 
     @Override
@@ -39,7 +42,7 @@ public final class RestoreLayoutAction extends DumbAwareAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        RunnerContentUi runnerContentUi = getRunnerUi(e);
+        RunnerContentUi runnerContentUi = e.getData(RunnerContentUi.KEY);
         boolean enabled = false;
         if (runnerContentUi != null) {
             enabled = true;
@@ -49,11 +52,5 @@ public final class RestoreLayoutAction extends DumbAwareAction {
             }
         }
         e.getPresentation().setEnabledAndVisible(enabled);
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return ExecutionIconGroup.actionRestorelayout();
     }
 }

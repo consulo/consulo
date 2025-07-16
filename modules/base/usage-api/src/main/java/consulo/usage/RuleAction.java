@@ -18,6 +18,7 @@ package consulo.usage;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
@@ -56,7 +57,8 @@ public abstract class RuleAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         setOptionValue(state);
         myState = state;
 

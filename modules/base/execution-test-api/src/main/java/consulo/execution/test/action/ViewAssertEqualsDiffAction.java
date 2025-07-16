@@ -95,27 +95,13 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
     final Presentation presentation = e.getPresentation();
     final boolean enabled;
     final DataContext dataContext = e.getDataContext();
-    if (dataContext.getData(Project.KEY) == null) {
+    if (!dataContext.hasData(Project.KEY)) {
       enabled = false;
     }
     else {
       final AbstractTestProxy test = dataContext.getData(AbstractTestProxy.KEY);
-      if (test != null) {
-        if (test.isLeaf()) {
-          enabled = test.getDiffViewerProvider() != null;
-        }
-        else if (test.isDefect()) {
-          enabled = true;
-        }
-        else {
-          enabled = false;
-        }
-      }
-      else {
-        enabled = false;
-      }
+      enabled = test != null && (test.isLeaf() ? test.getDiffViewerProvider() != null : test.isDefect());
     }
-    presentation.setEnabled(enabled);
-    presentation.setVisible(enabled);
+    presentation.setEnabledAndVisible(enabled);
   }
 }

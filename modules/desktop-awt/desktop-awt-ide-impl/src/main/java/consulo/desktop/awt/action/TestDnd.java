@@ -38,7 +38,7 @@ public class TestDnd extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    new DialogWrapper(e == null ? null : e.getData(Project.KEY)) {
+    new DialogWrapper(e.getData(Project.KEY)) {
       {
         setTitle("DnD Test");
         setScalableSize(600, 500);

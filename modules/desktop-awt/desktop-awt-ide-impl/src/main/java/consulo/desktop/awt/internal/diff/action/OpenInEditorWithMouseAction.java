@@ -55,23 +55,8 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   @Override
   public void update(@Nonnull AnActionEvent e) {
     InputEvent inputEvent = e.getInputEvent();
-    if (!(inputEvent instanceof MouseEvent)) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
-    }
-
-    if (e.getData(Project.KEY) == null) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
-    }
-
-    if (e.getData(OpenInEditorAction.KEY) == null) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
-    }
-
     Component component = inputEvent.getComponent();
-    if (component == null) {
+    if (!(inputEvent instanceof MouseEvent) || !e.hasData(Project.KEY) || !e.hasData(OpenInEditorAction.KEY) || component == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }

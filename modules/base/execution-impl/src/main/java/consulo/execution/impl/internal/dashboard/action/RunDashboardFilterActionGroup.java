@@ -93,6 +93,7 @@ public final class RunDashboardFilterActionGroup extends DefaultActionGroup impl
 //    }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       Project project = e.getData(Project.KEY);
       if (project == null) return;

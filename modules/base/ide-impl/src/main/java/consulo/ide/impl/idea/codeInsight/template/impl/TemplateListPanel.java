@@ -702,9 +702,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
             public void update(@Nonnull AnActionEvent e) {
                 final int selected = getSingleSelectedIndex();
                 final TemplateGroup templateGroup = getGroup(selected);
-                boolean enabled = templateGroup != null;
-                e.getPresentation().setEnabled(enabled);
-                e.getPresentation().setVisible(enabled);
+                e.getPresentation().setEnabledAndVisible(templateGroup != null);
                 super.update(e);
             }
 
@@ -721,8 +719,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
             public void update(@Nonnull AnActionEvent e) {
                 final Map<TemplateImpl, DefaultMutableTreeNode> templates = getSelectedTemplates();
                 boolean enabled = !templates.isEmpty();
-                e.getPresentation().setEnabled(enabled);
-                e.getPresentation().setVisible(enabled);
+                e.getPresentation().setEnabledAndVisible(enabled);
 
                 if (enabled) {
                     Set<String> oldGroups = getAllGroups(templates);

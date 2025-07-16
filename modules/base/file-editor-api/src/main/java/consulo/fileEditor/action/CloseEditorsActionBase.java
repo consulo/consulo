@@ -64,12 +64,12 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
         FileEditorWindow editorWindow = e.getData(FileEditorWindow.DATA_KEY);
         boolean inSplitter = editorWindow != null && editorWindow.inSplitter();
         commandProcessor.newCommand()
-            .project(e.getData(Project.KEY))
+            .project(e.getRequiredData(Project.KEY))
             .name(getPresentationText(inSplitter))
             .run(() -> {
                 List<Pair<FileEditorComposite, FileEditorWindow>> filesToClose = getFilesToClose(e);
