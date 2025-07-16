@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
-import consulo.localize.LocalizeValue;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import jakarta.inject.Inject;
 
+@ActionImpl(id = "ChooseRunConfiguration")
 public class ChooseRunConfigurationPopupAction extends BaseChooseRunConfigurationPopupAction {
     public ChooseRunConfigurationPopupAction() {
-        super("Run...", "Choose and run configuration", PlatformIconGroup.actionsExecute());
+        super(
+            ExecutionLocalize.actionChooseRunConfigurationPopupText(),
+            ExecutionLocalize.actionChooseRunConfigurationPopupDescription(),
+            PlatformIconGroup.actionsExecute()
+        );
     }
 
     @Override

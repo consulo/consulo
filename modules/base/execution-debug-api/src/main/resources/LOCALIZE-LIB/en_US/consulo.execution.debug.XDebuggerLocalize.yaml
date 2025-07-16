@@ -2,6 +2,10 @@ action.Debugger.PopFrame.description:
     text: Moves execution point back to the method call dropping current method frames from the stack
 action.Debugger.PopFrame.text:
     text: Reset _Frame
+action.choose.debug.configuration.popup.description:
+    text: Choose and debug configuration
+action.choose.debug.configuration.popup.text:
+    text: Debug...
 action.memory.view.settings.text:
     text: Memory View Settings
 action.next.frame.text:
