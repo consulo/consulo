@@ -27,6 +27,7 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.impl.internal.action.VcsContextWrapper;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -37,7 +38,8 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
   private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
   private AnAction[] myChildren;
 
-  public void update(AnActionEvent e) {
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
     VcsContext dataContext = VcsContextWrapper.createInstanceOn(e);
     if (myChildren == null) {
       DefaultActionGroup vcsGroupsGroup = (DefaultActionGroup)ActionManager.getInstance().getAction("VcsGroup");
@@ -113,7 +115,7 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
 
   private void updateFromAction(AnAction action, Presentation presentation) {
     Presentation wrappedActionPresentation = myPresentationFactory.getPresentation(action);
-    presentation.setDescription(wrappedActionPresentation.getDescription());
+    presentation.setDescriptionValue(wrappedActionPresentation.getDescriptionValue());
     presentation.setTextValue(wrappedActionPresentation.getTextValue());
     presentation.setVisible(wrappedActionPresentation.isVisible());
     presentation.setEnabled(wrappedActionPresentation.isEnabled());
@@ -122,7 +124,5 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
     for (AnAction aChildren : wrappedGroup.getChildren(null)) {
       add(aChildren);
     }
-
   }
-
 }

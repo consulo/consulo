@@ -273,8 +273,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
 
             presentation.setText(actionName);
 
-            presentation.setVisible(true);
-            presentation.setEnabled(true);
+            presentation.setEnabledAndVisible(true);
 
             if (supportingVcsesAreEmpty(vcsManager, myActionInfo)) {
                 presentation.setVisible(myAlwaysVisible);
@@ -297,8 +296,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             }
         }
         else {
-            presentation.setVisible(false);
-            presentation.setEnabled(false);
+            presentation.setEnabledAndVisible(false);
         }
     }
 

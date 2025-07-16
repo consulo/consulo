@@ -40,7 +40,6 @@ public class FindInPathAction extends FindReplaceInPathActionBase {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
     Project project = e.getRequiredData(Project.KEY);
 
     FindInProjectManager findManager = FindInProjectManager.getInstance(project);
@@ -49,7 +48,7 @@ public class FindInPathAction extends FindReplaceInPathActionBase {
       return;
     }
 
-    findManager.findInProject(dataContext, null);
+    findManager.findInProject(e.getDataContext(), null);
   }
 
   @Override

@@ -106,11 +106,10 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
             return;
         }
 
-        DataContext dataContext = e.getDataContext();
-        Editor editor = getEditor(dataContext);
+        Editor editor = getEditor(e.getDataContext());
 
-        PsiFile file = dataContext.getData(PsiFile.KEY);
-        PsiElement element = ReadAction.compute(() -> getElement(project, file, editor, dataContext.getData(PsiElement.KEY)));
+        PsiFile file = e.getData(PsiFile.KEY);
+        PsiElement element = ReadAction.compute(() -> getElement(project, file, editor, e.getData(PsiElement.KEY)));
 
         PsiFile containingFile = element != null ? element.getContainingFile() : file;
         boolean enabled = !(containingFile == null || !containingFile.getViewProvider().isPhysical());

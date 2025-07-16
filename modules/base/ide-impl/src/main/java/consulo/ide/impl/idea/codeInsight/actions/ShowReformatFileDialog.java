@@ -33,42 +33,33 @@ public class ShowReformatFileDialog extends AnAction implements DumbAware {
   private static final @NonNls String HELP_ID = "editing.codeReformatting";
 
   @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
-    Editor editor = dataContext.getData(Editor.KEY);
+  public void update(@Nonnull AnActionEvent e) {
+    Project project = e.getData(Project.KEY);
+    Editor editor = e.getData(Editor.KEY);
     if (project == null || editor == null) {
-      presentation.setEnabled(false);
+      e.getPresentation().setEnabled(false);
       return;
     }
 
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null || file.getVirtualFile() == null) {
-      presentation.setEnabled(false);
+      e.getPresentation().setEnabled(false);
       return;
     }
 
     if (FormattingModelBuilder.forContext(file) != null) {
-      presentation.setEnabled(true);
+      e.getPresentation().setEnabled(true);
     }
   }
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
-    Editor editor = dataContext.getData(Editor.KEY);
-    if (project == null || editor == null) {
-      presentation.setEnabled(false);
-      return;
-    }
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
+    Editor editor = e.getRequiredData(Editor.KEY);
 
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null || file.getVirtualFile() == null) {
-      presentation.setEnabled(false);
       return;
     }
 

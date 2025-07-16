@@ -35,13 +35,12 @@ public class ExportToHTMLAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
     try {
-      ExportToHTMLManager.executeExport(dataContext);
+      ExportToHTMLManager.executeExport(e.getDataContext());
     }
     catch (FileNotFoundException ex) {
       JOptionPane.showMessageDialog(
@@ -54,15 +53,13 @@ public class ExportToHTMLAction extends AnAction {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    PsiElement psiElement = dataContext.getData(PsiElement.KEY);
-    if (psiElement instanceof PsiDirectory) {
+  public void update(@Nonnull AnActionEvent e) {
+    Presentation presentation = e.getPresentation();
+    if (e.getData(PsiElement.KEY) instanceof PsiDirectory) {
       presentation.setEnabled(true);
       return;
     }
-    PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+    PsiFile psiFile = e.getData(PsiFile.KEY);
     presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
   }
 }

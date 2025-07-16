@@ -49,17 +49,16 @@ public class FindUsagesInFileAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        final Project project = dataContext.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
         PsiDocumentManager.getInstance(project).commitAllDocuments();
-        Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = e.getData(Editor.KEY);
 
-        UsageTarget[] usageTargets = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
+        UsageTarget[] usageTargets = e.getData(UsageView.USAGE_TARGETS_KEY);
         if (usageTargets != null) {
-            FileEditor fileEditor = dataContext.getData(FileEditor.KEY);
+            FileEditor fileEditor = e.getData(FileEditor.KEY);
             if (fileEditor != null) {
                 usageTargets[0].findUsagesInEditor(fileEditor);
             }
@@ -109,11 +108,10 @@ public class FindUsagesInFileAction extends AnAction {
     }
 
     @RequiredReadAction
-    public static void updateFindUsagesAction(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        boolean enabled = isEnabled(dataContext);
-        presentation.setVisible(enabled || !ActionPlaces.isPopupPlace(event.getPlace()));
+    public static void updateFindUsagesAction(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        boolean enabled = isEnabled(e.getDataContext());
+        presentation.setVisible(enabled || !ActionPlaces.isPopupPlace(e.getPlace()));
         presentation.setEnabled(enabled);
     }
 }

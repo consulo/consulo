@@ -36,9 +36,9 @@ public class RestoreShelvedChange extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
-    if (recycledChanges != null && recycledChanges.length == 1) {
+    Project project = e.getRequiredData(Project.KEY);
+    ShelvedChangeList[] recycledChanges = e.getRequiredData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+    if (recycledChanges.length == 1) {
       ShelveChangesManager.getInstance(project).restoreList(recycledChanges[0]);
     }
   }

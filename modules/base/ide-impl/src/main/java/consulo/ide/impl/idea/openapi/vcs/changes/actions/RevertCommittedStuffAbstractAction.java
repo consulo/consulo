@@ -63,7 +63,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getRequiredData(Project.KEY);
     final VirtualFile baseDir = project.getBaseDir();
     assert baseDir != null;
@@ -125,10 +125,8 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
   }
 
   @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
+  public void update(@Nonnull AnActionEvent e) {
     final Change[] changes = myForUpdateConvertor.convert(e);
-    e.getPresentation().setEnabled(project != null && changes != null && changes.length > 0);
+    e.getPresentation().setEnabled(e.hasData(Project.KEY) && changes != null && changes.length > 0);
   }
 }

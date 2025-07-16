@@ -23,28 +23,23 @@ import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 public class ShowHideRecycledAction extends AnAction {
-  @RequiredUIAccess
   @Override
-  public void update(@Nonnull final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Project project = e.getData(Project.KEY);
     final Presentation presentation = e.getPresentation();
     if (project == null) {
       presentation.setEnabledAndVisible(false);
       return;
     }
-    presentation.setEnabled(true);
-    presentation.setVisible(true);
+    presentation.setEnabledAndVisible(true);
     final boolean show = ShelveChangesManager.getInstance(project).isShowRecycled();
     presentation.setText(show ? "Hide Already Unshelved" : "Show Already Unshelved");
   }
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
-    }
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
     final ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
     final boolean show = manager.isShowRecycled();
     manager.setShowRecycled(! show);

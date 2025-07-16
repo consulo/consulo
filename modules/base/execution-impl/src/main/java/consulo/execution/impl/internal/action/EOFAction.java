@@ -35,7 +35,6 @@ import java.io.OutputStream;
 public class EOFAction extends DumbAwareAction {
   public static final String ACTION_ID = "SendEOF";
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());

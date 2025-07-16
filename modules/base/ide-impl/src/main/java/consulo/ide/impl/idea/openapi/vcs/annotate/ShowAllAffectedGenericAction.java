@@ -190,7 +190,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         final VcsKey vcsKey = e.getData(VcsDataKeys.VCS);
         if (project == null || vcsKey == null) {

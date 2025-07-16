@@ -24,7 +24,6 @@ import jakarta.annotation.Nonnull;
 
 public class CleanUnshelvedAction extends DumbAwareAction {
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     final Project project = e.getData(Project.KEY);
@@ -39,7 +38,7 @@ public class CleanUnshelvedAction extends DumbAwareAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getRequiredData(Project.KEY);
     CleanUnshelvedFilterDialog dialog = new CleanUnshelvedFilterDialog(project);
     dialog.show();

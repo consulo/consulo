@@ -65,26 +65,21 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   }
 
   private boolean isVisible(final DataContext dc) {
-    final Project project = dc.getData(Project.KEY);
-    return (project != null) && (dc.getData(VcsDataKeys.LABEL_BEFORE) != null) && (dc.getData(VcsDataKeys.LABEL_AFTER) != null);
+    return dc.hasData(Project.KEY) && dc.hasData(VcsDataKeys.LABEL_BEFORE) && dc.hasData(VcsDataKeys.LABEL_AFTER);
   }
 
   private boolean isEnabled(final DataContext dc) {
-    final Iterable<Pair<FilePath, FileStatus>> iterable = dc.getData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
-    return iterable != null;
+    return dc.hasData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DataContext dc = e.getDataContext();
-    if ((!isVisible(dc)) || (!isEnabled(dc))) return;
-
-    final Project project = dc.getData(Project.KEY);
-    final Iterable<Pair<FilePath, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
-    final Label before = (Label)e.getRequiredData(VcsDataKeys.LABEL_BEFORE);
-    final Label after = (Label)e.getRequiredData(VcsDataKeys.LABEL_AFTER);
-    final FilePath selectedUrl = dc.getData(VcsDataKeys.UPDATE_VIEW_SELECTED_PATH);
+    Project project = e.getRequiredData(Project.KEY);
+    Iterable<Pair<FilePath, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
+    Label before = (Label)e.getRequiredData(VcsDataKeys.LABEL_BEFORE);
+    Label after = (Label)e.getRequiredData(VcsDataKeys.LABEL_AFTER);
+    FilePath selectedUrl = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_SELECTED_PATH);
 
     MyDiffRequestChain requestChain = new MyDiffRequestChain(project, iterable, before, after, selectedUrl);
     DiffManager.getInstance().showDiff(project, requestChain, DiffDialogHints.FRAME);

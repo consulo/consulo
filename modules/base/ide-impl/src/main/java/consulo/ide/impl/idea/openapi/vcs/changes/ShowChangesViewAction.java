@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.vcs.actions.AbstractVcsAction;
@@ -22,12 +23,15 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  * @since 2006-08-18
  */
 public class ShowChangesViewAction extends AbstractVcsAction {
+  @Override
+  @RequiredUIAccess
   protected void actionPerformed(VcsContext e) {
     if (e.getProject() == null) return;
     final ToolWindowManager manager = ToolWindowManager.getInstance(e.getProject());
@@ -39,11 +43,13 @@ public class ShowChangesViewAction extends AbstractVcsAction {
     }
   }
 
-  protected void update(VcsContext vcsContext, Presentation presentation) {
+  @Override
+  protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
     presentation.setVisible(getActiveVcses(vcsContext).size() > 0);
   }
 
-  protected boolean forceSyncUpdate(final AnActionEvent e) {
+  @Override
+  protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
     return true;
   }
 }

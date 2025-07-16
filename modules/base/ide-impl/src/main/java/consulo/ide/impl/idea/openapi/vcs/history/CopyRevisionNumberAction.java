@@ -58,7 +58,6 @@ public class CopyRevisionNumberAction extends DumbAwareAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabled((e.getData(VcsDataKeys.VCS_FILE_REVISION) != null
-                                    || e.getData(VcsDataKeys.VCS_REVISION_NUMBER) != null));
+      e.getPresentation().setEnabled(e.hasData(VcsDataKeys.VCS_FILE_REVISION) || e.hasData(VcsDataKeys.VCS_REVISION_NUMBER));
   }
 }

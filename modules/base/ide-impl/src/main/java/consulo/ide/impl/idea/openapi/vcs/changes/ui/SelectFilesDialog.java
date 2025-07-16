@@ -94,7 +94,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
       AnAction deleteAction = new DeleteUnversionedFilesAction() {
         @Override
         @RequiredUIAccess
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           super.actionPerformed(e);
           myFileList.refresh();
         }

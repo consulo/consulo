@@ -60,9 +60,8 @@ public class SaveAsTemplateAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Editor editor = Objects.requireNonNull(dataContext.getData(Editor.KEY));
-        PsiFile file = Objects.requireNonNull(dataContext.getData(PsiFile.KEY));
+        Editor editor = e.getRequiredData(Editor.KEY);
+        PsiFile file = e.getRequiredData(PsiFile.KEY);
 
         Project project = file.getProject();
         PsiDocumentManager.getInstance(project).commitAllDocuments();
@@ -172,9 +171,8 @@ public class SaveAsTemplateAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Editor editor = dataContext.getData(Editor.KEY);
-        PsiFile file = dataContext.getData(PsiFile.KEY);
+        Editor editor = e.getData(Editor.KEY);
+        PsiFile file = e.getData(PsiFile.KEY);
 
         if (file == null || editor == null) {
             e.getPresentation().setEnabled(false);

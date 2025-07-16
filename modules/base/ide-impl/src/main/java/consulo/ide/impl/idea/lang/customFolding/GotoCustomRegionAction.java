@@ -61,30 +61,28 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        final Editor editor = e.getData(Editor.KEY);
+        Project project = e.getRequiredData(Project.KEY);
+        Editor editor = e.getRequiredData(Editor.KEY);
         if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
             return;
         }
-        if (project != null && editor != null) {
-            if (DumbService.getInstance(project).isDumb()) {
-                DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode().get());
-                return;
-            }
-            CommandProcessor.getInstance().newCommand()
-                .project(project)
-                .name(IdeLocalize.gotoCustomRegionCommand())
-                .run(() -> {
-                    Collection<FoldingDescriptor> foldingDescriptors = getCustomFoldingDescriptors(editor, project);
-                    if (foldingDescriptors.size() > 0) {
-                        CustomFoldingRegionsPopup regionsPopup = new CustomFoldingRegionsPopup(foldingDescriptors, editor, project);
-                        regionsPopup.show();
-                    }
-                    else {
-                        notifyCustomRegionsUnavailable(editor, project);
-                    }
-                });
+        if (DumbService.getInstance(project).isDumb()) {
+            DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode().get());
+            return;
         }
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(IdeLocalize.gotoCustomRegionCommand())
+            .run(() -> {
+                Collection<FoldingDescriptor> foldingDescriptors = getCustomFoldingDescriptors(editor, project);
+                if (foldingDescriptors.size() > 0) {
+                    CustomFoldingRegionsPopup regionsPopup = new CustomFoldingRegionsPopup(foldingDescriptors, editor, project);
+                    regionsPopup.show();
+                }
+                else {
+                    notifyCustomRegionsUnavailable(editor, project);
+                }
+            });
     }
 
     @Override
