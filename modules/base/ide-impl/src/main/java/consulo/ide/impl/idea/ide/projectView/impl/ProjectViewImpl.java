@@ -673,7 +673,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             }
 
             @Override
-            @RequiredReadAction
             public void update(@Nonnull AnActionEvent e) {
                 super.update(e);
                 Project project = e.getRequiredData(Project.KEY);
@@ -703,7 +702,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             }
 
             @Override
-            @RequiredReadAction
             public void update(@Nonnull AnActionEvent e) {
                 super.update(e);
                 Project project = e.getRequiredData(Project.KEY);

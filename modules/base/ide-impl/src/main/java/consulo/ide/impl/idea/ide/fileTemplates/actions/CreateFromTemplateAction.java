@@ -23,6 +23,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
+import jakarta.annotation.Nonnull;
 
 public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
 
@@ -39,12 +40,11 @@ public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
   }
 
   @Override
-  public void update(AnActionEvent e){
+  public void update(@Nonnull AnActionEvent e){
     super.update(e);
     Presentation presentation = e.getPresentation();
     boolean isEnabled = CreateFromTemplateGroup.canCreateFromTemplate(e, myTemplate);
-    presentation.setEnabled(isEnabled);
-    presentation.setVisible(isEnabled);
+    presentation.setEnabledAndVisible(isEnabled);
   }
 
   public FileTemplate getTemplate() {

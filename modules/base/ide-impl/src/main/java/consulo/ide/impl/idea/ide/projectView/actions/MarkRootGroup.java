@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.projectView.actions;
 
-import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.ActionGroup;
@@ -44,7 +43,7 @@ public class MarkRootGroup extends ActionGroup implements DumbAware {
         if (e == null) {
             return EMPTY_ARRAY;
         }
-        Module module = e.getData(LangDataKeys.MODULE);
+        Module module = e.getData(Module.KEY);
         if (module == null) {
             return EMPTY_ARRAY;
         }

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
-import consulo.dataContext.DataContext;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -26,6 +25,7 @@ import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.style.StyleManager;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -35,15 +35,13 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
     getTemplatePresentation().setTextValue(IdeLocalize.actionBookmarkToggleMnemonic());
   }
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     super.actionPerformed(e);
 
-    DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    if (project == null) return;
-    final BookmarkInContextInfo info = new BookmarkInContextInfo(dataContext, project).invoke();
+    Project project = e.getRequiredData(Project.KEY);
+    BookmarkInContextInfo info = new BookmarkInContextInfo(e.getDataContext(), project).invoke();
     final Bookmark bookmark = info.getBookmarkAtPlace();
     final BookmarkManager bookmarks = BookmarkManager.getInstance(project);
     if (bookmark != null) {
@@ -81,13 +79,13 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
         .setResizable(false)
         .createPopup();
 
-      popup[0].showInBestPositionFor(dataContext);
+      popup[0].showInBestPositionFor(e.getDataContext());
     }
   }
 
   @Override
   @RequiredUIAccess
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
 
     event.getPresentation().setTextValue(IdeLocalize.actionBookmarkToggleMnemonic());

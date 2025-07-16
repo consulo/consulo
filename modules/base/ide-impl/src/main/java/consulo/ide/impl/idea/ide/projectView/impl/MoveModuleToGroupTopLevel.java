@@ -42,10 +42,9 @@ import java.util.*;
 public class MoveModuleToGroupTopLevel extends ActionGroup {
   @Override
   @RequiredUIAccess
-  public void update(AnActionEvent e){
-    final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+  public void update(@Nonnull AnActionEvent e){
+    Project project = e.getData(Project.KEY);
+    Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     boolean active = project != null && modules != null && modules.length != 0;
     e.getPresentation().setVisible(active);
   }

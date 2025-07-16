@@ -19,7 +19,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.bookmark.ui.view.FavoritesListNode;
 import consulo.bookmark.ui.view.FavoritesListProvider;
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeUtil;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
@@ -59,25 +58,21 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Project project = e.getData(Project.KEY);
-        FavoritesViewTreeBuilder builder = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
-        if (project == null || builder == null) {
-            return;
-        }
+        Project project = e.getRequiredData(Project.KEY);
+        FavoritesViewTreeBuilder builder = e.getRequiredData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
         Set<Object> selection = builder.getSelectedElements();
         if (selection.isEmpty()) {
             return;
         }
         FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
-        String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
+        String listName = e.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
         FavoritesListProvider provider = favoritesManager.getListProvider(listName);
         if (provider != null && provider.willHandle(CommonActionsPanel.Buttons.REMOVE, project, selection)) {
             provider.handle(CommonActionsPanel.Buttons.REMOVE, project, selection, builder.getTree());
             return;
         }
-        FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
-        DnDAwareTree tree = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_KEY);
+        FavoritesTreeNodeDescriptor[] roots = e.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
+        DnDAwareTree tree = e.getData(FavoritesTreeViewPanel.FAVORITES_TREE_KEY);
 
         assert roots != null && tree != null;
         Map<String, List<AbstractTreeNode>> toRemove = new HashMap<>();
@@ -105,15 +100,14 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setTextValue(getTemplatePresentation().getTextValue());
-        DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
-        FavoritesViewTreeBuilder builder = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
+        FavoritesViewTreeBuilder builder = e.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
         if (project == null || builder == null) {
             e.getPresentation().setEnabled(false);
             return;
         }
         Set<Object> selection = builder.getSelectedElements();
-        String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
+        String listName = e.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
 
         FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
         FavoritesListProvider provider = favoritesManager.getListProvider(listName);
@@ -126,7 +120,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
             return;
         }
 
-        FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
+        FavoritesTreeNodeDescriptor[] roots = e.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
 
         if (roots == null || roots.length == 0 || selection.isEmpty()) {
             e.getPresentation().setEnabled(false);

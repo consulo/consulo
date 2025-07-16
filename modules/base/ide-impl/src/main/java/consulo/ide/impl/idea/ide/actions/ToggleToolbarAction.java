@@ -74,7 +74,6 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         boolean hasToolbars = iterateToolbars(myToolWindow.getContentManager().getComponent()).iterator().hasNext();
@@ -87,6 +86,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         myPropertiesComponent.setValue(getProperty(), String.valueOf(state), String.valueOf(true));
         for (Content content : myToolWindow.getContentManager().getContents()) {
@@ -130,8 +130,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         }
 
         @Override
-        @RequiredUIAccess
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
         }
 

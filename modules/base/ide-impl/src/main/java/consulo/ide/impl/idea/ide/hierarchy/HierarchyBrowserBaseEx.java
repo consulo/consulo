@@ -646,13 +646,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
 
         @Override
-        public final void update(@Nonnull AnActionEvent event) {
-            Presentation presentation = event.getPresentation();
+        public final void update(@Nonnull AnActionEvent e) {
+            Presentation presentation = e.getPresentation();
 
             registerCustomShortcutSet(ActionManager.getInstance().getAction(myActionId).getShortcutSet(), null);
 
-            DataContext dataContext = event.getDataContext();
-            HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx) dataContext.getData(myBrowserDataKey);
+            HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx) e.getData(myBrowserDataKey);
             if (browser == null) {
                 presentation.setEnabledAndVisible(false);
                 return;

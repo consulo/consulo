@@ -4,14 +4,15 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.lang.Comparing;
+import jakarta.annotation.Nonnull;
 
 /**
 * @author anna
-* @since 9:33 PM 8/5/11
+* @since 2011-08-05
 */
 public abstract class ShowModulesAction extends ToggleAction {
   private Project myProject;
@@ -26,23 +27,23 @@ public abstract class ShowModulesAction extends ToggleAction {
   }
 
   @Override
-  public boolean isSelected(AnActionEvent event) {
+  public boolean isSelected(@Nonnull AnActionEvent event) {
     return ProjectView.getInstance(myProject).isShowModules(getId());
   }
 
   protected abstract String getId();
 
   @Override
-  public void setSelected(AnActionEvent event, boolean flag) {
+  @RequiredUIAccess
+  public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
     final ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
     projectView.setShowModules(flag, getId());
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    final Presentation presentation = e.getPresentation();
     final ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
-    presentation.setVisible(Comparing.strEqual(projectView.getCurrentViewId(), getId()));
+    e.getPresentation().setVisible(Comparing.strEqual(projectView.getCurrentViewId(), getId()));
   }
 }

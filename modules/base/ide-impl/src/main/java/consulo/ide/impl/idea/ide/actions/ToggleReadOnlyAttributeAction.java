@@ -52,8 +52,7 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         VirtualFile[] files = getFiles(e.getDataContext());
         e.getPresentation().setEnabled(files.length > 0);
         if (files.length > 0) {

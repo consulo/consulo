@@ -118,33 +118,17 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
 
     @Override
     @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
-        DataContext context = e.getDataContext();
-        Project project = context.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
+        IdeView ideView = e.getData(IdeView.KEY);
 
-        if (project == null) {
+        if (project == null || ideView == null || !isEnabled(e, ideView) || Boolean.TRUE.equals(e.getData(LangDataKeys.NO_NEW_ACTION))) {
             presentation.setEnabled(false);
             return;
         }
 
-        IdeView ideView = context.getData(IdeView.KEY);
-        if (ideView == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        if (!isEnabled(e, ideView)) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        if (Boolean.TRUE.equals(context.getData(LangDataKeys.NO_NEW_ACTION))) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        presentation.setEnabled(!ActionGroupUtil.isGroupEmpty(getGroup(context), e));
+        presentation.setEnabled(!ActionGroupUtil.isGroupEmpty(getGroup(e.getDataContext()), e));
     }
 
     protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull IdeView ideView) {

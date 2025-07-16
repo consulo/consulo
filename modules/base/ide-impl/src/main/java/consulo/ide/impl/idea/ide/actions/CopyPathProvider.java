@@ -36,7 +36,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Optional;
@@ -47,19 +46,16 @@ public class CopyPathProvider extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        DataContext dataContext = e.getDataContext();
-        Editor editor = dataContext.getData(Editor.KEY);
+        Project project = e.getRequiredData(Project.KEY);
+        Editor editor = e.getData(Editor.KEY);
 
-        DataContext customDataContext = createCustomDataContext(dataContext);
+        DataContext customDataContext = createCustomDataContext(e.getDataContext());
 
         List<PsiElement> elements = CopyReferenceUtil.getElementsToCopy(editor, customDataContext);
-        if (project != null) {
-            String copy = getQualifiedName(project, elements, editor, customDataContext);
-            CopyPasteManager.getInstance().setContents(new StringSelection(copy));
+        String copy = getQualifiedName(project, elements, editor, customDataContext);
+        CopyPasteManager.getInstance().setContents(new StringSelection(copy));
 
-            CopyReferenceUtil.highlight(editor, project, elements);
-        }
+        CopyReferenceUtil.highlight(editor, project, elements);
     }
 
     private DataContext createCustomDataContext(DataContext dataContext) {
@@ -80,12 +76,10 @@ public class CopyPathProvider extends DumbAwareAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-
-        Editor editor = dataContext.getData(Editor.KEY);
-
+        Editor editor = e.getData(Editor.KEY);
         Project project = e.getData(Project.KEY);
 
+        DataContext dataContext = e.getDataContext();
         String qualifiedName = project != null
             ? getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext)
             : null;

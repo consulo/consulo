@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.codeEditor.Editor;
@@ -31,16 +30,14 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 
 public class CopyElementAction extends AnAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+        Project project = dataContext.getRequiredData(Project.KEY);
 
         CommandProcessor.getInstance().newCommand()
             .project(project)
@@ -74,23 +71,21 @@ public class CopyElementAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Project project = e.getData(Project.KEY);
         presentation.setEnabled(false);
         if (project == null) {
             return;
         }
 
-        Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = e.getData(Editor.KEY);
         if (editor != null) {
-            updateForEditor(dataContext, presentation);
+            updateForEditor(e.getDataContext(), presentation);
         }
         else {
             String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
-            updateForToolWindow(id, dataContext, presentation);
+            updateForToolWindow(id, e.getDataContext(), presentation);
         }
     }
 

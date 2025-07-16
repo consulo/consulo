@@ -107,15 +107,12 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
     return result.toArray(new AnAction[result.size()]);
   }
 
-  static boolean canCreateFromTemplate(AnActionEvent e, FileTemplate template) {
-    if (e == null) return false;
-    DataContext dataContext = e.getDataContext();
-    IdeView view = dataContext.getData(IdeView.KEY);
+  static boolean canCreateFromTemplate(@Nonnull AnActionEvent e, FileTemplate template) {
+    IdeView view = e.getData(IdeView.KEY);
     if (view == null) return false;
 
     PsiDirectory[] dirs = view.getDirectories();
     return dirs.length != 0 && FileTemplateImplUtil.canCreateFromTemplate(dirs, template);
-
   }
 
   private static class CreateFromTemplatesAction extends CreateFromTemplateActionBase {

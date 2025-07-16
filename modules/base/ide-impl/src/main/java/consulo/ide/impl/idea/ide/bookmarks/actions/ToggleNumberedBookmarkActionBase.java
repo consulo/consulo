@@ -43,10 +43,9 @@ public abstract class ToggleNumberedBookmarkActionBase extends AnAction implemen
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
     Project project = e.getRequiredData(Project.KEY);
 
-    BookmarksAction.BookmarkInContextInfo info = new BookmarksAction.BookmarkInContextInfo(dataContext, project).invoke();
+    BookmarksAction.BookmarkInContextInfo info = new BookmarksAction.BookmarkInContextInfo(e.getDataContext(), project).invoke();
     if (info.getFile() == null) return;
 
     final Bookmark oldBookmark = info.getBookmarkAtPlace();
