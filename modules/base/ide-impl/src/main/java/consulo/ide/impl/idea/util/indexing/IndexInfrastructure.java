@@ -1,8 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.application.Application;
@@ -32,6 +28,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+/**
+ * @author max
+ */
 @SuppressWarnings("HardCodedStringLiteral")
 public class IndexInfrastructure {
   private static final String STUB_VERSIONS = ".versions";

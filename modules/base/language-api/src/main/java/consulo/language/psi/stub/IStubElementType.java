@@ -1,8 +1,4 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
-/*
- * @author max
- */
 package consulo.language.psi.stub;
 
 import consulo.application.Application;
@@ -16,6 +12,9 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.*;
 
+/**
+ * @author max
+ */
 public abstract class IStubElementType<StubT extends StubElement, PsiT extends PsiElement> extends IElementType implements StubSerializer<StubT> {
   private static volatile boolean ourInitializedStubs;
   private static volatile Set<String> ourLazyExternalIds = Collections.emptySet();

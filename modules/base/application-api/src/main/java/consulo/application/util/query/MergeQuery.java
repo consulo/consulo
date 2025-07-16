@@ -1,8 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
-/*
- * @author max
- */
 package consulo.application.util.query;
 
 import consulo.util.concurrent.*;
@@ -10,6 +6,9 @@ import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
+/**
+ * @author max
+ */
 public class MergeQuery<T> extends AbstractQuery<T> {
     private final Query<? extends T> myQuery1;
     private final Query<? extends T> myQuery2;
