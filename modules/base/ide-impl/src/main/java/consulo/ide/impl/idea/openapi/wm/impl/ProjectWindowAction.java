@@ -20,6 +20,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -110,6 +111,7 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void setSelected(@Nullable AnActionEvent e, boolean selected) {
     if (!selected) {
       return;

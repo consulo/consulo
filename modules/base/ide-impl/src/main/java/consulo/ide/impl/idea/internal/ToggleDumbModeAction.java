@@ -35,14 +35,13 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     if (myDumb) {
       myDumb = false;
     }
     else {
       myDumb = true;
-      final Project project = e.getData(Project.KEY);
-      if (project == null) return;
+      final Project project = e.getRequiredData(Project.KEY);
 
       DumbService.getInstance(project).queueTask(new DumbModeTask() {
         @Override

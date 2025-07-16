@@ -24,6 +24,7 @@ import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.event.EditorMouseEventArea;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +44,7 @@ public class PasteFromX11Action extends EditorAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Editor editor = e.getData(Editor.KEY);
         if (editor == null || !Platform.current().os().isXWindow()) {

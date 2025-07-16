@@ -46,7 +46,7 @@ public class RestorePreviousSettingsAction extends AnAction implements ShortcutP
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     FindModel findModel = e.getRequiredData(EditorSearchSession.SESSION_KEY).getFindModel();
     findModel.copyFrom(FindManager.getInstance(e.getRequiredData(Project.KEY)).getPreviousFindModel());
   }

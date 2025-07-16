@@ -45,16 +45,14 @@ import java.util.List;
 public class ShowRecentFindUsagesAction extends AnAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
-    Project project = e.getData(Project.KEY);
-    e.getPresentation().setEnabled(usageView != null && project != null);
+      e.getPresentation().setEnabled(e.hasData(UsageView.USAGE_VIEW_KEY) && e.hasData(Project.KEY));
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
-    Project project = e.getData(Project.KEY);
+    UsageView usageView = e.getRequiredData(UsageView.USAGE_VIEW_KEY);
+    Project project = e.getRequiredData(Project.KEY);
     final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();
     List<ConfigurableUsageTarget> history = new ArrayList<>(findUsagesManager.getHistory().getAll());
 

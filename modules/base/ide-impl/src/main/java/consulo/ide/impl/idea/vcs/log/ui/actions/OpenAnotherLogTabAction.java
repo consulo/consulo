@@ -46,7 +46,7 @@ public class OpenAnotherLogTabAction extends DumbAwareAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     VcsLogContentProvider.openAnotherLogTab(e.getRequiredData(VcsLogInternalDataKeys.LOG_MANAGER), e.getRequiredData(Project.KEY));
   }
 }

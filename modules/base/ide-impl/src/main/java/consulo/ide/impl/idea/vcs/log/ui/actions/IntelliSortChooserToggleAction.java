@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.util.BekUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.versionControlSystem.log.VcsLogUi;
@@ -46,7 +47,8 @@ public class IntelliSortChooserToggleAction extends ToggleAction implements Dumb
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
+  @RequiredUIAccess
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
     if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
       PermanentGraph.SortType bekSortType = state ? PermanentGraph.SortType.Bek : PermanentGraph.SortType.Normal;

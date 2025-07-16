@@ -57,7 +57,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
+        Project project = e.getRequiredData(Project.KEY);
         Editor editor = e.getRequiredData(Editor.KEY);
         LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
         assert tracker != null;

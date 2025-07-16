@@ -38,7 +38,7 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     Presentation p = e.getPresentation();
 
-    if (e.getData(Project.KEY) == null) {
+    if (!e.hasData(Project.KEY)) {
       p.setEnabledAndVisible(false);
     }
     else {

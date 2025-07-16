@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.find.SearchSession;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.action.CheckboxAction;
@@ -70,6 +71,7 @@ public abstract class EditorHeaderToggleAction extends CheckboxAction implements
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean selected) {
         SearchSession search = e.getData(SearchSession.KEY);
         if (search != null) {

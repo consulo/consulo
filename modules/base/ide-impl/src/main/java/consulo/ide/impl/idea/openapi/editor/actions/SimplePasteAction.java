@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.codeEditor.action.EditorAction;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -30,9 +30,8 @@ public class SimplePasteAction extends EditorAction {
         super(new BasePasteHandler());
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         if (ActionPlaces.isPopupPlace(e.getPlace())) {
             Presentation presentation = e.getPresentation();

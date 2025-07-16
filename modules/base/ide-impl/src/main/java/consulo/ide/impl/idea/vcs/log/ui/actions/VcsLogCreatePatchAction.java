@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
 public class VcsLogCreatePatchAction extends CreatePatchFromChangesAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Change[] changes;
-    e.getPresentation().setEnabled((changes = e.getData(VcsDataKeys.CHANGES)) != null && changes.length > 0);
+    Change[] changes = e.getData(VcsDataKeys.CHANGES);
+    e.getPresentation().setEnabled(changes != null && changes.length > 0);
   }
 }

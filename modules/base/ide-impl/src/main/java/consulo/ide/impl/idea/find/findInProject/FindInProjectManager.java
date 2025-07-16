@@ -30,7 +30,7 @@ public class FindInProjectManager {
     private final Project myProject;
     private volatile boolean myIsFindInProgress;
 
-    public static FindInProjectManager getInstance(Project project) {
+    public static FindInProjectManager getInstance(@Nonnull Project project) {
         return ServiceManager.getService(project, FindInProjectManager.class);
     }
 

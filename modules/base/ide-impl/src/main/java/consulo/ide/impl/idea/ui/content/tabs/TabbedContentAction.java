@@ -154,8 +154,7 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Content[] contents = myManager.getContents();
-      for (Content content : contents) {
+      for (Content content : myManager.getContents()) {
         if (content.isCloseable()) {
           myManager.removeContent(content, true);
         }
@@ -164,9 +163,7 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      Presentation presentation = e.getPresentation();
-      presentation.setEnabled(myManager.canCloseAllContents());
-      presentation.setVisible(myManager.canCloseAllContents());
+      e.getPresentation().setEnabledAndVisible(myManager.canCloseAllContents());
     }
   }
   public static class MyNextTabAction extends TabbedContentAction {

@@ -52,12 +52,8 @@ public class MoveArrangementGroupingRuleUpAction extends AnAction implements Dum
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    ArrangementGroupingRulesControl control = e.getData(ArrangementGroupingRulesControl.KEY);
-    if (control == null) {
-      return;
-    }
-
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    ArrangementGroupingRulesControl control = e.getRequiredData(ArrangementGroupingRulesControl.KEY);
     int[] rows = control.getSelectedRows();
     int row = rows[0];
     if (rows.length != 1 || row == 0) {

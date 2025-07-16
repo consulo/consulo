@@ -1,10 +1,9 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.application.AllIcons;
 import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.SearchSession;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
@@ -12,9 +11,9 @@ public class ToggleWholeWordsOnlyAction extends EditorSearchToggleAction impleme
     public ToggleWholeWordsOnlyAction() {
         super(
             FindLocalize.findWholeWords(),
-            AllIcons.Actions.Words,
-            AllIcons.Actions.WordsHovered,
-            AllIcons.Actions.WordsSelected
+            PlatformIconGroup.actionsWords(),
+            PlatformIconGroup.actionsWordshovered(),
+            PlatformIconGroup.actionsWordsselected()
         );
     }
 
@@ -23,7 +22,6 @@ public class ToggleWholeWordsOnlyAction extends EditorSearchToggleAction impleme
         return false;
     }
     
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         SearchSession session = e.getData(SearchSession.KEY);

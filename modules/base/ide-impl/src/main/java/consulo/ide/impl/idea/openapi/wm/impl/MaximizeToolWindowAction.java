@@ -33,10 +33,8 @@ public class MaximizeToolWindowAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null || project.isDisposed()) return;
-    ToolWindow toolWindow = e.getData(ToolWindow.KEY);
-    if (toolWindow == null) return;
+    Project project = e.getRequiredData(Project.KEY);
+    ToolWindow toolWindow = e.getRequiredData(ToolWindow.KEY);
     ToolWindowManager manager = ToolWindowManager.getInstance(project);
     manager.setMaximized(toolWindow, !manager.isMaximized(toolWindow));
   }
@@ -45,12 +43,8 @@ public class MaximizeToolWindowAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(true);
     Project project = e.getData(Project.KEY);
-    if (project == null || project.isDisposed()) {
-      e.getPresentation().setEnabled(false);
-      return;
-    }
     ToolWindow toolWindow = e.getData(ToolWindow.KEY);
-    if (toolWindow == null) {
+    if (project == null || project.isDisposed() || toolWindow == null) {
       e.getPresentation().setEnabled(false);
       return;
     }

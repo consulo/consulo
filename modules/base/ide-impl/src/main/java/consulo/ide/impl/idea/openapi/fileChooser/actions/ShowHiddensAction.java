@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.fileChooser.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
@@ -34,6 +35,7 @@ public final class ShowHiddensAction extends ToggleAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean state) {
         final FileSystemTree fileSystemTree = e.getData(FileSystemTree.DATA_KEY);
         if (fileSystemTree != null) {

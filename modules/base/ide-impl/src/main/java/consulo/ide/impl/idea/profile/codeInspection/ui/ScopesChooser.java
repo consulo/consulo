@@ -114,9 +114,16 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
       }
       group.add(new DumbAwareAction(scopeName) {
         @Override
-        public void actionPerformed(final AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           for (final Descriptor defaultDescriptor : defaultDescriptors) {
-            inspectionProfile.addScope(defaultDescriptor.getToolWrapper().createCopy(), scope, defaultDescriptor.getLevel(), true, e == null ? null : e.getData(Project.KEY));
+            inspectionProfile.addScope(
+                defaultDescriptor.getToolWrapper().createCopy(),
+                scope,
+                defaultDescriptor.getLevel(),
+                true,
+                e.getData(Project.KEY)
+            );
           }
           onScopeAdded();
         }

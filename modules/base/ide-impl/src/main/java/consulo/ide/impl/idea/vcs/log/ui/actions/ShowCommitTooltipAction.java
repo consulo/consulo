@@ -32,10 +32,8 @@ public class ShowCommitTooltipAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    VcsLogUi ui = e.getData(VcsLogUi.KEY);
     e.getPresentation().setEnabledAndVisible(
-        project != null && ui instanceof VcsLogUiImpl vcsLogUi && vcsLogUi.getTable().getSelectedRowCount() == 1
+        e.hasData(Project.KEY) && e.getData(VcsLogUi.KEY) instanceof VcsLogUiImpl vcsLogUi && vcsLogUi.getTable().getSelectedRowCount() == 1
     );
   }
 

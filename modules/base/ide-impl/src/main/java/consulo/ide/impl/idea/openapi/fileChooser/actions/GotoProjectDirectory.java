@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 public final class GotoProjectDirectory extends FileChooserAction {
   @Override
-  protected void actionPerformed(FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+  protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
     final VirtualFile projectPath = getProjectDir(e);
     if (projectPath != null) {
       fileSystemTree.select(projectPath, () -> fileSystemTree.expand(projectPath, null));

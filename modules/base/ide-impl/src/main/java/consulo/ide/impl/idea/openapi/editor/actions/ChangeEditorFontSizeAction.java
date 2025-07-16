@@ -24,6 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
@@ -37,9 +38,9 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
     myStep = increaseStep;
   }
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final RealEditor editor = getEditor(e);
     if (editor != null) {
       final int size = editor.getFontSize() + myStep;
@@ -50,14 +51,13 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
   }
 
   @Nullable
-  private static RealEditor getEditor(AnActionEvent e) {
+  private static RealEditor getEditor(@Nonnull AnActionEvent e) {
     final Editor editor = e.getData(Editor.KEY);
     return editor instanceof RealEditor realEditor ? realEditor : null;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(getEditor(e) != null);
   }
 

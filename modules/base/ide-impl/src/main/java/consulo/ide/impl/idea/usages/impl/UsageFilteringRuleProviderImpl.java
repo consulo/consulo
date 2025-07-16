@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.usages.impl.rules.WriteAccessFilteringRule;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -116,7 +117,8 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       myReadWriteState.setShowReadAccess(state);
       Project project = e.getData(Project.KEY);
       if (project == null) return;
@@ -135,7 +137,8 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       myReadWriteState.setShowWriteAccess(state);
       Project project = e.getData(Project.KEY);
       if (project == null) return;

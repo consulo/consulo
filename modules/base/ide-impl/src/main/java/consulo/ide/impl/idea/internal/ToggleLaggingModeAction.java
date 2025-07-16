@@ -33,7 +33,8 @@ public class ToggleLaggingModeAction extends AnAction implements DumbAware {
   private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD); 
 
   @Override
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     if (myLagging) {
       myLagging = false;
       myAlarm.cancelAllRequests();

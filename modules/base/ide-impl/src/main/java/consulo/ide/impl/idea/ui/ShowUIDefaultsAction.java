@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Cell;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,6 +31,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.PairFunction;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -48,7 +50,8 @@ import java.util.EventObject;
  */
 public class ShowUIDefaultsAction extends AnAction implements DumbAware {
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final UIDefaults defaults = UIManager.getDefaults();
     Enumeration keys = defaults.keys();
     final Object[][] data = new Object[defaults.size()][2];
@@ -62,7 +65,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
 
     Arrays.sort(data, (o1, o2) -> StringUtil.naturalCompare(o1[0].toString(), o2[0].toString()));
 
-    final Project project = e == null ? null : e.getData(Project.KEY);
+    final Project project = e.getData(Project.KEY);
     new DialogWrapper(project) {
       {
         setTitle("Edit LaF Defaults");
