@@ -1,8 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
-/*
- * @author max
- */
 package consulo.index.io;
 
 import consulo.index.io.data.DataInputOutputUtil;
@@ -23,6 +19,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
+/**
+ * @author max
+ */
 public class PersistentHashMapValueStorage {
   @Nullable
   private RAReader myCompactionModeReader;

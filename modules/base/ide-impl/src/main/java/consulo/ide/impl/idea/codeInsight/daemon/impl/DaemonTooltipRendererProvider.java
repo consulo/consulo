@@ -1,8 +1,4 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
-/*
- * @author max
- */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.application.util.registry.Registry;
@@ -26,6 +22,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * @author max
+ */
 public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererProvider {
   private final Project myProject;
   private final Editor myEditor;
