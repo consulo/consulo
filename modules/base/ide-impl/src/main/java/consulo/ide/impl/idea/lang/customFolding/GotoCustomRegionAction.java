@@ -54,7 +54,7 @@ import java.util.Set;
  * @author Rustam Vishnyakov
  */
 public class GotoCustomRegionAction extends AnAction implements DumbAware, PopupAction {
-    public GotoCustomRegionAction(@Nonnull LocalizeValue text) {
+    public GotoCustomRegionAction() {
         super(IdeLocalize.gotoCustomRegionMenuItem());
     }
 
