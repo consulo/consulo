@@ -100,7 +100,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getDataContext().getRequiredData(Project.KEY);
+    final Project project = e.getRequiredData(Project.KEY);
     final ExportTestResultsConfiguration config = ExportTestResultsConfiguration.getInstance(project);
 
     final LocalizeValue name = ExecutionLocalize.exportTestResultsFilename(PathUtil.suggestFileName(myRunConfiguration.getName()));

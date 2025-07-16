@@ -19,8 +19,8 @@ package consulo.language.editor.impl.internal.generation;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.generation.GenerateActionPopupTemplateInjector;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,15 +34,19 @@ import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "Generate")
 public class GenerateAction extends DumbAwareAction {
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
 
     Project project = e.getRequiredData(Project.KEY);
-    final ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup(CodeInsightBundle.message("generate.list.popup.title"), wrapGroup(getGroup(), dataContext, project), dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                                    false);
+    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+        CodeInsightLocalize.generateListPopupTitle().get(),
+        wrapGroup(getGroup(), dataContext, project),
+        dataContext,
+        JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+        false
+    );
 
     popup.showInBestPositionFor(dataContext);
   }

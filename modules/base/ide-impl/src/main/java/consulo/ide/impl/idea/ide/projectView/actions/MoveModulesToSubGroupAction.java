@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.projectView.actions;
 
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.LangDataKeys;
@@ -26,6 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -42,15 +42,13 @@ public class MoveModulesToSubGroupAction extends MoveModulesToGroupAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
         String[] newGroup;
         if (myModuleGroup != null) {
             LocalizeValue message =
@@ -70,6 +68,6 @@ public class MoveModulesToSubGroupAction extends MoveModulesToGroupAction {
             newGroup = new String[]{group};
         }
 
-        doMove(modules, new ModuleGroup(newGroup), dataContext);
+        doMove(modules, new ModuleGroup(newGroup), e.getDataContext());
     }
 }

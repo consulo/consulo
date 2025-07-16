@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesToGroupAction;
 import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesToSubGroupAction;
 import consulo.ide.localize.IdeLocalize;
@@ -47,10 +46,9 @@ public class MoveModuleToGroup extends ActionGroup {
 
     @Override
     @RequiredUIAccess
-    public void update(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
-        Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
         boolean active = project != null && modules != null && modules.length != 0;
         Presentation presentation = e.getPresentation();
         presentation.setVisible(active);

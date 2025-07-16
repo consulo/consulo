@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public class ToggleDockModeAction extends ToggleAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         if (project == null) {
             return false;
@@ -41,7 +41,7 @@ public class ToggleDockModeAction extends ToggleAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
         Project project = event.getData(Project.KEY);
         if (project == null) {
             return;

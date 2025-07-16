@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.scopeView;
 
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
@@ -57,8 +55,7 @@ public class EditScopesAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled(false);
-    final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
+    final Project project = e.getData(Project.KEY);
     if (project != null) {
       final ProjectViewPane projectViewPane = ProjectView.getInstance(project).getCurrentProjectViewPane();
       if (projectViewPane != null) {

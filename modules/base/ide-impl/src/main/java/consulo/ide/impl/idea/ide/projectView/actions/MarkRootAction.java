@@ -91,11 +91,8 @@ public class MarkRootAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-        boolean enabled = canMark(e);
-        e.getPresentation().setVisible(enabled);
-        e.getPresentation().setEnabled(enabled);
+        e.getPresentation().setEnabledAndVisible(canMark(e));
     }
 
     public boolean canMark(AnActionEvent e) {

@@ -47,18 +47,16 @@ public class GenerateCopyrightAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext context = event.getDataContext();
-        Project project = context.getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         if (project == null) {
-            presentation.setEnabled(false);
+            e.getPresentation().setEnabled(false);
             return;
         }
 
-        PsiFile file = getFile(context, project);
+        PsiFile file = getFile(e.getDataContext(), project);
         if (file == null || !UpdateCopyrightsProvider.hasExtension(file)) {
-            presentation.setEnabled(false);
+            e.getPresentation().setEnabled(false);
         }
     }
 
@@ -76,13 +74,12 @@ public class GenerateCopyrightAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent event) {
-        DataContext context = event.getDataContext();
-        Project project = context.getRequiredData(Project.KEY);
-        Module module = context.getData(Module.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        Module module = e.getData(Module.KEY);
         PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-        PsiFile file = getFile(context, project);
+        PsiFile file = getFile(e.getDataContext(), project);
         assert file != null;
         if (CopyrightManager.getInstance(project).getCopyrightOptions(file) == null) {
             if (Messages.showOkCancelDialog(

@@ -85,10 +85,10 @@ public abstract class GotoActionBase extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        DataContext dataContext = e.getDataContext();
+        Project project = e.getData(Project.KEY);
         presentation.setEnabled(
             !getClass().equals(myInAction)
                 && (!requiresProject() || project != null)

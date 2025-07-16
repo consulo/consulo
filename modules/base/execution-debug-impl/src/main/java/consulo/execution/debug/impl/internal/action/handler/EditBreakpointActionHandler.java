@@ -36,9 +36,8 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
   protected abstract void doShowPopup(Project project, JComponent component, Point whereToShow, Object breakpoint);
 
   @Override
-  public void perform(@Nonnull Project project, AnActionEvent event) {
-    DataContext dataContext = event.getDataContext();
-    Editor editor = dataContext.getData(Editor.KEY);
+  public void perform(@Nonnull Project project, @Nonnull AnActionEvent event) {
+    Editor editor = event.getData(Editor.KEY);
     if (editor == null) return;
 
     final Pair<GutterIconRenderer,Object> pair = XBreakpointUtil.findSelectedBreakpoint(project, editor);

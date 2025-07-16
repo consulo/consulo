@@ -32,9 +32,8 @@ public class SearchWebAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        CopyProvider provider = dataContext.getRequiredData(CopyProvider.KEY);
-        provider.performCopy(dataContext);
+        CopyProvider provider = e.getRequiredData(CopyProvider.KEY);
+        provider.performCopy(e.getDataContext());
         String content = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
         if (StringUtil.isNotEmpty(content)) {
             WebSearchEngine engine = myWebSearchOptions.getEngine();

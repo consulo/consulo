@@ -24,7 +24,6 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
@@ -45,10 +44,8 @@ public class SelectAllAction extends TextComponentEditorAction implements DumbAw
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
+    public void update(@Nonnull AnActionEvent event) {
         Editor editor = TextComponentEditorAction.getEditorFromContext(event.getDataContext());
-        presentation.setEnabled(editor != null);
+        event.getPresentation().setEnabled(editor != null);
     }
 }

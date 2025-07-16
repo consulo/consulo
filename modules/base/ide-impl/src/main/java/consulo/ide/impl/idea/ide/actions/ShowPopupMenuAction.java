@@ -23,6 +23,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopupFactory;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +39,7 @@ public class ShowPopupMenuAction extends AnAction implements DumbAware, PopupAct
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         RelativePoint relPoint = JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext());
 
         KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -64,8 +65,7 @@ public class ShowPopupMenuAction extends AnAction implements DumbAware, PopupAct
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         e.getPresentation().setEnabled(focusManager.getFocusOwner() instanceof JComponent);
     }

@@ -47,14 +47,11 @@ public class MoveModulesToGroupAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
-        Presentation presentation = getTemplatePresentation();
-        DataContext dataContext = e.getDataContext();
-        Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+    public void update(@Nonnull AnActionEvent e) {
+        Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
 
         LocalizeValue description = IdeLocalize.messageMoveModulesToGroup(whatToMove(modules), myModuleGroup.presentableText());
-        presentation.setDescriptionValue(description);
+        getTemplatePresentation().setDescriptionValue(description);
     }
 
     protected static String whatToMove(Module[] modules) {
@@ -63,10 +60,9 @@ public class MoveModulesToGroupAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
-        doMove(modules, myModuleGroup, dataContext);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        doMove(modules, myModuleGroup, e.getDataContext());
     }
 
     public static void doMove(Module[] modules, ModuleGroup group, @Nullable DataContext dataContext) {

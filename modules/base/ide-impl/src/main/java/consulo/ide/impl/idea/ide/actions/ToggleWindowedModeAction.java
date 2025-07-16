@@ -64,7 +64,6 @@ public class ToggleWindowedModeAction extends ToggleAction implements DumbAware 
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();

@@ -1,21 +1,18 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
-/*
- * @author max
- */
 package consulo.language.editor.impl.internal.daemon;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorBundle;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.fileEditor.internal.EditorWindowHolder;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
@@ -26,6 +23,9 @@ import consulo.ui.ex.popup.JBPopup;
 import jakarta.annotation.Nonnull;
 import java.awt.*;
 
+/**
+ * @author max
+ */
 public class DaemonEditorPopup extends PopupHandler {
   private final Project myProject;
   private final Editor myEditor;
@@ -46,8 +46,9 @@ public class DaemonEditorPopup extends PopupHandler {
     DefaultActionGroup gotoGroup = createGotoGroup();
     actionGroup.add(gotoGroup);
     actionGroup.addSeparator();
-    actionGroup.add(new AnAction(EditorBundle.message("customize.highlighting.level.menu.item")) {
+    actionGroup.add(new AnAction(CodeEditorLocalize.customizeHighlightingLevelMenuItem()) {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
         JBPopup popup = ConfigureHighlightingLevel.getConfigureHighlightingLevelPopup(e.getDataContext());
         if (popup != null) popup.show(new RelativePoint(comp, new Point(x, y)));
@@ -55,13 +56,14 @@ public class DaemonEditorPopup extends PopupHandler {
     });
     if (!UIUtil.uiParents(myEditor.getComponent(), false).filter(EditorWindowHolder.class).isEmpty()) {
       actionGroup.addSeparator();
-      actionGroup.add(new ToggleAction(EditorBundle.message("checkbox.show.editor.preview.popup")) {
+      actionGroup.add(new ToggleAction(CodeEditorLocalize.checkboxShowEditorPreviewPopup()) {
         @Override
         public boolean isSelected(@Nonnull AnActionEvent e) {
           return UISettings.getInstance().getShowEditorToolTip();
         }
 
         @Override
+        @RequiredUIAccess
         public void setSelected(@Nonnull AnActionEvent e, boolean state) {
           UISettings.getInstance().setShowEditorToolTip(state);
           UISettings.getInstance().fireUISettingsChanged();
@@ -79,14 +81,16 @@ public class DaemonEditorPopup extends PopupHandler {
   public static DefaultActionGroup createGotoGroup() {
     Shortcut shortcut = KeymapUtil.getPrimaryShortcut("GotoNextError");
     String shortcutText = shortcut != null ? " (" + KeymapUtil.getShortcutText(shortcut) + ")" : "";
-    DefaultActionGroup gotoGroup = DefaultActionGroup.createPopupGroup(() -> CodeInsightBundle.message("popup.title.next.error.action.0.goes.through", shortcutText));
-    gotoGroup.add(new ToggleAction(EditorBundle.message("errors.panel.go.to.errors.first.radio")) {
+    DefaultActionGroup gotoGroup =
+        DefaultActionGroup.createPopupGroup(() -> CodeInsightLocalize.popupTitleNextErrorAction0GoesThrough(shortcutText).get());
+    gotoGroup.add(new ToggleAction(CodeEditorLocalize.errorsPanelGoToErrorsFirstRadio()) {
       @Override
       public boolean isSelected(@Nonnull AnActionEvent e) {
         return DaemonCodeAnalyzerSettings.getInstance().isNextErrorActionGoesToErrorsFirst();
       }
 
       @Override
+      @RequiredUIAccess
       public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         DaemonCodeAnalyzerSettings.getInstance().setNextErrorActionGoesToErrorsFirst(state);
       }
@@ -96,13 +100,14 @@ public class DaemonEditorPopup extends PopupHandler {
         return true;
       }
     });
-    gotoGroup.add(new ToggleAction(EditorBundle.message("errors.panel.go.to.next.error.warning.radio")) {
+    gotoGroup.add(new ToggleAction(CodeEditorLocalize.errorsPanelGoToNextErrorWarningRadio()) {
       @Override
       public boolean isSelected(@Nonnull AnActionEvent e) {
         return !DaemonCodeAnalyzerSettings.getInstance().isNextErrorActionGoesToErrorsFirst();
       }
 
       @Override
+      @RequiredUIAccess
       public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         DaemonCodeAnalyzerSettings.getInstance().setNextErrorActionGoesToErrorsFirst(!state);
       }

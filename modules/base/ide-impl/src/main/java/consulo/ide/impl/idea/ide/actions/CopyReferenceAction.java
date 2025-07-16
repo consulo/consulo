@@ -43,20 +43,18 @@ public class CopyReferenceAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         boolean plural = false;
         boolean enabled;
         boolean paths = false;
         boolean calcQualifiedName = ActionPlaces.COPY_REFERENCE_POPUP.equals(e.getPlace());
 
-        DataContext dataContext = e.getDataContext();
-        Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = e.getData(Editor.KEY);
         if (editor != null && FileDocumentManager.getInstance().getFile(editor.getDocument()) != null) {
             enabled = true;
         }
         else {
-            List<PsiElement> elements = getPsiElements(dataContext, editor);
+            List<PsiElement> elements = getPsiElements(e.getDataContext(), editor);
             enabled = !elements.isEmpty();
             plural = elements.size() > 1;
             paths = elements.stream().allMatch(el -> el instanceof PsiFileSystemItem && getQualifiedNameFromProviders(el) == null);
@@ -94,13 +92,12 @@ public class CopyReferenceAction extends DumbAwareAction {
         return getElementsToCopy(editor, dataContext);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Editor editor = dataContext.getData(Editor.KEY);
-        Project project = dataContext.getData(Project.KEY);
-        List<PsiElement> elements = getPsiElements(dataContext, editor);
+        Editor editor = e.getData(Editor.KEY);
+        Project project = e.getData(Project.KEY);
+        List<PsiElement> elements = getPsiElements(e.getDataContext(), editor);
 
         String copy = getQualifiedName(editor, elements);
         if (copy != null) {

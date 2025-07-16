@@ -24,14 +24,14 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 public class ExportToTextFileAction extends AnAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
-        ExporterToTextFile exporterToTextFile = getExporter(dataContext);
+        ExporterToTextFile exporterToTextFile = getExporter(e.getDataContext());
         if (exporterToTextFile == null) {
             return;
         }
@@ -60,10 +60,9 @@ public class ExportToTextFileAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        ExporterToTextFile exporterToTextFile = getExporter(dataContext);
-        presentation.setEnabled(event.hasData(Project.KEY) && exporterToTextFile != null && exporterToTextFile.canExport());
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        ExporterToTextFile exporterToTextFile = getExporter(e.getDataContext());
+        presentation.setEnabled(e.hasData(Project.KEY) && exporterToTextFile != null && exporterToTextFile.canExport());
     }
 }

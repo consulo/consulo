@@ -59,14 +59,14 @@ import java.util.function.Predicate;
 public class GotoRelatedFileAction extends AnAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        DataContext context = e.getDataContext();
-        Editor editor = context.getData(Editor.KEY);
-        PsiFile psiFile = context.getData(PsiFile.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Editor editor = e.getData(Editor.KEY);
+        PsiFile psiFile = e.getData(PsiFile.KEY);
         if (psiFile == null) {
             return;
         }
 
+        DataContext context = e.getDataContext();
         List<GotoRelatedItem> items = getItems(psiFile, editor, context);
         if (items.isEmpty()) {
             return;
@@ -332,8 +332,8 @@ public class GotoRelatedFileAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        e.getPresentation().setEnabled(e.getDataContext().hasData(PsiFile.KEY));
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(PsiFile.KEY));
     }
 
     private static Action createNumberAction(

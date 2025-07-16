@@ -56,9 +56,8 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     }
   }
 
-  private static boolean isEnabled(AnActionEvent event) {
-    final DataContext context = event.getDataContext();
-    final Project project = context.getData(Project.KEY);
+  private static boolean isEnabled(@Nonnull AnActionEvent e) {
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -66,8 +65,8 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     if (!CopyrightManager.getInstance(project).hasAnyCopyrights()) {
       return false;
     }
-    final VirtualFile[] files = context.getData(VirtualFile.KEY_OF_ARRAY);
-    final Editor editor = context.getData(Editor.KEY);
+    final VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+    final Editor editor = e.getData(Editor.KEY);
     if (editor != null) {
       final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       if (file == null || !UpdateCopyrightsProvider.hasExtension(file)) {
@@ -88,10 +87,10 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
 
     }
     else if ((files == null || files.length != 1)
-      && !context.hasData(LangDataKeys.MODULE_CONTEXT)
-      && !context.hasData(LangDataKeys.MODULE_CONTEXT_ARRAY)
-      && !context.hasData(PlatformDataKeys.PROJECT_CONTEXT)) {
-      final PsiElement[] elems = context.getData(PsiElement.KEY_OF_ARRAY);
+      && !e.hasData(LangDataKeys.MODULE_CONTEXT)
+      && !e.hasData(LangDataKeys.MODULE_CONTEXT_ARRAY)
+      && !e.hasData(PlatformDataKeys.PROJECT_CONTEXT)) {
+      final PsiElement[] elems = e.getData(PsiElement.KEY_OF_ARRAY);
       if (elems != null) {
         boolean copyrightEnabled = false;
         for (PsiElement elem : elems) {

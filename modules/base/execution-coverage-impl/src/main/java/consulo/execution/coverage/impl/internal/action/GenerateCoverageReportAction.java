@@ -2,7 +2,6 @@ package consulo.execution.coverage.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.dataContext.DataContext;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageSuitesBundle;
@@ -29,9 +28,8 @@ public class GenerateCoverageReportAction extends AnAction implements DumbAware 
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Project project = dataContext.getRequiredData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
         CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
         CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
 
@@ -44,7 +42,7 @@ public class GenerateCoverageReportAction extends AnAction implements DumbAware 
                 (o, throwable) -> {
                     // success complete
                     if (throwable == null) {
-                        coverageEngine.generateReport(project, dataContext, currentSuite);
+                        coverageEngine.generateReport(project, e.getDataContext(), currentSuite);
                     }
                 },
                 uiAccess
@@ -53,15 +51,14 @@ public class GenerateCoverageReportAction extends AnAction implements DumbAware 
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
         Presentation presentation = e.getPresentation();
         presentation.setEnabledAndVisible(false);
-        Project project = dataContext.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project != null) {
             CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
             if (currentSuite != null) {
                 CoverageEngine coverageEngine = currentSuite.getCoverageEngine();
-                if (coverageEngine.isReportGenerationAvailable(project, dataContext, currentSuite)) {
+                if (coverageEngine.isReportGenerationAvailable(project, e.getDataContext(), currentSuite)) {
                     presentation.setEnabledAndVisible(true);
                 }
             }

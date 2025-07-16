@@ -65,10 +65,8 @@ public class ShowCoveringTestsAction extends AnAction {
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext context = e.getDataContext();
-        Project project = context.getData(Project.KEY);
-        LOG.assertTrue(project != null);
-        Editor editor = context.getData(Editor.KEY);
-        LOG.assertTrue(editor != null);
+        Project project = context.getRequiredData(Project.KEY);
+        Editor editor = context.getRequiredData(Editor.KEY);
 
         CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
         LOG.assertTrue(currentSuite != null);

@@ -44,14 +44,13 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
 
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
 
         if (windowManager.isEditorComponentActive()) {
-            doNavigate(dataContext, project);
+            doNavigate(e.getDataContext(), project);
             return;
         }
 
@@ -60,9 +59,9 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Project project = e.getData(Project.KEY);
         presentation.setEnabled(false);
         if (project == null) {
             return;
@@ -70,7 +69,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
         if (windowManager.isEditorComponentActive()) {
             FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
-            FileEditorWindow currentWindow = event.getData(FileEditorWindow.DATA_KEY);
+            FileEditorWindow currentWindow = e.getData(FileEditorWindow.DATA_KEY);
             if (currentWindow == null) {
                 editorManager.getCurrentWindow();
             }
@@ -81,7 +80,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
             return;
         }
 
-        ContentManager contentManager = event.getData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
+        ContentManager contentManager = e.getData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
         presentation.setEnabled(contentManager != null && contentManager.getContentCount() > 1 && contentManager.isSingleSelection());
     }
 

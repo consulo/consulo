@@ -670,6 +670,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
       if (todoPanel != null) {
@@ -697,6 +698,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
 
@@ -727,6 +729,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
       if (todoPanel != null) {

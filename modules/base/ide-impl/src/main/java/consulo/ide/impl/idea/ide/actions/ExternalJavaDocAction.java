@@ -48,6 +48,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.BrowserUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.awt.*;
@@ -61,15 +62,14 @@ public class ExternalJavaDocAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
 
-        Editor editor = dataContext.getData(Editor.KEY);
-        PsiElement element = getElement(dataContext, editor);
+        Editor editor = e.getData(Editor.KEY);
+        PsiElement element = getElement(e.getDataContext(), editor);
         if (element == null) {
             Messages.showMessageDialog(
                 project,
@@ -80,12 +80,12 @@ public class ExternalJavaDocAction extends AnAction {
             return;
         }
 
-        PsiFile context = dataContext.getData(PsiFile.KEY);
+        PsiFile context = e.getDataContext().getData(PsiFile.KEY);
 
         PsiElement originalElement = getOriginalElement(context, editor);
         DocumentationManagerHelper.storeOriginalElement(project, originalElement, element);
 
-        showExternalJavadoc(element, originalElement, null, dataContext);
+        showExternalJavadoc(element, originalElement, null, e.getDataContext());
     }
 
     public static void showExternalJavadoc(
@@ -157,14 +157,12 @@ public class ExternalJavaDocAction extends AnAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        Editor editor = dataContext.getData(Editor.KEY);
-        PsiElement element = getElement(dataContext, editor);
-        PsiElement originalElement = getOriginalElement(dataContext.getData(PsiFile.KEY), editor);
-        DocumentationManagerHelper.storeOriginalElement(dataContext.getData(Project.KEY), originalElement, element);
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Editor editor = e.getData(Editor.KEY);
+        PsiElement element = getElement(e.getDataContext(), editor);
+        PsiElement originalElement = getOriginalElement(e.getData(PsiFile.KEY), editor);
+        DocumentationManagerHelper.storeOriginalElement(e.getData(Project.KEY), originalElement, element);
         DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
         boolean enabled;
         if (provider instanceof ExternalDocumentationProvider edProvider) {
@@ -176,7 +174,7 @@ public class ExternalJavaDocAction extends AnAction {
         }
         if (editor != null) {
             presentation.setEnabled(enabled);
-            if (ActionPlaces.isMainMenuOrActionSearch(event.getPlace())) {
+            if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
                 presentation.setVisible(true);
             }
             else {

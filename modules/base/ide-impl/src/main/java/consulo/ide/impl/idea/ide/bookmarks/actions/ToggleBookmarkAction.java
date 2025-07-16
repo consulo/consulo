@@ -19,26 +19,24 @@ package consulo.ide.impl.idea.ide.bookmarks.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.bookmark.BookmarkManager;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
   public ToggleBookmarkAction() {
     getTemplatePresentation().setTextValue(IdeLocalize.actionBookmarkToggle());
   }
 
-  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null) return;
-    BookmarkInContextInfo info = new BookmarkInContextInfo(dataContext, project).invoke();
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
+    BookmarkInContextInfo info = new BookmarkInContextInfo(e.getDataContext(), project).invoke();
     if (info.getFile() == null) return;
 
     if (info.getBookmarkAtPlace() != null) {
@@ -51,17 +49,13 @@ public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void update(AnActionEvent event) {
-    DataContext dataContext = event.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    event.getPresentation().setEnabled(
+  public void update(@Nonnull AnActionEvent e) {
+    Project project = e.getData(Project.KEY);
+    e.getPresentation().setEnabled(
       project != null
-        && (
-          ToolWindowManager.getInstance(project).isEditorComponentActive() && dataContext.getData(Editor.KEY) != null
-            || dataContext.getData(VirtualFile.KEY) != null
-        )
+        && (ToolWindowManager.getInstance(project).isEditorComponentActive() && e.hasData(Editor.KEY) || e.hasData(VirtualFile.KEY))
     );
 
-    event.getPresentation().setTextValue(IdeLocalize.actionBookmarkToggle());
+    e.getPresentation().setTextValue(IdeLocalize.actionBookmarkToggle());
   }
 }

@@ -296,7 +296,6 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
         }
 
         @Override
-        @RequiredUIAccess
         public void update(AnActionEvent e) {
             e.getPresentation().setVisible(myContent != null);
         }
