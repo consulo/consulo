@@ -45,7 +45,6 @@ abstract class BaseTreeNodeAction extends AnAction implements DumbAware {
     protected abstract void performOn(JTree tree);
 
     @Override
-    @RequiredUIAccess
     public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(enabledOn(getSourceComponent(e)));
     }

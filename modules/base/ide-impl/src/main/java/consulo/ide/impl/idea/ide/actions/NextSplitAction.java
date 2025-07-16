@@ -26,12 +26,13 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 
 public class NextSplitAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .name(IdeLocalize.commandGoToNextSplit())
@@ -42,7 +43,7 @@ public class NextSplitAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         Presentation presentation = event.getPresentation();
         if (project == null) {

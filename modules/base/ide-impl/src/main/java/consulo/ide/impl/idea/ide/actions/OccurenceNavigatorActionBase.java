@@ -40,12 +40,7 @@ import java.util.LinkedList;
 abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         OccurenceNavigator navigator = getNavigator(e.getDataContext());
         if (navigator == null) {
             return;
@@ -71,7 +66,8 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
     }
 
     @Override
-    public void update(AnActionEvent event) {
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);
         if (project == null) {

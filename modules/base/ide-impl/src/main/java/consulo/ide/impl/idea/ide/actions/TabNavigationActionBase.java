@@ -46,10 +46,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+        Project project = e.getRequiredData(Project.KEY);
 
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
 
@@ -58,10 +55,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
             return;
         }
 
-        ContentManager contentManager = e.getData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
-        if (contentManager == null) {
-            return;
-        }
+        ContentManager contentManager = e.getRequiredData(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER);
         doNavigate(contentManager);
     }
 

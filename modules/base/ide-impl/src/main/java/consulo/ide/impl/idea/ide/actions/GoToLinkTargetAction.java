@@ -36,9 +36,9 @@ public class GoToLinkTargetAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        VirtualFile file = e.getData(VirtualFile.KEY);
-        if (project != null && file != null && file.is(VFileProperty.SYMLINK)) {
+        Project project = e.getRequiredData(Project.KEY);
+        VirtualFile file = e.getRequiredData(VirtualFile.KEY);
+        if (file.is(VFileProperty.SYMLINK)) {
             VirtualFile target = file.getCanonicalFile();
             if (target != null) {
                 PsiManager psiManager = PsiManager.getInstance(project);

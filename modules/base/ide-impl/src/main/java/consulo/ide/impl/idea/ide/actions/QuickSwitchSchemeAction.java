@@ -51,8 +51,8 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
         DefaultActionGroup group = new DefaultActionGroup();
         fillActions(project, group, e.getDataContext());
         showPopup(e, group);

@@ -62,12 +62,8 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        IdeView view = e.getData(IdeView.KEY);
-        Project project = e.getData(Project.KEY);
-
-        if (view == null || project == null) {
-            return;
-        }
+        IdeView view = e.getRequiredData(IdeView.KEY);
+        Project project = e.getRequiredData(Project.KEY);
 
         PsiDirectory directory = DirectoryChooserUtil.getOrChooseDirectory(view);
 
@@ -137,13 +133,8 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
         Presentation presentation = event.getPresentation();
 
         Project project = event.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabledAndVisible(false);
-            return;
-        }
-
         IdeView view = event.getData(IdeView.KEY);
-        if (view == null) {
+        if (project == null || view == null) {
             presentation.setEnabledAndVisible(false);
             return;
         }

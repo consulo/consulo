@@ -37,19 +37,11 @@ import jakarta.annotation.Nullable;
  * from kotlin
  */
 public class OpenInRightSplitAction extends DumbAwareAction {
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-
-        VirtualFile file = e.getData(VirtualFile.KEY);
-        if (file == null) {
-            return;
-        }
-
+        Project project = e.getRequiredData(Project.KEY);
+        VirtualFile file = e.getRequiredData(VirtualFile.KEY);
         Navigatable element = ObjectUtil.tryCast(e.getData(PsiElement.KEY), Navigatable.class);
 
         FileEditorWindow editorWindow = openInRightSplit(project, file, element, true);
@@ -67,12 +59,8 @@ public class OpenInRightSplitAction extends DumbAwareAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        Editor editor = e.getData(Editor.KEY);
-        FileEditor fileEditor = e.getData(FileEditor.KEY);
-
         String place = e.getPlace();
-        if (project == null || fileEditor != null || editor != null
+        if (!e.hasData(Project.KEY) || e.hasData(FileEditor.KEY) || e.hasData(Editor.KEY)
             || ActionPlaces.EDITOR_TAB_POPUP.equals(place)
             || ActionPlaces.EDITOR_POPUP.equals(place)) {
             e.getPresentation().setEnabledAndVisible(false);

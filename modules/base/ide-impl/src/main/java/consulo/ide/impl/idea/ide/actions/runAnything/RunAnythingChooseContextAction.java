@@ -108,8 +108,8 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
             super(context);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             Application.get().invokeLater(() -> {
                 Project project = e.getData(Project.KEY);
@@ -120,7 +120,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                 PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(
                     descriptor,
                     project,
-                    e.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT)
+                    e.getData(UIExAWTDataKey.CONTEXT_COMPONENT)
                 );
 
                 chooser.chooseAsync(project.getBaseDir()).doWhenDone(virtualFiles -> {
@@ -252,7 +252,6 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         return AnAction.EMPTY_ARRAY;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();

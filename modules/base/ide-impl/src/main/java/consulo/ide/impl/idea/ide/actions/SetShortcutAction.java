@@ -31,8 +31,8 @@ public class SetShortcutAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        JBPopup seDialog = project == null ? null : project.getUserData(SearchEverywhereManager.SEARCH_EVERYWHERE_POPUP);
+        Project project = e.getRequiredData(Project.KEY);
+        JBPopup seDialog = project.getUserData(SearchEverywhereManager.SEARCH_EVERYWHERE_POPUP);
         if (seDialog == null) {
             return;
         }
@@ -43,11 +43,8 @@ public class SetShortcutAction extends AnAction implements DumbAware {
             return;
         }
 
-        AnAction action = e.getData(SELECTED_ACTION);
-        Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        if (action == null || component == null) {
-            return;
-        }
+        AnAction action = e.getRequiredData(SELECTED_ACTION);
+        Component component = e.getRequiredData(UIExAWTDataKey.CONTEXT_COMPONENT);
 
         seDialog.cancel();
         String id = ActionManager.getInstance().getId(action);

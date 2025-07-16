@@ -39,7 +39,6 @@ public class ShowLogAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setVisible(ShowFilePathAction.isSupported());

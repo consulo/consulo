@@ -58,19 +58,12 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
 
     @Override
     public void update(@Nonnull AnActionEvent event) {
-        boolean enabled = isAvailable();
-        Presentation presentation = event.getPresentation();
-        presentation.setEnabled(enabled);
-        presentation.setVisible(enabled);
+        event.getPresentation().setEnabledAndVisible(isAvailable());
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent event) {
-        if (!isAvailable()) {
-            return;
-        }
-
         Project project = event.getData(Project.KEY);
         CreateDesktopEntryDialog dialog = new CreateDesktopEntryDialog(project);
         if (!dialog.showAndGet()) {

@@ -41,15 +41,8 @@ public class ShowModulePropertiesAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-        Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
-        if (module == null) {
-            return;
-        }
-
+        Project project = e.getRequiredData(Project.KEY);
+        Module module = e.getRequiredData(LangDataKeys.MODULE_CONTEXT);
         myShowSettingsUtilProvider.get().showProjectStructureDialog(project, it -> it.select(module.getName(), null, true));
     }
 
