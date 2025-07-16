@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.CopyPasteManager;
@@ -22,6 +23,7 @@ import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.UpToDateLineNumberListener;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ui.ex.awt.transferable.TextTransferable;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -36,7 +38,8 @@ public class CopyRevisionNumberFromAnnotateAction extends AnAction implements Up
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     if (myLineNumber < 0) return;
     final VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(myLineNumber);
     if (revisionNumber != null) {
@@ -46,10 +49,9 @@ public class CopyRevisionNumberFromAnnotateAction extends AnAction implements Up
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final boolean enabled = myLineNumber >= 0 && myAnnotation.getLineRevisionNumber(myLineNumber) != null;
-    e.getPresentation().setEnabled(enabled);
-    e.getPresentation().setVisible(enabled);
+    e.getPresentation().setEnabledAndVisible(enabled);
   }
 
   @Override

@@ -11,9 +11,9 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -34,9 +34,10 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
   }
 
   @Override
-  public final void actionPerformed(AnActionEvent e) {
-    final Editor editor = getEditor(e);
-    final PsiFile file = getPsiFile(e);
+  @RequiredUIAccess
+  public final void actionPerformed(@Nonnull AnActionEvent e) {
+    final Editor editor = e.getRequiredData(Editor.KEY);
+    final PsiFile file = e.getData(PsiFile.KEY);
     if (editor == null || file == null) return;
 
     final List<T> expressions = getElement(editor, file);
@@ -100,20 +101,8 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
   }
 
   @Override
-  public final void update(AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    boolean enabled = Application.get().isInternal() && getEditor(e) != null && myFileClass.isInstance(getPsiFile(e));
-    presentation.setVisible(enabled);
-    presentation.setEnabled(enabled);
-  }
-
-  @Nullable
-  private static Editor getEditor(@Nonnull AnActionEvent e) {
-    return e.getDataContext().getData(Editor.KEY);
-  }
-
-  @Nullable
-  private static PsiFile getPsiFile(@Nonnull AnActionEvent e) {
-    return e.getDataContext().getData(PsiFile.KEY);
+  public final void update(@Nonnull AnActionEvent e) {
+    boolean enabled = Application.get().isInternal() && e.hasData(Editor.KEY) && myFileClass.isInstance(e.getData(PsiFile.KEY));
+    e.getPresentation().setEnabledAndVisible(enabled);
   }
 }

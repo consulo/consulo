@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
@@ -46,12 +47,14 @@ public abstract class AbstractVcsAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     actionPerformed(VcsContextWrapper.createCachedInstanceOn(e));
   }
 
   protected abstract void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation);
 
+  @RequiredUIAccess
   protected abstract void actionPerformed(@Nonnull VcsContext e);
 
   /**

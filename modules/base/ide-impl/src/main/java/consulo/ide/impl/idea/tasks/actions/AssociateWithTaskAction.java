@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.change.ChangeList;
@@ -24,15 +25,15 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.task.TaskManager;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
-
   @Override
-  public void update(AnActionEvent e) {
-    boolean isChangelist = e.getData(VcsDataKeys.CHANGE_LISTS) == null;
+  public void update(@Nonnull AnActionEvent e) {
+    boolean isChangelist = !e.hasData(VcsDataKeys.CHANGE_LISTS);
     e.getPresentation().setVisible(isChangelist);
     if (isChangelist) {
       super.update(e);   
@@ -40,7 +41,7 @@ public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
   }
 
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
     if (lists == null) {
       return false;
@@ -56,7 +57,8 @@ public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
+  @RequiredUIAccess
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
     if (lists == null) {
       return;

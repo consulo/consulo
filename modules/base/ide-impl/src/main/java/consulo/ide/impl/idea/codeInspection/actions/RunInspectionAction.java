@@ -57,15 +57,15 @@ public class RunInspectionAction extends GotoActionBase {
   }
 
   @Override
-  protected void gotoActionPerformed(final AnActionEvent e) {
+  protected void gotoActionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    final PsiElement psiElement = e.getDataContext().getData(PsiElement.KEY);
-    final PsiFile psiFile = e.getDataContext().getData(PsiFile.KEY);
-    final VirtualFile virtualFile = e.getDataContext().getData(VirtualFile.KEY);
+    final PsiElement psiElement = e.getData(PsiElement.KEY);
+    final PsiFile psiFile = e.getData(PsiFile.KEY);
+    final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.goto.inspection");
 

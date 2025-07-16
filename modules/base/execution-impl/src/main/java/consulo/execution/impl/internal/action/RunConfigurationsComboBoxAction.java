@@ -232,13 +232,11 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            Project project = e.getData(Project.KEY);
-            if (project != null) {
-                RunnerAndConfigurationSettings settings = chooseTempSettings(project);
-                if (settings != null) {
-                    RunManager runManager = RunManager.getInstance(project);
-                    runManager.makeStable(settings);
-                }
+            Project project = e.getRequiredData(Project.KEY);
+            RunnerAndConfigurationSettings settings = chooseTempSettings(project);
+            if (settings != null) {
+                RunManager runManager = RunManager.getInstance(project);
+                runManager.makeStable(settings);
             }
         }
 
@@ -247,26 +245,20 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
             Presentation presentation = e.getPresentation();
             Project project = e.getData(Project.KEY);
             if (project == null) {
-                disable(presentation);
+                presentation.setEnabledAndVisible(false);
                 return;
             }
             RunnerAndConfigurationSettings settings = chooseTempSettings(project);
             if (settings == null) {
-                disable(presentation);
+                presentation.setEnabledAndVisible(false);
             }
             else {
                 LocalizeValue textValue = ExecutionLocalize.saveTemporaryRunConfigurationActionName(settings.getName());
 
                 presentation.setTextValue(textValue);
                 presentation.setDescriptionValue(textValue.map(Presentation.NO_MNEMONIC));
-                presentation.setVisible(true);
-                presentation.setEnabled(true);
+                presentation.setEnabledAndVisible(true);
             }
-        }
-
-        private static void disable(Presentation presentation) {
-            presentation.setEnabled(false);
-            presentation.setVisible(false);
         }
 
         @Nullable

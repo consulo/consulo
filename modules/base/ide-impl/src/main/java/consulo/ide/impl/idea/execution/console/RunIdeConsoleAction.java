@@ -243,24 +243,19 @@ public class RunIdeConsoleAction extends DumbAwareAction {
   }
 
   private static class MyRunAction extends DumbAwareAction {
-
     private IdeScriptEngine engine;
 
     @Override
-    public void update(AnActionEvent e) {
-      Project project = e.getData(Project.KEY);
-      Editor editor = e.getDataContext().getData(Editor.KEY);
-      VirtualFile virtualFile = e.getDataContext().getData(VirtualFile.KEY);
-      e.getPresentation().setEnabledAndVisible(project != null && editor != null && virtualFile != null);
+    public void update(@Nonnull AnActionEvent e) {
+      e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(Editor.KEY) && e.hasData(VirtualFile.KEY));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-      Project project = e.getData(Project.KEY);
-      Editor editor = e.getDataContext().getData(Editor.KEY);
-      VirtualFile virtualFile = e.getDataContext().getData(VirtualFile.KEY);
-      if (project == null || editor == null || virtualFile == null) return;
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      Project project = e.getRequiredData(Project.KEY);
+      Editor editor = e.getRequiredData(Editor.KEY);
+      VirtualFile virtualFile = e.getRequiredData(VirtualFile.KEY);
       PsiDocumentManager.getInstance(project).commitAllDocuments();
 
       String extension = virtualFile.getExtension();

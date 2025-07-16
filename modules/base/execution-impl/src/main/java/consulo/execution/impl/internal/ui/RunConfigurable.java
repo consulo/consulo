@@ -1506,7 +1506,6 @@ public class RunConfigurable extends BaseConfigurable {
         @Override
         public void update(@Nonnull AnActionEvent e) {
             final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
-            final Presentation presentation = e.getPresentation();
             final boolean enabled;
             if (configuration == null) {
                 enabled = false;
@@ -1515,8 +1514,7 @@ public class RunConfigurable extends BaseConfigurable {
                 RunnerAndConfigurationSettings settings = configuration.getSettings();
                 enabled = settings != null && settings.isTemporary();
             }
-            presentation.setEnabled(enabled);
-            presentation.setVisible(enabled);
+            e.getPresentation().setEnabledAndVisible(enabled);
         }
     }
 

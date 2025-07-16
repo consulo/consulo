@@ -95,7 +95,7 @@ public class ShowRunningListAction extends AnAction {
                 .setBlockClicksThroughBalloon(true)
                 .setDialogMode(true)
                 .setHideOnKeyOutside(false);
-            IdeFrame frame = e.getDataContext().getData(IdeFrame.KEY);
+            IdeFrame frame = e.getData(IdeFrame.KEY);
             if (frame == null) {
                 frame = WindowManagerEx.getInstance().getIdeFrame(project);
             }

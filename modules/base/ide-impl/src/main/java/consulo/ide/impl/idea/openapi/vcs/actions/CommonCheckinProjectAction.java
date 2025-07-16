@@ -24,6 +24,7 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -52,17 +53,16 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
     return vcsManager.hasAnyMappings();
   }
 
-  protected void update(VcsContext vcsContext, Presentation presentation) {
+  @Override
+  protected void update(VcsContext vcsContext, @Nonnull Presentation presentation) {
     Project project = vcsContext.getProject();
     if (project == null) {
-      presentation.setEnabled(false);
-      presentation.setVisible(false);
+      presentation.setEnabledAndVisible(false);
       return;
     }
     final ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(project);
     if (! plVcsManager.hasActiveVcss()) {
-      presentation.setEnabled(false);
-      presentation.setVisible(false);
+      presentation.setEnabledAndVisible(false);
       return;
     }
 

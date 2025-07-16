@@ -280,7 +280,7 @@ public final class SystemShortcuts {
             .addClosingAction(
                 LocalizeValue.localizeTODO("Modify shortcut"),
                 e -> {
-                    Component component = e.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+                    Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
                     if (component == null) {
                         Window[] frames = Window.getWindows();
                         component = frames == null || frames.length == 0 ? null : frames[0];

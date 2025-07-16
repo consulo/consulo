@@ -62,12 +62,6 @@ public class ViewBreakpointsAction extends AnAction implements DumbAware {
 
     @Override
     public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getDataContext().getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-        presentation.setEnabled(true);
+        event.getPresentation().setEnabled(event.hasData(Project.KEY));
     }
 }

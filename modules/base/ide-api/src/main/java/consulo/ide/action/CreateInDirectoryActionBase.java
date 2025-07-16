@@ -61,13 +61,7 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
       return;
     }
 
-    final DataContext dataContext = e.getDataContext();
-    final Presentation presentation = e.getPresentation();
-
-    final boolean enabled = isAvailable(dataContext);
-
-    presentation.setVisible(enabled);
-    presentation.setEnabled(enabled);
+    e.getPresentation().setEnabledAndVisible(isAvailable(e.getDataContext()));
   }
 
   @Override

@@ -13,17 +13,14 @@ public abstract class ToolWindowContextMenuActionBase extends AnAction {
   @Override
   @RequiredUIAccess
   public final void actionPerformed(@Nonnull AnActionEvent e) {
-    ToolWindow toolWindow = e.getDataContext().getData(ToolWindow.KEY);
-    if (toolWindow == null) {
-      return;
-    }
+    ToolWindow toolWindow = e.getRequiredData(ToolWindow.KEY);
     Content content = getContextContent(e, toolWindow);
     actionPerformed(e, toolWindow, content);
   }
 
   @Override
   public final void update(@Nonnull AnActionEvent e) {
-    ToolWindow toolWindow = e.getDataContext().getData(ToolWindow.KEY);
+    ToolWindow toolWindow = e.getData(ToolWindow.KEY);
     if (toolWindow == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;

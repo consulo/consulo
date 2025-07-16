@@ -206,12 +206,10 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
       configuration = context.getConfiguration();
     }
     if (configuration == null) {
-      presentation.setEnabled(false);
-      presentation.setVisible(false);
+      presentation.setEnabledAndVisible(false);
     }
     else {
-      presentation.setEnabled(true);
-      presentation.setVisible(true);
+      presentation.setEnabledAndVisible(true);
       final List<ConfigurationFromContext> fromContext = getConfigurationsFromContext(context);
       if (existing == null && !fromContext.isEmpty()) {
         //todo[nik,anna] it's dirty fix. Otherwise wrong configuration will be returned from context.getConfiguration()

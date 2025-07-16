@@ -46,15 +46,8 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-        final Editor hostEditor = e.getDataContext().getData(Editor.KEY);
-        if (hostEditor == null) {
-            return;
-        }
-
+        Project project = e.getRequiredData(Project.KEY);
+        Editor hostEditor = e.getRequiredData(Editor.KEY);
         actionPerformedImpl(project, hostEditor);
     }
 
@@ -80,17 +73,10 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final Presentation presentation = e.getPresentation();
-
         Project project = e.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        Editor hostEditor = e.getDataContext().getData(Editor.KEY);
-        if (hostEditor == null) {
-            presentation.setEnabled(false);
+        Editor hostEditor = e.getData(Editor.KEY);
+        if (project == null || hostEditor == null) {
+            e.getPresentation().setEnabled(false);
             return;
         }
 
@@ -107,7 +93,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
                 }
             }
         );
-        presentation.setEnabled(enabled.get());
+        e.getPresentation().setEnabled(enabled.get());
     }
 
     private static void iterateOverCarets(

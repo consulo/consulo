@@ -19,7 +19,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.TitledHandler;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
@@ -91,7 +90,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
 
     private static PsiElement adjustForRename(DataContext dataContext, PsiElement element) {
         if (element instanceof PsiDirectoryContainer directoryContainer) {
-            final Module module = dataContext.getData(LangDataKeys.MODULE);
+            Module module = dataContext.getData(Module.KEY);
             if (module != null) {
                 final PsiDirectory[] directories = directoryContainer.getDirectories(GlobalSearchScope.moduleScope(module));
                 if (directories.length >= 1) {

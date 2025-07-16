@@ -29,12 +29,10 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class SortValuesToggleAction extends ToggleAction implements DumbAware {
-
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    XDebugSession session = e.getDataContext().getData(XDebugSession.DATA_KEY);
+    XDebugSession session = e.getData(XDebugSession.DATA_KEY);
     e.getPresentation().setEnabledAndVisible(session != null && !session.getDebugProcess().isValuesCustomSorted());
   }
 
@@ -44,6 +42,7 @@ public class SortValuesToggleAction extends ToggleAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void setSelected(AnActionEvent e, boolean state) {
     XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setSortValues(state);
     XDebuggerUtil.getInstance().rebuildAllSessionsViews(e.getData(Project.KEY));

@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -33,11 +32,7 @@ public class ShowStatisticsAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final SMTRunnerTestTreeView sender = e.getData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW);
-    if (sender == null) {
-      return;
-    }
-
+    SMTRunnerTestTreeView sender = e.getRequiredData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW);
     final TestResultsViewer resultsViewer = sender.getResultsViewer();
     assert resultsViewer != null;
 
@@ -51,11 +46,6 @@ public class ShowStatisticsAction extends AnAction {
     // visible only in SMTRunnerTestTreeView 
     presentation.setVisible(e.hasData(SMTRunnerTestTreeView.SM_TEST_RUNNER_VIEW));
     // enabled if some proxy is selected
-    presentation.setEnabled(getSelectedTestProxy(e) != null);
-  }
-
-  @Nullable
-  private static Object getSelectedTestProxy(final AnActionEvent e) {
-    return e.getDataContext().getData(AbstractTestProxy.KEY);
+    presentation.setEnabled(e.hasData(AbstractTestProxy.KEY));
   }
 }
