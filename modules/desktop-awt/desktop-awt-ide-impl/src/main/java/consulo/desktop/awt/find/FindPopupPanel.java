@@ -1947,8 +1947,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         @Override
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setEnabled(
-                e.getData(Editor.KEY) == null
-                    || SwingUtilities.isDescendingFrom(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT), myFileMaskField)
+                !e.hasData(Editor.KEY) || SwingUtilities.isDescendingFrom(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT), myFileMaskField)
             );
         }
 

@@ -51,17 +51,14 @@ public class FocusTracesAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final IdeFocusManager manager = IdeFocusManager.getGlobalInstance();
-    if (!(manager instanceof FocusManagerImpl)) return;
-    final FocusManagerImpl focusManager = (FocusManagerImpl)manager;
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    if (!(IdeFocusManager.getGlobalInstance() instanceof FocusManagerImpl focusManager)) return;
 
     myActive = !myActive;
     if (myActive) {
       myFocusTracker = event -> {
-        if (event instanceof FocusEvent && event.getID() == FocusEvent.FOCUS_GAINED) {
-          focusManager.getRequests().add(new FocusRequestInfo(((FocusEvent)event).getComponent(), new Throwable(), false));
+        if (event instanceof FocusEvent focusEvent && event.getID() == FocusEvent.FOCUS_GAINED) {
+          focusManager.getRequests().add(new FocusRequestInfo(focusEvent.getComponent(), new Throwable(), false));
         }
       };
       Toolkit.getDefaultToolkit().addAWTEventListener(myFocusTracker, AWTEvent.FOCUS_EVENT_MASK);
@@ -69,6 +66,7 @@ public class FocusTracesAction extends AnAction implements DumbAware {
 
     if (!myActive) {
       final List<FocusRequestInfo> requests = focusManager.getRequests();
+      Project project = e.getRequiredData(Project.KEY);
       new FocusTracesDialog(project, new ArrayList<>(requests)).show();
       Toolkit.getDefaultToolkit().removeAWTEventListener(myFocusTracker);
       myFocusTracker = null;
@@ -84,6 +82,6 @@ public class FocusTracesAction extends AnAction implements DumbAware {
             ? LocalizeValue.localizeTODO("Stop Focus Tracing")
             : LocalizeValue.localizeTODO("Start Focus Tracing")
     );
-    presentation.setEnabled(e.getData(Project.KEY) != null);
+    presentation.setEnabled(e.hasData(Project.KEY));
   }
 }

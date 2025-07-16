@@ -15,23 +15,19 @@ public class ClearConsoleAction extends DumbAwareAction {
     super(
       ExecutionLocalize.clearAllFromConsoleActionName(),
       LocalizeValue.localizeTODO("Clear the contents of the console"),
-        PlatformIconGroup.actionsGc()
+      PlatformIconGroup.actionsGc()
     );
   }
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
     ConsoleView data = e.getData(ConsoleView.KEY);
-    boolean enabled = data != null && data.getContentSize() > 0;
-    e.getPresentation().setEnabled(enabled);
+    e.getPresentation().setEnabled(data != null && data.getContentSize() > 0);
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    ConsoleView consoleView = e.getData(ConsoleView.KEY);
-    if (consoleView != null) {
-      consoleView.clear();
-    }
+    e.getRequiredData(ConsoleView.KEY).clear();
   }
 }

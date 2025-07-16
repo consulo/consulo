@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.LogicalPosition;
@@ -24,6 +25,7 @@ import consulo.execution.debug.impl.internal.action.handler.XQuickEvaluateHandle
 import consulo.execution.debug.impl.internal.evaluate.QuickEvaluateHandler;
 import consulo.execution.debug.impl.internal.evaluate.ValueHintType;
 import consulo.execution.debug.impl.internal.evaluate.ValueLookupManagerImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
@@ -31,9 +33,10 @@ import jakarta.annotation.Nonnull;
 /**
  * @author nik
  */
+@ActionImpl(id = "QuickEvaluateExpression")
 public class QuickEvaluateAction extends XDebuggerActionBase {
     public QuickEvaluateAction() {
-        super(true);
+        super(ActionLocalize.actionQuickevaluateexpressionText(), ActionLocalize.actionQuickevaluateexpressionDescription(), null, true);
     }
 
     @Override
@@ -50,23 +53,16 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
         }
 
         @Override
-        public void perform(@Nonnull final Project project, final AnActionEvent event) {
-            Editor editor = event.getData(Editor.KEY);
-            if (editor != null) {
-                LogicalPosition logicalPosition = editor.getCaretModel().getLogicalPosition();
-                ((ValueLookupManagerImpl) ValueLookupManager.getInstance(project))
-                    .showHint(myHandler, editor, editor.logicalPositionToXY(logicalPosition), ValueHintType.MOUSE_CLICK_HINT);
-            }
+        public void perform(@Nonnull Project project, AnActionEvent event) {
+            Editor editor = event.getRequiredData(Editor.KEY);
+            LogicalPosition logicalPosition = editor.getCaretModel().getLogicalPosition();
+            ((ValueLookupManagerImpl) ValueLookupManager.getInstance(project))
+                .showHint(myHandler, editor, editor.logicalPositionToXY(logicalPosition), ValueHintType.MOUSE_CLICK_HINT);
         }
 
         @Override
-        public boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
-            if (!myHandler.isEnabled(project)) {
-                return false;
-            }
-
-            Editor editor = event.getData(Editor.KEY);
-            return editor != null && !event.hasData(EditorGutter.KEY);
+        public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
+            return myHandler.isEnabled(project) && event.hasData(Editor.KEY) && !event.hasData(EditorGutter.KEY);
         }
     }
 }

@@ -19,6 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -39,13 +41,8 @@ import jakarta.annotation.Nullable;
 })
 public class MemorySettingsPopupActionGroup extends DefaultActionGroup implements DumbAware {
     public MemorySettingsPopupActionGroup() {
-        super(XDebuggerBundle.message("action.memory.view.settings.text"), true);
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.generalGearplain();
+        super(XDebuggerLocalize.actionMemoryViewSettingsText(), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());
+        setPopup(true);
     }
 
     @Override

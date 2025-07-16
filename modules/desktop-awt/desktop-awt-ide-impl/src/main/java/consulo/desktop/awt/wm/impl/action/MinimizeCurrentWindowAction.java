@@ -45,9 +45,9 @@ public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
     if (focusOwner != null) {
-      final Window window = focusOwner instanceof JFrame ? (Window) focusOwner : SwingUtilities.getWindowAncestor(focusOwner);
-      if (window instanceof JFrame && !(((JFrame)window).getState() == Frame.ICONIFIED)) {
-        ((JFrame)window).setState(Frame.ICONIFIED);
+      Window window = focusOwner instanceof JFrame frame ? frame : SwingUtilities.getWindowAncestor(focusOwner);
+      if (window instanceof JFrame frame && frame.getState() != Frame.ICONIFIED) {
+        frame.setState(Frame.ICONIFIED);
       }
     }
   }

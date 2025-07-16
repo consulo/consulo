@@ -59,7 +59,6 @@ public class ExecutorAction extends AnAction implements DumbAware {
         getTemplatePresentation().setVisible(false);
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
@@ -153,14 +152,10 @@ public class ExecutorAction extends AnAction implements DumbAware {
         return RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null || project.isDisposed()) {
-            return;
-        }
-
+        Project project = e.getRequiredData(Project.KEY);
         RunnerAndConfigurationSettings configuration = getConfiguration(project);
         if (configuration != null) {
             ExecutionEnvironmentBuilder builder = ExecutionEnvironmentBuilder.createOrNull(myExecutor, configuration);

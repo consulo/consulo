@@ -9,6 +9,7 @@ import consulo.execution.service.ServiceViewContributor;
 import consulo.execution.service.ServiceViewOptions;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
@@ -52,6 +53,7 @@ abstract class RunDashboardGroupingRuleToggleAction extends ToggleAction impleme
   }
 
   @Override
+  @RequiredUIAccess
   public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     Project project = e.getData(Project.KEY);
     if (project == null) return;

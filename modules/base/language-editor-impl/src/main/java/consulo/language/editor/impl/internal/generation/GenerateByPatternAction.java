@@ -60,9 +60,9 @@ public class GenerateByPatternAction extends AnAction {
         e.getPresentation().setVisible(false);
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         PatternDescriptor[] patterns = new PatternDescriptor[0];
         ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);
         for (PatternProvider extension : point.getExtensionList()) {

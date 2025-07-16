@@ -59,9 +59,7 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-
+    Project project = e.getRequiredData(Project.KEY);
     final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
     final TemplateDataLanguageConfigurable configurable = new TemplateDataLanguageConfigurable(project, TemplateDataLanguageMappings.getInstance(project));
     ShowSettingsUtil.getInstance().editConfigurable(project, configurable, () -> {

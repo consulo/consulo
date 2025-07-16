@@ -90,6 +90,7 @@ public final class ShowLibraryFramesAction extends ToggleAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void setSelected(AnActionEvent e, boolean enabled) {
     boolean newValue = !enabled;
     XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setShowLibraryStackFrames(newValue);

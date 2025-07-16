@@ -39,11 +39,7 @@ public class CopyQuickDocAction extends AnAction implements DumbAware, HintManag
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    String selected = e.getData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
-    if (selected == null || selected.isEmpty()) {
-      return;
-    }
-
+    String selected = e.getRequiredData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
     CopyPasteManager.getInstance().setContents(new StringSelection(selected));
   }
 

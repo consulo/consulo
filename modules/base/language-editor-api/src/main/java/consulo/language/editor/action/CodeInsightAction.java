@@ -30,20 +30,18 @@ public abstract class CodeInsightAction extends AnAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project != null) {
-            Editor hostEditor = e.getData(EditorKeys.HOST_EDITOR);
-            if (hostEditor != null) {
-                PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(hostEditor.getDocument());
-                if (file != null) {
-                    PsiDocumentManager.getInstance(project).commitAllDocuments();
-                }
+        Project project = e.getRequiredData(Project.KEY);
+        Editor hostEditor = e.getData(EditorKeys.HOST_EDITOR);
+        if (hostEditor != null) {
+            PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(hostEditor.getDocument());
+            if (file != null) {
+                PsiDocumentManager.getInstance(project).commitAllDocuments();
             }
-
-            Editor editor = getEditor(e.getDataContext(), project, false);
-
-            actionPerformedImpl(project, editor);
         }
+
+        Editor editor = getEditor(e.getDataContext(), project, false);
+
+        actionPerformedImpl(project, editor);
     }
 
     @Nonnull
@@ -135,7 +133,6 @@ public abstract class CodeInsightAction extends AnAction {
     protected abstract CodeInsightActionHandler getHandler();
 
     protected String getCommandName() {
-        String text = getTemplatePresentation().getText();
-        return text == null ? "" : text;
+        return getTemplatePresentation().getTextValue().get();
     }
 }

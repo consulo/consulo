@@ -49,9 +49,9 @@ public class UnshelveWithDialogAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final ShelvedChangeList[] changeLists = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
-    if (project == null || changeLists == null || changeLists.length != 1) return;
+    final Project project = e.getRequiredData(Project.KEY);
+    final ShelvedChangeList[] changeLists = e.getRequiredData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+    if (changeLists.length != 1) return;
 
     FileDocumentManager.getInstance().saveAllDocuments();
 

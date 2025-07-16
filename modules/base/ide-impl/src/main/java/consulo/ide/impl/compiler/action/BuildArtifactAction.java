@@ -82,10 +82,7 @@ public class BuildArtifactAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+        final Project project = e.getRequiredData(Project.KEY);
 
         List<Artifact> artifacts = ArtifactUtil.getArtifactWithOutputPaths(project);
         if (artifacts.isEmpty()) {

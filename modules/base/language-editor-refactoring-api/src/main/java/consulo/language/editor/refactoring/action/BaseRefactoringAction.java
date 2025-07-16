@@ -92,10 +92,7 @@ public abstract class BaseRefactoringAction extends AnAction {
     @RequiredUIAccess
     public final void actionPerformed(@Nonnull AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        final Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+        Project project = e.getRequiredData(Project.KEY);
         PsiDocumentManager.getInstance(project).commitAllDocuments();
         final Editor editor = e.getData(Editor.KEY);
         final PsiElement[] elements = getPsiElementArray(dataContext);
@@ -160,9 +157,7 @@ public abstract class BaseRefactoringAction extends AnAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        presentation.setVisible(true);
-        presentation.setEnabled(true);
+        e.getPresentation().setEnabledAndVisible(true);
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
         if (project == null || isHidden()) {

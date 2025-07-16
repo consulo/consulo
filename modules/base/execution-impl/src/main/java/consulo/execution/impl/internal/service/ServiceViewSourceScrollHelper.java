@@ -114,11 +114,7 @@ final class ServiceViewSourceScrollHelper {
     @Override
     public void update(@Nonnull AnActionEvent e) {
       Project project = e.getData(Project.KEY);
-      if (project == null) {
-        e.getPresentation().setEnabledAndVisible(false);
-        return;
-      }
-      e.getPresentation().setEnabledAndVisible(!isAutoScrollFromSourceEnabled(project));
+      e.getPresentation().setEnabledAndVisible(project != null && !isAutoScrollFromSourceEnabled(project));
     }
 
 //    @Override
@@ -129,8 +125,7 @@ final class ServiceViewSourceScrollHelper {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getData(Project.KEY);
-      if (project == null) return;
+      Project project = e.getRequiredData(Project.KEY);
 
       FileEditorManager manager = FileEditorManager.getInstance(project);
       FileEditor[] editors = manager.getSelectedEditors();

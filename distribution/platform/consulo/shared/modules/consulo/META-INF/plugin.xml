@@ -1919,7 +1919,7 @@
             <action id="Resume" class="consulo.execution.debug.impl.internal.action.ResumeAction"/>
             <separator/>
             <action id="EvaluateExpression" class="consulo.execution.debug.impl.internal.action.EvaluateAction"/>
-            <action id="QuickEvaluateExpression" class="consulo.execution.debug.impl.internal.action.QuickEvaluateAction"/>
+            <reference id="QuickEvaluateExpression"/>
             <action id="ShowExecutionPoint" class="consulo.execution.debug.impl.internal.action.ShowExecutionPointAction"/>
             <separator/>
             <action id="ToggleLineBreakpoint" class="consulo.execution.debug.impl.internal.action.ToggleLineBreakpointAction"/>
@@ -1968,7 +1968,7 @@
             <action id="XDebugger.RemoveWatch" class="consulo.execution.debug.impl.internal.frame.action.XRemoveWatchAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.cancel" use-shortcut-of="$Delete"/>
             <action id="XDebugger.RemoveAllWatches" class="consulo.execution.debug.impl.internal.frame.action.XRemoveAllWatchesAction"/>
-            <action id="XDebugger.MuteBreakpoints" class="consulo.execution.debug.impl.internal.action.MuteBreakpointAction"/>
+            <reference id="XDebugger.MuteBreakpoints"/>
             <action id="XDebugger.ToggleSortValues" class="consulo.execution.debug.impl.internal.ui.tree.action.SortValuesToggleAction"
                     icon="consulo.platform.base.PlatformIconGroup@objectbrowser.sorted"/>
             <action id="Debugger.MarkObject" class="consulo.execution.debug.impl.internal.action.MarkObjectAction"/>
@@ -2047,7 +2047,7 @@
         </group>
 
         <group id="XDebugger.Settings" icon="consulo.platform.base.PlatformIconGroup@general.gearplain" popup="true">
-            <action id="XDebugger.Inline" class="consulo.execution.debug.impl.internal.action.UseInlineDebuggerAction"/>
+            <reference ref="XDebugger.Inline"/>
             <separator/>
             <reference ref="XDebugger.ToggleSortValues"/>
             <!--<action id="XDebugger.AutoTooltip" class="consulo.execution.debug.impl.internal.action.ValueTooltipAutoShowAction"/>-->

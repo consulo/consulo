@@ -405,8 +405,8 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
             super(CredentialStorageLocalize.actionTextPasswordSafeClear());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent event) {
             boolean confirmed = MessageDialogBuilder.yesNo(
                     CredentialStorageLocalize.passwordsafeconfigurableClearPasswords().get(),

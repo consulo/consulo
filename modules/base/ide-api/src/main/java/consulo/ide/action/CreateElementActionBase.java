@@ -73,9 +73,9 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
 
   protected abstract String getActionName(PsiDirectory directory, String newName);
 
-  @RequiredUIAccess
   @Override
-  public final void actionPerformed(@Nonnull final AnActionEvent e) {
+  @RequiredUIAccess
+  public final void actionPerformed(@Nonnull AnActionEvent e) {
     final IdeView view = e.getData(IdeView.KEY);
     if (view == null) {
       return;

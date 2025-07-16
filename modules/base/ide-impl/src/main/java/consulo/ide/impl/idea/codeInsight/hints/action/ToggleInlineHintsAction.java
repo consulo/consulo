@@ -40,13 +40,9 @@ public class ToggleInlineHintsAction extends DumbAwareAction {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        if (!myApplication.getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions()) {
-            presentation.setEnabledAndVisible(false);
-            return;
-        }
         PsiFile file = e.getData(PsiFile.KEY);
-        if (file == null) {
+        Presentation presentation = e.getPresentation();
+        if (file == null || !myApplication.getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions()) {
             presentation.setEnabledAndVisible(false);
             return;
         }
