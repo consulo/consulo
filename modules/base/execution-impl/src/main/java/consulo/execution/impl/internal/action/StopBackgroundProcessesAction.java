@@ -1,18 +1,19 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.AllIcons;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.dataContext.DataContext;
 import consulo.execution.localize.ExecutionLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.JBList;
@@ -33,7 +34,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@ActionImpl(id = "StopBackgroundProcesses")
 public class StopBackgroundProcessesAction extends DumbAwareAction {
+  public StopBackgroundProcessesAction() {
+    super(ActionLocalize.actionStopbackgroundprocessesText(), ActionLocalize.actionStopbackgroundprocessesDescription());
+  }
+
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(!getCancellableProcesses(e.getData(Project.KEY)).isEmpty());

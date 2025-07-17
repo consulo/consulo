@@ -15,6 +15,7 @@
  */
 package consulo.execution.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
@@ -50,15 +51,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@ActionImpl(id = "RunConfiguration")
 public class RunConfigurationsComboBoxAction extends ComboBoxAction implements DumbAware {
     private final Application myApplication;
-
     private final RunCurrentFileService myRunCurrentFileService;
 
     @Inject
     public RunConfigurationsComboBoxAction(Application application, RunCurrentFileService runCurrentFileService) {
         myApplication = application;
         myRunCurrentFileService = runCurrentFileService;
+        getTemplatePresentation().setTextValue(ActionLocalize.actionRunconfigurationText());
+        getTemplatePresentation().setTextValue(ActionLocalize.actionRunconfigurationDescription());
     }
 
     @Nonnull

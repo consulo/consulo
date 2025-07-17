@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.impl.internal.action.BaseChooseRunConfigurationPopupAction;
 
+@ActionImpl(id = "ChooseDebugConfiguration")
 public class ChooseDebugConfigurationPopupAction extends BaseChooseRunConfigurationPopupAction {
     public ChooseDebugConfigurationPopupAction() {
-        super("Debug...", "Choose and debug configuration", ExecutionDebugIconGroup.actionStartdebugger());
+        super(
+            XDebuggerLocalize.actionChooseDebugConfigurationPopupText(),
+            XDebuggerLocalize.actionChooseDebugConfigurationPopupDescription(),
+            ExecutionDebugIconGroup.actionStartdebugger()
+        );
     }
 
     @Override
