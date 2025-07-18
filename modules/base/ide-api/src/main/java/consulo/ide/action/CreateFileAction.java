@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.action;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.UsageTrigger;
@@ -31,6 +30,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.TextBox;
 import consulo.ui.HasValidator;
@@ -45,6 +45,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.io.File;
@@ -52,10 +53,11 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.function.Consumer;
 
+@ActionImpl(id = "NewFile")
 public class CreateFileAction extends CreateElementActionBase implements DumbAware {
-
+  @Inject
   public CreateFileAction() {
-    super(IdeLocalize.actionCreateNewFile(), IdeLocalize.actionCreateNewFileDescription(), AllIcons.FileTypes.Text);
+    super(IdeLocalize.actionCreateNewFile(), IdeLocalize.actionCreateNewFileDescription(), PlatformIconGroup.filetypesText());
   }
 
   public CreateFileAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {

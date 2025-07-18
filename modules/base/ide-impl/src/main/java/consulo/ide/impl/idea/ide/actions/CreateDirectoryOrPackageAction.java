@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.component.extension.ExtensionPoint;
 import consulo.content.ContentFolderTypeProvider;
@@ -54,6 +54,7 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.function.Consumer;
 
+@ActionImpl(id = "NewDir")
 public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
     public CreateDirectoryOrPackageAction() {
         super(IdeLocalize.actionCreateNewDirectoryOrPackage(), IdeLocalize.actionCreateNewDirectoryOrPackage());

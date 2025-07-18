@@ -1593,9 +1593,9 @@
         </group>
 
         <group id="NewGroup" popup="true">
-            <action id="NewFile" class="consulo.ide.action.CreateFileAction"/>
-            <action id="NewScratchFile" class="consulo.ide.impl.idea.ide.scratch.ScratchFileActions$NewFileAction"/>
-            <action id="NewDir" class="consulo.ide.impl.idea.ide.actions.CreateDirectoryOrPackageAction"/>
+            <reference id="NewFile"/>
+            <reference id="NewScratchFile"/>
+            <reference id="NewDir"/>
             <separator/>
             <action id="NewFromTemplate" class="consulo.ide.impl.idea.ide.fileTemplates.actions.CreateFromTemplateGroup"/>
         </group>
@@ -1604,7 +1604,7 @@
             <add-to-group group-id="NewGroup" anchor="first"/>
         </group>
 
-        <group id="WeighingNewGroup" class="consulo.ide.impl.idea.ide.actions.WeighingNewActionGroup"/>
+        <reference ref="WeighingNewGroup"/>
 
 
         <group id="ToolbarFindGroup">
