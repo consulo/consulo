@@ -20,6 +20,7 @@ import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -79,6 +80,11 @@ public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.w
     @RequiredUIAccess
     @Override
     public void setIcon(@Nullable Image image) {
+
+    }
+
+    @Override
+    public void invoke(@Nonnull InputDetails inputDetails) {
 
     }
 

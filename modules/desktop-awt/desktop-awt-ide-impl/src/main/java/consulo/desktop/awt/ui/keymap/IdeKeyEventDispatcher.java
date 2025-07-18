@@ -25,6 +25,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.ProhibitAWTEvents;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.keymap.keyGesture.KeyboardGestureProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -573,7 +574,17 @@ public final class IdeKeyEventDispatcher implements Disposable {
             @Nonnull Presentation presentation,
             ActionManager manager
         ) {
-            return new AnActionEvent(inputEvent, context, place, presentation, manager, 0);
+            return new AnActionEvent(
+                inputEvent,
+                context,
+                place,
+                presentation,
+                manager,
+                0,
+                false,
+                false,
+                DesktopAWTInputDetails.convert(inputEvent.getComponent(), inputEvent)
+            );
         }
 
         @Override

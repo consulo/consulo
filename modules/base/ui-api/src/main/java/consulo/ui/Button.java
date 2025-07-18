@@ -20,6 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 import jakarta.annotation.Nonnull;
@@ -67,4 +68,6 @@ public interface Button extends Component, HasComponentStyle<ButtonStyle> {
 
     @RequiredUIAccess
     void setIcon(@Nullable Image image);
+
+    void invoke(@Nonnull InputDetails inputDetails);
 }

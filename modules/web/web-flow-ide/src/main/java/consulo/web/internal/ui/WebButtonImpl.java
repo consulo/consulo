@@ -22,6 +22,7 @@ import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
@@ -91,6 +92,11 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     @Override
     public void setIcon(@Nullable Image image) {
         // TODO  toVaadinComponent().setIcon(image);
+    }
+
+    @Override
+    public void invoke(@Nonnull InputDetails inputDetails) {
+
     }
 
     @Nullable

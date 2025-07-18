@@ -27,6 +27,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -84,11 +85,7 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
     public DesktopButtonImpl(LocalizeValue text) {
         initialize(new MyButton(text));
 
-        toAWTComponent().addActionListener(e -> {
-            ComponentEventListener<Component, ClickEvent> listener = getListenerDispatcher(ClickEvent.class);
-
-            listener.onEvent(new ClickEvent(this, DesktopAWTInputDetails.convert(toAWTComponent(), e)));
-        });
+        toAWTComponent().addActionListener(e -> invoke(DesktopAWTInputDetails.convert(toAWTComponent(), e)));
     }
 
     @Nonnull
@@ -115,17 +112,25 @@ class DesktopButtonImpl extends SwingComponentDelegate<DesktopButtonImpl.MyButto
         }
     }
 
+    @Override
+    @RequiredUIAccess
+    public void invoke(@Nonnull InputDetails inputDetails) {
+        ComponentEventListener<Component, ClickEvent> listener = getListenerDispatcher(ClickEvent.class);
+
+        listener.onEvent(new ClickEvent(this, inputDetails));
+    }
+
     @Nonnull
     @Override
     public LocalizeValue getText() {
-        MyButton button = (MyButton) toAWTComponent();
+        MyButton button = toAWTComponent();
         return button.myTextValue;
     }
 
     @RequiredUIAccess
     @Override
     public void setText(@Nonnull LocalizeValue text) {
-        MyButton button = (MyButton) toAWTComponent();
+        MyButton button = toAWTComponent();
         button.myTextValue = text;
         button.updateText();
     }

@@ -31,6 +31,7 @@ import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Alerts;
+import consulo.ui.Button;
 import consulo.ui.CheckBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -242,7 +243,7 @@ public abstract class DialogWrapper {
             ? createPeer(project, canBeParent, project == null ? IdeModalityType.IDE : ideModalityType)
             : createPeer(parentComponent, canBeParent);
         myCreateSouthSection = createSouth;
-        final Window window = myPeer.getWindow();
+        Window window = myPeer.getWindow();
         if (window != null) {
             myResizeListener = new ComponentAdapter() {
                 @Override
@@ -568,7 +569,7 @@ public abstract class DialogWrapper {
             panel.add(buttonsPanel, targetButtonPosition);
         }
 
-        final DoNotAskOption askOption = myDoNotAsk;
+        DoNotAskOption askOption = myDoNotAsk;
         if (askOption != null) {
             myCheckBoxDoNotShowDialog = CheckBox.create(askOption.getDoNotShowMessage());
             myCheckBoxDoNotShowDialog.setVisible(askOption.canBeHidden());
@@ -586,7 +587,7 @@ public abstract class DialogWrapper {
 
                 panel.add(new BorderLayoutPanel().addToLeft(helpButton).addToCenter(doNotAskCheckbox), BorderLayout.WEST);
             } else {
-                final JPanel withCB = addDoNotShowCheckBox(southPanel, doNotAskCheckbox);
+                JPanel withCB = addDoNotShowCheckBox(southPanel, doNotAskCheckbox);
                 panel = withCB;
             }
         }
@@ -619,7 +620,7 @@ public abstract class DialogWrapper {
 
     @Nonnull
     public static JPanel addDoNotShowCheckBox(JComponent southPanel, @Nonnull JComponent checkBox) {
-        final JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
 
         JPanel wrapper = new JPanel(new GridBagLayout());
         wrapper.add(checkBox);
@@ -644,11 +645,11 @@ public abstract class DialogWrapper {
     @Nonnull
     private JPanel createButtons(@Nonnull Action[] actions, @Nonnull Map<Action, JButton> buttons) {
         if (!UISettings.getShadowInstance().ALLOW_MERGE_BUTTONS) {
-            final List<Action> actionList = new ArrayList<>();
+            List<Action> actionList = new ArrayList<>();
             for (Action action : actions) {
                 actionList.add(action);
                 if (action instanceof OptionAction optionAction) {
-                    final Action[] options = optionAction.getOptions();
+                    Action[] options = optionAction.getOptions();
                     actionList.addAll(Arrays.asList(options));
                 }
             }
@@ -658,12 +659,12 @@ public abstract class DialogWrapper {
         }
 
         JPanel buttonsPanel = new JPanel(new HorizontalLayout(8, SwingConstants.CENTER));
-        for (final Action action : actions) {
+        for (Action action : actions) {
             JButton button = createJButtonForAction(action);
-            final Object value = action.getValue(Action.MNEMONIC_KEY);
+            Object value = action.getValue(Action.MNEMONIC_KEY);
             if (value instanceof Integer integer) {
-                final int mnemonic = integer;
-                final Object name = action.getValue(Action.NAME);
+                int mnemonic = integer;
+                Object name = action.getValue(Action.NAME);
                 if (mnemonic == 'Y' && "Yes".equals(name)) {
                     myYesAction = action;
                 }
@@ -704,9 +705,9 @@ public abstract class DialogWrapper {
     protected JButton createJButtonForAction(Action action) {
         JButton button;
         if (action instanceof OptionAction optionAction && UISettings.getShadowInstance().ALLOW_MERGE_BUTTONS) {
-            final Action[] options = optionAction.getOptions();
+            Action[] options = optionAction.getOptions();
             button = new JBOptionButton(action, options);
-            final JBOptionButton eachOptionsButton = (JBOptionButton)button;
+            JBOptionButton eachOptionsButton = (JBOptionButton)button;
             eachOptionsButton.setOkToProcessDefaultMnemonics(false);
             eachOptionsButton.setOptionTooltipText(LocalizeValue.localizeTODO(
                 "Press " + ShortcutUtil.getKeystrokeText(SHOW_OPTION_KEYSTROKE) +
@@ -714,10 +715,10 @@ public abstract class DialogWrapper {
             ).get());
             myOptionsButtons.add(eachOptionsButton);
 
-            final Set<JBOptionButton.OptionInfo> infos = eachOptionsButton.getOptionInfos();
+            Set<JBOptionButton.OptionInfo> infos = eachOptionsButton.getOptionInfos();
             for (final JBOptionButton.OptionInfo eachInfo : infos) {
                 if (eachInfo.getMnemonic() >= 0) {
-                    final CustomShortcutSet sc = new CustomShortcutSet(KeyStroke.getKeyStroke(
+                    CustomShortcutSet sc = new CustomShortcutSet(KeyStroke.getKeyStroke(
                         "alt pressed " + (char)eachInfo.getMnemonic()
                     ));
 
@@ -725,7 +726,7 @@ public abstract class DialogWrapper {
                         @RequiredUIAccess
                         @Override
                         public void actionPerformed(@Nonnull AnActionEvent e) {
-                            final JBOptionButton buttonToActivate = eachInfo.getButton();
+                            JBOptionButton buttonToActivate = eachInfo.getButton();
                             buttonToActivate.showPopup(eachInfo.getAction(), true);
                         }
                     }.registerCustomShortcutSet(sc, getPeer().getRootPane());
@@ -807,7 +808,7 @@ public abstract class DialogWrapper {
             plainText.append(ch);
         }
         button.setText(plainText.toString());
-        final Object name = action.getValue(Action.NAME);
+        Object name = action.getValue(Action.NAME);
         if (mnemonic == KeyEvent.VK_Y && "Yes".equals(name)) {
             myYesAction = action;
         }
@@ -818,7 +819,7 @@ public abstract class DialogWrapper {
         button.setMnemonic(mnemonic);
     }
 
-    protected DialogWrapperPeer createPeer(@Nonnull Component parent, final boolean canBeParent) {
+    protected DialogWrapperPeer createPeer(@Nonnull Component parent, boolean canBeParent) {
         return DialogWrapperPeerFactory.getInstance().createPeer(this, parent, canBeParent);
     }
 
@@ -832,18 +833,18 @@ public abstract class DialogWrapper {
     }
 
     protected DialogWrapperPeer createPeer(
-        final consulo.ui.Window owner,
-        final boolean canBeParent,
-        final IdeModalityType ideModalityType
+        consulo.ui.Window owner,
+        boolean canBeParent,
+        IdeModalityType ideModalityType
     ) {
         return DialogWrapperPeerFactory.getInstance().createPeer(this, owner, canBeParent, ideModalityType);
     }
 
     @Deprecated
     protected DialogWrapperPeer createPeer(
-        final ComponentManager project,
-        final boolean canBeParent,
-        final boolean applicationModalIfPossible
+        ComponentManager project,
+        boolean canBeParent,
+        boolean applicationModalIfPossible
     ) {
         return DialogWrapperPeerFactory.getInstance().createPeer(
             this,
@@ -854,14 +855,14 @@ public abstract class DialogWrapper {
     }
 
     protected DialogWrapperPeer createPeer(
-        @Nullable final ComponentManager project,
-        final boolean canBeParent,
-        final IdeModalityType ideModalityType
+        @Nullable ComponentManager project,
+        boolean canBeParent,
+        IdeModalityType ideModalityType
     ) {
         return DialogWrapperPeerFactory.getInstance().createPeer(this, project, canBeParent, ideModalityType);
     }
 
-    protected DialogWrapperPeer createPeer(@Nullable final ComponentManager project, final boolean canBeParent) {
+    protected DialogWrapperPeer createPeer(@Nullable ComponentManager project, boolean canBeParent) {
         return DialogWrapperPeerFactory.getInstance().createPeer(this, project, canBeParent);
     }
 
@@ -940,7 +941,7 @@ public abstract class DialogWrapper {
             myButtonMap.clear();
         }
 
-        final JRootPane rootPane = getRootPane();
+        JRootPane rootPane = getRootPane();
         // if rootPane = null, dialog has already been disposed
         if (rootPane != null) {
             unregisterKeyboardActions(rootPane);
@@ -973,7 +974,7 @@ public abstract class DialogWrapper {
         JComponentHacking.setClientProperties(rootPane, null);
     }
 
-    public static void unregisterKeyboardActions(final Component rootPane) {
+    public static void unregisterKeyboardActions(Component rootPane) {
         int[] flags = {
             JComponent.WHEN_FOCUSED,
             JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
@@ -1290,7 +1291,7 @@ public abstract class DialogWrapper {
     protected void init() {
         myErrorText = new ErrorText(getErrorTextAlignment());
         myErrorText.setVisible(false);
-        final ComponentAdapter resizeListener = new ComponentAdapter() {
+        ComponentAdapter resizeListener = new ComponentAdapter() {
             private int myHeight;
 
             @Override
@@ -1315,11 +1316,11 @@ public abstract class DialogWrapper {
         myErrorText.myLabel.addComponentListener(resizeListener);
         Disposer.register(myDisposable, () -> myErrorText.myLabel.removeComponentListener(resizeListener));
 
-        final JPanel root = new JPanel(createRootLayout());
+        JPanel root = new JPanel(createRootLayout());
         myPeer.setContentPane(root);
 
-        final CustomShortcutSet sc = new CustomShortcutSet(SHOW_OPTION_KEYSTROKE);
-        final AnAction toggleShowOptions = new DumbAwareAction() {
+        CustomShortcutSet sc = new CustomShortcutSet(SHOW_OPTION_KEYSTROKE);
+        AnAction toggleShowOptions = new DumbAwareAction() {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -1344,7 +1345,7 @@ public abstract class DialogWrapper {
     }
 
     protected void initRootPanel(@Nonnull JPanel root) {
-        final JPanel northSection = new JPanel(new BorderLayout());
+        JPanel northSection = new JPanel(new BorderLayout());
         root.add(northSection, BorderLayout.NORTH);
 
         JComponent titlePane = createTitlePane();
@@ -1357,23 +1358,23 @@ public abstract class DialogWrapper {
 
         root.setBorder(createContentPaneBorder());
 
-        final JComponent n = createNorthPanel();
+        JComponent n = createNorthPanel();
         if (n != null) {
             centerSection.add(n, BorderLayout.NORTH);
         }
 
-        final JComponent c = createCenterPanel();
+        JComponent c = createCenterPanel();
         if (c != null) {
             centerSection.add(c, BorderLayout.CENTER);
             myErrorPane = c;
         }
 
         if (myCreateSouthSection) {
-            final JPanel southSection = new JPanel(new BorderLayout());
+            JPanel southSection = new JPanel(new BorderLayout());
             root.add(southSection, BorderLayout.SOUTH);
 
             southSection.add(myErrorText, BorderLayout.CENTER);
-            final JComponent south = createSouthPanel();
+            JComponent south = createSouthPanel();
             if (south != null) {
                 southSection.add(south, BorderLayout.SOUTH);
             }
@@ -1395,15 +1396,22 @@ public abstract class DialogWrapper {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
-                final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 if (owner instanceof JButton button && owner.isEnabled()) {
-                    button.doClick();
+                    // redirect to UI component if it's UI wrapper
+                    consulo.ui.Component uiComponent = TargetAWT.from(button);
+
+                    if (uiComponent instanceof Button uiButton) {
+                        uiButton.invoke(Objects.requireNonNull(e.getInputDetails()));
+                    } else {
+                        button.doClick();
+                    }
                 }
             }
 
             @Override
             public void update(@Nonnull AnActionEvent e) {
-                final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 e.getPresentation().setEnabled(owner instanceof JButton && owner.isEnabled());
             }
         }.registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER"), root);
@@ -1434,7 +1442,7 @@ public abstract class DialogWrapper {
 
     protected final void initValidation() {
         myValidationAlarm.cancelAllRequests();
-        final Runnable validateRequest = () -> {
+        Runnable validateRequest = () -> {
             if (myDisposed) {
                 return;
             }
@@ -1731,13 +1739,13 @@ public abstract class DialogWrapper {
     @Nonnull
     @RequiredUIAccess
     public AsyncResult<Boolean> showAndGetOk() {
-        final AsyncResult<Boolean> result = new AsyncResult<>();
+        AsyncResult<Boolean> result = new AsyncResult<>();
 
         ensureEventDispatchThread();
         registerKeyboardShortcuts();
 
 
-        final Disposable uiParent = Disposer.get("ui");
+        Disposable uiParent = Disposer.get("ui");
         if (uiParent != null) { // may be null if no app yet (license agreement)
             Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
         }
@@ -1771,7 +1779,7 @@ public abstract class DialogWrapper {
 
         registerKeyboardShortcuts();
 
-        final Disposable uiParent = Disposer.get("ui");
+        Disposable uiParent = Disposer.get("ui");
         if (uiParent != null) {
             Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
         }
@@ -1793,7 +1801,7 @@ public abstract class DialogWrapper {
     }
 
     private void registerKeyboardShortcuts() {
-        final JRootPane rootPane = getRootPane();
+        JRootPane rootPane = getRootPane();
 
         if (rootPane == null) {
             return;
@@ -1924,9 +1932,9 @@ public abstract class DialogWrapper {
     }
 
     public static boolean isMultipleModalDialogs() {
-        final Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         if (c != null) {
-            final DialogWrapper wrapper = findInstance(c);
+            DialogWrapper wrapper = findInstance(c);
             return wrapper != null && wrapper.getPeer().getCurrentModalEntities().length > 1;
         }
         return false;
@@ -2096,11 +2104,11 @@ public abstract class DialogWrapper {
      */
     @Deprecated
     @DeprecationInfo("Use setErrorText(LocalizeValue)")
-    public void setErrorText(@Nullable final String text) {
+    public void setErrorText(@Nullable String text) {
         setErrorText(text, null);
     }
 
-    public void setErrorText(@Nonnull LocalizeValue text, @Nullable final JComponent component) {
+    public void setErrorText(@Nonnull LocalizeValue text, @Nullable JComponent component) {
         setErrorInfoAll(
             text == LocalizeValue.empty()
                 ? Collections.EMPTY_LIST
@@ -2110,7 +2118,7 @@ public abstract class DialogWrapper {
 
     @Deprecated
     @DeprecationInfo("Use setErrorText(LocalizeValue, JComponent)")
-    public void setErrorText(@Nullable final String text, @Nullable final JComponent component) {
+    public void setErrorText(@Nullable String text, @Nullable JComponent component) {
         setErrorText(LocalizeValue.ofNullable(text), component);
     }
 
@@ -2288,7 +2296,7 @@ public abstract class DialogWrapper {
             @Override
             public void run() {
                 int step = 0;
-                final Dimension cur = getSize();
+                Dimension cur = getSize();
                 int h = (size.height - cur.height) / steps;
                 int w = (size.width - cur.width) / steps;
                 while (step++ < steps) {
@@ -2420,7 +2428,7 @@ public abstract class DialogWrapper {
                 }
             };
 
-            balloon.addListener(new JBPopupListener.Adapter() {
+            balloon.addListener(new JBPopupListener() {
                 @Override
                 public void onClosed(@Nonnull LightweightWindowEvent event) {
                     JRootPane rootPane = getRootPane();
