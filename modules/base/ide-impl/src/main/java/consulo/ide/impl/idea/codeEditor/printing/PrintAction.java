@@ -47,11 +47,11 @@ public class PrintAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent e){
     Presentation presentation = e.getPresentation();
-    VirtualFile file = e.getData(VirtualFile.KEY);
+    VirtualFile file = ReadAction.compute(() -> e.getData(VirtualFile.KEY));
     if (file != null && file.isDirectory()) {
       presentation.setEnabled(true);
       return;
     }
-    presentation.setEnabled(e.hasData(PsiFile.KEY) || e.hasData(Editor.KEY));
+    presentation.setEnabled(ReadAction.compute(() -> e.hasData(PsiFile.KEY)) || e.hasData(Editor.KEY));
   }
 }
