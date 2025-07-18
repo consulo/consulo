@@ -35,8 +35,7 @@ public class ReplaceInPathAction extends FindReplaceInPathActionBase {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
+    Project project = e.getData(Project.KEY);
 
     ReplaceInProjectManager replaceManager = ReplaceInProjectManager.getInstance(project);
     if (!replaceManager.isEnabled()) {
@@ -44,7 +43,7 @@ public class ReplaceInPathAction extends FindReplaceInPathActionBase {
       return;
     }
 
-    replaceManager.replaceInProject(dataContext, null);
+    replaceManager.replaceInProject(e.getDataContext(), null);
   }
 
   @Override

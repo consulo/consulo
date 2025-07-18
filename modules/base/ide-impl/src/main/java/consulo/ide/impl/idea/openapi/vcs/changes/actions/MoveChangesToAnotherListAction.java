@@ -59,6 +59,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     );
   }
 
+  @Override
   public void update(@Nonnull AnActionEvent e) {
     boolean isEnabled = isEnabled(e);
 

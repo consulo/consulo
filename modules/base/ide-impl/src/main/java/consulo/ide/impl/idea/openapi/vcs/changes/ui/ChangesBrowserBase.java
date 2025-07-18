@@ -271,6 +271,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements ChangesBro
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(AnActionEvent e, boolean state) {
       T change = ObjectUtil.tryCast(e.getData(VcsDataKeys.CURRENT_CHANGE), myClass);
       if (change == null) return;

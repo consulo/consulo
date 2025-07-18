@@ -15,16 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.update.AbstractCommonUpdateAction;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.ide.impl.idea.openapi.vcs.update.ScopeInfo;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
@@ -41,7 +43,8 @@ public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
   }
 
   @Override
-  protected void actionPerformed(@Nonnull final VcsContext context) {
+  @RequiredUIAccess
+  protected void actionPerformed(@Nonnull VcsContext context) {
     Collection<FilePath> filePaths = getFilePaths(context);
     final List<ChangeList> selectedChangeLists = new ArrayList<>();
     final ChangeList[] selectionFromContext = context.getSelectedChangeLists();
@@ -64,8 +67,11 @@ public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
     }
     if (intersectingChanges.size() > 0) {
       int rc = Messages.showOkCancelDialog(
-              context.getProject(), VcsBundle.message("get.committed.changes.intersecting.prompt", intersectingChanges.size(), selectedChangeLists.size()),
-              VcsBundle.message("get.committed.changes.title"), Messages.getQuestionIcon());
+          context.getProject(),
+          VcsLocalize.getCommittedChangesIntersectingPrompt(intersectingChanges.size(), selectedChangeLists.size()).get(),
+          VcsLocalize.getCommittedChangesTitle().get(),
+          UIUtil.getQuestionIcon()
+      );
       if (rc != Messages.OK) return;
     }
     super.actionPerformed(context);

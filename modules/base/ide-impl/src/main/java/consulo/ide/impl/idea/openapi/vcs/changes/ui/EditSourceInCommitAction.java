@@ -15,13 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.application.AllIcons;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.DialogWrapper;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -32,13 +34,14 @@ public class EditSourceInCommitAction extends AnAction {
     super(
       ActionLocalize.actionEditsourceText(),
       ActionLocalize.actionEditsourceDescription(),
-      AllIcons.Actions.EditSource
+      PlatformIconGroup.actionsEditsource()
     );
     myDialogWrapper = dialogWrapper;
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
     if (navigatableArray != null && navigatableArray.length > 0) {
       SwingUtilities.invokeLater(() -> OpenSourceUtil.navigate(navigatableArray));

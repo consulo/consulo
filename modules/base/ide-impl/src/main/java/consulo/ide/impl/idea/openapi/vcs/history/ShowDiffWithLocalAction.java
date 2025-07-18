@@ -59,8 +59,7 @@ public class ShowDiffWithLocalAction extends DumbAwareAction {
       selectedRevisions != null && selectedRevisions.length == 1 && virtualFile != null
         && historySession != null && historySession.getCurrentRevisionNumber() != null
         && historySession.isContentAvailable(selectedRevisions[0])
-        && e.getData(VcsDataKeys.FILE_PATH) != null && e.getData(VcsDataKeys.HISTORY_PROVIDER) != null
-        && e.getData(Project.KEY) != null
+        && e.hasData(VcsDataKeys.FILE_PATH) && e.hasData(VcsDataKeys.HISTORY_PROVIDER) && e.hasData(Project.KEY)
     );
   }
 }

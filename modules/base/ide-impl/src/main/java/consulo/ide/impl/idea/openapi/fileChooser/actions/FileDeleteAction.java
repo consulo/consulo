@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.DeleteProvider;
-import consulo.ide.impl.idea.ide.actions.DeleteAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.Presentation;
+import consulo.ide.impl.idea.ide.actions.DeleteAction;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
+import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 public class FileDeleteAction extends DeleteAction {
   public FileDeleteAction() {
     setEnabledInModalContext(true);
   }
 
+  @Override
   protected DeleteProvider getDeleteProvider(DataContext dataContext) {
     return new VirtualFileDeleteProvider();
   }
 
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     final Boolean available = event.getData(FileChooserKeys.DELETE_ACTION_AVAILABLE);
     if (available != null && !available) {
       event.getPresentation().setEnabledAndVisible(false);

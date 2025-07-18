@@ -40,11 +40,8 @@ public class TestContinuationAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent e) {
-        final Project project = e.getDataContext().getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
 
         ProgressManager.getInstance().run(new Task.Backgroundable(
             project,
@@ -136,9 +133,8 @@ public class TestContinuationAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        final Project project = e.getDataContext().getData(Project.KEY);
-        e.getPresentation().setEnabled(project != null);
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 
     private static class ReportTask extends TaskDescriptor {

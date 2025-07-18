@@ -62,14 +62,13 @@ import java.util.function.Consumer;
 
 public class DiffShelvedChangesAction extends AnAction implements DumbAware {
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(isEnabled(e.getDataContext()));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         showShelvedChangesDiff(e.getDataContext());
     }
 

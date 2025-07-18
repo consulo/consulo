@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.moduleDependencies;
 
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
@@ -26,12 +24,14 @@ import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,20 +42,17 @@ import java.awt.*;
  */
 public class ShowModuleDependenciesAction extends AnAction {
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    if (project == null){
-      return;
-    }
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getRequiredData(Project.KEY);
     ModulesDependenciesPanel panel;
     AnalysisScope scope = new AnalysisScope(project);
-    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+    Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     if (modules != null){
       panel = new ModulesDependenciesPanel(project, modules);
       scope = new AnalysisScope(modules);
     } else {
-      final PsiElement element = dataContext.getData(PsiFile.KEY);
+      PsiElement element = e.getData(PsiFile.KEY);
       final Module module = element != null ? ModuleUtil.findModuleForPsiElement(element) : null;
       if (module != null && ModuleManager.getInstance(project).getModules().length > 1){
         MyModuleOrProjectScope dlg = new MyModuleOrProjectScope(module.getName());
@@ -86,10 +83,8 @@ public class ShowModuleDependenciesAction extends AnAction {
   }
 
   @Override
-  public void update(AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    e.getPresentation().setEnabled(project != null);
+  public void update(@Nonnull AnActionEvent e) {
+    e.getPresentation().setEnabled(e.hasData(Project.KEY));
   }
 
   private static class MyModuleOrProjectScope extends DialogWrapper{

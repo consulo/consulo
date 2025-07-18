@@ -36,26 +36,22 @@ public class PrintAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredReadAction
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
-    PrintManager.executePrint(dataContext);
+    PrintManager.executePrint(e.getDataContext());
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    VirtualFile file = ReadAction.compute(() -> dataContext.getData(VirtualFile.KEY));
+  public void update(@Nonnull AnActionEvent e){
+    Presentation presentation = e.getPresentation();
+    VirtualFile file = ReadAction.compute(() -> e.getData(VirtualFile.KEY));
     if (file != null && file.isDirectory()) {
       presentation.setEnabled(true);
       return;
     }
-    Editor editor = dataContext.getData(Editor.KEY);
-    PsiFile psiFile = ReadAction.compute(() -> dataContext.getData(PsiFile.KEY));
-    presentation.setEnabled(psiFile != null || editor != null);
+    presentation.setEnabled(ReadAction.compute(() -> e.hasData(PsiFile.KEY)) || e.hasData(Editor.KEY));
   }
 }

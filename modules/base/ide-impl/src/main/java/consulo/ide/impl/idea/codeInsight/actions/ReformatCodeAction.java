@@ -59,15 +59,14 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
-        DataContext dataContext = event.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
         PsiDocumentManager.getInstance(project).commitAllDocuments();
-        Editor editor = dataContext.getData(Editor.KEY);
-        VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+        Editor editor = e.getData(Editor.KEY);
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
 
         PsiFile file = null;
         PsiDirectory dir = null;
@@ -106,33 +105,31 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
             }
             return;
         }
+        else if (e.hasData(PlatformDataKeys.PROJECT_CONTEXT) || e.hasData(LangDataKeys.MODULE_CONTEXT)) {
+            Module moduleContext = e.getData(LangDataKeys.MODULE_CONTEXT);
+            ReformatFilesOptions selectedFlags = getLayoutProjectOptions(project, moduleContext);
+            if (selectedFlags != null) {
+                reformatModule(project, moduleContext, selectedFlags);
+            }
+            return;
+        }
         else {
-            if (dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) != null || dataContext.getData(LangDataKeys.MODULE_CONTEXT) != null) {
-                Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
-                ReformatFilesOptions selectedFlags = getLayoutProjectOptions(project, moduleContext);
-                if (selectedFlags != null) {
-                    reformatModule(project, moduleContext, selectedFlags);
-                }
+            PsiElement element = e.getData(PsiElement.KEY);
+            if (element == null) {
                 return;
             }
+            if (element instanceof PsiDirectoryContainer directoryContainer) {
+                dir = directoryContainer.getDirectories()[0];
+            }
+            else if (element instanceof PsiDirectory directory) {
+                dir = directory;
+            }
             else {
-                PsiElement element = dataContext.getData(PsiElement.KEY);
-                if (element == null) {
+                file = element.getContainingFile();
+                if (file == null) {
                     return;
                 }
-                if (element instanceof PsiDirectoryContainer directoryContainer) {
-                    dir = directoryContainer.getDirectories()[0];
-                }
-                else if (element instanceof PsiDirectory directory) {
-                    dir = directory;
-                }
-                else {
-                    file = element.getContainingFile();
-                    if (file == null) {
-                        return;
-                    }
-                    dir = file.getContainingDirectory();
-                }
+                dir = file.getContainingDirectory();
             }
         }
 
@@ -295,18 +292,17 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             presentation.setEnabled(false);
             return;
         }
 
-        Editor editor = dataContext.getData(Editor.KEY);
+        Editor editor = e.getData(Editor.KEY);
 
-        VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
 
         if (editor != null) {
             PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -345,20 +341,17 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         else if (files != null && files.length == 1) {
             // skip. Both directories and single files are supported.
         }
-        else {
-            if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null &&
-                dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
-                PsiElement element = dataContext.getData(PsiElement.KEY);
-                if (element == null) {
+        else if (!e.hasData(LangDataKeys.MODULE_CONTEXT) && !e.hasData(PlatformDataKeys.PROJECT_CONTEXT)) {
+            PsiElement element = e.getData(PsiElement.KEY);
+            if (element == null) {
+                presentation.setEnabled(false);
+                return;
+            }
+            if (!(element instanceof PsiDirectory)) {
+                PsiFile file = element.getContainingFile();
+                if (file == null || FormattingModelBuilder.forContext(file) == null) {
                     presentation.setEnabled(false);
                     return;
-                }
-                if (!(element instanceof PsiDirectory)) {
-                    PsiFile file = element.getContainingFile();
-                    if (file == null || FormattingModelBuilder.forContext(file) == null) {
-                        presentation.setEnabled(false);
-                        return;
-                    }
                 }
             }
         }

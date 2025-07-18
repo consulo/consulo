@@ -465,9 +465,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   private class MoveAction extends MoveChangesToAnotherListAction {
     @Override
     protected boolean isEnabled(@Nonnull AnActionEvent e) {
-      Change change = e.getData(VcsDataKeys.CURRENT_CHANGE);
-      if (change == null) return false;
-      return super.isEnabled(e);
+      return e.hasData(VcsDataKeys.CURRENT_CHANGE) && super.isEnabled(e);
     }
 
     @Override

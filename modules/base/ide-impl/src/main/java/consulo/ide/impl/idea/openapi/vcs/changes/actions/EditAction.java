@@ -40,7 +40,7 @@ public class EditAction extends AnAction {
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getData(Project.KEY);
-    List<VirtualFile> files = e.getData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
+    List<VirtualFile> files = e.getRequiredData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
     editFilesAndShowErrors(project, files);
   }
 
