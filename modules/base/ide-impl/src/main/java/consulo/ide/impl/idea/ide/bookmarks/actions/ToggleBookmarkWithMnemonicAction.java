@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
-import consulo.ide.localize.IdeLocalize;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,9 +31,10 @@ import jakarta.annotation.Nonnull;
 /**
  * @author max
  */
+@ActionImpl(id = "ToggleBookmarkWithMnemonic")
 public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
   public ToggleBookmarkWithMnemonicAction() {
-    getTemplatePresentation().setTextValue(IdeLocalize.actionBookmarkToggleMnemonic());
+    super(BookmarkLocalize.actionBookmarkToggleWithMnemonicText(), BookmarkLocalize.actionBookmarkToggleDescription());
   }
 
   @Override
@@ -67,7 +69,7 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
 
       final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(mc, mc);
       popup[0] = builder
-        .setTitle("BookmarkImpl Mnemonic")
+        .setTitle(BookmarkLocalize.dialogBookmarkAddWithMnemonicTitle())
         .setFocusable(true)
         .setRequestFocus(true)
         .setMovable(false)
@@ -84,10 +86,9 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent event) {
     super.update(event);
 
-    event.getPresentation().setTextValue(IdeLocalize.actionBookmarkToggleMnemonic());
+    event.getPresentation().setTextValue(BookmarkLocalize.actionBookmarkToggleWithMnemonicText());
   }
 }

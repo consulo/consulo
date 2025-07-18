@@ -1,2 +1,44 @@
+action.bookmark.delete:
+    text: Delete Bookmark
+action.bookmark.edit.description:
+    text: Edit Description
+action.bookmark.edit.description.description:
+    text: Assign short description for the bookmark to be shown along the file name
+action.bookmark.goto.0.text:
+    text: Go to Bookmark {0}
+action.bookmark.goto.next.description:
+    text: Navigate to the next bookmark in the active editor
+action.bookmark.goto.next.text:
+    text: Ne_xt Bookmark
+action.bookmark.goto.previous.description:
+    text: Navigate to the previous bookmark in the active editor
+action.bookmark.goto.previous.text:
+    text: P_revious Bookmark
+action.bookmark.toggle.0.text:
+    text: Toggle Bookmark {0}
+action.bookmark.toggle.description:
+    text: Toggle bookmark at the current location
+action.bookmark.toggle.text:
+    text: Toggle _Bookmark
+action.bookmark.toggle.with.mnemonic.text:
+    text: Toggle Bookmark With Mnemonic
+action.bookmarks.show.description:
+    text: Show list of all bookmarks
+action.bookmarks.show.text:
+    text: _Show Bookmarks
+dialog.bookmark.add.with.mnemonic.title:
+    text: Add Mnemonic Bookmark
+dialog.bookmark.edit.description.message:
+    text: Enter short bookmark description
+dialog.bookmark.edit.description.title:
+    text: Bookmark Description
+tooltip.bookmark:
+    text: Bookmark
+tooltip.bookmark.0:
+    text: Bookmark {0}
+tooltip.bookmark.0.with.description:
+    text: 'Bookmark {0}: {1}'
+tooltip.bookmark.with.description:
+    text: 'Bookmark: {0}'
 toolwindow.bookmarks.display.name:
     text: Bookmarks

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.icon.BookmarkIconGroup;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.*;
@@ -313,15 +313,17 @@ public class BookmarkImpl implements Bookmark {
     }
 
     private LocalizeValue getBookmarkTooltip() {
-        StringBuilder result = new StringBuilder("BookmarkImpl");
-        if (myMnemonic != 0) {
-            result.append(" ").append(myMnemonic);
-        }
         String description = StringUtil.escapeXml(getNotEmptyDescription());
-        if (description != null) {
-            result.append(": ").append(description);
+        if (myMnemonic != 0) {
+            return description != null
+                ? BookmarkLocalize.tooltipBookmark0WithDescription(myMnemonic, description)
+                : BookmarkLocalize.tooltipBookmark0(myMnemonic);
         }
-        return LocalizeValue.of(result.toString());
+        else {
+            return description != null
+                ? BookmarkLocalize.tooltipBookmarkWithDescription(description)
+                : BookmarkLocalize.tooltipBookmark();
+        }
     }
 
     private static class MyGutterIconRenderer extends GutterIconRenderer {
