@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.dataContext.DataContext;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -32,6 +32,7 @@ public abstract class ToggleNumberedBookmarkActionBase extends AnAction implemen
   private final int myNumber;
 
   public ToggleNumberedBookmarkActionBase(int n) {
+    super(BookmarkLocalize.actionBookmarkToggle0Text(n));
     myNumber = n;
   }
 

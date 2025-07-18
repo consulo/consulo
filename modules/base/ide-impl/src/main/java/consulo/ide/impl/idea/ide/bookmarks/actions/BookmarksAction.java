@@ -15,17 +15,21 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.popup.ItemWrapper;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.ide.bookmarks.*;
-import consulo.language.editor.ui.awt.DetailViewImpl;
-import consulo.codeEditor.util.popup.ItemWrapper;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkItem;
 import consulo.ide.impl.idea.ui.popup.util.MasterDetailPopupBuilder;
+import consulo.language.editor.ui.awt.DetailViewImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -37,9 +41,10 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -50,8 +55,18 @@ import java.util.List;
  * @author max
  */
 // TODO: remove duplication with BaseShowRecentFilesAction, there's quite a bit of it
+@ActionImpl(id = "ShowBookmarks")
 public class BookmarksAction extends AnAction implements DumbAware, MasterDetailPopupBuilder.Delegate {
   private JBPopup myPopup;
+
+  @Inject
+  public BookmarksAction() {
+    this(BookmarkLocalize.actionBookmarksShowText(), BookmarkLocalize.actionBookmarksShowDescription());
+  }
+
+  public BookmarksAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
 
   @Override
   public void update(AnActionEvent e) {

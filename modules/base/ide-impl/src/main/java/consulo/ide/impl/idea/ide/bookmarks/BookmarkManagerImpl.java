@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.event.BookmarksListener;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -39,8 +39,8 @@ import consulo.document.event.DocumentEvent;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.platform.Platform;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Comparing;
@@ -102,12 +102,13 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
   }
 
   @Override
+  @RequiredUIAccess
   public void editDescription(@Nonnull Bookmark bookmark) {
     String description = Messages.showInputDialog(
       myProject,
-      IdeLocalize.actionBookmarkEditDescriptionDialogMessage().get(),
-      IdeLocalize.actionBookmarkEditDescriptionDialogTitle().get(),
-      Messages.getQuestionIcon(),
+      BookmarkLocalize.dialogBookmarkEditDescriptionMessage().get(),
+      BookmarkLocalize.dialogBookmarkEditDescriptionTitle().get(),
+      UIUtil.getQuestionIcon(),
       bookmark.getDescription(),
       null
     );
@@ -474,4 +475,3 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     }
   }
 }
-

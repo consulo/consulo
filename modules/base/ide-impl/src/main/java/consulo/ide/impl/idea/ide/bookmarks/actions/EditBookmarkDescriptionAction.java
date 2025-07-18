@@ -15,16 +15,18 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.application.AllIcons;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.platform.Platform;
-import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.popup.JBPopup;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -35,9 +37,9 @@ class EditBookmarkDescriptionAction extends DumbAwareAction {
 
   EditBookmarkDescriptionAction(Project project, JList list) {
     super(
-      IdeLocalize.actionBookmarkEditDescription(),
-      IdeLocalize.actionBookmarkEditDescriptionDescription(),
-      AllIcons.Actions.Edit
+      BookmarkLocalize.actionBookmarkEditDescription(),
+      BookmarkLocalize.actionBookmarkEditDescriptionDescription(),
+      PlatformIconGroup.actionsEdit()
     );
     myProject = project;
     myList = list;
@@ -45,12 +47,13 @@ class EditBookmarkDescriptionAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(BookmarksAction.getSelectedBookmarks(myList).size() == 1);
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Bookmark bookmark = BookmarksAction.getSelectedBookmarks(myList).get(0);
     myPopup.setUiVisible(false);
 

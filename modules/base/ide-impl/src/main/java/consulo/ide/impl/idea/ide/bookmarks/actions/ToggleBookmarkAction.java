@@ -13,23 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.bookmark.BookmarkManager;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.codeEditor.Editor;
-import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
+@ActionImpl(id = "ToggleBookmark")
 public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
+  @Inject
   public ToggleBookmarkAction() {
-    getTemplatePresentation().setTextValue(IdeLocalize.actionBookmarkToggle());
+    super(BookmarkLocalize.actionBookmarkToggleText(), BookmarkLocalize.actionBookmarkToggleDescription());
+  }
+
+  public ToggleBookmarkAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
   }
 
   @Override
@@ -48,7 +56,6 @@ public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
   }
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     e.getPresentation().setEnabled(
@@ -56,6 +63,6 @@ public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
         && (ToolWindowManager.getInstance(project).isEditorComponentActive() && e.hasData(Editor.KEY) || e.hasData(VirtualFile.KEY))
     );
 
-    e.getPresentation().setTextValue(IdeLocalize.actionBookmarkToggle());
+    e.getPresentation().setTextValue(BookmarkLocalize.actionBookmarkToggleText());
   }
 }

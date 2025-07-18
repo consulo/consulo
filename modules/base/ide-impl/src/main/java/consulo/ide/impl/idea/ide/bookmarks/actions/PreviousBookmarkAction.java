@@ -15,8 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.bookmark.localize.BookmarkLocalize;
+
+@ActionImpl(id = "GotoPreviousBookmark")
 public class PreviousBookmarkAction extends GotoBookmarkActionBase {
     public PreviousBookmarkAction() {
         super(false);
+        getTemplatePresentation().setTextValue(BookmarkLocalize.actionBookmarkGotoPreviousText());
+        getTemplatePresentation().setDescriptionValue(BookmarkLocalize.actionBookmarkGotoPreviousDescription());
     }
 }

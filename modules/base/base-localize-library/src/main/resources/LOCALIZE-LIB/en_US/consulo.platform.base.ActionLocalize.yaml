@@ -1062,26 +1062,6 @@ action.GotoAspect.description:
     text: Navigate to the declaration of the advice, error or warning declaration that affects a join point at caret
 action.GotoAspect.text:
     text: _Aspect
-action.GotoBookmark0.text:
-    text: Go to Bookmark 0
-action.GotoBookmark1.text:
-    text: Go to Bookmark 1
-action.GotoBookmark2.text:
-    text: Go to Bookmark 2
-action.GotoBookmark3.text:
-    text: Go to Bookmark 3
-action.GotoBookmark4.text:
-    text: Go to Bookmark 4
-action.GotoBookmark5.text:
-    text: Go to Bookmark 5
-action.GotoBookmark6.text:
-    text: Go to Bookmark 6
-action.GotoBookmark7.text:
-    text: Go to Bookmark 7
-action.GotoBookmark8.text:
-    text: Go to Bookmark 8
-action.GotoBookmark9.text:
-    text: Go to Bookmark 9
 action.GotoClass.description:
     text: Quickly navigate to a class by name
 action.GotoClass.text:
@@ -1102,18 +1082,10 @@ action.GotoLine.description:
     text: Navigate to a line in editor by its number
 action.GotoLine.text:
     text: _Line…
-action.GotoNextBookmark.description:
-    text: Navigate to the next bookmark in the active editor
-action.GotoNextBookmark.text:
-    text: Ne_xt Bookmark
 action.GotoNextError.description:
     text: Navigate to the next highlighted error in the active editor
 action.GotoNextError.text:
     text: _Next Highlighted Error
-action.GotoPreviousBookmark.description:
-    text: Navigate to the previous bookmark in the active editor
-action.GotoPreviousBookmark.text:
-    text: P_revious Bookmark
 action.GotoPreviousError.description:
     text: Navigate to the previous highlighted error in the active editor
 action.GotoPreviousError.text:
@@ -1954,10 +1926,6 @@ action.ShowBackwardPackageDeps.description:
     text: Browse code chosen analysis item used in
 action.ShowBackwardPackageDeps.text:
     text: _Backward Dependencies…
-action.ShowBookmarks.description:
-    text: Show list of all bookmarks
-action.ShowBookmarks.text:
-    text: _Show Bookmarks
 action.ShowContent.description:
     text: Show a popup with the list of toolwindow tabs
 action.ShowContent.text:
@@ -2126,30 +2094,6 @@ action.TextComponent.ClearAction.description:
     text: Clear text in text components
 action.TextComponent.ClearAction.text:
     text: Clear text
-action.ToggleBookmark.description:
-    text: Toggle bookmark at the current location
-action.ToggleBookmark.text:
-    text: Toggle _Bookmark
-action.ToggleBookmark0.text:
-    text: Toggle Bookmark 0
-action.ToggleBookmark1.text:
-    text: Toggle Bookmark 1
-action.ToggleBookmark2.text:
-    text: Toggle Bookmark 2
-action.ToggleBookmark3.text:
-    text: Toggle Bookmark 3
-action.ToggleBookmark4.text:
-    text: Toggle Bookmark 4
-action.ToggleBookmark5.text:
-    text: Toggle Bookmark 5
-action.ToggleBookmark6.text:
-    text: Toggle Bookmark 6
-action.ToggleBookmark7.text:
-    text: Toggle Bookmark 7
-action.ToggleBookmark8.text:
-    text: Toggle Bookmark 8
-action.ToggleBookmark9.text:
-    text: Toggle Bookmark 9
 action.ToggleBreakpointEnabled.description:
     text: Enable/disable breakpoint at the current line
 action.ToggleBreakpointEnabled.text:

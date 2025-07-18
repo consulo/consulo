@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
+import consulo.annotation.component.ActionImpl;
+
 /**
  * @author max
  */
+@ActionImpl(id = "GotoBookmark6")
 public class GotoBookmark6Action extends GoToMnemonicBookmarkActionBase {
     public GotoBookmark6Action() {
         super(6);
