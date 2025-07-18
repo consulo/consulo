@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -67,17 +66,13 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
         }
       };
 
-      final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(mc, mc);
+      ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(mc, mc);
       popup[0] = builder
         .setTitle(BookmarkLocalize.dialogBookmarkAddWithMnemonicTitle())
         .setFocusable(true)
         .setRequestFocus(true)
-        .setMovable(false)
+        .setMovable(true)
         .setCancelKeyEnabled(false)
-        .setAdText(
-          bookmarks.hasBookmarksWithMnemonics()
-            ? (StyleManager.get().getCurrentStyle().isDark() ? "Brown" : "Yellow") + " cells are in use" : null
-        )
         .setResizable(false)
         .createPopup();
 
