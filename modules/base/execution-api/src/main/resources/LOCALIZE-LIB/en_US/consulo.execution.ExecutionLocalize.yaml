@@ -2,6 +2,10 @@ action.AnalyzeStacktrace.text:
     text: Analyze _Stack Trace or Thread Dump…
 action.Runner.ToggleTabLabels.text:
     text: Show Tab Labels
+action.choose.run.configuration.popup.description:
+    text: Choose and run configuration
+action.choose.run.configuration.popup.text:
+    text: Run...
 action.name.save.as.configuration:
     text: Save As
 action.name.save.configuration:

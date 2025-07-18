@@ -64,20 +64,6 @@ action.base.on.this.interface:
     text: Base on This Interface
 action.base.on.this.method:
     text: Base on This Method
-action.bookmark.delete:
-    text: Delete Bookmark
-action.bookmark.edit.description:
-    text: Edit Description
-action.bookmark.edit.description.description:
-    text: Assign short description for the bookmark to be shown along the file name
-action.bookmark.edit.description.dialog.message:
-    text: Enter short bookmark description
-action.bookmark.edit.description.dialog.title:
-    text: Bookmark Description
-action.bookmark.toggle:
-    text: Toggle _Bookmark
-action.bookmark.toggle.mnemonic:
-    text: Toggle Bookmark With Mnemonic
 action.browse.call.hierarchy:
     text: Browse Call Hierarchy
 action.browse.method.hierarchy:

@@ -15,8 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.bookmark.localize.BookmarkLocalize;
+
+@ActionImpl(id = "GotoNextBookmark")
 public class NextBookmarkAction extends GotoBookmarkActionBase {
     public NextBookmarkAction() {
         super(true);
+        getTemplatePresentation().setTextValue(BookmarkLocalize.actionBookmarkGotoNextText());
+        getTemplatePresentation().setDescriptionValue(BookmarkLocalize.actionBookmarkGotoNextDescription());
     }
 }

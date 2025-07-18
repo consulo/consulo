@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -31,7 +32,6 @@ abstract class WeighingActionGroup extends ActionGroup {
     private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         getDelegate().update(e);
     }
@@ -87,7 +87,7 @@ abstract class WeighingActionGroup extends ActionGroup {
 
         ActionGroup other = new ExcludingActionGroup(getDelegate(), heaviest);
         other.setPopup(true);
-        other.getTemplatePresentation().setText("Other...");
+        other.getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Other..."));
         return List.of(chosen.build(), new AnSeparator(), other);
     }
 

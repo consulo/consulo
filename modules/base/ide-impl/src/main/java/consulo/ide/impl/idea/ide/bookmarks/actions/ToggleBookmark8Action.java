@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
+import consulo.annotation.component.ActionImpl;
+
 /**
  * @author max
  */
+@ActionImpl(id = "ToggleBookmark8")
 public class ToggleBookmark8Action extends ToggleNumberedBookmarkActionBase {
     public ToggleBookmark8Action() {
         super(8);

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.dataContext.DataContext;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.project.Project;
@@ -31,6 +31,7 @@ public abstract class GoToMnemonicBookmarkActionBase extends AnAction implements
   private final int myNumber;
 
   public GoToMnemonicBookmarkActionBase(int n) {
+    super(BookmarkLocalize.actionBookmarkGoto0Text(n));
     myNumber = n;
   }
 

@@ -1218,9 +1218,9 @@
         <action id="AddNewFavoritesList" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddNewFavoritesListAction"/>
         <group id="SendToFavoritesGroup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.SendToFavoritesGroup" popup="true"/>
 
-        <action id="RunConfiguration" class="consulo.execution.impl.internal.action.RunConfigurationsComboBoxAction"/>
-        <action id="ChooseRunConfiguration" class="consulo.execution.impl.internal.action.ChooseRunConfigurationPopupAction"/>
-        <action id="ChooseDebugConfiguration" class="consulo.execution.debug.impl.internal.action.ChooseDebugConfigurationPopupAction"/>
+        <reference ref="RunConfiguration"/>
+        <reference ref="ChooseRunConfiguration"/>
+        <reference ref="ChooseDebugConfiguration"/>
 
         <group id="RunContextGroup" popup="false">
             <!-- A dynamic group filled with executor actions -->
@@ -1333,11 +1333,11 @@
         </group>
 
         <group id="EditBookmarksGroup" popup="true">
-            <action id="ToggleBookmark" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmarkAction"/>
-            <action id="ToggleBookmarkWithMnemonic" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmarkWithMnemonicAction"/>
-            <action id="ShowBookmarks" class="consulo.ide.impl.idea.ide.bookmarks.actions.BookmarksAction"/>
-            <action id="GotoNextBookmark" class="consulo.ide.impl.idea.ide.bookmarks.actions.NextBookmarkAction"/>
-            <action id="GotoPreviousBookmark" class="consulo.ide.impl.idea.ide.bookmarks.actions.PreviousBookmarkAction"/>
+            <reference ref="ToggleBookmark"/>
+            <reference ref="ToggleBookmarkWithMnemonic"/>
+            <reference ref="ShowBookmarks"/>
+            <reference ref="GotoNextBookmark"/>
+            <reference ref="GotoPreviousBookmark"/>
             <separator/>
 
             <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="JumpToLastChange"/>
@@ -1561,11 +1561,10 @@
             <group id="RunnerActions"/>
             <reference ref="ChooseRunConfiguration"/>
             <reference ref="ChooseDebugConfiguration"/>
-            <action id="editRunConfigurations" class="consulo.execution.impl.internal.action.EditRunConfigurationsAction"/>
-            <action id="Stop" class="consulo.execution.impl.internal.action.StopAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.suspend"/>
-            <action id="StopBackgroundProcesses" class="consulo.execution.impl.internal.action.StopBackgroundProcessesAction"/>
-            <action id="ShowLiveRunConfigurations" class="consulo.execution.impl.internal.action.ShowRunningListAction"/>
+            <reference ref="editRunConfigurations"/>
+            <reference ref="Stop"/>
+            <reference ref="StopBackgroundProcesses"/>
+            <reference ref="ShowLiveRunConfigurations"/>
 
             <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RefactoringMenu"/>
         </group>
@@ -1594,9 +1593,9 @@
         </group>
 
         <group id="NewGroup" popup="true">
-            <action id="NewFile" class="consulo.ide.action.CreateFileAction"/>
-            <action id="NewScratchFile" class="consulo.ide.impl.idea.ide.scratch.ScratchFileActions$NewFileAction"/>
-            <action id="NewDir" class="consulo.ide.impl.idea.ide.actions.CreateDirectoryOrPackageAction"/>
+            <reference id="NewFile"/>
+            <reference id="NewScratchFile"/>
+            <reference id="NewDir"/>
             <separator/>
             <action id="NewFromTemplate" class="consulo.ide.impl.idea.ide.fileTemplates.actions.CreateFromTemplateGroup"/>
         </group>
@@ -1605,7 +1604,7 @@
             <add-to-group group-id="NewGroup" anchor="first"/>
         </group>
 
-        <group id="WeighingNewGroup" class="consulo.ide.impl.idea.ide.actions.WeighingNewActionGroup"/>
+        <reference ref="WeighingNewGroup"/>
 
 
         <group id="ToolbarFindGroup">
@@ -1646,28 +1645,27 @@
             <reference ref="GotoNextBookmark"/>
             <reference ref="GotoPreviousBookmark"/>
 
-            <action id="GotoBookmark0" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark0Action"/>
-            <action id="GotoBookmark1" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark1Action"/>
-            <action id="GotoBookmark2" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark2Action"/>
-            <action id="GotoBookmark3" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark3Action"/>
-            <action id="GotoBookmark4" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark4Action"/>
-            <action id="GotoBookmark5" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark5Action"/>
-            <action id="GotoBookmark6" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark6Action"/>
-            <action id="GotoBookmark7" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark7Action"/>
-            <action id="GotoBookmark8" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark8Action"/>
-            <action id="GotoBookmark9" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark9Action"/>
+            <reference ref="GotoBookmark0"/>
+            <reference ref="GotoBookmark1"/>
+            <reference ref="GotoBookmark2"/>
+            <reference ref="GotoBookmark3"/>
+            <reference ref="GotoBookmark4"/>
+            <reference ref="GotoBookmark5"/>
+            <reference ref="GotoBookmark6"/>
+            <reference ref="GotoBookmark7"/>
+            <reference ref="GotoBookmark8"/>
+            <reference ref="GotoBookmark9"/>
 
-            <action id="ToggleBookmark0" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark0Action"/>
-            <action id="ToggleBookmark1" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark1Action"/>
-            <action id="ToggleBookmark2" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark2Action"/>
-            <action id="ToggleBookmark3" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark3Action"/>
-            <action id="ToggleBookmark4" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark4Action"/>
-            <action id="ToggleBookmark5" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark5Action"/>
-            <action id="ToggleBookmark6" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark6Action"/>
-            <action id="ToggleBookmark7" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark7Action"/>
-            <action id="ToggleBookmark8" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark8Action"/>
-            <action id="ToggleBookmark9" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark9Action"/>
-
+            <reference ref="ToggleBookmark0"/>
+            <reference ref="ToggleBookmark1"/>
+            <reference ref="ToggleBookmark2"/>
+            <reference ref="ToggleBookmark3"/>
+            <reference ref="ToggleBookmark4"/>
+            <reference ref="ToggleBookmark5"/>
+            <reference ref="ToggleBookmark6"/>
+            <reference ref="ToggleBookmark7"/>
+            <reference ref="ToggleBookmark8"/>
+            <reference ref="ToggleBookmark9"/>
         </group>
 
         <group id="ProjectViewPopupMenuRefactoringGroup">

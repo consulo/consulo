@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.action.CreateFileAction;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
+@ActionImpl(id = "WeighingNewGroup")
 public class WeighingNewActionGroup extends WeighingActionGroup {
     private ActionGroup myDelegate;
 
@@ -30,7 +31,7 @@ public class WeighingNewActionGroup extends WeighingActionGroup {
     protected ActionGroup getDelegate() {
         if (myDelegate == null) {
             myDelegate = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_NEW);
-            getTemplatePresentation().setText(myDelegate.getTemplatePresentation().getText());
+            getTemplatePresentation().setTextValue(myDelegate.getTemplatePresentation().getTextValue());
             setPopup(myDelegate.isPopup());
         }
         return myDelegate;
@@ -41,17 +42,17 @@ public class WeighingNewActionGroup extends WeighingActionGroup {
         return true;
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        e.getPresentation().setText(getTemplatePresentation().getText());
+        e.getPresentation().setTextValue(getTemplatePresentation().getTextValue());
     }
 
     @Override
     protected boolean shouldBeChosenAnyway(AnAction action) {
         Class<? extends AnAction> aClass = action.getClass();
-        return aClass == CreateFileAction.class || aClass == CreateDirectoryOrPackageAction.class ||
-            "NewModuleInGroupAction".equals(aClass.getSimpleName()); //todo why is it in idea module?
+        return aClass == CreateFileAction.class
+            || aClass == CreateDirectoryOrPackageAction.class
+            || "NewModuleInGroupAction".equals(aClass.getSimpleName()); //todo why is it in idea module?
     }
 }

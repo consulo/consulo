@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,7 +29,12 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "editRunConfigurations")
 public class EditRunConfigurationsAction extends DumbAwareAction {
+    public EditRunConfigurationsAction() {
+        super(ActionLocalize.actionEditrunconfigurationsText(), ActionLocalize.actionEditrunconfigurationsDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {

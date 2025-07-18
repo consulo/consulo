@@ -15,6 +15,7 @@
  */
 package consulo.execution.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.execution.executor.Executor;
 import consulo.execution.icon.ExecutionIconGroup;
@@ -55,6 +56,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+@ActionImpl(id = "ShowLiveRunConfigurations")
 public class ShowRunningListAction extends AnAction {
     public ShowRunningListAction() {
         super(ExecutionLocalize.showRunningListActionName(), ExecutionLocalize.showRunningListActionDescription());

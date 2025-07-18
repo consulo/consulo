@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.execution.ExecutionManager;
@@ -10,6 +11,8 @@ import consulo.execution.impl.internal.ExecutionManagerImpl;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.process.KillableProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
@@ -39,8 +42,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@ActionImpl(id = "Stop")
 public class StopAction extends DumbAwareAction {
   private WeakReference<JBPopup> myActivePopupRef = null;
+
+  public StopAction() {
+    super(
+        ActionLocalize.actionStopbackgroundprocessesText(),
+        ActionLocalize.actionStopbackgroundprocessesDescription(),
+        PlatformIconGroup.actionsSuspend()
+    );
+  }
 
   private static boolean isPlaceGlobal(@Nonnull AnActionEvent e) {
     return ActionPlaces.isMainMenuOrActionSearch(e.getPlace()) ||
