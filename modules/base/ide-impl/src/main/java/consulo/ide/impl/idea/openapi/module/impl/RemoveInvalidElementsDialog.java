@@ -63,7 +63,7 @@ public class RemoveInvalidElementsDialog extends DialogWrapper {
       panel.add(checkBox, constraints);
       constraints.anchor = GridBagConstraints.NORTHWEST;
       constraints.insets.top = 5;
-      panel.add(new JLabel("<html><body>" + StringUtil.replace(error.getDescription(), "\n", "<br>") + "</body></html>"), constraints);
+      panel.add(new JLabel("<html><body>" + StringUtil.replace(error.getDescription().get(), "\n", "<br>") + "</body></html>"), constraints);
       constraints.weightx = 1;
       panel.add(new JPanel(), constraints);
       myContentPanel.add(panel);

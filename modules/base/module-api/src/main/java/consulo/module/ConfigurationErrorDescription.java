@@ -13,43 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.module;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class ConfigurationErrorDescription {
-  private final String myElementName;
-  private final String myDescription;
-  private final ConfigurationErrorType myErrorType;
+    private final String myElementName;
+    @Nonnull
+    private final LocalizeValue myDescription;
+    private final ConfigurationErrorType myErrorType;
 
-  protected ConfigurationErrorDescription(String elementName, String description, ConfigurationErrorType errorType) {
-    myElementName = elementName;
-    myErrorType = errorType;
-    myDescription = description;
-  }
+    protected ConfigurationErrorDescription(String elementName, @Nonnull LocalizeValue description, ConfigurationErrorType errorType) {
+        myElementName = elementName;
+        myErrorType = errorType;
+        myDescription = description;
+    }
 
-  public String getElementName() {
-    return myElementName;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    protected ConfigurationErrorDescription(String elementName, String description, ConfigurationErrorType errorType) {
+        this(elementName, LocalizeValue.ofNullable(description), errorType);
+    }
 
-  public ConfigurationErrorType getErrorType() {
-    return myErrorType;
-  }
+    public String getElementName() {
+        return myElementName;
+    }
 
-  public String getDescription() {
-    return myDescription;
-  }
+    public ConfigurationErrorType getErrorType() {
+        return myErrorType;
+    }
 
-  @RequiredUIAccess
-  public abstract void ignoreInvalidElement();
+    @Nonnull
+    public LocalizeValue getDescription() {
+        return myDescription;
+    }
 
-  public abstract String getIgnoreConfirmationMessage();
+    @RequiredUIAccess
+    public abstract void ignoreInvalidElement();
 
-  public boolean isValid() {
-    return true;
-  }
+    @Nonnull
+    public abstract LocalizeValue getIgnoreConfirmationMessage();
+
+    public boolean isValid() {
+        return true;
+    }
 }

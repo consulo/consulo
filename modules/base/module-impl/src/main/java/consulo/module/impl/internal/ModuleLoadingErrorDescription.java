@@ -36,7 +36,7 @@ public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription
     private final ModuleManagerImpl myModuleManager;
 
     private ModuleLoadingErrorDescription(
-        String description,
+        @Nonnull LocalizeValue description,
         ModuleManagerImpl.ModuleLoadItem modulePath,
         ModuleManagerImpl moduleManager,
         String elementName
@@ -65,8 +65,8 @@ public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription
     }
 
     @Override
-    public String getIgnoreConfirmationMessage() {
-        return ProjectLocalize.moduleRemoveFromProjectConfirmation(getElementName()).get();
+    public LocalizeValue getIgnoreConfirmationMessage() {
+        return ProjectLocalize.moduleRemoveFromProjectConfirmation(getElementName());
     }
 
     public static ModuleLoadingErrorDescription create(
@@ -74,7 +74,7 @@ public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription
         ModuleManagerImpl.ModuleLoadItem loadItem,
         ModuleManagerImpl moduleManager
     ) {
-        return new ModuleLoadingErrorDescription(description.get(), loadItem, moduleManager, loadItem.getName());
+        return new ModuleLoadingErrorDescription(description, loadItem, moduleManager, loadItem.getName());
     }
 
     @Deprecated
@@ -84,6 +84,6 @@ public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription
         ModuleManagerImpl.ModuleLoadItem loadItem,
         ModuleManagerImpl moduleManager
     ) {
-        return new ModuleLoadingErrorDescription(description, loadItem, moduleManager, loadItem.getName());
+        return new ModuleLoadingErrorDescription(LocalizeValue.ofNullable(description), loadItem, moduleManager, loadItem.getName());
     }
 }
