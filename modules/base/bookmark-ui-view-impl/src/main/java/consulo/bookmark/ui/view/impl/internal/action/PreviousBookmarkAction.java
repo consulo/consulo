@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.bookmarks.actions;
+package consulo.bookmark.ui.view.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.bookmark.localize.BookmarkLocalize;
 
-/**
- * @author max
- */
-@ActionImpl(id = "GotoBookmark0")
-public class GotoBookmark0Action extends GoToMnemonicBookmarkActionBase {
-    public GotoBookmark0Action() {
-        super(0);
+@ActionImpl(id = "GotoPreviousBookmark")
+public class PreviousBookmarkAction extends GotoBookmarkActionBase {
+    public PreviousBookmarkAction() {
+        super(false);
+        getTemplatePresentation().setTextValue(BookmarkLocalize.actionBookmarkGotoPreviousText());
+        getTemplatePresentation().setDescriptionValue(BookmarkLocalize.actionBookmarkGotoPreviousDescription());
     }
 }

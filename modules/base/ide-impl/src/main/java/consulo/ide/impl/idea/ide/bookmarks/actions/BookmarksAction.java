@@ -20,18 +20,13 @@ import consulo.application.dumb.DumbAware;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.localize.BookmarkLocalize;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.util.popup.ItemWrapper;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
 import consulo.bookmark.ui.view.internal.BookmarkItem;
+import consulo.codeEditor.util.popup.ItemWrapper;
 import consulo.ide.impl.idea.ui.popup.util.MasterDetailPopupBuilder;
 import consulo.language.editor.ui.awt.DetailViewImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -39,7 +34,6 @@ import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -84,7 +78,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
             return;
         }
 
-        final DefaultListModel<BookmarkItem> model = buildModel(project);
+        DefaultListModel<BookmarkItem> model = buildModel(project);
 
         final JBList<BookmarkItem> list = new JBList<>(model);
         list.getEmptyText().setText("No Bookmarks");
@@ -127,7 +121,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     @Override
     public void handleMnemonic(KeyEvent e, Project project, JBPopup popup) {
         char mnemonic = e.getKeyChar();
-        final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic(mnemonic);
+        Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic(mnemonic);
         if (bookmark != null) {
             popup.cancel();
             ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> bookmark.navigate(true));
@@ -168,66 +162,13 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     }
 
     private static DefaultListModel<BookmarkItem> buildModel(Project project) {
-        final DefaultListModel<BookmarkItem> model = new DefaultListModel<>();
+        DefaultListModel<BookmarkItem> model = new DefaultListModel<>();
 
         for (Bookmark bookmark : BookmarkManager.getInstance(project).getValidBookmarks()) {
             model.addElement(new BookmarkItem(bookmark));
         }
 
         return model;
-    }
-
-    protected static class BookmarkInContextInfo {
-        private final DataContext myDataContext;
-        private final Project myProject;
-        private Bookmark myBookmarkAtPlace;
-        private VirtualFile myFile;
-        private int myLine;
-
-        public BookmarkInContextInfo(DataContext dataContext, Project project) {
-            myDataContext = dataContext;
-            myProject = project;
-        }
-
-        public Bookmark getBookmarkAtPlace() {
-            return myBookmarkAtPlace;
-        }
-
-        public VirtualFile getFile() {
-            return myFile;
-        }
-
-        public int getLine() {
-            return myLine;
-        }
-
-        public BookmarkInContextInfo invoke() {
-            myBookmarkAtPlace = null;
-            myFile = null;
-            myLine = -1;
-
-
-            BookmarkManager bookmarkManager = BookmarkManager.getInstance(myProject);
-            if (ToolWindowManager.getInstance(myProject).isEditorComponentActive()) {
-                Editor editor = myDataContext.getData(Editor.KEY);
-                if (editor != null) {
-                    Document document = editor.getDocument();
-                    myLine = editor.getCaretModel().getLogicalPosition().line;
-                    myFile = FileDocumentManager.getInstance().getFile(document);
-                    myBookmarkAtPlace = bookmarkManager.findEditorBookmark(document, myLine);
-                }
-            }
-
-            if (myFile == null) {
-                myFile = myDataContext.getData(VirtualFile.KEY);
-                myLine = -1;
-
-                if (myBookmarkAtPlace == null && myFile != null) {
-                    myBookmarkAtPlace = bookmarkManager.findFileBookmark(myFile);
-                }
-            }
-            return this;
-        }
     }
 
     static List<Bookmark> getSelectedBookmarks(JList list) {

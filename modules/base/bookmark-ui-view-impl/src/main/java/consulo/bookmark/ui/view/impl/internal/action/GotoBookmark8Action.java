@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.bookmarks.actions;
+package consulo.bookmark.ui.view.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 
 /**
  * @author max
  */
-@ActionImpl(id = "GotoBookmark9")
-public class GotoBookmark9Action extends GoToMnemonicBookmarkActionBase {
-    public GotoBookmark9Action() {
-        super(9);
+@ActionImpl(id = "GotoBookmark8")
+public class GotoBookmark8Action extends GoToMnemonicBookmarkActionBase {
+    public GotoBookmark8Action() {
+        super(8);
     }
 }

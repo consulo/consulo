@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.bookmarks.actions;
+package consulo.bookmark.ui.view.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 
 /**
  * @author max
  */
-@ActionImpl(id = "ToggleBookmark7")
-public class ToggleBookmark7Action extends ToggleNumberedBookmarkActionBase {
-    public ToggleBookmark7Action() {
-        super(7);
+@ActionImpl(id = "GotoBookmark5")
+public class GotoBookmark5Action extends GoToMnemonicBookmarkActionBase {
+    public GotoBookmark5Action() {
+        super(5);
     }
 }

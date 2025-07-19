@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.bookmarks.actions;
+package consulo.bookmark.ui.view.impl.internal.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
+import consulo.bookmark.ui.view.internal.BookmarkInContextInfo;
 import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -46,18 +47,18 @@ public abstract class ToggleNumberedBookmarkActionBase extends AnAction implemen
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(Project.KEY);
 
-    BookmarksAction.BookmarkInContextInfo info = new BookmarksAction.BookmarkInContextInfo(e.getDataContext(), project).invoke();
+    BookmarkInContextInfo info = new BookmarkInContextInfo(e.getDataContext(), project).invoke();
     if (info.getFile() == null) return;
 
-    final Bookmark oldBookmark = info.getBookmarkAtPlace();
+    Bookmark oldBookmark = info.getBookmarkAtPlace();
 
-    final BookmarkManager manager = BookmarkManager.getInstance(project);
+    BookmarkManager manager = BookmarkManager.getInstance(project);
     if (oldBookmark != null) {
       manager.removeBookmark(oldBookmark);
     }
 
     if (oldBookmark == null || oldBookmark.getMnemonic() != '0' + myNumber) {
-      final Bookmark bookmark = manager.addTextBookmark(info.getFile(), info.getLine(), "");
+      Bookmark bookmark = manager.addTextBookmark(info.getFile(), info.getLine(), "");
       manager.setMnemonic(bookmark, (char)('0' + myNumber));
     }
   }
