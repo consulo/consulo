@@ -396,7 +396,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         }
 
         if (myProject.getApplication().isHeadlessEnvironment()) {
-            throw new RuntimeException(errors.get(0).getDescription());
+            throw new RuntimeException(errors.get(0).getDescription().get());
         }
 
         ProjectLoadingErrorsNotifier.getInstance(myProject).registerErrors(errors);

@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class ArtifactLoadingErrorDescription extends ConfigurationErrorDescription {
-    private static final ConfigurationErrorType INVALID_ARTIFACT = new ConfigurationErrorType("artifact", false);
+    private static final ConfigurationErrorType INVALID_ARTIFACT = new ConfigurationErrorType(LocalizeValue.localizeTODO("artifact"), false);
 
     private final ArtifactManager myArtifactManager;
     private final InvalidArtifact myArtifact;

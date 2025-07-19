@@ -31,7 +31,7 @@ import jakarta.annotation.Nonnull;
  */
 public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription {
     private static final ConfigurationErrorType INVALID_MODULE =
-        new ConfigurationErrorType(ProjectLocalize.elementKindNameModule().get(), false);
+        new ConfigurationErrorType(ProjectLocalize.elementKindNameModule(), false);
     private final ModuleManagerImpl.ModuleLoadItem moduleLoadItem;
     private final ModuleManagerImpl myModuleManager;
 
