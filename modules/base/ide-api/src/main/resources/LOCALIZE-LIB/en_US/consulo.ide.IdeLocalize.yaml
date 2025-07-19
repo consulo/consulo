@@ -412,8 +412,6 @@ background.task.editor.header:
     text: '{0} : background task on vfs change is available for this file'
 bean.property:
     text: Bean Property
-bookmark.file.X.line.Y:
-    text: '{0}, line {1}'
 browsers.chrome:
     text: Chrome
 browsers.explorer:

@@ -17,6 +17,7 @@ package consulo.bookmark;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.bookmark.internal.BookmarkManagerInternal;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.project.Project;
@@ -31,7 +32,7 @@ import java.util.List;
  * @since 10-Aug-22
  */
 @ServiceAPI(ComponentScope.PROJECT)
-public interface BookmarkManager {
+public sealed interface BookmarkManager permits BookmarkManagerInternal {
   @Nonnull
   public static BookmarkManager getInstance(Project project) {
     return project.getInstance(BookmarkManager.class);

@@ -25,8 +25,7 @@ import consulo.codeEditor.util.popup.ItemWrapper;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkItem;
+import consulo.bookmark.ui.view.internal.BookmarkItem;
 import consulo.ide.impl.idea.ui.popup.util.MasterDetailPopupBuilder;
 import consulo.language.editor.ui.awt.DetailViewImpl;
 import consulo.localize.LocalizeValue;
@@ -46,6 +45,7 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,191 +57,195 @@ import java.util.List;
 // TODO: remove duplication with BaseShowRecentFilesAction, there's quite a bit of it
 @ActionImpl(id = "ShowBookmarks")
 public class BookmarksAction extends AnAction implements DumbAware, MasterDetailPopupBuilder.Delegate {
-  private JBPopup myPopup;
+    public static final Font MNEMONIC_FONT = new Font("Monospaced", 0, 11);
 
-  @Inject
-  public BookmarksAction() {
-    this(BookmarkLocalize.actionBookmarksShowText(), BookmarkLocalize.actionBookmarksShowDescription());
-  }
+    private JBPopup myPopup;
 
-  public BookmarksAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-    super(text, description);
-  }
+    @Inject
+    public BookmarksAction() {
+        this(BookmarkLocalize.actionBookmarksShowText(), BookmarkLocalize.actionBookmarksShowDescription());
+    }
 
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.hasData(Project.KEY));
-  }
+    public BookmarksAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
+    }
 
-    if (myPopup != null && myPopup.isVisible()) return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
 
-    final DefaultListModel<BookmarkItem> model = buildModel(project);
-
-    final JBList<BookmarkItem> list = new JBList<>(model);
-    list.getEmptyText().setText("No Bookmarks");
-
-    EditBookmarkDescriptionAction editDescriptionAction = new EditBookmarkDescriptionAction(project, list);
-    List<AnAction> actions = new ArrayList<>();
-    actions.add(editDescriptionAction);
-    actions.add(new DeleteBookmarkAction(project, list));
-    actions.add(new MoveBookmarkUpAction(project, list));
-    actions.add(new MoveBookmarkDownAction(project, list));
-
-    myPopup = new MasterDetailPopupBuilder(project)
-      .setActionsGroup(actions)
-      .setList(list)
-      .setDetailView(new DetailViewImpl(project))
-      .setCloseOnEnter(false)
-      .setDoneRunnable(() -> myPopup.cancel())
-      .setDelegate(this).createMasterDetailPopup();
-    new AnAction() {
-      @Override
-      @RequiredUIAccess
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        Object selectedValue = list.getSelectedValue();
-        if (selectedValue instanceof BookmarkItem) {
-          itemChosen((BookmarkItem)selectedValue, project, myPopup, true);
+        if (myPopup != null && myPopup.isVisible()) {
+            return;
         }
-      }
-    }.registerCustomShortcutSet(CommonShortcuts.getEditSource(), list);
-    editDescriptionAction.setPopup(myPopup);
-    myPopup.showCenteredInCurrentWindow(project);
-    //todo[zaec] selection mode shouldn't be set in builder.setList() method
-    list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-  }
 
-  @Override
-  public String getTitle() {
-    return "Bookmarks";
-  }
+        final DefaultListModel<BookmarkItem> model = buildModel(project);
 
-  @Override
-  public void handleMnemonic(KeyEvent e, Project project, JBPopup popup) {
-    char mnemonic = e.getKeyChar();
-    final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic(mnemonic);
-    if (bookmark != null) {
-      popup.cancel();
-      ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> bookmark.navigate(true));
-    }
-  }
+        final JBList<BookmarkItem> list = new JBList<>(model);
+        list.getEmptyText().setText("No Bookmarks");
 
-  @Override
-  @Nullable
-  public JComponent createAccessoryView(Project project) {
-    if (!BookmarkManager.getInstance(project).hasBookmarksWithMnemonics()) {
-      return null;
-    }
-    final JLabel mnemonicLabel = new JLabel();
-    mnemonicLabel.setFont(BookmarkImpl.MNEMONIC_FONT);
+        EditBookmarkDescriptionAction editDescriptionAction = new EditBookmarkDescriptionAction(project, list);
+        List<AnAction> actions = new ArrayList<>();
+        actions.add(editDescriptionAction);
+        actions.add(new DeleteBookmarkAction(project, list));
+        actions.add(new MoveBookmarkUpAction(project, list));
+        actions.add(new MoveBookmarkDownAction(project, list));
 
-    mnemonicLabel.setPreferredSize(new JLabel("W.").getPreferredSize());
-    mnemonicLabel.setOpaque(false);
-    return mnemonicLabel;
-  }
-
-  @Override
-  public Object[] getSelectedItemsInTree() {
-    return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public void itemChosen(ItemWrapper item, Project project, JBPopup popup, boolean withEnterOrDoubleClick) {
-    if (item instanceof BookmarkItem && withEnterOrDoubleClick) {
-      Bookmark bookmark = ((BookmarkItem)item).getBookmark();
-      popup.cancel();
-      bookmark.navigate(true);
-    }
-  }
-
-  @Override
-  public void removeSelectedItemsInTree() {
-
-  }
-
-  private static DefaultListModel<BookmarkItem> buildModel(Project project) {
-    final DefaultListModel<BookmarkItem> model = new DefaultListModel<>();
-
-    for (Bookmark bookmark : BookmarkManager.getInstance(project).getValidBookmarks()) {
-      model.addElement(new BookmarkItem(bookmark));
+        myPopup = new MasterDetailPopupBuilder(project)
+            .setActionsGroup(actions)
+            .setList(list)
+            .setDetailView(new DetailViewImpl(project))
+            .setCloseOnEnter(false)
+            .setDoneRunnable(() -> myPopup.cancel())
+            .setDelegate(this).createMasterDetailPopup();
+        new AnAction() {
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                Object selectedValue = list.getSelectedValue();
+                if (selectedValue instanceof BookmarkItem) {
+                    itemChosen((BookmarkItem) selectedValue, project, myPopup, true);
+                }
+            }
+        }.registerCustomShortcutSet(CommonShortcuts.getEditSource(), list);
+        editDescriptionAction.setPopup(myPopup);
+        myPopup.showCenteredInCurrentWindow(project);
+        //todo[zaec] selection mode shouldn't be set in builder.setList() method
+        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     }
 
-    return model;
-  }
-
-  protected static class BookmarkInContextInfo {
-    private final DataContext myDataContext;
-    private final Project myProject;
-    private Bookmark myBookmarkAtPlace;
-    private VirtualFile myFile;
-    private int myLine;
-
-    public BookmarkInContextInfo(DataContext dataContext, Project project) {
-      myDataContext = dataContext;
-      myProject = project;
+    @Override
+    public String getTitle() {
+        return "Bookmarks";
     }
 
-    public Bookmark getBookmarkAtPlace() {
-      return myBookmarkAtPlace;
-    }
-
-    public VirtualFile getFile() {
-      return myFile;
-    }
-
-    public int getLine() {
-      return myLine;
-    }
-
-    public BookmarkInContextInfo invoke() {
-      myBookmarkAtPlace = null;
-      myFile = null;
-      myLine = -1;
-
-
-      BookmarkManager bookmarkManager = BookmarkManager.getInstance(myProject);
-      if (ToolWindowManager.getInstance(myProject).isEditorComponentActive()) {
-        Editor editor = myDataContext.getData(Editor.KEY);
-        if (editor != null) {
-          Document document = editor.getDocument();
-          myLine = editor.getCaretModel().getLogicalPosition().line;
-          myFile = FileDocumentManager.getInstance().getFile(document);
-          myBookmarkAtPlace = bookmarkManager.findEditorBookmark(document, myLine);
+    @Override
+    public void handleMnemonic(KeyEvent e, Project project, JBPopup popup) {
+        char mnemonic = e.getKeyChar();
+        final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic(mnemonic);
+        if (bookmark != null) {
+            popup.cancel();
+            ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> bookmark.navigate(true));
         }
-      }
+    }
 
-      if (myFile == null) {
-        myFile = myDataContext.getData(VirtualFile.KEY);
-        myLine = -1;
-
-        if (myBookmarkAtPlace == null && myFile != null) {
-          myBookmarkAtPlace = bookmarkManager.findFileBookmark(myFile);
+    @Override
+    @Nullable
+    public JComponent createAccessoryView(Project project) {
+        if (!BookmarkManager.getInstance(project).hasBookmarksWithMnemonics()) {
+            return null;
         }
-      }
-      return this;
-    }
-  }
+        JLabel mnemonicLabel = new JLabel();
+        mnemonicLabel.setFont(MNEMONIC_FONT);
 
-  static List<Bookmark> getSelectedBookmarks(JList list) {
-    List<Bookmark> answer = new ArrayList<>();
-
-    for (Object value : list.getSelectedValues()) {
-      if (value instanceof BookmarkItem bookmarkItem) {
-        answer.add(bookmarkItem.getBookmark());
-      }
-      else {
-        return Collections.emptyList();
-      }
+        mnemonicLabel.setPreferredSize(new JLabel("W.").getPreferredSize());
+        mnemonicLabel.setOpaque(false);
+        return mnemonicLabel;
     }
 
-    return answer;
-  }
+    @Override
+    public Object[] getSelectedItemsInTree() {
+        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
-  static boolean notFiltered(JList list) {
-    return !(list.getModel() instanceof FilteringListModel model && model.getOriginalModel().getSize() != model.getSize());
-  }
+    @Override
+    public void itemChosen(ItemWrapper item, Project project, JBPopup popup, boolean withEnterOrDoubleClick) {
+        if (item instanceof BookmarkItem && withEnterOrDoubleClick) {
+            Bookmark bookmark = ((BookmarkItem) item).getBookmark();
+            popup.cancel();
+            bookmark.navigate(true);
+        }
+    }
+
+    @Override
+    public void removeSelectedItemsInTree() {
+
+    }
+
+    private static DefaultListModel<BookmarkItem> buildModel(Project project) {
+        final DefaultListModel<BookmarkItem> model = new DefaultListModel<>();
+
+        for (Bookmark bookmark : BookmarkManager.getInstance(project).getValidBookmarks()) {
+            model.addElement(new BookmarkItem(bookmark));
+        }
+
+        return model;
+    }
+
+    protected static class BookmarkInContextInfo {
+        private final DataContext myDataContext;
+        private final Project myProject;
+        private Bookmark myBookmarkAtPlace;
+        private VirtualFile myFile;
+        private int myLine;
+
+        public BookmarkInContextInfo(DataContext dataContext, Project project) {
+            myDataContext = dataContext;
+            myProject = project;
+        }
+
+        public Bookmark getBookmarkAtPlace() {
+            return myBookmarkAtPlace;
+        }
+
+        public VirtualFile getFile() {
+            return myFile;
+        }
+
+        public int getLine() {
+            return myLine;
+        }
+
+        public BookmarkInContextInfo invoke() {
+            myBookmarkAtPlace = null;
+            myFile = null;
+            myLine = -1;
+
+
+            BookmarkManager bookmarkManager = BookmarkManager.getInstance(myProject);
+            if (ToolWindowManager.getInstance(myProject).isEditorComponentActive()) {
+                Editor editor = myDataContext.getData(Editor.KEY);
+                if (editor != null) {
+                    Document document = editor.getDocument();
+                    myLine = editor.getCaretModel().getLogicalPosition().line;
+                    myFile = FileDocumentManager.getInstance().getFile(document);
+                    myBookmarkAtPlace = bookmarkManager.findEditorBookmark(document, myLine);
+                }
+            }
+
+            if (myFile == null) {
+                myFile = myDataContext.getData(VirtualFile.KEY);
+                myLine = -1;
+
+                if (myBookmarkAtPlace == null && myFile != null) {
+                    myBookmarkAtPlace = bookmarkManager.findFileBookmark(myFile);
+                }
+            }
+            return this;
+        }
+    }
+
+    static List<Bookmark> getSelectedBookmarks(JList list) {
+        List<Bookmark> answer = new ArrayList<>();
+
+        for (Object value : list.getSelectedValues()) {
+            if (value instanceof BookmarkItem bookmarkItem) {
+                answer.add(bookmarkItem.getBookmark());
+            }
+            else {
+                return Collections.emptyList();
+            }
+        }
+
+        return answer;
+    }
+
+    static boolean notFiltered(JList list) {
+        return !(list.getModel() instanceof FilteringListModel model && model.getOriginalModel().getSize() != model.getSize());
+    }
 }

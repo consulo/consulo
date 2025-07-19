@@ -332,7 +332,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.actions.runAnything.ui;
   exports consulo.ide.impl.idea.ide.actions.searcheverywhere;
   exports consulo.ide.impl.idea.ide.actions.tree;
-  exports consulo.ide.impl.idea.ide.bookmarks;
   exports consulo.ide.impl.idea.ide.bookmarks.actions;
   exports consulo.ide.impl.idea.ide.caches;
   exports consulo.ide.impl.idea.ide.dnd;

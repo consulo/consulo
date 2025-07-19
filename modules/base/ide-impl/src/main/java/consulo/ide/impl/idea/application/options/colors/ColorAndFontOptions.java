@@ -21,6 +21,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationBundle;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.bookmark.BookmarkManager;
+import consulo.bookmark.internal.BookmarkManagerInternal;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.*;
 import consulo.colorScheme.impl.internal.DefaultColorsScheme;
@@ -40,7 +41,6 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleViewUtil;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -235,7 +235,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     return mySelectedScheme.getDescriptors();
   }
 
-  public static boolean isReadOnly(@Nonnull final EditorColorsScheme scheme) {
+  public static boolean isReadOnly(@Nonnull EditorColorsScheme scheme) {
     return ((MyColorScheme)scheme).isReadOnly();
   }
 
@@ -284,7 +284,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     resetSchemesCombo(null);
   }
 
-  public void addImportedScheme(@Nonnull final EditorColorsScheme imported) {
+  public void addImportedScheme(@Nonnull EditorColorsScheme imported) {
     MyColorScheme newScheme = new MyColorScheme(imported, EditorColorsManager.getInstance());
     initScheme(newScheme);
 
@@ -347,7 +347,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     for (Project openProject : openProjects) {
       FileStatusManager.getInstance(openProject).fileStatusesChanged();
       DaemonCodeAnalyzer.getInstance(openProject).restart();
-      ((BookmarkManagerImpl)BookmarkManager.getInstance(openProject)).colorsChanged();
+      ((BookmarkManagerInternal)BookmarkManager.getInstance(openProject)).colorsChanged();
     }
   }
 
@@ -434,7 +434,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         @Override
         @Nonnull
         public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
-          final SimpleEditorPreview preview = new SimpleEditorPreview(options, page);
+          SimpleEditorPreview preview = new SimpleEditorPreview(options, page);
           return NewColorAndFontPanel.create(preview, page.getDisplayName(), options, null, page);
         }
 
@@ -580,12 +580,12 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   private static void initScopesDescriptors(@Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull MyColorScheme scheme) {
     Set<Pair<NamedScope, NamedScopesHolder>> namedScopes = Sets.newHashSet(new HashingStrategy<Pair<NamedScope,NamedScopesHolder>>() {
       @Override
-      public int hashCode(@Nonnull final Pair<NamedScope, NamedScopesHolder> object) {
+      public int hashCode(@Nonnull Pair<NamedScope, NamedScopesHolder> object) {
         return object.getFirst().getName().hashCode();
       }
 
       @Override
-      public boolean equals(@Nonnull final Pair<NamedScope, NamedScopesHolder> o1, @Nonnull final Pair<NamedScope, NamedScopesHolder> o2) {
+      public boolean equals(@Nonnull Pair<NamedScope, NamedScopesHolder> o1, @Nonnull Pair<NamedScope, NamedScopesHolder> o2) {
         return o1.getFirst().getName().equals(o2.getFirst().getName());
       }
     });
@@ -726,7 +726,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
       myRootSchemesPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
         @Override
-        public void schemeChanged(final Object source) {
+        public void schemeChanged(Object source) {
           if (!myIsReset) {
             resetSchemesCombo(source);
           }
@@ -1184,7 +1184,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         mySubPanel.reset(this);
         mySubPanel.addSchemesListener(new ColorAndFontSettingsListener.Abstract() {
           @Override
-          public void schemeChanged(final Object source) {
+          public void schemeChanged(Object source) {
             if (!myIsReset) {
               resetSchemesCombo(source);
             }
@@ -1279,7 +1279,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public Runnable enableSearch(final String option) {
+    public Runnable enableSearch(String option) {
       return createPanel().showOption(option);
     }
 

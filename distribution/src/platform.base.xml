@@ -27,7 +27,9 @@
                 <include>consulo:consulo-component-api</include>
                 <include>consulo:consulo-application-api</include>
                 <include>consulo:consulo-bookmark-api</include>
+                <include>consulo:consulo-bookmark-impl</include>
                 <include>consulo:consulo-bookmark-ui-view-api</include>
+                <include>consulo:consulo-bookmark-ui-view-impl</include>
                 <include>consulo:consulo-build-ui-api</include>
                 <include>consulo:consulo-build-ui-impl</include>
                 <include>consulo:consulo-ide-impl</include>

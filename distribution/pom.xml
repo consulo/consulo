@@ -104,7 +104,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -317,6 +317,16 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-bookmark-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-bookmark-ui-view-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-language-inject-advanced-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -340,7 +350,7 @@
             <artifactId>consulo-project-ui-view-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>consulo.internal.sound</groupId>
             <artifactId>jogg</artifactId>

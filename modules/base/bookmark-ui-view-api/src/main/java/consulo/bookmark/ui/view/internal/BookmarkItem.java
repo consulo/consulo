@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.bookmarks;
+package consulo.bookmark.ui.view.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
-import consulo.ui.ex.ColoredTextContainer;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.language.editor.FileColorManager;
-import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.codeEditor.util.popup.DetailView;
 import consulo.codeEditor.util.popup.ItemWrapper;
+import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.language.editor.FileColorManager;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
-import consulo.colorScheme.EffectType;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,10 +54,12 @@ public class BookmarkItem extends ItemWrapper {
   }
 
   @Override
+  @RequiredReadAction
   public void setupRenderer(ColoredTextContainer renderer, Project project, boolean selected) {
     setupRenderer(renderer, project, myBookmark, selected);
   }
 
+  @RequiredReadAction
   public static void setupRenderer(ColoredTextContainer renderer, Project project, Bookmark bookmark, boolean selected) {
     VirtualFile file = bookmark.getFile();
     if (!file.isValid()) {
@@ -100,7 +100,7 @@ public class BookmarkItem extends ItemWrapper {
   @Override
   public void updateAccessoryView(JComponent component) {
     JLabel label = (JLabel)component;
-    final char mnemonic = myBookmark.getMnemonic();
+    char mnemonic = myBookmark.getMnemonic();
     if (mnemonic != 0) {
       label.setText(Character.toString(mnemonic) + '.');
     }

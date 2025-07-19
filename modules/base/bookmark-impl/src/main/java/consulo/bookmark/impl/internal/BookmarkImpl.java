@@ -13,104 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.bookmarks;
+package consulo.bookmark.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.bookmark.Bookmark;
-import consulo.bookmark.icon.BookmarkIconGroup;
+import consulo.bookmark.internal.BookmarkIcon;
 import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.*;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.navigation.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
-import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-import consulo.ui.image.ImageKey;
-import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.awt.*;
-
 public class BookmarkImpl implements Bookmark {
-    //0..9  + A..Z
-    // Gutter + Action icon
-    @SuppressWarnings("unchecked")
-    private static final Couple<Image>[] ourMnemonicImageCache = new Couple[36];
-
-    @Nonnull
-    public static Image getDefaultIcon(boolean gutter) {
-        return gutter ? BookmarkIconGroup.gutterBookmark() : BookmarkIconGroup.actionBookmark();
-    }
-
-    @Nonnull
-    private static Image getMnemonicIcon(char mnemonic, boolean gutter) {
-        int index = mnemonic - 48;
-        if (index > 9) {
-            index -= 7;
-        }
-        if (index < 0 || index > ourMnemonicImageCache.length - 1) {
-            return createMnemonicIcon(mnemonic, gutter);
-        }
-
-        if (ourMnemonicImageCache[index] == null) {
-            // its not mistake about using gutter icon as default icon for named bookmarks, too big icon
-            ourMnemonicImageCache[index] = Couple.of(createMnemonicIcon(mnemonic, true), createMnemonicIcon(mnemonic, true));
-        }
-        Couple<Image> couple = ourMnemonicImageCache[index];
-        return gutter ? couple.getFirst() : couple.getSecond();
-    }
-
-    @Nonnull
-    private static Image createMnemonicIcon(char cha, boolean gutter) {
-        ImageKey base = PlatformIconGroup.gutterMnemonic();
-
-        return ImageEffects.layered(PlatformIconGroup.gutterMnemonic(), ImageEffects.canvas(base.getWidth(), base.getHeight(), c -> {
-            c.setFillStyle(ComponentColors.TEXT);
-
-            EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-            int editorFontSize = scheme.getEditorFontSize();
-
-            c.setFont(FontManager.get().createFont(scheme.getEditorFontName(), editorFontSize, consulo.ui.font.Font.STYLE_PLAIN));
-            c.setTextAlign(Canvas2D.TextAlign.center);
-            c.setTextBaseline(Canvas2D.TextBaseline.middle);
-
-            c.fillText(Character.toString(cha), base.getWidth() / 2 - 1, base.getHeight() / 2 - 1);
-        }));
-    }
-
     private final VirtualFile myFile;
     @Nonnull
-    private final OpenFileDescriptorImpl myTarget;
+    private final OpenFileDescriptor myTarget;
     private final Project myProject;
 
     private String myDescription;
     private char myMnemonic = 0;
-    public static final Font MNEMONIC_FONT = new Font("Monospaced", 0, 11);
 
     public BookmarkImpl(
         @Nonnull Project project,
@@ -123,7 +65,7 @@ public class BookmarkImpl implements Bookmark {
         myProject = project;
         myDescription = description;
 
-        myTarget = new OpenFileDescriptorImpl(project, file, line, -1, true);
+        myTarget = OpenFileDescriptorFactory.getInstance(project).newBuilder(file).line(line).persist().build();
 
         if (addHighlighter) {
             addHighlighter();
@@ -143,7 +85,7 @@ public class BookmarkImpl implements Bookmark {
     }
 
     public RangeHighlighter createHighlighter(@Nonnull MarkupModelEx markup) {
-        final RangeHighlighterEx highlighter;
+        RangeHighlighterEx highlighter;
         int line = getLine();
         if (line >= 0) {
             highlighter = markup.addPersistentLineHighlighter(line, HighlighterLayer.ERROR + 1, null);
@@ -168,19 +110,19 @@ public class BookmarkImpl implements Bookmark {
         if (line < 0) {
             return;
         }
-        final Document document = getDocument();
+        Document document = getDocument();
         if (document == null) {
             return;
         }
         MarkupModelEx markup = DocumentMarkupModel.forDocument(document, myProject, true);
-        final Document markupDocument = markup.getDocument();
+        Document markupDocument = markup.getDocument();
         if (markupDocument.getLineCount() <= line) {
             return;
         }
-        final int startOffset = markupDocument.getLineStartOffset(line);
-        final int endOffset = markupDocument.getLineEndOffset(line);
+        int startOffset = markupDocument.getLineStartOffset(line);
+        int endOffset = markupDocument.getLineEndOffset(line);
 
-        final SimpleReference<RangeHighlighterEx> found = new SimpleReference<>();
+        SimpleReference<RangeHighlighterEx> found = new SimpleReference<>();
         markup.processRangeHighlightersOverlappingWith(
             startOffset,
             endOffset,
@@ -202,9 +144,9 @@ public class BookmarkImpl implements Bookmark {
     @Override
     public Image getIcon(boolean gutter) {
         if (myMnemonic == 0) {
-            return getDefaultIcon(gutter);
+            return BookmarkIcon.getDefaultIcon(gutter);
         }
-        return getMnemonicIcon(myMnemonic, gutter);
+        return BookmarkIcon.getMnemonicIcon(myMnemonic, gutter);
     }
 
     @Override
@@ -258,7 +200,7 @@ public class BookmarkImpl implements Bookmark {
 
     @Override
     public int getLine() {
-        RangeMarker marker = myTarget.getRangeMarker();
+        RangeMarker marker = myTarget.getUserData(RangeMarker.KEY);
         if (marker != null && marker.isValid()) {
             Document document = marker.getDocument();
             return document.getLineNumber(marker.getStartOffset());
@@ -285,7 +227,7 @@ public class BookmarkImpl implements Bookmark {
             return presentableUrl;
         }
 
-        final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(myFile);
+        PsiFile psiFile = PsiManager.getInstance(myProject).findFile(myFile);
 
         if (psiFile == null) {
             return presentableUrl;
@@ -309,7 +251,7 @@ public class BookmarkImpl implements Bookmark {
             }
         }
 
-        return IdeLocalize.bookmarkFileXLineY(presentableUrl, getLine() + 1).get();
+        return BookmarkLocalize.bookmarkFileXLineY(presentableUrl, getLine() + 1).get();
     }
 
     private LocalizeValue getBookmarkTooltip() {

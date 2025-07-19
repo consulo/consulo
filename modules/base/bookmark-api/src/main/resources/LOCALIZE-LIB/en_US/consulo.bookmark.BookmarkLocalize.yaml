@@ -26,6 +26,8 @@ action.bookmarks.show.description:
     text: Show list of all bookmarks
 action.bookmarks.show.text:
     text: _Show Bookmarks
+bookmark.file.X.line.Y:
+    text: '{0}, line {1}'
 dialog.bookmark.add.with.mnemonic.title:
     text: Add Mnemonic Bookmark
 dialog.bookmark.edit.description.message:

@@ -32,67 +32,75 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class OpenFileDescriptorFactoryImpl implements OpenFileDescriptorFactory {
 
-  private static class BuilderImp implements Builder {
+    private static class BuilderImp implements Builder {
+        private final Project myProject;
+        private final VirtualFile myFile;
+
+        private int myOffset = -1;
+        private int myLine = -1;
+        private int myColumn = -1;
+        private boolean myUseCurrentWindow;
+        private boolean myPersist;
+
+        public BuilderImp(Project project, VirtualFile file) {
+            myProject = project;
+            myFile = file;
+        }
+
+        @Nonnull
+        @Override
+        public Builder offset(int offset) {
+            myOffset = offset;
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public Builder persist() {
+            myPersist = true;
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public Builder line(int line) {
+            myLine = line;
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public Builder column(int column) {
+            myColumn = column;
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public Builder useCurrentWindow(boolean useCurrentWindow) {
+            myUseCurrentWindow = useCurrentWindow;
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public OpenFileDescriptor build() {
+            OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, myFile, myLine, myColumn, myOffset, myPersist);
+            descriptor.setUseCurrentWindow(myUseCurrentWindow);
+            return descriptor;
+        }
+    }
+
     private final Project myProject;
-    private final VirtualFile myFile;
 
-    private int myOffset = -1;
-    private int myLine = -1;
-    private int myColumn = -1;
-    private boolean myUseCurrentWindow;
-
-    public BuilderImp(Project project, VirtualFile file) {
-      myProject = project;
-      myFile = file;
+    @Inject
+    public OpenFileDescriptorFactoryImpl(Project project) {
+        myProject = project;
     }
 
     @Nonnull
     @Override
-    public Builder offset(int offset) {
-      myOffset = offset;
-      return this;
+    public Builder newBuilder(@Nonnull VirtualFile file) {
+        return new BuilderImp(myProject, file);
     }
-
-    @Nonnull
-    @Override
-    public Builder line(int line) {
-      myLine = line;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder column(int column) {
-      myColumn = column;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder useCurrentWindow(boolean useCurrentWindow) {
-      myUseCurrentWindow = useCurrentWindow;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public OpenFileDescriptor build() {
-      OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, myFile, myLine, myColumn, myOffset, false);
-      descriptor.setUseCurrentWindow(myUseCurrentWindow);
-      return descriptor;
-    }
-  }
-
-  private final Project myProject;
-
-  @Inject
-  public OpenFileDescriptorFactoryImpl(Project project) {
-    myProject = project;
-  }
-
-  @Nonnull
-  @Override
-  public Builder newBuilder(@Nonnull VirtualFile file) {
-    return new BuilderImp(myProject, file);
-  }
 }

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkItem;
+import consulo.bookmark.ui.view.internal.BookmarkItem;
 import consulo.bookmark.BookmarkManager;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;

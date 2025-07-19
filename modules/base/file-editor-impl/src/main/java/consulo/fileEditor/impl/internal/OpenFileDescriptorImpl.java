@@ -343,4 +343,14 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         }
         return rangeMarker == null ? 0 : -1;
     }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getUserData(@Nonnull Key<T> key) {
+        if (key == RangeMarker.KEY) {
+            return (T) myRangeMarker;
+        }
+        return super.getUserData(key);
+    }
 }

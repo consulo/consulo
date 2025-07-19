@@ -45,6 +45,9 @@ public interface OpenFileDescriptorFactory {
     Builder column(int column);
 
     @Nonnull
+    Builder persist();
+
+    @Nonnull
     Builder useCurrentWindow(boolean useCurrentWindow);
 
     @Nonnull

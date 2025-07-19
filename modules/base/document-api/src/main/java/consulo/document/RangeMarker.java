@@ -17,6 +17,7 @@ package consulo.document;
 
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
 
@@ -34,6 +35,8 @@ import java.util.Comparator;
  * @see Document#createRangeMarker(int, int)
  */
 public interface RangeMarker extends UserDataHolder, Segment {
+    Key<RangeMarker> KEY = Key.of(RangeMarker.class);
+
     long getId();
 
     /**

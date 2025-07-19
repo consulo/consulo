@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.bookmarks;
+package consulo.bookmark.ui.view.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.event.BookmarksListener;
+import consulo.bookmark.internal.BookmarkIcon;
+import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.bookmark.ui.view.AbstractFavoritesListProvider;
 import consulo.bookmark.ui.view.FavoritesManager;
-import consulo.ide.IdeBundle;
+import consulo.bookmark.ui.view.internal.BookmarkItem;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.CommonActionsPanel;
@@ -121,9 +123,9 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   public String getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
     switch (type) {
       case EDIT:
-        return IdeBundle.message("action.bookmark.edit.description");
+        return BookmarkLocalize.actionBookmarkEditDescription().get();
       case REMOVE:
-        return IdeBundle.message("action.bookmark.delete");
+        return BookmarkLocalize.actionBookmarkDelete().get();
       default:
         return null;
     }
@@ -159,17 +161,13 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
           return;
         }
         Object toEdit = selectedObjects.iterator().next();
-        if (toEdit instanceof AbstractTreeNode && ((AbstractTreeNode)toEdit).getValue() instanceof BookmarkImpl) {
-          BookmarkImpl bookmark = (BookmarkImpl)((AbstractTreeNode)toEdit).getValue();
-          if (bookmark == null) {
-            return;
-          }
+        if (toEdit instanceof AbstractTreeNode && ((AbstractTreeNode)toEdit).getValue() instanceof Bookmark bookmark) {
           BookmarkManager.getInstance(project).editDescription(bookmark);
         }
         return;
       case REMOVE:
         for (Object toRemove : selectedObjects) {
-          BookmarkImpl bookmark = (BookmarkImpl)((AbstractTreeNode)toRemove).getValue();
+          Bookmark bookmark = (Bookmark)((AbstractTreeNode)toRemove).getValue();
           BookmarkManager.getInstance(project).removeBookmark(bookmark);
         }
         return;
@@ -193,7 +191,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
                                 int row,
                                 boolean hasFocus) {
     renderer.clear();
-    renderer.setIcon(BookmarkImpl.getDefaultIcon(false));
+    renderer.setIcon(BookmarkIcon.getDefaultIcon(false));
     if (value instanceof Bookmark) {
       Bookmark bookmark = (Bookmark)value;
       BookmarkItem.setupRenderer(renderer, myProject, bookmark, selected);
