@@ -18,7 +18,6 @@ package consulo.bookmark.ui.view.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
-import consulo.bookmark.ui.view.internal.BookmarkInContextInfo;
 import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

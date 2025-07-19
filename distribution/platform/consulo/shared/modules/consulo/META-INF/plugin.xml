@@ -1332,17 +1332,6 @@
             <add-to-group group-id="EditSelectGroup" anchor="last"/>
         </group>
 
-        <group id="EditBookmarksGroup" popup="true">
-            <reference ref="ToggleBookmark"/>
-            <reference ref="ToggleBookmarkWithMnemonic"/>
-            <reference ref="ShowBookmarks"/>
-            <reference ref="GotoNextBookmark"/>
-            <reference ref="GotoPreviousBookmark"/>
-            <separator/>
-
-            <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="JumpToLastChange"/>
-        </group>
-
         <group id="GoToCodeGroup">
             <separator/>
             <action id="SelectIn" class="consulo.ide.impl.idea.ide.actions.SelectInAction"/>
@@ -1363,7 +1352,7 @@
             </group>
             <separator/>
 
-            <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="EditBookmarksGroup"/>
+            <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="JumpToLastChange"/>
         </group>
 
         <group id="GoToErrorGroup">

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.bookmark.ui.view.internal;
+package consulo.bookmark.ui.view.impl.internal.action;
 
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class BookmarkInContextInfo {
@@ -56,14 +56,21 @@ public class BookmarkInContextInfo {
 
 
         BookmarkManager bookmarkManager = BookmarkManager.getInstance(myProject);
-        if (ToolWindowManager.getInstance(myProject).isEditorComponentActive()) {
-            Editor editor = myDataContext.getData(Editor.KEY);
-            if (editor != null) {
-                Document document = editor.getDocument();
-                myLine = editor.getCaretModel().getLogicalPosition().line;
-                myFile = FileDocumentManager.getInstance().getFile(document);
-                myBookmarkAtPlace = bookmarkManager.findEditorBookmark(document, myLine);
+
+        Editor editor = myDataContext.getData(Editor.KEY);
+        if (editor != null) {
+            Document document = editor.getDocument();
+
+            Integer line = myDataContext.getData(EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR);
+            if (line != null) {
+                myLine = line;
             }
+            else {
+                myLine = editor.getCaretModel().getLogicalPosition().line;
+            }
+
+            myFile = FileDocumentManager.getInstance().getFile(document);
+            myBookmarkAtPlace = bookmarkManager.findEditorBookmark(document, myLine);
         }
 
         if (myFile == null) {

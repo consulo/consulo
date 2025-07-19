@@ -62,14 +62,14 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
 
   @Override
   protected void update(PresentationData presentation) {
-    presentation.setIcon(BookmarkIconGroup.actionBookmark());
+    presentation.setIcon(BookmarkIconGroup.bookmarkslist());
     presentation.setPresentableText(myName);
     presentation.setLocationString(myDescription);
   }
 
   @Nonnull
-  public static Collection<AbstractTreeNode> getFavoritesRoots(Project project, String listName, final FavoritesListNode listNode) {
-    final Collection<TreeItem<Pair<AbstractUrl, String>>> pairs = FavoritesManager.getInstance(project).getFavoritesListRootUrls(listName);
+  public static Collection<AbstractTreeNode> getFavoritesRoots(Project project, String listName, FavoritesListNode listNode) {
+    Collection<TreeItem<Pair<AbstractUrl, String>>> pairs = FavoritesManager.getInstance(project).getFavoritesListRootUrls(listName);
     if (pairs.isEmpty()) return Collections.emptyList();
     return createFavoriteRoots(project, pairs, listNode);
   }
@@ -77,7 +77,7 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
   @Nonnull
   private static Collection<AbstractTreeNode> createFavoriteRoots(Project project,
                                                                   @Nonnull Collection<TreeItem<Pair<AbstractUrl, String>>> urls,
-                                                                  final AbstractTreeNode me) {
+                                                                  AbstractTreeNode me) {
     Collection<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
     processUrls(project, urls, result, me);
     return result;
@@ -85,27 +85,27 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
 
   private static void processUrls(Project project,
                                   Collection<TreeItem<Pair<AbstractUrl, String>>> urls,
-                                  Collection<AbstractTreeNode> result, final AbstractTreeNode me) {
+                                  Collection<AbstractTreeNode> result, AbstractTreeNode me) {
     for (TreeItem<Pair<AbstractUrl, String>> pair : urls) {
       AbstractUrl abstractUrl = pair.getData().getFirst();
-      final Object[] path = abstractUrl.createPath(project);
+      Object[] path = abstractUrl.createPath(project);
       if (path == null || path.length < 1 || path[0] == null) {
         continue;
       }
       try {
-        final String className = pair.getData().getSecond();
+        String className = pair.getData().getSecond();
 
-        @SuppressWarnings("unchecked") final Class<? extends AbstractTreeNode> nodeClass =
+        @SuppressWarnings("unchecked") Class<? extends AbstractTreeNode> nodeClass =
           (Class<? extends AbstractTreeNode>)Class.forName(className);
 
-        final AbstractTreeNode node = ProjectViewNode
+        AbstractTreeNode node = ProjectViewNode
           .createTreeNode(nodeClass, project, path[path.length - 1], FavoritesManager.getInstance(project).getViewSettings());
         node.setParent(me);
         node.setIndex(result.size());
         result.add(node);
 
         if (node instanceof ProjectViewNodeWithChildrenList) {
-          final List<TreeItem<Pair<AbstractUrl, String>>> children = pair.getChildren();
+          List<TreeItem<Pair<AbstractUrl, String>>> children = pair.getChildren();
           if (children != null && !children.isEmpty()) {
             Collection<AbstractTreeNode> childList = new ArrayList<AbstractTreeNode>();
             processUrls(project, children, childList, node);

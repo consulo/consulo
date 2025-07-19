@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,50 +16,52 @@
 package consulo.bookmark.ui.view.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
+import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.localize.BookmarkLocalize;
-import consulo.codeEditor.Editor;
-import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
-import jakarta.inject.Inject;
 
-@ActionImpl(id = "ToggleBookmark")
-public class ToggleBookmarkAction extends AnAction implements DumbAware {
-    @Inject
-    public ToggleBookmarkAction() {
-        super(BookmarkLocalize.actionBookmarkToggleText(), BookmarkLocalize.actionBookmarkToggleDescription());
+import javax.swing.*;
+
+@ActionImpl(id = "EditBookmark")
+public class EditBookmarkDescriptionAction extends DumbAwareAction {
+    public EditBookmarkDescriptionAction() {
+        super(
+            BookmarkLocalize.actionBookmarkEditDescription(),
+            BookmarkLocalize.actionBookmarkEditDescriptionDescription(),
+            PlatformIconGroup.actionsEdit()
+        );
+
+        setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(Platform.current().os().isMac() ? "meta ENTER" : "control ENTER")));
     }
 
-    public ToggleBookmarkAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-        super(text, description);
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
+
         BookmarkInContextInfo info = new BookmarkInContextInfo(e.getDataContext(), project).invoke();
         if (info.getFile() == null) {
             return;
         }
 
-        if (info.getBookmarkAtPlace() != null) {
-            BookmarkManager.getInstance(project).removeBookmark(info.getBookmarkAtPlace());
+        Bookmark bookmark = info.getBookmarkAtPlace();
+        if (bookmark == null) {
+            return;
         }
-        else {
-            BookmarkManager.getInstance(project).addTextBookmark(info.getFile(), info.getLine(), "");
-        }
-    }
 
-    @Override
-    public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabled(e.hasData(Project.KEY) && (e.hasData(Editor.KEY) || e.hasData(VirtualFile.KEY)));
-        e.getPresentation().setTextValue(BookmarkLocalize.actionBookmarkToggleText());
+        BookmarkManager.getInstance(project).editDescription(bookmark);
     }
 }

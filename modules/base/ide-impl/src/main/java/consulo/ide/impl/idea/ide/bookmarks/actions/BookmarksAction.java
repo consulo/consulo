@@ -32,8 +32,9 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -42,18 +43,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author max
  */
-// TODO: remove duplication with BaseShowRecentFilesAction, there's quite a bit of it
+// TODO rewrite without MasterDetailPopupBuilder
 @ActionImpl(id = "ShowBookmarks")
 public class BookmarksAction extends AnAction implements DumbAware, MasterDetailPopupBuilder.Delegate {
     public static final Font MNEMONIC_FONT = new Font("Monospaced", 0, 11);
 
-    private JBPopup myPopup;
+    private JBPopup myLastPopup;
 
     @Inject
     public BookmarksAction() {
@@ -72,45 +72,50 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getRequiredData(Project.KEY);
-
-        if (myPopup != null && myPopup.isVisible()) {
-            return;
+        if (myLastPopup != null && myLastPopup.isVisible()) {
+            myLastPopup.cancel();
+            myLastPopup = null;
         }
+
+        final Project project = e.getRequiredData(Project.KEY);
 
         DefaultListModel<BookmarkItem> model = buildModel(project);
 
         final JBList<BookmarkItem> list = new JBList<>(model);
         list.getEmptyText().setText("No Bookmarks");
 
-        EditBookmarkDescriptionAction editDescriptionAction = new EditBookmarkDescriptionAction(project, list);
         List<AnAction> actions = new ArrayList<>();
-        actions.add(editDescriptionAction);
-        actions.add(new DeleteBookmarkAction(project, list));
-        actions.add(new MoveBookmarkUpAction(project, list));
-        actions.add(new MoveBookmarkDownAction(project, list));
 
-        myPopup = new MasterDetailPopupBuilder(project)
+        JBPopup popup = new MasterDetailPopupBuilder(project)
             .setActionsGroup(actions)
             .setList(list)
             .setDetailView(new DetailViewImpl(project))
             .setCloseOnEnter(false)
-            .setDoneRunnable(() -> myPopup.cancel())
-            .setDelegate(this).createMasterDetailPopup();
+            .setDelegate(this)
+            .createMasterDetailPopup();
+
+        popup.addListener(new JBPopupListener() {
+            @Override
+            public void onClosed(@Nonnull LightweightWindowEvent event) {
+                myLastPopup = null;
+            }
+        });
+
         new AnAction() {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 Object selectedValue = list.getSelectedValue();
                 if (selectedValue instanceof BookmarkItem) {
-                    itemChosen((BookmarkItem) selectedValue, project, myPopup, true);
+                    itemChosen((BookmarkItem) selectedValue, project, popup, true);
                 }
             }
         }.registerCustomShortcutSet(CommonShortcuts.getEditSource(), list);
-        editDescriptionAction.setPopup(myPopup);
-        myPopup.showCenteredInCurrentWindow(project);
+        popup.showCenteredInCurrentWindow(project);
         //todo[zaec] selection mode shouldn't be set in builder.setList() method
         list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        myLastPopup = popup;
     }
 
     @Override
@@ -169,24 +174,5 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
         }
 
         return model;
-    }
-
-    static List<Bookmark> getSelectedBookmarks(JList list) {
-        List<Bookmark> answer = new ArrayList<>();
-
-        for (Object value : list.getSelectedValues()) {
-            if (value instanceof BookmarkItem bookmarkItem) {
-                answer.add(bookmarkItem.getBookmark());
-            }
-            else {
-                return Collections.emptyList();
-            }
-        }
-
-        return answer;
-    }
-
-    static boolean notFiltered(JList list) {
-        return !(list.getModel() instanceof FilteringListModel model && model.getOriginalModel().getSize() != model.getSize());
     }
 }

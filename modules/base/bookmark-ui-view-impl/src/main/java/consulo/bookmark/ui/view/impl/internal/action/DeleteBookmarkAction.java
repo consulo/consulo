@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,35 +15,32 @@
  */
 package consulo.bookmark.ui.view.impl.internal.action;
 
-import consulo.application.dumb.DumbAware;
+import consulo.annotation.component.ActionImpl;
+import consulo.application.AllIcons;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
-import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.DumbAwareAction;
 
-/**
- * @author max
- */
-public abstract class ToggleNumberedBookmarkActionBase extends AnAction implements DumbAware {
-    private final int myNumber;
+@ActionImpl(id = "DeleteBookmark")
+public class DeleteBookmarkAction extends DumbAwareAction {
 
-    public ToggleNumberedBookmarkActionBase(int n) {
-        super(BookmarkLocalize.actionBookmarkToggle0Text(n));
-        myNumber = n;
+    public DeleteBookmarkAction() {
+        super("Delete", "Delete current bookmark", AllIcons.General.Remove);
+        setShortcutSet(CustomShortcutSet.fromString("DELETE", "BACK_SPACE"));
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 
-    @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    @Override
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
 
         BookmarkInContextInfo info = new BookmarkInContextInfo(e.getDataContext(), project).invoke();
@@ -51,16 +48,11 @@ public abstract class ToggleNumberedBookmarkActionBase extends AnAction implemen
             return;
         }
 
-        Bookmark oldBookmark = info.getBookmarkAtPlace();
-
-        BookmarkManager manager = BookmarkManager.getInstance(project);
-        if (oldBookmark != null) {
-            manager.removeBookmark(oldBookmark);
+        Bookmark bookmark = info.getBookmarkAtPlace();
+        if (bookmark == null) {
+            return;
         }
 
-        if (oldBookmark == null || oldBookmark.getMnemonic() != '0' + myNumber) {
-            Bookmark bookmark = manager.addTextBookmark(info.getFile(), info.getLine(), "");
-            manager.setMnemonic(bookmark, (char) ('0' + myNumber));
-        }
+        BookmarkManager.getInstance(project).removeBookmark(bookmark);
     }
 }
