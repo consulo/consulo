@@ -29,7 +29,9 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.localize.ModuleLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -104,11 +106,13 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     }
 
     @Override
+    @RequiredUIAccess
     protected void fireModulesAdded() {
+        @RequiredUIAccess
         Runnable runnableWithProgress = () -> {
             Application app = myProject.getApplication();
-            for (final Module module : myModuleModel.getModules()) {
-                final Runnable swingRunnable = () -> fireModuleAddedInWriteAction(module);
+            for (Module module : myModuleModel.getModules()) {
+                Runnable swingRunnable = () -> fireModuleAddedInWriteAction(module);
                 if (app.isDispatchThread() || app.isHeadlessEnvironment()) {
                     swingRunnable.run();
                 }
@@ -121,7 +125,12 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
         ProgressIndicator progressIndicator = myProgressManager.getProgressIndicator();
         if (progressIndicator == null) {
-            myProgressManager.runProcessWithProgressSynchronously(runnableWithProgress, "Loading modules", false, myProject);
+            myProgressManager.runProcessWithProgressSynchronously(
+                runnableWithProgress,
+                ModuleLocalize.messageLoadingModules(),
+                false,
+                myProject
+            );
         }
         else {
             runnableWithProgress.run();
@@ -129,6 +138,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doFirstModulesLoad() {
     }
 

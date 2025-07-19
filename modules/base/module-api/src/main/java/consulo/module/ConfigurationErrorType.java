@@ -15,23 +15,35 @@
  */
 package consulo.module;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+
 /**
  * @author nik
  */
 public class ConfigurationErrorType {
-  private final String myElementKind;
-  private final boolean myCanIgnore;
+    @Nonnull
+    private final LocalizeValue myElementKind;
+    private final boolean myCanIgnore;
 
-  public ConfigurationErrorType(String elementKind, boolean canIgnore) {
-    myElementKind = elementKind;
-    myCanIgnore = canIgnore;
-  }
+    public ConfigurationErrorType(@Nonnull LocalizeValue elementKind, boolean canIgnore) {
+        myElementKind = elementKind;
+        myCanIgnore = canIgnore;
+    }
 
-  public String getElementKind() {
-    return myElementKind;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ConfigurationErrorType(String elementKind, boolean canIgnore) {
+        this(LocalizeValue.ofNullable(elementKind), canIgnore);
+    }
 
-  public boolean canIgnore() {
-    return myCanIgnore;
-  }
+    @Nonnull
+    public LocalizeValue getElementKind() {
+        return myElementKind;
+    }
+
+    public boolean canIgnore() {
+        return myCanIgnore;
+    }
 }

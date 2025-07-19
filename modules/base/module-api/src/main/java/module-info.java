@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 20/01/2022
+ * @since 2022-01-20
  */
 module consulo.module.api {
     // TODO [VISTALL] remove in future. Used in SwingMutableModuleExtension
@@ -16,6 +16,7 @@ module consulo.module.api {
     exports consulo.module.extension;
     exports consulo.module.extension.swing;
     exports consulo.module.extension.condition;
+    exports consulo.module.localize;
 
     exports consulo.module.internal to consulo.module.impl, consulo.ide.impl;
 }

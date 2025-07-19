@@ -13,30 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.module.impl.internal;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.WriteAction;
+import consulo.localize.LocalizeValue;
 import consulo.module.ConfigurationErrorDescription;
 import consulo.module.ConfigurationErrorType;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import consulo.project.ProjectBundle;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription {
-    private static final ConfigurationErrorType INVALID_MODULE = new ConfigurationErrorType(ProjectBundle.message("element.kind.name.module"), false);
+    private static final ConfigurationErrorType INVALID_MODULE =
+        new ConfigurationErrorType(ProjectLocalize.elementKindNameModule(), false);
     private final ModuleManagerImpl.ModuleLoadItem moduleLoadItem;
     private final ModuleManagerImpl myModuleManager;
 
-    private ModuleLoadingErrorDescription(String description,
-                                          ModuleManagerImpl.ModuleLoadItem modulePath,
-                                          ModuleManagerImpl moduleManager,
-                                          String elementName) {
+    private ModuleLoadingErrorDescription(
+        @Nonnull LocalizeValue description,
+        ModuleManagerImpl.ModuleLoadItem modulePath,
+        ModuleManagerImpl moduleManager,
+        String elementName
+    ) {
         super(elementName, description, INVALID_MODULE);
         moduleLoadItem = modulePath;
         myModuleManager = moduleManager;
@@ -46,8 +50,8 @@ public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription
         return moduleLoadItem;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void ignoreInvalidElement() {
         ModifiableModuleModel modifiableModel = myModuleManager.getModifiableModel();
         Module module = modifiableModel.findModuleByName(moduleLoadItem.getName());
@@ -61,13 +65,25 @@ public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription
     }
 
     @Override
-    public String getIgnoreConfirmationMessage() {
-        return ProjectLocalize.moduleRemoveFromProjectConfirmation(getElementName()).get();
+    public LocalizeValue getIgnoreConfirmationMessage() {
+        return ProjectLocalize.moduleRemoveFromProjectConfirmation(getElementName());
     }
 
-    public static ModuleLoadingErrorDescription create(String description,
-                                                       ModuleManagerImpl.ModuleLoadItem loadItem,
-                                                       ModuleManagerImpl moduleManager) {
+    public static ModuleLoadingErrorDescription create(
+        @Nonnull LocalizeValue description,
+        ModuleManagerImpl.ModuleLoadItem loadItem,
+        ModuleManagerImpl moduleManager
+    ) {
         return new ModuleLoadingErrorDescription(description, loadItem, moduleManager, loadItem.getName());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public static ModuleLoadingErrorDescription create(
+        String description,
+        ModuleManagerImpl.ModuleLoadItem loadItem,
+        ModuleManagerImpl moduleManager
+    ) {
+        return new ModuleLoadingErrorDescription(LocalizeValue.ofNullable(description), loadItem, moduleManager, loadItem.getName());
     }
 }
