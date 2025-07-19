@@ -1398,14 +1398,18 @@ public abstract class DialogWrapper {
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 if (owner instanceof JButton button && owner.isEnabled()) {
-                    // redirect to UI component if it's UI wrapper
-                    consulo.ui.Component uiComponent = TargetAWT.from(button);
+                    try {
+                        consulo.ui.Component uiComponent = TargetAWT.from(button);
 
-                    if (uiComponent instanceof Button uiButton) {
-                        uiButton.invoke(Objects.requireNonNull(e.getInputDetails()));
-                    } else {
-                        button.doClick();
+                        if (uiComponent instanceof Button uiButton) {
+                            uiButton.invoke(Objects.requireNonNull(e.getInputDetails()));
+                            return;
+                        }
                     }
+                    catch (Exception ignored) {
+                    }
+
+                    button.doClick();
                 }
             }
 
