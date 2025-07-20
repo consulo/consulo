@@ -279,7 +279,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
             new RerunSafeDelete(myProject, myElements, usageView),
             RefactoringLocalize.retryCommand().get(),
             null,
-            RefactoringLocalize.rerunSafeDelete().get()
+            RefactoringLocalize.rerunSafeDelete()
         );
         usageView.addPerformOperationAction(
             () -> {
@@ -295,7 +295,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
             },
             "Delete Anyway",
             RefactoringLocalize.usageviewNeedRerun().get(),
-            RefactoringLocalize.usageviewDoaction().get()
+            RefactoringLocalize.usageviewDoaction()
         );
     }
 

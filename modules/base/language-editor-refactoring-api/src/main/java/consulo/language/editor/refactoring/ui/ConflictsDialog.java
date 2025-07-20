@@ -229,7 +229,7 @@ public class ConflictsDialog extends DialogWrapper {
                         ? myCommandName
                         : RefactoringLocalize.retryCommand().get(),
                     "Unable to perform refactoring. There were changes in code after the usages have been found.",
-                    RefactoringLocalize.usageviewDoaction().get()
+                    RefactoringLocalize.usageviewDoaction()
                 );
             }
             close(SHOW_CONFLICTS_EXIT_CODE);

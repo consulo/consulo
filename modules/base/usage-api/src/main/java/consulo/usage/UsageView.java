@@ -5,9 +5,12 @@ package consulo.usage;
 
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -52,6 +55,7 @@ public interface UsageView extends Disposable {
 
     boolean isSearchInProgress();
 
+    @Deprecated
     default void addButtonToLowerPane(@Nonnull Runnable runnable, @Nonnull String text) {
         addButtonToLowerPane(new AnAction(text) {
             @RequiredUIAccess
@@ -60,6 +64,10 @@ public interface UsageView extends Disposable {
                 runnable.run();
             }
         });
+    }
+
+    default void addButtonToLowerPane(@Nonnull Runnable runnable, @Nonnull LocalizeValue actionText) {
+        addButtonToLowerPane(DumbAwareAction.create(actionText, e -> runnable.run()));
     }
 
     void addButtonToLowerPane(@Nonnull AnAction action);
@@ -72,12 +80,14 @@ public interface UsageView extends Disposable {
 
     void setAdditionalComponent(@Nullable JComponent component);
 
-    void addPerformOperationAction(
+    default void addPerformOperationAction(
         @Nonnull Runnable processRunnable,
         @Nonnull String commandName,
         String cannotMakeString,
-        @Nonnull String shortDescription
-    );
+        @Nonnull LocalizeValue actionText
+    ) {
+        addPerformOperationAction(processRunnable, commandName, cannotMakeString, actionText, true);
+    }
 
     /**
      * @param checkReadOnlyStatus if false, check is performed inside processRunnable
@@ -86,7 +96,7 @@ public interface UsageView extends Disposable {
         @Nonnull Runnable processRunnable,
         @Nonnull String commandName,
         String cannotMakeString,
-        @Nonnull String shortDescription,
+        @Nonnull LocalizeValue actionText,
         boolean checkReadOnlyStatus
     );
 
@@ -138,5 +148,9 @@ public interface UsageView extends Disposable {
 
     void expandAll();
 
+    @RequiredUIAccess
     void select();
+
+    @Nonnull
+    Project getProject();
 }

@@ -12,7 +12,6 @@ import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataManager;
-import consulo.fileEditor.statusBar.StatusBarUtil;
 import consulo.language.Language;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
 import consulo.language.editor.refactoring.event.RefactoringEventListener;
@@ -494,7 +493,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
             refactoringRunnable,
             getCommandName(),
             canNotMakeString,
-            RefactoringLocalize.usageviewDoaction().get(),
+            RefactoringLocalize.usageviewDoaction(),
             false
         );
     }

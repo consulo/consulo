@@ -291,7 +291,7 @@ public class UsageViewImpl implements UsageViewEx {
                     }, this);
 
                     if (myPresentation.isShowCancelButton()) {
-                        addButtonToLowerPane(this::close, UsageLocalize.usageViewCancelButton().get());
+                        addButtonToLowerPane(this::close, UsageLocalize.usageViewCancelButton());
                     }
 
                     myTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
@@ -1626,23 +1626,12 @@ public class UsageViewImpl implements UsageViewEx {
         @Nonnull Runnable processRunnable,
         @Nonnull String commandName,
         String cannotMakeString,
-        @Nonnull String shortDescription
-    ) {
-        addPerformOperationAction(processRunnable, commandName, cannotMakeString, shortDescription, true);
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void addPerformOperationAction(
-        @Nonnull Runnable processRunnable,
-        @Nonnull String commandName,
-        String cannotMakeString,
-        @Nonnull String shortDescription,
+        @Nonnull LocalizeValue actionText,
         boolean checkReadOnlyStatus
     ) {
         Runnable runnable =
             new MyPerformOperationRunnable(processRunnable, LocalizeValue.of(commandName), cannotMakeString, checkReadOnlyStatus);
-        addButtonToLowerPane(runnable, shortDescription);
+        addButtonToLowerPane(runnable, actionText);
     }
 
     @RequiredReadAction
