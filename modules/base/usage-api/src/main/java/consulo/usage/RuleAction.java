@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
 import consulo.usage.rule.UsageFilteringRuleListener;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -31,19 +30,22 @@ import jakarta.annotation.Nonnull;
  * @since 2005-01-19
  */
 public abstract class RuleAction extends ToggleAction implements DumbAware {
-    private final UsageView myView;
     private boolean myState;
 
+    public RuleAction(@Nonnull LocalizeValue text, @Nonnull Image icon) {
+        super(text, LocalizeValue.empty(), icon);
+        myState = getOptionValue();
+    }
+
+    @Deprecated
     public RuleAction(@Nonnull UsageView view, @Nonnull LocalizeValue text, @Nonnull Image icon) {
         super(text, LocalizeValue.empty(), icon);
-        myView = view;
         myState = getOptionValue();
     }
 
     @Deprecated
     public RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Image icon) {
         super(text, null, icon);
-        myView = view;
         myState = getOptionValue();
     }
 
@@ -66,7 +68,5 @@ public abstract class RuleAction extends ToggleAction implements DumbAware {
         if (project != null) {
             project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
         }
-
-        myView.select();
     }
 }

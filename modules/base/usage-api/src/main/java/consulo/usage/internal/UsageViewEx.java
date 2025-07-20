@@ -2,6 +2,7 @@
 package consulo.usage.internal;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
 import jakarta.annotation.Nonnull;
@@ -24,4 +25,9 @@ public interface UsageViewEx extends UsageView {
     void setSearchInProgress(boolean searchInProgress);
 
     void searchFinished();
+
+    @RequiredUIAccess
+    void refreshUsages();
+
+    boolean canPerformReRun();
 }

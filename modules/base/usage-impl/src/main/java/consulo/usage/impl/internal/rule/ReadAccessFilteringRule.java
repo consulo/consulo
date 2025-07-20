@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.usages.impl.rules;
+package consulo.usage.impl.internal.rule;
 
 import consulo.usage.ReadWriteAccessUsage;
 import consulo.usage.Usage;
@@ -25,13 +25,13 @@ import jakarta.annotation.Nonnull;
  * @author Eugene Zhuravlev
  * @since 2005-01-17
  */
-public class WriteAccessFilteringRule implements UsageFilteringRule{
+public class ReadAccessFilteringRule implements UsageFilteringRule{
   @Override
   public boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
     if (usage instanceof ReadWriteAccessUsage) {
       final ReadWriteAccessUsage readWriteAccessUsage = (ReadWriteAccessUsage)usage;
-      final boolean isForWritingOnly = readWriteAccessUsage.isAccessedForWriting() && !readWriteAccessUsage.isAccessedForReading();
-      return !isForWritingOnly;
+      final boolean isForReadingOnly = readWriteAccessUsage.isAccessedForReading() && !readWriteAccessUsage.isAccessedForWriting();
+      return !isForReadingOnly;
     }
     return true;
   }

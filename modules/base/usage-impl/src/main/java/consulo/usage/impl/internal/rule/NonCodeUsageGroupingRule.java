@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.usages.impl.rules;
+package consulo.usage.impl.internal.rule;
 
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.usage.UsageInfo;
-import consulo.usage.UsageViewBundle;
-import consulo.usage.Usage;
-import consulo.usage.UsageGroup;
-import consulo.usage.UsageInfo2UsageAdapter;
-import consulo.usage.UsageView;
+import consulo.usage.*;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageInFile;
-import org.jetbrains.annotations.NonNls;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * @author max

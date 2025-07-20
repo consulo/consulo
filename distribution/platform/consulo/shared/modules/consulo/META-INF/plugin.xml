@@ -1866,13 +1866,12 @@
         </reference>
 
         <group id="UsageView.Popup">
-            <action id="UsageView.Rerun" class="consulo.ide.impl.idea.usages.actions.RerunSearchAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.rerun" use-shortcut-of="Rerun"/>
+            <reference id="UsageView.Rerun"/>
             <separator/>
             <reference ref="EditSource"/>
             <reference ref="OpenInRightSplit"/>
-            <action id="UsageView.Include" class="consulo.ide.impl.idea.usages.actions.IncludeUsageAction"/>
-            <action id="UsageView.Exclude" class="consulo.ide.impl.idea.usages.actions.ExcludeUsageAction" use-shortcut-of="$Delete"/>
+            <reference id="UsageView.Include"/>
+            <reference id="UsageView.Exclude"/>
             <separator/>
             <action id="UsageView.ShowRecentFindUsages" class="consulo.ide.impl.idea.find.impl.ShowRecentFindUsagesAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.back"
@@ -2395,24 +2394,6 @@
             <reference ref="ViewSource"/>
             <separator/>
         </group>
-
-        <!--  TODO: fix
-          <group id="UsageView.Popup">-->
-        <!--<reference ref="EditSource"/>-->
-        <!--<action id="UsageView.Include" class="consulo.ide.impl.idea.usages.actions.IncludeUsageAction"/>-->
-        <!--<action id="UsageView.Exclude" class="consulo.ide.impl.idea.usages.actions.ExcludeUsageAction"/>-->
-        <!--<separator/>-->
-        <!--<reference ref="AddToFavorites"/>-->
-        <!--<reference ref="FindUsages"/>-->
-        <!--<action id="UsageView.ShowRecentFindUsages" class="consulo.ide.impl.idea.find.impl.ShowRecentFindUsagesAction" icon="/actions/back.png"/>-->
-        <!--<separator/>-->
-        <!--<reference ref="VersionControlsGroup"/>-->
-        <!--<separator/>-->
-        <!--<reference ref="ExternalToolsGroup"/>-->
-        <!--</group>-->
-
-        <!-- ****************************************************************** -->
-
 
         <group id="DiffPanel.Toolbar.IDEA">
             <reference ref="Find"/>

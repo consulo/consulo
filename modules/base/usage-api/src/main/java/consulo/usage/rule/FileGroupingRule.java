@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.usages.impl.rules;
+package consulo.usage.rule;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.language.file.inject.VirtualFileWindow;
+import consulo.application.dumb.DumbAware;
+import consulo.component.util.Iconable;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.fileEditor.FileEditorManager;
-import consulo.application.dumb.DumbAware;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.PsiElement;
-import consulo.project.Project;
-import consulo.component.util.Iconable;
-import consulo.usage.*;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.usage.rule.SingleParentUsageGroupingRule;
-import consulo.usage.rule.UsageInFile;
-import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
+import consulo.project.Project;
 import consulo.ui.image.Image;
-
+import consulo.usage.*;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -73,7 +70,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     private Image getIconImpl() {
-      return VfsIconUtil.getIcon(myFile, Iconable.ICON_FLAG_READ_STATUS, myProject);
+      return VirtualFileManager.getInstance().getFileIcon(myFile, myProject, Iconable.ICON_FLAG_READ_STATUS);
     }
 
     @Override
@@ -84,15 +81,17 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
       }
     }
 
+    @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof FileUsageGroup)) return false;
 
-      final FileUsageGroup fileUsageGroup = (FileUsageGroup)o;
+      FileUsageGroup fileUsageGroup = (FileUsageGroup)o;
 
       return myFile.equals(fileUsageGroup.myFile);
     }
 
+    @Override
     public int hashCode() {
       return myFile.hashCode();
     }
@@ -145,7 +144,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
 
     @Override
     @RequiredReadAction
-    public void calcData(final Key<?> key, final DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
       if (!isValid()) return;
       if (key == VirtualFile.KEY) {
         sink.put(VirtualFile.KEY, myFile);

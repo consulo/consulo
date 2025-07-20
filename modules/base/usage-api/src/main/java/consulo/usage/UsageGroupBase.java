@@ -1,9 +1,7 @@
-package consulo.ide.impl.idea.usages.impl.rules;
+package consulo.usage;
 
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.usage.UsageGroup;
 import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nullable;
 
 /**

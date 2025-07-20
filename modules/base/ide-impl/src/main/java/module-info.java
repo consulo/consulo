@@ -615,9 +615,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.unscramble;
   exports consulo.ide.impl.idea.usageView.impl;
   exports consulo.ide.impl.idea.usages;
-  exports consulo.ide.impl.idea.usages.actions;
   exports consulo.ide.impl.idea.usages.impl;
-  exports consulo.ide.impl.idea.usages.impl.rules;
   exports consulo.ide.impl.idea.util;
   exports consulo.ide.impl.idea.util.concurrency;
   exports consulo.ide.impl.idea.util.containers;

@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.usages.impl;
+package consulo.usage.impl.internal.rule;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.project.Project;
 import consulo.usage.RuleAction;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewSettings;
-import consulo.ide.impl.idea.usages.impl.rules.*;
+import consulo.usage.impl.internal.action.GroupByFileStructureAction;
+import consulo.usage.internal.UsageViewEx;
 import consulo.usage.localize.UsageLocalize;
+import consulo.usage.rule.FileGroupingRule;
 import consulo.usage.rule.FileStructureGroupRuleProvider;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageGroupingRuleProvider;
@@ -78,7 +80,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
     @Override
     @RequiredUIAccess
     public AnAction[] createGroupingActions(UsageView view) {
-        UsageViewImpl impl = (UsageViewImpl)view;
+        UsageViewEx impl = (UsageViewEx)view;
         JComponent component = impl.getComponent();
 
         GroupByModuleTypeAction groupByModuleTypeAction = new GroupByModuleTypeAction(impl);
@@ -125,9 +127,9 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
     }
 
     @RequiredUIAccess
-    public static GroupByFileStructureAction createGroupByFileStructureAction(UsageViewImpl impl) {
+    public static GroupByFileStructureAction createGroupByFileStructureAction(UsageViewEx impl) {
         JComponent component = impl.getComponent();
-        GroupByFileStructureAction groupByFileStructureAction = new GroupByFileStructureAction(impl);
+        GroupByFileStructureAction groupByFileStructureAction = new GroupByFileStructureAction();
         groupByFileStructureAction.registerCustomShortcutSet(new CustomShortcutSet(
             KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK)),
             component,
@@ -138,7 +140,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
     }
 
     private static class GroupByUsageTypeAction extends RuleAction {
-        private GroupByUsageTypeAction(UsageViewImpl view) {
+        private GroupByUsageTypeAction(UsageViewEx view) {
             super(view, UsageLocalize.actionGroupByUsageType(), PlatformIconGroup.generalFilter()); //TODO: special icon
         }
 
@@ -154,7 +156,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
     }
 
     private static class GroupByScopeAction extends RuleAction {
-        private GroupByScopeAction(UsageViewImpl view) {
+        private GroupByScopeAction(UsageViewEx view) {
             super(view, "Group by test/production", PlatformIconGroup.actionsGroupbytestproduction());
         }
 
@@ -170,7 +172,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
     }
 
     private static class GroupByModuleTypeAction extends RuleAction {
-        private GroupByModuleTypeAction(UsageViewImpl view) {
+        private GroupByModuleTypeAction(UsageViewEx view) {
             super(view, UsageLocalize.actionGroupByModule(), PlatformIconGroup.actionsGroupbymodule());
         }
 
@@ -186,7 +188,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
     }
 
     private static class GroupByPackageAction extends RuleAction {
-        private GroupByPackageAction(UsageViewImpl view) {
+        private GroupByPackageAction(UsageViewEx view) {
             super(view, UsageLocalize.actionGroupByPackage(), PlatformIconGroup.actionsGroupbypackage());
         }
 
@@ -201,19 +203,4 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
         }
     }
 
-    private static class GroupByFileStructureAction extends RuleAction {
-        private GroupByFileStructureAction(UsageViewImpl view) {
-            super(view, UsageLocalize.actionGroupByFileStructure(), PlatformIconGroup.actionsGroupbymethod());
-        }
-
-        @Override
-        protected boolean getOptionValue() {
-            return UsageViewSettings.getInstance().GROUP_BY_FILE_STRUCTURE;
-        }
-
-        @Override
-        protected void setOptionValue(boolean value) {
-            UsageViewSettings.getInstance().GROUP_BY_FILE_STRUCTURE = value;
-        }
-    }
 }

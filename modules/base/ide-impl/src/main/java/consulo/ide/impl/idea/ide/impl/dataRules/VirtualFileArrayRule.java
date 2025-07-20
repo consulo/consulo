@@ -33,7 +33,7 @@ import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.usage.Usage;
-import consulo.ide.impl.idea.usages.UsageDataUtil;
+import consulo.usage.internal.UsageDataUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

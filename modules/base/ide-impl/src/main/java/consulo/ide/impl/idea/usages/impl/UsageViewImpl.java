@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.TextCopyProvider;
 import consulo.ide.impl.idea.ide.actions.exclusion.ExclusionHandler;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.usages.UsageDataUtil;
+import consulo.usage.internal.UsageDataUtil;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.psi.*;
@@ -52,6 +52,8 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
+import consulo.usage.internal.NullUsage;
+import consulo.usage.internal.UsageViewElementsListener;
 import consulo.usage.internal.UsageViewEx;
 import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.*;
@@ -1129,6 +1131,7 @@ public class UsageViewImpl implements UsageViewEx {
         }
     }
 
+    @Override
     @RequiredUIAccess
     public void refreshUsages() {
         reset();
@@ -1660,6 +1663,7 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @RequiredReadAction
+    @Override
     public boolean canPerformReRun() {
         if (myRerunAction != null && myRerunAction.isEnabled()) {
             return allTargetsAreValid();

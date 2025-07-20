@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.usages.impl;
+package consulo.usage.impl.internal.rule;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
@@ -35,7 +35,7 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class ImportFilteringUsageViewSetting implements PersistentStateComponent<ImportFilteringUsageViewSetting> {
   public static ImportFilteringUsageViewSetting getInstance() {
-    return ServiceManager.getService(ImportFilteringUsageViewSetting.class);
+    return Application.get().getService(ImportFilteringUsageViewSetting.class);
   }
 
   public boolean SHOW_IMPORTS = true;

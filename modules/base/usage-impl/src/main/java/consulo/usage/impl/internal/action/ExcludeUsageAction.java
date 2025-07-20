@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.usages.impl.rules;
+package consulo.usage.impl.internal.action;
 
-import consulo.project.Project;
-import consulo.usage.rule.FileStructureGroupRuleProvider;
-import consulo.usage.rule.UsageGroupingRule;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.usage.Usage;
+import consulo.usage.UsageView;
 
 /**
- * @author yole
- *
- * FIXME [VISTALL] This impl used in PyCharm. We need it?
+ * @author max
  */
-public class FileGroupingRuleProvider implements FileStructureGroupRuleProvider {
+@ActionImpl(id = "UsageView.Exclude", shortcutFrom = @ActionRef(id = "$Delete"))
+public class ExcludeUsageAction extends IncludeExcludeActionBase {
   @Override
-  public UsageGroupingRule getUsageGroupingRule(Project project) {
-    return new FileGroupingRule(project);
+  protected void process(Usage[] usages, UsageView usageView) {
+    usageView.excludeUsages(usages);
   }
 }

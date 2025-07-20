@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.usages.impl;
+package consulo.usage.impl.internal.rule;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.usages.impl.rules.ReadAccessFilteringRule;
-import consulo.ide.impl.idea.usages.impl.rules.WriteAccessFilteringRule;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;

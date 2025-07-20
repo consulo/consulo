@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.usages.actions;
+package consulo.usage.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
 
 /**
  * @author max
  */
+@ActionImpl(id = "UsageView.Include")
 public class IncludeUsageAction extends IncludeExcludeActionBase {
   @Override
   protected void process(Usage[] usages, UsageView usageView) {
