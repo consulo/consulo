@@ -20,7 +20,6 @@ import consulo.application.ui.UISettings;
 import consulo.component.util.Iconable;
 import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
-import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
@@ -41,159 +40,157 @@ import java.util.Objects;
  * @since 2018-05-11
  */
 public abstract class FileEditorWindowBase implements FileEditorWindow {
-  private static final Logger LOG = Logger.getInstance(FileEditorWindowBase.class);
+    protected abstract FileEditorWithProviderComposite getEditorAt(int i);
 
-  protected abstract FileEditorWithProviderComposite getEditorAt(final int i);
+    protected abstract void setTitleAt(int index, String text);
 
-  protected abstract void setTitleAt(final int index, final String text);
+    protected abstract void setBackgroundColorAt(int index, Color color);
 
-  protected abstract void setBackgroundColorAt(final int index, final Color color);
+    protected abstract void setToolTipTextAt(int index, String text);
 
-  protected abstract void setToolTipTextAt(final int index, final String text);
+    protected abstract void setForegroundAt(int index, Color color);
 
-  protected abstract void setForegroundAt(final int index, final Color color);
+    protected abstract void setWaveColor(int index, @Nullable Color color);
 
-  protected abstract void setWaveColor(final int index, @Nullable final Color color);
+    protected abstract void setIconAt(int index, Image icon);
 
-  protected abstract void setIconAt(final int index, final Image icon);
+    protected abstract void setTabLayoutPolicy(int policy);
 
-  protected abstract void setTabLayoutPolicy(final int policy);
+    protected abstract void trimToSize(int limit, @Nullable VirtualFile fileToIgnore, boolean transferFocus);
 
-  protected abstract void trimToSize(final int limit, @Nullable final VirtualFile fileToIgnore, final boolean transferFocus);
-
-  protected void updateFileName(VirtualFile file, String tabText, String tabTooltip) {
-    final int index = findEditorIndex(findFileComposite(file));
-    if (index != -1) {
-      setTitleAt(index, tabText);
-      setToolTipTextAt(index, tabTooltip);
-    }
-  }
-
-  protected void updateFileIcon(VirtualFile file, Image image) {
-    final int index = findEditorIndex(findFileComposite(file));
-    if (index != -1) {
-      setIconAt(index, image);
-    }
-  }
-
-  protected void updateFileBackgroundColor(@Nonnull VirtualFile file) {
-    final int index = findEditorIndex(findFileComposite(file));
-    if (index != -1) {
-      final ColorValue color = EditorTabPresentationUtil.getEditorTabBackgroundColor(getManager().getProject(), file, this);
-      setBackgroundColorAt(index, TargetAWT.to(color));
-    }
-  }
-
-  /**
-   * @return icon which represents file's type and modification status
-   */
-  @Nullable
-  @RequiredReadAction
-  protected Image getFileIcon(@Nonnull final VirtualFile file) {
-    UIAccess.assetIsNotUIThread();
-    if (!file.isValid()) {
-      return UnknownFileType.INSTANCE.getIcon();
-    }
-
-    final Image baseIcon = VirtualFileManager.getInstance().getFileIconNoDefer(file, getManager().getProject(), Iconable.ICON_FLAG_READ_STATUS);
-
-    final FileEditorWithProviderComposite composite = findFileComposite(file);
-
-    boolean wantModifiedIcon = false;
-
-    UISettings settings = UISettings.getInstance();
-    if (settings.getMarkModifiedTabsWithAsterisk() || !settings.getHideTabsIfNeed()) {
-      if (settings.getMarkModifiedTabsWithAsterisk() && composite != null && composite.isModified()) {
-        wantModifiedIcon = true;
-      }
-    }
-
-    if (!wantModifiedIcon && composite != null) {
-      for (FileEditor fileEditor : composite.getEditors()) {
-        if (fileEditor instanceof FileEditorWithModifiedIcon && fileEditor.isModified()) {
-          wantModifiedIcon = true;
-          break;
+    protected void updateFileName(VirtualFile file, String tabText, String tabTooltip) {
+        int index = findEditorIndex(findFileComposite(file));
+        if (index != -1) {
+            setTitleAt(index, tabText);
+            setToolTipTextAt(index, tabTooltip);
         }
-      }
     }
 
-    if (wantModifiedIcon) {
-      return ImageEffects.layered(baseIcon, PlatformIconGroup.generalModified());
+    protected void updateFileIcon(VirtualFile file, Image image) {
+        int index = findEditorIndex(findFileComposite(file));
+        if (index != -1) {
+            setIconAt(index, image);
+        }
     }
 
-    return baseIcon;
-  }
-
-  public int findEditorIndex(final FileEditorComposite editorToFind) {
-    for (int i = 0; i != getTabCount(); ++i) {
-      final FileEditorWithProviderComposite editor = getEditorAt(i);
-      if (editor.equals(editorToFind)) {
-        return i;
-      }
+    protected void updateFileBackgroundColor(@Nonnull VirtualFile file) {
+        int index = findEditorIndex(findFileComposite(file));
+        if (index != -1) {
+            ColorValue color = EditorTabPresentationUtil.getEditorTabBackgroundColor(getManager().getProject(), file, this);
+            setBackgroundColorAt(index, TargetAWT.to(color));
+        }
     }
-    return -1;
-  }
 
-  public VirtualFile getFileAt(int i) {
-    return getEditorAt(i).getFile();
-  }
+    /**
+     * @return icon which represents file's type and modification status
+     */
+    @Nullable
+    @RequiredReadAction
+    protected Image getFileIcon(@Nonnull VirtualFile file) {
+        UIAccess.assetIsNotUIThread();
+        if (!file.isValid()) {
+            return UnknownFileType.INSTANCE.getIcon();
+        }
 
-  @Override
-  public void closeAllExcept(VirtualFile selectedFile) {
-    final VirtualFile[] files = getFiles();
-    for (final VirtualFile file : files) {
-      if (!Objects.equals(file, selectedFile) && !isFilePinned(file)) {
-        closeFile(file);
-      }
+        Image baseIcon = VirtualFileManager.getInstance().getFileIconNoDefer(file, getManager().getProject(), Iconable.ICON_FLAG_READ_STATUS);
+
+        FileEditorWithProviderComposite composite = findFileComposite(file);
+
+        boolean wantModifiedIcon = false;
+
+        UISettings settings = UISettings.getInstance();
+        if (settings.getMarkModifiedTabsWithAsterisk() || !settings.getHideTabsIfNeed()) {
+            if (settings.getMarkModifiedTabsWithAsterisk() && composite != null && composite.isModified()) {
+                wantModifiedIcon = true;
+            }
+        }
+
+        if (!wantModifiedIcon && composite != null) {
+            for (FileEditor fileEditor : composite.getEditors()) {
+                if (fileEditor instanceof FileEditorWithModifiedIcon && fileEditor.isModified()) {
+                    wantModifiedIcon = true;
+                    break;
+                }
+            }
+        }
+
+        if (wantModifiedIcon) {
+            return ImageEffects.layered(baseIcon, PlatformIconGroup.generalModified());
+        }
+
+        return baseIcon;
     }
-  }
 
-  @Nonnull
-  @Override
-  public VirtualFile[] getFiles() {
-    final int tabCount = getTabCount();
-    final VirtualFile[] res = new VirtualFile[tabCount];
-    for (int i = 0; i != tabCount; ++i) {
-      res[i] = getEditorAt(i).getFile();
+    public int findEditorIndex(FileEditorComposite editorToFind) {
+        for (int i = 0; i != getTabCount(); ++i) {
+            FileEditorWithProviderComposite editor = getEditorAt(i);
+            if (editor.equals(editorToFind)) {
+                return i;
+            }
+        }
+        return -1;
     }
-    return res;
-  }
 
-  @Override
-  public int findFileIndex(final VirtualFile fileToFind) {
-    for (int i = 0; i != getTabCount(); ++i) {
-      final VirtualFile file = getFileAt(i);
-      if (file.equals(fileToFind)) {
-        return i;
-      }
+    public VirtualFile getFileAt(int i) {
+        return getEditorAt(i).getFile();
     }
-    return -1;
-  }
 
-  @Nonnull
-  @Override
-  public FileEditorWithProviderComposite[] getEditors() {
-    final int tabCount = getTabCount();
-    final FileEditorWithProviderComposite[] res = new FileEditorWithProviderComposite[tabCount];
-    for (int i = 0; i != tabCount; ++i) {
-      res[i] = getEditorAt(i);
+    @Override
+    public void closeAllExcept(VirtualFile selectedFile) {
+        VirtualFile[] files = getFiles();
+        for (VirtualFile file : files) {
+            if (!Objects.equals(file, selectedFile) && !isFilePinned(file)) {
+                closeFile(file);
+            }
+        }
     }
-    return res;
-  }
 
-  @Nonnull
-  @Override
-  public abstract FileEditorManagerImpl getManager();
-
-  @Override
-  @Nullable
-  public FileEditorWithProviderComposite findFileComposite(final VirtualFile file) {
-    for (int i = 0; i != getTabCount(); ++i) {
-      final FileEditorWithProviderComposite editor = getEditorAt(i);
-      if (editor.getFile().equals(file)) {
-        return editor;
-      }
+    @Nonnull
+    @Override
+    public VirtualFile[] getFiles() {
+        int tabCount = getTabCount();
+        VirtualFile[] res = new VirtualFile[tabCount];
+        for (int i = 0; i != tabCount; ++i) {
+            res[i] = getEditorAt(i).getFile();
+        }
+        return res;
     }
-    return null;
-  }
+
+    @Override
+    public int findFileIndex(VirtualFile fileToFind) {
+        for (int i = 0; i != getTabCount(); ++i) {
+            VirtualFile file = getFileAt(i);
+            if (file.equals(fileToFind)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Nonnull
+    @Override
+    public FileEditorWithProviderComposite[] getEditors() {
+        int tabCount = getTabCount();
+        FileEditorWithProviderComposite[] res = new FileEditorWithProviderComposite[tabCount];
+        for (int i = 0; i != tabCount; ++i) {
+            res[i] = getEditorAt(i);
+        }
+        return res;
+    }
+
+    @Nonnull
+    @Override
+    public abstract FileEditorManagerImpl getManager();
+
+    @Override
+    @Nullable
+    public FileEditorWithProviderComposite findFileComposite(VirtualFile file) {
+        for (int i = 0; i != getTabCount(); ++i) {
+            FileEditorWithProviderComposite editor = getEditorAt(i);
+            if (editor.getFile().equals(file)) {
+                return editor;
+            }
+        }
+        return null;
+    }
 }
