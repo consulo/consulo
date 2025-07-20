@@ -19,6 +19,7 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
+import consulo.usage.localize.UsageLocalize;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -45,7 +46,7 @@ public class MoveMemberViewDescriptor implements UsageViewDescriptor {
 
   @Override
   public String getCodeReferencesText(int usagesCount, int filesCount) {
-    return RefactoringLocalize.referencesToBeChanged(UsageViewBundle.getReferencesString(usagesCount, filesCount)).get();
+    return UsageLocalize.referencesToBeChanged(UsageViewBundle.getReferencesString(usagesCount, filesCount)).get();
   }
 
   @Override

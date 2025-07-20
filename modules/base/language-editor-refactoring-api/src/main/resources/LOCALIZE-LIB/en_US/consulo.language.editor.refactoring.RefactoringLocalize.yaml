@@ -586,8 +586,6 @@ there.is.already.a.0.in.1.it.will.conflict.with.the.new.parameter:
   text: '{0} to change signature'
 New.name.of.method.is.not.java.identifier:
   text: New name of method is not Java identifier
-references.to.be.changed:
-  text: References to be changed {0}
 source.folder.0.has.package.prefix.1:
   text: |-
     Source folder {0} has package prefix ''{1}''

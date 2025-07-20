@@ -104,6 +104,8 @@ progress.searching.for:
     text: Searching for {0}...
 progress.searching.for.in:
     text: Searching for {0} in {1}{2}...
+references.to.be.changed:
+    text: References to be changed {0}
 select.the.usage.to.preview:
     text: Select the usage to preview
 several.occurrences.selected:

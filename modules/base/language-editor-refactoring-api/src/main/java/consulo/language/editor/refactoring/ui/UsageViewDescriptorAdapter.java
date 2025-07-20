@@ -16,9 +16,9 @@
 
 package consulo.language.editor.refactoring.ui;
 
-import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
+import consulo.usage.localize.UsageLocalize;
 
 /**
  * @author dsl
@@ -27,7 +27,7 @@ public abstract class UsageViewDescriptorAdapter implements UsageViewDescriptor 
 
   @Override
   public String getCodeReferencesText(int usagesCount, int filesCount) {
-    return RefactoringLocalize.referencesToBeChanged(UsageViewBundle.getReferencesString(usagesCount, filesCount)).get();
+    return UsageLocalize.referencesToBeChanged(UsageViewBundle.getReferencesString(usagesCount, filesCount)).get();
   }
 
   @Override
