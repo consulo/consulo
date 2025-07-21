@@ -114,7 +114,7 @@ find.popup.filemask:
     text: 'File mas&k:'
 find.popup.find.button:
     text: Open in Find Window
-find.popup.found.element.accesible.name:
+find.popup.found.element.accessible.name:
     text: '{0} in {1}'
 find.popup.regex:
     text: Rege&x
