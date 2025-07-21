@@ -1,121 +1,120 @@
-attempt.to.modify.read.only.document.error.message:
-  text: Attempt to modify read-only document
-editing.read.only.file.hint:
-  text: File is read-only
-typing.in.editor.command.name:
-  text: Typing
-errors.panel.go.to.errors.first.radio:
-  text: Go to high priority problems only
-errors.panel.go.to.next.error.warning.radio:
-  text: Go to next problem
-customize.highlighting.level.menu.item:
-  text: Customize Highlighting Level
-move.caret.command.name:
-  text: Move caret
-guarded.block.modification.attempt.error.message:
-  text: Unable to perform an action since it changes read-only fragments of the current document
-guarded.block.modification.attempt.error.title:
-  text: Guarded Block Modification Attempt
-close.editor.annotations.action.name:
-  text: Close Annotations
-editor.annotations.action.group.name:
-  text: Annotations
-move.cursor.command.name:
-  text: Move Cursor
-paste.command.name:
-  text: Paste
-move.selection.command.name:
-  text: Move selection
-typing.command.name:
-  text: Typing
-hector.import.popup.checkbox:
-  text: Import &popup
-hector.highlighting.level.title:
-  text: Highlighting Level
-hector.none.slider.label:
-  text: None
-hector.syntax.slider.label:
-  text: Syntax
-hector.inspections.slider.label:
-  text: Inspections
-action.duplicate.selection:
-  text: '&Duplicate Selection'
-action.duplicate.line:
-  text: '&Duplicate Line'
-increase.editor.font:
-  text: Increase Font Size
-decrease.editor.font:
-  text: Decrease Font Size
-forced.soft.wrap.message:
-  text: This document contains very long lines. Soft wraps were forcibly enabled to improve editor performance.
-forced.soft.wrap.hide.message:
-  text: Hide notification
-forced.soft.wrap.dont.show.again.message:
-  text: Don't show again
-editor.notification.default.action.name:
-  text: Notification actions
-editor.notification.settings.option.name:
-  text: Settings...
-editor.open.file.progress:
-  text: Opening {0}
-editing.viewer.hint:
-  text: This view is read-only
-iw.show.import.tooltip:
-  text: Show Auto-Import Tooltip
-iw.compact.view:
-  text: Compact View
-iw.highlight.label:
-  text: 'Highlight:'
-iw.disable.powersave:
-  text: Disable power save mode
-iw.level.none:
-  text: None
-iw.level.errors:
-  text: Errors Only
-iw.level.all:
-  text: All Problems
-iw.open.problems.view:
-  text: Open Problems View
-iw.found.so.far.suffix:
-  text: found so far
-checkbox.show.editor.preview.popup:
-  text: Show editor preview tooltip
-group.EditorStickyLinesSettings.text:
-    text: Sticky Lines
-group.EditorStickyLinesSettings.description:
-    text: Toggle sticky lines panel settings
-action.EditorStickyConfigure.text:
-    text: Configure Sticky Lines…
-action.EditorStickyConfigure.description:
-    text: Show sticky lines settings dialog
-action.EditorStickyLinesDisableForLang.text:
-    text: Disable for Language
-action.EditorStickyLinesDisableForLang.for.lang.text:
-    text: Disable for {0}
-action.EditorStickyLinesDisableForLang.description:
-    text: Hide the sticky lines panel for language
-action.EditorStickyLinesDisable.text:
-    text: Disable
-action.EditorStickyLinesDisable.description:
-    text: Hide the sticky lines panel
-action.EditorGutterToggleGlobalStickyLines.text:
-    text: Show Sticky Lines
 action.EditorGutterToggleGlobalStickyLines.description:
     text: Show the sticky lines panel
-radio.editor.tab.long.arrow:
-    text: Long arrow
+action.EditorGutterToggleGlobalStickyLines.text:
+    text: Show Sticky Lines
+action.EditorStickyConfigure.description:
+    text: Show sticky lines settings dialog
+action.EditorStickyConfigure.text:
+    text: Configure Sticky Lines…
+action.EditorStickyLinesDisable.description:
+    text: Hide the sticky lines panel
+action.EditorStickyLinesDisable.text:
+    text: Disable
+action.EditorStickyLinesDisableForLang.description:
+    text: Hide the sticky lines panel for language
+action.EditorStickyLinesDisableForLang.for.lang.text:
+    text: Disable for {0}
+action.EditorStickyLinesDisableForLang.text:
+    text: Disable for Language
+action.duplicate.line:
+    text: '&Duplicate Line'
+action.duplicate.selection:
+    text: '&Duplicate Selection'
+attempt.to.modify.read.only.document.error.message:
+    text: Attempt to modify read-only document
+checkbox.show.editor.preview.popup:
+    text: Show editor preview tooltip
+close.editor.annotations.action.name:
+    text: Close Annotations
+customize.highlighting.level.menu.item:
+    text: Customize Highlighting Level
+decrease.editor.font:
+    text: Decrease Font Size
+editing.read.only.file.hint:
+    text: File is read-only
+editing.viewer.hint:
+    text: This view is read-only
+editor.annotations.action.group.name:
+    text: Annotations
+editor.notification.default.action.name:
+    text: Notification actions
+editor.notification.settings.option.name:
+    text: Settings...
+editor.open.file.progress:
+    text: Opening {0}
+errors.panel.go.to.errors.first.radio:
+    text: Go to high priority problems only
+errors.panel.go.to.next.error.warning.radio:
+    text: Go to next problem
+forced.soft.wrap.dont.show.again.message:
+    text: Don't show again
+forced.soft.wrap.hide.message:
+    text: Hide notification
+forced.soft.wrap.message:
+    text: This document contains very long lines. Soft wraps were forcibly enabled to improve editor performance.
+group.EditorStickyLinesSettings.description:
+    text: Toggle sticky lines panel settings
+group.EditorStickyLinesSettings.text:
+    text: Sticky Lines
+guarded.block.modification.attempt.error.message:
+    text: Unable to perform an action since it changes read-only fragments of the current document
+guarded.block.modification.attempt.error.title:
+    text: Guarded Block Modification Attempt
+hector.highlighting.level.title:
+    text: Highlighting Level
+hector.import.popup.checkbox:
+    text: Import &popup
+hector.inspections.slider.label:
+    text: Inspections
+hector.none.slider.label:
+    text: None
+hector.syntax.slider.label:
+    text: Syntax
+increase.editor.font:
+    text: Increase Font Size
+inlay.hints.declarative.disable.action.no.provider.text:
+    text: Disable Inlay Hints
+inlay.hints.declarative.disable.action.text:
+    text: Disable ''{0}'' Inlay Hints
+inlay.hints.declarative.disable.option.action.text:
+    text: Disable option ''{0}'' for ''{1}'' inlay hints
+inlay.hints.declarative.enable.action.text:
+    text: Enable ''{0}'' inlay hints
+inlay.hints.declarative.enable.option.action.text:
+    text: Enable option ''{0}'' for ''{1}'' inlay hints
+iw.compact.view:
+    text: Compact View
+iw.disable.powersave:
+    text: Disable power save mode
+iw.found.so.far.suffix:
+    text: found so far
+iw.highlight.label:
+    text: 'Highlight:'
+iw.level.all:
+    text: All Problems
+iw.level.errors:
+    text: Errors Only
+iw.level.none:
+    text: None
+iw.open.problems.view:
+    text: Open Problems View
+iw.show.import.tooltip:
+    text: Show Auto-Import Tooltip
+move.caret.command.name:
+    text: Move caret
+move.cursor.command.name:
+    text: Move Cursor
+move.selection.command.name:
+    text: Move selection
+paste.command.name:
+    text: Paste
 radio.editor.tab.arrow:
     text: '> symbol'
 radio.editor.tab.horizontal.line:
     text: Horizontal line
-inlay.hints.declarative.enable.action.text:
-    text: Enable ''{0}'' inlay hints
-inlay.hints.declarative.disable.action.text:
-    text: Disable ''{0}'' Inlay Hints
-inlay.hints.declarative.disable.action.no.provider.text:
-    text: Disable Inlay Hints
-inlay.hints.declarative.enable.option.action.text:
-    text: Enable option ''{0}'' for ''{1}'' inlay hints
-inlay.hints.declarative.disable.option.action.text:
-    text: Disable option ''{0}'' for ''{1}'' inlay hints
-
+radio.editor.tab.long.arrow:
+    text: Long arrow
+typing.command.name:
+    text: Typing
+typing.in.editor.command.name:
+    text: Typing
