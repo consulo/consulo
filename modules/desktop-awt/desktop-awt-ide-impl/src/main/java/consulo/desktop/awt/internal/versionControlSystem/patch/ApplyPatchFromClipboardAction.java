@@ -24,63 +24,62 @@ import java.util.Collections;
 
 @ActionImpl(id = "ChangesView.ApplyPatchFromClipboard")
 public class ApplyPatchFromClipboardAction extends DumbAwareAction {
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    String text = ClipboardUtil.getTextInClipboard();
-    // allow to apply from clipboard even if we do not detect it as a patch, because during applying we parse content more precisely
-    e.getPresentation().setEnabled(project != null && text != null && ChangeListManager.getInstance(project).isFreezed() == null);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsBundle.message("patch.apply.cannot.apply.now"))) {
-      return;
-    }
-    FileDocumentManager.getInstance().saveAllDocuments();
-
-    String clipboardText = ClipboardUtil.getTextInClipboard();
-    assert clipboardText != null;
-    new MyApplyPatchFromClipboardDialog(project, clipboardText).show();
-  }
-
-  public static class MyApplyPatchFromClipboardDialog extends ApplyPatchDifferentiatedDialog {
-
-    public MyApplyPatchFromClipboardDialog(@Nonnull Project project, @Nonnull String clipboardText) {
-      super(
-        project,
-        new ApplyPatchDefaultExecutor(project),
-        Collections.emptyList(),
-        ApplyPatchMode.APPLY_PATCH_IN_MEMORY,
-        new LightVirtualFile("clipboardPatchFile", clipboardText),
-        null,
-        null,
-        //NON-NLS
-        null,
-        null,
-        null,
-        false
-      );
-    }
-
-    @Nullable
     @Override
-    protected JComponent createDoNotAskCheckbox() {
-      return createAnalyzeOnTheFlyOptionPanel();
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        String text = ClipboardUtil.getTextInClipboard();
+        // allow to apply from clipboard even if we do not detect it as a patch, because during applying we parse content more precisely
+        e.getPresentation().setEnabled(project != null && text != null && ChangeListManager.getInstance(project).isFreezed() == null);
     }
 
-    @Nonnull
-    private static JCheckBox createAnalyzeOnTheFlyOptionPanel() {
-      final JCheckBox removeOptionCheckBox = new JCheckBox(VcsBundle.message("patch.apply.analyze.from.clipboard.on.the.fly.checkbox"));
-      removeOptionCheckBox.setMnemonic(KeyEvent.VK_L);
-      removeOptionCheckBox.setSelected(VcsApplicationSettings.getInstance().DETECT_PATCH_ON_THE_FLY);
-      removeOptionCheckBox.addActionListener(
-        e -> VcsApplicationSettings.getInstance().DETECT_PATCH_ON_THE_FLY = removeOptionCheckBox.isSelected()
-      );
-      return removeOptionCheckBox;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsBundle.message("patch.apply.cannot.apply.now"))) {
+            return;
+        }
+        FileDocumentManager.getInstance().saveAllDocuments();
+
+        String clipboardText = ClipboardUtil.getTextInClipboard();
+        assert clipboardText != null;
+        new MyApplyPatchFromClipboardDialog(project, clipboardText).show();
     }
-  }
+
+    public static class MyApplyPatchFromClipboardDialog extends ApplyPatchDifferentiatedDialog {
+        public MyApplyPatchFromClipboardDialog(@Nonnull Project project, @Nonnull String clipboardText) {
+            super(
+                project,
+                new ApplyPatchDefaultExecutor(project),
+                Collections.emptyList(),
+                ApplyPatchMode.APPLY_PATCH_IN_MEMORY,
+                new LightVirtualFile("clipboardPatchFile", clipboardText),
+                null,
+                null,
+                //NON-NLS
+                null,
+                null,
+                null,
+                false
+            );
+        }
+
+        @Nullable
+        @Override
+        protected JComponent createDoNotAskCheckbox() {
+            return createAnalyzeOnTheFlyOptionPanel();
+        }
+
+        @Nonnull
+        private static JCheckBox createAnalyzeOnTheFlyOptionPanel() {
+            final JCheckBox removeOptionCheckBox =
+                new JCheckBox(VcsBundle.message("patch.apply.analyze.from.clipboard.on.the.fly.checkbox"));
+            removeOptionCheckBox.setMnemonic(KeyEvent.VK_L);
+            removeOptionCheckBox.setSelected(VcsApplicationSettings.getInstance().DETECT_PATCH_ON_THE_FLY);
+            removeOptionCheckBox.addActionListener(
+                e -> VcsApplicationSettings.getInstance().DETECT_PATCH_ON_THE_FLY = removeOptionCheckBox.isSelected()
+            );
+            return removeOptionCheckBox;
+        }
+    }
 }

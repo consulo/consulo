@@ -25,29 +25,29 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public class FocusOppositePaneAction extends AnAction implements DumbAware {
-  protected final boolean myScrollToPosition;
+    protected final boolean myScrollToPosition;
 
-  public FocusOppositePaneAction() {
-    this(false);
-  }
+    public FocusOppositePaneAction() {
+        this(false);
+    }
 
-  public FocusOppositePaneAction(boolean scrollToPosition) {
-    myScrollToPosition = scrollToPosition;
-    ActionUtil.copyFrom(this, getActionId());
-  }
+    public FocusOppositePaneAction(boolean scrollToPosition) {
+        myScrollToPosition = scrollToPosition;
+        ActionUtil.copyFrom(this, getActionId());
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        throw new UnsupportedOperationException();
+    }
 
-  public void install(@Nonnull JComponent component) {
-    registerCustomShortcutSet(getShortcutSet(), component);
-  }
+    public void install(@Nonnull JComponent component) {
+        registerCustomShortcutSet(getShortcutSet(), component);
+    }
 
-  @Nonnull
-  private String getActionId() {
-    return myScrollToPosition ? "Diff.FocusOppositePaneAndScroll" : "Diff.FocusOppositePane";
-  }
+    @Nonnull
+    private String getActionId() {
+        return myScrollToPosition ? "Diff.FocusOppositePaneAndScroll" : "Diff.FocusOppositePane";
+    }
 }

@@ -40,87 +40,97 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
-  @Nullable
-  private static Editor getEditor(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return null;
+    @Nullable
+    private static Editor getEditor(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return null;
+        }
 
-    Editor editor = e.getData(Editor.KEY);
-    if (editor != null) return editor;
+        Editor editor = e.getData(Editor.KEY);
+        if (editor != null) {
+            return editor;
+        }
 
-    editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-    if (editor != null) return editor;
+        editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+        if (editor != null) {
+            return editor;
+        }
 
-    return null;
-  }
-
-  @Nullable
-  private static FileType getEditorFileType(@Nonnull AnActionEvent e) {
-    DiffContent content = e.getData(DiffDataKeys.CURRENT_CONTENT);
-    if (content != null && content.getContentType() != null) return content.getContentType();
-
-    DiffRequest request = e.getData(DiffDataKeys.DIFF_REQUEST);
-    if (request instanceof ContentDiffRequest contentDiffRequest) {
-      for (DiffContent diffContent : contentDiffRequest.getContents()) {
-        FileType type = diffContent.getContentType();
-        if (type != null && type != UnknownFileType.INSTANCE) return type;
-      }
+        return null;
     }
 
-    return null;
-  }
+    @Nullable
+    private static FileType getEditorFileType(@Nonnull AnActionEvent e) {
+        DiffContent content = e.getData(DiffDataKeys.CURRENT_CONTENT);
+        if (content != null && content.getContentType() != null) {
+            return content.getContentType();
+        }
 
-  @Override
-  protected boolean isAvailable(@Nonnull AnActionEvent e) {
-    Editor editor = getEditor(e);
-    return editor != null;
-  }
+        DiffRequest request = e.getData(DiffDataKeys.DIFF_REQUEST);
+        if (request instanceof ContentDiffRequest contentDiffRequest) {
+            for (DiffContent diffContent : contentDiffRequest.getContents()) {
+                FileType type = diffContent.getContentType();
+                if (type != null && type != UnknownFileType.INSTANCE) {
+                    return type;
+                }
+            }
+        }
 
-  @Nullable
-  @Override
-  protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    Editor editor = getEditor(e);
-    FileType editorFileType = getEditorFileType(e);
-    assert editor != null;
-
-    DocumentContent content2 = createContent(project, editor, editorFileType);
-    DocumentContent content1 = DiffContentFactory.getInstance().createClipboardContent(project, content2);
-
-    LocalizeValue title1 = DiffLocalize.diffContentClipboardContentTitle();
-    String title2 = createContentTitle(editor);
-
-    LocalizeValue title = DiffLocalize.diffClipboardVsEditorDialogTitle();
-
-    SimpleDiffRequest request = new SimpleDiffRequest(title.get(), content1, content2, title1.get(), title2);
-    if (editor.isViewer()) {
-      request.putUserData(DiffUserDataKeys.FORCE_READ_ONLY_CONTENTS, new boolean[]{false, true});
-    }
-    return request;
-  }
-
-  @Nonnull
-  private static DocumentContent createContent(@Nonnull Project project, @Nonnull Editor editor, @Nullable FileType type) {
-    DocumentContent content = DiffContentFactory.getInstance().create(project, editor.getDocument(), type);
-
-    SelectionModel selectionModel = editor.getSelectionModel();
-    if (selectionModel.hasSelection()) {
-      TextRange range = new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd());
-      content = DiffContentFactory.getInstance().createFragment(project, content, range);
+        return null;
     }
 
-    return content;
-  }
-
-  @Nonnull
-  private static String createContentTitle(@Nonnull Editor editor) {
-    VirtualFile file = FileDocumentManager.getInstance().getFile(editor.getDocument());
-    String title = file != null ? DiffRequestFactory.getInstance().getContentTitle(file) : "Editor";
-
-    if (editor.getSelectionModel().hasSelection()) {
-      title = DiffLocalize.diffContentSelectionFromFileContentTitle(title).get();
+    @Override
+    protected boolean isAvailable(@Nonnull AnActionEvent e) {
+        Editor editor = getEditor(e);
+        return editor != null;
     }
 
-    return title;
-  }
+    @Nullable
+    @Override
+    protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        Editor editor = getEditor(e);
+        FileType editorFileType = getEditorFileType(e);
+        assert editor != null;
+
+        DocumentContent content2 = createContent(project, editor, editorFileType);
+        DocumentContent content1 = DiffContentFactory.getInstance().createClipboardContent(project, content2);
+
+        LocalizeValue title1 = DiffLocalize.diffContentClipboardContentTitle();
+        String title2 = createContentTitle(editor);
+
+        LocalizeValue title = DiffLocalize.diffClipboardVsEditorDialogTitle();
+
+        SimpleDiffRequest request = new SimpleDiffRequest(title.get(), content1, content2, title1.get(), title2);
+        if (editor.isViewer()) {
+            request.putUserData(DiffUserDataKeys.FORCE_READ_ONLY_CONTENTS, new boolean[]{false, true});
+        }
+        return request;
+    }
+
+    @Nonnull
+    private static DocumentContent createContent(@Nonnull Project project, @Nonnull Editor editor, @Nullable FileType type) {
+        DocumentContent content = DiffContentFactory.getInstance().create(project, editor.getDocument(), type);
+
+        SelectionModel selectionModel = editor.getSelectionModel();
+        if (selectionModel.hasSelection()) {
+            TextRange range = new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd());
+            content = DiffContentFactory.getInstance().createFragment(project, content, range);
+        }
+
+        return content;
+    }
+
+    @Nonnull
+    private static String createContentTitle(@Nonnull Editor editor) {
+        VirtualFile file = FileDocumentManager.getInstance().getFile(editor.getDocument());
+        String title = file != null ? DiffRequestFactory.getInstance().getContentTitle(file) : "Editor";
+
+        if (editor.getSelectionModel().hasSelection()) {
+            title = DiffLocalize.diffContentSelectionFromFileContentTitle(title).get();
+        }
+
+        return title;
+    }
 }

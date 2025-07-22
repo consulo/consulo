@@ -28,26 +28,26 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author max
  */
 public abstract class GoToMnemonicBookmarkActionBase extends AnAction implements DumbAware {
-  private final int myNumber;
+    private final int myNumber;
 
-  public GoToMnemonicBookmarkActionBase(int n) {
-    super(BookmarkLocalize.actionBookmarkGoto0Text(n));
-    myNumber = n;
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.hasData(Project.KEY));
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-
-    Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic((char)('0' + myNumber));
-    if (bookmark != null) {
-      bookmark.navigate(true);
+    public GoToMnemonicBookmarkActionBase(int n) {
+        super(BookmarkLocalize.actionBookmarkGoto0Text(n));
+        myNumber = n;
     }
-  }
+
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+
+        Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic((char) ('0' + myNumber));
+        if (bookmark != null) {
+            bookmark.navigate(true);
+        }
+    }
 }

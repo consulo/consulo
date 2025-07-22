@@ -48,70 +48,78 @@ import java.util.function.Function;
  * @author Dmitry Avdeev
  */
 public class ExecutorAction extends AnAction {
-  private static final Key<List<ConfigurationFromContext>> CONFIGURATION_CACHE = Key.create("ConfigurationFromContext");
+    private static final Key<List<ConfigurationFromContext>> CONFIGURATION_CACHE = Key.create("ConfigurationFromContext");
 
-  @Nonnull
-  public static AnAction[] getActions(final int order) {
-    return ContainerUtil.map2Array(ExecutorRegistry.getInstance().getRegisteredExecutors(), AnAction.class,
-                                   (Function<Executor, AnAction>)executor -> new ExecutorAction(ActionManager.getInstance().getAction(executor.getContextActionId()), executor, order));
-  }
-
-  private final AnAction myOrigin;
-  private final Executor myExecutor;
-  private final int myOrder;
-
-  private ExecutorAction(@Nonnull AnAction origin, @Nonnull Executor executor, int order) {
-    myOrigin = origin;
-    myExecutor = executor;
-    myOrder = order;
-    copyFrom(origin);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
-    e.getPresentation().setVisible(activeText != LocalizeValue.of());
-    e.getPresentation().setTextValue(activeText);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    myOrigin.actionPerformed(e);
-  }
-
-  @Nonnull
-  private static List<ConfigurationFromContext> getConfigurations(DataContext dataContext) {
-    List<ConfigurationFromContext> result = DataManager.getInstance().loadFromDataContext(dataContext, CONFIGURATION_CACHE);
-    if (result == null) {
-      DataManager.getInstance().saveInDataContext(dataContext, CONFIGURATION_CACHE, result = calcConfigurations(dataContext));
+    @Nonnull
+    public static AnAction[] getActions(final int order) {
+        return ContainerUtil.map2Array(ExecutorRegistry.getInstance().getRegisteredExecutors(), AnAction.class,
+            (Function<Executor, AnAction>) executor ->
+                new ExecutorAction(ActionManager.getInstance().getAction(executor.getContextActionId()), executor, order)
+        );
     }
-    return result;
-  }
 
-  @Nonnull
-  private static List<ConfigurationFromContext> calcConfigurations(DataContext dataContext) {
-    final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
-    if (context.getLocation() == null) return Collections.emptyList();
-    return context.getProject().getApplication().getExtensionPoint(RunConfigurationProducer.class)
-        .collectMapped(producer -> createConfiguration(producer, context));
-  }
+    private final AnAction myOrigin;
+    private final Executor myExecutor;
+    private final int myOrder;
 
-  @Nonnull
-  private LocalizeValue getActionText(DataContext dataContext, @Nonnull Executor executor) {
-    List<ConfigurationFromContext> list = getConfigurations(dataContext);
-    if (list.isEmpty()) return LocalizeValue.of();
-    ConfigurationFromContext configuration = list.get(myOrder < list.size() ? myOrder : 0);
-    String actionName = BaseRunConfigurationAction.suggestRunActionName((LocatableConfiguration)configuration.getConfiguration());
-    return ExecutionActionValue.buildWithConfiguration(executor::getStartActiveText, actionName);
-  }
+    private ExecutorAction(@Nonnull AnAction origin, @Nonnull Executor executor, int order) {
+        myOrigin = origin;
+        myExecutor = executor;
+        myOrder = order;
+        copyFrom(origin);
+    }
 
-  @Nullable
-  private static ConfigurationFromContext createConfiguration(RunConfigurationProducer<?> producer, ConfigurationContext context) {
-    RunConfiguration configuration = producer.createLightConfiguration(context);
-    if (configuration == null) return null;
-    RunManagerEx runManager = (RunManagerEx)RunManager.getInstance(context.getProject());
-    RunnerAndConfigurationSettings settings = runManager.createConfiguration(configuration, false);
-    return new ConfigurationFromContextImpl(producer, settings, context.getPsiLocation());
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
+        e.getPresentation().setVisible(activeText != LocalizeValue.of());
+        e.getPresentation().setTextValue(activeText);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        myOrigin.actionPerformed(e);
+    }
+
+    @Nonnull
+    private static List<ConfigurationFromContext> getConfigurations(DataContext dataContext) {
+        List<ConfigurationFromContext> result = DataManager.getInstance().loadFromDataContext(dataContext, CONFIGURATION_CACHE);
+        if (result == null) {
+            DataManager.getInstance().saveInDataContext(dataContext, CONFIGURATION_CACHE, result = calcConfigurations(dataContext));
+        }
+        return result;
+    }
+
+    @Nonnull
+    private static List<ConfigurationFromContext> calcConfigurations(DataContext dataContext) {
+        final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
+        if (context.getLocation() == null) {
+            return Collections.emptyList();
+        }
+        return context.getProject().getApplication().getExtensionPoint(RunConfigurationProducer.class)
+            .collectMapped(producer -> createConfiguration(producer, context));
+    }
+
+    @Nonnull
+    private LocalizeValue getActionText(DataContext dataContext, @Nonnull Executor executor) {
+        List<ConfigurationFromContext> list = getConfigurations(dataContext);
+        if (list.isEmpty()) {
+            return LocalizeValue.of();
+        }
+        ConfigurationFromContext configuration = list.get(myOrder < list.size() ? myOrder : 0);
+        String actionName = BaseRunConfigurationAction.suggestRunActionName((LocatableConfiguration) configuration.getConfiguration());
+        return ExecutionActionValue.buildWithConfiguration(executor::getStartActiveText, actionName);
+    }
+
+    @Nullable
+    private static ConfigurationFromContext createConfiguration(RunConfigurationProducer<?> producer, ConfigurationContext context) {
+        RunConfiguration configuration = producer.createLightConfiguration(context);
+        if (configuration == null) {
+            return null;
+        }
+        RunManagerEx runManager = (RunManagerEx) RunManager.getInstance(context.getProject());
+        RunnerAndConfigurationSettings settings = runManager.createConfiguration(configuration, false);
+        return new ConfigurationFromContextImpl(producer, settings, context.getPsiLocation());
+    }
 }

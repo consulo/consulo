@@ -33,36 +33,37 @@ import java.io.OutputStream;
  * @author egor
  */
 public class EOFAction extends DumbAwareAction {
-  public static final String ACTION_ID = "SendEOF";
+    public static final String ACTION_ID = "SendEOF";
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
-    ProcessHandler handler = descriptor != null ? descriptor.getProcessHandler() : null;
-    e.getPresentation().setEnabledAndVisible(e.hasData(ConsoleView.KEY)
-                                               && e.hasData(Editor.KEY)
-                                               && handler != null
-                                               && !handler.isProcessTerminated());
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
+        ProcessHandler handler = descriptor != null ? descriptor.getProcessHandler() : null;
+        e.getPresentation().setEnabledAndVisible(
+            e.hasData(ConsoleView.KEY) && e.hasData(Editor.KEY) && handler != null && !handler.isProcessTerminated()
+        );
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
-    ProcessHandler activeProcessHandler = descriptor != null ? descriptor.getProcessHandler() : null;
-    if (activeProcessHandler == null || activeProcessHandler.isProcessTerminated()) return;
-
-    try {
-      OutputStream input = activeProcessHandler.getProcessInput();
-      if (input != null) {
-        ConsoleView console = e.getData(ConsoleView.KEY);
-        if (console != null) {
-          console.print("^D\n", ConsoleViewContentType.SYSTEM_OUTPUT);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
+        ProcessHandler activeProcessHandler = descriptor != null ? descriptor.getProcessHandler() : null;
+        if (activeProcessHandler == null || activeProcessHandler.isProcessTerminated()) {
+            return;
         }
-        input.close();
-      }
+
+        try {
+            OutputStream input = activeProcessHandler.getProcessInput();
+            if (input != null) {
+                ConsoleView console = e.getData(ConsoleView.KEY);
+                if (console != null) {
+                    console.print("^D\n", ConsoleViewContentType.SYSTEM_OUTPUT);
+                }
+                input.close();
+            }
+        }
+        catch (IOException ignored) {
+        }
     }
-    catch (IOException ignored) {
-    }
-  }
 }

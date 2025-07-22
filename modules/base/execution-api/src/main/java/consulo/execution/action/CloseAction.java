@@ -28,45 +28,46 @@ import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 
 public class CloseAction extends AnAction implements DumbAware {
-  private RunContentDescriptor myContentDescriptor;
-  private final Project myProject;
-  private Executor myExecutor;
+    private RunContentDescriptor myContentDescriptor;
+    private final Project myProject;
+    private Executor myExecutor;
 
-  public CloseAction(Executor executor, RunContentDescriptor contentDescriptor, Project project) {
-    myExecutor = executor;
-    myContentDescriptor = contentDescriptor;
-    myProject = project;
-    copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE));
-    final Presentation templatePresentation = getTemplatePresentation();
-    templatePresentation.setIcon(PlatformIconGroup.actionsCancel());
-    templatePresentation.setTextValue(ExecutionLocalize.closeTabActionName());
-    templatePresentation.setDescriptionValue(LocalizeValue.empty());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final RunContentDescriptor contentDescriptor = getContentDescriptor();
-    if (contentDescriptor == null) {
-      return;
+    public CloseAction(Executor executor, RunContentDescriptor contentDescriptor, Project project) {
+        myExecutor = executor;
+        myContentDescriptor = contentDescriptor;
+        myProject = project;
+        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE));
+        final Presentation templatePresentation = getTemplatePresentation();
+        templatePresentation.setIcon(PlatformIconGroup.actionsCancel());
+        templatePresentation.setTextValue(ExecutionLocalize.closeTabActionName());
+        templatePresentation.setDescriptionValue(LocalizeValue.empty());
     }
-    final boolean removedOk = ExecutionManager.getInstance(myProject).getContentManager().removeRunContent(getExecutor(), contentDescriptor);
-    if (removedOk) {
-      myContentDescriptor = null;
-      myExecutor = null;
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final RunContentDescriptor contentDescriptor = getContentDescriptor();
+        if (contentDescriptor == null) {
+            return;
+        }
+        final boolean removedOk =
+            ExecutionManager.getInstance(myProject).getContentManager().removeRunContent(getExecutor(), contentDescriptor);
+        if (removedOk) {
+            myContentDescriptor = null;
+            myExecutor = null;
+        }
     }
-  }
 
-  public RunContentDescriptor getContentDescriptor() {
-    return myContentDescriptor;
-  }
+    public RunContentDescriptor getContentDescriptor() {
+        return myContentDescriptor;
+    }
 
-  public Executor getExecutor() {
-    return myExecutor;
-  }
+    public Executor getExecutor() {
+        return myExecutor;
+    }
 
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(myContentDescriptor != null);
-  }
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(myContentDescriptor != null);
+    }
 }

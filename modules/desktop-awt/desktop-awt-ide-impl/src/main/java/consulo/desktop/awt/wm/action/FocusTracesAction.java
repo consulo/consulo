@@ -20,7 +20,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.desktop.awt.wm.FocusRequestInfo;
-import consulo.localize.LocalizeValue;import consulo.project.Project;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -38,50 +39,52 @@ import java.util.List;
  */
 @ActionImpl(id = "FocusTracer")
 public class FocusTracesAction extends AnAction implements DumbAware {
-  private static boolean myActive = false;
-  private AWTEventListener myFocusTracker;
+    private static boolean myActive = false;
+    private AWTEventListener myFocusTracker;
 
-  public FocusTracesAction() {
-    super("Start Focus Trace");
-  }
+    public FocusTracesAction() {
+        super("Start Focus Trace");
+    }
 
-  public static boolean isActive() {
-    return myActive;
-  }
+    public static boolean isActive() {
+        return myActive;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    if (!(IdeFocusManager.getGlobalInstance() instanceof FocusManagerImpl focusManager)) return;
-
-    myActive = !myActive;
-    if (myActive) {
-      myFocusTracker = event -> {
-        if (event instanceof FocusEvent focusEvent && event.getID() == FocusEvent.FOCUS_GAINED) {
-          focusManager.getRequests().add(new FocusRequestInfo(focusEvent.getComponent(), new Throwable(), false));
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        if (!(IdeFocusManager.getGlobalInstance() instanceof FocusManagerImpl focusManager)) {
+            return;
         }
-      };
-      Toolkit.getDefaultToolkit().addAWTEventListener(myFocusTracker, AWTEvent.FOCUS_EVENT_MASK);
+
+        myActive = !myActive;
+        if (myActive) {
+            myFocusTracker = event -> {
+                if (event instanceof FocusEvent focusEvent && event.getID() == FocusEvent.FOCUS_GAINED) {
+                    focusManager.getRequests().add(new FocusRequestInfo(focusEvent.getComponent(), new Throwable(), false));
+                }
+            };
+            Toolkit.getDefaultToolkit().addAWTEventListener(myFocusTracker, AWTEvent.FOCUS_EVENT_MASK);
+        }
+
+        if (!myActive) {
+            final List<FocusRequestInfo> requests = focusManager.getRequests();
+            Project project = e.getRequiredData(Project.KEY);
+            new FocusTracesDialog(project, new ArrayList<>(requests)).show();
+            Toolkit.getDefaultToolkit().removeAWTEventListener(myFocusTracker);
+            myFocusTracker = null;
+            requests.clear();
+        }
     }
 
-    if (!myActive) {
-      final List<FocusRequestInfo> requests = focusManager.getRequests();
-      Project project = e.getRequiredData(Project.KEY);
-      new FocusTracesDialog(project, new ArrayList<>(requests)).show();
-      Toolkit.getDefaultToolkit().removeAWTEventListener(myFocusTracker);
-      myFocusTracker = null;
-      requests.clear();
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        presentation.setTextValue(
+            myActive
+                ? LocalizeValue.localizeTODO("Stop Focus Tracing")
+                : LocalizeValue.localizeTODO("Start Focus Tracing")
+        );
+        presentation.setEnabled(e.hasData(Project.KEY));
     }
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    presentation.setTextValue(
-        myActive
-            ? LocalizeValue.localizeTODO("Stop Focus Tracing")
-            : LocalizeValue.localizeTODO("Start Focus Tracing")
-    );
-    presentation.setEnabled(e.hasData(Project.KEY));
-  }
 }

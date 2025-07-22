@@ -28,30 +28,30 @@ import jakarta.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 class ChangeCompareModeAction extends AnAction {
-  private final static Image ON = AllIcons.Actions.Checked;
-  private final static Image ON_SELECTED = AllIcons.Actions.Checked_selected;
-  private final static Image OFF = Image.empty(ON.getHeight());
+    private final static Image ON = AllIcons.Actions.Checked;
+    private final static Image ON_SELECTED = AllIcons.Actions.Checked_selected;
+    private final static Image OFF = Image.empty(ON.getHeight());
 
-  private final DirDiffTableModel myModel;
-  private final DirDiffSettings.CompareMode myMode;
+    private final DirDiffTableModel myModel;
+    private final DirDiffSettings.CompareMode myMode;
 
-  ChangeCompareModeAction(DirDiffTableModel model, DirDiffSettings.CompareMode mode) {
-    super(mode.getPresentableName(model.getSettings()));
-    myModel = model;
-    myMode = mode;
-  }
+    ChangeCompareModeAction(DirDiffTableModel model, DirDiffSettings.CompareMode mode) {
+        super(mode.getPresentableName(model.getSettings()));
+        myModel = model;
+        myMode = mode;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    myModel.setCompareMode(myMode);
-    myModel.reloadModel(false);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        myModel.setCompareMode(myMode);
+        myModel.reloadModel(false);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final boolean on = myModel.getCompareMode() == myMode;
-    e.getPresentation().setIcon(on ? ON : OFF);
-    e.getPresentation().setSelectedIcon(on ? ON_SELECTED : OFF);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final boolean on = myModel.getCompareMode() == myMode;
+        e.getPresentation().setIcon(on ? ON : OFF);
+        e.getPresentation().setSelectedIcon(on ? ON_SELECTED : OFF);
+    }
 }
