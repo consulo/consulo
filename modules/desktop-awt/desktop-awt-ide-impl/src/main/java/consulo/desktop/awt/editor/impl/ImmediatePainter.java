@@ -16,6 +16,7 @@ import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesEffectsBuilder;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
@@ -24,6 +25,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -48,6 +50,8 @@ import java.util.function.Consumer;
  * @author Pavel Fatin
  */
 class ImmediatePainter {
+    private static final Logger LOG = Logger.getInstance(ImmediatePainter.class);
+
     private static final int DEBUG_PAUSE_DURATION = 1000;
 
     static final RegistryValue ENABLED = Registry.get("editor.zero.latency.rendering");
@@ -86,8 +90,13 @@ class ImmediatePainter {
 
             int caretOffset = replacement.getBegin();
             char c = replacement.getText().charAt(0);
-            paintImmediately((Graphics2D) g, caretOffset, c);
-            return true;
+            try {
+                paintImmediately((Graphics2D) g, caretOffset, c);
+                return true;
+            }
+            catch (Exception e) {
+                LOG.error(e);
+            }
         }
         return false;
     }
@@ -106,7 +115,18 @@ class ImmediatePainter {
             !isInVirtualSpace(editor, caret) &&
             !isInsertion(document, caret.getOffset()) &&
             !caret.isAtRtlLocation() &&
-            !caret.isAtBidiRunBoundary();
+            !caret.isAtBidiRunBoundary() &&
+            noBorderEffectPainted(editor, caret);
+    }
+
+    private static boolean noBorderEffectPainted(EditorEx editor, Caret caret) {
+        int offset = caret.getOffset();
+        EditorColorsScheme colorsScheme = editor.getColorsScheme();
+        return editor.getMarkupModel().processRangeHighlightersOverlappingWith(offset, offset, h -> {
+            TextAttributes attrs = h.getTextAttributes(colorsScheme);
+            return attrs == null || !attrs.hasEffects() ||
+                TextAttributesEffectsBuilder.create(attrs).getEffectDescriptor(TextAttributesEffectsBuilder.EffectSlot.FRAME_SLOT) == null;
+        });
     }
 
     private static boolean isInVirtualSpace(Editor editor, Caret caret) {
@@ -125,13 +145,21 @@ class ImmediatePainter {
         EditorSettings settings = editor.getSettings();
         boolean isBlockCursor = editor.isInsertMode() == settings.isBlockCursor();
         int lineHeight = editor.getLineHeight();
+        int caretHeight = editor.myView.getCaretHeight();
         int ascent = editor.getAscent();
-        int topOverhang = editor.myView.getTopOverhang();
-        int bottomOverhang = editor.myView.getBottomOverhang();
+        int topOverhang = settings.isFullLineHeightCursor() ? 0 : editor.myView.getTopOverhang();
 
         char c1 = offset == 0 ? ' ' : document.getCharsSequence().charAt(offset - 1);
 
-        List<TextAttributes> attributes = highlighter.getAttributesForPreviousAndTypedChars(document, offset, c2);
+        List<TextAttributes> attributes;
+        try {
+            attributes = highlighter.getAttributesForPreviousAndTypedChars(document, offset, c2);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Error calculating attributes, highlighter: " + highlighter + ", offset: " + offset + ", document length" +
+                document.getTextLength() + ", highlighter's last offset:" + highlighter.getSegments().getLastValidOffset(),
+                e);
+        }
         updateAttributes(editor, offset, attributes);
 
         TextAttributes attributes1 = attributes.get(0);
@@ -154,12 +182,16 @@ class ImmediatePainter {
 
         Caret caret = editor.getCaretModel().getPrimaryCaret();
         //noinspection ConstantConditions
-        float caretWidth = isBlockCursor ? editor.getCaretLocations(false)[0].myWidth : JBUIScale.scale(caret.getVisualAttributes().getWidth(settings.getLineCursorWidth()));
+        float caretWidth = isBlockCursor ? editor.getCaretLocations(false)[0].myWidth
+            : JBUIScale.scale(caret.getVisualAttributes().getWidth(settings.getLineCursorWidth()));
         float caretShift = isBlockCursor ? 0 : caretWidth <= 1 ? 0 : 1 / JBUIScale.sysScale(g);
-        Rectangle2D caretRectangle = new Rectangle2D.Float(p2x + width2 - caretShift, p2y - topOverhang, caretWidth, lineHeight + topOverhang + bottomOverhang);
+        Rectangle2D caretRectangle = new Rectangle2D.Float(p2x + width2 - caretShift, p2y - topOverhang,
+            caretWidth, caretHeight);
 
+        float rectangle2Start = (float) PaintUtil.alignToInt(p2x, g, PaintUtil.RoundingMode.FLOOR);
+        float rectangle2End = (float) PaintUtil.alignToInt(p2x + width2 + caretWidth - caretShift, g, PaintUtil.RoundingMode.CEIL);
         Rectangle2D rectangle1 = new Rectangle2D.Float(p2x - width1, p2y, width1, lineHeight);
-        Rectangle2D rectangle2 = new Rectangle2D.Float(p2x, p2y, width2 + caretWidth - caretShift, lineHeight);
+        Rectangle2D rectangle2 = new Rectangle2D.Float(rectangle2Start, p2y, rectangle2End - rectangle2Start, lineHeight);
 
         Consumer<Graphics2D> painter = graphics -> {
             EditorUIUtil.setupAntialiasing(graphics);
@@ -176,8 +208,15 @@ class ImmediatePainter {
 
         Shape originalClip = g.getClip();
 
-        float clipStartX = (float) PaintUtil.alignToInt(p2x > editor.getContentComponent().getInsets().left ? p2x - caretShift : p2x, g, PaintUtil.RoundingMode.FLOOR);
-        float clipEndX = (float) PaintUtil.alignToInt(p2x + width2 - caretShift + caretWidth, g, PaintUtil.RoundingMode.CEIL);
+        float clipStartX = (float) PaintUtil.alignToInt(p2x > editor.getContentComponent().getInsets().left ? p2x - caretShift : p2x,
+            g, PaintUtil.RoundingMode.FLOOR);
+        float clipEndX = (float) PaintUtil.alignToInt(p2x + width2 - caretShift + caretWidth,
+            g, PaintUtil.RoundingMode.CEIL);
+        if (clipEndX > editor.getContentComponent().getWidth()) {
+            // we cannot paint beyond component bounds (this will go beyond dev clip in graphics anyway)
+            return;
+        }
+
         g.setClip(new Rectangle2D.Float(clipStartX, p2y, clipEndX - clipStartX, lineHeight));
         // at the moment, lines in editor are not aligned to dev pixel grid along Y axis, when fractional scale is used,
         // so double buffering is disabled (as it might not produce the same result as direct painting, and will case text jitter)

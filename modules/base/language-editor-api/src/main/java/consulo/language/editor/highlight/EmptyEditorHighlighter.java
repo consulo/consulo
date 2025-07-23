@@ -1,123 +1,120 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.highlight;
 
 import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterClient;
+import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.HighlighterIterator;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.codeEditor.HighlighterColors;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.HighlighterClient;
 import consulo.document.internal.PrioritizedDocumentListener;
-import consulo.colorScheme.TextAttributes;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDocumentListener {
-  private static final Logger LOG = Logger.getInstance(EmptyEditorHighlighter.class);
+    private static final Logger LOG = Logger.getInstance(EmptyEditorHighlighter.class);
 
-  private TextAttributes myAttributes;
-  private int myTextLength = 0;
-  private HighlighterClient myEditor;
+    private TextAttributes myCachedAttributes;
+    private final TextAttributesKey myKey;
+    private int myTextLength = 0;
+    private HighlighterClient myEditor;
 
-  public EmptyEditorHighlighter(TextAttributes attributes) {
-    myAttributes = attributes;
-  }
+    public EmptyEditorHighlighter() {
+        this(null, HighlighterColors.TEXT);
+    }
 
-  public void setAttributes(TextAttributes attributes) {
-    myAttributes = attributes;
-  }
+    public EmptyEditorHighlighter(@Nullable EditorColorsScheme scheme, @Nonnull TextAttributesKey key) {
+        myKey = key;
+        myCachedAttributes = scheme != null ? scheme.getAttributes(key) : null;
+    }
 
-  @Override
-  public void setText(CharSequence text) {
-    myTextLength = text.length();
-  }
+    public EmptyEditorHighlighter(@Nullable TextAttributes attributes) {
+        myCachedAttributes = attributes;
+        myKey = HighlighterColors.TEXT;
+    }
 
-  @Override
-  public void setEditor(HighlighterClient editor) {
-    LOG.assertTrue(myEditor == null, "Highlighters cannot be reused with different editors");
-    myEditor = editor;
-  }
+    @Override
+    public void setText(@Nonnull CharSequence text) {
+        myTextLength = text.length();
+    }
 
-  @Override
-  public void setColorScheme(EditorColorsScheme scheme) {
-    setAttributes(scheme.getAttributes(HighlighterColors.TEXT));
-  }
+    @Override
+    public void setEditor(@Nonnull HighlighterClient editor) {
+        LOG.assertTrue(myEditor == null, "Highlighters cannot be reused with different editors");
+        myEditor = editor;
+    }
 
-  @Override
-  public void documentChanged(DocumentEvent e) {
-    myTextLength += e.getNewLength() - e.getOldLength();
-  }
+    @Override
+    public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
+        myCachedAttributes = scheme.getAttributes(myKey);
+    }
 
-  @Override
-  public void beforeDocumentChange(DocumentEvent event) {}
+    @Override
+    public void documentChanged(@Nonnull DocumentEvent e) {
+        myTextLength += e.getNewLength() - e.getOldLength();
+    }
 
-  @Override
-  public int getPriority() {
-    return 2;
-  }
+    @Override
+    public int getPriority() {
+        return 2;
+    }
 
-  @Nonnull
-  @Override
-  public HighlighterIterator createIterator(int startOffset) {
-    return new HighlighterIterator(){
-      private int index = 0;
+    @Override
+    public @Nonnull HighlighterIterator createIterator(int startOffset) {
+        return new HighlighterIterator() {
+            private final TextAttributesKey[] myKeys = new TextAttributesKey[]{myKey};
+            private int index = 0;
 
-      @Override
-      public TextAttributes getTextAttributes() {
-        return myAttributes;
-      }
+            @Override
+            public TextAttributes getTextAttributes() {
+                return myCachedAttributes;
+            }
 
-      @Override
-      public int getStart() {
-        return 0;
-      }
+            @Override
+            @Nonnull
+            public TextAttributesKey[] getTextAttributesKeys() {
+                return myKeys;
+            }
 
-      @Override
-      public int getEnd() {
-        return myTextLength;
-      }
+            @Override
+            public int getStart() {
+                return 0;
+            }
 
-      @Override
-      public void advance() {
-        index++;
-      }
+            @Override
+            public int getEnd() {
+                return myTextLength;
+            }
 
-      @Override
-      public void retreat(){
-        index--;
-      }
+            @Override
+            public void advance() {
+                index++;
+            }
 
-      @Override
-      public boolean atEnd() {
-        return index != 0;
-      }
+            @Override
+            public void retreat() {
+                index--;
+            }
 
-      @Override
-      public Document getDocument() {
-        return myEditor.getDocument();
-      }
+            @Override
+            public boolean atEnd() {
+                return index != 0;
+            }
 
-      @Override
-      public IElementType getTokenType(){
-        return IElementType.find(IElementType.FIRST_TOKEN_INDEX);
-      }
-    };
-  }
+            @Override
+            public @Nonnull Document getDocument() {
+                return myEditor.getDocument();
+            }
+
+            @Override
+            public IElementType getTokenType() {
+                return IElementType.find(IElementType.FIRST_TOKEN_INDEX);
+            }
+        };
+    }
 }

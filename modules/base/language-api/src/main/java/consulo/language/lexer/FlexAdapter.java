@@ -1,39 +1,30 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.lexer;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.component.ProcessCanceledException;
 import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.logging.Logger;
+import jakarta.annotation.Nonnull;
 
-import java.io.IOException;
-
-/**
- * @author max
- */
-@Deprecated
-@DeprecationInfo(value = "Please regenerate lexer with new skeleton, avoid using IDEA jflex skeleton")
 public class FlexAdapter extends LexerBase {
-    private FlexLexer myFlex = null;
-    private IElementType myTokenType = null;
+
+    private static final Logger LOG = Logger.getInstance(FlexAdapter.class);
+
+    private final FlexLexer myFlex;
+
+    private IElementType myTokenType;
     private CharSequence myText;
 
-    private int myEnd;
+    private int myTokenStart;
+    private int myTokenEnd;
+
+    private int myBufferEnd;
     private int myState;
 
-    public FlexAdapter(final FlexLexer flex) {
+    private boolean myFailed;
+
+    public FlexAdapter(@Nonnull FlexLexer flex) {
         myFlex = flex;
     }
 
@@ -42,77 +33,83 @@ public class FlexAdapter extends LexerBase {
     }
 
     @Override
-    public void start(final CharSequence buffer, int startOffset, int endOffset, final int initialState) {
+    public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
         myText = buffer;
-        myEnd = endOffset;
+        myTokenStart = myTokenEnd = startOffset;
+        myBufferEnd = endOffset;
         myFlex.reset(myText, startOffset, endOffset, initialState);
         myTokenType = null;
     }
 
     @Override
     public int getState() {
-        if (myTokenType == null) {
-            locateToken();
-        }
+        locateToken();
         return myState;
     }
 
     @Override
     public IElementType getTokenType() {
-        if (myTokenType == null) {
-            locateToken();
-        }
+        locateToken();
         return myTokenType;
     }
 
     @Override
     public int getTokenStart() {
-        if (myTokenType == null) {
-            locateToken();
-        }
-        return myFlex.getTokenStart();
+        locateToken();
+        return myTokenStart;
     }
 
     @Override
     public int getTokenEnd() {
-        if (myTokenType == null) {
-            locateToken();
-        }
-        return myFlex.getTokenEnd();
+        locateToken();
+        return myTokenEnd;
     }
 
     @Override
     public void advance() {
-        if (myTokenType == null) {
-            locateToken();
-        }
+        locateToken();
         myTokenType = null;
     }
 
     @Override
+    @Nonnull
     public CharSequence getBufferSequence() {
         return myText;
     }
 
     @Override
     public int getBufferEnd() {
-        return myEnd;
+        return myBufferEnd;
     }
 
-    private void locateToken() {
+    protected void locateToken() {
         if (myTokenType != null) {
             return;
         }
+
+        myTokenStart = myTokenEnd;
+        if (myFailed) {
+            return;
+        }
+
         try {
             myState = myFlex.yystate();
             myTokenType = myFlex.advance();
+            myTokenEnd = myFlex.getTokenEnd();
         }
-        catch (IOException e) { /*Can't happen*/ }
-        catch (Error e) {
-            // add lexer class name to the error
-            final Error error = new Error(myFlex.getClass().getName() + ": " + e.getMessage());
-            error.setStackTrace(e.getStackTrace());
-            throw error;
+        catch (ProcessCanceledException e) {
+            throw e;
         }
+        catch (Throwable e) {
+            myFailed = true;
+            myTokenType = TokenType.BAD_CHARACTER;
+            myTokenEnd = myBufferEnd;
+            LOG.warn(myFlex.getClass().getName(), e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "FlexAdapter for " + myFlex.getClass().getName();
     }
 }

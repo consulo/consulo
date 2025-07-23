@@ -13,6 +13,8 @@ module consulo.language.editor.api {
   requires transitive consulo.undo.redo.api;
   requires transitive consulo.virtual.file.status.api;
 
+  requires static it.unimi.dsi.fastutil;
+
   requires static consulo.http.api;
   requires consulo.external.service.api;
   requires consulo.util.jdom;

@@ -81,10 +81,6 @@ public class ConsoleViewUtil {
     }
 
     @Override
-    public void setAttributes(TextAttributes attributes) {
-    }
-
-    @Override
     public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
     }
   }

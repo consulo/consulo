@@ -35,6 +35,8 @@ import java.util.function.Supplier;
  * A type of item with a distinct highlighting in an editor or in other views.
  */
 public final class TextAttributesKey implements Comparable<TextAttributesKey> {
+    public static final TextAttributesKey[] EMPTY_ARRAY = new TextAttributesKey[0];
+
     /**
      * Registers a text attribute key with the specified identifier and default attributes.
      *

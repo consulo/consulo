@@ -17,25 +17,32 @@
 package consulo.codeEditor;
 
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
+import jakarta.annotation.Nonnull;
 
 public interface HighlighterIterator {
-  TextAttributes getTextAttributes();
+    TextAttributes getTextAttributes();
 
-  int getStart();
+    @Nonnull
+    default TextAttributesKey[] getTextAttributesKeys() {
+        return TextAttributesKey.EMPTY_ARRAY;
+    }
 
-  int getEnd();
+    int getStart();
 
-  /**
-   * @return IElementType, return object since not need dependency to language-api module
-   */
-  Object getTokenType();
+    int getEnd();
 
-  void advance();
+    /**
+     * @return IElementType, return object since not need dependency to language-api module
+     */
+    Object getTokenType();
 
-  void retreat();
+    void advance();
 
-  boolean atEnd();
+    void retreat();
 
-  Document getDocument();
+    boolean atEnd();
+
+    Document getDocument();
 }

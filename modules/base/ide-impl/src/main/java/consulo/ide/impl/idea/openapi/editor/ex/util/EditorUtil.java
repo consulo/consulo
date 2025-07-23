@@ -650,15 +650,10 @@ public final class EditorUtil {
     public static EditorHighlighter createEmptyHighlighter(@Nullable Project project, @Nonnull Document document) {
         EditorHighlighter highlighter = new EmptyEditorHighlighter(new TextAttributes()) {
             @Override
-            public
             @Nonnull
-            HighlighterIterator createIterator(int startOffset) {
+            public HighlighterIterator createIterator(int startOffset) {
                 setText(document.getImmutableCharSequence());
                 return super.createIterator(startOffset);
-            }
-
-            @Override
-            public void setAttributes(TextAttributes attributes) {
             }
 
             @Override

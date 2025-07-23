@@ -18,8 +18,8 @@ package consulo.language.lexer;
 public abstract class LexerBase extends Lexer {
     @Override
     public LexerPosition getCurrentPosition() {
-        final int offset = getTokenStart();
-        final int intState = getState();
+        int offset = getTokenStart();
+        int intState = getState();
         return new LexerPositionImpl(offset, intState);
     }
 

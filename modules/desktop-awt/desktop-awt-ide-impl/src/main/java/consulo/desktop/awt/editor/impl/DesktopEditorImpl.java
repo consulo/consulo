@@ -4387,10 +4387,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
 
         @Override
-        public void setAttributes(TextAttributes attributes) {
-        }
-
-        @Override
         public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
         }
     }

@@ -30,7 +30,6 @@ public interface RestartableLexer {
      * @param state lexer state to check
      * @return {@code true} if state is restartable, {@code false} otherwise.
      */
-    //@ApiStatus.Experimental
     boolean isRestartableState(int state);
 
     /**
@@ -45,6 +44,5 @@ public interface RestartableLexer {
      * @param initialState  state to start lexing with
      * @param tokenIterator iterator for getting info from preceding tokens
      */
-    //@ApiStatus.Experimental
     void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState, TokenIterator tokenIterator);
 }

@@ -29,10 +29,6 @@ public interface EditorHighlighter extends DocumentListener {
 
   void setText(@Nonnull CharSequence text);
 
-  default void setText(@Nonnull CharSequence text, @Nullable String debugInfo) {
-    setText(text);
-  }
-
   void setEditor(@Nonnull HighlighterClient editor);
 
   void setColorScheme(@Nonnull EditorColorsScheme scheme);

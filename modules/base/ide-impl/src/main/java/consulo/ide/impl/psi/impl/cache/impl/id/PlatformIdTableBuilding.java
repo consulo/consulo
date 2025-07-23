@@ -191,7 +191,7 @@ public class PlatformIdTableBuilding {
         }
         else {
           highlighter = HighlighterFactory.createHighlighter(null, myFile);
-          highlighter.setText(chars, "psiFile: " + myFile.getPath());
+          highlighter.setText(chars);
         }
 
         final int documentLength = chars.length();
