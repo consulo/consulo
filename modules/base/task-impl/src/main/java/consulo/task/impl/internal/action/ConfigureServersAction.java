@@ -16,21 +16,20 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "tasks.configure.servers")
 public class ConfigureServersAction extends BaseTaskAction {
-  public ConfigureServersAction() {
-    super("Configure Servers...", null, AllIcons.General.Settings);
-  }
+    public ConfigureServersAction() {
+        super("Configure Servers...", null, AllIcons.General.Settings);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
 
-    Application.get().getInstance(ShowConfigurableService.class).showAndSelect(project, TaskRepositoriesConfigurable.class);
+        Application.get().getInstance(ShowConfigurableService.class).showAndSelect(project, TaskRepositoriesConfigurable.class);
 
-    // we need call serversChanged - but its impossible
-  }
+        // we need call serversChanged - but its impossible
+    }
 
-  protected void serversChanged() {
-
-  }
+    protected void serversChanged() {
+    }
 }

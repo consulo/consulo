@@ -55,218 +55,225 @@ import java.util.function.Consumer;
 
 @ActionImpl(id = "NewFile")
 public class CreateFileAction extends CreateElementActionBase implements DumbAware {
-  @Inject
-  public CreateFileAction() {
-    super(IdeLocalize.actionCreateNewFile(), IdeLocalize.actionCreateNewFileDescription(), PlatformIconGroup.filetypesText());
-  }
-
-  public CreateFileAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
-
-  public CreateFileAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-    super(text, description);
-  }
-
-  public CreateFileAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
-
-  @Override
-  public boolean isDumbAware() {
-    return CreateFileAction.class.equals(getClass());
-  }
-
-  @Nonnull
-  @Override
-  @RequiredUIAccess
-  protected void invokeDialog(@Nonnull Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer) {
-    MyInputValidator validator = new MyValidator(project, directory);
-    if (project.getApplication().isUnitTestMode()) {
-      try {
-        elementsConsumer.accept(validator.create("test"));
-      }
-      catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+    @Inject
+    public CreateFileAction() {
+        super(IdeLocalize.actionCreateNewFile(), IdeLocalize.actionCreateNewFileDescription(), PlatformIconGroup.filetypesText());
     }
-    else {
-      createLightWeightPopup(validator, elementsConsumer).showCenteredInCurrentWindow(project);
+
+    public CreateFileAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+        super(text, description, icon);
     }
-  }
 
-  @RequiredUIAccess
-  private JBPopup createLightWeightPopup(MyInputValidator validator, Consumer<PsiElement[]> consumer) {
-    NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
-    TextBox nameField = contentPanel.getTextField();
-    JBPopup popup = NewItemPopupUtil.createNewItemPopup(IdeLocalize.titleNewFile().get(), contentPanel, (JComponent)TargetAWT.to(nameField));
-    contentPanel.addValidator(value -> {
-      if (!validator.checkInput(value)) {
-        String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
-        return new HasValidator.ValidationInfo(message);
-      }
+    public CreateFileAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
-      return null;
-    });
+    public CreateFileAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 
-    contentPanel.setApplyAction(event -> {
-      validator.canClose(nameField.getValue());
+    @Override
+    public boolean isDumbAware() {
+        return CreateFileAction.class.equals(getClass());
+    }
 
-      popup.closeOk(event);
-      consumer.accept(validator.getCreatedElements());
-    });
-
-    return popup;
-  }
-
-  @RequiredUIAccess
-  @Override
-  @Nonnull
-  protected PsiElement[] create(String newName, PsiDirectory directory) throws Exception {
-    MkDirs mkdirs = new MkDirs(newName, directory);
-    return new PsiElement[]{WriteAction.compute(() -> mkdirs.directory.createFile(getFileName(mkdirs.newName)))};
-  }
-
-  public static PsiDirectory findOrCreateSubdirectory(@Nonnull PsiDirectory parent, @Nonnull String subdirName) {
-    final PsiDirectory sub = parent.findSubdirectory(subdirName);
-    return sub == null ? WriteAction.compute(() -> parent.createSubdirectory(subdirName)) : sub;
-  }
-
-  public static class MkDirs {
-    public final String newName;
-    public final PsiDirectory directory;
-
-    @RequiredReadAction
-    public MkDirs(@Nonnull String newName, @Nonnull PsiDirectory directory) {
-      if (Platform.current().os().isWindows()) {
-        newName = newName.replace('\\', '/');
-      }
-      if (newName.contains("/")) {
-        final List<String> subDirs = StringUtil.split(newName, "/");
-        newName = subDirs.remove(subDirs.size() - 1);
-        boolean firstToken = true;
-        for (String dir : subDirs) {
-          if (firstToken && "~".equals(dir)) {
-            final VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
-            if (userHomeDir == null) throw new IncorrectOperationException("User home directory not found");
-            final PsiDirectory directory1 = directory.getManager().findDirectory(userHomeDir);
-            if (directory1 == null) throw new IncorrectOperationException("User home directory not found");
-            directory = directory1;
-          }
-          else if ("..".equals(dir)) {
-            final PsiDirectory parentDirectory = directory.getParentDirectory();
-            if (parentDirectory == null) throw new IncorrectOperationException("Not a valid directory");
-            directory = parentDirectory;
-          }
-          else if (!".".equals(dir)) {
-            directory = findOrCreateSubdirectory(directory, dir);
-          }
-          firstToken = false;
+    @Nonnull
+    @Override
+    @RequiredUIAccess
+    protected void invokeDialog(@Nonnull Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer) {
+        MyInputValidator validator = new MyValidator(project, directory);
+        if (project.getApplication().isUnitTestMode()) {
+            try {
+                elementsConsumer.accept(validator.create("test"));
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
-      }
-
-      this.newName = newName;
-      this.directory = directory;
-    }
-  }
-
-  @Override
-  protected String getActionName(PsiDirectory directory, String newName) {
-    return IdeLocalize.progressCreatingFile(directory.getVirtualFile().getPresentableUrl(), File.separator, newName).get();
-  }
-
-  @Override
-  protected String getErrorTitle() {
-    return IdeLocalize.titleCannotCreateFile().get();
-  }
-
-  @Override
-  protected String getCommandName() {
-    return IdeLocalize.commandCreateFile().get();
-  }
-
-  protected String getFileName(String newName) {
-    if (getDefaultExtension() == null || FileUtil.getExtension(newName).length() > 0) {
-      return newName;
-    }
-    return newName + "." + getDefaultExtension();
-  }
-
-  @Nullable
-  protected String getDefaultExtension() {
-    return null;
-  }
-
-  protected class MyValidator extends MyInputValidator implements InputValidatorEx {
-    private String myErrorText;
-
-    public MyValidator(Project project, PsiDirectory directory) {
-      super(project, directory);
+        else {
+            createLightWeightPopup(validator, elementsConsumer).showCenteredInCurrentWindow(project);
+        }
     }
 
     @RequiredUIAccess
-    @Override
-    public boolean checkInput(String inputString) {
-      final StringTokenizer tokenizer = new StringTokenizer(inputString, "\\/");
-      VirtualFile vFile = getDirectory().getVirtualFile();
-      boolean firstToken = true;
-      while (tokenizer.hasMoreTokens()) {
-        final String token = tokenizer.nextToken();
-        if ((token.equals(".") || token.equals("..")) && !tokenizer.hasMoreTokens()) {
-          myErrorText = "Can't create file with name '" + token + "'";
-          return false;
-        }
-        if (vFile != null) {
-          if (firstToken && "~".equals(token)) {
-            final VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
-            if (userHomeDir == null) {
-              myErrorText = "User home directory not found";
-              return false;
+    private JBPopup createLightWeightPopup(MyInputValidator validator, Consumer<PsiElement[]> consumer) {
+        NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
+        TextBox nameField = contentPanel.getTextField();
+        JBPopup popup =
+            NewItemPopupUtil.createNewItemPopup(IdeLocalize.titleNewFile().get(), contentPanel, (JComponent) TargetAWT.to(nameField));
+        contentPanel.addValidator(value -> {
+            if (!validator.checkInput(value)) {
+                String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
+                return new HasValidator.ValidationInfo(message);
             }
-            vFile = userHomeDir;
-          }
-          else if ("..".equals(token)) {
-            vFile = vFile.getParent();
-            if (vFile == null) {
-              myErrorText = "Not a valid directory";
-              return false;
-            }
-          }
-          else if (!".".equals(token)) {
-            final VirtualFile child = vFile.findChild(token);
-            if (child != null) {
-              if (!child.isDirectory()) {
-                myErrorText = "A file with name '" + token + "' already exists";
-                return false;
-              }
-              else if (!tokenizer.hasMoreTokens()) {
-                myErrorText = "A directory with name '" + token + "' already exists";
-                return false;
-              }
-            }
-            vFile = child;
-          }
-        }
-        if (FileTypeManager.getInstance().isFileIgnored(getFileName(token))) {
-          myErrorText = "'" + token + "' is an ignored name (Settings | Editor | File Types | Ignore files and folders)";
-          return true;
-        }
-        firstToken = false;
-      }
-      myErrorText = null;
-      return true;
+
+            return null;
+        });
+
+        contentPanel.setApplyAction(event -> {
+            validator.canClose(nameField.getValue());
+
+            popup.closeOk(event);
+            consumer.accept(validator.getCreatedElements());
+        });
+
+        return popup;
     }
 
-    @Override
-    public String getErrorText(String inputString) {
-      return myErrorText;
-    }
-
+    @Nonnull
     @Override
     @RequiredUIAccess
-    public PsiElement[] create(String newName) throws Exception {
-      UsageTrigger.trigger("CreateFile." + CreateFileAction.this.getClass().getSimpleName());
-      return super.create(newName);
+    protected PsiElement[] create(String newName, PsiDirectory directory) throws Exception {
+        MkDirs mkdirs = new MkDirs(newName, directory);
+        return new PsiElement[]{WriteAction.compute(() -> mkdirs.directory.createFile(getFileName(mkdirs.newName)))};
     }
-  }
+
+    public static PsiDirectory findOrCreateSubdirectory(@Nonnull PsiDirectory parent, @Nonnull String subdirName) {
+        final PsiDirectory sub = parent.findSubdirectory(subdirName);
+        return sub == null ? WriteAction.compute(() -> parent.createSubdirectory(subdirName)) : sub;
+    }
+
+    public static class MkDirs {
+        public final String newName;
+        public final PsiDirectory directory;
+
+        @RequiredReadAction
+        public MkDirs(@Nonnull String newName, @Nonnull PsiDirectory directory) {
+            if (Platform.current().os().isWindows()) {
+                newName = newName.replace('\\', '/');
+            }
+            if (newName.contains("/")) {
+                final List<String> subDirs = StringUtil.split(newName, "/");
+                newName = subDirs.remove(subDirs.size() - 1);
+                boolean firstToken = true;
+                for (String dir : subDirs) {
+                    if (firstToken && "~".equals(dir)) {
+                        final VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
+                        if (userHomeDir == null) {
+                            throw new IncorrectOperationException("User home directory not found");
+                        }
+                        final PsiDirectory directory1 = directory.getManager().findDirectory(userHomeDir);
+                        if (directory1 == null) {
+                            throw new IncorrectOperationException("User home directory not found");
+                        }
+                        directory = directory1;
+                    }
+                    else if ("..".equals(dir)) {
+                        final PsiDirectory parentDirectory = directory.getParentDirectory();
+                        if (parentDirectory == null) {
+                            throw new IncorrectOperationException("Not a valid directory");
+                        }
+                        directory = parentDirectory;
+                    }
+                    else if (!".".equals(dir)) {
+                        directory = findOrCreateSubdirectory(directory, dir);
+                    }
+                    firstToken = false;
+                }
+            }
+
+            this.newName = newName;
+            this.directory = directory;
+        }
+    }
+
+    @Override
+    protected String getActionName(PsiDirectory directory, String newName) {
+        return IdeLocalize.progressCreatingFile(directory.getVirtualFile().getPresentableUrl(), File.separator, newName).get();
+    }
+
+    @Override
+    protected String getErrorTitle() {
+        return IdeLocalize.titleCannotCreateFile().get();
+    }
+
+    @Override
+    protected String getCommandName() {
+        return IdeLocalize.commandCreateFile().get();
+    }
+
+    protected String getFileName(String newName) {
+        if (getDefaultExtension() == null || FileUtil.getExtension(newName).length() > 0) {
+            return newName;
+        }
+        return newName + "." + getDefaultExtension();
+    }
+
+    @Nullable
+    protected String getDefaultExtension() {
+        return null;
+    }
+
+    protected class MyValidator extends MyInputValidator implements InputValidatorEx {
+        private String myErrorText;
+
+        public MyValidator(Project project, PsiDirectory directory) {
+            super(project, directory);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public boolean checkInput(String inputString) {
+            final StringTokenizer tokenizer = new StringTokenizer(inputString, "\\/");
+            VirtualFile vFile = getDirectory().getVirtualFile();
+            boolean firstToken = true;
+            while (tokenizer.hasMoreTokens()) {
+                final String token = tokenizer.nextToken();
+                if ((token.equals(".") || token.equals("..")) && !tokenizer.hasMoreTokens()) {
+                    myErrorText = "Can't create file with name '" + token + "'";
+                    return false;
+                }
+                if (vFile != null) {
+                    if (firstToken && "~".equals(token)) {
+                        final VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
+                        if (userHomeDir == null) {
+                            myErrorText = "User home directory not found";
+                            return false;
+                        }
+                        vFile = userHomeDir;
+                    }
+                    else if ("..".equals(token)) {
+                        vFile = vFile.getParent();
+                        if (vFile == null) {
+                            myErrorText = "Not a valid directory";
+                            return false;
+                        }
+                    }
+                    else if (!".".equals(token)) {
+                        final VirtualFile child = vFile.findChild(token);
+                        if (child != null) {
+                            if (!child.isDirectory()) {
+                                myErrorText = "A file with name '" + token + "' already exists";
+                                return false;
+                            }
+                            else if (!tokenizer.hasMoreTokens()) {
+                                myErrorText = "A directory with name '" + token + "' already exists";
+                                return false;
+                            }
+                        }
+                        vFile = child;
+                    }
+                }
+                if (FileTypeManager.getInstance().isFileIgnored(getFileName(token))) {
+                    myErrorText = "'" + token + "' is an ignored name (Settings | Editor | File Types | Ignore files and folders)";
+                    return true;
+                }
+                firstToken = false;
+            }
+            myErrorText = null;
+            return true;
+        }
+
+        @Override
+        public String getErrorText(String inputString) {
+            return myErrorText;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public PsiElement[] create(String newName) throws Exception {
+            UsageTrigger.trigger("CreateFile." + CreateFileAction.this.getClass().getSimpleName());
+            return super.create(newName);
+        }
+    }
 }

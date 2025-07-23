@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.impl.internal.action;
 
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
@@ -22,15 +21,13 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ExtractInterfaceAction extends ExtractSuperActionBase {
+    public ExtractInterfaceAction() {
+        setInjectedContext(true);
+    }
 
-  public ExtractInterfaceAction() {
-    setInjectedContext(true);
-  }
-
-  @Nullable
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider supportProvider) {
-    return supportProvider.getExtractInterfaceHandler();
-  }
-
+    @Nullable
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider supportProvider) {
+        return supportProvider.getExtractInterfaceHandler();
+    }
 }

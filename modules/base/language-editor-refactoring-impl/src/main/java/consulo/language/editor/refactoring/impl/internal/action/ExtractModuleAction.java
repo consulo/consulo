@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.impl.internal.action;
 
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
@@ -24,9 +23,8 @@ import jakarta.annotation.Nonnull;
  * @author Dennis.Ushakov
  */
 public class ExtractModuleAction extends ExtractSuperActionBase {
-
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider supportProvider) {
-    return supportProvider.getExtractModuleHandler();
-  }
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider supportProvider) {
+        return supportProvider.getExtractModuleHandler();
+    }
 }

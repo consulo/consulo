@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.impl.internal.action;
 
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 
 public abstract class ExtractSuperActionBase extends BasePlatformRefactoringAction {
-
-  @Override
-  public boolean isAvailableInEditorOnly() {
-    return false;
-  }
+    @Override
+    public boolean isAvailableInEditorOnly() {
+        return false;
+    }
 }

@@ -35,57 +35,57 @@ import javax.swing.*;
  * @author Dennis.Ushakov
  */
 public class AdjustAutotestDelayActionGroup extends ActionGroup {
-  public static final int MAX_DELAY = 10;
-  private final DataContext myDataContext;
+    public static final int MAX_DELAY = 10;
+    private final DataContext myDataContext;
 
-  public AdjustAutotestDelayActionGroup(@Nonnull JComponent parent) {
-    super(LocalizeValue.localizeTODO("Set AutoTest Delay"), true);
-    myDataContext = DataManager.getInstance().getDataContext(parent);
-  }
+    public AdjustAutotestDelayActionGroup(@Nonnull JComponent parent) {
+        super(LocalizeValue.localizeTODO("Set AutoTest Delay"), true);
+        myDataContext = DataManager.getInstance().getDataContext(parent);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    RunContentDescriptor descriptor = myDataContext.getData(RunContentDescriptor.KEY);
-    boolean visible = false;
-    if (descriptor != null) {
-      for (AnAction action : descriptor.getRestartActions()) {
-        if (action instanceof ToggleAutoTestAction toggleAutoTestAction) {
-          visible = toggleAutoTestAction.isDelayApplicable();
-          break;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        RunContentDescriptor descriptor = myDataContext.getData(RunContentDescriptor.KEY);
+        boolean visible = false;
+        if (descriptor != null) {
+            for (AnAction action : descriptor.getRestartActions()) {
+                if (action instanceof ToggleAutoTestAction toggleAutoTestAction) {
+                    visible = toggleAutoTestAction.isDelayApplicable();
+                    break;
+                }
+            }
         }
-      }
-    }
-    e.getPresentation().setVisible(visible);
-  }
-
-  @Nonnull
-  @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    final AnAction[] actions = new AnAction[MAX_DELAY];
-    for (int i = 0; i < MAX_DELAY; i++) {
-      actions[i] = new SetAutoTestDelayAction(i + 1);
-    }
-    return actions;
-  }
-
-  private static class SetAutoTestDelayAction extends ToggleAction {
-    private final int myDelay;
-
-    public SetAutoTestDelayAction(int delay) {
-      super(delay + "s");
-      myDelay = delay * 1000;
+        e.getPresentation().setVisible(visible);
     }
 
+    @Nonnull
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
-      Project project = e.getData(Project.KEY);
-      return project != null && AutoTestManager.getInstance(project).getDelay() == myDelay;
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        final AnAction[] actions = new AnAction[MAX_DELAY];
+        for (int i = 0; i < MAX_DELAY; i++) {
+            actions[i] = new SetAutoTestDelayAction(i + 1);
+        }
+        return actions;
     }
 
-    @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-      Project project = e.getRequiredData(Project.KEY);
-      AutoTestManager.getInstance(project).setDelay(myDelay);
+    private static class SetAutoTestDelayAction extends ToggleAction {
+        private final int myDelay;
+
+        public SetAutoTestDelayAction(int delay) {
+            super(delay + "s");
+            myDelay = delay * 1000;
+        }
+
+        @Override
+        public boolean isSelected(@Nonnull AnActionEvent e) {
+            Project project = e.getData(Project.KEY);
+            return project != null && AutoTestManager.getInstance(project).getDelay() == myDelay;
+        }
+
+        @Override
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            Project project = e.getRequiredData(Project.KEY);
+            AutoTestManager.getInstance(project).setDelay(myDelay);
+        }
     }
-  }
 }

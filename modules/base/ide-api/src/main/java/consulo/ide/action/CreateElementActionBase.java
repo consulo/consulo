@@ -38,107 +38,114 @@ import java.util.function.Consumer;
  * @since 5.1
  */
 public abstract class CreateElementActionBase extends CreateInDirectoryActionBase {
-
-  protected CreateElementActionBase() {
-  }
-
-  protected CreateElementActionBase(@Nonnull LocalizeValue text) {
-    super(text);
-  }
-
-  protected CreateElementActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-    super(text, description);
-  }
-
-  protected CreateElementActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
-
-  protected CreateElementActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
-
-  protected abstract void invokeDialog(@Nonnull Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer);
-
-  /**
-   * @return created elements. Never null.
-   */
-  @Nonnull
-  @RequiredUIAccess
-  protected abstract PsiElement[] create(String newName, PsiDirectory directory) throws Exception;
-
-  protected abstract String getErrorTitle();
-
-  protected abstract String getCommandName();
-
-  protected abstract String getActionName(PsiDirectory directory, String newName);
-
-  @Override
-  @RequiredUIAccess
-  public final void actionPerformed(@Nonnull AnActionEvent e) {
-    final IdeView view = e.getData(IdeView.KEY);
-    if (view == null) {
-      return;
+    protected CreateElementActionBase() {
     }
 
-    final Project project = e.getRequiredData(Project.KEY);
-
-    final PsiDirectory dir = view.getOrChooseDirectory();
-    if (dir == null) return;
-
-    invokeDialog(project, dir, elements -> {
-      for (PsiElement createdElement : elements) {
-        view.selectElement(createdElement);
-      }
-    });
-  }
-
-  public static String filterMessage(String message) {
-    if (message == null) return null;
-    @NonNls final String ioExceptionPrefix = "java.io.IOException:";
-    message = StringUtil.trimStart(message, ioExceptionPrefix);
-    return message;
-  }
-
-  protected class MyInputValidator extends ElementCreator implements InputValidator {
-    private final PsiDirectory myDirectory;
-    private PsiElement[] myCreatedElements = PsiElement.EMPTY_ARRAY;
-
-    public MyInputValidator(final Project project, final PsiDirectory directory) {
-      super(project, getErrorTitle());
-      myDirectory = directory;
+    protected CreateElementActionBase(@Nonnull LocalizeValue text) {
+        super(text);
     }
 
-    public PsiDirectory getDirectory() {
-      return myDirectory;
+    protected CreateElementActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
     }
 
+    protected CreateElementActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    protected CreateElementActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    protected abstract void invokeDialog(
+        @Nonnull Project project,
+        PsiDirectory directory,
+        @Nonnull Consumer<PsiElement[]> elementsConsumer
+    );
+
+    /**
+     * @return created elements. Never null.
+     */
+    @Nonnull
     @RequiredUIAccess
-    @Override
-    public boolean checkInput(final String inputString) {
-      return true;
-    }
+    protected abstract PsiElement[] create(String newName, PsiDirectory directory) throws Exception;
+
+    protected abstract String getErrorTitle();
+
+    protected abstract String getCommandName();
+
+    protected abstract String getActionName(PsiDirectory directory, String newName);
 
     @Override
     @RequiredUIAccess
-    public PsiElement[] create(String newName) throws Exception {
-      return CreateElementActionBase.this.create(newName, myDirectory);
+    public final void actionPerformed(@Nonnull AnActionEvent e) {
+        final IdeView view = e.getData(IdeView.KEY);
+        if (view == null) {
+            return;
+        }
+
+        final Project project = e.getRequiredData(Project.KEY);
+
+        final PsiDirectory dir = view.getOrChooseDirectory();
+        if (dir == null) {
+            return;
+        }
+
+        invokeDialog(project, dir, elements -> {
+            for (PsiElement createdElement : elements) {
+                view.selectElement(createdElement);
+            }
+        });
     }
 
-    @Override
-    public String getActionName(String newName) {
-      return CreateElementActionBase.this.getActionName(myDirectory, newName);
+    public static String filterMessage(String message) {
+        if (message == null) {
+            return null;
+        }
+        @NonNls final String ioExceptionPrefix = "java.io.IOException:";
+        message = StringUtil.trimStart(message, ioExceptionPrefix);
+        return message;
     }
 
-    @RequiredUIAccess
-    @Override
-    public boolean canClose(final String inputString) {
-      myCreatedElements = tryCreate(inputString);
-      return myCreatedElements.length > 0;
-    }
+    protected class MyInputValidator extends ElementCreator implements InputValidator {
+        private final PsiDirectory myDirectory;
+        private PsiElement[] myCreatedElements = PsiElement.EMPTY_ARRAY;
 
-    public final PsiElement[] getCreatedElements() {
-      return myCreatedElements;
+        public MyInputValidator(final Project project, final PsiDirectory directory) {
+            super(project, getErrorTitle());
+            myDirectory = directory;
+        }
+
+        public PsiDirectory getDirectory() {
+            return myDirectory;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public boolean checkInput(final String inputString) {
+            return true;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public PsiElement[] create(String newName) throws Exception {
+            return CreateElementActionBase.this.create(newName, myDirectory);
+        }
+
+        @Override
+        public String getActionName(String newName) {
+            return CreateElementActionBase.this.getActionName(myDirectory, newName);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public boolean canClose(final String inputString) {
+            myCreatedElements = tryCreate(inputString);
+            return myCreatedElements.length > 0;
+        }
+
+        public final PsiElement[] getCreatedElements() {
+            return myCreatedElements;
+        }
     }
-  }
 }

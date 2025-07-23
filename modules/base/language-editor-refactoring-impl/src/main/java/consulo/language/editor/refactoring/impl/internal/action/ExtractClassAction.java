@@ -22,14 +22,13 @@ import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import jakarta.annotation.Nonnull;
 
 public class ExtractClassAction extends BasePlatformRefactoringAction {
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+        return provider.getExtractClassHandler();
+    }
 
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
-    return provider.getExtractClassHandler();
-  }
-
-  @Override
-  public boolean isAvailableInEditorOnly(){
-      return false;
-  }
+    @Override
+    public boolean isAvailableInEditorOnly() {
+        return false;
+    }
 }

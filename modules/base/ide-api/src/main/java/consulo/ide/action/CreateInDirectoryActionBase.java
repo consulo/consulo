@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.action;
 
 import consulo.dataContext.DataContext;
@@ -36,50 +35,50 @@ import jakarta.annotation.Nullable;
  * @since 15.1
  */
 public abstract class CreateInDirectoryActionBase extends AnAction {
-  protected CreateInDirectoryActionBase() {
-  }
-
-  protected CreateInDirectoryActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
-
-  protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text) {
-    super(text);
-  }
-
-  protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-    super(text, description);
-  }
-
-  protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    if (!e.getPresentation().isVisible()) {
-      return;
+    protected CreateInDirectoryActionBase() {
     }
 
-    e.getPresentation().setEnabledAndVisible(isAvailable(e.getDataContext()));
-  }
-
-  @Override
-  public boolean isDumbAware() {
-    return false;
-  }
-
-  protected boolean isAvailable(final DataContext dataContext) {
-    final Project project = dataContext.getData(Project.KEY);
-    if (project == null) {
-      return false;
+    protected CreateInDirectoryActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+        super(text, description, icon);
     }
 
-    if (DumbService.getInstance(project).isDumb() && !isDumbAware()) {
-      return false;
+    protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text) {
+        super(text);
     }
 
-    final IdeView view = dataContext.getData(IdeView.KEY);
-    return view != null && view.getDirectories().length != 0;
-  }
+    protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
+    protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        if (!e.getPresentation().isVisible()) {
+            return;
+        }
+
+        e.getPresentation().setEnabledAndVisible(isAvailable(e.getDataContext()));
+    }
+
+    @Override
+    public boolean isDumbAware() {
+        return false;
+    }
+
+    protected boolean isAvailable(final DataContext dataContext) {
+        final Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return false;
+        }
+
+        if (DumbService.getInstance(project).isDumb() && !isDumbAware()) {
+            return false;
+        }
+
+        final IdeView view = dataContext.getData(IdeView.KEY);
+        return view != null && view.getDirectories().length != 0;
+    }
 }

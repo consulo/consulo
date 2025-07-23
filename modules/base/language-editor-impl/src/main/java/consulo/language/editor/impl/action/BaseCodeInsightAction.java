@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.action;
 
 import consulo.codeEditor.Editor;
@@ -33,68 +32,72 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class BaseCodeInsightAction extends CodeInsightAction {
-  private final boolean myLookForInjectedEditor;
+    private final boolean myLookForInjectedEditor;
 
-  protected BaseCodeInsightAction() {
-    this(true);
-  }
-
-  protected BaseCodeInsightAction(boolean lookForInjectedEditor) {
-    myLookForInjectedEditor = lookForInjectedEditor;
-  }
-
-  @RequiredUIAccess
-  @Override
-  @Nullable
-  protected Editor getEditor(@Nonnull final DataContext dataContext, @Nonnull final Project project, boolean forUpdate) {
-    Editor editor = getBaseEditor(dataContext, project);
-    if (!myLookForInjectedEditor) return editor;
-    return getInjectedEditor(project, editor, !forUpdate);
-  }
-
-  @RequiredUIAccess
-  public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor) {
-    return getInjectedEditor(project, editor, true);
-  }
-
-  @RequiredUIAccess
-  public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor, boolean commit) {
-    Editor injectedEditor = editor;
-    if (editor != null) {
-      PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-      PsiFile psiFile = documentManager.getCachedPsiFile(editor.getDocument());
-      if (psiFile != null) {
-        if (commit) documentManager.commitAllDocuments();
-        injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile);
-      }
-    }
-    return injectedEditor;
-  }
-
-  @Nullable
-  protected Editor getBaseEditor(final DataContext dataContext, final Project project) {
-    return super.getEditor(dataContext, project, true);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    if (project == null){
-      presentation.setEnabled(false);
-      return;
+    protected BaseCodeInsightAction() {
+        this(true);
     }
 
-    final Lookup activeLookup = LookupManager.getInstance(project).getActiveLookup();
-    if (activeLookup != null){
-      presentation.setEnabled(isValidForLookup());
+    protected BaseCodeInsightAction(boolean lookForInjectedEditor) {
+        myLookForInjectedEditor = lookForInjectedEditor;
     }
-    else {
-      super.update(event);
-    }
-  }
 
-  protected boolean isValidForLookup() {
-    return false;
-  }
+    @Nullable
+    @Override
+    @RequiredUIAccess
+    protected Editor getEditor(@Nonnull final DataContext dataContext, @Nonnull final Project project, boolean forUpdate) {
+        Editor editor = getBaseEditor(dataContext, project);
+        if (!myLookForInjectedEditor) {
+            return editor;
+        }
+        return getInjectedEditor(project, editor, !forUpdate);
+    }
+
+    @RequiredUIAccess
+    public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor) {
+        return getInjectedEditor(project, editor, true);
+    }
+
+    @RequiredUIAccess
+    public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor, boolean commit) {
+        Editor injectedEditor = editor;
+        if (editor != null) {
+            PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+            PsiFile psiFile = documentManager.getCachedPsiFile(editor.getDocument());
+            if (psiFile != null) {
+                if (commit) {
+                    documentManager.commitAllDocuments();
+                }
+                injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile);
+            }
+        }
+        return injectedEditor;
+    }
+
+    @Nullable
+    protected Editor getBaseEditor(final DataContext dataContext, final Project project) {
+        return super.getEditor(dataContext, project, true);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        final Lookup activeLookup = LookupManager.getInstance(project).getActiveLookup();
+        if (activeLookup != null) {
+            presentation.setEnabled(isValidForLookup());
+        }
+        else {
+            super.update(event);
+        }
+    }
+
+    protected boolean isValidForLookup() {
+        return false;
+    }
 }

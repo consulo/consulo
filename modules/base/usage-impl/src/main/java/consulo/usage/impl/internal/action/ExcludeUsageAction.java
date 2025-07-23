@@ -25,8 +25,8 @@ import consulo.usage.UsageView;
  */
 @ActionImpl(id = "UsageView.Exclude", shortcutFrom = @ActionRef(id = "$Delete"))
 public class ExcludeUsageAction extends IncludeExcludeActionBase {
-  @Override
-  protected void process(Usage[] usages, UsageView usageView) {
-    usageView.excludeUsages(usages);
-  }
+    @Override
+    protected void process(Usage[] usages, UsageView usageView) {
+        usageView.excludeUsages(usages);
+    }
 }

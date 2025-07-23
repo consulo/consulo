@@ -24,11 +24,11 @@ import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
 
 public abstract class CloseTabToolbarAction extends AnAction implements DumbAware {
-  public CloseTabToolbarAction() {
-    copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE_ACTIVE_TAB));
-    Presentation presentation = getTemplatePresentation();
-    presentation.setIcon(AllIcons.Actions.Cancel);
-    presentation.setText(CommonBundle.getCloseButtonText());
-    presentation.setDescription(null);
-  }
+    public CloseTabToolbarAction() {
+        copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE_ACTIVE_TAB));
+        Presentation presentation = getTemplatePresentation();
+        presentation.setIcon(AllIcons.Actions.Cancel);
+        presentation.setText(CommonBundle.getCloseButtonText());
+        presentation.setDescription(null);
+    }
 }

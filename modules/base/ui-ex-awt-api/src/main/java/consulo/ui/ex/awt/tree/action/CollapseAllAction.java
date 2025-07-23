@@ -23,23 +23,22 @@ import consulo.ui.ex.action.AnActionEvent;
 import javax.swing.*;
 
 public class CollapseAllAction extends AnAction implements DumbAware {
+    protected JTree myTree;
 
-  protected JTree myTree;
-
-  public CollapseAllAction(JTree tree) {
-    super("Collapse All", "", PlatformIconGroup.actionsCollapseall());
-    myTree = tree;
-  }
-
-  public void actionPerformed(AnActionEvent e) {
-    int row = getTree().getRowCount() - 1;
-    while (row >= 0) {
-      getTree().collapseRow(row);
-      row--;
+    public CollapseAllAction(JTree tree) {
+        super("Collapse All", "", PlatformIconGroup.actionsCollapseall());
+        myTree = tree;
     }
-  }
 
-  protected JTree getTree() {
-    return myTree;
-  }
+    public void actionPerformed(AnActionEvent e) {
+        int row = getTree().getRowCount() - 1;
+        while (row >= 0) {
+            getTree().collapseRow(row);
+            row--;
+        }
+    }
+
+    protected JTree getTree() {
+        return myTree;
+    }
 }
