@@ -32,59 +32,59 @@ import java.util.ArrayList;
  * @author Konstantin Bulenkov
  */
 public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutProvider {
-  private final DefaultActionGroup myGroup;
-  private DirDiffSettings mySettings;
-  private ComboBoxButton myButton;
+    private final DefaultActionGroup myGroup;
+    private DirDiffSettings mySettings;
+    private ComboBoxButton myButton;
 
-  public ChangeCompareModeGroup(DirDiffTableModel model) {
-    mySettings = model.getSettings();
-    getTemplatePresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
-    final ArrayList<ChangeCompareModeAction> actions = new ArrayList<ChangeCompareModeAction>();
-    if (model.getSettings().showCompareModes) {
-      for (DirDiffSettings.CompareMode mode : DirDiffSettings.CompareMode.values()) {
-        actions.add(new ChangeCompareModeAction(model, mode));
-      }
+    public ChangeCompareModeGroup(DirDiffTableModel model) {
+        mySettings = model.getSettings();
+        getTemplatePresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
+        final ArrayList<ChangeCompareModeAction> actions = new ArrayList<ChangeCompareModeAction>();
+        if (model.getSettings().showCompareModes) {
+            for (DirDiffSettings.CompareMode mode : DirDiffSettings.CompareMode.values()) {
+                actions.add(new ChangeCompareModeAction(model, mode));
+            }
+        }
+        else {
+            getTemplatePresentation().setEnabledAndVisible(false);
+        }
+        myGroup = new DefaultActionGroup(actions.toArray(new ChangeCompareModeAction[actions.size()]));
     }
-    else {
-      getTemplatePresentation().setEnabledAndVisible(false);
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        myButton.showPopup();
     }
-    myGroup = new DefaultActionGroup(actions.toArray(new ChangeCompareModeAction[actions.size()]));
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    myButton.showPopup();
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        getTemplatePresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
+        e.getPresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    getTemplatePresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
-    e.getPresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
-  }
+    @Nonnull
+    @Override
+    public JComponent createCustomComponent(Presentation presentation, String place) {
+        JPanel panel = new JPanel(new BorderLayout());
+        final JLabel label = new JLabel("Compare by:");
+        label.setDisplayedMnemonicIndex(0);
+        panel.add(label, BorderLayout.WEST);
+        myButton = (ComboBoxButton) super.createCustomComponent(presentation, place).getComponent(0);
+        panel.add(myButton.getComponent(), BorderLayout.CENTER);
+        panel.setBorder(IdeBorderFactory.createEmptyBorder(2, 6, 2, 0));
+        return panel;
+    }
 
-  @Nonnull
-  @Override
-  public JComponent createCustomComponent(Presentation presentation, String place) {
-    JPanel panel = new JPanel(new BorderLayout());
-    final JLabel label = new JLabel("Compare by:");
-    label.setDisplayedMnemonicIndex(0);
-    panel.add(label, BorderLayout.WEST);
-    myButton = (ComboBoxButton)super.createCustomComponent(presentation, place).getComponent(0);
-    panel.add(myButton.getComponent(), BorderLayout.CENTER);
-    panel.setBorder(IdeBorderFactory.createEmptyBorder(2, 6, 2, 0));
-    return panel;
-  }
+    @Nonnull
+    @Override
+    public DefaultActionGroup createPopupActionGroup(JComponent button) {
+        return myGroup;
+    }
 
-  @Nonnull
-  @Override
-  public DefaultActionGroup createPopupActionGroup(JComponent button) {
-    return myGroup;
-  }
-
-  @Override
-  public ShortcutSet getShortcut() {
-    return CustomShortcutSet.fromString("alt C");
-  }
+    @Override
+    public ShortcutSet getShortcut() {
+        return CustomShortcutSet.fromString("alt C");
+    }
 }

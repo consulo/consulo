@@ -20,8 +20,8 @@ import consulo.ui.ex.action.EmptyAction;
 import consulo.application.dumb.DumbAware;
 
 public abstract class GoToChangePopupAction extends AnAction implements DumbAware {
-  public GoToChangePopupAction() {
-    setEnabledInModalContext(true);
-    EmptyAction.setupAction(this, "GotoChangedFile", null);
-  }
+    public GoToChangePopupAction() {
+        setEnabledInModalContext(true);
+        EmptyAction.setupAction(this, "GotoChangedFile", null);
+    }
 }

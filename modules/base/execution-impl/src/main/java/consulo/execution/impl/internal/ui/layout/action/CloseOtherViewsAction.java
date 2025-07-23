@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.impl.internal.ui.layout.action;
 
 import consulo.execution.internal.layout.ViewContext;
@@ -22,28 +21,34 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 
 public class CloseOtherViewsAction extends BaseViewAction {
-  @Override
-  protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
-    setEnabled(e, isEnabled(context, content, e.getPlace()));
-  }
-
-  @Override
-  protected void actionPerformed(final AnActionEvent e, final ViewContext context, final Content[] content) {
-    final ContentManager manager = context.getContentManager();
-    for (Content c : manager.getContents()) {
-      if (c != content[0] && c.isCloseable()) {
-        manager.removeContent(c, context.isToDisposeRemovedContent());
-      }
+    @Override
+    protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
+        setEnabled(e, isEnabled(context, content, e.getPlace()));
     }
-  }
 
-  public static boolean isEnabled(ViewContext context, Content[] content, String place) {
-    if (content.length != 1) return false;
-    int closeable = 0;
-    for (Content c : context.getContentManager().getContents()) {
-      if (c == content[0]) continue;
-      if (c.isCloseable()) closeable++;
+    @Override
+    protected void actionPerformed(final AnActionEvent e, final ViewContext context, final Content[] content) {
+        final ContentManager manager = context.getContentManager();
+        for (Content c : manager.getContents()) {
+            if (c != content[0] && c.isCloseable()) {
+                manager.removeContent(c, context.isToDisposeRemovedContent());
+            }
+        }
     }
-    return closeable > 0;
-  }
+
+    public static boolean isEnabled(ViewContext context, Content[] content, String place) {
+        if (content.length != 1) {
+            return false;
+        }
+        int closeable = 0;
+        for (Content c : context.getContentManager().getContents()) {
+            if (c == content[0]) {
+                continue;
+            }
+            if (c.isCloseable()) {
+                closeable++;
+            }
+        }
+        return closeable > 0;
+    }
 }

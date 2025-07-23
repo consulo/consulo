@@ -11,23 +11,23 @@ import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 
 public class ClearConsoleAction extends DumbAwareAction {
-  public ClearConsoleAction() {
-    super(
-      ExecutionLocalize.clearAllFromConsoleActionName(),
-      LocalizeValue.localizeTODO("Clear the contents of the console"),
-      PlatformIconGroup.actionsGc()
-    );
-  }
+    public ClearConsoleAction() {
+        super(
+            ExecutionLocalize.clearAllFromConsoleActionName(),
+            LocalizeValue.localizeTODO("Clear the contents of the console"),
+            PlatformIconGroup.actionsGc()
+        );
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ConsoleView data = e.getData(ConsoleView.KEY);
-    e.getPresentation().setEnabled(data != null && data.getContentSize() > 0);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ConsoleView data = e.getData(ConsoleView.KEY);
+        e.getPresentation().setEnabled(data != null && data.getContentSize() > 0);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    e.getRequiredData(ConsoleView.KEY).clear();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        e.getRequiredData(ConsoleView.KEY).clear();
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.impl.internal.ui.layout.action;
 
 import consulo.execution.internal.layout.Grid;
@@ -27,60 +26,62 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class BaseViewAction extends DumbAwareAction {
-  @Override
-  public final void update(@Nonnull AnActionEvent e) {
-    ViewContext context = getViewFacade(e);
-    Content[] content = getContent(e);
+    @Override
+    public final void update(@Nonnull AnActionEvent e) {
+        ViewContext context = getViewFacade(e);
+        Content[] content = getContent(e);
 
-    if (context != null && content != null) {
-      if (containsInvalidContent(content)) {
-        e.getPresentation().setEnabled(false);
-      } else {
-        update(e, context, content);
-      }
-    } else {
-      e.getPresentation().setEnabled(false);
-    }
-  }
-
-  private boolean containsInvalidContent(Content[] content) {
-    for (Content each : content) {
-      if (!each.isValid()) {
-        return true;
-      }
+        if (context != null && content != null) {
+            if (containsInvalidContent(content)) {
+                e.getPresentation().setEnabled(false);
+            }
+            else {
+                update(e, context, content);
+            }
+        }
+        else {
+            e.getPresentation().setEnabled(false);
+        }
     }
 
-    return false;
-  }
+    private boolean containsInvalidContent(Content[] content) {
+        for (Content each : content) {
+            if (!each.isValid()) {
+                return true;
+            }
+        }
 
-  protected void update(AnActionEvent e, ViewContext context, Content[] content) {
-  }
+        return false;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public final void actionPerformed(final AnActionEvent e) {
-    actionPerformed(e, getViewFacade(e), getContent(e));
-  }
+    protected void update(AnActionEvent e, ViewContext context, Content[] content) {
+    }
 
-  protected abstract void actionPerformed(AnActionEvent e, ViewContext context, Content[] content);
+    @RequiredUIAccess
+    @Override
+    public final void actionPerformed(final AnActionEvent e) {
+        actionPerformed(e, getViewFacade(e), getContent(e));
+    }
 
-  @Nullable
-  private ViewContext getViewFacade(final AnActionEvent e) {
-    return e.getData(ViewContext.CONTEXT_KEY);
-  }
+    protected abstract void actionPerformed(AnActionEvent e, ViewContext context, Content[] content);
 
-  @Nullable
-  private Content[] getContent(final AnActionEvent e) {
-    return e.getData(Content.KEY_OF_ARRAY);
-  }
+    @Nullable
+    private ViewContext getViewFacade(final AnActionEvent e) {
+        return e.getData(ViewContext.CONTEXT_KEY);
+    }
 
-  @Nullable
-  protected static Tab getTabFor(final ViewContext context, final Content[] content) {
-    Grid grid = context.findGridFor(content[0]);
-    return context.getTabFor(grid);
-  }
+    @Nullable
+    private Content[] getContent(final AnActionEvent e) {
+        return e.getData(Content.KEY_OF_ARRAY);
+    }
 
-  protected final void setEnabled(AnActionEvent e, boolean enabled) {
-    e.getPresentation().setVisible(enabled);
-  }
+    @Nullable
+    protected static Tab getTabFor(final ViewContext context, final Content[] content) {
+        Grid grid = context.findGridFor(content[0]);
+        return context.getTabFor(grid);
+    }
+
+    protected final void setEnabled(AnActionEvent e, boolean enabled) {
+        e.getPresentation().setVisible(enabled);
+    }
 }

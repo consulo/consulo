@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.impl.internal.ui.layout.action;
 
 import consulo.execution.internal.layout.ViewContext;
@@ -23,29 +22,29 @@ import consulo.ui.ex.content.Content;
 import jakarta.annotation.Nonnull;
 
 public class AbstractFocusOnAction extends BaseViewAction implements Toggleable {
-  @Nonnull
-  private final String myCondition;
+    @Nonnull
+    private final String myCondition;
 
-  public AbstractFocusOnAction(@Nonnull String condition) {
-    myCondition = condition;
-  }
-
-  @Override
-  protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
-    final boolean visible = content.length == 1;
-    e.getPresentation().setVisible(visible);
-    if (visible) {
-      e.getPresentation().putClientProperty(SELECTED_PROPERTY, isToFocus(context, content));
+    public AbstractFocusOnAction(@Nonnull String condition) {
+        myCondition = condition;
     }
-  }
 
-  private boolean isToFocus(final ViewContext context, final Content[] content) {
-    return context.getRunnerLayoutUi().getOptions().isToFocus(content[0], myCondition);
-  }
+    @Override
+    protected void update(final AnActionEvent e, final ViewContext context, final Content[] content) {
+        final boolean visible = content.length == 1;
+        e.getPresentation().setVisible(visible);
+        if (visible) {
+            e.getPresentation().putClientProperty(SELECTED_PROPERTY, isToFocus(context, content));
+        }
+    }
 
-  @Override
-  protected void actionPerformed(final AnActionEvent e, final ViewContext context, final Content[] content) {
-    final boolean toFocus = isToFocus(context, content);
-    context.getRunnerLayoutUi().getOptions().setToFocus(toFocus ? null : content[0], myCondition);
-  }
+    private boolean isToFocus(final ViewContext context, final Content[] content) {
+        return context.getRunnerLayoutUi().getOptions().isToFocus(content[0], myCondition);
+    }
+
+    @Override
+    protected void actionPerformed(final AnActionEvent e, final ViewContext context, final Content[] content) {
+        final boolean toFocus = isToFocus(context, content);
+        context.getRunnerLayoutUi().getOptions().setToFocus(toFocus ? null : content[0], myCondition);
+    }
 }

@@ -23,17 +23,17 @@ import consulo.ui.ex.action.EmptyAction;
  * @author Konstantin Bulenkov
  */
 public class EnableLeft extends DirDiffAction {
-  protected EnableLeft(DirDiffTableModel model) {
-    super(model);
-    EmptyAction.setupAction(this, "DirDiffMenu.EnableLeft", null);
-  }
+    protected EnableLeft(DirDiffTableModel model) {
+        super(model);
+        EmptyAction.setupAction(this, "DirDiffMenu.EnableLeft", null);
+    }
 
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return getModel().isShowNewOnSource();
-  }
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        return getModel().isShowNewOnSource();
+    }
 
-  public void updateState(boolean state) {
-    getModel().setShowNewOnSource(state);
-  }
+    public void updateState(boolean state) {
+        getModel().setShowNewOnSource(state);
+    }
 }

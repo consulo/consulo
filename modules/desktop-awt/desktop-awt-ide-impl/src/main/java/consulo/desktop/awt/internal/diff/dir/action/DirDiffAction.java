@@ -27,52 +27,54 @@ import jakarta.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public abstract class DirDiffAction extends ToggleAction implements ShortcutProvider {
-  private final DirDiffTableModel myModel;
+    private final DirDiffTableModel myModel;
 
-  protected DirDiffAction(DirDiffTableModel model) {
-    myModel = model;
-  }
-
-  public DirDiffTableModel getModel() {
-    return myModel;
-  }
-
-  protected abstract void updateState(boolean state);
-
-  @Override
-  public final void setSelected(AnActionEvent e, boolean state) {
-    updateState(state);
-    if (isReloadNeeded()) {
-      if (isFullReload()) {
-        getModel().reloadModel(true);
-      } else {
-        if (state) {
-          getModel().applySettings();
-        } else {
-          getModel().applyRemove();
-        }
-      }
+    protected DirDiffAction(DirDiffTableModel model) {
+        myModel = model;
     }
-    getModel().updateFromUI();
-  }
 
-  protected boolean isFullReload() {
-    return false;
-  }
+    public DirDiffTableModel getModel() {
+        return myModel;
+    }
 
-  protected boolean isReloadNeeded() {
-    return true;
-  }
+    protected abstract void updateState(boolean state);
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setEnabled(!getModel().isUpdating());
-  }
+    @Override
+    public final void setSelected(AnActionEvent e, boolean state) {
+        updateState(state);
+        if (isReloadNeeded()) {
+            if (isFullReload()) {
+                getModel().reloadModel(true);
+            }
+            else {
+                if (state) {
+                    getModel().applySettings();
+                }
+                else {
+                    getModel().applyRemove();
+                }
+            }
+        }
+        getModel().updateFromUI();
+    }
 
-  @Nullable
-  @Override
-  public ShortcutSet getShortcut() {
-    return getShortcutSet();
-  }
+    protected boolean isFullReload() {
+        return false;
+    }
+
+    protected boolean isReloadNeeded() {
+        return true;
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(!getModel().isUpdating());
+    }
+
+    @Nullable
+    @Override
+    public ShortcutSet getShortcut() {
+        return getShortcutSet();
+    }
 }

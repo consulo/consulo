@@ -30,36 +30,38 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
-  public BaseShowDiffAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    boolean canShow = isAvailable(e);
-    presentation.setEnabled(canShow);
-    if (ActionPlaces.isPopupPlace(e.getPlace())) {
-      presentation.setVisible(canShow);
+    public BaseShowDiffAction() {
+        setEnabledInModalContext(true);
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    DiffRequest request = getDiffRequest(e);
-    if (request == null) return;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        boolean canShow = isAvailable(e);
+        presentation.setEnabled(canShow);
+        if (ActionPlaces.isPopupPlace(e.getPlace())) {
+            presentation.setVisible(canShow);
+        }
+    }
 
-    DiffManager.getInstance().showDiff(project, request);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        DiffRequest request = getDiffRequest(e);
+        if (request == null) {
+            return;
+        }
 
-  protected abstract boolean isAvailable(@Nonnull AnActionEvent e);
+        DiffManager.getInstance().showDiff(project, request);
+    }
 
-  protected static boolean hasContent(VirtualFile file) {
-    return !(file instanceof VirtualFileWithoutContent);
-  }
+    protected abstract boolean isAvailable(@Nonnull AnActionEvent e);
 
-  @Nullable
-  protected abstract DiffRequest getDiffRequest(@Nonnull AnActionEvent e);
+    protected static boolean hasContent(VirtualFile file) {
+        return !(file instanceof VirtualFileWithoutContent);
+    }
+
+    @Nullable
+    protected abstract DiffRequest getDiffRequest(@Nonnull AnActionEvent e);
 }

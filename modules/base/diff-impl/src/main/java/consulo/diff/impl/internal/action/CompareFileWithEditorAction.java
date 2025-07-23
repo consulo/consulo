@@ -33,59 +33,64 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class CompareFileWithEditorAction extends BaseShowDiffAction {
-  @Override
-  protected boolean isAvailable(@Nonnull AnActionEvent e) {
-    VirtualFile selectedFile = getSelectedFile(e);
-    if (selectedFile == null) {
-      return false;
+    @Override
+    protected boolean isAvailable(@Nonnull AnActionEvent e) {
+        VirtualFile selectedFile = getSelectedFile(e);
+        if (selectedFile == null) {
+            return false;
+        }
+
+        VirtualFile currentFile = getEditingFile(e);
+        return currentFile != null && canCompare(selectedFile, currentFile);
     }
 
-    VirtualFile currentFile = getEditingFile(e);
-    return currentFile != null && canCompare(selectedFile, currentFile);
-  }
+    @Nullable
+    private static VirtualFile getSelectedFile(@Nonnull AnActionEvent e) {
+        VirtualFile[] array = e.getData(VirtualFile.KEY_OF_ARRAY);
+        if (array == null || array.length != 1 || array[0].isDirectory()) {
+            return null;
+        }
 
-  @Nullable
-  private static VirtualFile getSelectedFile(@Nonnull AnActionEvent e) {
-    VirtualFile[] array = e.getData(VirtualFile.KEY_OF_ARRAY);
-    if (array == null || array.length != 1 || array[0].isDirectory()) {
-      return null;
+        return array[0];
     }
 
-    return array[0];
-  }
+    @Nullable
+    private static VirtualFile getEditingFile(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return null;
+        }
 
-  @Nullable
-  private static VirtualFile getEditingFile(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return null;
-
-    return FileEditorManager.getInstance(project).getCurrentFile();
-  }
-
-  private static boolean canCompare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
-    return !file1.equals(file2) && hasContent(file1) && hasContent(file2);
-  }
-
-  @Nullable
-  @Override
-  protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-
-    VirtualFile selectedFile = getSelectedFile(e);
-    VirtualFile currentFile = getEditingFile(e);
-
-    assert selectedFile != null && currentFile != null;
-
-    ContentDiffRequest request = DiffRequestFactory.getInstance().createFromFiles(project, selectedFile, currentFile);
-
-    DiffContent editorContent = request.getContents().get(1);
-    if (editorContent instanceof DocumentContent) {
-      Editor[] editors = EditorFactory.getInstance().getEditors(((DocumentContent)editorContent).getDocument());
-      if (editors.length != 0) {
-        request.putUserData(DiffUserDataKeys.SCROLL_TO_LINE, Pair.create(Side.RIGHT, editors[0].getCaretModel().getLogicalPosition().line));
-      }
+        return FileEditorManager.getInstance(project).getCurrentFile();
     }
 
-    return request;
-  }
+    private static boolean canCompare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+        return !file1.equals(file2) && hasContent(file1) && hasContent(file2);
+    }
+
+    @Nullable
+    @Override
+    protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+
+        VirtualFile selectedFile = getSelectedFile(e);
+        VirtualFile currentFile = getEditingFile(e);
+
+        assert selectedFile != null && currentFile != null;
+
+        ContentDiffRequest request = DiffRequestFactory.getInstance().createFromFiles(project, selectedFile, currentFile);
+
+        DiffContent editorContent = request.getContents().get(1);
+        if (editorContent instanceof DocumentContent) {
+            Editor[] editors = EditorFactory.getInstance().getEditors(((DocumentContent) editorContent).getDocument());
+            if (editors.length != 0) {
+                request.putUserData(
+                    DiffUserDataKeys.SCROLL_TO_LINE,
+                    Pair.create(Side.RIGHT, editors[0].getCaretModel().getLogicalPosition().line)
+                );
+            }
+        }
+
+        return request;
+    }
 }
