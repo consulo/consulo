@@ -25,42 +25,42 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ContextHelpAction extends AnAction implements DumbAware {
-  private final String myHelpID;
+    private final String myHelpID;
 
-  public ContextHelpAction() {
-    this(null);
-  }
-
-  public ContextHelpAction(@Nullable String helpID) {
-    myHelpID = helpID;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final String helpId = getHelpId(dataContext);
-    if (helpId != null) {
-      HelpManager.getInstance().invokeHelp(helpId);
+    public ContextHelpAction() {
+        this(null);
     }
-  }
 
-  @Nullable
-  protected String getHelpId(DataContext dataContext) {
-    return myHelpID != null ? myHelpID : dataContext.getData(HelpManager.HELP_ID);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-
-    if (ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
-      DataContext dataContext = event.getDataContext();
-      presentation.setEnabled(getHelpId(dataContext) != null);
+    public ContextHelpAction(@Nullable String helpID) {
+        myHelpID = helpID;
     }
-    else {
-      presentation.setIcon(PlatformIconGroup.actionsHelp());
-      presentation.setTextValue(CommonLocalize.buttonHelp());
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        final String helpId = getHelpId(dataContext);
+        if (helpId != null) {
+            HelpManager.getInstance().invokeHelp(helpId);
+        }
     }
-  }
+
+    @Nullable
+    protected String getHelpId(DataContext dataContext) {
+        return myHelpID != null ? myHelpID : dataContext.getData(HelpManager.HELP_ID);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+
+        if (ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
+            DataContext dataContext = event.getDataContext();
+            presentation.setEnabled(getHelpId(dataContext) != null);
+        }
+        else {
+            presentation.setIcon(PlatformIconGroup.actionsHelp());
+            presentation.setTextValue(CommonLocalize.buttonHelp());
+        }
+    }
 }

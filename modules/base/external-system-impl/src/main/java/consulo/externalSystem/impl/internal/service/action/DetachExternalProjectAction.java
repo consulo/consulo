@@ -41,68 +41,67 @@ import java.util.List;
  * @since 2013-06-13
  */
 public class DetachExternalProjectAction extends AnAction implements DumbAware {
-  public DetachExternalProjectAction() {
-    super(
-        ExternalSystemLocalize.actionDetachExternalProjectText(),
-        ExternalSystemLocalize.actionDetachExternalProjectDescription(),
-        PlatformIconGroup.generalRemove()
-    );
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
-    e.getPresentation().setEnabled(info.externalProject != null);
-    if (info.externalSystemId != null) {
-      LocalizeValue displayName = info.externalSystemId.getDisplayName();
-      e.getPresentation().setTextValue(ExternalSystemLocalize.actionDetachExternalProject0Text(displayName));
-      e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionDetachExternalProject0Description(displayName));
-    }
-    else {
-      e.getPresentation().setTextValue(ExternalSystemLocalize.actionDetachExternalProjectText());
-      e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionDetachExternalProjectDescription());
-    }
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
-    if (info.settings == null || info.localSettings == null || info.externalProject == null || info.ideProject == null
-        || info.externalSystemId == null)
-    {
-      return;
+    public DetachExternalProjectAction() {
+        super(
+            ExternalSystemLocalize.actionDetachExternalProjectText(),
+            ExternalSystemLocalize.actionDetachExternalProjectDescription(),
+            PlatformIconGroup.generalRemove()
+        );
     }
 
-    ExternalSystemTasksTreeModel allTasksModel = e.getData(ExternalSystemDataKeys.ALL_TASKS_MODEL);
-    if (allTasksModel != null) {
-      allTasksModel.pruneNodes(info.externalProject);
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
+        e.getPresentation().setEnabled(info.externalProject != null);
+        if (info.externalSystemId != null) {
+            LocalizeValue displayName = info.externalSystemId.getDisplayName();
+            e.getPresentation().setTextValue(ExternalSystemLocalize.actionDetachExternalProject0Text(displayName));
+            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionDetachExternalProject0Description(displayName));
+        }
+        else {
+            e.getPresentation().setTextValue(ExternalSystemLocalize.actionDetachExternalProjectText());
+            e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionDetachExternalProjectDescription());
+        }
     }
 
-    ExternalSystemRecentTasksList recentTasksList = e.getData(ExternalSystemDataKeys.RECENT_TASKS_LIST);
-    if (recentTasksList != null) {
-      recentTasksList.getModel().forgetTasksFrom(info.externalProject.getPath());
-    }
-    
-    info.localSettings.forgetExternalProjects(Collections.singleton(info.externalProject.getPath()));
-    info.settings.unlinkExternalProject(info.externalProject.getPath());
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
+        if (info.settings == null || info.localSettings == null || info.externalProject == null || info.ideProject == null
+            || info.externalSystemId == null) {
+            return;
+        }
 
-    // Process orphan modules.
-    String externalSystemIdAsString = info.externalSystemId.toString();
-    List<Module> orphanModules = new ArrayList<>();
-    for (Module module : ModuleManager.getInstance(info.ideProject).getModules()) {
-      String systemId = ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
-      if (!externalSystemIdAsString.equals(systemId)) {
-        continue;
-      }
-      String path = ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
-      if (info.externalProject.getPath().equals(path)) {
-        orphanModules.add(module);
-      }
-    }
+        ExternalSystemTasksTreeModel allTasksModel = e.getData(ExternalSystemDataKeys.ALL_TASKS_MODEL);
+        if (allTasksModel != null) {
+            allTasksModel.pruneNodes(info.externalProject);
+        }
 
-    if (!orphanModules.isEmpty()) {
-      ExternalSystemUtil.ruleOrphanModules(orphanModules, info.ideProject, info.externalSystemId);
+        ExternalSystemRecentTasksList recentTasksList = e.getData(ExternalSystemDataKeys.RECENT_TASKS_LIST);
+        if (recentTasksList != null) {
+            recentTasksList.getModel().forgetTasksFrom(info.externalProject.getPath());
+        }
+
+        info.localSettings.forgetExternalProjects(Collections.singleton(info.externalProject.getPath()));
+        info.settings.unlinkExternalProject(info.externalProject.getPath());
+
+        // Process orphan modules.
+        String externalSystemIdAsString = info.externalSystemId.toString();
+        List<Module> orphanModules = new ArrayList<>();
+        for (Module module : ModuleManager.getInstance(info.ideProject).getModules()) {
+            String systemId = ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
+            if (!externalSystemIdAsString.equals(systemId)) {
+                continue;
+            }
+            String path = ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
+            if (info.externalProject.getPath().equals(path)) {
+                orphanModules.add(module);
+            }
+        }
+
+        if (!orphanModules.isEmpty()) {
+            ExternalSystemUtil.ruleOrphanModules(orphanModules, info.ideProject, info.externalSystemId);
+        }
     }
-  }
 }

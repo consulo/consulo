@@ -28,60 +28,60 @@ import jakarta.annotation.Nullable;
  * Represents a separator.
  */
 public final class AnSeparator extends AnAction implements DumbAware {
-  private static final AnSeparator ourInstance = new AnSeparator();
+    private static final AnSeparator ourInstance = new AnSeparator();
 
-  @Nonnull
-  public static AnSeparator getInstance() {
-    return ourInstance;
-  }
+    @Nonnull
+    public static AnSeparator getInstance() {
+        return ourInstance;
+    }
 
-  @Nonnull
-  public static AnSeparator create() {
-    return ourInstance;
-  }
+    @Nonnull
+    public static AnSeparator create() {
+        return ourInstance;
+    }
 
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use #create(LocalizeValue)")
-  public static AnSeparator create(@Nullable String text) {
-    return StringUtil.isEmptyOrSpaces(text) ? ourInstance : new AnSeparator(text);
-  }
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use #create(LocalizeValue)")
+    public static AnSeparator create(@Nullable String text) {
+        return StringUtil.isEmptyOrSpaces(text) ? ourInstance : new AnSeparator(text);
+    }
 
-  @Nonnull
-  public static AnSeparator create(@Nonnull LocalizeValue textValue) {
-    return textValue == LocalizeValue.empty() ? ourInstance : new AnSeparator(textValue);
-  }
+    @Nonnull
+    public static AnSeparator create(@Nonnull LocalizeValue textValue) {
+        return textValue == LocalizeValue.empty() ? ourInstance : new AnSeparator(textValue);
+    }
 
-  @Nonnull
-  private final LocalizeValue myTextValue;
+    @Nonnull
+    private final LocalizeValue myTextValue;
 
-  public AnSeparator() {
-    this(LocalizeValue.empty());
-  }
+    public AnSeparator() {
+        this(LocalizeValue.empty());
+    }
 
-  public AnSeparator(@Nullable String text) {
-    myTextValue = StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.empty() : LocalizeValue.of(text);
-  }
+    public AnSeparator(@Nullable String text) {
+        myTextValue = StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.empty() : LocalizeValue.of(text);
+    }
 
-  public AnSeparator(@Nonnull LocalizeValue textValue) {
-    myTextValue = textValue;
-  }
+    public AnSeparator(@Nonnull LocalizeValue textValue) {
+        myTextValue = textValue;
+    }
 
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use #getTextValue()")
-  public String getText() {
-    return StringUtil.nullize(myTextValue.getValue());
-  }
+    @Nullable
+    @Deprecated
+    @DeprecationInfo("Use #getTextValue()")
+    public String getText() {
+        return StringUtil.nullize(myTextValue.getValue());
+    }
 
-  @Nonnull
-  public LocalizeValue getTextValue() {
-    return myTextValue;
-  }
+    @Nonnull
+    public LocalizeValue getTextValue() {
+        return myTextValue;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    throw new UnsupportedOperationException();
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        throw new UnsupportedOperationException();
+    }
 }

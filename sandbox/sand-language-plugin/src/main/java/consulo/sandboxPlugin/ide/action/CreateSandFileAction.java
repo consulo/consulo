@@ -26,21 +26,21 @@ import consulo.sandboxPlugin.lang.SandFileType;
 
 /**
  * @author VISTALL
- * @since 31-Jul-22
+ * @since 2022-07-31
  */
 @ActionImpl(id = "CreateSandFile", parents = @ActionParentRef(@ActionRef(id = "NewGroup")))
 public class CreateSandFileAction extends CreateFileFromTemplateAction {
-  public CreateSandFileAction() {
-    super("Sand File", "", SandFileType.INSTANCE.getIcon());
-  }
+    public CreateSandFileAction() {
+        super("Sand File", "", SandFileType.INSTANCE.getIcon());
+    }
 
-  @Override
-  protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-    builder.addKind("Sand File", SandFileType.INSTANCE.getIcon(), "Sand File");
-  }
+    @Override
+    protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
+        builder.addKind("Sand File", SandFileType.INSTANCE.getIcon(), "Sand File");
+    }
 
-  @Override
-  protected String getActionName(PsiDirectory directory, String newName, String templateName) {
-    return "Sand File";
-  }
+    @Override
+    protected String getActionName(PsiDirectory directory, String newName, String templateName) {
+        return "Sand File";
+    }
 }

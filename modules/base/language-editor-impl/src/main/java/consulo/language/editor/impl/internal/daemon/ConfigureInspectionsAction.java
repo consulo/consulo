@@ -27,22 +27,22 @@ import jakarta.annotation.Nonnull;
  * from kotlin
  */
 public class ConfigureInspectionsAction extends DumbAwareAction {
-  public ConfigureInspectionsAction() {
-    super(DaemonLocalize.popupActionConfigureInspections());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public ConfigureInspectionsAction() {
+        super(DaemonLocalize.popupActionConfigureInspections());
     }
-    LanguageEditorInternalHelper.getInstance().showInspectionsSettings(project);
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.hasData(Project.KEY));
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        LanguageEditorInternalHelper.getInstance().showInspectionsSettings(project);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
+    }
 }

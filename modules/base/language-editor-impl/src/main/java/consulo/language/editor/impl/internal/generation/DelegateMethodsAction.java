@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.generation;
 
 import consulo.annotation.component.ActionImpl;
@@ -23,8 +22,8 @@ import jakarta.inject.Inject;
 
 @ActionImpl(id = "DelegateMethods")
 public class DelegateMethodsAction extends MethodsBasedAction<DelegateMethodHandler> {
-  @Inject
-  public DelegateMethodsAction(Application application) {
-    super(application, DelegateMethodHandler.class, DelegateMethodHandler.KEY);
-  }
+    @Inject
+    public DelegateMethodsAction(Application application) {
+        super(application, DelegateMethodHandler.class, DelegateMethodHandler.KEY);
+    }
 }

@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 13/12/2021
+ * @since 2021-12-13
  */
 public class DialogCancelAction extends DumbAwareAction {
     public DialogCancelAction() {

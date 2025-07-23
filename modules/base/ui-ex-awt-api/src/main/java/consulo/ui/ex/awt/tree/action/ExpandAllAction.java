@@ -22,21 +22,20 @@ import consulo.ui.ex.action.AnActionEvent;
 import javax.swing.*;
 
 public class ExpandAllAction extends AnAction {
+    protected JTree myTree;
 
-  protected JTree myTree;
-
-  public ExpandAllAction(JTree tree) {
-    super("Expand All", "", PlatformIconGroup.actionsExpandall());
-    myTree = tree;
-  }
-
-  public void actionPerformed(AnActionEvent e) {
-    for (int i = 0; i < getTree().getRowCount(); i++) {
-      getTree().expandRow(i);
+    public ExpandAllAction(JTree tree) {
+        super("Expand All", "", PlatformIconGroup.actionsExpandall());
+        myTree = tree;
     }
-  }
 
-  protected JTree getTree() {
-    return myTree;
-  }
+    public void actionPerformed(AnActionEvent e) {
+        for (int i = 0; i < getTree().getRowCount(); i++) {
+            getTree().expandRow(i);
+        }
+    }
+
+    protected JTree getTree() {
+        return myTree;
+    }
 }

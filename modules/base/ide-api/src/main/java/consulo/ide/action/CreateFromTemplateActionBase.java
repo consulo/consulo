@@ -35,78 +35,83 @@ import consulo.util.lang.ObjectUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.Map;
 
 public abstract class CreateFromTemplateActionBase extends AnAction {
-  public CreateFromTemplateActionBase(final String title, final String description, final Image icon) {
-    super(title, description, icon);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public final void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    IdeView view = dataContext.getData(IdeView.KEY);
-    if (view == null) return;
-    PsiDirectory dir = getTargetDirectory(dataContext, view);
-    if (dir == null) return;
-    Project project = dir.getProject();
-
-    FileTemplate selectedTemplate = getTemplate(project, dir);
-    if (selectedTemplate != null) {
-      AnAction action = getReplacedAction(selectedTemplate);
-      if (action != null) {
-        action.actionPerformed(e);
-      }
-      else {
-        FileTemplateManager.getInstance(project).addRecentName(selectedTemplate.getName());
-        AttributesDefaults defaults = getAttributesDefaults(dataContext);
-        Map<String, Object> properties = defaults != null ? defaults.getDefaultProperties() : null;
-        CreateFromTemplateDialog dialog = new CreateFromTemplateDialog(dir, selectedTemplate, defaults, properties);
-        PsiElement createdElement = dialog.create();
-        if (createdElement != null) {
-          elementCreated(dialog, createdElement);
-          view.selectElement(createdElement);
-          if (selectedTemplate.isLiveTemplateEnabled() && createdElement instanceof PsiFile) {
-            Map<String, String> defaultValues = getLiveTemplateDefaults(dataContext, ((PsiFile)createdElement));
-            startLiveTemplate((PsiFile)createdElement, ObjectUtil.notNull(defaultValues, Collections.emptyMap()));
-          }
-        }
-      }
+    public CreateFromTemplateActionBase(final String title, final String description, final Image icon) {
+        super(title, description, icon);
     }
-  }
 
-  public static void startLiveTemplate(@Nonnull PsiFile file) {
-    EditorFileTemplateUtil.startLiveTemplate(file, Map.of());
-  }
+    @RequiredUIAccess
+    @Override
+    public final void actionPerformed(@Nonnull AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        IdeView view = dataContext.getData(IdeView.KEY);
+        if (view == null) {
+            return;
+        }
+        PsiDirectory dir = getTargetDirectory(dataContext, view);
+        if (dir == null) {
+            return;
+        }
+        Project project = dir.getProject();
 
-  public static void startLiveTemplate(@Nonnull PsiFile file, @Nonnull Map<String, String> defaultValues) {
-    EditorFileTemplateUtil.startLiveTemplate(file, defaultValues);
-  }
+        FileTemplate selectedTemplate = getTemplate(project, dir);
+        if (selectedTemplate != null) {
+            AnAction action = getReplacedAction(selectedTemplate);
+            if (action != null) {
+                action.actionPerformed(e);
+            }
+            else {
+                FileTemplateManager.getInstance(project).addRecentName(selectedTemplate.getName());
+                AttributesDefaults defaults = getAttributesDefaults(dataContext);
+                Map<String, Object> properties = defaults != null ? defaults.getDefaultProperties() : null;
+                CreateFromTemplateDialog dialog = new CreateFromTemplateDialog(dir, selectedTemplate, defaults, properties);
+                PsiElement createdElement = dialog.create();
+                if (createdElement != null) {
+                    elementCreated(dialog, createdElement);
+                    view.selectElement(createdElement);
+                    if (selectedTemplate.isLiveTemplateEnabled() && createdElement instanceof PsiFile) {
+                        Map<String, String> defaultValues = getLiveTemplateDefaults(dataContext, ((PsiFile) createdElement));
+                        startLiveTemplate((PsiFile) createdElement, ObjectUtil.notNull(defaultValues, Collections.emptyMap()));
+                    }
+                }
+            }
+        }
+    }
 
-  @Nullable
-  protected PsiDirectory getTargetDirectory(DataContext dataContext, IdeView view) {
-    return DirectoryChooserUtil.getOrChooseDirectory(view);
-  }
+    public static void startLiveTemplate(@Nonnull PsiFile file) {
+        EditorFileTemplateUtil.startLiveTemplate(file, Map.of());
+    }
 
-  protected abstract FileTemplate getTemplate(Project project, PsiDirectory dir);
+    public static void startLiveTemplate(@Nonnull PsiFile file, @Nonnull Map<String, String> defaultValues) {
+        EditorFileTemplateUtil.startLiveTemplate(file, defaultValues);
+    }
 
-  @Nullable
-  protected AnAction getReplacedAction(FileTemplate selectedTemplate) {
-    return null;
-  }
+    @Nullable
+    protected PsiDirectory getTargetDirectory(DataContext dataContext, IdeView view) {
+        return DirectoryChooserUtil.getOrChooseDirectory(view);
+    }
 
-  @Nullable
-  protected AttributesDefaults getAttributesDefaults(DataContext dataContext) {
-    return null;
-  }
+    protected abstract FileTemplate getTemplate(Project project, PsiDirectory dir);
 
-  protected void elementCreated(CreateFromTemplateDialog dialog, PsiElement createdElement) {
-  }
+    @Nullable
+    protected AnAction getReplacedAction(FileTemplate selectedTemplate) {
+        return null;
+    }
 
-  @Nullable
-  protected Map<String, String> getLiveTemplateDefaults(DataContext dataContext, @Nonnull PsiFile file) {
-    return null;
-  }
+    @Nullable
+    protected AttributesDefaults getAttributesDefaults(DataContext dataContext) {
+        return null;
+    }
+
+    protected void elementCreated(CreateFromTemplateDialog dialog, PsiElement createdElement) {
+    }
+
+    @Nullable
+    protected Map<String, String> getLiveTemplateDefaults(DataContext dataContext, @Nonnull PsiFile file) {
+        return null;
+    }
 }

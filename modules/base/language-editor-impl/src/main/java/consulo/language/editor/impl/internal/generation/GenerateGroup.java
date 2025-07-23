@@ -22,13 +22,13 @@ import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author VISTALL
- * @since 17-Jul-22
+ * @since 2022-07-17
  */
 @ActionImpl(id = IdeActions.GROUP_GENERATE, children = {
-        @ActionRef(type = OverrideMethodsAction.class),
-        @ActionRef(type = ImplementMethodsAction.class),
-        @ActionRef(type = DelegateMethodsAction.class),
-        @ActionRef(type = GenerateByPatternAction.class)
+    @ActionRef(type = OverrideMethodsAction.class),
+    @ActionRef(type = ImplementMethodsAction.class),
+    @ActionRef(type = DelegateMethodsAction.class),
+    @ActionRef(type = GenerateByPatternAction.class)
 })
 public class GenerateGroup extends DefaultActionGroup {
 }

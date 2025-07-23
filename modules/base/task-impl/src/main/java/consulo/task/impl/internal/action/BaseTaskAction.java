@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package consulo.task.impl.internal.action;
 
 import consulo.application.dumb.DumbAware;
@@ -30,40 +29,39 @@ import jakarta.annotation.Nullable;
  * @author Dmitry Avdeev
  */
 public abstract class BaseTaskAction extends AnAction implements DumbAware {
-
-  protected BaseTaskAction() {
-  }
-
-  protected BaseTaskAction(String text) {
-    super(text);
-  }
-
-  protected BaseTaskAction(@Nullable final String text, @Nullable final String description, @Nullable final Image icon) {
-    super(text, description, icon);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    event.getPresentation().setEnabled(getProject(event) != null);
-  }
-
-  @Nullable
-  public static Project getProject(@Nonnull AnActionEvent event) {
-    return event.getData(Project.KEY);
-  }
-
-  @Nullable
-  public static TaskManager getTaskManager(@Nonnull AnActionEvent event) {
-    Project project = getProject(event);
-    if (project == null) {
-      return null;
+    protected BaseTaskAction() {
     }
-    return TaskManager.getManager(project);
-  }
 
-  @Nullable
-  public static LocalTask getActiveTask(@Nonnull AnActionEvent event) {
-    TaskManager manager = getTaskManager(event);
-    return manager == null ? null : manager.getActiveTask();
-  }
+    protected BaseTaskAction(String text) {
+        super(text);
+    }
+
+    protected BaseTaskAction(@Nullable final String text, @Nullable final String description, @Nullable final Image icon) {
+        super(text, description, icon);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        event.getPresentation().setEnabled(getProject(event) != null);
+    }
+
+    @Nullable
+    public static Project getProject(@Nonnull AnActionEvent event) {
+        return event.getData(Project.KEY);
+    }
+
+    @Nullable
+    public static TaskManager getTaskManager(@Nonnull AnActionEvent event) {
+        Project project = getProject(event);
+        if (project == null) {
+            return null;
+        }
+        return TaskManager.getManager(project);
+    }
+
+    @Nullable
+    public static LocalTask getActiveTask(@Nonnull AnActionEvent event) {
+        TaskManager manager = getTaskManager(event);
+        return manager == null ? null : manager.getActiveTask();
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.impl.internal.action;
 
 import consulo.application.ReadAction;
@@ -35,50 +34,52 @@ import jakarta.annotation.Nullable;
  * @author ven
  */
 public class ExtractIncludeAction extends BasePlatformRefactoringAction {
-  @Override
-  public boolean isAvailableInEditorOnly() {
-    return true;
-  }
-
-  @Override
-  public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
-    return false;
-  }
-
-  @Override
-  protected boolean isAvailableForLanguage(Language language) {
-    return true;
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    final RefactoringActionHandler handler = ReadAction.compute(() -> getHandler(e.getDataContext()));
-    if (handler instanceof TitledHandler titledHandler) {
-      e.getPresentation().setTextValue(titledHandler.getActionTitleValue());
+    @Override
+    public boolean isAvailableInEditorOnly() {
+        return true;
     }
-    else {
-      e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Include File..."));
+
+    @Override
+    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+        return false;
     }
-  }
 
-  @Override
-  protected boolean isAvailableForFile(PsiFile file) {
-    final Language baseLanguage = file.getViewProvider().getBaseLanguage();
-    return LanguageExtractIncludeHandler.forLanguage(baseLanguage) != null;
-  }
+    @Override
+    protected boolean isAvailableForLanguage(Language language) {
+        return true;
+    }
 
-  @Nullable
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
-    return null;
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        final RefactoringActionHandler handler = ReadAction.compute(() -> getHandler(e.getDataContext()));
+        if (handler instanceof TitledHandler titledHandler) {
+            e.getPresentation().setTextValue(titledHandler.getActionTitleValue());
+        }
+        else {
+            e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Include File..."));
+        }
+    }
 
-  @Override
-  @Nullable
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider, PsiElement element) {
-    PsiFile file = element.getContainingFile();
-    if (file == null) return null;
-    return LanguageExtractIncludeHandler.forLanguage(file.getViewProvider().getBaseLanguage());
-  }
+    @Override
+    protected boolean isAvailableForFile(PsiFile file) {
+        final Language baseLanguage = file.getViewProvider().getBaseLanguage();
+        return LanguageExtractIncludeHandler.forLanguage(baseLanguage) != null;
+    }
+
+    @Nullable
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider, PsiElement element) {
+        PsiFile file = element.getContainingFile();
+        if (file == null) {
+            return null;
+        }
+        return LanguageExtractIncludeHandler.forLanguage(file.getViewProvider().getBaseLanguage());
+    }
 }
