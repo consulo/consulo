@@ -30,37 +30,37 @@ import jakarta.annotation.Nonnull;
  * @since 2008-01-16
  */
 public final class FlattenPackagesAction extends ToggleAction {
-  private final Runnable myUpdate;
+    private final Runnable myUpdate;
 
-  public FlattenPackagesAction(Runnable update) {
-    super(
-      IdeLocalize.actionFlattenPackages(),
-      IdeLocalize.actionFlattenPackages(),
-      AllIcons.ObjectBrowser.FlattenPackages
-    );
-    myUpdate = update;
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public FlattenPackagesAction(Runnable update) {
+        super(
+            IdeLocalize.actionFlattenPackages(),
+            IdeLocalize.actionFlattenPackages(),
+            AllIcons.ObjectBrowser.FlattenPackages
+        );
+        myUpdate = update;
     }
-    if (!PsiPackageSupportProviders.isPackageSupported(project)) {
-      e.getPresentation().setVisible(false);
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        if (!PsiPackageSupportProviders.isPackageSupported(project)) {
+            e.getPresentation().setVisible(false);
+        }
     }
-  }
 
-  @Override
-  public boolean isSelected(@Nonnull AnActionEvent event) {
-    return DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES;
-  }
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent event) {
+        return DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES;
+    }
 
-  @Override
-  public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
-    DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES = flag;
-    myUpdate.run();
-  }
+    @Override
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES = flag;
+        myUpdate.run();
+    }
 }

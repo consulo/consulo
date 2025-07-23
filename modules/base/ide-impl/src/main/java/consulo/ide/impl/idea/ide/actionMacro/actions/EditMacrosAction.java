@@ -30,17 +30,17 @@ import jakarta.annotation.Nonnull;
  * @since 2003-07-22
  */
 public class EditMacrosAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    EditMacrosDialog dialog = new EditMacrosDialog(e.getData(Project.KEY));
-    dialog.show();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        EditMacrosDialog dialog = new EditMacrosDialog(e.getData(Project.KEY));
+        dialog.show();
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final ActionMacroManager manager = ActionMacroManager.getInstance();
-    ActionMacro[] macros = manager.getAllMacros();
-    e.getPresentation().setEnabled(macros != null && macros.length > 0);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final ActionMacroManager manager = ActionMacroManager.getInstance();
+        ActionMacro[] macros = manager.getAllMacros();
+        e.getPresentation().setEnabled(macros != null && macros.length > 0);
+    }
 }

@@ -30,37 +30,37 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class PopupProjectGroupActionGroup extends DefaultActionGroup implements DumbAware {
-  private final ProjectGroup myGroup;
+    private final ProjectGroup myGroup;
 
-  public PopupProjectGroupActionGroup(ProjectGroup group, List<AnAction> children) {
-    super(group.getName(), children);
-    myGroup = group;
-  }
+    public PopupProjectGroupActionGroup(ProjectGroup group, List<AnAction> children) {
+        super(group.getName(), children);
+        myGroup = group;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    new RecentProjectsWelcomeScreenActionBase() {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        myGroup.setExpanded(!myGroup.isExpanded());
-        final JList list = getList(e);
-        if (list != null) {
-          final int index = list.getSelectedIndex();
-          rebuildRecentProjectsList(e);
-          list.setSelectedIndex(index);
-        }
-      }
-    }.actionPerformed(e);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        new RecentProjectsWelcomeScreenActionBase() {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                myGroup.setExpanded(!myGroup.isExpanded());
+                final JList list = getList(e);
+                if (list != null) {
+                    final int index = list.getSelectedIndex();
+                    rebuildRecentProjectsList(e);
+                    list.setSelectedIndex(index);
+                }
+            }
+        }.actionPerformed(e);
+    }
 
-  @Override
-  public boolean isPopup() {
-    return !myGroup.isExpanded();
-  }
+    @Override
+    public boolean isPopup() {
+        return !myGroup.isExpanded();
+    }
 
-  public ProjectGroup getGroup() {
-    return myGroup;
-  }
+    public ProjectGroup getGroup() {
+        return myGroup;
+    }
 }

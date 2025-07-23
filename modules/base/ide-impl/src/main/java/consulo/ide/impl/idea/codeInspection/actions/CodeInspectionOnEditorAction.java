@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.dataContext.DataContext;
@@ -33,39 +32,39 @@ import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 public class CodeInspectionOnEditorAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null){
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final DataContext dataContext = e.getDataContext();
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+        if (psiFile != null) {
+            analyze(project, psiFile);
+        }
     }
-    PsiFile psiFile = dataContext.getData(PsiFile.KEY);
-    if (psiFile != null){
-      analyze(project, psiFile);
+
+    protected static void analyze(Project project, PsiFile psiFile) {
+        FileDocumentManager.getInstance().saveAllDocuments();
+        final InspectionManagerImpl inspectionManagerEx = (InspectionManagerImpl) InspectionManager.getInstance(project);
+        final AnalysisScope scope = new AnalysisScope(psiFile);
+        final GlobalInspectionContextImpl inspectionContext = inspectionManagerEx.createNewGlobalContext(false);
+        inspectionContext.setCurrentScope(scope);
+        final InspectionProfile inspectionProfile =
+            InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
+        inspectionContext.setExternalProfile(inspectionProfile);
+        inspectionContext.doInspections(scope);
     }
-  }
 
-  protected static void analyze(Project project, PsiFile psiFile) {
-    FileDocumentManager.getInstance().saveAllDocuments();
-    final InspectionManagerImpl inspectionManagerEx = (InspectionManagerImpl)InspectionManager.getInstance(project);
-    final AnalysisScope scope = new AnalysisScope(psiFile);
-    final GlobalInspectionContextImpl inspectionContext = inspectionManagerEx.createNewGlobalContext(false);
-    inspectionContext.setCurrentScope(scope);
-    final InspectionProfile inspectionProfile =
-      InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-    inspectionContext.setExternalProfile(inspectionProfile);
-    inspectionContext.doInspections(scope);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    final PsiFile psiFile = dataContext.getData(PsiFile.KEY);
-    e.getPresentation().setEnabled(
-      project != null && psiFile != null && DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(psiFile)
-    );
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final DataContext dataContext = e.getDataContext();
+        final Project project = dataContext.getData(Project.KEY);
+        final PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+        e.getPresentation().setEnabled(
+            project != null && psiFile != null && DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(psiFile)
+        );
+    }
 }

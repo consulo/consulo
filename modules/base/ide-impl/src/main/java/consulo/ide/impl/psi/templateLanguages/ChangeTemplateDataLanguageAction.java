@@ -33,39 +33,50 @@ import jakarta.annotation.Nonnull;
  * @author peter
  */
 public class ChangeTemplateDataLanguageAction extends AnAction {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setVisible(false);
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setVisible(false);
 
-    VirtualFile virtualFile = e.getData(VirtualFile.KEY);
-    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-    if (files != null && files.length > 1) {
-      virtualFile = null;
+        VirtualFile virtualFile = e.getData(VirtualFile.KEY);
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        if (files != null && files.length > 1) {
+            virtualFile = null;
+        }
+        if (virtualFile == null || virtualFile.isDirectory()) {
+            return;
+        }
+
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+
+        final FileViewProvider provider = PsiManager.getInstance(project).findViewProvider(virtualFile);
+        if (provider instanceof ConfigurableTemplateLanguageFileViewProvider) {
+            final TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider) provider;
+
+            e.getPresentation()
+                .setTextValue(LanguageLocalize.quickfixChangeTemplateDataLanguageText(viewProvider.getTemplateDataLanguage()
+                    .getDisplayName()));
+            e.getPresentation().setEnabledAndVisible(true);
+        }
     }
-    if (virtualFile == null || virtualFile.isDirectory()) return;
 
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-
-    final FileViewProvider provider = PsiManager.getInstance(project).findViewProvider(virtualFile);
-    if (provider instanceof ConfigurableTemplateLanguageFileViewProvider) {
-      final TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider)provider;
-
-      e.getPresentation().setTextValue(LanguageLocalize.quickfixChangeTemplateDataLanguageText(viewProvider.getTemplateDataLanguage().getDisplayName()));
-      e.getPresentation().setEnabledAndVisible(true);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
+        final TemplateDataLanguageConfigurable configurable =
+            new TemplateDataLanguageConfigurable(project, TemplateDataLanguageMappings.getInstance(project));
+        ShowSettingsUtil.getInstance().editConfigurable(
+            project,
+            configurable,
+            () -> {
+                if (virtualFile != null) {
+                    configurable.selectFile(virtualFile);
+                }
+            }
+        );
     }
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
-    final TemplateDataLanguageConfigurable configurable = new TemplateDataLanguageConfigurable(project, TemplateDataLanguageMappings.getInstance(project));
-    ShowSettingsUtil.getInstance().editConfigurable(project, configurable, () -> {
-      if (virtualFile != null) {
-        configurable.selectFile(virtualFile);
-      }
-    });
-  }
 }

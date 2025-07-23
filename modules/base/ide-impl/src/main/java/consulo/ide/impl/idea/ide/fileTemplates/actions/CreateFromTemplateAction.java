@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.fileTemplates.actions;
 
 import consulo.fileTemplate.FileTemplate;
@@ -26,28 +25,27 @@ import consulo.language.psi.PsiDirectory;
 import jakarta.annotation.Nonnull;
 
 public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
+    private final FileTemplate myTemplate;
 
-  private final FileTemplate myTemplate;
+    public CreateFromTemplateAction(FileTemplate template) {
+        super(template.getName(), null, FileTemplateUtil.getIcon(template));
+        myTemplate = template;
+    }
 
-  public CreateFromTemplateAction(FileTemplate template){
-    super(template.getName(), null, FileTemplateUtil.getIcon(template));
-    myTemplate = template;
-  }
+    @Override
+    protected FileTemplate getTemplate(final Project project, final PsiDirectory dir) {
+        return myTemplate;
+    }
 
-  @Override
-  protected FileTemplate getTemplate(final Project project, final PsiDirectory dir) {
-    return myTemplate;
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        Presentation presentation = e.getPresentation();
+        boolean isEnabled = CreateFromTemplateGroup.canCreateFromTemplate(e, myTemplate);
+        presentation.setEnabledAndVisible(isEnabled);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e){
-    super.update(e);
-    Presentation presentation = e.getPresentation();
-    boolean isEnabled = CreateFromTemplateGroup.canCreateFromTemplate(e, myTemplate);
-    presentation.setEnabledAndVisible(isEnabled);
-  }
-
-  public FileTemplate getTemplate() {
-    return myTemplate;
-  }
+    public FileTemplate getTemplate() {
+        return myTemplate;
+    }
 }
