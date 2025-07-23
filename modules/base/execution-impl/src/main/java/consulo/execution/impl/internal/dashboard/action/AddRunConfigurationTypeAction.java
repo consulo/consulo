@@ -45,80 +45,87 @@ import java.util.function.Consumer;
  */
 @ActionImpl(id = "RunDashboard.AddType", parents = @ActionParentRef(@ActionRef(type = AddServiceActionGroup.class)))
 public class AddRunConfigurationTypeAction extends DumbAwareAction {
-  private static final Comparator<ConfigurationType> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
-    (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName());
+    private static final Comparator<ConfigurationType> IGNORE_CASE_DISPLAY_NAME_COMPARATOR =
+        (o1, o2) -> o1.getDisplayName().compareIgnoreCase(o2.getDisplayName());
 
-  public AddRunConfigurationTypeAction() {
-    super(ActionLocalize.actionRundashboardAddtypeText());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    RunDashboardManager runDashboardManager = RunDashboardManager.getInstance(project);
-    Set<String> addedTypes = runDashboardManager.getTypes();
-    showAddPopup(project, addedTypes, newTypes -> {
-      Set<String> updatedTypes = new HashSet<>(addedTypes);
-      for (ConfigurationType type : newTypes) {
-        updatedTypes.add(type.getId());
-      }
-      runDashboardManager.setTypes(updatedTypes);
-    }, popup -> popup.showInBestPositionFor(e.getDataContext()), true);
-  }
-
-  private void showAddPopup(Project project, Set<String> addedTypes,
-                            Consumer<List<ConfigurationType>> onAddCallback,
-                            Consumer<JBPopup> popupOpener,
-                            boolean showApplicableTypesOnly) {
-    List<ConfigurationType> allTypes =
-      ContainerUtil.filter(project.getApplication().getExtensionList(ConfigurationType.class), it -> !addedTypes.contains(it.getId()));
-
-    List<ConfigurationType> configurationTypes = new ArrayList<>(ConfigurationTypeSelector.getTypesToShow(project,
-                                                                                                          showApplicableTypesOnly && !project.isDefault(),
-                                                                                                          allTypes));
-
-    configurationTypes.sort(IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
-    var hiddenCount = allTypes.size() - configurationTypes.size();
-    List<Object> popupList = new ArrayList<>(configurationTypes);
-    if (hiddenCount > 0) {
-      popupList.add(ExecutionLocalize.showIrrelevantConfigurationsActionName(hiddenCount).get());
+    public AddRunConfigurationTypeAction() {
+        super(ActionLocalize.actionRundashboardAddtypeText());
     }
 
-    var builder = JBPopupFactory.getInstance().createPopupChooserBuilder(popupList)
-      .setTitle(ExecutionLocalize.runDashboardConfigurableAddConfigurationType().get())
-      .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
-      .setRenderer(new ColoredListCellRenderer() {
-        @Override
-        protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-          if (value instanceof ConfigurationType configurationType) {
-            setIcon(configurationType.getIcon());
-            append(configurationType.getDisplayName().get());
-          }
-          else {
-            append(String.valueOf(value));
-          }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        RunDashboardManager runDashboardManager = RunDashboardManager.getInstance(project);
+        Set<String> addedTypes = runDashboardManager.getTypes();
+        showAddPopup(project, addedTypes, newTypes -> {
+            Set<String> updatedTypes = new HashSet<>(addedTypes);
+            for (ConfigurationType type : newTypes) {
+                updatedTypes.add(type.getId());
+            }
+            runDashboardManager.setTypes(updatedTypes);
+        }, popup -> popup.showInBestPositionFor(e.getDataContext()), true);
+    }
+
+    private void showAddPopup(
+        Project project, Set<String> addedTypes,
+        Consumer<List<ConfigurationType>> onAddCallback,
+        Consumer<JBPopup> popupOpener,
+        boolean showApplicableTypesOnly
+    ) {
+        List<ConfigurationType> allTypes =
+            ContainerUtil.filter(
+                project.getApplication().getExtensionList(ConfigurationType.class),
+                it -> !addedTypes.contains(it.getId())
+            );
+
+        List<ConfigurationType> configurationTypes = new ArrayList<>(ConfigurationTypeSelector.getTypesToShow(
+            project,
+            showApplicableTypesOnly && !project.isDefault(),
+            allTypes
+        ));
+
+        configurationTypes.sort(IGNORE_CASE_DISPLAY_NAME_COMPARATOR);
+        var hiddenCount = allTypes.size() - configurationTypes.size();
+        List<Object> popupList = new ArrayList<>(configurationTypes);
+        if (hiddenCount > 0) {
+            popupList.add(ExecutionLocalize.showIrrelevantConfigurationsActionName(hiddenCount).get());
         }
-      })
-      .setMovable(true)
-      .setResizable(true)
-      .setNamerForFiltering(o -> o instanceof ConfigurationType type ? type.getDisplayName().get() : null)
-      .setAdText(ExecutionLocalize.runDashboardConfigurableTypesPanelHint().get())
-      .setItemsChosenCallback(selectedValues -> {
-        var value = ContainerUtil.getOnlyItem(selectedValues);
-        if (value instanceof String) {
-          showAddPopup(project, addedTypes, onAddCallback, popupOpener, false);
-          return;
-        }
 
-        onAddCallback.accept(ContainerUtil.filterIsInstance(selectedValues, ConfigurationType.class));
-      });
+        var builder = JBPopupFactory.getInstance().createPopupChooserBuilder(popupList)
+            .setTitle(ExecutionLocalize.runDashboardConfigurableAddConfigurationType().get())
+            .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
+            .setRenderer(new ColoredListCellRenderer() {
+                @Override
+                protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+                    if (value instanceof ConfigurationType configurationType) {
+                        setIcon(configurationType.getIcon());
+                        append(configurationType.getDisplayName().get());
+                    }
+                    else {
+                        append(String.valueOf(value));
+                    }
+                }
+            })
+            .setMovable(true)
+            .setResizable(true)
+            .setNamerForFiltering(o -> o instanceof ConfigurationType type ? type.getDisplayName().get() : null)
+            .setAdText(ExecutionLocalize.runDashboardConfigurableTypesPanelHint().get())
+            .setItemsChosenCallback(selectedValues -> {
+                var value = ContainerUtil.getOnlyItem(selectedValues);
+                if (value instanceof String) {
+                    showAddPopup(project, addedTypes, onAddCallback, popupOpener, false);
+                    return;
+                }
 
-    popupOpener.accept(builder.createPopup());
-  }
+                onAddCallback.accept(ContainerUtil.filterIsInstance(selectedValues, ConfigurationType.class));
+            });
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
-  }
+        popupOpener.accept(builder.createPopup());
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
+    }
 }

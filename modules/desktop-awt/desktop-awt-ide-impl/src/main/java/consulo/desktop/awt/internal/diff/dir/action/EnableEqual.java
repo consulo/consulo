@@ -23,17 +23,17 @@ import consulo.ui.ex.action.EmptyAction;
  * @author Konstantin Bulenkov
  */
 public class EnableEqual extends DirDiffAction {
-  public EnableEqual(DirDiffTableModel model) {
-    super(model);
-    EmptyAction.setupAction(this, "DirDiffMenu.EnableEqual", null);
-  }
+    public EnableEqual(DirDiffTableModel model) {
+        super(model);
+        EmptyAction.setupAction(this, "DirDiffMenu.EnableEqual", null);
+    }
 
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return getModel().isShowEqual();
-  }
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        return getModel().isShowEqual();
+    }
 
-  public void updateState(boolean state) {
-    getModel().setShowEqual(state);
-  }
+    public void updateState(boolean state) {
+        getModel().setShowEqual(state);
+    }
 }

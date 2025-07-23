@@ -23,17 +23,17 @@ import consulo.ui.ex.action.EmptyAction;
  * @author Konstantin Bulenkov
  */
 public class EnableNotEqual extends DirDiffAction {
-  protected EnableNotEqual(DirDiffTableModel model) {
-    super(model);
-    EmptyAction.setupAction(this, "DirDiffMenu.EnableNotEqual", null);
-  }
+    protected EnableNotEqual(DirDiffTableModel model) {
+        super(model);
+        EmptyAction.setupAction(this, "DirDiffMenu.EnableNotEqual", null);
+    }
 
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return getModel().isShowDifferent();
-  }
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        return getModel().isShowDifferent();
+    }
 
-  public void updateState(boolean state) {
-    getModel().setShowDifferent(state);
-  }
+    public void updateState(boolean state) {
+        getModel().setShowDifferent(state);
+    }
 }

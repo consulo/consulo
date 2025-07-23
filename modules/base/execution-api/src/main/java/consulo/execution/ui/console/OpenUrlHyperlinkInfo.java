@@ -29,61 +29,62 @@ import consulo.webBrowser.WebBrowserManager;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 import java.util.function.Predicate;
 
 public final class OpenUrlHyperlinkInfo implements HyperlinkWithPopupMenuInfo {
-  private final String url;
-  private final WebBrowser browser;
-  private final Predicate<WebBrowser> browserCondition;
+    private final String url;
+    private final WebBrowser browser;
+    private final Predicate<WebBrowser> browserCondition;
 
-  public OpenUrlHyperlinkInfo(@Nonnull String url) {
-    this(url, webBrowser -> true, null);
-  }
-
-  public OpenUrlHyperlinkInfo(@Nonnull String url, @Nullable WebBrowser browser) {
-    this(url, null, browser);
-  }
-
-  public OpenUrlHyperlinkInfo(@Nonnull String url, @Nonnull Predicate<WebBrowser> browserCondition) {
-    this(url, browserCondition, null);
-  }
-
-  private OpenUrlHyperlinkInfo(@Nonnull String url, @Nullable Predicate<WebBrowser> browserCondition, @Nullable WebBrowser browser) {
-    this.url = url;
-    this.browserCondition = browserCondition;
-    this.browser = browser;
-  }
-
-  @Override
-  public ActionGroup getPopupMenuGroup(@Nonnull MouseEvent event) {
-    ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
-    for (final WebBrowser browser : WebBrowserManager.getInstance().getActiveBrowsers()) {
-      if (browserCondition == null ? (this.browser == null || browser.equals(this.browser)) : browserCondition.test(browser)) {
-        builder.add(new DumbAwareAction("Open in " + browser.getName(), "Open URL in " + browser.getName(), browser.getIcon()) {
-          @RequiredUIAccess
-          @Override
-          public void actionPerformed(@Nonnull AnActionEvent e) {
-            BrowserLauncher.getInstance().browse(url, browser, e.getData(Project.KEY));
-          }
-        });
-      }
+    public OpenUrlHyperlinkInfo(@Nonnull String url) {
+        this(url, webBrowser -> true, null);
     }
 
-    builder.add(new AnAction("Copy URL", "Copy URL to clipboard", PlatformIconGroup.actionsCopy()) {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        CopyPasteManager.getInstance().setContents(new StringSelection(url));
-      }
-    });
-    return builder.build();
-  }
+    public OpenUrlHyperlinkInfo(@Nonnull String url, @Nullable WebBrowser browser) {
+        this(url, null, browser);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void navigate(Project project) {
-    BrowserLauncher.getInstance().browse(url, browser, project);
-  }
+    public OpenUrlHyperlinkInfo(@Nonnull String url, @Nonnull Predicate<WebBrowser> browserCondition) {
+        this(url, browserCondition, null);
+    }
+
+    private OpenUrlHyperlinkInfo(@Nonnull String url, @Nullable Predicate<WebBrowser> browserCondition, @Nullable WebBrowser browser) {
+        this.url = url;
+        this.browserCondition = browserCondition;
+        this.browser = browser;
+    }
+
+    @Override
+    public ActionGroup getPopupMenuGroup(@Nonnull MouseEvent event) {
+        ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
+        for (final WebBrowser browser : WebBrowserManager.getInstance().getActiveBrowsers()) {
+            if (browserCondition == null ? (this.browser == null || browser.equals(this.browser)) : browserCondition.test(browser)) {
+                builder.add(new DumbAwareAction("Open in " + browser.getName(), "Open URL in " + browser.getName(), browser.getIcon()) {
+                    @RequiredUIAccess
+                    @Override
+                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                        BrowserLauncher.getInstance().browse(url, browser, e.getData(Project.KEY));
+                    }
+                });
+            }
+        }
+
+        builder.add(new AnAction("Copy URL", "Copy URL to clipboard", PlatformIconGroup.actionsCopy()) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                CopyPasteManager.getInstance().setContents(new StringSelection(url));
+            }
+        });
+        return builder.build();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void navigate(Project project) {
+        BrowserLauncher.getInstance().browse(url, browser, project);
+    }
 }

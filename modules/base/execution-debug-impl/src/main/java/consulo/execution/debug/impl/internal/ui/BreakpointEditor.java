@@ -34,69 +34,78 @@ import java.awt.*;
  * @since 2012-04-04
  */
 public class BreakpointEditor {
-  public JPanel getMainPanel() {
-    return myMainPanel;
-  }
-
-  private void createUIComponents() {
-    AnAction action = ActionManager.getInstance().getAction(XDebuggerActions.VIEW_BREAKPOINTS);
-    String shortcutText = action != null ? KeymapUtil.getFirstKeyboardShortcutText(action) : null;
-    String text = shortcutText != null ? "More (" + shortcutText + ")" : "More";
-    myShowMoreOptionsLink = new LinkLabel(text, null, (aSource, aLinkData) -> {
-      if (myDelegate != null) {
-        myDelegate.more();
-      }
-    });
-  }
-
-  public void setShowMoreOptionsLink(boolean b) {
-    myShowMoreOptionsLink.setVisible(b);
-  }
-
-  public interface Delegate {
-    void done();
-    void more();
-  }
-
-  private JPanel myMainPanel;
-  private JButton myDoneButton;
-  private JPanel myPropertiesPlaceholder;
-  private LinkLabel myShowMoreOptionsLink;
-  private Delegate myDelegate;
-
-  public BreakpointEditor() {
-    myDoneButton.addActionListener(actionEvent -> done());
-
-    final AnAction doneAction = new AnAction() {
-      @Override
-      public void update(@Nonnull AnActionEvent e) {
-        super.update(e);
-        boolean lookup = LookupManager.getInstance(e.getRequiredData(Project.KEY)).getActiveLookup() != null;
-        Editor editor = e.getData(Editor.KEY);
-        e.getPresentation().setEnabled(!lookup && (editor == null || StringUtil.isEmpty(editor.getSelectionModel().getSelectedText())) );
-      }
-
-      @Override
-      @RequiredUIAccess
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        done();
-      }
-    };
-    doneAction.registerCustomShortcutSet(new CompositeShortcutSet(CustomShortcutSet.fromString("ESCAPE"), CustomShortcutSet.fromString("ENTER")), myMainPanel);
-  }
-
-  private void done() {
-    if (myDelegate != null) {
-      myDelegate.done();
+    public JPanel getMainPanel() {
+        return myMainPanel;
     }
-  }
 
-  public void setPropertiesPanel(JComponent p) {
-    myPropertiesPlaceholder.removeAll();
-    myPropertiesPlaceholder.add(p, BorderLayout.CENTER);
-  }
+    private void createUIComponents() {
+        AnAction action = ActionManager.getInstance().getAction(XDebuggerActions.VIEW_BREAKPOINTS);
+        String shortcutText = action != null ? KeymapUtil.getFirstKeyboardShortcutText(action) : null;
+        String text = shortcutText != null ? "More (" + shortcutText + ")" : "More";
+        myShowMoreOptionsLink = new LinkLabel(
+            text,
+            null,
+            (aSource, aLinkData) -> {
+                if (myDelegate != null) {
+                    myDelegate.more();
+                }
+            }
+        );
+    }
 
-  public void setDelegate(Delegate d) {
-    myDelegate = d;
-  }
+    public void setShowMoreOptionsLink(boolean b) {
+        myShowMoreOptionsLink.setVisible(b);
+    }
+
+    public interface Delegate {
+        void done();
+
+        void more();
+    }
+
+    private JPanel myMainPanel;
+    private JButton myDoneButton;
+    private JPanel myPropertiesPlaceholder;
+    private LinkLabel myShowMoreOptionsLink;
+    private Delegate myDelegate;
+
+    public BreakpointEditor() {
+        myDoneButton.addActionListener(actionEvent -> done());
+
+        final AnAction doneAction = new AnAction() {
+            @Override
+            public void update(@Nonnull AnActionEvent e) {
+                super.update(e);
+                boolean lookup = LookupManager.getInstance(e.getRequiredData(Project.KEY)).getActiveLookup() != null;
+                Editor editor = e.getData(Editor.KEY);
+                e.getPresentation()
+                    .setEnabled(!lookup && (editor == null || StringUtil.isEmpty(editor.getSelectionModel().getSelectedText())));
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                done();
+            }
+        };
+        doneAction.registerCustomShortcutSet(
+            new CompositeShortcutSet(CustomShortcutSet.fromString("ESCAPE"), CustomShortcutSet.fromString("ENTER")),
+            myMainPanel
+        );
+    }
+
+    private void done() {
+        if (myDelegate != null) {
+            myDelegate.done();
+        }
+    }
+
+    public void setPropertiesPanel(JComponent p) {
+        myPropertiesPlaceholder.removeAll();
+        myPropertiesPlaceholder.add(p, BorderLayout.CENTER);
+    }
+
+    public void setDelegate(Delegate d) {
+        myDelegate = d;
+    }
 }

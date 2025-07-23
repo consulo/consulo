@@ -34,91 +34,96 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class DiffWindowBase {
-  @Nullable protected final Project myProject;
-  @Nonnull
-  protected final DiffDialogHints myHints;
+    @Nullable
+    protected final Project myProject;
+    @Nonnull
+    protected final DiffDialogHints myHints;
 
-  private DiffRequestProcessor myProcessor;
-  private WindowWrapper myWrapper;
+    private DiffRequestProcessor myProcessor;
+    private WindowWrapper myWrapper;
 
-  public DiffWindowBase(@Nullable Project project, @Nonnull DiffDialogHints hints) {
-    myProject = project;
-    myHints = hints;
-  }
+    public DiffWindowBase(@Nullable Project project, @Nonnull DiffDialogHints hints) {
+        myProject = project;
+        myHints = hints;
+    }
 
-  protected void init() {
-    if (myWrapper != null) return;
+    protected void init() {
+        if (myWrapper != null) {
+            return;
+        }
 
-    myProcessor = createProcessor();
+        myProcessor = createProcessor();
 
-    String dialogGroupKey = myProcessor.getContextUserData(DiffUserDataKeys.DIALOG_GROUP_KEY);
-    if (dialogGroupKey == null) dialogGroupKey = "DiffContextDialog";
+        String dialogGroupKey = myProcessor.getContextUserData(DiffUserDataKeys.DIALOG_GROUP_KEY);
+        if (dialogGroupKey == null) {
+            dialogGroupKey = "DiffContextDialog";
+        }
 
-    myWrapper = new WindowWrapperBuilder(AWTDiffUtil.getWindowMode(myHints), new MyPanel(myProcessor.getComponent()))
+        myWrapper = new WindowWrapperBuilder(AWTDiffUtil.getWindowMode(myHints), new MyPanel(myProcessor.getComponent()))
             .setProject(myProject)
             .setParent(myHints.getParent())
             .setDimensionServiceKey(dialogGroupKey)
             .setOnShowCallback(new Runnable() {
-              @Override
-              public void run() {
-                myProcessor.updateRequest();
-                myProcessor.requestFocus(); // TODO: not needed for modal dialogs. Make a flag in WindowWrapperBuilder ?
-              }
+                @Override
+                public void run() {
+                    myProcessor.updateRequest();
+                    myProcessor.requestFocus(); // TODO: not needed for modal dialogs. Make a flag in WindowWrapperBuilder ?
+                }
             })
             .build();
-    myWrapper.setImage(new DesktopAWTScalableImage(PlatformIconGroup.actionsDiff()));
-    Disposer.register(myWrapper, myProcessor);
+        myWrapper.setImage(new DesktopAWTScalableImage(PlatformIconGroup.actionsDiff()));
+        Disposer.register(myWrapper, myProcessor);
 
-    new DumbAwareAction() {
-      public void actionPerformed(final AnActionEvent e) {
-        myWrapper.close();
-      }
-    }.registerCustomShortcutSet(CommonShortcuts.getCloseActiveWindow(), myProcessor.getComponent());
-  }
-
-  public void show() {
-    init();
-    myWrapper.show();
-  }
-
-  @Nonnull
-  protected abstract DiffRequestProcessor createProcessor();
-
-  //
-  // Delegate
-  //
-
-  protected void setWindowTitle(@Nonnull String title) {
-    myWrapper.setTitle(title);
-  }
-
-  protected void onAfterNavigate() {
-    AWTDiffUtil.closeWindow(myWrapper.getWindow(), true, true);
-  }
-
-  //
-  // Getters
-  //
-
-  protected WindowWrapper getWrapper() {
-    return myWrapper;
-  }
-
-  protected DiffRequestProcessor getProcessor() {
-    return myProcessor;
-  }
-
-  private static class MyPanel extends JPanel {
-    public MyPanel(@Nonnull JComponent content) {
-      super(new BorderLayout());
-      add(content, BorderLayout.CENTER);
+        new DumbAwareAction() {
+            public void actionPerformed(final AnActionEvent e) {
+                myWrapper.close();
+            }
+        }.registerCustomShortcutSet(CommonShortcuts.getCloseActiveWindow(), myProcessor.getComponent());
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-      Dimension windowSize = AWTDiffUtil.getDefaultDiffWindowSize();
-      Dimension size = super.getPreferredSize();
-      return new Dimension(Math.max(windowSize.width, size.width), Math.max(windowSize.height, size.height));
+    public void show() {
+        init();
+        myWrapper.show();
     }
-  }
+
+    @Nonnull
+    protected abstract DiffRequestProcessor createProcessor();
+
+    //
+    // Delegate
+    //
+
+    protected void setWindowTitle(@Nonnull String title) {
+        myWrapper.setTitle(title);
+    }
+
+    protected void onAfterNavigate() {
+        AWTDiffUtil.closeWindow(myWrapper.getWindow(), true, true);
+    }
+
+    //
+    // Getters
+    //
+
+    protected WindowWrapper getWrapper() {
+        return myWrapper;
+    }
+
+    protected DiffRequestProcessor getProcessor() {
+        return myProcessor;
+    }
+
+    private static class MyPanel extends JPanel {
+        public MyPanel(@Nonnull JComponent content) {
+            super(new BorderLayout());
+            add(content, BorderLayout.CENTER);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension windowSize = AWTDiffUtil.getDefaultDiffWindowSize();
+            Dimension size = super.getPreferredSize();
+            return new Dimension(Math.max(windowSize.width, size.width), Math.max(windowSize.height, size.height));
+        }
+    }
 }

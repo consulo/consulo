@@ -39,89 +39,88 @@ import java.util.function.BiConsumer;
  * @since 2017-09-12
  */
 public class DesktopTabImpl implements Tab {
-  private static class CloseAction extends DumbAwareAction {
+    private static class CloseAction extends DumbAwareAction {
+        private final BiConsumer<Tab, Component> myCloseHandler;
+        private final DesktopTabImpl myTabInfo;
 
-    private final BiConsumer<Tab, Component> myCloseHandler;
-    private final DesktopTabImpl myTabInfo;
+        public CloseAction(BiConsumer<Tab, Component> closeHandler, DesktopTabImpl tabInfo) {
+            myCloseHandler = closeHandler;
+            myTabInfo = tabInfo;
+        }
 
-    public CloseAction(BiConsumer<Tab, Component> closeHandler, DesktopTabImpl tabInfo) {
-      myCloseHandler = closeHandler;
-      myTabInfo = tabInfo;
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            myCloseHandler.accept(myTabInfo, myTabInfo.myComponent);
+        }
+
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+            e.getPresentation().setIcon(PlatformIconGroup.actionsCancel());
+            e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Close"));
+        }
+    }
+
+    private BiConsumer<Tab, TextItemPresentation> myRender = (tab, presentation) -> presentation.append(toString());
+
+    private final TabInfo myTabInfo = new TabInfo(null);
+
+    private final DesktopTabbedLayoutImpl myTabbedLayout;
+
+    private Component myComponent;
+
+    public DesktopTabImpl(DesktopTabbedLayoutImpl tabbedLayout) {
+        myTabbedLayout = tabbedLayout;
+    }
+
+    public void setComponent(Component component) {
+        myComponent = component;
+
+        myTabInfo.setComponent(TargetAWT.to(component));
+    }
+
+    public TabInfo getTabInfo() {
+        return myTabInfo;
     }
 
     @Override
-    @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      myCloseHandler.accept(myTabInfo, myTabInfo.myComponent);
+    public void update() {
+        myRender.accept(this, new TextItemPresentation() {
+            @Override
+            public void clearText() {
+                myTabInfo.setText("");
+            }
+
+            @Nonnull
+            @Override
+            public TextItemPresentation withIcon(@Nullable Image image) {
+                myTabInfo.setIcon(image);
+                return this;
+            }
+
+            @Override
+            public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
+                String oldText = myTabInfo.getText();
+                myTabInfo.setText(StringUtil.notNullize(oldText) + text.getValue());
+            }
+        });
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setIcon(PlatformIconGroup.actionsCancel());
-      e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Close"));
+    public void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> render) {
+        myRender = render;
     }
-  }
 
-  private BiConsumer<Tab, TextItemPresentation> myRender = (tab, presentation) -> presentation.append(toString());
+    @Override
+    public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
+        ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
+        builder.add(new CloseAction(closeHandler, this));
 
-  private final TabInfo myTabInfo = new TabInfo(null);
+        myTabInfo.setTabLabelActions(builder.build(), "TabActions");
+    }
 
-  private final DesktopTabbedLayoutImpl myTabbedLayout;
-
-  private Component myComponent;
-
-  public DesktopTabImpl(DesktopTabbedLayoutImpl tabbedLayout) {
-    myTabbedLayout = tabbedLayout;
-  }
-
-  public void setComponent(Component component) {
-    myComponent = component;
-
-    myTabInfo.setComponent(TargetAWT.to(component));
-  }
-
-  public TabInfo getTabInfo() {
-    return myTabInfo;
-  }
-
-  @Override
-  public void update() {
-     myRender.accept(this, new TextItemPresentation() {
-       @Override
-       public void clearText() {
-         myTabInfo.setText("");
-       }
-
-       @Nonnull
-       @Override
-       public TextItemPresentation withIcon(@Nullable Image image) {
-         myTabInfo.setIcon(image);
-         return this;
-       }
-
-       @Override
-       public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
-         String oldText = myTabInfo.getText();
-         myTabInfo.setText(StringUtil.notNullize(oldText) + text.getValue());
-       }
-     });
-  }
-
-  @Override
-  public void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> render) {
-    myRender = render;
-  }
-
-  @Override
-  public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
-    ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
-    builder.add(new CloseAction(closeHandler, this));
-
-    myTabInfo.setTabLabelActions(builder.build(), "TabActions");
-  }
-
-  @Override
-  public void select() {
-    myTabbedLayout.toAWTComponent().select(myTabInfo, true);
-  }
+    @Override
+    public void select() {
+        myTabbedLayout.toAWTComponent().select(myTabInfo, true);
+    }
 }

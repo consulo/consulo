@@ -29,11 +29,11 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class DirDiffToolbarActions extends ActionGroup {
-  private final AnAction[] myActions;
+    private final AnAction[] myActions;
 
-  public DirDiffToolbarActions(DirDiffTableModel model, JComponent panel) {
-    super("Directory Diff Actions", false);
-    final List<AnAction> actions = new ArrayList<AnAction>(Arrays.asList(
+    public DirDiffToolbarActions(DirDiffTableModel model, JComponent panel) {
+        super("Directory Diff Actions", false);
+        final List<AnAction> actions = new ArrayList<AnAction>(Arrays.asList(
             new RefreshDirDiffAction(model),
             AnSeparator.getInstance(),
             new EnableLeft(model),
@@ -42,34 +42,35 @@ public class DirDiffToolbarActions extends ActionGroup {
             new EnableRight(model),
             AnSeparator.getInstance(),
             new ChangeCompareModeGroup(model),
-            AnSeparator.getInstance()));
+            AnSeparator.getInstance()
+        ));
 
-    if (model.isOperationsEnabled()) {
-      actions.add(new SynchronizeDiff(model, true));
-      actions.add(new SynchronizeDiff(model, false));
-    }
-
-    for (AnAction action : model.getSettings().getExtraActions()) {
-      actions.add(action);
-    }
-
-    for (AnAction action : actions) {
-      if (action instanceof ShortcutProvider) {
-        final ShortcutSet shortcut = ((ShortcutProvider)action).getShortcut();
-        if (shortcut != null) {
-          action.registerCustomShortcutSet(shortcut, panel);
+        if (model.isOperationsEnabled()) {
+            actions.add(new SynchronizeDiff(model, true));
+            actions.add(new SynchronizeDiff(model, false));
         }
-      }
-      if (action instanceof DirDiffModelHolder) {
-        ((DirDiffModelHolder)action).setModel(model);
-      }
-    }
-    myActions = actions.toArray(new AnAction[actions.size()]);
-  }
 
-  @Nonnull
-  @Override
-  public AnAction[] getChildren(@jakarta.annotation.Nullable AnActionEvent e) {
-    return myActions;
-  }
+        for (AnAction action : model.getSettings().getExtraActions()) {
+            actions.add(action);
+        }
+
+        for (AnAction action : actions) {
+            if (action instanceof ShortcutProvider) {
+                final ShortcutSet shortcut = ((ShortcutProvider) action).getShortcut();
+                if (shortcut != null) {
+                    action.registerCustomShortcutSet(shortcut, panel);
+                }
+            }
+            if (action instanceof DirDiffModelHolder) {
+                ((DirDiffModelHolder) action).setModel(model);
+            }
+        }
+        myActions = actions.toArray(new AnAction[actions.size()]);
+    }
+
+    @Nonnull
+    @Override
+    public AnAction[] getChildren(@jakarta.annotation.Nullable AnActionEvent e) {
+        return myActions;
+    }
 }
