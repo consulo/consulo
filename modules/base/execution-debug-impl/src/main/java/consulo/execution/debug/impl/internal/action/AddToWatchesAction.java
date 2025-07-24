@@ -15,33 +15,33 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XAddToWatchesFromEditorActionHandler;
-import consulo.ui.image.Image;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
+@ActionImpl(id = "Debugger.AddToWatch")
 public class AddToWatchesAction extends XDebuggerActionBase {
-    private final XAddToWatchesFromEditorActionHandler myHandler;
+    private final XAddToWatchesFromEditorActionHandler myHandler = new XAddToWatchesFromEditorActionHandler();
 
     public AddToWatchesAction() {
-        super(true);
-        myHandler = new XAddToWatchesFromEditorActionHandler();
+        super(
+            XDebuggerLocalize.actionAddToWatchText(),
+            LocalizeValue.empty(),
+            ExecutionDebugIconGroup.actionAddtowatch(),
+            true
+        );
     }
 
     @Nonnull
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return ExecutionDebugIconGroup.actionAddtowatch();
     }
 }

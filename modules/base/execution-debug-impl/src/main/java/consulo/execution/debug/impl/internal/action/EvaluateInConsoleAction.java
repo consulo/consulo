@@ -15,14 +15,23 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Debugger.EvaluateInConsole")
 final class EvaluateInConsoleAction extends XDebuggerActionBase {
     private final XEvaluateInConsoleFromEditorActionHandler myHandler = new XEvaluateInConsoleFromEditorActionHandler();
 
     public EvaluateInConsoleAction() {
-        super(true);
+        super(
+            XDebuggerLocalize.actionEvaluateInConsoleText(),
+            LocalizeValue.empty(),
+            null,
+            true
+        );
     }
 
     @Nonnull

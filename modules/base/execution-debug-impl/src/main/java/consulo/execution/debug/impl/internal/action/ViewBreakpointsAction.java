@@ -15,29 +15,30 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.execution.debug.impl.internal.breakpoint.ui.BreakpointsDialogFactory;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Jeka
  */
+@ActionImpl(id = "ViewBreakpoints")
 public class ViewBreakpointsAction extends AnAction implements DumbAware {
     private Object myInitialBreakpoint;
 
     public ViewBreakpointsAction() {
-        super(ActionLocalize.actionViewbreakpointsText(), LocalizeValue.empty(), ExecutionDebugIconGroup.actionViewbreakpoints());
+        super(XDebuggerLocalize.actionViewBreakpointsText(), LocalizeValue.empty(), ExecutionDebugIconGroup.actionViewbreakpoints());
     }
 
     @Override

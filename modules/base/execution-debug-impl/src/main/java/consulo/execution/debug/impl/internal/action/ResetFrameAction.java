@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.frame.XDropFrameHandler;
@@ -29,9 +30,14 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2024-12-06
  */
+@ActionImpl(id = "Debugger.PopFrame")
 public class ResetFrameAction extends XDebuggerActionBase {
     public ResetFrameAction() {
-        super(XDebuggerLocalize.actionDebuggerPopframeText(), XDebuggerLocalize.actionDebuggerPopframeDescription(), ExecutionDebugIconGroup.actionInlinedropframe());
+        super(
+            XDebuggerLocalize.actionPopFrameText(),
+            XDebuggerLocalize.actionPopFrameDescription(),
+            ExecutionDebugIconGroup.actionInlinedropframe()
+        );
     }
 
     private final DebuggerActionHandler myHandler = new XDebuggerActionHandler() {

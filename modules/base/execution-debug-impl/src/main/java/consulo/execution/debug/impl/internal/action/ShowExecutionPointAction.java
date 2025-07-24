@@ -15,35 +15,38 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
-import consulo.ui.image.Image;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
+@ActionImpl(id = "ShowExecutionPoint")
 public class ShowExecutionPointAction extends XDebuggerActionBase {
     private final DebuggerActionHandler myHandler = new XDebuggerSuspendedActionHandler() {
         @Override
-        protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
+        protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
             session.showExecutionPoint();
         }
     };
 
-    @Override
-    @Nonnull
-    protected DebuggerActionHandler getHandler() {
-        return myHandler;
+    public ShowExecutionPointAction() {
+        super(
+            XDebuggerLocalize.actionShowExecutionPointText(),
+            XDebuggerLocalize.actionShowExecutionPointDescription(),
+            ExecutionDebugIconGroup.actionShowcurrentframe()
+        );
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    protected Image getTemplateIcon() {
-        return ExecutionDebugIconGroup.actionShowcurrentframe();
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
     }
 }
