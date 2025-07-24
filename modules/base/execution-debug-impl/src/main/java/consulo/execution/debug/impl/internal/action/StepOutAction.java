@@ -15,35 +15,38 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
-import consulo.ui.image.Image;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
+@ActionImpl(id = "StepOut")
 public class StepOutAction extends XDebuggerActionBase {
     private final DebuggerActionHandler myHandler = new XDebuggerSuspendedActionHandler() {
         @Override
-        protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
+        protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
             session.stepOut();
         }
     };
 
-    @Override
-    @Nonnull
-    protected DebuggerActionHandler getHandler() {
-        return myHandler;
+    public StepOutAction() {
+        super(
+            XDebuggerLocalize.actionStepOutText(),
+            XDebuggerLocalize.actionStepOutDescription(),
+            ExecutionDebugIconGroup.actionStepout()
+        );
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    protected Image getTemplateIcon() {
-        return ExecutionDebugIconGroup.actionStepout();
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
     }
 }

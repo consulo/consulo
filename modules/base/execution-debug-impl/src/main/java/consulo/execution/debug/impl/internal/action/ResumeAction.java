@@ -15,37 +15,46 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerActionHandler;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
+@ActionImpl(id = "Resume")
 public class ResumeAction extends XDebuggerActionBase implements DumbAware {
     private final DebuggerActionHandler myHandler = new XDebuggerActionHandler() {
         @Override
-        protected boolean isEnabled(@Nonnull final XDebugSession session, final DataContext dataContext) {
+        protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
             return session.isPaused();
         }
 
         @Override
-        protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
+        protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
             session.resume();
         }
     };
+
+    public ResumeAction() {
+        super(
+            XDebuggerLocalize.actionResumeText(),
+            XDebuggerLocalize.actionResumeDescription(),
+            PlatformIconGroup.actionsResume()
+        );
+    }
 
     @Override
     protected boolean isEnabled(AnActionEvent e) {
@@ -72,15 +81,9 @@ public class ResumeAction extends XDebuggerActionBase implements DumbAware {
         }
     }
 
-    @Override
     @Nonnull
+    @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.actionsResume();
     }
 }

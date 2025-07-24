@@ -1,17 +1,81 @@
-action.Debugger.PopFrame.description:
-    text: Moves execution point back to the method call dropping current method frames from the stack
-action.Debugger.PopFrame.text:
-    text: Reset _Frame
+action.add.to.watch.text:
+    text: Add to Watches
 action.choose.debug.configuration.popup.description:
     text: Choose and debug configuration
 action.choose.debug.configuration.popup.text:
     text: Debug...
+action.evaluate.expression.description:
+    text: Evaluate arbitrary expression
+action.evaluate.expression.text:
+    text: _Evaluate Expression…
+action.evaluate.in.console.text:
+    text: Evaluate in Console
+action.force.run.to.cursor.description:
+    text: Run to the line where the caret is, ignoring any breakpoints
+action.force.run.to.cursor.text:
+    text: Force Run to Cur_sor
+action.force.step.into.description:
+    text: Step into, ignore stepping filters for libraries, constructors, etc.
+action.force.step.into.text:
+    text: Force Step I_nto
+action.force.step.over.description:
+    text: Step over, disable all breakpoints before stepping.
+action.force.step.over.text:
+    text: Force Step O_ver
 action.memory.view.settings.text:
     text: Memory View Settings
 action.next.frame.text:
     text: Next Frame
+action.pause.description:
+    text: Suspend program execution and enable debugging
+action.pause.text:
+    text: _Pause Program
+action.pop.frame.description:
+    text: Moves execution point back to the method call dropping current method frames from the stack
+action.pop.frame.text:
+    text: Reset _Frame
 action.previous.frame.text:
     text: Previous Frame
+action.resume.description:
+    text: Resume program execution
+action.resume.text:
+    text: Resume Pro_gram
+action.run.to.cursor.description:
+    text: Run to the line where the caret is
+action.run.to.cursor.text:
+    text: Run to _Cursor
+action.show.execution.point.description:
+    text: Show the current program execution point
+action.show.execution.point.text:
+    text: Show E_xecution Point
+action.smart.step.into.description:
+    text: Step into the particular method
+action.smart.step.into.text:
+    text: Smart Ste_p Into
+action.step.into.description:
+    text: Step to the next line executed
+action.step.into.text:
+    text: Step _Into
+action.step.out.description:
+    text: Step to the first line executed after returning from this method
+action.step.out.text:
+    text: Step Ou_t
+action.step.over.description:
+    text: Step to the next line in this file
+action.step.over.text:
+    text: Step _Over
+action.toggle.line.breakpoint.description:
+    text: Toggle line breakpoint at caret
+action.toggle.line.breakpoint.text:
+    text: Toggle _Line Breakpoint
+action.toggle.temporary.line.breakpoint.description:
+    text: Toggle temporary line breakpoint at caret
+action.toggle.temporary.line.breakpoint.text:
+    text: Toggle Temporary Line Breakpoint
+action.view.breakpoints.description:
+    text: View and manage all breakpoints and watchpoints
+action.view.breakpoints.text:
+    text: View Brea_kpoints…
 ad.extra.selection.shortcut:
     text: 'You can also choose an item with: {0}'
 button.text.code.fragment.mode:

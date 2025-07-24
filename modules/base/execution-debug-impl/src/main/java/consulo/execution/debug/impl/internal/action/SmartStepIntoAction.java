@@ -15,8 +15,10 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -24,8 +26,17 @@ import jakarta.annotation.Nullable;
 /**
  * @author nik
  */
+@ActionImpl(id = "SmartStepInto")
 public class SmartStepIntoAction extends XDebuggerActionBase {
     private final XDebuggerSmartStepIntoHandler myHandler = new XDebuggerSmartStepIntoHandler();
+
+    public SmartStepIntoAction() {
+        super(
+            XDebuggerLocalize.actionSmartStepIntoText(),
+            XDebuggerLocalize.actionSmartStepIntoDescription(),
+            ExecutionDebugIconGroup.actionSmartstepinto()
+        );
+    }
 
     @Override
     @Nonnull

@@ -1891,34 +1891,33 @@
         <action id="EditBreakpoint" class="consulo.execution.debug.impl.internal.action.EditBreakpointAction"/>
         <group id="DebugMainMenu">
             <separator/>
-            <action id="StepOver" class="consulo.execution.debug.impl.internal.action.StepOverAction"/>
-            <action id="ForceStepOver" class="consulo.execution.debug.impl.internal.action.ForceStepOverAction"/>
-            <action id="StepInto" class="consulo.execution.debug.impl.internal.action.StepIntoAction"/>
-            <action id="ForceStepInto" class="consulo.execution.debug.impl.internal.action.ForceStepIntoAction"/>
-            <action id="SmartStepInto" class="consulo.execution.debug.impl.internal.action.SmartStepIntoAction"/>
-            <action id="StepOut" class="consulo.execution.debug.impl.internal.action.StepOutAction"/>
-            <action id="RunToCursor" class="consulo.execution.debug.impl.internal.action.RunToCursorAction"/>
-            <action id="ForceRunToCursor" class="consulo.execution.debug.impl.internal.action.ForceRunToCursorAction"/>
-            <action id="Debugger.PopFrame" class="consulo.execution.debug.impl.internal.action.ResetFrameAction"/>
+            <reference ref="StepOver"/>
+            <reference ref="ForceStepOver"/>
+            <reference ref="StepInto"/>
+            <reference ref="ForceStepInto"/>
+            <reference ref="SmartStepInto"/>
+            <reference ref="StepOut"/>
+            <reference ref="RunToCursor"/>
+            <reference ref="ForceRunToCursor"/>
+            <reference ref="Debugger.PopFrame"/>
 
-            <action id="Pause" class="consulo.execution.debug.impl.internal.action.PauseAction"/>
-            <action id="Resume" class="consulo.execution.debug.impl.internal.action.ResumeAction"/>
+            <reference ref="Pause"/>
+            <reference ref="Resume"/>
             <separator/>
-            <action id="EvaluateExpression" class="consulo.execution.debug.impl.internal.action.EvaluateAction"/>
-            <reference id="QuickEvaluateExpression"/>
-            <action id="ShowExecutionPoint" class="consulo.execution.debug.impl.internal.action.ShowExecutionPointAction"/>
+            <reference ref="EvaluateExpression"/>
+            <reference ref="QuickEvaluateExpression"/>
+            <reference ref="ShowExecutionPoint"/>
             <separator/>
-            <action id="ToggleLineBreakpoint" class="consulo.execution.debug.impl.internal.action.ToggleLineBreakpointAction"/>
-            <action id="ToggleTemporaryLineBreakpoint"
-                    class="consulo.execution.debug.impl.internal.action.ToggleTemporaryLineBreakpointAction"/>
-            <action id="ViewBreakpoints" class="consulo.execution.debug.impl.internal.action.ViewBreakpointsAction"/>
+            <reference ref="ToggleLineBreakpoint"/>
+            <reference ref="ToggleTemporaryLineBreakpoint"/>
+            <reference ref="ViewBreakpoints"/>
             <separator/>
 
             <add-to-group group-id="RunMenu" anchor="last"/>
         </group>
 
-        <action id="Debugger.AddToWatch" class="consulo.execution.debug.impl.internal.action.AddToWatchesAction"/>
-        <action id="Debugger.EvaluateInConsole" class="consulo.execution.debug.impl.internal.action.EvaluateInConsoleAction"/>
+        <reference ref="Debugger.AddToWatch"/>
+        <reference ref="Debugger.EvaluateInConsole"/>
 
         <group id="EditorPopupMenuDebug">
             <separator/>
@@ -1931,7 +1930,6 @@
 
             <add-to-group group-id="EditorLangPopupMenu" relative-to-action="EditorPopupMenu.Run" anchor="before"/>
         </group>
-
 
         <group id="XDebugger.Actions">
             <action id="XDebugger.SetValue" class="consulo.execution.debug.impl.internal.ui.tree.action.XSetValueAction"/>

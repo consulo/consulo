@@ -438,8 +438,6 @@ action.CreateRunConfiguration.text:
     text: Create Run Configuration
 action.DebugListen.text:
     text: Throw Debug Exception
-action.Debugger.AddToWatch.text:
-    text: Add to Watches
 action.Debugger.AdjustArrayRange.text:
     text: Adjust Range…
 action.Debugger.AutoRenderer.text:
@@ -462,8 +460,6 @@ action.Debugger.EditTypeSource.text:
     text: Jump to Object Source
 action.Debugger.EditWatch.text:
     text: Edit Watch
-action.Debugger.EvaluateInConsole.text:
-    text: Evaluate in Console
 action.Debugger.FocusOnBreakpoint.description:
     text: Focus this view by default when breakpoint is reached
 action.Debugger.FocusOnBreakpoint.text:
@@ -856,10 +852,6 @@ action.EditorUpWithSelection.text:
     text: Up with Selection
 action.EmacsStyleIndent.text:
     text: Emacs Tab
-action.EvaluateExpression.description:
-    text: Evaluate arbitrary expression
-action.EvaluateExpression.text:
-    text: _Evaluate Expression…
 action.ExcludeFromProject.text:
     text: Exclude From Project…
 action.Exit.description:
@@ -1022,18 +1014,6 @@ action.FixDocComment.description:
     text: Generate or fix doc comment for the current context
 action.FixDocComment.text:
     text: Fix doc comment
-action.ForceRunToCursor.description:
-    text: Run to the line where the caret is, ignoring any breakpoints
-action.ForceRunToCursor.text:
-    text: Force Run to Cur_sor
-action.ForceStepInto.description:
-    text: Step into, ignore stepping filters for libraries, constructors, etc.
-action.ForceStepInto.text:
-    text: Force Step I_nto
-action.ForceStepOver.description:
-    text: Step over, disable all breakpoints before stepping.
-action.ForceStepOver.text:
-    text: Force Step O_ver
 action.Forward.description:
     text: Redo last undone navigation operation
 action.Forward.text:
@@ -1570,10 +1550,6 @@ action.PasteMultiple.description:
     text: Paste from recent clipboards
 action.PasteMultiple.text:
     text: Past_e from History…
-action.Pause.description:
-    text: Suspend program execution and enable debugging
-action.Pause.text:
-    text: _Pause Program
 action.PerformanceReport.text:
     text: Submit Performance Report
 action.PinActiveTab.description:
@@ -1740,10 +1716,6 @@ action.RestoreDefaultLayout.description:
     text: Restore default layout
 action.RestoreDefaultLayout.text:
     text: Restore De_fault Layout
-action.Resume.description:
-    text: Resume program execution
-action.Resume.text:
-    text: Resume Pro_gram
 action.RevealIn.text:
     text: Show/Reveal in Explorer/Finder/Konqueror/Nautilus
 action.ReverteOverrideFileTypeAction.description:
@@ -1790,10 +1762,6 @@ action.RunDashboard.UngroupConfigurations.text:
     text: Ungroup Configurations
 action.RunGc.text:
     text: Run Garbage Collector
-action.RunToCursor.description:
-    text: Run to the line where the caret is
-action.RunToCursor.text:
-    text: Run to _Cursor
 action.Runner.AttachCell.description:
     text: Attach selected views to the debugger tool window
 action.Runner.AttachCell.text:
@@ -1938,10 +1906,6 @@ action.ShowErrorDescription.description:
     text: Show description of error or warning at caret
 action.ShowErrorDescription.text:
     text: E_rror Description
-action.ShowExecutionPoint.description:
-    text: Show the current program execution point
-action.ShowExecutionPoint.text:
-    text: Show E_xecution Point
 action.ShowFilePath.description:
     text: Popup path of the current file for opening in external file manager
 action.ShowFilePath.text:
@@ -2010,10 +1974,6 @@ action.ShowUsages.text:
     text: _Show Usages
 action.ShowUserActivities.text:
     text: Show Activities
-action.SmartStepInto.description:
-    text: Step into the particular method
-action.SmartStepInto.text:
-    text: Smart Ste_p Into
 action.SmartTypeCompletion.description:
     text: Complete code basing on expected type
 action.SmartTypeCompletion.text:
@@ -2034,18 +1994,6 @@ action.StartupWizard.description:
     text: Run a wizard for selecting the set of enabled plugins
 action.StartupWizard.text:
     text: Configure Plugins…
-action.StepInto.description:
-    text: Step to the next line executed
-action.StepInto.text:
-    text: Step _Into
-action.StepOut.description:
-    text: Step to the first line executed after returning from this method
-action.StepOut.text:
-    text: Step Ou_t
-action.StepOver.description:
-    text: Step to the next line in this file
-action.StepOver.text:
-    text: Step _Over
 action.Stop.description:
     text: Stop process
 action.Stop.text:
@@ -2118,10 +2066,6 @@ action.ToggleFullScreen.text.enter:
     text: Enter Full Screen
 action.ToggleFullScreen.text.exit:
     text: Exit Full Screen
-action.ToggleLineBreakpoint.description:
-    text: Toggle line breakpoint at caret
-action.ToggleLineBreakpoint.text:
-    text: Toggle _Line Breakpoint
 action.TogglePinnedMode.description:
     text: Pin/unpin active tool window
 action.TogglePinnedMode.text:
@@ -2150,10 +2094,6 @@ action.ToggleSideMode.description:
     text: Tool windows split mode on/off
 action.ToggleSideMode.text:
     text: Split Mode
-action.ToggleTemporaryLineBreakpoint.description:
-    text: Toggle temporary line breakpoint at caret
-action.ToggleTemporaryLineBreakpoint.text:
-    text: Toggle Temporary Line Breakpoint
 action.ToggleWindowedMode.description:
     text: Window/unwindow active tool window
 action.ToggleWindowedMode.text:
@@ -2290,10 +2230,6 @@ action.VcsShowPrevChangeMarker.description:
     text: Go to previous change
 action.VcsShowPrevChangeMarker.text:
     text: Previous Ch_ange
-action.ViewBreakpoints.description:
-    text: View and manage all breakpoints and watchpoints
-action.ViewBreakpoints.text:
-    text: View Brea_kpoints…
 action.ViewImportPopups.description:
     text: Toggle display import popups in current file
 action.ViewImportPopups.text:
