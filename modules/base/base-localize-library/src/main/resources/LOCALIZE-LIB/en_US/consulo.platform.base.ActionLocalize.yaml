@@ -596,8 +596,6 @@ action.DumpIntentionsDescriptions.text:
     text: Dump intentions descriptions
 action.DumpPsiMemoryCaches.text:
     text: Dump what is cached in PSI
-action.EditBreakpoint.text:
-    text: Edit
 action.EditFavorites.description:
     text: Edit
 action.EditFavorites.text:
@@ -1034,6 +1032,10 @@ action.GenerateDTD.text:
     text: Generate DTD from _XML File
 action.GenerateSuperMethodCall.text:
     text: Super Method Call
+action.GoToLinkTarget.description:
+    text: Opens a target of this symlink in the Project View
+action.GoToLinkTarget.text:
+    text: Go to Link Target
 action.GotoAction.description:
     text: Quickly navigate to action by name
 action.GotoAction.text:
@@ -1606,6 +1608,8 @@ action.ProjectViewChangeView.description:
     text: Choose Project, Sourcepath or Classpath tree in the Project View window
 action.ProjectViewChangeView.text:
     text: Change View…
+action.ProjectViewEditSource.text:
+    text: Edit Source
 action.PsiViewer.text:
     text: _View PSI Structure…
 action.PsiViewerForContext.text:

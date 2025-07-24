@@ -1664,7 +1664,7 @@
         <group id="ProjectViewPopupMenuModifyGroup">
             <reference ref="$Delete"/>
             <group id="MarkFileAs">
-                <action id="OverrideFileTypeAction" class="consulo.ide.impl.idea.openapi.file.exclude.OverrideFileTypeAction"/>
+                <reference ref="OverrideFileTypeAction"/>
                 <action id="ReverteOverrideFileTypeAction"
                         class="consulo.ide.impl.idea.openapi.file.exclude.ReverteOverrideFileTypeAction"/>
             </group>
@@ -1684,8 +1684,7 @@
             <reference ref="AssociateWithFileType"/>
             <separator/>
             <reference ref="CutCopyPasteGroup"/>
-            <action id="ProjectViewEditSource" use-shortcut-of="EditSource"
-                    class="consulo.ide.impl.idea.ide.actions.ProjectViewEditSourceAction"/>
+            <reference ref="ProjectViewEditSource"/>
             <separator/>
             <reference ref="FindUsages"/>
             <reference ref="FindInPath"/>
@@ -1700,10 +1699,9 @@
             <reference ref="ProjectViewPopupMenuRunGroup"/>
             <separator/>
             <reference ref="VersionControlsGroup"/>
-            <action id="SynchronizeCurrentFile" class="consulo.ide.impl.idea.ide.actions.SynchronizeCurrentFileAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
+            <reference ref="SynchronizeCurrentFile"/>
             <separator/>
-            <action id="GoToLinkTarget" class="consulo.ide.impl.idea.ide.actions.GoToLinkTargetAction"/>
+            <reference ref="GoToLinkTarget"/>
             <separator/>
             <reference ref="CompareTwoFiles"/>
             <reference ref="CompareFileWithEditor"/>
@@ -1884,11 +1882,11 @@
 
         <action id="TypeHierarchyBase.BaseOnThisType" text="Base on This Type"
                 class="consulo.ide.impl.idea.ide.hierarchy.TypeHierarchyBrowserBase$BaseOnThisTypeAction"/>
-        <action id="TypeHierarchy.Class" class="consulo.ide.impl.idea.ide.hierarchy.ViewClassHierarchyAction"/>
-        <action id="TypeHierarchy.Subtypes" class="consulo.ide.impl.idea.ide.hierarchy.ViewSubtypesHierarchyAction"/>
-        <action id="TypeHierarchy.Supertypes" class="consulo.ide.impl.idea.ide.hierarchy.ViewSupertypesHierarchyAction"/>
+        <reference ref="TypeHierarchy.Class"/>
+        <reference ref="TypeHierarchy.Subtypes"/>
+        <reference ref="TypeHierarchy.Supertypes"/>
 
-        <action id="EditBreakpoint" class="consulo.execution.debug.impl.internal.action.EditBreakpointAction"/>
+        <reference ref="EditBreakpoint"/>
         <group id="DebugMainMenu">
             <separator/>
             <reference ref="StepOver"/>
@@ -2810,7 +2808,7 @@
         </group>
 
         <group id="XDebugger.AttachGroup">
-            <action id="XDebugger.AttachToProcess" class="consulo.execution.debug.impl.internal.action.AttachToProcessAction"/>
+            <reference ref="XDebugger.AttachToProcess"/>
             <add-to-group group-id="RunMenu" anchor="before" relative-to-action="editRunConfigurations"/>
         </group>
 

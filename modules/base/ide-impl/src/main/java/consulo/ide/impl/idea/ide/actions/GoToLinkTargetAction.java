@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.view.ProjectView;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,7 +28,12 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "GoToLinkTarget")
 public class GoToLinkTargetAction extends DumbAwareAction {
+    public GoToLinkTargetAction() {
+        super(ActionLocalize.actionGotolinktargetText(), ActionLocalize.actionGotolinktargetDescription());
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         VirtualFile file = e.getData(VirtualFile.KEY);

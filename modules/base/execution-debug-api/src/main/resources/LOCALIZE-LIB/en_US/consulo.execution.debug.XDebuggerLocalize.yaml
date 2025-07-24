@@ -4,6 +4,8 @@ action.choose.debug.configuration.popup.description:
     text: Choose and debug configuration
 action.choose.debug.configuration.popup.text:
     text: Debug...
+action.edit.breakpoint.text:
+    text: Edit
 action.evaluate.expression.description:
     text: Evaluate arbitrary expression
 action.evaluate.expression.text:
