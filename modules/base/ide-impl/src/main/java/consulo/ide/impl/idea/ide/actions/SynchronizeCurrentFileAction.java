@@ -1,25 +1,34 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
+import consulo.annotation.component.ActionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.util.collection.JBIterable;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.RefreshQueue;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WindowManager;
-import consulo.util.collection.JBIterable;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
+@ActionImpl(id = "SynchronizeCurrentFile")
 public class SynchronizeCurrentFileAction extends AnAction implements DumbAware {
+    public SynchronizeCurrentFileAction() {
+        super(
+            ActionLocalize.actionSynchronizecurrentfileText(),
+            LocalizeValue.empty(),
+            PlatformIconGroup.actionsRefresh()
+        );
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         List<VirtualFile> files = getFiles(e).take(2).toList();

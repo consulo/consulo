@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.navigation.Navigatable;
 import consulo.language.pom.NavigatableWithText;
-import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 
@@ -27,12 +29,13 @@ import java.util.Arrays;
 import java.util.Objects;
 
 // from kotlin
+@ActionImpl(id = "ProjectViewEditSource", shortcutFrom = @ActionRef(id = "EditSource"))
 public class ProjectViewEditSourceAction extends BaseNavigateToSourceAction {
     public ProjectViewEditSourceAction() {
         super(true);
+        getTemplatePresentation().setTextValue(ActionLocalize.actionProjectvieweditsourceText());
     }
 
-    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);

@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.file.exclude;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.language.file.FileTypeManager;
@@ -22,7 +23,15 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@ActionImpl(id = "OverrideFileTypeAction")
 public class OverrideFileTypeAction extends AnAction {
+    public OverrideFileTypeAction() {
+        super(
+            ActionLocalize.actionOverridefiletypeactionText(),
+            ActionLocalize.actionOverridefiletypeactionDescription()
+        );
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         VirtualFile[] files = getContextFiles(e, file -> OverrideFileTypeManager.getInstance().getFileValue(file) == null);
@@ -36,8 +45,8 @@ public class OverrideFileTypeAction extends AnAction {
         presentation.setEnabledAndVisible(enabled);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         VirtualFile[] files = getContextFiles(e, file -> OverrideFileTypeManager.getInstance().getFileValue(file) == null);
         if (files.length == 0) {
@@ -46,9 +55,15 @@ public class OverrideFileTypeAction extends AnAction {
 
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
         // although well-behaved types have unique names, file types coming from plugins can be wild
-        Map<LocalizeValue, List<LocalizeValue>> duplicates = Arrays.stream(FileTypeManager.getInstance().getRegisteredFileTypes()).map(FileType::getDisplayName).collect(Collectors.groupingBy(Function.identity()));
+        Map<LocalizeValue, List<LocalizeValue>> duplicates = Arrays.stream(FileTypeManager.getInstance().getRegisteredFileTypes())
+            .map(FileType::getDisplayName)
+            .collect(Collectors.groupingBy(Function.identity()));
 
-        for (FileType type : ContainerUtil.sorted(Arrays.asList(FileTypeManager.getInstance().getRegisteredFileTypes()), (f1, f2) -> f1.getDisplayName().compareIgnoreCase(f2.getDisplayName()))) {
+        List<FileType> sortedFileTypes = ContainerUtil.sorted(
+            Arrays.asList(FileTypeManager.getInstance().getRegisteredFileTypes()),
+            (f1, f2) -> f1.getDisplayName().compareIgnoreCase(f2.getDisplayName())
+        );
+        for (FileType type : sortedFileTypes) {
             if (!OverrideFileTypeManager.isOverridable(type)) {
                 continue;
             }
@@ -64,19 +79,22 @@ public class OverrideFileTypeAction extends AnAction {
                         : ActionLocalize.groupOverridefiletypeactionFromnamedplugin(descriptor.getName())) +
                     ")";
             }
-            
+
             String finalDupHint = dupHint;
-            LocalizeValue displayText = type.getDisplayName().map((localizeManager, s) -> s + StringUtil.notNullize(finalDupHint));
+            LocalizeValue displayText = type.getDisplayName()
+                .map((localizeManager, s) -> s + StringUtil.notNullize(finalDupHint));
             group.add(new ChangeToThisFileTypeAction(displayText, files, type));
         }
-        JBPopupFactory.getInstance().createActionGroupPopup(
-            ActionLocalize.groupOverridefiletypeactionTitle().get(),
-            group.build(),
-            e.getDataContext(),
-            false,
-            null,
-            -1
-        ).showInBestPositionFor(e.getDataContext());
+        JBPopupFactory.getInstance()
+            .createActionGroupPopup(
+                ActionLocalize.groupOverridefiletypeactionTitle().get(),
+                group.build(),
+                e.getDataContext(),
+                false,
+                null,
+                -1
+            )
+            .showInBestPositionFor(e.getDataContext());
     }
 
     @Nonnull
@@ -85,7 +103,10 @@ public class OverrideFileTypeAction extends AnAction {
         if (files == null) {
             return VirtualFile.EMPTY_ARRAY;
         }
-        return Arrays.stream(files).filter(file -> file != null && !file.isDirectory()).filter(additionalPredicate).toArray(count -> VirtualFile.ARRAY_FACTORY.create(count));
+        return Arrays.stream(files)
+            .filter(file -> file != null && !file.isDirectory())
+            .filter(additionalPredicate)
+            .toArray(VirtualFile.ARRAY_FACTORY::create);
     }
 
     private static class ChangeToThisFileTypeAction extends AnAction {
@@ -105,6 +126,7 @@ public class OverrideFileTypeAction extends AnAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             for (VirtualFile file : myFiles) {
                 if (file.isValid() && !file.isDirectory() && OverrideFileTypeManager.isOverridable(file.getFileType())) {
@@ -115,7 +137,10 @@ public class OverrideFileTypeAction extends AnAction {
 
         @Override
         public void update(@Nonnull AnActionEvent e) {
-            boolean enabled = ContainerUtil.exists(myFiles, file -> file.isValid() && !file.isDirectory() && OverrideFileTypeManager.isOverridable(file.getFileType()));
+            boolean enabled = ContainerUtil.exists(
+                myFiles,
+                file -> file.isValid() && !file.isDirectory() && OverrideFileTypeManager.isOverridable(file.getFileType())
+            );
             e.getPresentation().setEnabled(enabled);
         }
     }

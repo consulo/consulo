@@ -15,25 +15,27 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerEditBreakpointActionHandler;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "EditBreakpoint")
 public class EditBreakpointAction extends XDebuggerActionBase {
-
     public static class ContextAction extends AnAction {
         private final GutterIconRenderer myRenderer;
         private final Object myBreakpoint;
 
         public ContextAction(GutterIconRenderer breakpointRenderer, Object breakpoint) {
-            super(ActionLocalize.actionEditbreakpointText());
+            super(XDebuggerLocalize.actionEditBreakpointText());
             myRenderer = breakpointRenderer;
             myBreakpoint = breakpoint;
         }
@@ -41,12 +43,16 @@ public class EditBreakpointAction extends XDebuggerActionBase {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
-            final Editor editor = e.getData(Editor.KEY);
+            Editor editor = e.getData(Editor.KEY);
             if (editor == null) {
                 return;
             }
             XDebuggerEditBreakpointActionHandler.INSTANCE.editBreakpoint(e.getRequiredData(Project.KEY), editor, myBreakpoint, myRenderer);
         }
+    }
+
+    public EditBreakpointAction() {
+        super(XDebuggerLocalize.actionEditBreakpointText(), LocalizeValue.empty(), null);
     }
 
     @Nonnull

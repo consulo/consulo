@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.hierarchy;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -25,6 +25,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author cdr
  */
+@ActionImpl(id = "TypeHierarchy.Class")
 public final class ViewClassHierarchyAction extends ChangeViewTypeActionBase {
     public ViewClassHierarchyAction() {
         super(
