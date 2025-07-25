@@ -19,6 +19,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.ui.ShadowAction;
 import consulo.ide.impl.idea.openapi.wm.ToolWindowScrollable;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
@@ -54,12 +55,8 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
     protected ResizeToolWindowAction() {
     }
 
-    protected ResizeToolWindowAction(String text) {
-        super(text);
-    }
-
-    protected ResizeToolWindowAction(String text, String description, Image icon) {
-        super(text, description, icon);
+    protected ResizeToolWindowAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
     }
 
     protected ResizeToolWindowAction(ToolWindow toolWindow, String originalAction, JComponent c) {
@@ -211,114 +208,6 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
 
     private static void incHeight(ToolWindow wnd, int value, boolean isPositive) {
         ((ToolWindowEx)wnd).stretchHeight(isPositive ? value : -value);
-    }
-
-    public static class Left extends ResizeToolWindowAction {
-        public Left() {
-        }
-
-        public Left(String text) {
-            super(text);
-        }
-
-        public Left(String text, String description, Image icon) {
-            super(text, description, icon);
-        }
-
-        public Left(ToolWindow toolWindow, JComponent c) {
-            super(toolWindow, "ResizeToolWindowLeft", c);
-        }
-
-        @Override
-        protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
-            event.getPresentation().setEnabled(!window.getAnchor().isHorizontal());
-        }
-
-        @Override
-        protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
-            stretch(wnd, true, false);
-        }
-    }
-
-    public static class Right extends ResizeToolWindowAction {
-        public Right() {
-        }
-
-        public Right(String text) {
-            super(text);
-        }
-
-        public Right(String text, String description, Image icon) {
-            super(text, description, icon);
-        }
-
-        public Right(ToolWindow toolWindow, JComponent c) {
-            super(toolWindow, "ResizeToolWindowRight", c);
-        }
-
-        @Override
-        protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
-            event.getPresentation().setEnabled(!window.getAnchor().isHorizontal());
-        }
-
-        @Override
-        protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
-            stretch(wnd, true, true);
-        }
-    }
-
-    public static class Up extends ResizeToolWindowAction {
-        public Up() {
-        }
-
-        public Up(String text) {
-            super(text);
-        }
-
-        public Up(String text, String description, Image icon) {
-            super(text, description, icon);
-        }
-
-        public Up(ToolWindow toolWindow, JComponent c) {
-            super(toolWindow, "ResizeToolWindowUp", c);
-        }
-
-        @Override
-        protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
-            event.getPresentation().setEnabled(window.getAnchor().isHorizontal());
-        }
-
-        @Override
-        protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
-            stretch(wnd, false, true);
-        }
-    }
-
-    public static class Down extends ResizeToolWindowAction {
-        public Down() {
-        }
-
-        public Down(String text) {
-            super(text);
-        }
-
-        public Down(String text, String description, Image icon) {
-            super(text, description, icon);
-        }
-
-        public Down(ToolWindow toolWindow, JComponent c) {
-            super(toolWindow, "ResizeToolWindowDown", c);
-        }
-
-        @Override
-        protected void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr) {
-            event.getPresentation().setEnabled(window.getAnchor().isHorizontal());
-        }
-
-        @Override
-        protected void actionPerformed(AnActionEvent e, ToolWindow wnd, ToolWindowManager mgr) {
-            stretch(wnd, false, false);
-        }
     }
 
     private class DefaultToolWindowScrollable implements ToolWindowScrollable {

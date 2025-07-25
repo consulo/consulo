@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.ui.ShadowAction;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,15 +30,18 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
 
+@ActionImpl(id = "ShowContent")
 public class ShowContentAction extends AnAction implements DumbAware {
     private ToolWindow myWindow;
 
-    @SuppressWarnings({"UnusedDeclaration"})
+    @Inject
     public ShowContentAction() {
+        super(ActionLocalize.actionShowcontentText(), ActionLocalize.actionShowcontentDescription());
     }
 
     public ShowContentAction(ToolWindow window, JComponent c) {
@@ -46,18 +51,20 @@ public class ShowContentAction extends AnAction implements DumbAware {
         copyFrom(original);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         ToolWindow window = getWindow(e);
         e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
-        e.getPresentation().setText(
-            window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED ? "Show List of Tabs" : "Show List of Views"
+        e.getPresentation().setTextValue(
+            window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED
+                ? ActionLocalize.actionShowcontentText()
+                : ActionLocalize.actionShowcontentViewsText()
         );
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         getWindow(e).showContentPopup(e.getInputEvent());
     }

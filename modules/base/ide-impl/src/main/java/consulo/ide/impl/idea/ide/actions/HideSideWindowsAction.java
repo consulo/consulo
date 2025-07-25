@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -25,7 +27,12 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.internal.ToolWindowEx;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "HideSideWindows")
 public class HideSideWindowsAction extends AnAction implements DumbAware {
+    public HideSideWindowsAction() {
+        super(ActionLocalize.actionHidesidewindowsText(), ActionLocalize.actionHidesidewindowsDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

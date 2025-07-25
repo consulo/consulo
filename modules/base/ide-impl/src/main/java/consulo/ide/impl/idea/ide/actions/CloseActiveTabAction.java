@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.Content;
@@ -27,14 +29,19 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
+@ActionImpl(id = "CloseActiveTab")
 public class CloseActiveTabAction extends AnAction implements DumbAware {
+    public CloseActiveTabAction() {
+        super(ActionLocalize.actionCloseactivetabText(), ActionLocalize.actionCloseactivetabDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(e.getDataContext(), true);
         boolean processed = false;
         if (contentManager != null && contentManager.canCloseContents()) {
-            final Content selectedContent = contentManager.getSelectedContent();
+            Content selectedContent = contentManager.getSelectedContent();
             if (selectedContent != null && selectedContent.isCloseable()) {
                 contentManager.removeContent(selectedContent, true);
                 processed = true;

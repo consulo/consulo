@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -28,7 +30,12 @@ import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ToggleWindowedMode")
 public class ToggleWindowedModeAction extends ToggleAction implements DumbAware {
+    public ToggleWindowedModeAction() {
+        super(ActionLocalize.actionTogglewindowedmodeText(), ActionLocalize.actionTogglewindowedmodeDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public boolean isSelected(AnActionEvent event) {
@@ -53,7 +60,7 @@ public class ToggleWindowedModeAction extends ToggleAction implements DumbAware 
             return;
         }
         ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
-        ToolWindowEx toolWindow = (ToolWindowEx)mgr.getToolWindow(id);
+        ToolWindowEx toolWindow = (ToolWindowEx) mgr.getToolWindow(id);
         ToolWindowType type = toolWindow.getType();
         if (ToolWindowType.WINDOWED == type) {
             toolWindow.setType(toolWindow.getInternalType(), null);
