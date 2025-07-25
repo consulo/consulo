@@ -23,14 +23,16 @@ import jakarta.inject.Inject;
 
 import javax.swing.*;
 
-@ActionImpl(id = "ResizeToolWindowDown")
+@ActionImpl(id = ResizeToolWindowDownAction.ID)
 public class ResizeToolWindowDownAction extends ResizeToolWindowAction {
+    public static final String ID = "ResizeToolWindowDown";
+
     @Inject
     public ResizeToolWindowDownAction() {
     }
 
     public ResizeToolWindowDownAction(ToolWindow toolWindow, JComponent c) {
-        super(toolWindow, "ResizeToolWindowDown", c);
+        super(toolWindow, ID, c);
     }
 
     @Override
