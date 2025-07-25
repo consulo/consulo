@@ -16,7 +16,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -26,7 +28,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "JumpToLastWindow")
 public class JumpToLastWindowAction extends AnAction implements DumbAware {
+    public JumpToLastWindowAction() {
+        super(ActionLocalize.actionJumptolastwindowText(), ActionLocalize.actionJumptolastwindowDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -47,7 +54,7 @@ public class JumpToLastWindowAction extends AnAction implements DumbAware {
             presentation.setEnabled(false);
             return;
         }
-        ToolWindowManagerEx manager = (ToolWindowManagerEx)ToolWindowManager.getInstance(project);
+        ToolWindowManagerEx manager = (ToolWindowManagerEx) ToolWindowManager.getInstance(project);
         String id = manager.getLastActiveToolWindowId();
         presentation.setEnabled(id != null && manager.getToolWindow(id).isAvailable());
     }

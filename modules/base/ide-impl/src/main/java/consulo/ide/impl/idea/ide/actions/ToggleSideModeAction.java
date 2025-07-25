@@ -15,11 +15,18 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
+@ActionImpl(id = "ToggleSideMode")
 public class ToggleSideModeAction extends BaseToolWindowToggleAction {
+    public ToggleSideModeAction() {
+        super(ActionLocalize.actionTogglesidemodeText(), ActionLocalize.actionTogglesidemodeDescription());
+    }
+
     @Override
     @RequiredUIAccess
     protected boolean isSelected(ToolWindow window) {

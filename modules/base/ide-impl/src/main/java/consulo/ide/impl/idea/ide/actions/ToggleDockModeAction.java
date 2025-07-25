@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -26,7 +28,12 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ToggleDockMode")
 public class ToggleDockModeAction extends ToggleAction implements DumbAware {
+    public ToggleDockModeAction() {
+        super(ActionLocalize.actionToggledockmodeText(), ActionLocalize.actionToggledockmodeDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public boolean isSelected(@Nonnull AnActionEvent event) {

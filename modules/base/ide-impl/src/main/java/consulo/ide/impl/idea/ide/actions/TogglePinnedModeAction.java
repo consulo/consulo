@@ -15,12 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 
+@ActionImpl(id = "TogglePinnedMode")
 public class TogglePinnedModeAction extends BaseToolWindowToggleAction {
+    public TogglePinnedModeAction() {
+        super(ActionLocalize.actionTogglepinnedmodeText(), ActionLocalize.actionTogglepinnedmodeDescription());
+    }
+
     @Override
     @RequiredUIAccess
     protected boolean isSelected(ToolWindow window) {

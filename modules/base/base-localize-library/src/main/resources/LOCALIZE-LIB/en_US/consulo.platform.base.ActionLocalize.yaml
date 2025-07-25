@@ -1902,6 +1902,8 @@ action.ShowContent.description:
     text: Show a popup with the list of toolwindow tabs
 action.ShowContent.text:
     text: Show List of Tabs
+action.ShowContent.views.text:
+    text: Show List of Views
 action.ShowCoverageInfo.text:
     text: Show Co&verage Info
 action.ShowDiagram.text:

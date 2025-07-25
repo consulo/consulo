@@ -22,8 +22,7 @@ import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction;
-import consulo.ide.impl.idea.ide.actions.ToggleToolbarAction;
+import consulo.ide.impl.idea.ide.actions.*;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
@@ -428,10 +427,10 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         group.add(moveGroup);
 
         DefaultActionGroup resize = new DefaultActionGroup(ActionLocalize.groupResizetoolwindowgroupText(), true);
-        resize.add(new ResizeToolWindowAction.Left(myToolWindow, this));
-        resize.add(new ResizeToolWindowAction.Right(myToolWindow, this));
-        resize.add(new ResizeToolWindowAction.Up(myToolWindow, this));
-        resize.add(new ResizeToolWindowAction.Down(myToolWindow, this));
+        resize.add(new ResizeToolWindowLeftAction(myToolWindow, this));
+        resize.add(new ResizeToolWindowRightAction(myToolWindow, this));
+        resize.add(new ResizeToolWindowUpAction(myToolWindow, this));
+        resize.add(new ResizeToolWindowDownAction(myToolWindow, this));
         resize.add(ActionManager.getInstance().getAction("MaximizeToolWindow"));
 
         group.add(resize);

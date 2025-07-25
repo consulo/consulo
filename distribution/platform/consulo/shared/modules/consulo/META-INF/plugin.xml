@@ -697,29 +697,29 @@
             </group>
 
             <group id="WindowMenu" popup="true">
-                <action id="StoreDefaultLayout" class="consulo.ide.impl.idea.ide.actions.StoreDefaultLayoutAction"/>
-                <action id="RestoreDefaultLayout" class="consulo.ide.impl.idea.ide.actions.RestoreDefaultLayoutAction"/>
+                <reference ref="StoreDefaultLayout"/>
+                <reference ref="RestoreDefaultLayout"/>
                 <separator/>
                 <group id="ActiveToolwindowGroup" popup="true">
-                    <action id="HideActiveWindow" class="consulo.ide.impl.idea.ide.actions.HideToolWindowAction"/>
-                    <action id="HideSideWindows" class="consulo.ide.impl.idea.ide.actions.HideSideWindowsAction"/>
-                    <action id="HideAllWindows" class="consulo.ide.impl.idea.ide.actions.HideAllToolWindowsAction"/>
-                    <action id="CloseActiveTab" class="consulo.ide.impl.idea.ide.actions.CloseActiveTabAction"/>
-                    <action id="JumpToLastWindow" class="consulo.ide.impl.idea.ide.actions.JumpToLastWindowAction"/>
-                    <action id="MaximizeToolWindow" class="consulo.ide.impl.idea.openapi.wm.impl.MaximizeToolWindowAction"/>
+                    <reference ref="HideActiveWindow"/>
+                    <reference ref="HideSideWindows"/>
+                    <reference ref="HideAllWindows"/>
+                    <reference ref="CloseActiveTab"/>
+                    <reference ref="JumpToLastWindow"/>
+                    <reference ref="MaximizeToolWindow"/>
                     <separator/>
-                    <action id="TogglePinnedMode" class="consulo.ide.impl.idea.ide.actions.TogglePinnedModeAction"/>
-                    <action id="ToggleDockMode" class="consulo.ide.impl.idea.ide.actions.ToggleDockModeAction"/>
-                    <action id="ToggleFloatingMode" class="consulo.ide.impl.idea.ide.actions.ToggleFloatingModeAction"/>
-                    <action id="ToggleWindowedMode" class="consulo.ide.impl.idea.ide.actions.ToggleWindowedModeAction"/>
-                    <action id="ToggleSideMode" class="consulo.ide.impl.idea.ide.actions.ToggleSideModeAction"/>
-                    <action id="ToggleContentUiTypeMode" class="consulo.ide.impl.idea.ide.actions.ToggleContentUiTypeAction"/>
-                    <action id="ShowContent" class="consulo.ide.impl.idea.ide.actions.ShowContentAction"/>
+                    <reference ref="TogglePinnedMode"/>
+                    <reference ref="ToggleDockMode"/>
+                    <reference ref="ToggleFloatingMode"/>
+                    <reference ref="ToggleWindowedMode"/>
+                    <reference ref="ToggleSideMode"/>
+                    <reference ref="ToggleContentUiTypeMode"/>
+                    <reference ref="ShowContent"/>
                     <group id="ResizeToolWindowGroup" popup="true">
-                        <action id="ResizeToolWindowLeft" class="consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction$Left"/>
-                        <action id="ResizeToolWindowRight" class="consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction$Right"/>
-                        <action id="ResizeToolWindowUp" class="consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction$Up"/>
-                        <action id="ResizeToolWindowDown" class="consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction$Down"/>
+                        <reference ref="ResizeToolWindowLeft"/>
+                        <reference ref="ResizeToolWindowRight"/>
+                        <reference ref="ResizeToolWindowUp"/>
+                        <reference ref="ResizeToolWindowDown"/>
                     </group>
                 </group>
 

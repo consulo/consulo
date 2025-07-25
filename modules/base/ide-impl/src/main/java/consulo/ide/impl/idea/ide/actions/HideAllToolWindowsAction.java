@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,7 +29,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "HideAllWindows")
 public class HideAllToolWindowsAction extends AnAction implements DumbAware {
+    public HideAllToolWindowsAction() {
+        super(ActionLocalize.actionHideallwindowsText(), ActionLocalize.actionHideallwindowsDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -84,7 +91,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
         for (String id : ids) {
             if (toolWindowManager.getToolWindow(id).isVisible()) {
                 presentation.setEnabled(true);
-                presentation.setText(IdeLocalize.actionHideAllWindows().get(), true);
+                presentation.setTextValue(IdeLocalize.actionHideAllWindows());
                 return;
             }
         }

@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.ui.internal.ToolWindowManagerEx;
@@ -28,7 +30,12 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "RestoreDefaultLayout")
 public final class RestoreDefaultLayoutAction extends AnAction implements DumbAware {
+    public RestoreDefaultLayoutAction() {
+        super(ActionLocalize.actionRestoredefaultlayoutText(), ActionLocalize.actionRestoredefaultlayoutDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

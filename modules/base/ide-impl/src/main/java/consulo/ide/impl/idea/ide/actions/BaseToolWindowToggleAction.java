@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -28,6 +29,10 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
 
 public abstract class BaseToolWindowToggleAction extends ToggleAction implements DumbAware {
+    protected BaseToolWindowToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
     @Override
     @RequiredUIAccess
     public final boolean isSelected(AnActionEvent e) {

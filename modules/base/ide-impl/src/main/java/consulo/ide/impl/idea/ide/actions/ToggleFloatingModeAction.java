@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -27,7 +29,12 @@ import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ToggleFloatingMode")
 public class ToggleFloatingModeAction extends ToggleAction implements DumbAware {
+    public ToggleFloatingModeAction() {
+        super(ActionLocalize.actionTogglefloatingmodeText(), ActionLocalize.actionTogglefloatingmodeDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public boolean isSelected(@Nonnull AnActionEvent event) {
@@ -52,7 +59,7 @@ public class ToggleFloatingModeAction extends ToggleAction implements DumbAware 
             return;
         }
         ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
-        ToolWindowEx toolWindow = (ToolWindowEx)mgr.getToolWindow(id);
+        ToolWindowEx toolWindow = (ToolWindowEx) mgr.getToolWindow(id);
         ToolWindowType type = toolWindow.getType();
         if (ToolWindowType.FLOATING == type) {
             toolWindow.setType(toolWindow.getInternalType(), null);

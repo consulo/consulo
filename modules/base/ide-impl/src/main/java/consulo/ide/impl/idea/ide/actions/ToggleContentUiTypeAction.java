@@ -15,12 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 
+@ActionImpl(id = "ToggleContentUiTypeMode")
 public class ToggleContentUiTypeAction extends BaseToolWindowToggleAction {
+    public ToggleContentUiTypeAction() {
+        super(ActionLocalize.actionTogglecontentuitypemodeText(), ActionLocalize.actionTogglecontentuitypemodeDescription());
+    }
+
     @Override
     @RequiredUIAccess
     protected boolean isSelected(ToolWindow window) {
