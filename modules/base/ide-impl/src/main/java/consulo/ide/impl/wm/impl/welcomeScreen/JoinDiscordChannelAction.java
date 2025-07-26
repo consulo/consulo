@@ -16,30 +16,28 @@
 package consulo.ide.impl.wm.impl.welcomeScreen;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 06/12/2020
+ * @since 2020-12-06
  */
 @ActionImpl(id = "Help.JoinDiscordChannel")
 public class JoinDiscordChannelAction extends DumbAwareAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Platform.current().openInBrowser("https://discord.gg/Ab3Ka5gTFv");
-  }
+    public JoinDiscordChannelAction() {
+        super(ActionLocalize.actionHelpJoindiscordchannelText(), LocalizeValue.empty(), PlatformIconGroup.actionsDiscord());
+    }
 
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.actionsDiscord();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Platform.current().openInBrowser("https://discord.gg/Ab3Ka5gTFv");
+    }
 }

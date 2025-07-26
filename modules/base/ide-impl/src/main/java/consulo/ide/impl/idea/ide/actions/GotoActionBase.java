@@ -26,7 +26,9 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
@@ -64,6 +66,14 @@ public abstract class GotoActionBase extends AnAction {
     private static final Map<Class, Pair<String, Integer>> ourLastStrings = new HashMap<>();
     private static final Map<Class, List<String>> ourHistory = new HashMap<>();
     private int myHistoryIndex = 0;
+
+    protected GotoActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
+    protected GotoActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Image icon) {
+        super(text, description, icon);
+    }
 
     @Override
     @RequiredUIAccess

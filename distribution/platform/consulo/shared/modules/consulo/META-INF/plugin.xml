@@ -681,28 +681,7 @@
                 <reference ref="StoreDefaultLayout"/>
                 <reference ref="RestoreDefaultLayout"/>
                 <separator/>
-                <group id="ActiveToolwindowGroup" popup="true">
-                    <reference ref="HideActiveWindow"/>
-                    <reference ref="HideSideWindows"/>
-                    <reference ref="HideAllWindows"/>
-                    <reference ref="CloseActiveTab"/>
-                    <reference ref="JumpToLastWindow"/>
-                    <reference ref="MaximizeToolWindow"/>
-                    <separator/>
-                    <reference ref="TogglePinnedMode"/>
-                    <reference ref="ToggleDockMode"/>
-                    <reference ref="ToggleFloatingMode"/>
-                    <reference ref="ToggleWindowedMode"/>
-                    <reference ref="ToggleSideMode"/>
-                    <reference ref="ToggleContentUiTypeMode"/>
-                    <reference ref="ShowContent"/>
-                    <group id="ResizeToolWindowGroup" popup="true">
-                        <reference ref="ResizeToolWindowLeft"/>
-                        <reference ref="ResizeToolWindowRight"/>
-                        <reference ref="ResizeToolWindowUp"/>
-                        <reference ref="ResizeToolWindowDown"/>
-                    </group>
-                </group>
+                <reference ref="ActiveToolwindowGroup"/>
 
                 <group id="EditorTabsGroup" popup="true">
                     <action id="NextTab" class="consulo.ide.impl.idea.ide.actions.NextTabAction"/>
@@ -739,10 +718,7 @@
                             text="Alphabetical Mode"/>
                 </group>
 
-                <group id="BackgroundTasks" popup="true">
-                    <action id="ShowProcessWindow" class="consulo.ide.impl.idea.openapi.wm.impl.status.ShowProcessWindowAction"/>
-                    <action id="AutoShowProcessWindow" class="consulo.ide.impl.idea.openapi.wm.impl.status.AutoShowProcessPopupAction"/>
-                </group>
+                <reference ref="BackgroundTasks"/>
 
                 <separator/>
                 <group id="OpenProjectWindows" class="consulo.ide.impl.idea.openapi.wm.impl.ProjectWindowActionGroup">
@@ -753,24 +729,7 @@
             </group>
 
             <!-- Help -->
-            <group id="HelpMenu" popup="true">
-                <action id="GotoAction" class="consulo.ide.impl.idea.ide.actions.GotoActionAction"/>
-                <separator/>
-                <reference id="HelpTopics"/>
-                <reference id="ShowTips"/>
-                <reference id="ProductivityGude"/>
-                <separator/>
-                <action id="ShowLog" class="consulo.ide.impl.idea.ide.actions.ShowLogAction"/>
-                <separator/>
-                <reference id="OnlineDocAction"/>
-                <reference id="Help.KeymapReference"/>
-                <reference id="Help.Youtube"/>
-                <reference id="Help.JoinDiscordChannel"/>
-                <reference id="TechnicalSupport"/>
-                <separator/>
-                <reference id="CheckForUpdate"/>
-                <reference id="About"/>
-            </group>
+            <reference ref="HelpMenu"/>
         </group>
 
         <group id="MainToolBar">
@@ -807,7 +766,7 @@
                 <reference ref="PasteMultiple"/>
             </group>
             <reference ref="EditorToggleColumnMode"/>
-            <action id="$SearchWeb" class="consulo.ide.impl.idea.ide.actions.SearchWebAction"/>
+            <reference ref="$SearchWeb"/>
             <separator/>
             <reference ref="CompareClipboardWithSelection"/>
             <reference ref="ChangeFileEncodingAction"/>
@@ -1385,10 +1344,10 @@
 
         <!-- Go To -->
         <group id="GoToTargetEx">
-            <action id="GotoClass" class="consulo.ide.impl.idea.ide.actions.GotoClassAction"/>
-            <action id="GotoFile" class="consulo.ide.impl.idea.ide.actions.GotoFileAction"/>
-            <action id="GotoSymbol" class="consulo.ide.impl.idea.ide.actions.GotoSymbolAction"/>
-            <action id="GotoCustomRegion" class="consulo.ide.impl.idea.lang.customFolding.GotoCustomRegionAction"/>
+            <reference ref="GotoClass"/>
+            <reference ref="GotoFile"/>
+            <reference ref="GotoSymbol"/>
+            <reference ref="GotoCustomRegion"/>
 
             <add-to-group group-id="GoToMenu" anchor="first"/>
         </group>

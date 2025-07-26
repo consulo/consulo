@@ -18,6 +18,7 @@ package consulo.externalService.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.externalService.impl.internal.WebServiceApi;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -29,8 +30,12 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "TechnicalSupport")
 public class TechnicalSupportAction extends DumbAwareAction {
-    @RequiredUIAccess
+    public TechnicalSupportAction() {
+        super(ActionLocalize.actionTechnicalsupportText(), ActionLocalize.actionTechnicalsupportDescription());
+    }
+
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Platform.current().openInBrowser(WebServiceApi.DISCUSSION.buildUrl());
     }

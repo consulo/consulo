@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
@@ -23,6 +24,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
@@ -51,7 +53,12 @@ import java.util.Set;
 
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
 
+@ActionImpl(id = "GotoAction")
 public class GotoActionAction extends GotoActionBase implements DumbAware {
+    public GotoActionAction() {
+        super(ActionLocalize.actionGotoactionText(), ActionLocalize.actionGotoactionDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
