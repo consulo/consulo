@@ -21,11 +21,8 @@ import consulo.ide.impl.idea.openapi.ui.ShadowAction;
 import consulo.ide.impl.idea.openapi.wm.ToolWindowScrollable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.event.ProjectManagerAdapter;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -35,7 +32,6 @@ import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,8 +45,6 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
     protected JLabel myScrollHelper;
 
     private ToolWindow myToolWindow;
-
-    private boolean myListenerInstalled;
 
     protected ResizeToolWindowAction() {
     }
@@ -71,16 +65,6 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
         if (project == null) {
             setDisabled(e);
             return;
-        }
-
-        if (!myListenerInstalled) {
-            myListenerInstalled = true;
-            ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
-                @Override
-                public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-                    setDisabled(null);
-                }
-            });
         }
 
         Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
