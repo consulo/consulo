@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.dataContext.DataContext;
@@ -32,34 +31,34 @@ import javax.swing.*;
 import java.io.FileNotFoundException;
 
 public class ExportToHTMLAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        try {
+            ExportToHTMLManager.executeExport(e.getDataContext());
+        }
+        catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(
+                null,
+                CodeEditorBundle.message("file.not.found", ex.getMessage()),
+                CommonLocalize.titleError().get(),
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
-    try {
-      ExportToHTMLManager.executeExport(e.getDataContext());
-    }
-    catch (FileNotFoundException ex) {
-      JOptionPane.showMessageDialog(
-        null,
-        CodeEditorBundle.message("file.not.found", ex.getMessage()),
-        CommonLocalize.titleError().get(),
-        JOptionPane.ERROR_MESSAGE
-      );
-    }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    if (e.getData(PsiElement.KEY) instanceof PsiDirectory) {
-      presentation.setEnabled(true);
-      return;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        if (e.getData(PsiElement.KEY) instanceof PsiDirectory) {
+            presentation.setEnabled(true);
+            return;
+        }
+        PsiFile psiFile = e.getData(PsiFile.KEY);
+        presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
     }
-    PsiFile psiFile = e.getData(PsiFile.KEY);
-    presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
-  }
 }

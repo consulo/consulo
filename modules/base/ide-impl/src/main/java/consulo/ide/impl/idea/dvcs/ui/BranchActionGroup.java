@@ -24,46 +24,55 @@ import consulo.ui.image.ImageState;
 import jakarta.annotation.Nonnull;
 
 public abstract class BranchActionGroup extends ActionGroup implements DumbAware {
+    private boolean myIsFavorite;
 
-  private boolean myIsFavorite;
+    private ImageState<Boolean> myIconState = new ImageState<>(Boolean.FALSE);
 
-  private ImageState<Boolean> myIconState = new ImageState<>(Boolean.FALSE);
+    public BranchActionGroup() {
+        super(LocalizeValue.of(), true);
+        getTemplatePresentation().setDisabledMnemonic(true);
+        setIcons(
+            PlatformIconGroup.nodesFavorite(),
+            Image.empty(Image.DEFAULT_ICON_SIZE),
+            PlatformIconGroup.nodesFavorite(),
+            PlatformIconGroup.nodesNotfavoriteonhover()
+        );
+    }
 
-  public BranchActionGroup() {
-    super(LocalizeValue.of(), true);
-    getTemplatePresentation().setDisabledMnemonic(true);
-    setIcons(PlatformIconGroup.nodesFavorite(), Image.empty(Image.DEFAULT_ICON_SIZE), PlatformIconGroup.nodesFavorite(), PlatformIconGroup.nodesNotfavoriteonhover());
-  }
+    protected void setIcons(
+        @Nonnull Image favorite,
+        @Nonnull Image notFavorite,
+        @Nonnull Image favoriteOnHover,
+        @Nonnull Image notFavoriteOnHover
+    ) {
+        getTemplatePresentation().setIcon(Image.stated(myIconState, it -> it ? favorite : notFavorite));
+        getTemplatePresentation().setSelectedIcon(Image.stated(myIconState, it -> it ? favoriteOnHover : notFavoriteOnHover));
 
-  protected void setIcons(@Nonnull Image favorite, @Nonnull Image notFavorite, @Nonnull Image favoriteOnHover, @Nonnull Image notFavoriteOnHover) {
-    getTemplatePresentation().setIcon(Image.stated(myIconState, it -> it ? favorite : notFavorite));
-    getTemplatePresentation().setSelectedIcon(Image.stated(myIconState, it -> it ? favoriteOnHover : notFavoriteOnHover));
+        updateIcons();
+    }
 
-    updateIcons();
-  }
+    private void updateIcons() {
+        myIconState.setState(myIsFavorite);
+    }
 
-  private void updateIcons() {
-    myIconState.setState(myIsFavorite);
-  }
+    public boolean isFavorite() {
+        return myIsFavorite;
+    }
 
-  public boolean isFavorite() {
-    return myIsFavorite;
-  }
+    public void setFavorite(boolean favorite) {
+        myIsFavorite = favorite;
+        updateIcons();
+    }
 
-  public void setFavorite(boolean favorite) {
-    myIsFavorite = favorite;
-    updateIcons();
-  }
+    public void toggle() {
+        setFavorite(!myIsFavorite);
+    }
 
-  public void toggle() {
-    setFavorite(!myIsFavorite);
-  }
+    public boolean hasIncomingCommits() {
+        return false;
+    }
 
-  public boolean hasIncomingCommits() {
-    return false;
-  }
-
-  public boolean hasOutgoingCommits() {
-    return false;
-  }
+    public boolean hasOutgoingCommits() {
+        return false;
+    }
 }

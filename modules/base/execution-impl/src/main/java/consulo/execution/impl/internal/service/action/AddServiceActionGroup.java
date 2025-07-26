@@ -14,22 +14,22 @@ import static consulo.execution.impl.internal.service.ServiceViewActionProvider.
 
 @ActionImpl(id = "ServiceView.AddService")
 public final class AddServiceActionGroup extends DefaultActionGroup implements DumbAware {
-  public AddServiceActionGroup() {
-    super(ActionLocalize.groupServiceviewAddserviceText(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
-  }
+    public AddServiceActionGroup() {
+        super(ActionLocalize.groupServiceviewAddserviceText(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
+    }
 
-  @Override
-  public boolean isPopup() {
-    return true;
-  }
+    @Override
+    public boolean isPopup() {
+        return true;
+    }
 
-//  @Override
-//  public @NotNull ActionUpdateThread getActionUpdateThread() {
-//    return ActionUpdateThread.BGT;
-//  }
+//    @Override
+//    public @NotNull ActionUpdateThread getActionUpdateThread() {
+//        return ActionUpdateThread.BGT;
+//    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(getSelectedView(e) != null);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(getSelectedView(e) != null);
+    }
 }

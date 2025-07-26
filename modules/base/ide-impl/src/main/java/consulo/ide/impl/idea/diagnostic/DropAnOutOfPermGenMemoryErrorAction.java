@@ -20,11 +20,11 @@ import consulo.ui.ex.action.DumbAwareAction;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnOutOfPermGenMemoryErrorAction extends DumbAwareAction {
-  public DropAnOutOfPermGenMemoryErrorAction() {
-    super ("Drop an perm gen OutOfMemoryError");
-  }
+    public DropAnOutOfPermGenMemoryErrorAction() {
+        super("Drop an perm gen OutOfMemoryError");
+    }
 
-  public void actionPerformed(AnActionEvent e) {
-    throw new OutOfMemoryError("foo PermGen foo");
-  }
+    public void actionPerformed(AnActionEvent e) {
+        throw new OutOfMemoryError("foo PermGen foo");
+    }
 }

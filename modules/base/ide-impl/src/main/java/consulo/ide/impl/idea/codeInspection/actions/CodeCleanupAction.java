@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.language.editor.scope.AnalysisScope;
@@ -27,34 +26,36 @@ import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileMana
 import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 
 public class CodeCleanupAction extends CodeInspectionAction {
+    public static final String CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME = "Code Cleanup Inspections";
 
-  public static final String CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME = "Code Cleanup Inspections";
+    public CodeCleanupAction() {
+        super("Code Cleanup", "Code Cleanup");
+    }
 
-  public CodeCleanupAction() {
-    super("Code Cleanup", "Code Cleanup");
-  }
+    @Override
+    protected void runInspections(Project project, AnalysisScope scope) {
+        final InspectionProfile profile =
+            myExternalProfile != null ? myExternalProfile : InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
+        final InspectionManager managerEx = InspectionManager.getInstance(project);
+        final GlobalInspectionContextBase globalContext = (GlobalInspectionContextBase) managerEx.createNewGlobalContext(false);
+        globalContext.codeCleanup(project, scope, profile, getTemplatePresentation().getText(), null, false);
+    }
 
-  @Override
-  protected void runInspections(Project project, AnalysisScope scope) {
-    final InspectionProfile profile = myExternalProfile != null ? myExternalProfile : InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-    final InspectionManager managerEx = InspectionManager.getInstance(project);
-    final GlobalInspectionContextBase globalContext = (GlobalInspectionContextBase)managerEx.createNewGlobalContext(false);
-    globalContext.codeCleanup(project, scope, profile, getTemplatePresentation().getText(), null, false);
-  }
+    @Override
+    protected IDEInspectionToolsConfigurable createConfigurable(
+        InspectionProjectProfileManager projectProfileManager,
+        InspectionProfileManager profileManager
+    ) {
+        return new IDEInspectionToolsConfigurable(projectProfileManager, profileManager) {
+            @Override
+            protected boolean acceptTool(InspectionToolWrapper entry) {
+                return super.acceptTool(entry) && entry.isCleanupTool();
+            }
 
-  @Override
-  protected IDEInspectionToolsConfigurable createConfigurable(InspectionProjectProfileManager projectProfileManager,
-                                                              InspectionProfileManager profileManager) {
-    return new IDEInspectionToolsConfigurable(projectProfileManager, profileManager) {
-      @Override
-      protected boolean acceptTool(InspectionToolWrapper entry) {
-        return super.acceptTool(entry) && entry.isCleanupTool();
-      }
-
-      @Override
-      public String getDisplayName() {
-        return CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME;
-      }
-    };
-  }
+            @Override
+            public String getDisplayName() {
+                return CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME;
+            }
+        };
+    }
 }

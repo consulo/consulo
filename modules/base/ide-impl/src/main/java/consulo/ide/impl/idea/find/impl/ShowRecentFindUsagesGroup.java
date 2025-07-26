@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.find.FindManager;
@@ -38,39 +37,46 @@ import java.util.List;
  * @author cdr
  */
 public class ShowRecentFindUsagesGroup extends ActionGroup {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
-  }
-
-  @Override
-  @Nonnull
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    if (e == null) return EMPTY_ARRAY;
-    Project project = e.getData(Project.KEY);
-    if (project == null) return EMPTY_ARRAY;
-    final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();
-    List<ConfigurableUsageTarget> history = new ArrayList<>(findUsagesManager.getHistory().getAll());
-    Collections.reverse(history);
-
-    String description =
-            ActionManager.getInstance().getAction(UsageViewImpl.SHOW_RECENT_FIND_USAGES_ACTION_ID).getTemplatePresentation().getDescription();
-
-    List<AnAction> children = new ArrayList<>(history.size());
-    for (final ConfigurableUsageTarget usageTarget : history) {
-      if (!usageTarget.isValid()) {
-        continue;
-      }
-      String text = usageTarget.getLongDescriptiveName();
-      AnAction action = new AnAction(text, description, null) {
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull final AnActionEvent e) {
-          findUsagesManager.rerunAndRecallFromHistory(usageTarget);
-        }
-      };
-      children.add(action);
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
-    return children.toArray(new AnAction[children.size()]);
-  }
+
+    @Override
+    @Nonnull
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        if (e == null) {
+            return EMPTY_ARRAY;
+        }
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return EMPTY_ARRAY;
+        }
+        final FindUsagesManager findUsagesManager = ((FindManagerImpl) FindManager.getInstance(project)).getFindUsagesManager();
+        List<ConfigurableUsageTarget> history = new ArrayList<>(findUsagesManager.getHistory().getAll());
+        Collections.reverse(history);
+
+        String description =
+            ActionManager.getInstance()
+                .getAction(UsageViewImpl.SHOW_RECENT_FIND_USAGES_ACTION_ID)
+                .getTemplatePresentation()
+                .getDescription();
+
+        List<AnAction> children = new ArrayList<>(history.size());
+        for (final ConfigurableUsageTarget usageTarget : history) {
+            if (!usageTarget.isValid()) {
+                continue;
+            }
+            String text = usageTarget.getLongDescriptiveName();
+            AnAction action = new AnAction(text, description, null) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull final AnActionEvent e) {
+                    findUsagesManager.rerunAndRecallFromHistory(usageTarget);
+                }
+            };
+            children.add(action);
+        }
+        return children.toArray(new AnAction[children.size()]);
+    }
 }

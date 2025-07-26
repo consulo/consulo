@@ -21,6 +21,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,39 +30,39 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 class ComboBoxVisibilityGroup extends ComboBoxAction {
-  private String myValue;
-  private DefaultActionGroup myGroup;
-  private Map<String, String> myMap = new HashMap<String, String>();
+    private String myValue;
+    private DefaultActionGroup myGroup;
+    private Map<String, String> myMap = new HashMap<String, String>();
 
-  protected ComboBoxVisibilityGroup(final String[] options, String[] presentableNames, final Runnable run) {
-    final AnAction[] myActions = new AnAction[options.length];
-    for (int i = 0; i < options.length; i++) {
-      final String value = options[i];
-      final String name = presentableNames[i];
-      myMap.put(value, name);
-      myActions[i] = new AnAction(name) {
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-          setValue(value);
-          run.run();
+    protected ComboBoxVisibilityGroup(final String[] options, String[] presentableNames, final Runnable run) {
+        final AnAction[] myActions = new AnAction[options.length];
+        for (int i = 0; i < options.length; i++) {
+            final String value = options[i];
+            final String name = presentableNames[i];
+            myMap.put(value, name);
+            myActions[i] = new AnAction(name) {
+                @Override
+                public void actionPerformed(AnActionEvent e) {
+                    setValue(value);
+                    run.run();
+                }
+            };
         }
-      };
+        myGroup = new DefaultActionGroup(myActions);
     }
-    myGroup = new DefaultActionGroup(myActions);
-  }
 
-  public String getValue() {
-    return myValue;
-  }
+    public String getValue() {
+        return myValue;
+    }
 
-  @Nonnull
-  @Override
-  public DefaultActionGroup createPopupActionGroup(JComponent component) {
-    return myGroup;
-  }
+    @Nonnull
+    @Override
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
+        return myGroup;
+    }
 
-  public void setValue(String value) {
-    getTemplatePresentation().setText(myMap.get(value));
-    myValue = value;
-  }
+    public void setValue(String value) {
+        getTemplatePresentation().setText(myMap.get(value));
+        myValue = value;
+    }
 }
