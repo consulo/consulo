@@ -164,7 +164,6 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         myBinarySwitch = new CardLayout();
         myViewingPanel = new JPanel(myBinarySwitch);
         myEditor.setBorder(null);
-        ((EditorEx) myEditor).getScrollPane().setViewportBorder(JBScrollPane.createIndentBorder());
         myViewingPanel.add(myEditor.getComponent(), TEXT_PAGE_KEY);
 
         myBinaryPanel = new JPanel(new BorderLayout());
