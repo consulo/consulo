@@ -17,27 +17,27 @@ package consulo.language.impl.util;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.util.PerFileMappings;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Objects;
 
 /**
  * @author peter
  */
 public abstract class LanguagePerFileMappings<T> extends PerFileMappingsBase<T> implements PerFileMappings<T> {
-  public LanguagePerFileMappings(@Nonnull Project project) {
-    super(project);
-  }
+    public LanguagePerFileMappings(@Nonnull Project project) {
+        super(project);
+    }
 
-  @Override
-  @Nonnull
-  protected Project getProject() {
-    return Objects.requireNonNull(super.getProject());
-  }
+    @Override
+    @Nonnull
+    protected Project getProject() {
+        return Objects.requireNonNull(super.getProject());
+    }
 
-  @Override
-  @Nonnull
-  protected String getValueAttribute() {
-    return "dialect";
-  }
+    @Override
+    @Nonnull
+    protected String getValueAttribute() {
+        return "dialect";
+    }
 }

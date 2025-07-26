@@ -24,11 +24,11 @@ import consulo.language.template.TemplateDataLanguageMappings;
 import consulo.module.content.FilePropertyPusher;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -38,44 +38,44 @@ import java.util.List;
 @State(name = "TemplateDataLanguageMappings", storages = {@Storage("templateLanguages.xml")})
 @ServiceImpl
 public class TemplateDataLanguageMappingsImpl extends LanguagePerFileMappings<Language> implements TemplateDataLanguageMappings {
-  @Inject
-  public TemplateDataLanguageMappingsImpl(final Project project) {
-    super(project);
-  }
+    @Inject
+    public TemplateDataLanguageMappingsImpl(Project project) {
+        super(project);
+    }
 
-  @Override
-  protected String serialize(final Language language) {
-    return language.getID();
-  }
+    @Override
+    protected String serialize(Language language) {
+        return language.getID();
+    }
 
-  @Override
-  @Nonnull
-  public List<Language> getAvailableValues() {
-    return TemplateDataLanguageMappings.getTemplateableLanguages();
-  }
+    @Override
+    @Nonnull
+    public List<Language> getAvailableValues() {
+        return TemplateDataLanguageMappings.getTemplateableLanguages();
+    }
 
-  @Nullable
-  @Override
-  public Language getMapping(@Nullable VirtualFile file) {
-    Language t = getConfiguredMapping(file);
-    return t == null || t == Language.ANY ? getDefaultMapping(file) : t;
-  }
+    @Nullable
+    @Override
+    public Language getMapping(@Nullable VirtualFile file) {
+        Language t = getConfiguredMapping(file);
+        return t == null || t == Language.ANY ? getDefaultMapping(file) : t;
+    }
 
-  @Override
-  public Language getDefaultMapping(@Nullable VirtualFile file) {
-    return getDefaultMappingForFile(file);
-  }
+    @Override
+    public Language getDefaultMapping(@Nullable VirtualFile file) {
+        return getDefaultMappingForFile(file);
+    }
 
-  @Nullable
-  public static Language getDefaultMappingForFile(@Nullable VirtualFile file) {
-    return file == null ? null : TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName(file);
-  }
+    @Nullable
+    public static Language getDefaultMappingForFile(@Nullable VirtualFile file) {
+        return file == null ? null : TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName(file);
+    }
 
-  private final FilePropertyPusher<Language> myPropertyPusher = new TemplateDataLanguagePusher();
+    private final FilePropertyPusher<Language> myPropertyPusher = new TemplateDataLanguagePusher();
 
-  @Nonnull
-  @Override
-  protected FilePropertyPusher<Language> getFilePropertyPusher() {
-    return myPropertyPusher;
-  }
+    @Nonnull
+    @Override
+    protected FilePropertyPusher<Language> getFilePropertyPusher() {
+        return myPropertyPusher;
+    }
 }

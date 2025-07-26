@@ -29,11 +29,10 @@ import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jdom.Element;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+import org.jetbrains.annotations.TestOnly;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -104,7 +103,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     @Nullable
     private T getMappingInner(@Nullable VirtualFile file, @Nullable Key<T> pusherKey, boolean forHierarchy) {
         if (file instanceof VirtualFileWindow) {
-            VirtualFileWindow window = (VirtualFileWindow)file;
+            VirtualFileWindow window = (VirtualFileWindow) file;
             file = window.getDelegate();
         }
         VirtualFile originalFile = file instanceof LightVirtualFile lightVirtualFile ? lightVirtualFile.getOriginalFile() : null;
