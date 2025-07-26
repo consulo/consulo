@@ -214,8 +214,7 @@
         <group id="Diff.EditorGutterPopupMenu"/>
 
         <group id="LookupActions">
-            <!-- these must be declared before standard EnterAction and TabAction -->
-            <action id="EditorChooseLookupItem" class="consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction$FocusedOnly"/>
+            <reference id="EditorChooseLookupItem" />
             <action id="EditorChooseLookupItemReplace"
                     class="consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction$Replacing"/>
             <action id="EditorChooseLookupItemCompleteStatement"
@@ -227,7 +226,7 @@
                     class="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateByTabAction"
                     use-shortcut-of="EditorTab"/>
 
-            <action id="NextTemplateVariable" class="consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction"/>
+            <reference id="NextTemplateVariable"/>
             <action id="PreviousTemplateVariable" class="consulo.ide.impl.idea.codeInsight.template.impl.actions.PreviousVariableAction"/>
 
             <action id="NextParameter" class="consulo.ide.impl.idea.codeInsight.hint.actions.NextParameterAction"/>

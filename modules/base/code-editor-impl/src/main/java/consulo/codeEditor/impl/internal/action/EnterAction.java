@@ -45,8 +45,8 @@ public class EnterAction extends EditorAction {
     }
 
     @Override
-    public EditorActionHandler getHandler() {
-        return super.getHandler();
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
     }
 
     private static class Handler extends EditorWriteActionHandler {

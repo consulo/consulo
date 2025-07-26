@@ -625,7 +625,10 @@ public final class IdeKeyEventDispatcher implements Disposable {
         boolean dumb = project != null && DumbService.getInstance(project).isDumb();
         List<AnActionEvent> nonDumbAwareAction = new ArrayList<>();
         List<AnAction> actions = myContext.getActions();
-        for (AnAction action : actions.toArray(new AnAction[actions.size()])) {
+
+        List<AnAction> processedItems = new ArrayList<>(actions);
+        processedItems.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
+        for (AnAction action : processedItems) {
             Presentation presentation = myPresentationFactory.getPresentation(action);
 
             // Mouse modifiers are 0 because they have no any sense when action is invoked via keyboard

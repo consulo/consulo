@@ -144,12 +144,6 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
         return liveTemplateLookup.getTemplateShortcut() == shortcutChar;
     }
 
-    public static class FocusedOnly extends ChooseItemAction {
-        public FocusedOnly() {
-            super(new Handler(true, Lookup.NORMAL_SELECT_CHAR));
-        }
-    }
-
     public static class Replacing extends ChooseItemAction {
         public Replacing() {
             super(new Handler(false, Lookup.REPLACE_SELECT_CHAR));

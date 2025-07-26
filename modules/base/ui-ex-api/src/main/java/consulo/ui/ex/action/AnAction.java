@@ -17,6 +17,7 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ActionAPI;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.disposer.Disposable;
@@ -127,7 +128,7 @@ public abstract class AnAction implements PossiblyDumbAware {
     /**
      * Creates a new action with <code>icon</code> provided. Its text, description set to <code>null</code>.
      * <p>
-     * If creating action via @{@link consulo.annotation.component.ActionImpl} use {@link #getTemplateIcon()}
+     * If creating action via @{@link ActionImpl} use {@link #getTemplateIcon()}
      *
      * @param icon Default icon to appear in toolbars and menus (Note some platform don't have icons in menu).
      */
@@ -386,6 +387,15 @@ public abstract class AnAction implements PossiblyDumbAware {
     @Nonnull
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
+    }
+
+    /**
+     * Return weight of action while execution on mouse/keyboard press handling
+     *
+     * @return weight
+     */
+    public int getExecuteWeight() {
+        return 0;
     }
 
     /**

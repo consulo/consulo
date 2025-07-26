@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
@@ -32,6 +33,7 @@ import jakarta.annotation.Nullable;
  * @author max
  * @since 2002-05-16
  */
+@ActionImpl(id = "NextTemplateVariable")
 public class NextVariableAction extends EditorAction {
     public NextVariableAction() {
         super(new Handler());
