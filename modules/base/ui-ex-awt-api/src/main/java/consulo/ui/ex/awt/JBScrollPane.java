@@ -4,7 +4,6 @@ package consulo.ui.ex.awt;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.awt.internal.ScrollSettings;
-import consulo.ui.ex.awt.internal.laf.DefaultScrollBarUI;
 import consulo.ui.ex.awt.scroll.LatchingScroll;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
@@ -135,12 +134,6 @@ public class JBScrollPane extends JScrollPane {
                 catch (Exception e1) {
                     return true;
                 }
-            }
-            else if (ui instanceof DefaultScrollBarUI) {
-                DefaultScrollBarUI dui = (DefaultScrollBarUI) ui;
-                Point point = e.getLocationOnScreen();
-                SwingUtilities.convertPointFromScreen(point, bar);
-                return !dui.isThumbContains(point.x, point.y);
             }
         }
         return true;
