@@ -1124,11 +1124,6 @@
             <add-to-group group-id="MainToolBarSettings" relative-to-action="ShowSettings" anchor="before"/>
         </group>
 
-        <!-- Window -->
-        <action id="CloseAllUnmodifiedEditors" class="consulo.ide.impl.idea.ide.actions.CloseAllUnmodifiedEditorsAction">
-            <add-to-group group-id="CloseEditorsGroup" anchor="before" relative-to-action="CloseAllUnpinnedEditors"/>
-        </action>
-
         <action id="Vcs.ShowDiffWithLocal" class="consulo.ide.impl.idea.openapi.vcs.history.ShowDiffWithLocalAction"
                 text="Compare with Local" description="Compare version from selected revision with current version"
                 icon="consulo.platform.base.PlatformIconGroup@actions.diffwithcurrent"/>

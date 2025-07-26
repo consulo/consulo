@@ -16,6 +16,9 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.fileEditor.action.CloseEditorsActionBase;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -28,7 +31,14 @@ import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
 import jakarta.annotation.Nonnull;
 
-@ActionImpl(id = IdeActions.ACTION_CLOSE_ALL_UNMODIFIED_EDITORS)
+@ActionImpl(
+    id = IdeActions.ACTION_CLOSE_ALL_UNMODIFIED_EDITORS,
+    parents = @ActionParentRef(
+        value = @ActionRef(type = CloseEditorsGroup.class),
+        anchor = ActionRefAnchor.BEFORE,
+        relatedToAction = @ActionRef(type = CloseAllUnpinnedEditorsAction.class)
+    )
+)
 public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
     public CloseAllUnmodifiedEditorsAction() {
         super(ActionLocalize.actionCloseallunmodifiededitorsText(), ActionLocalize.actionCloseallunmodifiededitorsDescription());
