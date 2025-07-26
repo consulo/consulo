@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,26 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import jakarta.inject.Inject;
+import consulo.ui.ex.action.DefaultActionGroup;
 
-import jakarta.annotation.Nonnull;
-
-@ActionImpl(id = "ShowTips")
-public class ShowTipsAction extends AnAction implements DumbAware {
-    private final TipOfDayManager myManager;
-
-    @Inject
-    public ShowTipsAction(TipOfDayManager manager) {
-        super(ActionLocalize.actionShowtipsText(), ActionLocalize.actionShowtipsDescription());
-        myManager = manager;
+/**
+ * @author UNV
+ * @since 2025-07-26
+ */
+@ActionImpl(
+    id = "ResizeToolWindowGroup",
+    children = {
+        @ActionRef(type = ResizeToolWindowLeftAction.class),
+        @ActionRef(type = ResizeToolWindowRightAction.class),
+        @ActionRef(type = ResizeToolWindowUpAction.class),
+        @ActionRef(type = ResizeToolWindowDownAction.class)
     }
-
-    @RequiredUIAccess
-    @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-        myManager.showAsync();
+)
+public class ResizeToolWindowGroup extends DefaultActionGroup implements DumbAware {
+    public ResizeToolWindowGroup() {
+        super(ActionLocalize.groupResizetoolwindowgroupText(), true);
     }
 }

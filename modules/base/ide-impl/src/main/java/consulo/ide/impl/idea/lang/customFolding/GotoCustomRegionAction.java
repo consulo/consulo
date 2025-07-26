@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.lang.customFolding;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
@@ -33,7 +34,6 @@ import consulo.language.editor.internal.CompositeFoldingBuilder;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
@@ -53,6 +53,7 @@ import java.util.Set;
 /**
  * @author Rustam Vishnyakov
  */
+@ActionImpl(id = "GotoCustomRegion")
 public class GotoCustomRegionAction extends AnAction implements DumbAware, PopupAction {
     public GotoCustomRegionAction() {
         super(IdeLocalize.gotoCustomRegionMenuItem());
@@ -67,7 +68,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
             return;
         }
         if (DumbService.getInstance(project).isDumb()) {
-            DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode().get());
+            DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode());
             return;
         }
         CommandProcessor.getInstance().newCommand()
@@ -94,14 +95,14 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
     @RequiredReadAction
     private static Collection<FoldingDescriptor> getCustomFoldingDescriptors(@Nonnull Editor editor, @Nonnull Project project) {
         Set<FoldingDescriptor> foldingDescriptors = new HashSet<>();
-        final Document document = editor.getDocument();
+        Document document = editor.getDocument();
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
         PsiFile file = documentManager != null ? documentManager.getPsiFile(document) : null;
         if (file != null) {
-            final FileViewProvider viewProvider = file.getViewProvider();
-            for (final Language language : viewProvider.getLanguages()) {
-                final PsiFile psi = viewProvider.getPsi(language);
-                final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
+            FileViewProvider viewProvider = file.getViewProvider();
+            for (Language language : viewProvider.getLanguages()) {
+                PsiFile psi = viewProvider.getPsi(language);
+                FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
                 if (psi != null) {
                     for (FoldingDescriptor descriptor : LanguageFolding.buildFoldingDescriptors(foldingBuilder, psi, document, false)) {
                         CustomFoldingBuilder customFoldingBuilder = getCustomFoldingBuilder(foldingBuilder, descriptor);
@@ -128,7 +129,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
     }
 
     private static void notifyCustomRegionsUnavailable(@Nonnull Editor editor, @Nonnull Project project) {
-        final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
+        JBPopupFactory popupFactory = JBPopupFactory.getInstance();
         Balloon balloon = popupFactory.createHtmlTextBalloonBuilder(
                 IdeLocalize.gotoCustomRegionMessageUnavailable().get(),
                 NotificationType.INFO,

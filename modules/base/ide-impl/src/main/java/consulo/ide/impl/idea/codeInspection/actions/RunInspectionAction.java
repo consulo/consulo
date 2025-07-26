@@ -35,6 +35,7 @@ import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.language.psi.*;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -53,7 +54,7 @@ public class RunInspectionAction extends GotoActionBase {
   private static final Logger LOGGER = Logger.getInstance(RunInspectionAction.class);
 
   public RunInspectionAction() {
-    getTemplatePresentation().setTextValue(IdeLocalize.gotoInspectionActionText());
+    super(IdeLocalize.gotoInspectionActionText(), LocalizeValue.empty());
   }
 
   @Override

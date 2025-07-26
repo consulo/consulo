@@ -43,14 +43,13 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
     public static final String ID = "tasks.goto";
 
     public GotoTaskAction() {
-        getTemplatePresentation().setTextValue(LocalizeValue.localizeTODO("Open Task..."));
-        getTemplatePresentation().setIcon(PlatformIconGroup.generalAdd());
+        super(LocalizeValue.localizeTODO("Open Task..."), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
     }
 
     @Override
     @RequiredUIAccess
-    protected void gotoActionPerformed(final AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+    protected void gotoActionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         if (project != null) {
             perform(project);
         }
@@ -128,7 +127,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
             }
         });
 
-        final DefaultActionGroup group = new DefaultActionGroup(new ConfigureServersAction() {
+        DefaultActionGroup group = new DefaultActionGroup(new ConfigureServersAction() {
             @Override
             protected void serversChanged() {
                 popup.rebuildList(true);
@@ -229,7 +228,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         }
 
         @Override
-        public void saveInitialCheckBoxState(final boolean state) {
+        public void saveInitialCheckBoxState(boolean state) {
             ((TaskManagerImpl)TaskManager.getManager(getProject())).getState().searchClosedTasks = state;
         }
 
@@ -246,7 +245,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
             return LocalizeValue.localizeTODO("Create New Task \'" + taskName + "\'").get();
         }
 
-        public void setTaskName(final String taskName) {
+        public void setTaskName(String taskName) {
             this.taskName = taskName;
         }
 

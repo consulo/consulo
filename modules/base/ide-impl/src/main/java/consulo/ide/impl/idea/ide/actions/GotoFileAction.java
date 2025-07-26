@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
@@ -28,6 +29,7 @@ import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.Navigatable;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -49,8 +51,13 @@ import java.util.List;
  * @author Eugene Belyaev
  * @author Constantine.Plotnikov
  */
+@ActionImpl(id = GotoFileAction.ID)
 public class GotoFileAction extends GotoActionBase implements DumbAware {
     public static final String ID = "GotoFile";
+
+    public GotoFileAction() {
+        super(ActionLocalize.actionGotofileText(), ActionLocalize.actionGotofileDescription());
+    }
 
     @Override
     @RequiredUIAccess
