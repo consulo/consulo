@@ -15,17 +15,25 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.fileEditor.action.CloseEditorsActionBase;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = IdeActions.ACTION_CLOSE_ALL_UNMODIFIED_EDITORS)
 public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
+    public CloseAllUnmodifiedEditorsAction() {
+        super(ActionLocalize.actionCloseallunmodifiededitorsText(), ActionLocalize.actionCloseallunmodifiededitorsDescription());
+    }
+
     @Override
     protected boolean isFileToClose(FileEditorComposite editor, FileEditorWindow window) {
         return !window.getManager().isChanged(editor);

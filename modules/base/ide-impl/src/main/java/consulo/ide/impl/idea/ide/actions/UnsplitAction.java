@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -23,7 +25,12 @@ import consulo.ui.ex.action.AnActionEvent;
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "Unsplit")
 public class UnsplitAction extends SplitterActionBase {
+    public UnsplitAction() {
+        super(ActionLocalize.actionUnsplitText(), ActionLocalize.actionUnsplitDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {

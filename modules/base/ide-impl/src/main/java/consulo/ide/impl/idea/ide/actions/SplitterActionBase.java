@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -29,6 +29,10 @@ import jakarta.annotation.Nonnull;
  * @author yole
  */
 public abstract class SplitterActionBase extends AnAction implements DumbAware {
+    protected SplitterActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent event) {
         Project project = event.getData(Project.KEY);
