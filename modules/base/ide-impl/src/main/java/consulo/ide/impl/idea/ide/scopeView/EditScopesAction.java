@@ -34,36 +34,37 @@ import jakarta.annotation.Nonnull;
  * @since 2006-01-27
  */
 public class EditScopesAction extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance(EditScopesAction.class);
+    private static final Logger LOG = Logger.getInstance(EditScopesAction.class);
 
-  public EditScopesAction() {
-    getTemplatePresentation().setIcon(AllIcons.Ide.LocalScope);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    final String scopeName = ProjectView.getInstance(project).getCurrentProjectViewPane().getSubId();
-    LOG.assertTrue(scopeName != null);
-    final ScopeChooserConfigurable scopeChooserConfigurable = new ScopeChooserConfigurable(project, () -> MasterDetailsStateService.getInstance(project));
-    ShowSettingsUtil.getInstance()
-      .editConfigurable(project, scopeChooserConfigurable, () -> scopeChooserConfigurable.selectNodeInTree(scopeName));
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setEnabled(false);
-    final Project project = e.getData(Project.KEY);
-    if (project != null) {
-      final ProjectViewPane projectViewPane = ProjectView.getInstance(project).getCurrentProjectViewPane();
-      if (projectViewPane != null) {
-        final String scopeName = projectViewPane.getSubId();
-        if (scopeName != null) {
-          e.getPresentation().setEnabled(true);
-        }
-      }
+    public EditScopesAction() {
+        getTemplatePresentation().setIcon(AllIcons.Ide.LocalScope);
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        final String scopeName = ProjectView.getInstance(project).getCurrentProjectViewPane().getSubId();
+        LOG.assertTrue(scopeName != null);
+        final ScopeChooserConfigurable scopeChooserConfigurable =
+            new ScopeChooserConfigurable(project, () -> MasterDetailsStateService.getInstance(project));
+        ShowSettingsUtil.getInstance()
+            .editConfigurable(project, scopeChooserConfigurable, () -> scopeChooserConfigurable.selectNodeInTree(scopeName));
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(false);
+        final Project project = e.getData(Project.KEY);
+        if (project != null) {
+            final ProjectViewPane projectViewPane = ProjectView.getInstance(project).getCurrentProjectViewPane();
+            if (projectViewPane != null) {
+                final String scopeName = projectViewPane.getSubId();
+                if (scopeName != null) {
+                    e.getPresentation().setEnabled(true);
+                }
+            }
+        }
+    }
 }

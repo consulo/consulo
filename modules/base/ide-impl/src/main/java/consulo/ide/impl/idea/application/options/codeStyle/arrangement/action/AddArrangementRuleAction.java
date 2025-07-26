@@ -28,46 +28,45 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
- * @since 8/24/12 1:54 PM
+ * @since 2012-08-24
  */
 public class AddArrangementRuleAction extends AbstractArrangementRuleAction implements DumbAware {
-
-  public AddArrangementRuleAction() {
-    getTemplatePresentation().setText(ApplicationBundle.message("arrangement.action.rule.add.text"));
-    getTemplatePresentation().setDescription(ApplicationBundle.message("arrangement.action.rule.add.description"));
-    getTemplatePresentation().setIcon(IconUtil.getAddIcon());
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    ArrangementMatchingRulesControl control = getRulesControl(e);
-    if (control == null) {
-      return;
+    public AddArrangementRuleAction() {
+        getTemplatePresentation().setText(ApplicationBundle.message("arrangement.action.rule.add.text"));
+        getTemplatePresentation().setDescription(ApplicationBundle.message("arrangement.action.rule.add.description"));
+        getTemplatePresentation().setIcon(IconUtil.getAddIcon());
     }
 
-    control.hideEditor();
-    IntList rows = control.getSelectedModelRows();
-    ArrangementMatchingRulesModel model = control.getModel();
-    int rowToEdit;
-    if (rows.size() == 1) {
-      rowToEdit = rows.get(0) + 1;
-      model.insertRow(rowToEdit, new Object[] {createNewRule(control)});
-    }
-    else {
-      rowToEdit = model.getSize();
-      model.add(createNewRule(control));
-    }
-    showEditor(control, rowToEdit);
-    control.getSelectionModel().setSelectionInterval(rowToEdit, rowToEdit);
-    scrollRowToVisible(control, rowToEdit);
-  }
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        ArrangementMatchingRulesControl control = getRulesControl(e);
+        if (control == null) {
+            return;
+        }
 
-  @Nonnull
-  protected Object createNewRule(@Nonnull ArrangementMatchingRulesControl control) {
-    return new EmptyArrangementRuleComponent(control.getEmptyRowHeight());
-  }
+        control.hideEditor();
+        IntList rows = control.getSelectedModelRows();
+        ArrangementMatchingRulesModel model = control.getModel();
+        int rowToEdit;
+        if (rows.size() == 1) {
+            rowToEdit = rows.get(0) + 1;
+            model.insertRow(rowToEdit, new Object[]{createNewRule(control)});
+        }
+        else {
+            rowToEdit = model.getSize();
+            model.add(createNewRule(control));
+        }
+        showEditor(control, rowToEdit);
+        control.getSelectionModel().setSelectionInterval(rowToEdit, rowToEdit);
+        scrollRowToVisible(control, rowToEdit);
+    }
 
-  protected void showEditor(@Nonnull ArrangementMatchingRulesControl control, int rowToEdit) {
-    control.showEditor(rowToEdit);
-  }
+    @Nonnull
+    protected Object createNewRule(@Nonnull ArrangementMatchingRulesControl control) {
+        return new EmptyArrangementRuleComponent(control.getEmptyRowHeight());
+    }
+
+    protected void showEditor(@Nonnull ArrangementMatchingRulesControl control, int rowToEdit) {
+        control.showEditor(rowToEdit);
+    }
 }

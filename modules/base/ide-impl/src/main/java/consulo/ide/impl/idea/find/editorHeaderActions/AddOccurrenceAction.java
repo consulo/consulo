@@ -23,13 +23,13 @@ import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class AddOccurrenceAction extends OccurrenceAction {
-  public AddOccurrenceAction() {
-    super(IdeActions.ACTION_SELECT_NEXT_OCCURENCE, AllIcons.Actions.AddMulticaret);
-  }
+    public AddOccurrenceAction() {
+        super(IdeActions.ACTION_SELECT_NEXT_OCCURENCE, AllIcons.Actions.AddMulticaret);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    e.getRequiredData(EditorSearchSession.SESSION_KEY).addNextOccurrence();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        e.getRequiredData(EditorSearchSession.SESSION_KEY).addNextOccurrence();
+    }
 }

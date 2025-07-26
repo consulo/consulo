@@ -35,103 +35,104 @@ import java.util.function.Consumer;
 
 /**
  * moved from inner class
+ *
  * @author irengrig
  * @since 2011-02-24
  */
 public class SetTodoFilterAction extends ActionGroup implements DumbAware {
-  private final Project myProject;
-  private final TodoPanelSettings myToDoSettings;
-  private final Consumer<TodoFilter> myTodoFilterConsumer;
-
-  public SetTodoFilterAction(
-    final Project project,
-    final TodoPanelSettings toDoSettings,
-    final Consumer<TodoFilter> todoFilterConsumer
-  ) {
-    super(IdeLocalize.actionFilterTodoItems(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
-    setPopup(true);
-    myProject = project;
-    myToDoSettings = toDoSettings;
-    myTodoFilterConsumer = todoFilterConsumer;
-  }
-
-  @Nonnull
-  @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    TodoFilter[] filters = TodoConfiguration.getInstance().getTodoFilters();
-    List<AnAction> group = new ArrayList<>();
-    group.add(new TodoFilterApplier(
-      IdeLocalize.actionTodoShowAll().get(),
-      IdeLocalize.actionDescriptionTodoShowAll().get(),
-      null,
-      myToDoSettings,
-      myTodoFilterConsumer
-    ));
-    for (TodoFilter filter : filters) {
-      group.add(new TodoFilterApplier(filter.getName(), null, filter, myToDoSettings, myTodoFilterConsumer));
-    }
-    group.add(AnSeparator.create());
-    group.add(
-      new DumbAwareAction(
-        IdeLocalize.actionTodoEditFilters(),
-        IdeLocalize.actionTodoEditFilters(),
-        PlatformIconGroup.generalSettings()
-      ) {
-        @RequiredUIAccess
-        @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-          ShowSettingsUtil.getInstance().showAndSelect(myProject, TodoConfigurable.class);
-        }
-      }
-    );
-    return group.toArray(AnAction[]::new);
-  }
-
-  private static class TodoFilterApplier extends ToggleAction implements DumbAware {
-    private final TodoFilter myFilter;
-    private final TodoPanelSettings mySettings;
+    private final Project myProject;
+    private final TodoPanelSettings myToDoSettings;
     private final Consumer<TodoFilter> myTodoFilterConsumer;
 
-    /**
-     * @param text               action's text.
-     * @param description        action's description.
-     * @param filter             filter to be applied. {@code null} value means "empty" filter.
-     * @param settings
-     * @param todoFilterConsumer
-     */
-    TodoFilterApplier(
-      String text,
-      String description,
-      TodoFilter filter,
-      TodoPanelSettings settings,
-      Consumer<TodoFilter> todoFilterConsumer
+    public SetTodoFilterAction(
+        final Project project,
+        final TodoPanelSettings toDoSettings,
+        final Consumer<TodoFilter> todoFilterConsumer
     ) {
-      super(null, description, null);
-      mySettings = settings;
-      myTodoFilterConsumer = todoFilterConsumer;
-      getTemplatePresentation().setText(text, false);
-      myFilter = filter;
+        super(IdeLocalize.actionFilterTodoItems(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
+        setPopup(true);
+        myProject = project;
+        myToDoSettings = toDoSettings;
+        myTodoFilterConsumer = todoFilterConsumer;
     }
 
+    @Nonnull
     @Override
-    public void update(AnActionEvent e) {
-      super.update(e);
-      if (myFilter != null) {
-        e.getPresentation().setEnabled(!myFilter.isEmpty());
-      }
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        TodoFilter[] filters = TodoConfiguration.getInstance().getTodoFilters();
+        List<AnAction> group = new ArrayList<>();
+        group.add(new TodoFilterApplier(
+            IdeLocalize.actionTodoShowAll().get(),
+            IdeLocalize.actionDescriptionTodoShowAll().get(),
+            null,
+            myToDoSettings,
+            myTodoFilterConsumer
+        ));
+        for (TodoFilter filter : filters) {
+            group.add(new TodoFilterApplier(filter.getName(), null, filter, myToDoSettings, myTodoFilterConsumer));
+        }
+        group.add(AnSeparator.create());
+        group.add(
+            new DumbAwareAction(
+                IdeLocalize.actionTodoEditFilters(),
+                IdeLocalize.actionTodoEditFilters(),
+                PlatformIconGroup.generalSettings()
+            ) {
+                @RequiredUIAccess
+                @Override
+                public void actionPerformed(@Nonnull AnActionEvent e) {
+                    ShowSettingsUtil.getInstance().showAndSelect(myProject, TodoConfigurable.class);
+                }
+            }
+        );
+        return group.toArray(AnAction[]::new);
     }
 
-    @Override
-    public boolean isSelected(AnActionEvent e) {
-      return Comparing.equal(myFilter != null ? myFilter.getName() : null, mySettings.todoFilterName);
-    }
+    private static class TodoFilterApplier extends ToggleAction implements DumbAware {
+        private final TodoFilter myFilter;
+        private final TodoPanelSettings mySettings;
+        private final Consumer<TodoFilter> myTodoFilterConsumer;
 
-    @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-      if (state) {
-        myTodoFilterConsumer.accept(myFilter);
-        //setTodoFilter(myFilter);
-      }
+        /**
+         * @param text               action's text.
+         * @param description        action's description.
+         * @param filter             filter to be applied. {@code null} value means "empty" filter.
+         * @param settings
+         * @param todoFilterConsumer
+         */
+        TodoFilterApplier(
+            String text,
+            String description,
+            TodoFilter filter,
+            TodoPanelSettings settings,
+            Consumer<TodoFilter> todoFilterConsumer
+        ) {
+            super(null, description, null);
+            mySettings = settings;
+            myTodoFilterConsumer = todoFilterConsumer;
+            getTemplatePresentation().setText(text, false);
+            myFilter = filter;
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            super.update(e);
+            if (myFilter != null) {
+                e.getPresentation().setEnabled(!myFilter.isEmpty());
+            }
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent e) {
+            return Comparing.equal(myFilter != null ? myFilter.getName() : null, mySettings.todoFilterName);
+        }
+
+        @Override
+        public void setSelected(AnActionEvent e, boolean state) {
+            if (state) {
+                myTodoFilterConsumer.accept(myFilter);
+                //setTodoFilter(myFilter);
+            }
+        }
     }
-  }
 }

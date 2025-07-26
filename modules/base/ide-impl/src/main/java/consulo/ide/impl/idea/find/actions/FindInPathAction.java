@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2012 JetBrains s.r.o.
  *
@@ -32,45 +31,45 @@ import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 public class FindInPathAction extends FindReplaceInPathActionBase {
-  @Inject
-  public FindInPathAction(NotificationService notificationService) {
-    super(ActionLocalize.actionFindinpathText(), ActionLocalize.actionFindinpathDescription(), notificationService);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-
-    FindInProjectManager findManager = FindInProjectManager.getInstance(project);
-    if (!findManager.isEnabled()) {
-      showNotAvailableMessage(e, project);
-      return;
+    @Inject
+    public FindInPathAction(NotificationService notificationService) {
+        super(ActionLocalize.actionFindinpathText(), ActionLocalize.actionFindinpathDescription(), notificationService);
     }
 
-    findManager.findInProject(e.getDataContext(), null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    doUpdate(e);
-  }
+        FindInProjectManager findManager = FindInProjectManager.getInstance(project);
+        if (!findManager.isEnabled()) {
+            showNotAvailableMessage(e, project);
+            return;
+        }
 
-  static void doUpdate(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    Project project = e.getData(Project.KEY);
-    presentation.setEnabled(project != null);
-    if (ActionPlaces.isPopupPlace(e.getPlace())) {
-      presentation.setVisible(isValidSearchScope(e));
+        findManager.findInProject(e.getDataContext(), null);
     }
-  }
 
-  private static boolean isValidSearchScope(@Nonnull AnActionEvent e) {
-    PsiElement[] elements = e.getData(PsiElement.KEY_OF_ARRAY);
-    if (elements != null && elements.length == 1 && elements[0] instanceof PsiDirectoryContainer) {
-      return true;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        doUpdate(e);
     }
-    VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
-    return virtualFiles != null && virtualFiles.length == 1 && virtualFiles[0].isDirectory();
-  }
+
+    static void doUpdate(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Project project = e.getData(Project.KEY);
+        presentation.setEnabled(project != null);
+        if (ActionPlaces.isPopupPlace(e.getPlace())) {
+            presentation.setVisible(isValidSearchScope(e));
+        }
+    }
+
+    private static boolean isValidSearchScope(@Nonnull AnActionEvent e) {
+        PsiElement[] elements = e.getData(PsiElement.KEY_OF_ARRAY);
+        if (elements != null && elements.length == 1 && elements[0] instanceof PsiDirectoryContainer) {
+            return true;
+        }
+        VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
+        return virtualFiles != null && virtualFiles.length == 1 && virtualFiles[0].isDirectory();
+    }
 }
