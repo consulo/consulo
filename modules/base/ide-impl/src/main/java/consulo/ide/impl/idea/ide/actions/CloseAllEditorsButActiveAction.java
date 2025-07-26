@@ -15,20 +15,28 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.util.lang.Comparing;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
+import java.util.Objects;
+
+@ActionImpl(id = IdeActions.ACTION_CLOSE_ALL_EDITORS_BUT_THIS)
 public class CloseAllEditorsButActiveAction extends AnAction implements DumbAware {
+    public CloseAllEditorsButActiveAction() {
+        super(ActionLocalize.actionClosealleditorsbutactiveText(), ActionLocalize.actionClosealleditorsbutactiveDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -43,7 +51,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
         selectedFile = fileEditorManager.getSelectedFiles()[0];
         VirtualFile[] siblings = fileEditorManager.getSiblings(selectedFile);
         for (VirtualFile sibling : siblings) {
-            if (!Comparing.equal(selectedFile, sibling)) {
+            if (!Objects.equals(selectedFile, sibling)) {
                 fileEditorManager.closeFile(sibling);
             }
         }

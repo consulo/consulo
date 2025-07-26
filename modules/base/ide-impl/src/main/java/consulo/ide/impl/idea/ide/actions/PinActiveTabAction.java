@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.ide.localize.IdeLocalize;
@@ -23,10 +24,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ContentManagerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.Toggleable;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -39,6 +37,7 @@ import jakarta.annotation.Nullable;
  * <p>
  * todo drop TW and EW, both are only for menu|Window tab/editor sub-menus.
  */
+@ActionImpl(id = IdeActions.ACTION_PIN_ACTIVE_TAB)
 public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     public static abstract class Handler {
         public final boolean isPinned;

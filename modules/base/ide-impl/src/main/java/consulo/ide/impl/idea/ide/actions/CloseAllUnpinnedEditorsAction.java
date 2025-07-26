@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.fileEditor.action.CloseEditorsActionBase;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.fileEditor.FileEditorComposite;
@@ -34,7 +35,12 @@ import java.util.Set;
 /**
  * @author yole
  */
+@ActionImpl(id = "CloseAllUnpinnedEditors")
 public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
+    public CloseAllUnpinnedEditorsAction() {
+        super(ActionLocalize.actionCloseallunpinnededitorsText(), ActionLocalize.actionCloseallunpinnededitorsDescription());
+    }
+
     @Override
     protected boolean isFileToClose(FileEditorComposite editor, FileEditorWindow window) {
         return !window.isFilePinned(editor.getFile());

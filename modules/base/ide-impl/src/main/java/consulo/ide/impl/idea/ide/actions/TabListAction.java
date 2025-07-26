@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,7 +28,12 @@ import jakarta.annotation.Nonnull;
  *
  * @author yole
  */
+@ActionImpl(id = "TabList")
 public class TabListAction extends AnAction {
+    public TabListAction() {
+        super(ActionLocalize.actionTablistText(), ActionLocalize.actionTablistDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

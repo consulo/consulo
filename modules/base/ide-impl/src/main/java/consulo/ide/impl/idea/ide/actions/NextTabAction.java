@@ -15,8 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
+
+@ActionImpl(id = IdeActions.ACTION_NEXT_TAB)
 public class NextTabAction extends TabNavigationActionBase {
     public NextTabAction() {
-        super(+1);
+        super(ActionLocalize.actionNexttabText(), ActionLocalize.actionNexttabDescription(), Direction.NEXT);
     }
 }

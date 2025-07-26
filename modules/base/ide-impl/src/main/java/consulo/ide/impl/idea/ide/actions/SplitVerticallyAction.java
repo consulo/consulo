@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import javax.swing.*;
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "SplitVertically")
 public final class SplitVerticallyAction extends SplitAction {
     public SplitVerticallyAction() {
-        super(SwingConstants.VERTICAL);
+        super(IdeLocalize.actionSplitVertically(), PlatformIconGroup.actionsSplitvertically(), Orientation.VERTICAL);
     }
 }

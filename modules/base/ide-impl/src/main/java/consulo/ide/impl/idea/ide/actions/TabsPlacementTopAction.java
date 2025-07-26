@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,17 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.ui.UISettings;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.IdeActions;
 
-@ActionImpl(id = IdeActions.ACTION_PREVIOUS_TAB)
-public class PreviousTabAction extends TabNavigationActionBase {
-    public PreviousTabAction() {
-        super(ActionLocalize.actionPrevioustabText(), ActionLocalize.actionPrevioustabDescription(), Direction.PREVIOUS);
+@ActionImpl(id = "TabsPlacementTop")
+public class TabsPlacementTopAction extends TabsPlacementAction {
+    public TabsPlacementTopAction() {
+        super(ActionLocalize.actionTabsplacementtopText());
+    }
+
+    @Override
+    int getPlace() {
+        return UISettings.PLACEMENT_EDITOR_TAB_TOP;
     }
 }
