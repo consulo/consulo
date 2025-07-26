@@ -22,7 +22,7 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.document.util.TextRange;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker;
+import consulo.codeEditor.action.EditorLastActionTracker;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.editor.hint.HintManager;

@@ -30,6 +30,7 @@ import consulo.document.impl.TextRangeInterval;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -37,8 +38,11 @@ import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static consulo.codeEditor.util.EditorUtil.getTabSize;
 
@@ -145,7 +149,7 @@ public class EditorImplUtil {
         return visualPosition.line;
     }
 
-    public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
+    public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
         if (editor instanceof RealEditorWithEditorView editorImpl) {
             int lineEndOffset = line >= editorImpl.getVisibleLineCount()
                 ? editor.getDocument().getTextLength()
@@ -266,9 +270,9 @@ public class EditorImplUtil {
     @Deprecated
     public static int calcColumnNumber(@Nullable Editor editor,
                                        @Nonnull CharSequence text,
-                                       final int start,
-                                       final int offset,
-                                       final int tabSize) {
+                                       int start,
+                                       int offset,
+                                       int tabSize) {
         return EditorUtil.calcColumnNumber(editor, text, start, offset, tabSize);
     }
 
@@ -378,11 +382,22 @@ public class EditorImplUtil {
     }
 
     @Nonnull
-    public static FontInfo fontForChar(final char c, @JdkConstants.FontStyle int style, @Nonnull Editor editor) {
+    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, @Nonnull Editor editor) {
         EditorColorsScheme colorsScheme = editor.getColorsScheme();
         return ComplementaryFontsRegistry.getFontAbleToDisplay(c,
             style,
             colorsScheme.getFontPreferences(),
             FontInfo.getFontRenderContext(editor.getContentComponent()));
+    }
+
+    @Nullable
+    public static Transferable getContentsToPasteToEditor(@Nullable Supplier<Transferable> producer) {
+        if (producer == null) {
+            CopyPasteManager manager = CopyPasteManager.getInstance();
+            return manager.areDataFlavorsAvailable(DataFlavor.stringFlavor) ? manager.getContents() : null;
+        }
+        else {
+            return producer.get();
+        }
     }
 }

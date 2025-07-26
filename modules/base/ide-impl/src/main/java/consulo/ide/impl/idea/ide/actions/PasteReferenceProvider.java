@@ -6,7 +6,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.editor.actions.PasteAction;
+import consulo.codeEditor.impl.internal.action.PasteAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.QualifiedNameProvider;

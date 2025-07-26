@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.action.EditorAction;
-import consulo.ide.impl.idea.openapi.editor.actions.TextComponentEditorAction;
+import consulo.codeEditor.impl.internal.action.TextComponentEditorAction;
 
 import java.util.ArrayList;
 import java.util.Collections;

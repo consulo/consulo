@@ -24,15 +24,14 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CopyPasteManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class EditorModificationUtil {
   private EditorModificationUtil() {
@@ -40,10 +39,6 @@ public class EditorModificationUtil {
 
   public static void deleteSelectedText(Editor editor) {
     consulo.codeEditor.util.EditorModificationUtil.deleteSelectedText(editor);
-  }
-
-  public static void deleteSelectedTextForAllCarets(@Nonnull final Editor editor) {
-    editor.getCaretModel().runForEachCaret(caret -> deleteSelectedText(editor));
   }
 
   public static void zeroWidthBlockSelectionAtCaretColumn(final Editor editor, final int startLine, final int endLine) {
@@ -93,17 +88,6 @@ public class EditorModificationUtil {
 
     editor.getCaretModel().moveToLogicalPosition(caretToRestore);
     zeroWidthBlockSelectionAtCaretColumn(editor, caretLine, caretLine);
-  }
-
-  @Nullable
-  public static Transferable getContentsToPasteToEditor(@Nullable Supplier<Transferable> producer) {
-    if (producer == null) {
-      CopyPasteManager manager = CopyPasteManager.getInstance();
-      return manager.areDataFlavorsAvailable(DataFlavor.stringFlavor) ? manager.getContents() : null;
-    }
-    else {
-      return producer.get();
-    }
   }
 
   @Nullable

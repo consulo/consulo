@@ -21,10 +21,6 @@
     <extensions defaultExtensionNs="consulo">
 
 
-        <!--
-            <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.hint.EscapeHandler" id="hide-hints"/>
-        -->
-
         <!--<editorActionHandler action="EditorDelete" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteSelectionHandler"-->
         <!--id="delete.for.selection"/>-->
         <!--<editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteSelectionHandler"-->
@@ -238,8 +234,6 @@
             <action id="PrevParameter" class="consulo.ide.impl.idea.codeInsight.hint.actions.PrevParameterAction"/>
         </group>
 
-        <action id="EditorIndentSelection" class="consulo.ide.impl.idea.openapi.editor.actions.LangIndentSelectionAction"/>
-
         <action id="ContextHelp" class="consulo.ui.ex.action.ContextHelpAction"/>
         <action id="RunGc" class="consulo.ide.impl.idea.ide.actions.RunGcAction"/>
         <action id="ShowPopupMenu" class="consulo.ide.impl.idea.ide.actions.ShowPopupMenuAction"/>
@@ -272,108 +266,96 @@
         </group>
 
         <group id="EditorActions">
-            <action id="EditorPageUp" class="consulo.ide.impl.idea.openapi.editor.actions.PageUpAction"/>
-            <action id="EditorPageDown" class="consulo.ide.impl.idea.openapi.editor.actions.PageDownAction"/>
-            <action id="EditorPageUpWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.PageUpWithSelectionAction"/>
-            <action id="EditorPageDownWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.PageDownWithSelectionAction"/>
-            <action id="EditorCopy" class="consulo.ide.impl.idea.openapi.editor.actions.CopyAction" use-shortcut-of="$Copy"/>
-            <action id="EditorCut" class="consulo.ide.impl.idea.openapi.editor.actions.CutAction" use-shortcut-of="$Cut"/>
-            <action id="EditorPaste" class="consulo.ide.impl.idea.openapi.editor.actions.PasteAction" use-shortcut-of="$Paste"/>
-            <action id="EditorPasteSimple" class="consulo.ide.impl.idea.openapi.editor.actions.SimplePasteAction"/>
-            <action id="EditorPasteFromX11" class="consulo.ide.impl.idea.openapi.editor.actions.PasteFromX11Action"/>
-            <action id="EditorDelete" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteAction" use-shortcut-of="$Delete"/>
-            <action id="EditorBackSpace" class="consulo.ide.impl.idea.openapi.editor.actions.BackspaceAction"/>
-            <action id="EditorHungryBackSpace" class="consulo.ide.impl.idea.openapi.editor.actions.HungryBackspaceAction"/>
-            <action id="EditorMoveToPageTop" class="consulo.ide.impl.idea.openapi.editor.actions.PageTopAction"/>
-            <action id="EditorMoveToPageBottom" class="consulo.ide.impl.idea.openapi.editor.actions.PageBottomAction"/>
-            <action id="EditorMoveToPageTopWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.PageTopWithSelectionAction"/>
-            <action id="EditorMoveToPageBottomWithSelection"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.PageBottomWithSelectionAction"/>
-            <action id="EditorEnter" class="consulo.ide.impl.idea.openapi.editor.actions.EnterAction"/>
-            <action id="EditorEscape" class="consulo.ide.impl.idea.openapi.editor.actions.EscapeAction"/>
-            <reference id="EditorUp" />
-            <reference id="EditorDown" />
-            <action id="EditorLeft" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretLeftAction"/>
-            <action id="EditorRight" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretRightAction"/>
-            <action id="EditorUpWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretUpWithSelectionAction"/>
-            <action id="EditorDownWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretDownWithSelectionAction"/>
-            <action id="EditorLeftWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretLeftWithSelectionAction"/>
-            <action id="EditorRightWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretRightWithSelectionAction"/>
-            <action id="EditorUnindentSelection" class="consulo.ide.impl.idea.openapi.editor.actions.UnindentSelectionAction"/>
-            <action id="EditorTab" class="consulo.ide.impl.idea.openapi.editor.actions.TabAction"/>
-            <action id="EditorResetFontSize" class="consulo.ide.impl.idea.openapi.editor.actions.ResetFontSizeAction"/>
-            <action id="EditorScrollUp" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollUpAction"/>
-            <action id="EditorScrollDown" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollDownAction"/>
-            <action id="EditorScrollUpAndMove" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollUpAndMoveAction"/>
-            <action id="EditorScrollDownAndMove" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollDownAndMoveAction"/>
-            <action id="EditorScrollRight" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollRightAction"/>
-            <action id="EditorScrollLeft" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollLeftAction"/>
-            <action id="EditorScrollTop" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollToTopAction"/>
-            <action id="EditorScrollBottom" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollToBottomAction"/>
-            <action id="EditorMoveUpAndScroll" class="consulo.ide.impl.idea.openapi.editor.actions.MoveUpAndScrollAction"/>
-            <action id="EditorMoveDownAndScroll" class="consulo.ide.impl.idea.openapi.editor.actions.MoveDownAndScrollAction"/>
-            <action id="EditorMoveUpAndScrollWithSelection"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.MoveUpWithSelectionAndScrollAction"/>
-            <action id="EditorMoveDownAndScrollWithSelection"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.MoveDownWithSelectionAndScrollAction"/>
-            <action id="EditorAddOrRemoveCaret" class="consulo.ide.impl.idea.openapi.editor.actions.AddOrRemoveCaretDummyAction"/>
-            <action id="EditorCloneCaretBelow" class="consulo.ide.impl.idea.openapi.editor.actions.CloneCaretBelow"/>
-            <action id="EditorCloneCaretAbove" class="consulo.ide.impl.idea.openapi.editor.actions.CloneCaretAbove"/>
-            <action id="EditorToggleStickySelection" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleStickySelectionModeAction"/>
-            <action id="EditorSwapSelectionBoundaries" class="consulo.ide.impl.idea.openapi.editor.actions.SwapSelectionBoundariesAction"/>
-            <action id="EditorLineStart" class="consulo.ide.impl.idea.openapi.editor.actions.LineStartAction"/>
-            <action id="EditorLineEnd" class="consulo.ide.impl.idea.openapi.editor.actions.LineEndAction"/>
-            <action id="EditorCutLineBackward" class="consulo.ide.impl.idea.openapi.editor.actions.CutLineBackwardAction"/>
-            <action id="EditorCutLineEnd" class="consulo.ide.impl.idea.openapi.editor.actions.CutLineEndAction"/>
-            <action id="EditorDeleteToLineStart" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToLineStartAction"/>
-            <action id="EditorDeleteToLineEnd" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToLineEndAction"/>
-            <action id="EditorTextStart" class="consulo.ide.impl.idea.openapi.editor.actions.TextStartAction"/>
-            <action id="EditorTextEnd" class="consulo.ide.impl.idea.openapi.editor.actions.TextEndAction"/>
-            <action id="EditorLineStartWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.LineStartWithSelectionAction"/>
-            <action id="EditorLineEndWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.LineEndWithSelectionAction"/>
-            <action id="EditorTextStartWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.TextStartWithSelectionAction"/>
-            <action id="EditorTextEndWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.TextEndWithSelectionAction"/>
-            <action id="EditorNextWord" class="consulo.ide.impl.idea.openapi.editor.actions.NextWordAction"/>
-            <action id="EditorNextWordInDifferentHumpsMode"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.NextWordInDifferentHumpsModeAction"/>
-            <action id="EditorNextWordWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.NextWordWithSelectionAction"/>
-            <action id="EditorNextWordInDifferentHumpsModeWithSelection"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.NextWordInDifferentHumpsModeWithSelectionAction"/>
-            <action id="EditorPreviousWord" class="consulo.ide.impl.idea.openapi.editor.actions.PreviousWordAction"/>
-            <action id="EditorPreviousWordInDifferentHumpsMode"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.PreviousWordInDifferentHumpsModeAction"/>
-            <action id="EditorPreviousWordWithSelection"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.PreviousWordWithSelectionAction"/>
-            <action id="EditorPreviousWordInDifferentHumpsModeWithSelection"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.PreviousWordInDifferentHumpsModeWithSelectionAction"/>
-            <action id="EditorDeleteToWordStart" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToWordStartAction"/>
-            <action id="EditorDeleteToWordStartInDifferentHumpsMode"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToWordStartInDifferentHumpsModeAction"/>
-            <action id="EditorDeleteToWordEnd" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToWordEndAction"/>
-            <action id="EditorDeleteToWordEndInDifferentHumpsMode"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToWordEndInDifferentHumpsModeAction"/>
-            <action id="EditorDeleteLine" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteLineAction"/>
-            <action id="EditorKillToWordStart" class="consulo.ide.impl.idea.openapi.editor.actions.KillToWordStartAction"/>
-            <action id="EditorKillToWordEnd" class="consulo.ide.impl.idea.openapi.editor.actions.KillToWordEndAction"/>
-            <action id="EditorKillRegion" class="consulo.ide.impl.idea.openapi.editor.actions.KillRegionAction"/>
-            <action id="EditorKillRingSave" class="consulo.ide.impl.idea.openapi.editor.actions.KillRingSaveAction"/>
-            <action id="EditorDuplicate" class="consulo.ide.impl.idea.openapi.editor.actions.DuplicateAction"/>
-            <action id="EditorDuplicateLines" class="consulo.ide.impl.idea.openapi.editor.actions.DuplicateLinesAction"/>
-            <action id="EditorToggleInsertState" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleInsertStateAction"/>
-            <action id="EditorToggleColumnMode" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleColumnModeAction"/>
-            <action id="EditorIncreaseFontSize"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.ChangeEditorFontSizeAction$IncreaseEditorFontSize"/>
-            <action id="EditorDecreaseFontSize"
-                    class="consulo.ide.impl.idea.openapi.editor.actions.ChangeEditorFontSizeAction$DecreaseEditorFontSize"/>
+            <reference id="EditorPageUp"/>
+            <reference id="EditorPageDown"/>
+            <reference id="EditorPageUpWithSelection"/>
+            <reference id="EditorPageDownWithSelection"/>
+            <reference id="EditorCopy"/>
+            <reference id="EditorCut" />
+            <reference id="EditorPaste" />
+            <reference id="EditorPasteSimple"/>
+            <reference id="EditorPasteFromX11" />
+            <reference id="EditorDelete" />
+            <reference id="EditorBackSpace"/>
+            <reference id="EditorHungryBackSpace"/>
+            <reference id="EditorMoveToPageTop"/>
+            <reference id="EditorMoveToPageBottom"/>
+            <reference id="EditorMoveToPageTopWithSelection"/>
+            <reference id="EditorMoveToPageBottomWithSelection"/>
+            <reference id="EditorEnter"/>
+            <reference id="EditorEscape"/>
+            <reference id="EditorUp"/>
+            <reference id="EditorDown"/>
+            <reference id="EditorLeft"/>
+            <reference id="EditorRight"/>
+            <reference id="EditorUpWithSelection"/>
+            <reference id="EditorDownWithSelection"/>
+            <reference id="EditorLeftWithSelection"/>
+            <reference id="EditorRightWithSelection"/>
+            <reference id="EditorUnindentSelection"/>
+            <reference id="EditorTab"/>
+            <reference id="EditorResetFontSize" />
+            <reference id="EditorScrollUp"/>
+            <reference id="EditorScrollDown"/>
+            <reference id="EditorScrollUpAndMove"/>
+            <reference id="EditorScrollDownAndMove"/>
+            <reference id="EditorScrollRight"/>
+            <reference id="EditorScrollLeft"/>
+            <reference id="EditorScrollTop"/>
+            <reference id="EditorScrollBottom"/>
+            <reference id="EditorMoveUpAndScroll"/>
+            <reference id="EditorMoveDownAndScroll"/>
+            <reference id="EditorMoveUpAndScrollWithSelection"/>
+            <reference id="EditorMoveDownAndScrollWithSelection"/>
+            <reference id="EditorAddOrRemoveCaret"/>
+            <reference id="EditorCloneCaretBelow"/>
+            <reference id="EditorCloneCaretAbove"/>
+            <reference id="EditorToggleStickySelection"/>
+            <reference id="EditorSwapSelectionBoundaries"/>
+            <reference id="EditorLineStart"/>
+            <reference id="EditorLineEnd"/>
+            <reference id="EditorCutLineBackward"/>
+            <reference id="EditorCutLineEnd"/>
+            <reference id="EditorDeleteToLineStart"/>
+            <reference id="EditorDeleteToLineEnd"/>
+            <reference id="EditorTextStart"/>
+            <reference id="EditorTextEnd"/>
+            <reference id="EditorLineStartWithSelection"/>
+            <reference id="EditorLineEndWithSelection"/>
+            <reference id="EditorTextStartWithSelection"/>
+            <reference id="EditorTextEndWithSelection"/>
+            <reference id="EditorNextWord"/>
+            <reference id="EditorNextWordInDifferentHumpsMode"/>
+            <reference id="EditorNextWordWithSelection"/>
+            <reference id="EditorNextWordInDifferentHumpsModeWithSelection"/>
+            <reference id="EditorPreviousWord"/>
+            <reference id="EditorPreviousWordInDifferentHumpsMode"/>
+            <reference id="EditorPreviousWordWithSelection"/>
+            <reference id="EditorPreviousWordInDifferentHumpsModeWithSelection"/>
+            <reference id="EditorDeleteToWordStart"/>
+            <reference id="EditorDeleteToWordStartInDifferentHumpsMode"/>
+            <reference id="EditorDeleteToWordEnd"/>
+            <reference id="EditorDeleteToWordEndInDifferentHumpsMode"/>
+            <reference id="EditorDeleteLine"/>
+            <reference id="EditorKillToWordStart"/>
+            <reference id="EditorKillToWordEnd"/>
+            <reference id="EditorKillRegion"/>
+            <reference id="EditorKillRingSave"/>
+            <reference id="EditorDuplicate"/>
+            <reference id="EditorDuplicateLines"/>
+            <reference id="EditorToggleInsertState"/>
+            <reference id="EditorToggleColumnMode"/>
+            <reference id="EditorIncreaseFontSize"/>
+            <reference id="EditorDecreaseFontSize"/>
 
-            <action id="EditorScrollToCenter" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollToCenterAction"/>
-            <action id="EditorToggleCase" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleCaseAction"/>
-            <action id="EditorJoinLines" class="consulo.ide.impl.idea.openapi.editor.actions.JoinLinesAction"/>
+            <reference id="EditorScrollToCenter"/>
+            <reference id="EditorToggleCase"/>
+            <reference id="EditorJoinLines"/>
             <action id="FillParagraph" class="consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph.FillParagraphAction"/>
-            <action id="EditorSelectLine" class="consulo.ide.impl.idea.openapi.editor.actions.SelectLineAction"/>
-            <action id="EditorSplitLine" class="consulo.ide.impl.idea.openapi.editor.actions.SplitLineAction"/>
-            <action id="EditorStartNewLine" class="consulo.ide.impl.idea.openapi.editor.actions.StartNewLineAction"/>
-            <action id="EditorStartNewLineBefore" class="consulo.ide.impl.idea.openapi.editor.actions.StartNewLineBeforeAction"/>
+            <reference id="EditorSelectLine"/>
+            <reference id="EditorSplitLine"/>
+            <reference id="EditorStartNewLine"/>
+            <reference id="EditorStartNewLineBefore"/>
         </group>
 
         <!-- grouping for Settings -> Keymap -> Version Control Systems -->
@@ -2563,7 +2545,7 @@
 
         <group id="CoverageMenu">
             <reference id="SwitchCoverage"/>
-            <reference id="GenerateCoverageReport" />
+            <reference id="GenerateCoverageReport"/>
             <reference id="HideCoverage"/>
             <separator/>
         </group>

@@ -24,7 +24,7 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.editor.actions.CopyAction;
+import consulo.codeEditor.impl.internal.action.CopyAction;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorCopyPasteHelperImpl;
 import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.psi.PsiDocumentManager;

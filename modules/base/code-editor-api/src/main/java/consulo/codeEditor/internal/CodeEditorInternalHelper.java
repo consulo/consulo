@@ -15,6 +15,7 @@
  */
 package consulo.codeEditor.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -33,6 +34,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -146,5 +148,16 @@ public interface CodeEditorInternalHelper {
 
     default int compareByHighlightInfoSeverity(@Nonnull RangeHighlighterEx o1, @Nonnull RangeHighlighterEx o2) {
         return 0;
+    }
+
+    default void hideCursorInEditor(Editor editor) {
+    }
+
+    default void includeCurrentCommandAsNavigation(@Nonnull Project project) {
+    }
+
+    @RequiredReadAction
+    default void checkNotIndentLines(Project project, Document document, List<Integer> nonModifiableLines, int startIndex, int endIndex) {
+
     }
 }

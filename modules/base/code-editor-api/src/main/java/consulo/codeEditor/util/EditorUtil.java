@@ -416,4 +416,8 @@ public class EditorUtil {
 //                NotificationType.INFORMATION)
 //            .notify(editor.getProject());
     }
+
+    public static boolean isCurrentCaretPrimary(@Nonnull Editor editor) {
+        return editor.getCaretModel().getCurrentCaret() == editor.getCaretModel().getPrimaryCaret();
+    }
 }

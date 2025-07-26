@@ -118,7 +118,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
             return;
         }
 
-        CommandProcessor.getInstance().setCurrentCommandName(CodeInsightLocalize.commandNameTyping().get());
+        CommandProcessor.getInstance().setCurrentCommandName(CodeInsightLocalize.commandNameTyping());
 
         EditorModificationUtil.deleteSelectedText(editor);
 

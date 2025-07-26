@@ -23,7 +23,7 @@ import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker;
+import consulo.codeEditor.action.EditorLastActionTracker;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.language.editor.moveLeftRight.MoveElementLeftRightHandler;
 import consulo.language.psi.PsiDocumentManager;

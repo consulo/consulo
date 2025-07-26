@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.action.EditorAction;
-import consulo.ide.impl.idea.openapi.editor.actions.TextComponentEditorAction;
+import consulo.codeEditor.impl.internal.action.TextComponentEditorAction;
 import consulo.language.Language;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.ui.EditorCustomization;

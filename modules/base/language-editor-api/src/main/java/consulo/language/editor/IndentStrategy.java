@@ -25,7 +25,6 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,38 +37,38 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IndentStrategy extends LanguageExtension {
-  ExtensionPointCacheKey<IndentStrategy, ByLanguageValue<IndentStrategy>> KEY = ExtensionPointCacheKey.create("IndentStrategy", LanguageOneToOne.build(new IndentStrategy() {
+    ExtensionPointCacheKey<IndentStrategy, ByLanguageValue<IndentStrategy>> KEY = ExtensionPointCacheKey.create("IndentStrategy", LanguageOneToOne.build(new IndentStrategy() {
+        @Nonnull
+        @Override
+        public Language getLanguage() {
+            return Language.ANY;
+        }
+
+        @Override
+        public boolean canIndent(PsiElement element) {
+            return true;
+        }
+    }));
+
     @Nonnull
-    @Override
-    public Language getLanguage() {
-      return Language.ANY;
+    static IndentStrategy forLanguage(@Nonnull Language language) {
+        return Application.get().getExtensionPoint(IndentStrategy.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
-    @Override
-    public boolean canIndent(PsiElement element) {
-      return true;
+    @Nonnull
+    static IndentStrategy forFile(@Nullable PsiFile file) {
+        if (file != null) {
+            Language language = file.getLanguage();
+            return forLanguage(language);
+        }
+        return forLanguage(Language.ANY);
     }
-  }));
 
-  @Nonnull
-  static IndentStrategy forLanguage(@Nonnull Language language) {
-    return Application.get().getExtensionPoint(IndentStrategy.class).getOrBuildCache(KEY).requiredGet(language);
-  }
-
-  @Nonnull
-  static IndentStrategy forFile(@Nullable PsiFile file) {
-    if (file != null) {
-      Language language = file.getLanguage();
-      return forLanguage(language);
-    }
-    return forLanguage(Language.ANY);
-  }
-
-  /**
-   * Checks if an element can be indented.
-   *
-   * @param element The element to check.
-   * @return True if the element can change its indentation, false if the indentation must be preserved.
-   */
-  boolean canIndent(PsiElement element);
+    /**
+     * Checks if an element can be indented.
+     *
+     * @param element The element to check.
+     * @return True if the element can change its indentation, false if the indentation must be preserved.
+     */
+    boolean canIndent(PsiElement element);
 }

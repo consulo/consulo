@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ReadAction;
 import consulo.codeEditor.*;
@@ -31,13 +32,17 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
+import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.IndentStrategy;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 import consulo.language.editor.action.WordBoundaryFilter;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -46,6 +51,7 @@ import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -57,6 +63,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -233,5 +240,43 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         }
         // having severity has more priority than no severity
         return Boolean.compare(severity1 == null, severity2 == null);
+    }
+
+    @Override
+    public void hideCursorInEditor(Editor editor) {
+        EditorUIUtil.hideCursorInEditor(editor);
+    }
+
+    @Override
+    public void includeCurrentCommandAsNavigation(@Nonnull Project project) {
+        IdeDocumentHistory instance = IdeDocumentHistory.getInstance(project);
+        instance.includeCurrentCommandAsNavigation();
+    }
+
+    @RequiredReadAction
+    @Override
+    public void checkNotIndentLines(Project project, Document document, List<Integer> nonModifiableLines, int startIndex, int endIndex) {
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
+        IndentStrategy indentStrategy = IndentStrategy.forFile(file);
+        // it's not default indent strategy
+        if (indentStrategy.getLanguage() != Language.ANY) {
+            for (int i = startIndex; i <= endIndex; i++) {
+                if (!canIndent(document, file, i, indentStrategy)) {
+                    nonModifiableLines.add(i);
+                }
+            }
+        }
+    }
+
+    @RequiredReadAction
+    static boolean canIndent(Document document, PsiFile file, int line, @Nonnull IndentStrategy indentStrategy) {
+        int offset = document.getLineStartOffset(line);
+        if (file != null) {
+            PsiElement element = file.findElementAt(offset);
+            if (element != null) {
+                return indentStrategy.canIndent(element);
+            }
+        }
+        return true;
     }
 }

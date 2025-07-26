@@ -21,6 +21,8 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.codeEditor.impl.internal.action.PasteAction;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -31,7 +33,6 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.CodeInsightUtilBase;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
-import consulo.ide.impl.idea.openapi.editor.actions.PasteAction;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.FormattingModelBuilder;
@@ -88,7 +89,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     @Override
     @RequiredUIAccess
     public void execute(Editor editor, DataContext dataContext, @Nullable Supplier<Transferable> producer) {
-        Transferable transferable = EditorModificationUtil.getContentsToPasteToEditor(producer);
+        Transferable transferable = EditorImplUtil.getContentsToPasteToEditor(producer);
         if (transferable == null) {
             return;
         }

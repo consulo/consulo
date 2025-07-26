@@ -432,7 +432,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.editor.richcopy.model;
   exports consulo.ide.impl.idea.openapi.editor.richcopy.settings;
   exports consulo.ide.impl.idea.openapi.editor.richcopy.view;
-  exports consulo.ide.impl.idea.openapi.editor.textarea;
   exports consulo.ide.impl.idea.openapi.file.exclude;
   exports consulo.ide.impl.idea.openapi.fileChooser;
   exports consulo.ide.impl.idea.openapi.fileChooser.actions;

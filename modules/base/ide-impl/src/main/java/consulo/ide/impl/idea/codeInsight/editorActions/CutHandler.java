@@ -28,7 +28,7 @@ import consulo.dataContext.DataManager;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
-import consulo.ide.impl.idea.openapi.editor.actions.CopyAction;
+import consulo.codeEditor.impl.internal.action.CopyAction;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;

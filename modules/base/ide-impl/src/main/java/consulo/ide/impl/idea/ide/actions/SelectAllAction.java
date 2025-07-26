@@ -19,7 +19,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.editor.actions.TextComponentEditorAction;
+import consulo.codeEditor.impl.internal.action.TextComponentEditorAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.codeEditor.impl.internal.action.TextComponentEditorAction;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;

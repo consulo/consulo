@@ -478,7 +478,7 @@ public final class EditorUtil {
     }
 
     public static boolean isCurrentCaretPrimary(@Nonnull Editor editor) {
-        return editor.getCaretModel().getCurrentCaret() == editor.getCaretModel().getPrimaryCaret();
+        return consulo.codeEditor.util.EditorUtil.isCurrentCaretPrimary(editor);
     }
 
     @RequiredUIAccess
