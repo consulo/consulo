@@ -35,6 +35,11 @@ public class EscapeAction extends EditorAction {
         setInjectedContext(true);
     }
 
+    @Override
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
+    }
+ 
     private static class Handler extends EditorActionHandler {
         @Override
         public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {

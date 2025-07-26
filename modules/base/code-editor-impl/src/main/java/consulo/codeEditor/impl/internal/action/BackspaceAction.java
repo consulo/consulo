@@ -41,6 +41,11 @@ public class BackspaceAction extends EditorAction {
         super(new Handler());
     }
 
+    @Override
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
+    }
+    
     private static class Handler extends EditorWriteActionHandler {
         private Handler() {
             super(true);

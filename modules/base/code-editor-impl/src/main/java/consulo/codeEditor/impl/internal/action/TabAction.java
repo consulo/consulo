@@ -50,6 +50,11 @@ public class TabAction extends EditorAction {
         setInjectedContext(true);
     }
 
+    @Override
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
+    }
+
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);

@@ -40,6 +40,11 @@ public class DeleteAction extends EditorAction {
         super(new Handler());
     }
 
+    @Override
+    public int getExecuteWeight() {
+        return Integer.MIN_VALUE;
+    }
+
     public static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
