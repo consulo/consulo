@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.actions.AboutManager;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Window;
@@ -38,6 +39,7 @@ public class AboutAction extends AnAction implements DumbAware {
 
     @Inject
     public AboutAction(Provider<AboutManager> aboutManager, Provider<WindowManager> windowManager, Application application) {
+        super(ActionLocalize.actionAboutText(), ActionLocalize.actionAboutDescription());
         myAboutManager = aboutManager;
         myWindowManager = windowManager;
         myApplication = application;

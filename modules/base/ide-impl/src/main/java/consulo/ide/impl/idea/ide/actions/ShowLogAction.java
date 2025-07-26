@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -30,7 +31,12 @@ import java.io.File;
 /**
  * @author pegov
  */
+@ActionImpl(id = "ShowLog")
 public class ShowLogAction extends AnAction implements DumbAware {
+    public ShowLogAction() {
+        super(ActionLocalize.actionShowlogText(), ActionLocalize.actionShowlogDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

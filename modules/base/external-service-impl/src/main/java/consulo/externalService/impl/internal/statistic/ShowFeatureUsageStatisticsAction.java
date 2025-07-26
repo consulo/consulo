@@ -17,6 +17,7 @@ package consulo.externalService.impl.internal.statistic;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -25,15 +26,19 @@ import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ProductivityGude")
 public class ShowFeatureUsageStatisticsAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    new ShowFeatureUsageStatisticsDialog(e.getData(Project.KEY)).show();
-  }
+    public ShowFeatureUsageStatisticsAction() {
+        super(ActionLocalize.actionProductivitygudeText(), ActionLocalize.actionProductivitygudeDescription());
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setEnabled(e.hasData(Project.KEY));
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        new ShowFeatureUsageStatisticsDialog(e.getData(Project.KEY)).show();
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
+    }
 }

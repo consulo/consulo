@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
@@ -10,13 +11,19 @@ import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.navigation.GotoSymbolContributor;
 import consulo.language.Language;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "GotoSymbol")
 public class GotoSymbolAction extends GotoActionBase implements DumbAware {
+    public GotoSymbolAction() {
+        super(ActionLocalize.actionGotosymbolText(), ActionLocalize.actionGotosymbolDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

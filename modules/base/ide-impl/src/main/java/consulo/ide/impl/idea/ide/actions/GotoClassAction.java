@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.matcher.MinusculeMatcher;
@@ -51,15 +52,17 @@ import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+@ActionImpl(id = "GotoClass")
 public class GotoClassAction extends GotoActionBase implements DumbAware {
     public GotoClassAction() {
         //we need to change the template presentation to show the proper text for the action in Settings | Keymap
-        Presentation presentation = getTemplatePresentation();
-        presentation.setText(GotoClassPresentationUpdater.getActionTitle() + "...");
-        presentation.setDescriptionValue(IdeLocalize.goToClassActionDescription(StringUtil.join(
-            GotoClassPresentationUpdater.getElementKinds(),
-            "/"
-        )));
+        super(
+            LocalizeValue.localizeTODO(GotoClassPresentationUpdater.getActionTitle() + "..."),
+            IdeLocalize.goToClassActionDescription(StringUtil.join(
+                GotoClassPresentationUpdater.getElementKinds(),
+                "/"
+            ))
+        );
     }
 
     @Override
@@ -152,7 +155,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
             PopupNavigationUtil.activateFileWithPsiElement(psiElement, !popup.isOpenInCurrentWindowRequested());
         }
         else {
-            EditSourceUtil.navigate(((NavigationItem)element), true, popup.isOpenInCurrentWindowRequested());
+            EditSourceUtil.navigate(((NavigationItem) element), true, popup.isOpenInCurrentWindowRequested());
         }
     }
 
@@ -188,7 +191,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
                         int degree = matcher.matchingDegree(presentableText);
                         if (degree > max) {
                             max = degree;
-                            target = ((StructureViewTreeElement)treeElement).getValue();
+                            target = ((StructureViewTreeElement) treeElement).getValue();
                         }
                     }
                 }
