@@ -16,11 +16,13 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.TitledHandler;
 import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
@@ -34,13 +36,24 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.event.KeyEvent;
 
+@ActionImpl(id = "$Delete")
 public class DeleteAction extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(DeleteAction.class);
+
+    @Inject
+    public DeleteAction() {
+        super(ActionLocalize.action$deleteText(), ActionLocalize.action$deleteDescription());
+    }
+
+    public DeleteAction(String text, String description, Image icon) {
+        super(text, description, icon);
+    }
 
     @Override
     @RequiredUIAccess
@@ -114,12 +127,5 @@ public class DeleteAction extends AnAction implements DumbAware {
         else {
             presentation.setEnabled(canDelete);
         }
-    }
-
-    public DeleteAction(String text, String description, Image icon) {
-        super(text, description, icon);
-    }
-
-    public DeleteAction() {
     }
 }

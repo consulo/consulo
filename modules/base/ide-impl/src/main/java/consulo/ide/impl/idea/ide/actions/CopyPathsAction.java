@@ -1,7 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -13,8 +15,10 @@ import java.awt.datatransfer.StringSelection;
 
 import static consulo.ui.ex.action.ActionPlaces.KEYBOARD_SHORTCUT;
 
+@ActionImpl(id = "CopyPaths")
 public class CopyPathsAction extends AnAction implements DumbAware {
     public CopyPathsAction() {
+        super(ActionLocalize.actionCopypathsText(), ActionLocalize.actionCopypathsDescription());
         setEnabledInModalContext(true);
     }
 

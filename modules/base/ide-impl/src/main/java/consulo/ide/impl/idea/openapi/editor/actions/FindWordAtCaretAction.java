@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -28,6 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
  * @author max
  * @since 2002-05-18
  */
+@ActionImpl(id = "FindWordAtCaret")
 public class FindWordAtCaretAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
@@ -45,6 +48,6 @@ public class FindWordAtCaretAction extends EditorAction {
     }
 
     public FindWordAtCaretAction() {
-        super(new Handler());
+        super(ActionLocalize.actionFindwordatcaretText(), ActionLocalize.actionFindwordatcaretDescription(), new Handler());
     }
 }

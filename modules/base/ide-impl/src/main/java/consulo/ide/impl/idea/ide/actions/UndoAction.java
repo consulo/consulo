@@ -15,11 +15,23 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.undoRedo.UndoManager;
 import consulo.fileEditor.FileEditor;
 import consulo.util.lang.Couple;
 
+@ActionImpl(id = "$Undo")
 public class UndoAction extends UndoRedoAction {
+    public UndoAction() {
+        super(
+            ActionLocalize.actionUndoText(ActionLocalize.actionUndoDescriptionEmpty()),
+            ActionLocalize.actionUndoDescription(ActionLocalize.actionUndoDescriptionEmpty()),
+            PlatformIconGroup.actionsUndo()
+        );
+    }
+
     @Override
     protected boolean isAvailable(FileEditor editor, UndoManager undoManager) {
         return undoManager.isUndoAvailable(editor);

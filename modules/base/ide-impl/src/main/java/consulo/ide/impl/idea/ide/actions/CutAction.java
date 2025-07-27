@@ -15,8 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CutProvider;
@@ -26,7 +29,16 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "$Cut")
 public class CutAction extends AnAction implements DumbAware {
+    public CutAction() {
+        super(
+            ActionLocalize.action$cutText(),
+            ActionLocalize.action$cutDescription(),
+            PlatformIconGroup.actionsMenu_cut()
+        );
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -35,7 +47,7 @@ public class CutAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();
         CutProvider provider = event.getData(CutProvider.KEY);
