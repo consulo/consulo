@@ -37,10 +37,10 @@ public abstract class SplitAction extends AnAction implements DumbAware {
         HORIZONTAL(SwingConstants.HORIZONTAL),
         VERTICAL(SwingConstants.VERTICAL);
 
-        public final int orientation;
+        public final int myOrientation;
 
         Orientation(int orientation) {
-            this.orientation = orientation;
+            myOrientation = orientation;
         }
     }
 
@@ -59,7 +59,7 @@ public abstract class SplitAction extends AnAction implements DumbAware {
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
 
-        fileEditorManager.createSplitter(myOrientation.orientation, window);
+        fileEditorManager.createSplitter(myOrientation.myOrientation, window);
     }
 
     @Override

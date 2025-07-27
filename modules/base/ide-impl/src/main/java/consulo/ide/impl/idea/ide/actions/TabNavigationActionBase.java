@@ -39,10 +39,10 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     protected enum Direction {
         PREVIOUS(-1), NEXT(+1);
 
-        public final int dir;
+        public final int myDir;
 
         private Direction(int dir) {
-            this.dir = dir;
+            myDir = dir;
         }
     }
     private final Direction myDir;
@@ -117,6 +117,6 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
         VirtualFile[] files = currentWindow.getFiles();
         int index = ArrayUtil.find(files, selectedFile);
         LOG.assertTrue(index != -1);
-        editorManager.openFile(files[(index + files.length + dir.dir) % files.length], true);
+        editorManager.openFile(files[(index + files.length + dir.myDir) % files.length], true);
     }
 }
