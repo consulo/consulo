@@ -21,17 +21,13 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.action.EditorActionManager;
-import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.action.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.CharArrayUtil;
 import jakarta.annotation.Nonnull;
 
@@ -39,10 +35,9 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 @ActionImpl(id = "EditorSplitLine")
-public class SplitLineAction extends EditorAction {
-    public static Key<Boolean> SPLIT_LINE_KEY = Key.create("consulo.codeEditor.impl.internal.action.SplitLineAction");
+public class SplitLineActionImpl extends EditorAction {
 
-    public SplitLineAction() {
+    public SplitLineActionImpl() {
         super(new Handler());
         setEnabledInModalContext(false);
     }
@@ -82,12 +77,12 @@ public class SplitLineAction extends EditorAction {
                 editor.getCaretModel().moveToOffset(offset);
             }
             else {
-                DataManager.getInstance().saveInDataContext(dataContext, SPLIT_LINE_KEY, true);
+                DataManager.getInstance().saveInDataContext(dataContext, SplitLineAction.SPLIT_LINE_KEY, true);
                 try {
                     getEnterHandler().execute(editor, caret, dataContext);
                 }
                 finally {
-                    DataManager.getInstance().saveInDataContext(dataContext, SPLIT_LINE_KEY, null);
+                    DataManager.getInstance().saveInDataContext(dataContext, SplitLineAction.SPLIT_LINE_KEY, null);
                 }
 
                 editor.getCaretModel().moveToOffset(Math.min(document.getTextLength(), rangeMarker.getStartOffset()));
