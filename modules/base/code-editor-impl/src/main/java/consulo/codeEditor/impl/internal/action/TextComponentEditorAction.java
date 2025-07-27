@@ -20,6 +20,7 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.impl.internal.textEditor.TextComponentEditorImpl;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import jakarta.annotation.Nonnull;
@@ -33,6 +34,10 @@ import javax.swing.text.JTextComponent;
 public abstract class TextComponentEditorAction extends EditorAction {
     protected TextComponentEditorAction(@Nonnull EditorActionHandler defaultHandler) {
         super(defaultHandler);
+    }
+
+    protected TextComponentEditorAction(@Nonnull LocalizeValue text, EditorActionHandler defaultHandler) {
+        super(text, defaultHandler);
     }
 
     @Override

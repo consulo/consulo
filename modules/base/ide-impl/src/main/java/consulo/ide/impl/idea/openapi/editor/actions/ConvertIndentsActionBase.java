@@ -15,27 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.language.editor.hint.HintManager;
-import consulo.dataContext.DataContext;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
-import consulo.document.util.TextRange;
-import consulo.util.lang.StringUtil;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
-import consulo.annotation.access.RequiredWriteAction;
-
+import consulo.document.util.TextRange;
+import consulo.language.editor.hint.HintManager;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author yole
  */
 public abstract class ConvertIndentsActionBase extends EditorAction {
-    protected ConvertIndentsActionBase() {
-        super(null);
+    protected ConvertIndentsActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description, null);
         setupHandler(new Handler());
     }
 

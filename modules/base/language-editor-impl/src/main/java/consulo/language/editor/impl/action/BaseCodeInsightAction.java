@@ -23,6 +23,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -42,10 +43,19 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
         myLookForInjectedEditor = lookForInjectedEditor;
     }
 
+    protected BaseCodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        this(text, description, true);
+    }
+
+    protected BaseCodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, boolean lookForInjectedEditor) {
+        super(text, description);
+        myLookForInjectedEditor = lookForInjectedEditor;
+    }
+
     @Nullable
     @Override
     @RequiredUIAccess
-    protected Editor getEditor(@Nonnull final DataContext dataContext, @Nonnull final Project project, boolean forUpdate) {
+    protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project, boolean forUpdate) {
         Editor editor = getBaseEditor(dataContext, project);
         if (!myLookForInjectedEditor) {
             return editor;
@@ -54,12 +64,12 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     }
 
     @RequiredUIAccess
-    public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor) {
+    public static Editor getInjectedEditor(@Nonnull Project project, Editor editor) {
         return getInjectedEditor(project, editor, true);
     }
 
     @RequiredUIAccess
-    public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor, boolean commit) {
+    public static Editor getInjectedEditor(@Nonnull Project project, Editor editor, boolean commit) {
         Editor injectedEditor = editor;
         if (editor != null) {
             PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
@@ -75,7 +85,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     }
 
     @Nullable
-    protected Editor getBaseEditor(final DataContext dataContext, final Project project) {
+    protected Editor getBaseEditor(DataContext dataContext, Project project) {
         return super.getEditor(dataContext, project, true);
     }
 
@@ -88,7 +98,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
             return;
         }
 
-        final Lookup activeLookup = LookupManager.getInstance(project).getActiveLookup();
+        Lookup activeLookup = LookupManager.getInstance(project).getActiveLookup();
         if (activeLookup != null) {
             presentation.setEnabled(isValidForLookup());
         }

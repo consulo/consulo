@@ -22,12 +22,17 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.completion.NextPrevParameterAction;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 
 /**
  * @author peter
  */
 @ActionImpl(id = "EditorIndentSelection")
 public class LangIndentSelectionAction extends IndentSelectionAction {
+    public LangIndentSelectionAction() {
+        super(ActionLocalize.actionEditorindentselectionText());
+    }
+
     @Override
     protected boolean isEnabled(Editor editor, DataContext dataContext) {
         if (!originalIsEnabled(editor, wantSelection())) {
@@ -39,7 +44,7 @@ public class LangIndentSelectionAction extends IndentSelectionAction {
 
         PsiFile psiFile = dataContext.getData(PsiFile.KEY);
         return psiFile == null || !NextPrevParameterAction.hasSutablePolicy(editor, psiFile);
-    }                                                                                            
+    }
 
     protected boolean wantSelection() {
         return true;
