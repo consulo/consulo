@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.HelpManager;
@@ -30,8 +31,12 @@ import jakarta.annotation.Nonnull;
  */
 @ActionImpl(id = "Help.KeymapReference")
 public class RefCardAction extends AnAction implements DumbAware {
-    @RequiredUIAccess
+    public RefCardAction() {
+        super(ActionLocalize.actionHelpKeymapreferenceText(), ActionLocalize.actionHelpKeymapreferenceDescription());
+    }
+
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         String helpId;
 

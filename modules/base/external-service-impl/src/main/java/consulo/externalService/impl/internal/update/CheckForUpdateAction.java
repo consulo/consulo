@@ -23,6 +23,7 @@ import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -41,6 +42,7 @@ public class CheckForUpdateAction extends DumbAwareAction {
 
     @Inject
     public CheckForUpdateAction(Provider<UpdateSettings> updateSettingsProvider) {
+        super(ActionLocalize.actionCheckforupdateText(), ActionLocalize.actionCheckforupdateDescription());
         myUpdateSettingsProvider = updateSettingsProvider;
     }
 

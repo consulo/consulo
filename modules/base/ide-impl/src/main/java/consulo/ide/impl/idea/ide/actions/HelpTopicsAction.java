@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.HelpManager;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -28,15 +29,13 @@ import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "HelpTopics")
 public class HelpTopicsAction extends DumbAwareAction {
-    @RequiredUIAccess
-    @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-        HelpManager.getInstance().invokeHelp("");
+    public HelpTopicsAction() {
+        super(ActionLocalize.actionHelptopicsText(), ActionLocalize.actionHelptopicsDescription(), PlatformIconGroup.actionsHelp());
     }
 
-    @Nullable
     @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.actionsHelp();
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        HelpManager.getInstance().invokeHelp("");
     }
 }
