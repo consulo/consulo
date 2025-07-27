@@ -504,51 +504,13 @@
 
             <!-- Edit -->
             <group id="EditMenu" popup="true">
-                <action id="$Undo" class="consulo.ide.impl.idea.ide.actions.UndoAction"
-                        icon="consulo.platform.base.PlatformIconGroup@actions.undo" text="Undo"/>
-                <action id="$Redo" class="consulo.ide.impl.idea.ide.actions.RedoAction"
-                        icon="consulo.platform.base.PlatformIconGroup@actions.redo" text="Redo"/>
+                <reference ref="$Undo"/>
+                <reference ref="$Redo"/>
                 <separator/>
-                <group id="CutCopyPasteGroup">
-                    <action id="$Cut" class="consulo.ide.impl.idea.ide.actions.CutAction"
-                            icon="consulo.platform.base.PlatformIconGroup@actions.menu_cut"/>
-                    <action id="$Copy" class="consulo.ide.impl.idea.ide.actions.CopyAction"
-                            icon="consulo.platform.base.PlatformIconGroup@actions.copy"/>
-                    <action id="CopyPaths" class="consulo.ide.impl.idea.ide.actions.CopyPathsAction"/>
-                    <group id="PasteGroup" popup="true" class="consulo.ide.impl.idea.ide.actions.PopupInMainMenuActionGroup">
-                        <action id="$Paste" class="consulo.ide.impl.idea.ide.actions.PasteAction"
-                                icon="consulo.platform.base.PlatformIconGroup@actions.menu_paste"/>
-                        <action id="PasteMultiple" class="consulo.ide.impl.idea.openapi.editor.actions.MultiplePasteAction"/>
-                        <reference ref="EditorPasteSimple"/>
-                    </group>
-                </group>
-                <group id="EditCreateDeleteGroup">
-                    <action id="$Delete" class="consulo.ide.impl.idea.ide.actions.DeleteAction"/>
-                </group>
+                <reference ref="CutCopyPasteGroup"/>
+                <reference ref="EditCreateDeleteGroup"/>
                 <separator/>
-                <group id="FindMenuGroup" popup="true">
-                    <action id="Find" class="consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction"/>
-                    <action id="Replace" class="consulo.ide.impl.idea.openapi.editor.actions.ReplaceAction"/>
-                    <action id="FindNext" class="consulo.ide.impl.idea.ide.actions.SearchAgainAction"/>
-                    <action id="FindPrevious" class="consulo.ide.impl.idea.ide.actions.SearchBackAction"/>
-                    <action id="FindWordAtCaret" class="consulo.ide.impl.idea.openapi.editor.actions.FindWordAtCaretAction"/>
-                    <action id="SelectAllOccurrences" class="consulo.ide.impl.idea.openapi.editor.actions.SelectAllOccurrencesAction"/>
-                    <action id="SelectNextOccurrence" class="consulo.ide.impl.idea.openapi.editor.actions.SelectNextOccurrenceAction"/>
-                    <action id="UnselectPreviousOccurrence"
-                            class="consulo.ide.impl.idea.openapi.editor.actions.UnselectPreviousOccurrenceAction"/>
-                    <separator/>
-                    <action id="FindInPath" class="consulo.ide.impl.idea.find.actions.FindInPathAction"/>
-                    <action id="ReplaceInPath" class="consulo.ide.impl.idea.find.actions.ReplaceInPathAction"/>
-                    <separator/>
-                    <action id="FindUsages" class="consulo.ide.impl.idea.find.actions.FindUsagesAction"/>
-                    <action id="ShowSettingsAndFindUsages"
-                            class="consulo.ide.impl.idea.find.actions.FindUsagesAction$ShowSettingsAndFindUsages"/>
-                    <action id="ShowUsages" class="consulo.ide.impl.idea.find.actions.ShowUsagesAction"/>
-                    <action id="FindUsagesInFile" class="consulo.ide.impl.idea.find.actions.FindUsagesInFileAction"/>
-                    <action id="HighlightUsagesInFile"
-                            class="consulo.ide.impl.idea.codeInsight.highlighting.actions.HighlightUsagesAction"/>
-                    <group id="ShowRecentFindUsagesGroup" class="consulo.ide.impl.idea.find.impl.ShowRecentFindUsagesGroup" popup="true"/>
-                </group>
+                <reference ref="FindMenuGroup"/>
                 <group id="Macros" popup="true">
                     <group id="StandardMacroActions">
                         <action id="PlaybackLastMacro" class="consulo.ide.impl.idea.ide.actionMacro.actions.PlaybackLastMacroAction"/>

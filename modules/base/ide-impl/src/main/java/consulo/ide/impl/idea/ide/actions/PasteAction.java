@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PasteProvider;
 import consulo.dataContext.DataContext;
@@ -25,7 +28,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "$Paste")
 public class PasteAction extends AnAction implements DumbAware {
+    public PasteAction() {
+        super(ActionLocalize.action$pasteText(), ActionLocalize.action$pasteDescription(), PlatformIconGroup.actionsMenu_paste());
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();

@@ -19,9 +19,11 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -35,6 +37,29 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     private boolean myHandlersLoaded;
 
     protected EditorAction(EditorActionHandler defaultHandler) {
+        myHandler = defaultHandler;
+        setEnabledInModalContext(true);
+    }
+
+    protected EditorAction(@Nonnull LocalizeValue text, EditorActionHandler defaultHandler) {
+        super(text);
+        myHandler = defaultHandler;
+        setEnabledInModalContext(true);
+    }
+
+    protected EditorAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, EditorActionHandler defaultHandler) {
+        super(text, description);
+        myHandler = defaultHandler;
+        setEnabledInModalContext(true);
+    }
+
+    protected EditorAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nonnull Image icon,
+        EditorActionHandler defaultHandler
+    ) {
+        super(text, description, icon);
         myHandler = defaultHandler;
         setEnabledInModalContext(true);
     }
@@ -63,7 +88,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
             ExtensionEditorActionHandler handler = extensions.get(i);
             if (handler.getActionId().equals(id)) {
                 handler.init(myHandler);
-                myHandler = (EditorActionHandler)handler;
+                myHandler = (EditorActionHandler) handler;
                 myHandler.setWorksInInjected(isInInjectedContext());
             }
         }
@@ -153,7 +178,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
             @SuppressWarnings("unchecked")
             public <T> T getData(@Nonnull Key<T> dataId) {
                 if (Project.KEY == dataId) {
-                    return (T)editor.getProject();
+                    return (T) editor.getProject();
                 }
                 return original.getData(dataId);
             }

@@ -16,7 +16,7 @@
  */
 package consulo.ide.impl.idea.find.actions;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -26,28 +26,29 @@ import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
+@ActionImpl(id = "ReplaceInPath")
 public class ReplaceInPathAction extends FindReplaceInPathActionBase {
-  @Inject
-  public ReplaceInPathAction(@Nonnull NotificationService notificationService) {
-    super(ActionLocalize.actionReplaceinpathText(), ActionLocalize.actionReplaceinpathDescription(), notificationService);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-
-    ReplaceInProjectManager replaceManager = ReplaceInProjectManager.getInstance(project);
-    if (!replaceManager.isEnabled()) {
-      showNotAvailableMessage(e, project);
-      return;
+    @Inject
+    public ReplaceInPathAction(@Nonnull NotificationService notificationService) {
+        super(ActionLocalize.actionReplaceinpathText(), ActionLocalize.actionReplaceinpathDescription(), notificationService);
     }
 
-    replaceManager.replaceInProject(e.getDataContext(), null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
 
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    FindInPathAction.doUpdate(event);
-  }
+        ReplaceInProjectManager replaceManager = ReplaceInProjectManager.getInstance(project);
+        if (!replaceManager.isEnabled()) {
+            showNotAvailableMessage(e, project);
+            return;
+        }
+
+        replaceManager.replaceInProject(e.getDataContext(), null);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        FindInPathAction.doUpdate(event);
+    }
 }

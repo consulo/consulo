@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindResult;
@@ -24,15 +25,17 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorAction;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "SelectNextOccurrence")
 public class SelectNextOccurrenceAction extends EditorAction {
     public SelectNextOccurrenceAction() {
-        super(new Handler());
+        super(ActionLocalize.actionSelectnextoccurrenceText(), new Handler());
     }
 
     static class Handler extends SelectOccurrencesActionHandler {

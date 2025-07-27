@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -26,18 +27,17 @@ import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "Find")
 public class IncrementalFindAction extends EditorAction {
     public static final Key<Boolean> SEARCH_DISABLED = Key.create("EDITOR_SEARCH_DISABLED");
 
     public static class Handler extends EditorActionHandler {
-
         private final boolean myReplace;
 
         public Handler(boolean isReplace) {
@@ -95,12 +95,11 @@ public class IncrementalFindAction extends EditorAction {
     }
 
     public IncrementalFindAction() {
-        super(new Handler(false));
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.actionsSearch();
+        super(
+            ActionLocalize.actionFindText(),
+            ActionLocalize.actionFindDescription(),
+            PlatformIconGroup.actionsSearch(),
+            new Handler(false)
+        );
     }
 }
