@@ -28,20 +28,20 @@ import consulo.ui.ex.action.DumbAwareAction;
  */
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnErrorAction extends DumbAwareAction {
-  public DropAnErrorAction() {
-    super("Drop an error");
-  }
+    public DropAnErrorAction() {
+        super("Drop an error");
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    /*
-    Project p = (Project)e.getDataContext().getData(DataConstants.PROJECT);
-    final StatusBar bar = WindowManager.getInstance().getStatusBar(p);
-    bar.fireNotificationPopup(new JLabel("<html><body><br><b>       Notifier      </b><br><br></body></html>"));
-    */
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        /*
+        Project p = (Project)e.getDataContext().getData(DataConstants.PROJECT);
+        final StatusBar bar = WindowManager.getInstance().getStatusBar(p);
+        bar.fireNotificationPopup(new JLabel("<html><body><br><b>       Notifier      </b><br><br></body></html>"));
+        */
 
-    ArtifactManager.getInstance(e.getRequiredData(Project.KEY));
-    Logger.getInstance("test").error("Test");
-  }
+        ArtifactManager.getInstance(e.getRequiredData(Project.KEY));
+        Logger.getInstance("test").error("Test");
+    }
 }

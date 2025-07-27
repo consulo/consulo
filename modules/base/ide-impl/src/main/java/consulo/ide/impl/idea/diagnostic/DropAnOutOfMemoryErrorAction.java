@@ -20,11 +20,11 @@ import consulo.ui.ex.action.DumbAwareAction;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnOutOfMemoryErrorAction extends DumbAwareAction {
-  public DropAnOutOfMemoryErrorAction() {
-    super ("Drop an OutOfMemoryError");
-  }
+    public DropAnOutOfMemoryErrorAction() {
+        super("Drop an OutOfMemoryError");
+    }
 
-  public void actionPerformed(AnActionEvent e) {
-    throw new OutOfMemoryError();
-  }
+    public void actionPerformed(AnActionEvent e) {
+        throw new OutOfMemoryError();
+    }
 }

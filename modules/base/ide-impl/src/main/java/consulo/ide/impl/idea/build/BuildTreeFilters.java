@@ -25,97 +25,112 @@ import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Predicate;
 
 /**
  * from kotlin
  */
 public class BuildTreeFilters {
-  private static final Predicate<ExecutionNodeImpl> SUCCESSFUL_STEPS_FILTER = (node) -> !node.isFailed() && !node.hasWarnings();
-  private static final Predicate<ExecutionNodeImpl> WARNINGS_FILTER = (node) -> node.hasWarnings() || node.hasInfos();
+    private static final Predicate<ExecutionNodeImpl> SUCCESSFUL_STEPS_FILTER = (node) -> !node.isFailed() && !node.hasWarnings();
+    private static final Predicate<ExecutionNodeImpl> WARNINGS_FILTER = (node) -> node.hasWarnings() || node.hasInfos();
 
-  public static DefaultActionGroup createFilteringActionsGroup(Filterable<ExecutionNodeImpl> filterable) {
-    DefaultActionGroup actionGroup = new DefaultActionGroup(LangBundle.message("action.filters.text"), true);
-    actionGroup.getTemplatePresentation().setIcon(PlatformIconGroup.actionsShow());
-    actionGroup.add(new WarningsToggleAction(filterable));
-    actionGroup.add(new SuccessfulStepsToggleAction(filterable));
-    return actionGroup;
-  }
-
-  public static void install(Filterable<ExecutionNodeImpl> filterable) {
-    boolean filteringEnabled = filterable.isFilteringEnabled();
-    if (!filteringEnabled) return;
-    SuccessfulStepsToggleAction.install(filterable);
-    WarningsToggleAction.install(filterable);
-  }
-
-  static class WarningsToggleAction extends FilterToggleAction {
-    static void install(Filterable<ExecutionNodeImpl> filterable) {
-      install(filterable, WARNINGS_FILTER, STATE_KEY, true);
+    public static DefaultActionGroup createFilteringActionsGroup(Filterable<ExecutionNodeImpl> filterable) {
+        DefaultActionGroup actionGroup = new DefaultActionGroup(LangBundle.message("action.filters.text"), true);
+        actionGroup.getTemplatePresentation().setIcon(PlatformIconGroup.actionsShow());
+        actionGroup.add(new WarningsToggleAction(filterable));
+        actionGroup.add(new SuccessfulStepsToggleAction(filterable));
+        return actionGroup;
     }
 
-    private static final String STATE_KEY = "build.toolwindow.show.warnings.selection.state";
-
-    WarningsToggleAction(Filterable<ExecutionNodeImpl> filterable) {
-      super(LangBundle.message("build.tree.filters.show.warnings"), STATE_KEY, filterable, WARNINGS_FILTER, true);
-    }
-  }
-
-  static class SuccessfulStepsToggleAction extends FilterToggleAction {
-    static void install(Filterable<ExecutionNodeImpl> filterable) {
-      install(filterable, SUCCESSFUL_STEPS_FILTER, STATE_KEY, false);
+    public static void install(Filterable<ExecutionNodeImpl> filterable) {
+        boolean filteringEnabled = filterable.isFilteringEnabled();
+        if (!filteringEnabled) {
+            return;
+        }
+        SuccessfulStepsToggleAction.install(filterable);
+        WarningsToggleAction.install(filterable);
     }
 
-    private static final String STATE_KEY = "build.toolwindow.show.successful.steps.selection.state";
+    static class WarningsToggleAction extends FilterToggleAction {
+        static void install(Filterable<ExecutionNodeImpl> filterable) {
+            install(filterable, WARNINGS_FILTER, STATE_KEY, true);
+        }
 
-    SuccessfulStepsToggleAction(Filterable<ExecutionNodeImpl> filterable) {
-      super(LangBundle.message("build.tree.filters.show.succesful"), STATE_KEY, filterable, SUCCESSFUL_STEPS_FILTER, false);
-    }
-  }
+        private static final String STATE_KEY = "build.toolwindow.show.warnings.selection.state";
 
-  static class FilterToggleAction extends ToggleAction implements DumbAware {
-    static void install(Filterable<ExecutionNodeImpl> filterable, Predicate<ExecutionNodeImpl> filter, String stateKey, boolean defaultState) {
-      if (PropertiesComponent.getInstance().getBoolean(stateKey, defaultState) && !filterable.contains(filter)) {
-        filterable.addFilter(filter);
-      }
+        WarningsToggleAction(Filterable<ExecutionNodeImpl> filterable) {
+            super(LangBundle.message("build.tree.filters.show.warnings"), STATE_KEY, filterable, WARNINGS_FILTER, true);
+        }
     }
 
-    private final String stateKey;
-    private final Filterable<ExecutionNodeImpl> filterable;
-    private final Predicate<ExecutionNodeImpl> filter;
-    private final boolean defaultState;
+    static class SuccessfulStepsToggleAction extends FilterToggleAction {
+        static void install(Filterable<ExecutionNodeImpl> filterable) {
+            install(filterable, SUCCESSFUL_STEPS_FILTER, STATE_KEY, false);
+        }
 
-    FilterToggleAction(String text, String stateKey, Filterable<ExecutionNodeImpl> filterable, Predicate<ExecutionNodeImpl> filter, boolean defaultState) {
-      super(text);
-      this.stateKey = stateKey;
-      this.filterable = filterable;
-      this.filter = filter;
-      this.defaultState = defaultState;
+        private static final String STATE_KEY = "build.toolwindow.show.successful.steps.selection.state";
+
+        SuccessfulStepsToggleAction(Filterable<ExecutionNodeImpl> filterable) {
+            super(LangBundle.message("build.tree.filters.show.succesful"), STATE_KEY, filterable, SUCCESSFUL_STEPS_FILTER, false);
+        }
     }
 
-    @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
-      Presentation presentation = e.getPresentation();
-      boolean filteringEnabled = filterable.isFilteringEnabled();
-      presentation.setEnabledAndVisible(filteringEnabled);
-      if (filteringEnabled && stateKey != null && PropertiesComponent.getInstance().getBoolean(stateKey, defaultState) && !filterable.contains(filter)) {
-        setSelected(e, true);
-      }
+    static class FilterToggleAction extends ToggleAction implements DumbAware {
+        static void install(
+            Filterable<ExecutionNodeImpl> filterable,
+            Predicate<ExecutionNodeImpl> filter,
+            String stateKey,
+            boolean defaultState
+        ) {
+            if (PropertiesComponent.getInstance().getBoolean(stateKey, defaultState) && !filterable.contains(filter)) {
+                filterable.addFilter(filter);
+            }
+        }
 
-      return filterable.contains(filter);
-    }
+        private final String stateKey;
+        private final Filterable<ExecutionNodeImpl> filterable;
+        private final Predicate<ExecutionNodeImpl> filter;
+        private final boolean defaultState;
 
-    @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-      if (state) {
-        filterable.addFilter(filter);
-      }
-      else {
-        filterable.removeFilter(filter);
-      }
-      if (stateKey != null) {
-        PropertiesComponent.getInstance().setValue(stateKey, state, defaultState);
-      }
+        FilterToggleAction(
+            String text,
+            String stateKey,
+            Filterable<ExecutionNodeImpl> filterable,
+            Predicate<ExecutionNodeImpl> filter,
+            boolean defaultState
+        ) {
+            super(text);
+            this.stateKey = stateKey;
+            this.filterable = filterable;
+            this.filter = filter;
+            this.defaultState = defaultState;
+        }
+
+        @Override
+        public boolean isSelected(@Nonnull AnActionEvent e) {
+            Presentation presentation = e.getPresentation();
+            boolean filteringEnabled = filterable.isFilteringEnabled();
+            presentation.setEnabledAndVisible(filteringEnabled);
+            if (filteringEnabled && stateKey != null && PropertiesComponent.getInstance()
+                .getBoolean(stateKey, defaultState) && !filterable.contains(filter)) {
+                setSelected(e, true);
+            }
+
+            return filterable.contains(filter);
+        }
+
+        @Override
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            if (state) {
+                filterable.addFilter(filter);
+            }
+            else {
+                filterable.removeFilter(filter);
+            }
+            if (stateKey != null) {
+                PropertiesComponent.getInstance().setValue(stateKey, state, defaultState);
+            }
+        }
     }
-  }
 }

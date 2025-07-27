@@ -32,49 +32,49 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
-  public ProblemsViewPanel(Project project) {
-    super(project, HelpID.COMPILER, false, true, null);
-    myTree.getEmptyText().setText("No compilation problems found");
-  }
-
-  @Override
-  public void addActionsAfter(ActionGroup.Builder group) {
-    group.add(new CompilerPropertiesAction());
-  }
-
-  @Override
-  protected void addExtraPopupMenuActions(ActionGroup.Builder group) {
-    group.add(new ExcludeFromCompileAction(myProject) {
-      @Nullable
-      @Override
-      protected VirtualFile getFile() {
-        final ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
-        ErrorTreeElement element = descriptor != null ? descriptor.getElement() : null;
-        if (element != null && !(element instanceof GroupingElement)) {
-          NodeDescriptor parent = descriptor.getParentDescriptor();
-          if (parent instanceof ErrorTreeNodeDescriptor) {
-            element = ((ErrorTreeNodeDescriptor)parent).getElement();
-          }
-        }
-        return element instanceof GroupingElement ? ((GroupingElement)element).getFile() : null;
-      }
-    });
-
-    ActionGroup popupGroup = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_COMPILER_ERROR_VIEW_POPUP);
-    if (popupGroup != null) {
-      for (AnAction action : popupGroup.getChildren(null)) {
-        group.add(action);
-      }
+    public ProblemsViewPanel(Project project) {
+        super(project, HelpID.COMPILER, false, true, null);
+        myTree.getEmptyText().setText("No compilation problems found");
     }
-  }
 
-  @Override
-  protected boolean shouldShowFirstErrorInEditor() {
-    return CompilerWorkspaceConfiguration.getInstance(myProject).AUTO_SHOW_ERRORS_IN_EDITOR;
-  }
+    @Override
+    public void addActionsAfter(ActionGroup.Builder group) {
+        group.add(new CompilerPropertiesAction());
+    }
 
-  @Override
-  protected boolean canHideWarningsOrInfos() {
-    return true;
-  }
+    @Override
+    protected void addExtraPopupMenuActions(ActionGroup.Builder group) {
+        group.add(new ExcludeFromCompileAction(myProject) {
+            @Nullable
+            @Override
+            protected VirtualFile getFile() {
+                final ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
+                ErrorTreeElement element = descriptor != null ? descriptor.getElement() : null;
+                if (element != null && !(element instanceof GroupingElement)) {
+                    NodeDescriptor parent = descriptor.getParentDescriptor();
+                    if (parent instanceof ErrorTreeNodeDescriptor) {
+                        element = ((ErrorTreeNodeDescriptor) parent).getElement();
+                    }
+                }
+                return element instanceof GroupingElement ? ((GroupingElement) element).getFile() : null;
+            }
+        });
+
+        ActionGroup popupGroup = (ActionGroup) ActionManager.getInstance().getAction(IdeActions.GROUP_COMPILER_ERROR_VIEW_POPUP);
+        if (popupGroup != null) {
+            for (AnAction action : popupGroup.getChildren(null)) {
+                group.add(action);
+            }
+        }
+    }
+
+    @Override
+    protected boolean shouldShowFirstErrorInEditor() {
+        return CompilerWorkspaceConfiguration.getInstance(myProject).AUTO_SHOW_ERRORS_IN_EDITOR;
+    }
+
+    @Override
+    protected boolean canHideWarningsOrInfos() {
+        return true;
+    }
 }
