@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.component.util.localize.BundleBase;
 import consulo.dataContext.DataContext;
@@ -21,11 +22,16 @@ import jakarta.inject.Inject;
 
 import java.awt.datatransfer.DataFlavor;
 
+@ActionImpl(id = "$SearchWeb")
 public class SearchWebAction extends AnAction implements DumbAware {
     private final WebSearchOptions myWebSearchOptions;
 
     @Inject
     public SearchWebAction(WebSearchOptions webSearchOptions) {
+        super(
+            ActionLocalize.action$searchweb0Text(webSearchOptions.getEngine().getPresentableName()),
+            ActionLocalize.action$searchweb0Description(webSearchOptions.getEngine().getPresentableName())
+        );
         myWebSearchOptions = webSearchOptions;
     }
 
@@ -48,9 +54,5 @@ public class SearchWebAction extends AnAction implements DumbAware {
         CopyProvider provider = e.getData(CopyProvider.KEY);
         boolean available = provider != null && provider.isCopyEnabled(dataContext) && provider.isCopyVisible(dataContext);
         presentation.setEnabledAndVisible(available);
-
-        String engineName = myWebSearchOptions.getEngine().getPresentableName();
-        presentation.setTextValue(ActionLocalize.action$searchweb0Text(engineName));
-        presentation.setDescriptionValue(ActionLocalize.action$searchweb0Description(engineName));
     }
 }

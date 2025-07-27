@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.HelpManager;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -34,6 +35,7 @@ public class OnlineDocAction extends DumbAwareAction {
 
     @Inject
     public OnlineDocAction(Provider<HelpManager> helpManagerProvider) {
+        super(ActionLocalize.actionOnlinedocactionText(), ActionLocalize.actionOnlinedocactionDescription());
         myHelpManagerProvider = helpManagerProvider;
     }
 
