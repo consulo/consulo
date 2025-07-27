@@ -35,6 +35,10 @@ import java.util.List;
  * @author yole
  */
 public abstract class CloseEditorsActionBase extends AnAction implements DumbAware {
+    protected CloseEditorsActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
     @Nonnull
     protected List<Pair<FileEditorComposite, FileEditorWindow>> getFilesToClose(AnActionEvent event) {
         ArrayList<Pair<FileEditorComposite, FileEditorWindow>> res = new ArrayList<>();

@@ -683,40 +683,7 @@
                 <separator/>
                 <reference ref="ActiveToolwindowGroup"/>
 
-                <group id="EditorTabsGroup" popup="true">
-                    <action id="NextTab" class="consulo.ide.impl.idea.ide.actions.NextTabAction"/>
-                    <action id="PreviousTab" class="consulo.ide.impl.idea.ide.actions.PreviousTabAction"/>
-                    <action id="PinActiveTab" class="consulo.ide.impl.idea.ide.actions.PinActiveTabAction"/>
-                    <action id="TabList" class="consulo.ide.impl.idea.ide.actions.TabListAction"/>
-                    <separator/>
-                    <group id="CloseEditorsGroup">
-                        <action id="CloseContent" class="consulo.ide.impl.idea.ide.actions.CloseAction"/>
-                        <action id="CloseAllEditorsButActive" class="consulo.ide.impl.idea.ide.actions.CloseAllEditorsButActiveAction"/>
-                        <action id="CloseAllEditors" class="consulo.ide.impl.idea.ide.actions.CloseAllEditorsAction"/>
-                        <action id="CloseAllUnpinnedEditors" class="consulo.ide.impl.idea.ide.actions.CloseAllUnpinnedEditorsAction"/>
-                    </group>
-                    <separator/>
-                    <action id="ReopenClosedTab" class="consulo.ide.impl.idea.openapi.fileEditor.impl.ReopenClosedTabAction"/>
-                    <action id="SplitVertically" class="consulo.ide.impl.idea.ide.actions.SplitVerticallyAction"
-                            icon="consulo.platform.base.PlatformIconGroup@actions.splitvertically"/>
-                    <action id="SplitHorizontally" class="consulo.ide.impl.idea.ide.actions.SplitHorizontallyAction"
-                            icon="consulo.platform.base.PlatformIconGroup@actions.splithorizontally"/>
-                    <action id="ChangeSplitOrientation" class="consulo.ide.impl.idea.ide.actions.ChangeSplitterOrientationAction"/>
-                    <action id="Unsplit" class="consulo.ide.impl.idea.ide.actions.UnsplitAction"/>
-                    <action id="UnsplitAll" class="consulo.ide.impl.idea.ide.actions.UnsplitAllAction"/>
-                    <action id="NextSplitter" class="consulo.ide.impl.idea.ide.actions.NextSplitAction"/>
-                    <action id="PrevSplitter" class="consulo.ide.impl.idea.ide.actions.PrevSplitAction"/>
-                    <group id="TabsPlacementGroup" popup="true" text="Tabs Placement">
-                        <action id="TabsPlacementTop" text="Top" class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$Top"/>
-                        <action id="TabsPlacementBottom" text="Bottom"
-                                class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$Bottom"/>
-                        <action id="TabsPlacementLeft" text="Left" class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$Left"/>
-                        <action id="TabsPlacementRight" text="Right" class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$Right"/>
-                        <action id="TabsPlacementNone" text="None" class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$None"/>
-                    </group>
-                    <action id="TabsAlphabeticalMode" class="consulo.ide.impl.idea.ide.actions.TabsAlphabeticalModeSwitcher"
-                            text="Alphabetical Mode"/>
-                </group>
+                <reference ref="EditorTabsGroup"/>
 
                 <reference ref="BackgroundTasks"/>
 
@@ -1115,11 +1082,6 @@
             <separator/>
             <add-to-group group-id="MainToolBarSettings" relative-to-action="ShowSettings" anchor="before"/>
         </group>
-
-        <!-- Window -->
-        <action id="CloseAllUnmodifiedEditors" class="consulo.ide.impl.idea.ide.actions.CloseAllUnmodifiedEditorsAction">
-            <add-to-group group-id="CloseEditorsGroup" anchor="before" relative-to-action="CloseAllUnpinnedEditors"/>
-        </action>
 
         <action id="Vcs.ShowDiffWithLocal" class="consulo.ide.impl.idea.openapi.vcs.history.ShowDiffWithLocalAction"
                 text="Compare with Local" description="Compare version from selected revision with current version"

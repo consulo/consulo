@@ -1684,6 +1684,8 @@ action.RenameFavoritesList.description:
     text: Rename the favorites list the selected node belongs to
 action.RenameFavoritesList.text:
     text: Rename Favorites List
+action.ReopenClosedTab.text:
+    text: Reopen Closed Tab
 action.Replace.description:
     text: Replace a string in active editor with another string
 action.Replace.text:
@@ -2032,6 +2034,18 @@ action.TabList.description:
     text: Show dropdown with the list of all tabs in single-row tab layout
 action.TabList.text:
     text: Show All Tabs
+action.TabsAlphabeticalMode.text:
+    text: Sort Tabs By Filename
+action.TabsPlacementBottom.text:
+    text: Bottom
+action.TabsPlacementLeft.text:
+    text: Left
+action.TabsPlacementNone.text:
+    text: None
+action.TabsPlacementRight.text:
+    text: Right
+action.TabsPlacementTop.text:
+    text: Top
 action.TechnicalSupport.description:
     text: Open developer community site
 action.TechnicalSupport.text:
@@ -2664,6 +2678,8 @@ group.ShowRecentFindUsagesGroup.text:
     text: Recent Find Usages
 group.StandardMacroActions.text:
     text: Standard Macro Actions
+group.TabsPlacementGroup.text:
+    text: Tabs Placement
 group.TodoMainGroup.text:
     text: TODO
 group.TodoViewGroupByGroup.text:
