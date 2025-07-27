@@ -26,54 +26,57 @@ import jakarta.annotation.Nullable;
  * @author anna
  */
 public class CustomisedActionGroup extends ActionGroup {
-  private boolean myForceUpdate;
-  private final ActionGroup myGroup;
-  private AnAction[] myChildren;
-  private final CustomActionsSchemaImpl mySchema;
-  private final String myDefaultGroupName;
+    private boolean myForceUpdate;
+    private final ActionGroup myGroup;
+    private AnAction[] myChildren;
+    private final CustomActionsSchemaImpl mySchema;
+    private final String myDefaultGroupName;
 
-  public CustomisedActionGroup(String shortName,
-                               boolean popup,
-                               final ActionGroup group,
-                               CustomActionsSchemaImpl schema,
-                               String defaultGroupName) {
-    super(shortName, popup);
-    myGroup = group;
-    mySchema = schema;
-    myDefaultGroupName = defaultGroupName;
-    myForceUpdate = true;
-  }
-
-  public ActionGroup getDelegate() {
-    return myGroup;
-  }
-
-  @Nonnull
-  public AnAction[] getChildren(@Nullable final AnActionEvent e) {
-    if (myForceUpdate){
-      myChildren = CustomizationUtil.getReordableChildren(myGroup, mySchema, myDefaultGroupName, e);
-      myForceUpdate = false;
-      return myChildren;
-    } else {
-      if (!(myGroup instanceof DefaultActionGroup) || myChildren == null){
-        myChildren = CustomizationUtil.getReordableChildren(myGroup, mySchema, myDefaultGroupName, e);
-      }
-      return myChildren;
+    public CustomisedActionGroup(
+        String shortName,
+        boolean popup,
+        final ActionGroup group,
+        CustomActionsSchemaImpl schema,
+        String defaultGroupName
+    ) {
+        super(shortName, popup);
+        myGroup = group;
+        mySchema = schema;
+        myDefaultGroupName = defaultGroupName;
+        myForceUpdate = true;
     }
-  }
 
-  public void update(AnActionEvent e) {
-    myGroup.update(e);
-  }
+    public ActionGroup getDelegate() {
+        return myGroup;
+    }
 
-  @Override
-  public boolean isDumbAware() {
-    return myGroup.isDumbAware();
-  }
+    @Nonnull
+    public AnAction[] getChildren(@Nullable final AnActionEvent e) {
+        if (myForceUpdate) {
+            myChildren = CustomizationUtil.getReordableChildren(myGroup, mySchema, myDefaultGroupName, e);
+            myForceUpdate = false;
+            return myChildren;
+        }
+        else {
+            if (!(myGroup instanceof DefaultActionGroup) || myChildren == null) {
+                myChildren = CustomizationUtil.getReordableChildren(myGroup, mySchema, myDefaultGroupName, e);
+            }
+            return myChildren;
+        }
+    }
 
-  @Nullable
-  public AnAction getFirstAction() {
-    final AnAction[] children = getChildren(null);
-    return children.length > 0 ? children[0] : null;
-  }
+    public void update(AnActionEvent e) {
+        myGroup.update(e);
+    }
+
+    @Override
+    public boolean isDumbAware() {
+        return myGroup.isDumbAware();
+    }
+
+    @Nullable
+    public AnAction getFirstAction() {
+        final AnAction[] children = getChildren(null);
+        return children.length > 0 ? children[0] : null;
+    }
 }
