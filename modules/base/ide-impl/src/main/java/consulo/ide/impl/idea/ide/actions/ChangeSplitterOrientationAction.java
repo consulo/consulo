@@ -15,15 +15,23 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = IdeActions.ACTION_CHANGE_SPLIT_ORIENTATION)
 public final class ChangeSplitterOrientationAction extends SplitterActionBase {
+    public ChangeSplitterOrientationAction() {
+        super(ActionLocalize.actionChangesplitorientationText(), ActionLocalize.actionChangesplitorientationDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent event) {

@@ -20,6 +20,7 @@ import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -35,10 +36,19 @@ import jakarta.annotation.Nonnull;
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(TabNavigationActionBase.class);
 
-    private final int myDir;
+    protected enum Direction {
+        PREVIOUS(-1), NEXT(+1);
 
-    TabNavigationActionBase(int dir) {
-        LOG.assertTrue(dir == 1 || dir == -1);
+        public final int myDir;
+
+        private Direction(int dir) {
+            myDir = dir;
+        }
+    }
+    private final Direction myDir;
+
+    TabNavigationActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Direction dir) {
+        super(text, description);
         myDir = dir;
     }
 
@@ -85,7 +95,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     }
 
     private void doNavigate(ContentManager contentManager) {
-        if (myDir == -1) {
+        if (myDir == Direction.PREVIOUS) {
             contentManager.selectPreviousContent();
         }
         else {
@@ -98,8 +108,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
         navigateImpl(dataContext, project, selectedFile, myDir);
     }
 
-    public static void navigateImpl(DataContext dataContext, Project project, VirtualFile selectedFile, int dir) {
-        LOG.assertTrue(dir == 1 || dir == -1);
+    private static void navigateImpl(DataContext dataContext, Project project, VirtualFile selectedFile, @Nonnull Direction dir) {
         FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
         FileEditorWindow currentWindow = dataContext.getData(FileEditorWindow.DATA_KEY);
         if (currentWindow == null) {
@@ -108,6 +117,6 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
         VirtualFile[] files = currentWindow.getFiles();
         int index = ArrayUtil.find(files, selectedFile);
         LOG.assertTrue(index != -1);
-        editorManager.openFile(files[(index + files.length + dir) % files.length], true);
+        editorManager.openFile(files[(index + files.length + dir.myDir) % files.length], true);
     }
 }

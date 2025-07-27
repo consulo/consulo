@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -16,9 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,7 +28,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "PrevSplitter")
 public class PrevSplitAction extends AnAction implements DumbAware {
+    public PrevSplitAction() {
+        super(ActionLocalize.actionPrevsplitterText(), ActionLocalize.actionPrevsplitterDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -50,6 +56,8 @@ public class PrevSplitAction extends AnAction implements DumbAware {
         }
         FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        e.getPresentation().setEnabled(toolWindowManager.isEditorComponentActive() && manager.isInSplitter() && manager.getCurrentWindow() != null);
+        e.getPresentation().setEnabled(
+            toolWindowManager.isEditorComponentActive() && manager.isInSplitter() && manager.getCurrentWindow() != null
+        );
     }
 }

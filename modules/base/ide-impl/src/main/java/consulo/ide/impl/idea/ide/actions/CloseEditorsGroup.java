@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,26 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.DefaultActionGroup;
 
-@ActionImpl(id = IdeActions.ACTION_PREVIOUS_TAB)
-public class PreviousTabAction extends TabNavigationActionBase {
-    public PreviousTabAction() {
-        super(ActionLocalize.actionPrevioustabText(), ActionLocalize.actionPrevioustabDescription(), Direction.PREVIOUS);
+/**
+ * @author UNV
+ * @since 2025-07-26
+ */
+@ActionImpl(
+    id = "CloseEditorsGroup",
+    children = {
+        @ActionRef(type = CloseAction.class),
+        @ActionRef(type = CloseAllEditorsButActiveAction.class),
+        @ActionRef(type = CloseAllEditorsAction.class),
+        @ActionRef(type = CloseAllUnpinnedEditorsAction.class)
+    }
+)
+public class CloseEditorsGroup extends DefaultActionGroup implements DumbAware {
+    public CloseEditorsGroup() {
+        super(ActionLocalize.groupCloseeditorsgroupText(), false);
     }
 }

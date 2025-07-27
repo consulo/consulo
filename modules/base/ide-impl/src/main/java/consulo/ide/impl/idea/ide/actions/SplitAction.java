@@ -18,12 +18,14 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,9 +33,22 @@ import javax.swing.*;
  * @author Vladimir Kondratyev
  */
 public abstract class SplitAction extends AnAction implements DumbAware {
-    private final int myOrientation;
+    protected enum Orientation {
+        HORIZONTAL(SwingConstants.HORIZONTAL),
+        VERTICAL(SwingConstants.VERTICAL);
 
-    protected SplitAction(int orientation) {
+        public final int myOrientation;
+
+        Orientation(int orientation) {
+            myOrientation = orientation;
+        }
+    }
+
+    @Nonnull
+    private final Orientation myOrientation;
+
+    protected SplitAction(@Nonnull LocalizeValue text, @Nonnull Image icon, @Nonnull Orientation orientation) {
+        super(text, LocalizeValue.empty(), icon);
         myOrientation = orientation;
     }
 
@@ -44,18 +59,13 @@ public abstract class SplitAction extends AnAction implements DumbAware {
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
 
-        fileEditorManager.createSplitter(myOrientation, window);
+        fileEditorManager.createSplitter(myOrientation.myOrientation, window);
     }
 
     @Override
     public void update(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         Presentation presentation = event.getPresentation();
-        presentation.setTextValue(
-            myOrientation == SwingConstants.VERTICAL
-                ? IdeLocalize.actionSplitVertically()
-                : IdeLocalize.actionSplitHorizontally()
-        );
         if (project == null) {
             presentation.setEnabled(false);
             return;
