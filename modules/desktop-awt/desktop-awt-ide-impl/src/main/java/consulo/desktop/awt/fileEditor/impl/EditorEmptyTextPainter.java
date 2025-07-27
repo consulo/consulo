@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
+import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;

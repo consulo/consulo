@@ -18,7 +18,7 @@ package consulo.web.internal.wm.toolWindow;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import consulo.application.ui.UISettings;
-import consulo.ide.impl.wm.impl.ToolWindowBase;
+import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,8 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
-import org.jetbrains.annotations.NonNls;
-
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -28,7 +26,7 @@ import java.beans.PropertyChangeListener;
  * @author Vladimir Kondratyev
  */
 public abstract class VisibilityWatcher extends ComponentAdapter implements PropertyChangeListener{
-  @NonNls protected static final String ANCESTOR_PROPERTY_NAME = "ancestor";
+  protected static final String ANCESTOR_PROPERTY_NAME = "ancestor";
 
   public final void componentHidden(final ComponentEvent e){
     visibilityChanged();

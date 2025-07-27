@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ui.navigation;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.ui.ShadowAction;
+import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.application.dumb.DumbAware;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

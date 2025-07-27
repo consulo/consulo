@@ -4,7 +4,7 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.ApplicationManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
-import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
+import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;

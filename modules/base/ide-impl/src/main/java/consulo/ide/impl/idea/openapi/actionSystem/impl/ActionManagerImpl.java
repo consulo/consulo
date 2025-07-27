@@ -145,7 +145,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     private final Application myApplication;
     private final Provider<ActionToolbarFactory> myToolbarFactory;
-    private final ActionPopupMenuFactory myPopupMenuFactory;
+    private final Provider<ActionPopupMenuFactory> myPopupMenuFactory;
     private final ComponentBinding myComponentBinding;
     private final KeymapManagerEx myKeymapManager;
 
@@ -155,7 +155,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     @Inject
     ActionManagerImpl(Application application,
                       Provider<ActionToolbarFactory> toolbarFactory,
-                      ActionPopupMenuFactory popupMenuFactory,
+                      Provider<ActionPopupMenuFactory> popupMenuFactory,
                       ComponentBinding componentBinding,
                       KeymapManager keymapManager) {
         myApplication = application;
@@ -370,9 +370,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     private static void processAbbreviationNode(@Nonnull SimpleXmlElement e, @Nonnull String id) {
-        final String abbr = e.getAttributeValue(VALUE_ATTR_NAME);
+        String abbr = e.getAttributeValue(VALUE_ATTR_NAME);
         if (!StringUtil.isEmpty(abbr)) {
-            final AbbreviationManagerImpl abbreviationManager = (AbbreviationManagerImpl) AbbreviationManager.getInstance();
+            AbbreviationManagerImpl abbreviationManager = (AbbreviationManagerImpl) AbbreviationManager.getInstance();
             abbreviationManager.register(abbr, id, true);
         }
     }
@@ -387,7 +387,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             return LocalizeValue.of(descriptionValue);
         }
 
-        final String key = elementType + "." + id + ".description";
+        String key = elementType + "." + id + ".description";
         return localizeHelper.getValue(key);
     }
 
@@ -400,7 +400,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return localizeHelper.getValue(key);
     }
 
-    private static boolean checkRelativeToAction(final String relativeToActionId, @Nonnull final Anchor anchor, @Nonnull final String actionName, @Nullable final PluginId pluginId) {
+    private static boolean checkRelativeToAction(String relativeToActionId, @Nonnull Anchor anchor, @Nonnull String actionName, @Nullable PluginId pluginId) {
         if ((Anchor.BEFORE == anchor || Anchor.AFTER == anchor) && relativeToActionId == null) {
             reportActionError(pluginId, actionName + ": \"relative-to-action\" cannot be null if anchor is \"after\" or \"before\"");
             return false;
@@ -409,7 +409,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Nullable
-    private static Anchor parseAnchor(final String anchorStr, @Nullable final String actionName, @Nullable final PluginId pluginId) {
+    private static Anchor parseAnchor(String anchorStr, @Nullable String actionName, @Nullable PluginId pluginId) {
         if (StringUtil.isEmptyOrSpaces(anchorStr)) {
             return Anchor.LAST;
         }
@@ -460,7 +460,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         processRemoveAndReplace(element, actionId, keymap, shortcut);
     }
 
-    private void assertActionIsGroupOrStub(final AnAction action) {
+    private void assertActionIsGroupOrStub(AnAction action) {
         if (!(action instanceof ActionGroup || action instanceof ActionStubBase)) {
             LOG.error("Action : " + action + "; class: " + action.getClass());
         }
@@ -490,7 +490,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     private static String getPluginInfo(@Nullable PluginId id) {
         if (id != null) {
-            final PluginDescriptor plugin = PluginManager.findPlugin(id);
+            PluginDescriptor plugin = PluginManager.findPlugin(id);
             if (plugin != null) {
                 String name = plugin.getName();
                 if (name == null) {
@@ -504,7 +504,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Nonnull
     private static DataContext getContextBy(Component contextComponent) {
-        final DataManager dataManager = DataManager.getInstance();
+        DataManager dataManager = DataManager.getInstance();
         return contextComponent != null ? dataManager.getDataContext(contextComponent) : dataManager.getDataContext();
     }
 
@@ -517,7 +517,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Override
-    public void addTimerListener(int delay, @Nonnull final TimerListener listener) {
+    public void addTimerListener(int delay, @Nonnull TimerListener listener) {
         _addTimerListener(listener, false);
     }
 
@@ -536,7 +536,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         _removeTimerListener(listener, true);
     }
 
-    private void _addTimerListener(final TimerListener listener, boolean transparent) {
+    private void _addTimerListener(TimerListener listener, boolean transparent) {
         if (ApplicationManager.getApplication().isUnitTestMode()) {
             return;
         }
@@ -554,9 +554,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
+    @Override
     @Nonnull
     public ActionPopupMenu createActionPopupMenu(@Nonnull String place, @Nonnull ActionGroup group, @Nullable PresentationFactory presentationFactory) {
-        return myPopupMenuFactory.createActionPopupMenu(this, place, group, presentationFactory);
+        return myPopupMenuFactory.get().createActionPopupMenu(place, group, presentationFactory);
     }
 
     @Nonnull
@@ -565,17 +566,17 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         if (Application.get().isUnifiedApplication()) {
             return new UnifiedActionPopupMenuImpl(place, group, this, null);
         }
-        return myPopupMenuFactory.createActionPopupMenu(this, place, group);
+        return myPopupMenuFactory.get().createActionPopupMenu(place, group);
     }
 
     @Nonnull
     @Override
-    public ActionToolbar createActionToolbar(@Nonnull final String place, @Nonnull final ActionGroup group, final boolean horizontal) {
+    public ActionToolbar createActionToolbar(@Nonnull String place, @Nonnull ActionGroup group, boolean horizontal) {
         return myToolbarFactory.get().createActionToolbar(place, group, horizontal ? ActionToolbar.Style.HORIZONTAL : ActionToolbar.Style.VERTICAL);
     }
 
     public void registerPluginActions(@Nonnull PluginDescriptor plugin, LocalizeHelper localizeHelper) {
-        final List<SimpleXmlElement> elementList = plugin.getActionsDescriptionElements();
+        List<SimpleXmlElement> elementList = plugin.getActionsDescriptionElements();
         if (elementList != null) {
             //long startTime = StartUpMeasurer.getCurrentTime();
             for (SimpleXmlElement e : elementList) {
@@ -902,8 +903,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
-    private void processReferenceNode(final SimpleXmlElement element, final PluginId pluginId) {
-        final AnAction action = processReferenceElement(element, pluginId);
+    private void processReferenceNode(SimpleXmlElement element, PluginId pluginId) {
+        AnAction action = processReferenceElement(element, pluginId);
         if (action == null) {
             return;
         }
@@ -918,7 +919,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     /**
      * @param element description of link
      */
-    private void processAddToGroupNode(AnAction action, SimpleXmlElement element, final PluginId pluginId, boolean secondary) {
+    private void processAddToGroupNode(AnAction action, SimpleXmlElement element, PluginId pluginId, boolean secondary) {
         // Real subclasses of AnAction should not be here
         if (!(action instanceof AnSeparator)) {
             assertActionIsGroupOrStub(action);
@@ -934,18 +935,18 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
 
         // parent group
-        final AnAction parentGroup = getParentGroup(element.getAttributeValue(GROUPID_ATTR_NAME), actionName, pluginId);
+        AnAction parentGroup = getParentGroup(element.getAttributeValue(GROUPID_ATTR_NAME), actionName, pluginId);
         if (parentGroup == null) {
             return;
         }
 
         // anchor attribute
-        final Anchor anchor = parseAnchor(element.getAttributeValue(ANCHOR_ELEMENT_NAME), actionName, pluginId);
+        Anchor anchor = parseAnchor(element.getAttributeValue(ANCHOR_ELEMENT_NAME), actionName, pluginId);
         if (anchor == null) {
             return;
         }
 
-        final String relativeToActionId = element.getAttributeValue(RELATIVE_TO_ACTION_ATTR_NAME);
+        String relativeToActionId = element.getAttributeValue(RELATIVE_TO_ACTION_ATTR_NAME);
         if (!checkRelativeToAction(relativeToActionId, anchor, actionName, pluginId)) {
             return;
         }
@@ -959,7 +960,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Nullable
-    public AnAction getParentGroup(final String groupId, @Nullable final String actionName, @Nullable final PluginId pluginId) {
+    public AnAction getParentGroup(String groupId, @Nullable String actionName, @Nullable PluginId pluginId) {
         if (groupId == null || groupId.isEmpty()) {
             reportActionError(pluginId, actionName + ": attribute \"group-id\" should be defined");
             return null;
@@ -1035,7 +1036,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             reportKeymapNotFoundWarning(pluginId, keymapName);
             return;
         }
-        final KeyboardShortcut shortcut = new KeyboardShortcut(firstKeyStroke, secondKeyStroke);
+        KeyboardShortcut shortcut = new KeyboardShortcut(firstKeyStroke, secondKeyStroke);
         processRemoveAndReplace(element, actionId, keymap, shortcut);
     }
 
@@ -1189,7 +1190,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             myAction2Id.remove(oldValue);
             myId2Index.remove(actionId);
 
-            for (final Map.Entry<PluginId, Collection<String>> entry : myPlugin2Id.entrySet()) {
+            for (Map.Entry<PluginId, Collection<String>> entry : myPlugin2Id.entrySet()) {
                 Collection<String> pluginActions = entry.getValue();
                 pluginActions.remove(actionId);
             }
@@ -1231,7 +1232,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     public void removeActionPopup(@Nonnull Object menu) {
-        final boolean removed = myPopups.remove(menu);
+        boolean removed = myPopups.remove(menu);
         if (removed && menu instanceof ActionPopupMenu actionPopupMenu) {
             for (ActionPopupMenuListener listener : myActionPopupMenuListeners) {
                 listener.actionPopupMenuReleased(actionPopupMenu);
@@ -1240,7 +1241,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Override
-    public void queueActionPerformedEvent(@Nonnull final AnAction action, @Nonnull DataContext context, @Nonnull AnActionEvent event) {
+    public void queueActionPerformedEvent(@Nonnull AnAction action, @Nonnull DataContext context, @Nonnull AnActionEvent event) {
         if (myPopups.isEmpty()) {
             fireAfterActionPerformed(action, context, event);
         }
@@ -1323,8 +1324,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
         //noinspection AssignmentToStaticFieldFromInstanceMethod
         LastActionTracker.ourLastActionId = myLastPreformedActionId;
-        final PsiFile file = dataContext.getData(PsiFile.KEY);
-        final Language language = file != null ? file.getLanguage() : null;
+        PsiFile file = dataContext.getData(PsiFile.KEY);
+        Language language = file != null ? file.getLanguage() : null;
         //ActionsCollector.getInstance().record(CommonDataKeys.PROJECT.getData(dataContext), action, event, language);
         for (AnActionListener listener : myActionListeners) {
             listener.beforeActionPerformed(action, dataContext, event);
@@ -1355,9 +1356,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             return null;
         }
         
-        final ShortcutSet shortcutSet = action.getShortcutSet();
-        final Shortcut[] shortcuts = shortcutSet.getShortcuts();
-        for (final Shortcut shortcut : shortcuts) {
+        ShortcutSet shortcutSet = action.getShortcutSet();
+        Shortcut[] shortcuts = shortcutSet.getShortcuts();
+        for (Shortcut shortcut : shortcuts) {
             // Shortcut can be MouseShortcut here.
             // For example IdeaVIM often assigns them
             if (shortcut instanceof KeyboardShortcut kb && kb.getSecondKeyStroke() == null) {
@@ -1411,13 +1412,13 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Nonnull
     @Override
-    public ActionCallback tryToExecute(@Nonnull final AnAction action, @Nonnull final InputEvent inputEvent, @Nullable final Component contextComponent, @Nullable final String place, boolean now) {
+    public ActionCallback tryToExecute(@Nonnull AnAction action, @Nonnull InputEvent inputEvent, @Nullable Component contextComponent, @Nullable String place, boolean now) {
 
-        final Application app = ApplicationManager.getApplication();
+        Application app = ApplicationManager.getApplication();
         assert app.isDispatchThread();
 
-        final ActionCallback result = new ActionCallback();
-        final Runnable doRunnable = () -> tryToExecuteNow(action, inputEvent, contextComponent, place, result);
+        ActionCallback result = new ActionCallback();
+        Runnable doRunnable = () -> tryToExecuteNow(action, inputEvent, contextComponent, place, result);
 
         if (now) {
             doRunnable.run();
@@ -1430,11 +1431,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return result;
     }
 
-    private void tryToExecuteNow(@Nonnull AnAction action, final InputEvent inputEvent, final Component contextComponent, final String place, final ActionCallback result) {
-        final Presentation presentation = action.getTemplatePresentation().clone();
+    private void tryToExecuteNow(@Nonnull AnAction action, InputEvent inputEvent, Component contextComponent, String place, ActionCallback result) {
+        Presentation presentation = action.getTemplatePresentation().clone();
 
         IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown((() -> {
-            final DataContext context = getContextBy(contextComponent);
+            DataContext context = getContextBy(contextComponent);
 
             AnActionEvent event = new AnActionEvent(inputEvent, context, place != null ? place : ActionPlaces.UNKNOWN, presentation, this, inputEvent.getModifiersEx());
 
@@ -1464,7 +1465,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             UIUtil.addAwtListener(event1 -> {
                 if (event1.getID() == WindowEvent.WINDOW_OPENED || event1.getID() == WindowEvent.WINDOW_ACTIVATED) {
                     if (!result.isProcessed()) {
-                        final WindowEvent we = (WindowEvent) event1;
+                        WindowEvent we = (WindowEvent) event1;
                         IdeFocusManager.findInstanceByComponent(we.getWindow()).doWhenFocusSettlesDown(result.createSetDoneRunnable(), IdeaModalityState.defaultModalityState());
                     }
                 }
@@ -1485,7 +1486,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             super(TIMER_DELAY, null);
             addActionListener(this);
             setRepeats(true);
-            final MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
+            MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
             connection.subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
                 @Override
                 public void applicationActivated(@Nonnull IdeFrame ideFrame) {
@@ -1519,7 +1520,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                 return;
             }
 
-            final int lastEventCount = myLastTimePerformed;
+            int lastEventCount = myLastTimePerformed;
             myLastTimePerformed = ActivityTracker.getInstance().getCount();
 
             if (myLastTimePerformed == lastEventCount && !Registry.is("actionSystem.always.update.toolbar.actions")) {
@@ -1544,7 +1545,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             }
         }
 
-        private void notifyListeners(final List<? extends TimerListener> timerListeners, final Set<? super TimerListener> notified) {
+        private void notifyListeners(List<? extends TimerListener> timerListeners, Set<? super TimerListener> notified) {
             for (TimerListener listener : timerListeners) {
                 if (notified.add(listener)) {
                     runListenerAction(listener);

@@ -24,7 +24,7 @@ import consulo.component.util.ActiveRunnable;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.ui.ShadowAction;
+import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;

@@ -33,6 +33,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
+import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.FactoryMap;

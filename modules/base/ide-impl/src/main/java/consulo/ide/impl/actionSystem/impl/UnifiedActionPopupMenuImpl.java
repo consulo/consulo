@@ -46,7 +46,10 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
     @Nullable
     private Supplier<DataContext> myDataContextProvider;
 
-    public UnifiedActionPopupMenuImpl(String place, @Nonnull ActionGroup group, ActionManagerImpl actionManager, @Nullable PresentationFactory factory) {
+    public UnifiedActionPopupMenuImpl(String place,
+                                      @Nonnull ActionGroup group,
+                                      ActionManagerImpl actionManager,
+                                      @Nullable PresentationFactory factory) {
         myPlace = place;
         myGroup = group;
         myManager = actionManager;

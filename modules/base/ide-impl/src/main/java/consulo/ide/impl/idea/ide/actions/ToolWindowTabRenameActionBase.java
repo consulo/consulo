@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.wm.ToolWindowContextMenuActionBase;
+import consulo.project.ui.wm.action.ToolWindowContextMenuActionBase;
 import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;

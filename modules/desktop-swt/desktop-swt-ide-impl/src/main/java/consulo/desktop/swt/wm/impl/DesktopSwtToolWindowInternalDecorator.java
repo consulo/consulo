@@ -27,7 +27,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.layout.DockLayout;
-import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
+import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 
 import jakarta.annotation.Nonnull;
 

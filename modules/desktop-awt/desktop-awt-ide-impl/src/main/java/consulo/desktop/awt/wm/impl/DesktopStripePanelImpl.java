@@ -21,7 +21,7 @@ import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
+import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;

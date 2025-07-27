@@ -16,7 +16,7 @@
 package consulo.web.internal.wm.toolWindow;
 
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
+import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;

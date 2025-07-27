@@ -19,7 +19,7 @@ import consulo.application.ui.UISettings;
 import consulo.disposer.Disposable;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
-import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
+import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
 import consulo.ide.impl.idea.ui.MouseDragHelper;
 import consulo.ide.impl.idea.util.ui.JBImageIcon;

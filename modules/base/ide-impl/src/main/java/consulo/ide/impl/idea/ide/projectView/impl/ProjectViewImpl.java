@@ -47,7 +47,7 @@ import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.ide.impl.projectView.ProjectViewEx;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.ide.impl.wm.impl.ToolWindowContentUI;
+import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.content.ProjectRootsUtil;

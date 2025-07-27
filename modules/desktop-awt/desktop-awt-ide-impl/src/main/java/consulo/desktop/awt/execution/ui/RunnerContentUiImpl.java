@@ -34,7 +34,7 @@ import consulo.execution.ui.layout.LayoutViewOptions;
 import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ide.impl.idea.execution.ui.layout.impl.JBRunnerTabs;
-import consulo.ide.impl.idea.ide.actions.CloseAction;
+import consulo.ui.ex.action.CloseAction;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;

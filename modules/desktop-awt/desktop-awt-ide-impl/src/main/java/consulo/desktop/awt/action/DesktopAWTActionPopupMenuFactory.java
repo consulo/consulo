@@ -17,9 +17,11 @@ package consulo.desktop.awt.action;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -29,17 +31,27 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class DesktopAWTActionPopupMenuFactory implements ActionPopupMenuFactory {
-  @Override
-  public ActionPopupMenu createActionPopupMenu(@Nonnull ActionManager actionManager, String place, @Nonnull ActionGroup group) {
-    return new DesktopActionPopupMenuImpl(place, group,
-                                          (ActionManagerImpl)actionManager, null);
-  }
+    private final ActionManagerImpl myActionManager;
 
-  @Override
-  public ActionPopupMenu createActionPopupMenu(@Nonnull ActionManager actionManager,
-                                               @Nonnull String place,
-                                               @Nonnull ActionGroup group,
-                                               @Nullable PresentationFactory presentationFactory) {
-    return new DesktopActionPopupMenuImpl(place, group, (ActionManagerImpl)actionManager, presentationFactory);
-  }
+    @Inject
+    public DesktopAWTActionPopupMenuFactory(ActionManager actionManager) {
+        myActionManager = (ActionManagerImpl) actionManager;
+    }
+
+    @Override
+    public ActionPopupMenu createActionPopupMenu(String place, @Nonnull ActionGroup group) {
+        return new DesktopActionPopupMenuImpl(place, group, myActionManager, null);
+    }
+
+    @Override
+    public ActionPopupMenu createActionPopupMenu(@Nonnull String place,
+                                                 @Nonnull ActionGroup group,
+                                                 @Nullable PresentationFactory presentationFactory) {
+        return new DesktopActionPopupMenuImpl(place, group, myActionManager, presentationFactory);
+    }
+
+    @Override
+    public ActionPopupMenu createActionPopupMenuForceHide(String place, @Nonnull ActionGroup group) {
+        return new DesktopActionPopupMenuImpl(place, group, myActionManager, new MenuItemPresentationFactory(true));
+    }
 }

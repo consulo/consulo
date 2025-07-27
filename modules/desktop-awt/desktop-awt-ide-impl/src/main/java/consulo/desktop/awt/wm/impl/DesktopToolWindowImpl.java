@@ -28,7 +28,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.util.concurrent.AsyncResult;
-import consulo.ide.impl.wm.impl.ToolWindowBase;
+import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

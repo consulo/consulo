@@ -60,7 +60,10 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
   private Supplier<DataContext> myDataContextProvider;
   private boolean myIsToolWindowContextMenu;
 
-  public DesktopActionPopupMenuImpl(String place, @Nonnull ActionGroup group, ActionManagerImpl actionManager, @Nullable PresentationFactory factory) {
+  public DesktopActionPopupMenuImpl(String place,
+                                    @Nonnull ActionGroup group,
+                                    ActionManagerImpl actionManager,
+                                    @Nullable PresentationFactory factory) {
     myManager = actionManager;
     myMenu = new MyMenu(place, group, factory);
     myApp = ApplicationManager.getApplication();

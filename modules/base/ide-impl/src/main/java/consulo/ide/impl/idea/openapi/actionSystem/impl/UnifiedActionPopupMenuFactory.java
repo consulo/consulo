@@ -21,6 +21,7 @@ import consulo.ide.impl.actionSystem.impl.UnifiedActionPopupMenuImpl;
 import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -30,16 +31,27 @@ import jakarta.inject.Singleton;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @Singleton
 public class UnifiedActionPopupMenuFactory implements ActionPopupMenuFactory {
-  @Override
-  public ActionPopupMenu createActionPopupMenu(@Nonnull ActionManager actionManager, String place, @Nonnull ActionGroup group) {
-    return new UnifiedActionPopupMenuImpl(place, group, (ActionManagerImpl)actionManager, null);
-  }
+    private final ActionManagerImpl myActionManager;
 
-  @Override
-  public ActionPopupMenu createActionPopupMenu(@Nonnull ActionManager actionManager,
-                                               @Nonnull String place,
-                                               @Nonnull ActionGroup group,
-                                               @Nullable PresentationFactory presentationFactory) {
-    return new UnifiedActionPopupMenuImpl(place, group, (ActionManagerImpl)actionManager, presentationFactory);
-  }
+    @Inject
+    public UnifiedActionPopupMenuFactory(ActionManager actionManager) {
+        myActionManager = (ActionManagerImpl) actionManager;
+    }
+
+    @Override
+    public ActionPopupMenu createActionPopupMenu(String place, @Nonnull ActionGroup group) {
+        return new UnifiedActionPopupMenuImpl(place, group, myActionManager, null);
+    }
+
+    @Override
+    public ActionPopupMenu createActionPopupMenu(@Nonnull String place,
+                                                 @Nonnull ActionGroup group,
+                                                 @Nullable PresentationFactory presentationFactory) {
+        return new UnifiedActionPopupMenuImpl(place, group, myActionManager, presentationFactory);
+    }
+
+    @Override
+    public ActionPopupMenu createActionPopupMenuForceHide(String place, @Nonnull ActionGroup group) {
+        return new UnifiedActionPopupMenuImpl(place, group, myActionManager, new MenuItemPresentationFactory(true));
+    }
 }

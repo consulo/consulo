@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.ui.ToolwindowPaintUtil;
-import consulo.ide.impl.wm.impl.ToolWindowContentUI;
+import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;

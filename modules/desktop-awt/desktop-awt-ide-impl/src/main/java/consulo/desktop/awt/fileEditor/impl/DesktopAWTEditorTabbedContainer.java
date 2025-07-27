@@ -31,7 +31,7 @@ import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.impl.idea.ide.actions.CloseAction;
+import consulo.ui.ex.action.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;

@@ -583,7 +583,7 @@
 
             <!-- View -->
             <group id="ViewMenu" popup="true">
-                <group id="ToolWindowsGroup" class="consulo.ide.impl.idea.ide.actions.ToolWindowsGroup" popup="true"/>
+                <reference id="ToolWindowsGroup" />
 
                 <action id="EditSource" class="consulo.ide.impl.idea.ide.actions.EditSourceAction"/>
                 <action id="OpenInRightSplit" class="consulo.ide.impl.idea.ide.actions.OpenInRightSplitAction"

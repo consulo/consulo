@@ -19,6 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.CloseAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 /**

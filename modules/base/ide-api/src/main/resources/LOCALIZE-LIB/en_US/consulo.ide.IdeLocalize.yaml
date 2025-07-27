@@ -46,8 +46,6 @@ action.ToggleAction.text.toggle.view:
     text: Toggle View
 action.abbreviate.qualified.package.names:
     text: Abbreviate Qualified Package Names
-action.activate.tool.window:
-    text: Activate {0} window
 action.add:
     text: Add
 action.add.all.open.tabs.to.new.favorites.list:
@@ -186,8 +184,6 @@ action.group.by.scope.type:
     text: Group by Scope Type
 action.help:
     text: Help
-action.hide.all.windows:
-    text: Hide All _Windows
 action.hide.empty.middle.packages:
     text: Hide Empty Middle Packages
 action.hide.infos:
@@ -258,8 +254,6 @@ action.rename.favorites.list:
     text: Rename favorites list
 action.reset.to.default:
     text: Reset To Default
-action.restore.windows:
-    text: Restore _Windows
 action.select.none:
     text: Select &None
 action.send.to.new.favorites.list:

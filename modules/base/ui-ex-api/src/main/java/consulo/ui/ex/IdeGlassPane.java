@@ -30,9 +30,9 @@ public interface IdeGlassPane {
 
   void addMouseMotionPreprocessor(MouseMotionListener listener, Disposable parent);
 
-  void addPainter(final Component component, Painter painter, Disposable parent);
+  void addPainter(Component component, Painter painter, Disposable parent);
 
-  void removePainter(final Painter painter);
+  void removePainter(Painter painter);
 
   void removeMousePreprocessor(MouseListener listener);
 

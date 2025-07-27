@@ -1,3 +1,7 @@
+action.activate.tool.window:
+    text: Activate {0} window
+action.hide.all.windows:
+    text: Hide All _Windows
 action.notification.clear.description:
     text: Clear the contents of the Event Log
 action.notification.clear.text:
@@ -14,6 +18,8 @@ action.notification.show.balloons.description:
     text: Enable or suppress notification balloons
 action.notification.show.balloons.text:
     text: Show balloons
+action.restore.windows:
+    text: Restore _Windows
 toolwindow.messages.display.name:
     text: Messages
 toolwindow.notifications.display.name:

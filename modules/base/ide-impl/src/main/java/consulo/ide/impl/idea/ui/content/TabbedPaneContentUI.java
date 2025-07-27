@@ -19,7 +19,7 @@ import consulo.dataContext.DataProvider;
 import consulo.ide.impl.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.ui.TabbedPaneImpl;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
-import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
+import consulo.project.ui.impl.internal.wm.action.TabbedContentAction;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.platform.Platform;
 import consulo.ui.ex.action.ActionManager;

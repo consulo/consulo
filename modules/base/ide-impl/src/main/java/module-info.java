@@ -534,7 +534,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vfs.impl.http;
   exports consulo.ide.impl.idea.openapi.vfs.impl.local;
   exports consulo.ide.impl.idea.openapi.wm;
-  exports consulo.ide.impl.idea.openapi.wm.ex;
   exports consulo.ide.impl.idea.openapi.wm.impl;
   exports consulo.ide.impl.idea.openapi.wm.impl.status;
   exports consulo.ide.impl.idea.openapi.wm.impl.status.widget;
@@ -735,7 +734,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.vcs;
   exports consulo.ide.impl.welcomeScreen;
   exports consulo.ide.impl.wm.impl;
-  exports consulo.ide.impl.wm.impl.layout;
   exports consulo.ide.impl.wm.impl.status;
   exports consulo.ide.impl.wm.impl.welcomeScreen;
 

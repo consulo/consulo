@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
-import consulo.ide.impl.wm.impl.ToolWindowContentUI;
+import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopupFactory;

@@ -19,7 +19,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.ui.ShadowAction;
+import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;

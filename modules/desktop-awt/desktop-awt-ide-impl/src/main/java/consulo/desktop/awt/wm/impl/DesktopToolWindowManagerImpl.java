@@ -43,7 +43,7 @@ import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
-import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
+import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;

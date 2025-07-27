@@ -15,56 +15,55 @@
  */
 package consulo.ui.ex.internal;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowType;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
-import kava.beans.PropertyChangeListener;
-
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
 
 public interface ToolWindowEx extends ToolWindow {
-  String PROP_AVAILABLE = "available";
-  String PROP_ICON = "icon";
-  @Deprecated
-  String PROP_TITLE = "title";
-  @Deprecated
-  String PROP_STRIPE_TITLE = "stripe-title";
+    String PROP_AVAILABLE = "available";
+    String PROP_ICON = "icon";
+    @Deprecated
+    String PROP_TITLE = "title";
+    @Deprecated
+    String PROP_STRIPE_TITLE = "stripe-title";
 
-  void addPropertyChangeListener(final PropertyChangeListener l);
+    void addPropertyChangeListener(PropertyChangeListener l);
 
-  /**
-   * Removes specified property change listener.
-   *
-   * @param l listener to be removed.
-   */
-  void removePropertyChangeListener(PropertyChangeListener l);
+    /**
+     * Removes specified property change listener.
+     *
+     * @param l listener to be removed.
+     */
+    void removePropertyChangeListener(PropertyChangeListener l);
 
-  /**
-   * @return type of internal decoration of tool window.
-   * @throws IllegalStateException if tool window isn't installed.
-   */
-  @RequiredUIAccess
-  ToolWindowType getInternalType();
+    /**
+     * @return type of internal decoration of tool window.
+     * @throws IllegalStateException if tool window isn't installed.
+     */
+    @RequiredUIAccess
+    ToolWindowType getInternalType();
 
-  void stretchWidth(int value);
+    void stretchWidth(int value);
 
-  void stretchHeight(int value);
+    void stretchHeight(int value);
 
-  ToolWindowInternalDecorator getDecorator();
+    ToolWindowInternalDecorator getDecorator();
 
-  void setAdditionalGearActions(@Nullable ActionGroup additionalGearActions);
+    void setAdditionalGearActions(@Nullable ActionGroup additionalGearActions);
 
-  void setTitleActions(@Nonnull AnAction... actions);
+    void setTitleActions(@Nonnull AnAction... actions);
 
-  void setTabActions(@Nonnull AnAction... actions);
+    void setTabActions(@Nonnull AnAction... actions);
 
-  void setTabDoubleClickActions(@Nonnull AnAction... actions);
+    void setTabDoubleClickActions(@Nonnull AnAction... actions);
 
-  void setUseLastFocusedOnActivation(boolean focus);
+    void setUseLastFocusedOnActivation(boolean focus);
 
-  boolean isUseLastFocusedOnActivation();
+    boolean isUseLastFocusedOnActivation();
 }

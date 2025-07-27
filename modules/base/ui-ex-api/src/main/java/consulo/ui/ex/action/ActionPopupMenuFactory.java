@@ -27,25 +27,28 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ActionPopupMenuFactory {
-  @Nonnull
-  static ActionPopupMenuFactory getInstance() {
-    return Application.get().getInstance(ActionPopupMenuFactory.class);
-  }
+    @Nonnull
+    static ActionPopupMenuFactory getInstance() {
+        return Application.get().getInstance(ActionPopupMenuFactory.class);
+    }
 
-  /**
-   * Factory method that creates an <code>ActionPopupMenu</code> from the
-   * specified group. The specified place is associated with the created popup.
-   *
-   * @param place Determines the place that will be set for {@link AnActionEvent} passed
-   *              when an action from the group is either performed or updated
-   *              See {@link consulo.ide.impl.idea.openapi.actionSystem.ActionPlaces}
-   * @param group Group from which the actions for the menu are taken.
-   * @return An instance of <code>ActionPopupMenu</code>
-   */
-  ActionPopupMenu createActionPopupMenu(@Nonnull ActionManager actionManager, String place, @Nonnull ActionGroup group);
+    /**
+     * Factory method that creates an <code>ActionPopupMenu</code> from the
+     * specified group. The specified place is associated with the created popup.
+     *
+     * @param place Determines the place that will be set for {@link AnActionEvent} passed
+     *              when an action from the group is either performed or updated
+     *              See {@link consulo.ide.impl.idea.openapi.actionSystem.ActionPlaces}
+     * @param group Group from which the actions for the menu are taken.
+     * @return An instance of <code>ActionPopupMenu</code>
+     */
+    ActionPopupMenu createActionPopupMenu(String place,
+                                          @Nonnull ActionGroup group);
 
-  ActionPopupMenu createActionPopupMenu(@Nonnull ActionManager actionManager,
-                                        @Nonnull String place,
-                                        @Nonnull ActionGroup group,
-                                        @Nullable PresentationFactory presentationFactory);
+    ActionPopupMenu createActionPopupMenuForceHide(String place,
+                                                   @Nonnull ActionGroup group);
+
+    ActionPopupMenu createActionPopupMenu(@Nonnull String place,
+                                          @Nonnull ActionGroup group,
+                                          @Nullable PresentationFactory presentationFactory);
 }
