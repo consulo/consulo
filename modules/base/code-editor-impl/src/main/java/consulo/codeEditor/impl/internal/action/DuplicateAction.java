@@ -42,7 +42,7 @@ public class DuplicateAction extends EditorAction {
 
     @Override
     public int getExecuteWeight() {
-        return Integer.MIN_VALUE;
+        return 2_000_000;
     }
     
     private static class Handler extends EditorWriteActionHandler {

@@ -15,13 +15,14 @@
  */
 package consulo.execution.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessHandler;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
@@ -32,8 +33,18 @@ import java.io.OutputStream;
 /**
  * @author egor
  */
+@ActionImpl(id = EOFAction.ACTION_ID)
 public class EOFAction extends DumbAwareAction {
     public static final String ACTION_ID = "SendEOF";
+
+    public EOFAction() {
+        super(LocalizeValue.localizeTODO("Send EOF"));
+    }
+
+    @Override
+    public int getExecuteWeight() {
+        return 1_000_000;
+    }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {

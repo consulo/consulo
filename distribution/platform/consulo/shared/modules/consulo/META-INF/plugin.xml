@@ -2331,8 +2331,6 @@
             <add-to-group group-id="MainToolBarSettings" anchor="after" relative-to-action="ShowSettings"/>
         </reference>
 
-        <action id="SendEOF" class="consulo.execution.impl.internal.action.EOFAction" text="Send EOF"/>
-
         <action id="ShowReformatFileDialog" class="consulo.ide.impl.idea.codeInsight.actions.ShowReformatFileDialog"/>
 
         <group id="Vcs.Show.Toolwindow.Tab">
