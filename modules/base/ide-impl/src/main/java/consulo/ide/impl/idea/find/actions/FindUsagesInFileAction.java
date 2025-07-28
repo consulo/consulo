@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.find.actions;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditor;
@@ -28,6 +28,7 @@ import consulo.language.findUsage.EmptyFindUsagesProvider;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -41,8 +42,10 @@ import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "FindUsagesInFile")
 public class FindUsagesInFileAction extends AnAction {
     public FindUsagesInFileAction() {
+        super(ActionLocalize.actionFindusagesinfileText(), ActionLocalize.actionFindusagesinfileDescription());
         setInjectedContext(true);
     }
 
@@ -108,7 +111,7 @@ public class FindUsagesInFileAction extends AnAction {
     }
 
     @RequiredReadAction
-    public static void updateFindUsagesAction(AnActionEvent e) {
+    public static void updateFindUsagesAction(@Nonnull AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         boolean enabled = isEnabled(e.getDataContext());
         presentation.setVisible(enabled || !ActionPlaces.isPopupPlace(e.getPlace()));

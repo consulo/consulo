@@ -16,8 +16,10 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.image.Image;
 import consulo.undoRedo.UndoManager;
 import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.ProjectUndoManager;
@@ -32,7 +34,8 @@ import consulo.util.lang.Couple;
 import jakarta.annotation.Nonnull;
 
 public abstract class UndoRedoAction extends DumbAwareAction {
-    public UndoRedoAction() {
+    public UndoRedoAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Image icon) {
+        super(text, description, icon);
         setEnabledInModalContext(true);
     }
 

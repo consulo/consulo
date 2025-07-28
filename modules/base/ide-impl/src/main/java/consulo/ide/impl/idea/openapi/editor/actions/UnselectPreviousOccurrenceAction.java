@@ -15,17 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorAction;
 
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "UnselectPreviousOccurrence")
 public class UnselectPreviousOccurrenceAction extends EditorAction {
     public UnselectPreviousOccurrenceAction() {
-        super(new Handler());
+        super(ActionLocalize.actionUnselectpreviousoccurrenceText(), new Handler());
     }
 
     private static class Handler extends SelectOccurrencesActionHandler {

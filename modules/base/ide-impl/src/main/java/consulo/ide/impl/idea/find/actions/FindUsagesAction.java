@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.find.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.find.FindManager;
 import consulo.find.localize.FindLocalize;
@@ -25,6 +25,8 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -35,17 +37,24 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.PsiElementUsageTarget;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
-import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nonnull;import jakarta.inject.Inject;
 
+@ActionImpl(id = "FindUsages")
 public class FindUsagesAction extends AnAction {
+    @Inject
     public FindUsagesAction() {
+        this(ActionLocalize.actionFindusagesText(), ActionLocalize.actionFindusagesDescription());
+    }
+
+    protected FindUsagesAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
         setInjectedContext(true);
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = e.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
         }
@@ -53,19 +62,20 @@ public class FindUsagesAction extends AnAction {
 
         UsageTarget[] usageTargets = e.getData(UsageView.USAGE_TARGETS_KEY);
         if (usageTargets == null) {
-            final Editor editor = e.getData(Editor.KEY);
-            chooseAmbiguousTargetAndPerform(project, editor, element -> {
-                startFindUsages(element);
-                return false;
-            });
-        }
-        else {
-            UsageTarget target = usageTargets[0];
-            if (target instanceof PsiElementUsageTarget) {
-                PsiElement element = ((PsiElementUsageTarget)target).getElement();
-                if (element != null) {
+            Editor editor = e.getData(Editor.KEY);
+            chooseAmbiguousTargetAndPerform(
+                project,
+                editor,
+                element -> {
                     startFindUsages(element);
+                    return false;
                 }
+            );
+        }
+        else if (usageTargets[0] instanceof PsiElementUsageTarget elementUsageTarget) {
+            PsiElement element = elementUsageTarget.getElement();
+            if (element != null) {
+                startFindUsages(element);
             }
         }
     }
@@ -81,8 +91,8 @@ public class FindUsagesAction extends AnAction {
 
     @RequiredUIAccess
     static void chooseAmbiguousTargetAndPerform(
-        @Nonnull final Project project,
-        final Editor editor,
+        @Nonnull Project project,
+        Editor editor,
         @Nonnull PsiElementProcessor<PsiElement> processor
     ) {
         if (editor == null) {
@@ -113,13 +123,6 @@ public class FindUsagesAction extends AnAction {
                     project.getDisposed()
                 );
             }
-        }
-    }
-
-    public static class ShowSettingsAndFindUsages extends FindUsagesAction {
-        @Override
-        protected void startFindUsages(@Nonnull PsiElement element) {
-            FindManager.getInstance(element.getProject()).findUsages(element, true);
         }
     }
 }

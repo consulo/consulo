@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -22,15 +23,15 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
 
 /**
  * @author max
  * @since 2002-06-18
  */
+@ActionImpl(id = "Replace")
 public class ReplaceAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
@@ -48,12 +49,11 @@ public class ReplaceAction extends EditorAction {
     }
 
     public ReplaceAction() {
-        super(new IncrementalFindAction.Handler(true));
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.actionsReplace();
+        super(
+            ActionLocalize.actionReplaceText(),
+            ActionLocalize.actionReplaceDescription(),
+            PlatformIconGroup.actionsReplace(),
+            new IncrementalFindAction.Handler(true)
+        );
     }
 }
