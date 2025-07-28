@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 
+@Deprecated
 public class JBViewport extends JViewport implements ZoomableViewport {
   public static final Key<Boolean> FORCE_VISIBLE_ROW_COUNT_KEY = Key.create("forceVisibleRowCount");
 

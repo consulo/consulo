@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
  *
  * @see #createUI(JComponent)
  */
+@Deprecated
 public class JBScrollBar extends JScrollBar implements TopComponent {
     public static final Key<Component> LEADING_KEY = Key.create("JB_SCROLL_BAR_LEADING_COMPONENT");
     public static final Key<Component> TRAILING_KEY = Key.create("JB_SCROLL_BAR_TRAILING_COMPONENT");

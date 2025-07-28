@@ -120,7 +120,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
     @Nonnull
     protected List<Trinity<String, Supplier<T>, Consumer<T>>> getDefaultMappings() {
-        return ContainerUtil.emptyList();
+        return List.of();
     }
 
     protected boolean canRemoveTarget(@Nullable Object target) {
@@ -783,7 +783,6 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                     value.set(o);
                     updateText(presentation);
                 }, value::commit);
-                popup.setMinimumSize(new Dimension(getMinWidth(), getMinHeight()));
                 return popup;
             }
 

@@ -30,7 +30,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Animator;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -123,10 +122,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     @RequiredUIAccess
     public Rectangle getVisibleAreaOnScrollingFinished() {
         assertIsDispatchThread();
-        if (SystemProperties.isTrueSmoothScrollingEnabled()) {
-            Rectangle viewRect = myEditor.getScrollPane().getViewport().getViewRect();
-            return new Rectangle(getOffset(getHorizontalScrollBar()), getOffset(getVerticalScrollBar()), viewRect.width, viewRect.height);
-        }
+
         if (myCurrentAnimationRequest != null) {
             return myCurrentAnimationRequest.getTargetVisibleArea();
         }

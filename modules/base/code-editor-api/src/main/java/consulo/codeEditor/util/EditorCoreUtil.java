@@ -9,10 +9,6 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 public final class EditorCoreUtil {
-  public static boolean isTrueSmoothScrollingEnabled() {
-    return Boolean.getBoolean("idea.true.smooth.scrolling");
-  }
-
   public static void indentLine(Project project, @Nonnull Editor editor, int lineNumber, int indent, boolean shouldUseSmartTabs) {
     int caretOffset = editor.getCaretModel().getOffset();
     int newCaretOffset = indentLine(project, editor, lineNumber, indent, caretOffset, shouldUseSmartTabs);

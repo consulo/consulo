@@ -852,11 +852,6 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback) {
-    myDelegate.registerScrollBarRepaintCallback(callback);
-  }
-
-  @Override
   public void setPrefixTextAndAttributes(@Nullable String prefixText, @Nullable TextAttributes attributes) {
     myDelegate.setPrefixTextAndAttributes(prefixText, attributes);
   }

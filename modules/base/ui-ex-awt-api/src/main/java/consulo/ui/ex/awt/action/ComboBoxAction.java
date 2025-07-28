@@ -98,7 +98,6 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
             getPreselectCondition(),
             getPopupActionPlace()
         );
-        popup.setMinimumSize(new Dimension(getMinWidth(), getMinHeight()));
         return popup;
     }
 
@@ -138,14 +137,6 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
     public int getMaxRows() {
         return 30;
-    }
-
-    public int getMinHeight() {
-        return 1;
-    }
-
-    public int getMinWidth() {
-        return 1;
     }
 
     @Nonnull

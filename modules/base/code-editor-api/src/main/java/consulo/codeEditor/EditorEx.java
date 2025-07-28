@@ -293,8 +293,8 @@ public interface EditorEx extends Editor {
      *
      * @param callback callback which will be called from the {@link JComponent#paint(Graphics)} method of the editor vertical scrollbar.
      */
+    @Deprecated
     default void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback) {
-        throw new UnsupportedOperationException("Unsupported platform");
     }
 
     /**

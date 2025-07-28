@@ -193,7 +193,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Nonnull
-    private final MyVerticalScrollBar myVerticalScrollBar;
+    private final JScrollBar myVerticalScrollBar;
 
     @Nonnull
     protected final CaretCursor myCaretCursor;
@@ -408,7 +408,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         new FoldingPopupManager(this);
 
         myEditorComponent = new EditorComponentImpl(this);
-        myVerticalScrollBar = (MyVerticalScrollBar) myScrollPane.getVerticalScrollBar();
+        myVerticalScrollBar = myScrollPane.getVerticalScrollBar();
         myPanel = new JPanel(new BorderLayout());
 
         getMarkupModel().updateUI();
@@ -673,11 +673,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myView.setPrefix(prefixText, attributes);
     }
 
-    @Override
-    public void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback) {
-        myVerticalScrollBar.registerRepaintCallback(callback);
-    }
-
     @Nullable
     private Cursor getCustomCursor() {
         return ContainerUtil.getFirstItem(myCustomCursors.values());
@@ -855,7 +850,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myGutterComponent.removeMouseMotionListener(myMouseMotionListener);
 
         Disposer.dispose(myDisposable);
-        myVerticalScrollBar.setUI(null); // clear error panel's cached image
     }
 
     private void clearCaretThread() {
@@ -2677,47 +2671,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
     }
 
-    private class MyHorizontalScrollBar extends JBScrollBar {
-        private MyHorizontalScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
-            super(orientation);
-            UIUtil.putClientProperty(this, EditorColorKey.FUNCTION_KEY, key -> getColorsScheme().getColor(key));
-        }
-    }
-
-    class MyVerticalScrollBar extends JBScrollBar implements IdeGlassPane.TopComponent {
-        private Consumer<Graphics> myRepaintCallback;
-
-        private MyVerticalScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
-            super(orientation);
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-            if (myRepaintCallback != null) {
-                myRepaintCallback.accept(g);
-            }
-        }
-
-        @Override
-        public int getUnitIncrement(int direction) {
-            JViewport vp = myScrollPane.getViewport();
-            Rectangle vr = vp.getViewRect();
-            return myEditorComponent.getScrollableUnitIncrement(vr, SwingConstants.VERTICAL, direction);
-        }
-
-        @Override
-        public int getBlockIncrement(int direction) {
-            JViewport vp = myScrollPane.getViewport();
-            Rectangle vr = vp.getViewRect();
-            return myEditorComponent.getScrollableBlockIncrement(vr, SwingConstants.VERTICAL, direction);
-        }
-
-        private void registerRepaintCallback(@Nullable Consumer<Graphics> callback) {
-            myRepaintCallback = callback;
-        }
-    }
-
     @Override
     @RequiredUIAccess
     public void setVerticalScrollbarOrientation(int type) {
@@ -2756,17 +2709,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Nonnull
-    public MyVerticalScrollBar getVerticalScrollBar() {
+    public JScrollBar getVerticalScrollBar() {
         return myVerticalScrollBar;
     }
 
     public JPanel getPanel() {
         return myPanel;
-    }
-
-    @Nonnull
-    MyVerticalScrollBar getHorizontalScrollBar() {
-        return (MyVerticalScrollBar) myScrollPane.getHorizontalScrollBar();
     }
 
     @MouseSelectionState
@@ -4274,17 +4222,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
             super.processMouseWheelEvent(e);
         }
 
-        @Nonnull
-        @Override
-        public JScrollBar createHorizontalScrollBar() {
-            return new MyHorizontalScrollBar(Adjustable.HORIZONTAL);
-        }
-
-        @Nonnull
-        @Override
-        public JScrollBar createVerticalScrollBar() {
-            return new MyVerticalScrollBar(Adjustable.VERTICAL);
-        }
 
         @Override
         protected void setupCorners() {
