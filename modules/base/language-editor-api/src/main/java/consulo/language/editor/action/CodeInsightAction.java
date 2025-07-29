@@ -13,6 +13,7 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
@@ -27,6 +28,13 @@ import jakarta.annotation.Nullable;
  * @author Dmitry Avdeev
  */
 public abstract class CodeInsightAction extends AnAction {
+    protected CodeInsightAction() {
+    }
+
+    protected CodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

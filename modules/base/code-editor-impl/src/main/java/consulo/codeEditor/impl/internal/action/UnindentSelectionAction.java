@@ -22,6 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.EditorEx;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -35,7 +36,7 @@ import consulo.annotation.access.RequiredWriteAction;
 @ActionImpl(id = "EditorUnindentSelection")
 public class UnindentSelectionAction extends EditorAction {
     public UnindentSelectionAction() {
-        super(new Handler());
+        super(ActionLocalize.actionEditorunindentselectionText(), new Handler());
     }
 
     private static class Handler extends EditorWriteActionHandler {

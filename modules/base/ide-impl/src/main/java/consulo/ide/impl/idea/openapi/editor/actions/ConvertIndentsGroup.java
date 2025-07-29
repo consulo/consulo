@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,24 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.codeEditor.Editor;
-import consulo.document.util.TextRange;
+import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
- * @author yole
+ * @author UNV
+ * @since 2025-07-27
  */
-@ActionImpl(id = "ConvertIndentsToSpaces")
-public class ConvertIndentsToSpacesAction extends ConvertIndentsActionBase {
-    public ConvertIndentsToSpacesAction() {
-        super(ActionLocalize.actionConvertindentstospacesText(), ActionLocalize.actionConvertindentstospacesDescription());
+@ActionImpl(
+    id = "ConvertIndentsGroup",
+    children = {
+        @ActionRef(type = ConvertIndentsToSpacesAction.class),
+        @ActionRef(type = ConvertIndentsToTabsAction.class)
     }
-
-    @Override
-    protected int performAction(Editor editor, TextRange textRange) {
-        return convertIndentsToSpaces(editor.getDocument(), editor.getSettings().getTabSize(editor.getProject()), textRange);
+)
+public class ConvertIndentsGroup extends DefaultActionGroup implements DumbAware {
+    public ConvertIndentsGroup() {
+        super(ActionLocalize.groupConvertindentsgroupText(), true);
     }
 }

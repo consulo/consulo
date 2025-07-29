@@ -24,6 +24,7 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
@@ -37,7 +38,7 @@ import jakarta.annotation.Nullable;
 @ActionImpl(id = "EditorDuplicate")
 public class DuplicateAction extends EditorAction {
     public DuplicateAction() {
-        super(new Handler());
+        super(ActionLocalize.actionEditorduplicateText(), new Handler());
     }
 
     @Override

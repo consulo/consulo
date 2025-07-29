@@ -25,13 +25,10 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
+import consulo.platform.base.localize.ActionLocalize;
 
 @ActionImpl(id = "EditorJoinLines")
 public class JoinLinesAction extends TextComponentEditorAction {
-    public JoinLinesAction() {
-        super(new Handler());
-    }
-
     private static class Handler extends EditorWriteActionHandler {
         public Handler() {
             super(true);
@@ -87,5 +84,9 @@ public class JoinLinesAction extends TextComponentEditorAction {
                 caret.removeSelection();
             }
         }
+    }
+
+    public JoinLinesAction() {
+        super(ActionLocalize.actionEditorjoinlinesText(), new Handler());
     }
 }

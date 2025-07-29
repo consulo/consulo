@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
@@ -28,17 +29,19 @@ import consulo.document.util.DocumentUtil;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.CharArrayUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class IndentSelectionAction extends EditorAction {
-    public IndentSelectionAction() {
-        super(new Handler());
+    public IndentSelectionAction(@Nonnull LocalizeValue text) {
+        super(text, new Handler());
     }
 
     private static class Handler extends EditorWriteActionHandler {

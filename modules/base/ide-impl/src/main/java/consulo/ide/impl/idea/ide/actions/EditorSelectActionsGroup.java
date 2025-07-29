@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.actions;
+package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.codeEditor.Editor;
-import consulo.document.util.TextRange;
+import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
- * @author yole
+ * @author UNV
+ * @since 2025-07-27
  */
-@ActionImpl(id = "ConvertIndentsToTabs")
-public class ConvertIndentsToTabsAction extends ConvertIndentsActionBase {
-    public ConvertIndentsToTabsAction() {
-        super(ActionLocalize.actionConvertindentstotabsText(), ActionLocalize.actionConvertindentstotabsDescription());
-    }
-
-    @Override
-    protected int performAction(Editor editor, TextRange textRange) {
-        return convertIndentsToTabs(editor.getDocument(), editor.getSettings().getTabSize(editor.getProject()), textRange);
+@ActionImpl(
+    id = "EditSelectGroup",
+    children = @ActionRef(type = SelectAllAction.class)
+)
+public class EditorSelectActionsGroup extends DefaultActionGroup implements DumbAware {
+    public EditorSelectActionsGroup() {
+        super(ActionLocalize.groupEditselectgroupText(), true);
     }
 }

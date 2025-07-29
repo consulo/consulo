@@ -350,7 +350,7 @@
             <reference id="EditorScrollToCenter"/>
             <reference id="EditorToggleCase"/>
             <reference id="EditorJoinLines"/>
-            <action id="FillParagraph" class="consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph.FillParagraphAction"/>
+            <reference id="FillParagraph"/>
             <reference id="EditorSelectLine"/>
             <reference id="EditorSplitLine"/>
             <reference id="EditorStartNewLine"/>
@@ -523,23 +523,9 @@
                     <group id="MacrosGroup" class="consulo.ide.impl.idea.ide.actionMacro.actions.MacrosGroup"/>
                 </group>
                 <reference ref="EditorToggleColumnMode"/>
-                <group id="EditSelectGroup">
-                    <action id="$SelectAll" class="consulo.ide.impl.idea.ide.actions.SelectAllAction"/>
-                </group>
+                <reference ref="EditSelectGroup"/>
                 <separator/>
-                <group id="EditSmartGroup">
-                    <reference ref="EditorJoinLines"/>
-                    <reference ref="FillParagraph"/>
-                    <reference ref="EditorDuplicate"/>
-                    <reference ref="EditorIndentSelection"/>
-                    <reference ref="EditorUnindentSelection"/>
-                    <reference ref="EditorToggleCase"/>
-                    <group id="ConvertIndentsGroup" popup="true">
-                        <action id="ConvertIndentsToSpaces"
-                                class="consulo.ide.impl.idea.openapi.editor.actions.ConvertIndentsToSpacesAction"/>
-                        <action id="ConvertIndentsToTabs" class="consulo.ide.impl.idea.openapi.editor.actions.ConvertIndentsToTabsAction"/>
-                    </group>
-                </group>
+                <reference ref="EditSmartGroup"/>
                 <reference ref="TemplateParametersNavigation"/>
             </group>
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -27,6 +28,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "$SelectAll")
 public class SelectAllAction extends TextComponentEditorAction implements DumbAware {
     public SelectAllAction() {
         super(new Handler());
