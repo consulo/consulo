@@ -15,20 +15,21 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.language.pom.NavigatableWithText;
+import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.project.ui.view.internal.ProjectSettingsService;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.pom.NavigatableWithText;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import jakarta.annotation.Nonnull;
 
@@ -107,9 +108,10 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
         }
     }
 
+    @Nonnull
     @Override
-    public String getNavigateActionText(boolean focusEditor) {
-        return ProjectUIViewLocalize.actionOpenModuleSettingsText().get();
+    public LocalizeValue getNavigateActionText(boolean focusEditor) {
+        return ProjectUIViewLocalize.actionOpenModuleSettingsText();
     }
 
     @Override

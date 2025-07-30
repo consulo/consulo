@@ -26,6 +26,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.language.pom.NavigatableWithText;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.orderEntry.*;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -156,8 +157,9 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
         return true;
     }
 
+    @Nonnull
     @Override
-    public String getNavigateActionText(boolean focusEditor) {
-        return ProjectUIViewLocalize.actionOpenLibrarySettingsText().get();
+    public LocalizeValue getNavigateActionText(boolean focusEditor) {
+        return ProjectUIViewLocalize.actionOpenLibrarySettingsText();
     }
 }
