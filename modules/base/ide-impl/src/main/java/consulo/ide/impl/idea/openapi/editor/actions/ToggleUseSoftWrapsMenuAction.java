@@ -15,7 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
@@ -25,18 +28,24 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 2010-08-19
  */
+@ActionImpl(id = "EditorToggleUseSoftWraps")
 public class ToggleUseSoftWrapsMenuAction extends AbstractToggleUseSoftWrapsAction {
-
-  public ToggleUseSoftWrapsMenuAction() {
-    super(SoftWrapAppliancePlaces.MAIN_EDITOR, false);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e){
-    super.update(e);
-    if (!e.isFromActionToolbar()) {
-      e.getPresentation().setIcon(null);
+    public ToggleUseSoftWrapsMenuAction() {
+        super(
+            ActionLocalize.actionEditortoggleusesoftwrapsText(),
+            ActionLocalize.actionEditortoggleusesoftwrapsDescription(),
+            PlatformIconGroup.actionsTogglesoftwrap(),
+            SoftWrapAppliancePlaces.MAIN_EDITOR,
+            false
+        );
     }
-    e.getPresentation().setEnabled(getEditor(e) != null);
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        if (!e.isFromActionToolbar()) {
+            e.getPresentation().setIcon(null);
+        }
+        e.getPresentation().setEnabled(getEditor(e) != null);
+    }
 }

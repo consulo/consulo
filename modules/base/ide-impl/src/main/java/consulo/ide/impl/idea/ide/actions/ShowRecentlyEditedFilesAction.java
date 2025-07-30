@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -24,7 +26,12 @@ import jakarta.annotation.Nonnull;
 /**
  * @author max
  */
+@ActionImpl(id = "RecentChangedFiles")
 public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
+    public ShowRecentlyEditedFilesAction() {
+        super(ActionLocalize.actionRecentchangedfilesText(), ActionLocalize.actionRecentchangedfilesDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

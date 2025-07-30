@@ -204,6 +204,13 @@ public class Switcher extends AnAction implements DumbAware {
     }
 
     public static class ToggleCheckBoxAction extends DumbAwareAction implements DumbAware {
+        public ToggleCheckBoxAction() {
+        }
+
+        public ToggleCheckBoxAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+            super(text, description);
+        }
+
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {

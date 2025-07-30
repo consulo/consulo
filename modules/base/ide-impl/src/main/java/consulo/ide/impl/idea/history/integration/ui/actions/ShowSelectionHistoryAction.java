@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.history.core.LocalHistoryFacade;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.ui.views.SelectionHistoryDialog;
 import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.history.VcsSelection;
@@ -42,10 +42,11 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
     new SelectionHistoryDialog(p, gw, f, from, to).show();
   }
 
+  @Nonnull
   @Override
-  protected String getText(@Nonnull AnActionEvent e) {
+  protected LocalizeValue getTextValue(@Nonnull AnActionEvent e) {
     VcsSelection sel = getSelection(e);
-    return sel == null ? super.getText(e) : sel.getActionName();
+    return sel == null ? super.getTextValue(e) : LocalizeValue.ofNullable(sel.getActionName());
   }
 
   @Override

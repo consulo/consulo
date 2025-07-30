@@ -15,16 +15,23 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
+import consulo.platform.base.localize.ActionLocalize;
 
+@ActionImpl(id = "EditorToggleShowLineNumbers")
 public class ToggleShowLineNumbersAction extends EditorToggleDecorationAction {
-  @Override
-  protected void setOption(Editor editor, boolean state) {
-    editor.getSettings().setLineNumbersShown(state);
-  }
+    public ToggleShowLineNumbersAction() {
+        super(ActionLocalize.actionEditortoggleshowlinenumbersText(), ActionLocalize.actionEditortoggleshowlinenumbersDescription());
+    }
 
-  @Override
-  protected boolean getOption(Editor editor) {
-    return editor.getSettings().isLineNumbersShown();
-  }
+    @Override
+    protected void setOption(Editor editor, boolean state) {
+        editor.getSettings().setLineNumbersShown(state);
+    }
+
+    @Override
+    protected boolean getOption(Editor editor) {
+        return editor.getSettings().isLineNumbersShown();
+    }
 }

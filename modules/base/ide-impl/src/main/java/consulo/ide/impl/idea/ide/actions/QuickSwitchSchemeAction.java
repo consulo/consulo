@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -34,7 +34,7 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAware {
-    protected static final Image ourCurrentAction = AllIcons.Actions.Forward;
+    protected static final Image ourCurrentAction = PlatformIconGroup.actionsForward();
     protected static final Image ourNotCurrentAction = Image.empty(Image.DEFAULT_ICON_SIZE);
     @Nonnull
     protected String myActionPlace = ActionPlaces.UNKNOWN;
@@ -46,6 +46,19 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
     }
 
     protected QuickSwitchSchemeAction(boolean showPopupWithNoActions) {
+        myShowPopupWithNoActions = showPopupWithNoActions;
+    }
+
+    protected QuickSwitchSchemeAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        this(text, description, false);
+    }
+
+    protected QuickSwitchSchemeAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        boolean showPopupWithNoActions
+    ) {
+        super(text, description);
         myShowPopupWithNoActions = showPopupWithNoActions;
     }
 

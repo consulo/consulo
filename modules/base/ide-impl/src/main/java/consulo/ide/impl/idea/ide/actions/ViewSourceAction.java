@@ -16,8 +16,13 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.IdeActions;
+
+@ActionImpl(id = IdeActions.ACTION_VIEW_SOURCE)
 public class ViewSourceAction extends BaseNavigateToSourceAction {
     public ViewSourceAction() {
-        super(false);
+        super(ActionLocalize.actionViewsourceText(), ActionLocalize.actionViewsourceDescription(), false);
     }
 }

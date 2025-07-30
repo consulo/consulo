@@ -15,47 +15,38 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.BidiTextDirection;
+import jakarta.annotation.Nonnull;
 
 public abstract class SetEditorBidiTextDirectionAction extends ToggleAction {
-  private final BidiTextDirection myDirection;
+    private final BidiTextDirection myDirection;
 
-  private SetEditorBidiTextDirectionAction(BidiTextDirection direction) {
-    myDirection = direction;
-  }
-
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    return EditorSettingsExternalizable.getInstance().getBidiTextDirection() == myDirection;
-  }
-
-  @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    if (myDirection != EditorSettingsExternalizable.getInstance().getBidiTextDirection()) {
-      EditorSettingsExternalizable.getInstance().setBidiTextDirection(myDirection);
-      EditorFactory.getInstance().refreshAllEditors();
+    protected SetEditorBidiTextDirectionAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        BidiTextDirection direction
+    ) {
+        super(text, description);
+        myDirection = direction;
     }
-  }
 
-  public static class ContentBased extends SetEditorBidiTextDirectionAction {
-    public ContentBased() {
-      super(BidiTextDirection.CONTENT_BASED);
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        return EditorSettingsExternalizable.getInstance().getBidiTextDirection() == myDirection;
     }
-  }
 
-  public static class Ltr extends SetEditorBidiTextDirectionAction {
-    public Ltr() {
-      super(BidiTextDirection.LTR);
+    @Override
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        if (myDirection != EditorSettingsExternalizable.getInstance().getBidiTextDirection()) {
+            EditorSettingsExternalizable.getInstance().setBidiTextDirection(myDirection);
+            EditorFactory.getInstance().refreshAllEditors();
+        }
     }
-  }
-
-  public static class Rtl extends SetEditorBidiTextDirectionAction {
-    public Rtl() {
-      super(BidiTextDirection.RTL);
-    }
-  }
 }

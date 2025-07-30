@@ -2096,6 +2096,8 @@ action.TogglePowerSave.description:
     text: Power save mode disables background code analysis and other background operations
 action.TogglePowerSave.text:
     text: Power Save Mode
+action.TogglePresentationAssistant.text:
+    text: Presentation Mouse/Keyboard Assistant
 action.TogglePresentationMode.description:
     text: Toggle Presentation mode
 action.TogglePresentationMode.text:
@@ -2277,7 +2279,7 @@ action.ViewToolBar.text:
 action.ViewToolButtons.description:
     text: Show/hide tool window buttons
 action.ViewToolButtons.text:
-    text: _Tool Buttons
+    text: _Tool Window Bars
 action.VirtualFileInfo.text:
     text: Virtual File Info
 action.WelcomeScreen.Configure.DesktopEntry.description:
@@ -2462,6 +2464,8 @@ group.CommanderViewPopupMenu.text:
     text: Commander View Popup Menu
 group.CommentGroup.text:
     text: Comment Actions
+group.CompareActions.text:
+    text: Compare
 group.ConvertIndentsGroup.text:
     text: Convert Indents
 group.Copy.Paste.Special.description:
@@ -2686,6 +2690,8 @@ group.TodoViewGroupByGroup.text:
     text: Group By
 group.ToggleBreakpointAction.text:
     text: Breakpoint Actions
+group.ToggleFullScreenGroup.text:
+    text: Toggle Full Screen
 group.ToolWindowsGroup.text:
     text: _Tool Windows
 group.ToolbarFindGroup.text:
@@ -2728,6 +2734,8 @@ group.TouchBarDefault_ctrl.text:
     text: Default with Ctrl Key
 group.TouchBarDefault_shift.text:
     text: Default with Shift Key
+group.UIToggleActions.text:
+    text: UI Toggle Actions
 group.Vcs.Browse.text:
     text: Browse VCS Repository
 group.Vcs.Checkout.text:

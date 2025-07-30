@@ -15,13 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.Application;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -36,7 +38,16 @@ import jakarta.annotation.Nullable;
 /**
  * from kotlin
  */
+@ActionImpl(id = "OpenInRightSplit")
 public class OpenInRightSplitAction extends DumbAwareAction {
+    public OpenInRightSplitAction() {
+        super(
+            ActionLocalize.actionOpeninrightsplitText(),
+            ActionLocalize.actionOpeninrightsplitDescription(),
+            PlatformIconGroup.actionsSplitvertically()
+        );
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -74,8 +85,8 @@ public class OpenInRightSplitAction extends DumbAwareAction {
     @Nullable
     @RequiredUIAccess
     public static FileEditorWindow openInRightSplit(
-        Project project,
-        VirtualFile file,
+        @Nonnull Project project,
+        @Nonnull VirtualFile file,
         @Nullable Navigatable element,
         boolean requestFocus
     ) {
@@ -100,7 +111,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
         }
 
         if (element != null && !(element instanceof PsiFile)) {
-            Application.get().invokeLater(() -> element.navigate(requestFocus), project.getDisposed());
+            project.getApplication().invokeLater(() -> element.navigate(requestFocus), project.getDisposed());
         }
 
         return editorWindow;

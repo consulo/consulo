@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.ui.DimensionService;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
@@ -15,9 +16,10 @@ import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Point2D;
@@ -34,7 +36,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -49,6 +51,7 @@ import java.util.function.Function;
 
 import static consulo.ui.ex.awt.speedSearch.SpeedSearchSupply.ENTERED_PREFIX_PROPERTY_NAME;
 
+@ActionImpl(id = "RecentLocations")
 public class RecentLocationsAction extends DumbAwareAction {
     public static final String RECENT_LOCATIONS_ACTION_ID = "RecentLocations";
     private static final String LOCATION_SETTINGS_KEY = "recent.locations.popup";
@@ -63,8 +66,12 @@ public class RecentLocationsAction extends DumbAwareAction {
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    @RequiredUIAccess
+    public RecentLocationsAction() {
+        super(ActionLocalize.actionRecentlocationsText(), ActionLocalize.actionRecentlocationsDescription());
+    }
+
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed(RECENT_LOCATIONS_ACTION_ID);
         Project project = e.getData(Project.KEY);
@@ -90,7 +97,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         JBCheckBox checkBox = createCheckbox(showChangedOnlyShortcutSet, showChanged);
 
         ListWithFilter<RecentLocationItem> listWithFilter =
-            (ListWithFilter<RecentLocationItem>)ListWithFilter.wrap(list, scrollPane, getNamer(model, checkBox), true);
+            (ListWithFilter<RecentLocationItem>) ListWithFilter.wrap(list, scrollPane, getNamer( ), true);
         listWithFilter.setAutoPackHeight(false);
         listWithFilter.setBorder(BorderFactory.createEmptyBorder());
 
@@ -98,7 +105,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         speedSearch.addChangeListener(evt -> {
             if (evt.getPropertyName().equals(ENTERED_PREFIX_PROPERTY_NAME)) {
                 if (StringUtil.isEmpty(speedSearch.getFilter())) {
-                    model.getEditorsToRelease().forEach(editor -> clearSelectionInEditor(editor));
+                    model.getEditorsToRelease().forEach(RecentLocationsAction::clearSelectionInEditor);
                 }
             }
         });
@@ -114,7 +121,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         CaptionPanel topPanel = createHeaderPanel(title, checkBox);
         JPanel mainPanel = createMainPanel(listWithFilter, topPanel);
 
-        Ref<Boolean> navigationRef = Ref.create(false);
+        SimpleReference<Boolean> navigationRef = SimpleReference.create(false);
         JBPopup popup = JBPopupFactory.getInstance()
             .createComponentPopupBuilder(mainPanel, list)
             .setProject(project)
@@ -203,10 +210,8 @@ public class RecentLocationsAction extends DumbAwareAction {
     @Nonnull
     public static JBCheckBox createCheckbox(@Nonnull ShortcutSet checkboxShortcutSet, boolean showChanged) {
         String text = "<html>" +
-            IdeLocalize.recentLocationsTitleText().get() +
-            " <font color=\"" +
-            getShortcutHexColor() +
-            "\">" +
+            IdeLocalize.recentLocationsTitleText() +
+            " <font color=\"" + getShortcutHexColor() + "\">" +
             KeymapUtil.getShortcutsText(checkboxShortcutSet.getShortcuts()) +
             "</font>" +
             "</html>";
@@ -244,12 +249,12 @@ public class RecentLocationsAction extends DumbAwareAction {
         boolean changed
     ) {
         NameFilteringListModel<RecentLocationItem> model =
-            (NameFilteringListModel<RecentLocationItem>)listWithFilter.getList().getModel();
+            (NameFilteringListModel<RecentLocationItem>) listWithFilter.getList().getModel();
         DefaultListModel<RecentLocationItem> originalModel =
-            (DefaultListModel<RecentLocationItem>)model.getOriginalModel();
+            (DefaultListModel<RecentLocationItem>) model.getOriginalModel();
 
         originalModel.removeAllElements();
-        data.getPlaces(changed).forEach(item -> originalModel.addElement(item));
+        data.getPlaces(changed).forEach(originalModel::addElement);
 
         listWithFilter.getSpeedSearch().reset();
     }
@@ -298,10 +303,7 @@ public class RecentLocationsAction extends DumbAwareAction {
     }
 
     @Nonnull
-    private static Function<RecentLocationItem, String> getNamer(
-        @Nonnull RecentLocationsDataModel data,
-        @Nonnull JBCheckBox checkBox
-    ) {
+    private static Function<RecentLocationItem, String> getNamer() {
         return value -> {
             EditorEx editor = value.getEditor();
             return value.getInfo().getFile().getName() + " " + editor.getDocument().getText();
@@ -315,7 +317,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         @Nonnull JBList<RecentLocationItem> list,
         @Nonnull JBCheckBox checkBox,
         @Nonnull JBPopup popup,
-        @Nonnull Ref<? super Boolean> navigationRef
+        @Nonnull SimpleReference<? super Boolean> navigationRef
     ) {
         listWithFilter.addMouseListener(new MouseAdapter() {
             @Override
@@ -354,12 +356,12 @@ public class RecentLocationsAction extends DumbAwareAction {
             if (showChanged) {
                 ContainerUtil
                     .filter(ideDocumentHistory.getChangePlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.getInfo()))
-                    .forEach(info -> ideDocumentHistory.removeChangePlace(info));
+                    .forEach(ideDocumentHistory::removeChangePlace);
             }
             else {
                 ContainerUtil
                     .filter(ideDocumentHistory.getBackPlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.getInfo()))
-                    .forEach(info -> ideDocumentHistory.removeBackPlace(info));
+                    .forEach(ideDocumentHistory::removeBackPlace);
             }
         }
 
@@ -374,7 +376,7 @@ public class RecentLocationsAction extends DumbAwareAction {
         @Nonnull Project project,
         @Nonnull JBList<RecentLocationItem> list,
         @Nonnull JBPopup popup,
-        @Nonnull Ref<? super Boolean> navigationRef
+        @Nonnull SimpleReference<? super Boolean> navigationRef
     ) {
         ContainerUtil.reverse(list.getSelectedValuesList())
             .forEach(item -> IdeDocumentHistory.getInstance(project).gotoPlaceInfo(item.getInfo()));

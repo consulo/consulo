@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2017 JetBrains s.r.o.
  *
@@ -16,15 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.application.dumb.DumbAware;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ViewToolBar")
 public class ViewToolbarAction extends ToggleAction implements DumbAware {
     public ViewToolbarAction() {
-        super("Show Toolbar");
+        super(ActionLocalize.actionViewtoolbarText(), ActionLocalize.actionViewtoolbarDescription());
     }
 
     @Override
@@ -33,6 +36,7 @@ public class ViewToolbarAction extends ToggleAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent event, boolean state) {
         UISettings uiSettings = UISettings.getInstance();
         uiSettings.setShowMainToolbar(state);

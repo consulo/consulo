@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,7 +29,12 @@ import jakarta.annotation.Nonnull;
 /**
  * @author max
  */
+@ActionImpl(id = "QuickChangeScheme")
 public class QuickChangeSchemesAction extends QuickSwitchSchemeAction implements DumbAware {
+    public QuickChangeSchemesAction() {
+        super(ActionLocalize.actionQuickchangeschemeText(), ActionLocalize.actionQuickchangeschemeDescription());
+    }
+
     @Override
     protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
         AnAction[] actions = getGroup().getChildren(null);
@@ -38,7 +45,7 @@ public class QuickChangeSchemesAction extends QuickSwitchSchemeAction implements
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         super.actionPerformed(e);
         FeatureUsageTracker.getInstance().triggerFeatureUsed("ui.scheme.quickswitch");
     }
@@ -49,6 +56,6 @@ public class QuickChangeSchemesAction extends QuickSwitchSchemeAction implements
     }
 
     private DefaultActionGroup getGroup() {
-        return (DefaultActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_CHANGE_SCHEME);
+        return (DefaultActionGroup) ActionManager.getInstance().getAction(IdeActions.GROUP_CHANGE_SCHEME);
     }
 }

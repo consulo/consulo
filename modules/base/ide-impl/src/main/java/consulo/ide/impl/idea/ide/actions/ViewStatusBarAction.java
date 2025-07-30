@@ -15,7 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.ui.UISettings;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
@@ -24,13 +27,19 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "ViewStatusBar")
 public class ViewStatusBarAction extends ToggleAction implements DumbAware {
+    public ViewStatusBarAction() {
+        super(ActionLocalize.actionViewstatusbarText(), ActionLocalize.actionViewstatusbarDescription());
+    }
+
     @Override
     public boolean isSelected(@Nonnull AnActionEvent e) {
         return UISettings.getInstance().SHOW_STATUS_BAR;
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         UISettings uiSettings = UISettings.getInstance();
         uiSettings.SHOW_STATUS_BAR = state;

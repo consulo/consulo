@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.EditorKeys;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
@@ -28,26 +29,31 @@ import jakarta.annotation.Nonnull;
  * @since 2002-05-14
  */
 public abstract class EditorToggleDecorationAction extends ToggleAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public final void setSelected(@Nonnull AnActionEvent e, boolean state) {
-    Editor editor = e.getRequiredData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
-    setOption(editor, state);
-    editor.getComponent().repaint();
-  }
+    protected EditorToggleDecorationAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
-  @Override
-  public final boolean isSelected(@Nonnull AnActionEvent e) {
-    Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
-    return editor != null && getOption(editor);
-  }
+    @Override
+    @RequiredUIAccess
+    public final void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        Editor editor = e.getRequiredData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
+        setOption(editor, state);
+        editor.getComponent().repaint();
+    }
 
-  @Override
-  public final void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setEnabled(e.hasData(EditorKeys.EDITOR_EVEN_IF_INACTIVE));
-  }
-  
-  protected abstract void setOption(Editor editor, boolean state);
-  protected abstract boolean getOption(Editor editor);
+    @Override
+    public final boolean isSelected(@Nonnull AnActionEvent e) {
+        Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
+        return editor != null && getOption(editor);
+    }
+
+    @Override
+    public final void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(e.hasData(EditorKeys.EDITOR_EVEN_IF_INACTIVE));
+    }
+
+    protected abstract void setOption(Editor editor, boolean state);
+
+    protected abstract boolean getOption(Editor editor);
 }
