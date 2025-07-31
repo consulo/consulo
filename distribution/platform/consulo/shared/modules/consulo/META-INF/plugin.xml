@@ -558,23 +558,7 @@
                 <separator/>
             </group>
 
-            <group id="WindowMenu" popup="true">
-                <reference ref="StoreDefaultLayout"/>
-                <reference ref="RestoreDefaultLayout"/>
-                <separator/>
-                <reference ref="ActiveToolwindowGroup"/>
-
-                <reference ref="EditorTabsGroup"/>
-
-                <reference ref="BackgroundTasks"/>
-
-                <separator/>
-                <group id="OpenProjectWindows" class="consulo.ide.impl.idea.openapi.wm.impl.ProjectWindowActionGroup">
-                    <action id="NextProjectWindow" class="consulo.ide.impl.idea.openapi.wm.impl.NextProjectWindow"/>
-                    <action id="PreviousProjectWindow" class="consulo.ide.impl.idea.openapi.wm.impl.PreviousProjectWindow"/>
-                    <separator/>
-                </group>
-            </group>
+            <reference ref="WindowMenu"/>
 
             <!-- Help -->
             <reference ref="HelpMenu"/>

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
@@ -29,31 +30,29 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+@ActionRef(id = "RecentProjectListGroup")
 public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     private final Provider<RecentProjectsManager> myRecentProjectsManager;
 
     @Inject
     public RecentProjectsGroup(Provider<RecentProjectsManager> recentProjectsManager) {
-        myRecentProjectsManager = recentProjectsManager;
-
-        Presentation templatePresentation = getTemplatePresentation();
-        // Let's make title more macish
-        templatePresentation.setTextValue(
-            Platform.current().os().isMac() ? ActionLocalize.groupReopenMacText() : ActionLocalize.groupReopenWinText()
+        super(
+            // Let's make title more macish
+            Platform.current().os().isMac() ? ActionLocalize.groupReopenMacText() : ActionLocalize.groupReopenWinText(),
+            false
         );
+        myRecentProjectsManager = recentProjectsManager;
     }
 
     @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        return myRecentProjectsManager.get().getRecentProjectsActions(RecentProjectsManager.RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU
-        );
+        return myRecentProjectsManager.get().getRecentProjectsActions(RecentProjectsManager.RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU);
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        presentation.setEnabled(myRecentProjectsManager.get().hasRecentPaths());
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(myRecentProjectsManager.get().hasRecentPaths());
     }
 }
