@@ -15,20 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.navigation.GotoRelatedProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
@@ -36,12 +35,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -56,7 +55,12 @@ import java.util.function.Predicate;
 /**
  * @author Dmitry Avdeev
  */
+@ActionImpl(id = "GotoRelated")
 public class GotoRelatedFileAction extends AnAction {
+    public GotoRelatedFileAction() {
+        super(ActionLocalize.actionGotorelatedText(), ActionLocalize.actionGotorelatedDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -75,7 +79,7 @@ public class GotoRelatedFileAction extends AnAction {
             items.get(0).navigate();
             return;
         }
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             //noinspection UseOfSystemOutOrSystemErr
             System.out.println(items);
         }
@@ -102,7 +106,7 @@ public class GotoRelatedFileAction extends AnAction {
                     itemsMap.get(element).navigate();
                 }
                 else {
-                    ((GotoRelatedItem)element).navigate();
+                    ((GotoRelatedItem) element).navigate();
                 }
                 return true;
             }
@@ -131,6 +135,7 @@ public class GotoRelatedFileAction extends AnAction {
             }
 
             @Override
+            @RequiredReadAction
             public String getContainerText(PsiElement element, String name) {
                 String customContainerName = itemsMap.get(element).getCustomContainerName();
 
@@ -157,7 +162,7 @@ public class GotoRelatedFileAction extends AnAction {
                 boolean selected,
                 boolean hasFocus
             ) {
-                GotoRelatedItem item = (GotoRelatedItem)value;
+                GotoRelatedItem item = (GotoRelatedItem) value;
                 Color color = list.getForeground();
                 SimpleTextAttributes nameAttributes = new SimpleTextAttributes(Font.PLAIN, color);
                 String name = item.getCustomName();
@@ -177,7 +182,7 @@ public class GotoRelatedFileAction extends AnAction {
                 boolean isSelected,
                 boolean cellHasFocus
             ) {
-                JPanel component = (JPanel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                JPanel component = (JPanel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (!hasMnemonic.get()) {
                     return component;
                 }
@@ -191,7 +196,7 @@ public class GotoRelatedFileAction extends AnAction {
                 }
                 label.setPreferredSize(new JLabel("8.").getPreferredSize());
 
-                JComponent leftRenderer = (JComponent)component.getComponents()[0];
+                JComponent leftRenderer = (JComponent) component.getComponents()[0];
                 component.remove(leftRenderer);
                 panelWithMnemonic.setBorder(BorderFactory.createEmptyBorder(0, 7, 0, 0));
                 panelWithMnemonic.setBackground(leftRenderer.getBackground());
@@ -213,7 +218,7 @@ public class GotoRelatedFileAction extends AnAction {
                 if (value instanceof GotoRelatedItem gotoRelatedItem) {
                     return gotoRelatedItem.getCustomName();
                 }
-                PsiElement element = (PsiElement)value;
+                PsiElement element = (PsiElement) value;
                 return renderer.getElementText(element) + " " + renderer.getContainerText(element, null);
             }
 
@@ -226,6 +231,7 @@ public class GotoRelatedFileAction extends AnAction {
         };
         popup.getList().setCellRenderer(new PopupListElementRenderer<PsiElement>(popup) {
             Map<Object, String> separators = new HashMap<>();
+
             {
                 ListModel model = popup.getList().getModel();
                 String current = null;
@@ -292,6 +298,7 @@ public class GotoRelatedFileAction extends AnAction {
     }
 
     @Nonnull
+    @RequiredReadAction
     public static List<GotoRelatedItem> getItems(@Nonnull PsiFile psiFile, @Nullable Editor editor, @Nullable DataContext dataContext) {
         PsiElement contextElement = psiFile;
         if (editor != null) {

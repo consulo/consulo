@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.view.CompositeSelectInTarget;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -42,7 +43,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@ActionImpl(id = "SelectIn")
 public class SelectInAction extends AnAction implements DumbAware {
+    public SelectInAction() {
+        super(ActionLocalize.actionSelectinText(), ActionLocalize.actionSelectinText());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -142,7 +148,7 @@ public class SelectInAction extends AnAction implements DumbAware {
             text = "&" + 0 + ". " + text;
         }
         else {
-            text = "&" + (char)('A' + n - 10) + ". " + text;
+            text = "&" + (char) ('A' + n - 10) + ". " + text;
         }
         return text;
     }

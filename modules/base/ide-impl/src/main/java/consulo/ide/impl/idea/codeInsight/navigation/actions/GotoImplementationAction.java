@@ -16,34 +16,40 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.navigation.GotoImplementationHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 import consulo.language.psi.search.DefinitionsScopedSearch;
 import jakarta.annotation.Nonnull;
-import consulo.ui.annotation.RequiredUIAccess;
 
+@ActionImpl(id = "GotoImplementation")
 public class GotoImplementationAction extends BaseCodeInsightAction implements DumbAware {
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler(){
-    return new GotoImplementationHandler();
-  }
-
-  @Override
-  protected boolean isValidForLookup() {
-    return true;
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    if (!DefinitionsScopedSearch.INSTANCE.hasAnyExecutors()) {
-      event.getPresentation().setVisible(false);
+    public GotoImplementationAction() {
+        super(ActionLocalize.actionGotoimplementationText(), ActionLocalize.actionGotoimplementationDescription());
     }
-    else {
-      super.update(event);
+
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new GotoImplementationHandler();
     }
-  }
+
+    @Override
+    protected boolean isValidForLookup() {
+        return true;
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        if (!DefinitionsScopedSearch.INSTANCE.hasAnyExecutors()) {
+            event.getPresentation().setVisible(false);
+        }
+        else {
+            super.update(event);
+        }
+    }
 }

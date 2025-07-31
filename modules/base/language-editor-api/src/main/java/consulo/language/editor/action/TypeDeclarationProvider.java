@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.action;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -31,11 +30,11 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TypeDeclarationProvider {
-  public static final ExtensionPointName<TypeDeclarationProvider> EP_NAME = ExtensionPointName.create(TypeDeclarationProvider.class);
+    public static final ExtensionPointName<TypeDeclarationProvider> EP_NAME = ExtensionPointName.create(TypeDeclarationProvider.class);
 
-  @Nullable
-  @RequiredReadAction
-  public PsiElement[] getSymbolTypeDeclarations(@Nonnull PsiElement symbol, @Nullable Editor editor, int offset) {
-    return null;
-  }
+    @Nullable
+    @RequiredReadAction
+    public PsiElement[] getSymbolTypeDeclarations(@Nonnull PsiElement symbol, @Nullable Editor editor, int offset) {
+        return null;
+    }
 }

@@ -21,6 +21,7 @@ import com.sun.jna.platform.win32.*;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
 import consulo.annotation.UsedInPlugin;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.util.*;
 import consulo.application.util.concurrent.PooledThreadExecutor;
@@ -74,6 +75,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+@ActionImpl(id = "ShowFilePath")
 public class ShowFilePathAction extends AnAction {
     private interface Shell32Ex extends StdCallLibrary {
         Shell32Ex INSTANCE = Native.load("shell32", Shell32Ex.class, W32APIOptions.DEFAULT_OPTIONS);
@@ -162,6 +164,10 @@ public class ShowFilePathAction extends AnAction {
             ':' + StringUtil.defaultIfEmpty(dataDirs, "/usr/local/share:/usr/share");
     }
 
+    public ShowFilePathAction() {
+        super(ActionLocalize.actionShowfilepathText(), ActionLocalize.actionShowfilepathDescription());
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         boolean visible = !Platform.current().os().isMac() && isSupported();
@@ -245,7 +251,7 @@ public class ShowFilePathAction extends AnAction {
             public PopupStep onChosen(VirtualFile selectedValue, boolean finalChoice) {
                 File selectedFile = new File(getPresentableUrl(selectedValue));
                 if (selectedFile.exists()) {
-                    Application.get().executeOnPooledThread((Runnable)() -> openFile(selectedFile));
+                    Application.get().executeOnPooledThread((Runnable) () -> openFile(selectedFile));
                 }
                 return FINAL_CHOICE;
             }

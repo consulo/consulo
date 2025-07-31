@@ -15,26 +15,27 @@
  */
 package consulo.ide.impl.idea.ide.hierarchy.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.hierarchy.MethodHierarchyProvider;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "MethodHierarchy")
 public final class BrowseMethodHierarchyAction extends BrowseHierarchyActionBase<MethodHierarchyProvider> {
     public BrowseMethodHierarchyAction() {
-        super(MethodHierarchyProvider.class);
+        super(ActionLocalize.actionMethodhierarchyText(), ActionLocalize.actionMethodhierarchyDescription(), MethodHierarchyProvider.class);
     }
 
     @Override
     @RequiredUIAccess
-    public final void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        if (!ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
-            presentation.setTextValue(IdeLocalize.actionBrowseMethodHierarchy());
+    public final void update(@Nonnull AnActionEvent e) {
+        if (!ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
+            e.getPresentation().setTextValue(IdeLocalize.actionBrowseMethodHierarchy());
         }
-        super.update(event);
+        super.update(e);
     }
 }

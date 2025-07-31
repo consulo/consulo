@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
@@ -26,49 +26,54 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "GotoSuperMethod")
 public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
+    public static final String FEATURE_ID = "navigation.goto.super";
 
-  public static final String FEATURE_ID = "navigation.goto.super";
-
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
-
-    int offset = editor.getCaretModel().getOffset();
-    final Language language = PsiUtilCore.getLanguageAtOffset(file, offset);
-
-    final CodeInsightActionHandler codeInsightActionHandler = GotoSuperActionHander.forLanguage(language);
-    if (codeInsightActionHandler != null) {
-      codeInsightActionHandler.invoke(project, editor, file);
+    public GotoSuperAction() {
+        super(ActionLocalize.actionGotosupermethodText(), ActionLocalize.actionGotosupermethodDescription());
     }
-  }
 
-  @Override
-  public boolean startInWriteAction() {
-    return false;
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return this;
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    if (Application.get().getExtensionPoint(GotoSuperActionHander.class).hasAnyExtensions()) {
-      event.getPresentation().setVisible(true);
-      super.update(event);
+    @Override
+    @RequiredUIAccess
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
+
+        int offset = editor.getCaretModel().getOffset();
+        Language language = PsiUtilCore.getLanguageAtOffset(file, offset);
+
+        CodeInsightActionHandler codeInsightActionHandler = GotoSuperActionHander.forLanguage(language);
+        if (codeInsightActionHandler != null) {
+            codeInsightActionHandler.invoke(project, editor, file);
+        }
     }
-    else {
-      event.getPresentation().setVisible(false);
+
+    @Override
+    public boolean startInWriteAction() {
+        return false;
     }
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        if (Application.get().getExtensionPoint(GotoSuperActionHander.class).hasAnyExtensions()) {
+            event.getPresentation().setVisible(true);
+            super.update(event);
+        }
+        else {
+            event.getPresentation().setVisible(false);
+        }
+    }
 }

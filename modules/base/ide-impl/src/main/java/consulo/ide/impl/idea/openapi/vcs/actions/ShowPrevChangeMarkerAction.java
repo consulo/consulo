@@ -15,24 +15,38 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 import consulo.ide.impl.idea.openapi.vcs.ex.Range;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import jakarta.inject.Inject;
 
 /**
- * author: lesya
+ * @author lesya
  */
+@ActionImpl(id = ShowPrevChangeMarkerAction.ID)
 public class ShowPrevChangeMarkerAction extends ShowChangeMarkerAction {
-  public ShowPrevChangeMarkerAction(final Range range, final LineStatusTracker lineStatusTracker, final Editor editor) {
-    super(range, lineStatusTracker, editor);
-    ActionImplUtil.copyFrom(this, "VcsShowPrevChangeMarker");
-  }
+    public static final String ID = "VcsShowPrevChangeMarker";
 
-  public ShowPrevChangeMarkerAction() {
-  }
+    public ShowPrevChangeMarkerAction(Range range, LineStatusTracker lineStatusTracker, Editor editor) {
+        super(range, lineStatusTracker, editor);
+        ActionImplUtil.copyFrom(this, ID);
+    }
 
-  protected Range extractRange(LineStatusTracker lineStatusTracker, int line, Editor editor) {
-    return lineStatusTracker.getPrevRange(line);
-  }
+    @Inject
+    public ShowPrevChangeMarkerAction() {
+        super(
+            ActionLocalize.actionVcsshowprevchangemarkerText(),
+            ActionLocalize.actionVcsshowprevchangemarkerDescription(),
+            PlatformIconGroup.actionsPreviousoccurence()
+        );
+    }
+
+    @Override
+    protected Range extractRange(LineStatusTracker lineStatusTracker, int line, Editor editor) {
+        return lineStatusTracker.getPrevRange(line);
+    }
 }

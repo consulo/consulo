@@ -17,29 +17,38 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.GotoNextErrorHandler;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "GotoPreviousError")
 public class GotoPreviousErrorAction extends BaseCodeInsightAction implements DumbAware {
-  public GotoPreviousErrorAction() {
-    super(false);
-  }
+    public GotoPreviousErrorAction() {
+        super(
+            ActionLocalize.actionGotopreviouserrorText(),
+            ActionLocalize.actionGotopreviouserrorDescription(),
+            PlatformIconGroup.actionsPreviousoccurence(),
+            false
+        );
+    }
 
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new GotoNextErrorHandler(false);
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new GotoNextErrorHandler(false);
+    }
 
-  @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    return DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(file);
-  }
+    @Override
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        return DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(file);
+    }
 }

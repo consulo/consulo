@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -28,7 +29,12 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "ShowNavBar")
 public class ShowNavBarAction extends AnAction implements DumbAware, PopupAction {
+    public ShowNavBarAction() {
+        super(ActionLocalize.actionShownavbarText());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
