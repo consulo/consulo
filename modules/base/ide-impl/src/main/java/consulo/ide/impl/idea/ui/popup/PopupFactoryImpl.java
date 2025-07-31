@@ -767,9 +767,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
         private final boolean myIsEnabled;
         private final Image myIcon;
         private final Image mySelectedIcon;
-        private final boolean myPrependWithSeparator;
-        private final String mySeparatorText;
         private final String myDescription;
+        private final boolean myIsSeparator;
 
         ActionItem(
             @Nonnull AnAction action,
@@ -778,17 +777,15 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             boolean enabled,
             @Nullable Image icon,
             @Nullable Image selectedIcon,
-            boolean prependWithSeparator,
-            String separatorText
+            boolean isSeparator
         ) {
             myAction = action;
             myTextValue = textValue;
             myIsEnabled = enabled;
             myIcon = icon;
             mySelectedIcon = selectedIcon;
-            myPrependWithSeparator = prependWithSeparator;
-            mySeparatorText = separatorText;
             myDescription = description;
+            myIsSeparator = isSeparator;
             myAction.getTemplatePresentation().addPropertyChangeListener(evt -> {
                 if (evt.getPropertyName().equals(Presentation.PROP_TEXT)) {
                     myTextValue = myAction.getTemplatePresentation().getTextValue();
@@ -811,12 +808,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory implements AWTPopu
             return selected && mySelectedIcon != null ? mySelectedIcon : myIcon;
         }
 
-        public boolean isPrependWithSeparator() {
-            return myPrependWithSeparator;
-        }
-
-        public String getSeparatorText() {
-            return mySeparatorText;
+        public boolean isSeparator() {
+            return myIsSeparator;
         }
 
         public boolean isEnabled() {

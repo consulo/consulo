@@ -1451,6 +1451,10 @@ public class UIUtil {
         return JBUI.insets(8, 0);
     }
 
+    public static Insets getListViewportPaddingFull() {
+        return JBUI.insets(8);
+    }
+
     public static boolean isControlKeyDown(MouseEvent mouseEvent) {
         return Platform.current().os().isMac() ? mouseEvent.isMetaDown() : mouseEvent.isControlDown();
     }

@@ -2,25 +2,30 @@
 package consulo.ui.ex.awt.popup;
 
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nullable;
 
 public interface ListItemDescriptor<T> {
-  @Nullable
-  String getTextFor(T value);
+    @Nullable
+    String getTextFor(T value);
 
-  @Nullable
-  String getTooltipFor(T value);
+    @Nullable
+    String getTooltipFor(T value);
 
-  @Nullable
-  Image getIconFor(T value);
+    @Nullable
+    Image getIconFor(T value);
 
-  default Image getSelectedIconFor(T value) {
-    return getIconFor(value);
-  }
+    default Image getSelectedIconFor(T value) {
+        return getIconFor(value);
+    }
 
-  boolean hasSeparatorAboveOf(T value);
+    @Deprecated
+    boolean hasSeparatorAboveOf(T value);
 
-  @Nullable
-  String getCaptionAboveOf(T value);
+    @Nullable
+    @Deprecated
+    String getCaptionAboveOf(T value);
+
+    default boolean isSeparator(T value) {
+        return true;
+    }
 }

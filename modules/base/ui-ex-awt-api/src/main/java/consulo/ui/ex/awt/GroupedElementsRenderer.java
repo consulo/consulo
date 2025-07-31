@@ -12,8 +12,6 @@ import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 
 public abstract class GroupedElementsRenderer {
-  protected SeparatorWithText mySeparatorComponent = createSeparator();
-
   protected abstract JComponent createItemComponent();
 
   protected JComponent myComponent;
@@ -36,10 +34,6 @@ public abstract class GroupedElementsRenderer {
   }
 
   protected final JComponent configureComponent(String text, String tooltip, Image icon, Image disabledIcon, boolean isSelected, boolean hasSeparatorAbove, String separatorTextAbove, int preferredForcedWidth) {
-    mySeparatorComponent.setVisible(hasSeparatorAbove);
-    mySeparatorComponent.setCaption(separatorTextAbove);
-    mySeparatorComponent.setMinimumWidth(preferredForcedWidth);
-
     myTextLabel.setText(text);
     myRendererComponent.setToolTipText(tooltip);
     AccessibleContextUtil.setName(myRendererComponent, myTextLabel);
@@ -88,8 +82,6 @@ public abstract class GroupedElementsRenderer {
   public abstract static class List extends GroupedElementsRenderer {
     @Override
     protected void layout() {
-      myRendererComponent.add(mySeparatorComponent, BorderLayout.NORTH);
-
       JComponent centerComponent = new NonOpaquePanel(myComponent);
 
       myRendererComponent.add(centerComponent, BorderLayout.CENTER);
@@ -120,7 +112,6 @@ public abstract class GroupedElementsRenderer {
 
     @Override
     protected void layout() {
-      myRendererComponent.add(mySeparatorComponent, BorderLayout.NORTH);
       myRendererComponent.add(myComponent, BorderLayout.WEST);
     }
 

@@ -16,9 +16,9 @@
 package consulo.ui.ex.popup;
 
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -30,58 +30,65 @@ import java.util.List;
  */
 public interface ListPopupStep<T> extends PopupStep<T> {
 
-  /**
-   * Returns the values to be displayed in the list popup.
-   *
-   * @return the list of values to be displayed in the list popup.
-   */
-  @Nonnull
-  List<T> getValues();
+    /**
+     * Returns the values to be displayed in the list popup.
+     *
+     * @return the list of values to be displayed in the list popup.
+     */
+    @Nonnull
+    List<T> getValues();
 
-  /**
-   * Checks if the specified value in the list can be selected.
-   *
-   * @param value the value to check.
-   * @return true if the value can be selected, false otherwise.
-   */
-  boolean isSelectable(T value);
+    /**
+     * Checks if the specified value in the list can be selected.
+     *
+     * @param value the value to check.
+     * @return true if the value can be selected, false otherwise.
+     */
+    boolean isSelectable(T value);
 
-  /**
-   * Returns the icon to display for the specified list item.
-   *
-   * @param aValue the value for which the icon is requested.
-   * @return the icon to display, or null if no icon is necessary.
-   */
-  @Nullable
-  Image getIconFor(T aValue);
+    /**
+     * Returns the icon to display for the specified list item.
+     *
+     * @param aValue the value for which the icon is requested.
+     * @return the icon to display, or null if no icon is necessary.
+     */
+    @Nullable
+    Image getIconFor(T aValue);
 
-  @Nullable
-  default Image getSelectedIconFor(T value) {
-    return getIconFor(value);
-  }
+    @Nullable
+    default Image getSelectedIconFor(T value) {
+        return getIconFor(value);
+    }
 
-  /**
-   * Returns the text to display for the specified list item.
-   *
-   * @param value the value for which the text is requested.
-   * @return the text to display.
-   */
-  @Nonnull
-  String getTextFor(T value);
+    /**
+     * Returns the text to display for the specified list item.
+     *
+     * @param value the value for which the text is requested.
+     * @return the text to display.
+     */
+    @Nonnull
+    String getTextFor(T value);
 
-  /**
-   * Returns the separator to display above the specified list item.
-   *
-   * @param value the value for which the separator is requested.
-   * @return the separator to display, or null if no separator is necessary.
-   */
-  @Nullable
-  ListSeparator getSeparatorAbove(T value);
+    /**
+     * Returns the separator to display above the specified list item.
+     *
+     * @param value the value for which the separator is requested.
+     * @return the separator to display, or null if no separator is necessary.
+     */
+    @Nullable
+    @Deprecated
+    default ListSeparator getSeparatorAbove(T value) {
+        return null;
+    }
 
-  /**
-   * Returns the index of the item to be initially selected in the list.
-   *
-   * @return the index of the item to be initially selected in the list.
-   */
-  int getDefaultOptionIndex();
+    default boolean isSeparator(T value) {
+        return false;
+    }
+
+    /**
+     * Returns the index of the item to be initially selected in the list.
+     *
+     * @return the index of the item to be initially selected in the list.
+     */
+    int getDefaultOptionIndex();
 }

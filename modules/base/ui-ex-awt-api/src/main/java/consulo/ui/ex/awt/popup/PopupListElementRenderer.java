@@ -14,7 +14,6 @@ import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.lang.Comparing;
 import jakarta.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;
@@ -52,6 +51,11 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
             @Override
             public String getCaptionAboveOf(E value) {
                 return aPopup.getListModel().getCaptionAboveOf(value);
+            }
+
+            @Override
+            public boolean isSeparator(E value) {
+                return aPopup.getListModel().isSeparator(value);
             }
 
             @Nullable
@@ -112,13 +116,6 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
             }
             if (!isSelected && bg != null) {
                 UIUtil.setBackgroundRecursively(myComponent, bg);
-            }
-            if (bg != null && mySeparatorComponent.isVisible() && myCurrentIndex > 0) {
-                E prevValue = list.getModel().getElementAt(myCurrentIndex - 1);
-                // separator between 2 colored items shall get color too
-                if (Comparing.equal(bg, ((BaseListPopupStep<E>) step).getBackgroundFor(prevValue))) {
-                    myRendererComponent.setBackground(bg);
-                }
             }
         }
 

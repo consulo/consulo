@@ -19,9 +19,9 @@ import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.util.collection.FList;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
@@ -39,109 +39,116 @@ import static consulo.util.lang.Pair.pair;
 @Deprecated
 @DeprecationInfo(value = "Use ColoredListCellRenderer")
 public abstract class ListCellRendererWrapper<T> implements ListCellRenderer<T> {
-  private final ListCellRenderer myDefaultRenderer;
+    private final ListCellRenderer myDefaultRenderer;
 
-  private boolean mySeparator;
-  private Icon myIcon;
-  private String myText;
-  private String myToolTipText;
-  private Color myForeground;
-  private Color myBackground;
-  private Font myFont;
-  private FList<Pair<Object, Object>> myProperties = FList.emptyList();
+    private boolean mySeparator;
+    private Icon myIcon;
+    private String myText;
+    private String myToolTipText;
+    private Color myForeground;
+    private Color myBackground;
+    private Font myFont;
+    private FList<Pair<Object, Object>> myProperties = FList.emptyList();
 
-  @SuppressWarnings("UndesirableClassUsage")
-  public ListCellRendererWrapper() {
-    ListCellRenderer renderer = new JComboBox().getRenderer();
-    if (renderer == null) {
-      renderer = new BasicComboBoxRenderer();
-      Logger.getInstance(this.getClass()).error("LaF: " + UIManager.getLookAndFeel());
-    }
-    myDefaultRenderer = renderer;
-  }
-
-  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-    mySeparator = false;
-    myIcon = null;
-    myText = null;
-    myForeground = null;
-    myBackground = null;
-    myFont = null;
-    myToolTipText = null;
-    myProperties = FList.emptyList();
-
-    @SuppressWarnings("unchecked") final T t = (T)value;
-    customize(list, t, index, isSelected, cellHasFocus);
-
-    if (mySeparator) {
-      final TitledSeparator separator = new TitledSeparator(myText);
-      separator.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
-      if (!UIUtil.isUnderGTKLookAndFeel()) {
-        separator.setOpaque(false);
-        separator.setBackground(UIUtil.TRANSPARENT_COLOR);
-        separator.getLabel().setOpaque(false);
-        separator.getLabel().setBackground(UIUtil.TRANSPARENT_COLOR);
-      }
-      return separator;
+    @SuppressWarnings("UndesirableClassUsage")
+    public ListCellRendererWrapper() {
+        ListCellRenderer renderer = new JComboBox().getRenderer();
+        if (renderer == null) {
+            renderer = new BasicComboBoxRenderer();
+            Logger.getInstance(this.getClass()).error("LaF: " + UIManager.getLookAndFeel());
+        }
+        myDefaultRenderer = renderer;
     }
 
-    @SuppressWarnings("unchecked") final Component component = myDefaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-    if (component instanceof JLabel) {
-      final JLabel label = (JLabel)component;
-      label.setIcon(myIcon);
-      if (myText != null) label.setText(myText);
-      if (myForeground != null) label.setForeground(myForeground);
-      if (myBackground != null && !isSelected) label.setBackground(myBackground);
-      if (myFont != null) label.setFont(myFont);
-      label.setToolTipText(myToolTipText);
-      for (Pair<Object, Object> pair : myProperties) {
-        label.putClientProperty(pair.first, pair.second);
-      }
+    @Override
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        mySeparator = false;
+        myIcon = null;
+        myText = null;
+        myForeground = null;
+        myBackground = null;
+        myFont = null;
+        myToolTipText = null;
+        myProperties = FList.emptyList();
+
+        @SuppressWarnings("unchecked") T t = (T) value;
+        customize(list, t, index, isSelected, cellHasFocus);
+
+        if (mySeparator) {
+            TitledSeparator separator = new TitledSeparator(myText);
+            separator.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
+            separator.setOpaque(false);
+            separator.setBackground(UIUtil.TRANSPARENT_COLOR);
+            separator.getLabel().setOpaque(false);
+            separator.getLabel().setBackground(UIUtil.TRANSPARENT_COLOR);
+            return separator;
+        }
+
+        @SuppressWarnings("unchecked") Component component = myDefaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        if (component instanceof JLabel) {
+            JLabel label = (JLabel) component;
+            label.setIcon(myIcon);
+            if (myText != null) {
+                label.setText(myText);
+            }
+            if (myForeground != null) {
+                label.setForeground(myForeground);
+            }
+            if (myBackground != null && !isSelected) {
+                label.setBackground(myBackground);
+            }
+            if (myFont != null) {
+                label.setFont(myFont);
+            }
+            label.setToolTipText(myToolTipText);
+            for (Pair<Object, Object> pair : myProperties) {
+                label.putClientProperty(pair.first, pair.second);
+            }
+        }
+        return component;
     }
-    return component;
-  }
 
-  /**
-   * Implement this method to configure text and icon for given value.
-   * Use {@link #setIcon(Icon)} and {@link #setText(String)} methods.
-   *
-   * @param list     The JList we're painting.
-   * @param value    The value returned by list.getModel().getElementAt(index).
-   * @param index    The cells index.
-   * @param selected True if the specified cell was selected.
-   * @param hasFocus True if the specified cell has the focus.
-   */
-  public abstract void customize(final JList list, final T value, final int index, final boolean selected, final boolean hasFocus);
+    /**
+     * Implement this method to configure text and icon for given value.
+     * Use {@link #setIcon(Icon)} and {@link #setText(String)} methods.
+     *
+     * @param list     The JList we're painting.
+     * @param value    The value returned by list.getModel().getElementAt(index).
+     * @param index    The cells index.
+     * @param selected True if the specified cell was selected.
+     * @param hasFocus True if the specified cell has the focus.
+     */
+    public abstract void customize(JList list, T value, int index, boolean selected, boolean hasFocus);
 
-  public final void setSeparator() {
-    mySeparator = true;
-  }
+    public final void setSeparator() {
+        mySeparator = true;
+    }
 
-  public final void setIcon(@Nullable final Icon icon) {
-    myIcon = icon;
-  }
+    public final void setIcon(@Nullable Icon icon) {
+        myIcon = icon;
+    }
 
-  public final void setText(@Nullable final String text) {
-    myText = text;
-  }
+    public final void setText(@Nullable String text) {
+        myText = text;
+    }
 
-  public final void setToolTipText(@Nullable final String toolTipText) {
-    myToolTipText = toolTipText;
-  }
+    public final void setToolTipText(@Nullable String toolTipText) {
+        myToolTipText = toolTipText;
+    }
 
-  public final void setForeground(@Nullable final Color foreground) {
-    myForeground = foreground;
-  }
+    public final void setForeground(@Nullable Color foreground) {
+        myForeground = foreground;
+    }
 
-  public final void setBackground(@Nullable final Color background) {
-    myBackground = background;
-  }
+    public final void setBackground(@Nullable Color background) {
+        myBackground = background;
+    }
 
-  public final void setFont(@Nullable final Font font) {
-    myFont = font;
-  }
+    public final void setFont(@Nullable Font font) {
+        myFont = font;
+    }
 
-  public final void setClientProperty(@Nonnull final Object key, @Nullable final Object value) {
-    myProperties = myProperties.prepend(pair(key, value));
-  }
+    public final void setClientProperty(@Nonnull Object key, @Nullable Object value) {
+        myProperties = myProperties.prepend(pair(key, value));
+    }
 }

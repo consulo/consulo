@@ -28,112 +28,121 @@ import java.util.List;
 
 public class ListPopupModel extends AbstractListModel {
 
-  private final List<Object> myOriginalList;
-  private final List<Object> myFilteredList = new ArrayList<>();
+    private final List<Object> myOriginalList;
+    private final List<Object> myFilteredList = new ArrayList<>();
 
-  private final ElementFilter myFilter;
-  private final ListPopupStep myStep;
+    private final ElementFilter myFilter;
+    private final ListPopupStep myStep;
 
-  private int myFullMatchIndex = -1;
-  private int myStartsWithIndex = -1;
-  private final SpeedSearch mySpeedSearch;
+    private int myFullMatchIndex = -1;
+    private int myStartsWithIndex = -1;
+    private final SpeedSearch mySpeedSearch;
 
-  public ListPopupModel(ElementFilter filter, SpeedSearch speedSearch, ListPopupStep step) {
-    myFilter = filter;
-    myStep = step;
-    mySpeedSearch = speedSearch;
-    myOriginalList = new ArrayList<Object>(step.getValues());
-    rebuildLists();
-  }
-
-  public void deleteItem(final Object item) {
-    final int i = myOriginalList.indexOf(item);
-    if (i >= 0) {
-      myOriginalList.remove(i);
-      rebuildLists();
-      fireContentsChanged(this, 0, myFilteredList.size());
-    }
-  }
-
-  @Nullable
-  public Object get(final int i) {
-    if (i >= 0 && i < myFilteredList.size()) {
-      return myFilteredList.get(i);
+    public ListPopupModel(ElementFilter filter, SpeedSearch speedSearch, ListPopupStep step) {
+        myFilter = filter;
+        myStep = step;
+        mySpeedSearch = speedSearch;
+        myOriginalList = new ArrayList<Object>(step.getValues());
+        rebuildLists();
     }
 
-    return null;
-  }
-
-  private void rebuildLists() {
-    myFilteredList.clear();
-    myFullMatchIndex = -1;
-    myStartsWithIndex = -1;
-
-    for (Object each : myOriginalList) {
-      if (myFilter.shouldBeShowing(each)) {
-        addToFiltered(each);
-      }
-    }
-  }
-
-  private void addToFiltered(Object each) {
-    myFilteredList.add(each);
-    String filterString = StringUtil.toUpperCase(mySpeedSearch.getFilter());
-    String candidateString = StringUtil.toUpperCase(myStep.getTextFor(each));
-    int index = myFilteredList.size() - 1;
-
-    if (myFullMatchIndex == -1 && filterString.equals(candidateString)) {
-      myFullMatchIndex = index;
+    public void deleteItem(Object item) {
+        int i = myOriginalList.indexOf(item);
+        if (i >= 0) {
+            myOriginalList.remove(i);
+            rebuildLists();
+            fireContentsChanged(this, 0, myFilteredList.size());
+        }
     }
 
-    if (myStartsWithIndex == -1 && candidateString.startsWith(filterString)) {
-      myStartsWithIndex = index;
+    @Nullable
+    public Object get(int i) {
+        if (i >= 0 && i < myFilteredList.size()) {
+            return myFilteredList.get(i);
+        }
+
+        return null;
     }
-  }
 
-  public int getSize() {
-    return myFilteredList.size();
-  }
+    private void rebuildLists() {
+        myFilteredList.clear();
+        myFullMatchIndex = -1;
+        myStartsWithIndex = -1;
 
-  public Object getElementAt(int index) {
-    if (index >= myFilteredList.size()) {
-      return null;
+        for (Object each : myOriginalList) {
+            if (myFilter.shouldBeShowing(each)) {
+                addToFiltered(each);
+            }
+        }
     }
-    return myFilteredList.get(index);
-  }
 
-  public boolean isSeparatorAboveOf(Object aValue) {
-    return getSeparatorAbove(aValue) != null;
-  }
+    private void addToFiltered(Object each) {
+        myFilteredList.add(each);
+        String filterString = StringUtil.toUpperCase(mySpeedSearch.getFilter());
+        String candidateString = StringUtil.toUpperCase(myStep.getTextFor(each));
+        int index = myFilteredList.size() - 1;
 
-  public String getCaptionAboveOf(Object value) {
-    ListSeparator separator = getSeparatorAbove(value);
-    if (separator != null) {
-      return separator.getText();
+        if (myFullMatchIndex == -1 && filterString.equals(candidateString)) {
+            myFullMatchIndex = index;
+        }
+
+        if (myStartsWithIndex == -1 && candidateString.startsWith(filterString)) {
+            myStartsWithIndex = index;
+        }
     }
-    return "";
-  }
 
-  private ListSeparator getSeparatorAbove(Object value) {
-    return myStep.getSeparatorAbove(value);
-  }
-
-  public void refilter() {
-    rebuildLists();
-    if (myFilteredList.isEmpty() && !myOriginalList.isEmpty()) {
-      mySpeedSearch.noHits();
+    @Override
+    public int getSize() {
+        return myFilteredList.size();
     }
-    else {
-      fireContentsChanged(this, 0, myFilteredList.size());
+
+    @Override
+    public Object getElementAt(int index) {
+        if (index >= myFilteredList.size()) {
+            return null;
+        }
+        return myFilteredList.get(index);
     }
-  }
 
-  public boolean isVisible(Object object) {
-    return myFilteredList.contains(object);
-  }
+    public boolean isSeparator(Object value) {
+        return myStep.isSeparator(value);
+    }
 
-  public int getClosestMatchIndex() {
-    return myFullMatchIndex != -1 ? myFullMatchIndex : myStartsWithIndex;
-  }
+    @Deprecated
+    public boolean isSeparatorAboveOf(Object aValue) {
+        return getSeparatorAbove(aValue) != null;
+    }
+
+    @Deprecated
+    public String getCaptionAboveOf(Object value) {
+        ListSeparator separator = getSeparatorAbove(value);
+        if (separator != null) {
+            return separator.getText();
+        }
+        return "";
+    }
+
+    @Deprecated
+    private ListSeparator getSeparatorAbove(Object value) {
+        return myStep.getSeparatorAbove(value);
+    }
+
+    public void refilter() {
+        rebuildLists();
+        if (myFilteredList.isEmpty() && !myOriginalList.isEmpty()) {
+            mySpeedSearch.noHits();
+        }
+        else {
+            fireContentsChanged(this, 0, myFilteredList.size());
+        }
+    }
+
+    public boolean isVisible(Object object) {
+        return myFilteredList.contains(object);
+    }
+
+    public int getClosestMatchIndex() {
+        return myFullMatchIndex != -1 ? myFullMatchIndex : myStartsWithIndex;
+    }
 
 }

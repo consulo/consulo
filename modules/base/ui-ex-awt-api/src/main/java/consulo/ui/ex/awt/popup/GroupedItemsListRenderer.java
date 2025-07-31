@@ -15,62 +15,66 @@
  */
 package consulo.ui.ex.awt.popup;
 
-import consulo.ui.ex.awt.ErrorLabel;
-import consulo.ui.ex.awt.GroupedElementsRenderer;
-import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.*;
 import consulo.ui.image.Image;
-import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List implements ListCellRenderer<E> {
-  protected ListItemDescriptor<E> myDescriptor;
+    protected ListItemDescriptor<E> myDescriptor;
 
-  protected JLabel myNextStepLabel;
-  protected int myCurrentIndex;
+    protected JLabel myNextStepLabel;
+    protected int myCurrentIndex;
 
-  public JLabel getNextStepLabel() {
-    return myNextStepLabel;
-  }
+    public JLabel getNextStepLabel() {
+        return myNextStepLabel;
+    }
 
-  public GroupedItemsListRenderer(ListItemDescriptor<E> descriptor) {
-    myDescriptor = descriptor;
-  }
+    public GroupedItemsListRenderer(ListItemDescriptor<E> descriptor) {
+        myDescriptor = descriptor;
+    }
 
-  @Override
-  public Component getListCellRendererComponent(JList<? extends E> list, E value, int index, boolean isSelected, boolean cellHasFocus) {
-    String caption = myDescriptor.getCaptionAboveOf(value);
-    boolean hasSeparator = myDescriptor.hasSeparatorAboveOf(value);
-    if (index == 0 && StringUtil.isEmptyOrSpaces(caption)) hasSeparator = false;
+    @Override
+    public Component getListCellRendererComponent(JList<? extends E> list, E value, int index, boolean isSelected, boolean cellHasFocus) {
+        if (myDescriptor.isSeparator(value)) {
+            String text = myDescriptor.getTextFor(value);
 
-    Image icon = isSelected ? myDescriptor.getSelectedIconFor(value) : myDescriptor.getIconFor(value);
-    final JComponent result = configureComponent(myDescriptor.getTextFor(value), myDescriptor.getTooltipFor(value), icon, icon, isSelected, hasSeparator, caption, -1);
-    myCurrentIndex = index;
-    myRendererComponent.setBackground(list.getBackground());
-    customizeComponent(list, value, isSelected);
-    return result;
-  }
+            TitledSeparator separator = new TitledSeparator(text);
+            separator.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
+            separator.setOpaque(false);
+            separator.setBackground(UIUtil.TRANSPARENT_COLOR);
+            separator.getLabel().setOpaque(false);
+            separator.getLabel().setBackground(UIUtil.TRANSPARENT_COLOR);
+            return separator;
+        }
 
+        Image icon = isSelected ? myDescriptor.getSelectedIconFor(value) : myDescriptor.getIconFor(value);
+        JComponent result = configureComponent(myDescriptor.getTextFor(value), myDescriptor.getTooltipFor(value), icon, icon, isSelected, false, null, -1);
+        myCurrentIndex = index;
+        myRendererComponent.setBackground(list.getBackground());
+        customizeComponent(list, value, isSelected);
+        return result;
+    }
 
-  @Override
-  protected JComponent createItemComponent() {
-    createLabel();
-    return layoutComponent(myTextLabel);
-  }
+    @Override
+    protected JComponent createItemComponent() {
+        createLabel();
+        return layoutComponent(myTextLabel);
+    }
 
-  protected void createLabel() {
-    myTextLabel = new ErrorLabel();
-    myTextLabel.setBorder(JBUI.Borders.emptyBottom(1));
-    myTextLabel.setOpaque(true);
-  }
+    protected void createLabel() {
+        myTextLabel = new ErrorLabel();
+        myTextLabel.setBorder(JBUI.Borders.emptyBottom(1));
+        myTextLabel.setOpaque(true);
+    }
 
-  protected final JComponent layoutComponent(JComponent middleItemComponent) {
-    myNextStepLabel = new JLabel();
-    myNextStepLabel.setOpaque(false);
-    return JBUI.Panels.simplePanel(middleItemComponent).addToRight(myNextStepLabel).withBorder(getDefaultItemComponentBorder());
-  }
+    protected final JComponent layoutComponent(JComponent middleItemComponent) {
+        myNextStepLabel = new JLabel();
+        myNextStepLabel.setOpaque(false);
+        return JBUI.Panels.simplePanel(middleItemComponent).addToRight(myNextStepLabel).withBorder(getDefaultItemComponentBorder());
+    }
 
-  protected void customizeComponent(JList<? extends E> list, E value, boolean isSelected) {
-  }
+    protected void customizeComponent(JList<? extends E> list, E value, boolean isSelected) {
+    }
 }
