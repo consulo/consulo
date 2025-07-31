@@ -15,21 +15,32 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.module.Module;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class OpenModuleSettingsAction extends EditSourceAction {
+@ActionImpl(id = "OpenModuleSettings", shortcutFrom = @ActionRef(id = "EditSource"))
+public class OpenModuleSettingsAction extends BaseNavigateToSourceAction {
+    public OpenModuleSettingsAction() {
+        super(ProjectUIViewLocalize.actionOpenModuleSettingsText(),
+            ProjectUIViewLocalize.actionOpenModuleSettingsText(),
+            PlatformIconGroup.generalProjectstructure(),
+            true
+        );
+    }
+
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent event) {

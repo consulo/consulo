@@ -1928,7 +1928,6 @@
         </group>
 
         <action id="ModuleSettings" class="consulo.ide.impl.idea.ide.actions.ShowModulePropertiesAction"/>
-        <action id="OpenModuleSettings" class="consulo.ide.impl.idea.ide.actions.OpenModuleSettingsAction" use-shortcut-of="EditSource"/>
         <group id="MoveModuleToGroup" class="consulo.ide.impl.idea.ide.projectView.impl.MoveModuleToGroupTopLevel" popup="true"/>
 
         <reference ref="AnalyzeMenu">
@@ -1964,9 +1963,6 @@
 
         <reference ref="OpenModuleSettings">
             <add-to-group group-id="ProjectViewPopupMenuSettingsGroup" anchor="first"/>
-        </reference>
-        <reference ref="MoveModuleToGroup">
-            <add-to-group group-id="ProjectViewPopupMenuSettingsGroup" anchor="after" relative-to-action="OpenModuleSettings"/>
         </reference>
 
         <group id="StructureViewCompileGroup">
