@@ -15,20 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
+import consulo.platform.base.localize.ActionLocalize;
 
 /**
  * @author max
  * @since 2002-05-14
  */
+@ActionImpl(id = "EditorToggleShowWhitespaces")
 public class ToggleShowWhitespacesAction extends EditorToggleDecorationAction {
-  @Override
-  protected void setOption(Editor editor, boolean state) {
-    editor.getSettings().setWhitespacesShown(state);
-  }
+    public ToggleShowWhitespacesAction() {
+        super(ActionLocalize.actionEditortoggleshowwhitespacesText(), ActionLocalize.actionEditortoggleshowwhitespacesText());
+    }
 
-  @Override
-  protected boolean getOption(Editor editor) {
-    return editor.getSettings().isWhitespacesShown();
-  }
+    @Override
+    protected void setOption(Editor editor, boolean state) {
+        editor.getSettings().setWhitespacesShown(state);
+    }
+
+    @Override
+    protected boolean getOption(Editor editor) {
+        return editor.getSettings().isWhitespacesShown();
+    }
 }

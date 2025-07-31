@@ -316,6 +316,9 @@
   <action id="IntroduceVariable">
     <keyboard-shortcut first-keystroke="control alt V"/>
   </action>
+  <action id="RecentChanges">
+    <keyboard-shortcut first-keystroke="alt shift C"/>
+  </action>
   <action id="RecentFiles">
     <keyboard-shortcut first-keystroke="control E"/>
   </action>

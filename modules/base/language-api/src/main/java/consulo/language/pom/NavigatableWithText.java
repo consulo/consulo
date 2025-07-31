@@ -15,14 +15,14 @@
  */
 package consulo.language.pom;
 
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
-
-import jakarta.annotation.Nullable;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public interface NavigatableWithText extends Navigatable {
-  @Nullable
-  String getNavigateActionText(boolean focusEditor);
+    @Nonnull
+    LocalizeValue getNavigateActionText(boolean focusEditor);
 }

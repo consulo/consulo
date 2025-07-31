@@ -17,13 +17,15 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.impl.SettingsImpl;
 import consulo.codeEditor.util.SoftWrapUtil;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,7 +36,6 @@ import jakarta.annotation.Nullable;
  * @since 2010-08-23
  */
 public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction implements DumbAware {
-
     private final SoftWrapAppliancePlaces myAppliancePlace;
     private final boolean myGlobal;
 
@@ -50,16 +51,26 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
         myGlobal = global;
     }
 
+    protected AbstractToggleUseSoftWrapsAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon,
+        SoftWrapAppliancePlaces appliancePlace,
+        boolean global
+    ) {
+        super(text, description, icon);
+        myAppliancePlace = appliancePlace;
+        myGlobal = global;
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         if (myGlobal) {
             Editor editor = getEditor(e);
-            if (editor != null) {
-                EditorSettings settings = editor.getSettings();
-                if (settings instanceof SettingsImpl settingsImpl && settingsImpl.getSoftWrapAppliancePlace() != myAppliancePlace) {
-                    e.getPresentation().setEnabledAndVisible(false);
-                    return;
-                }
+            if (editor != null && editor.getSettings() instanceof SettingsImpl settingsImpl
+                && settingsImpl.getSoftWrapAppliancePlace() != myAppliancePlace) {
+                e.getPresentation().setEnabledAndVisible(false);
+                return;
             }
         }
         super.update(e);
@@ -75,8 +86,9 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
     }
 
     @Override
+    @RequiredUIAccess
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-        final Editor editor = getEditor(e);
+        Editor editor = getEditor(e);
         if (editor == null) {
             return;
         }

@@ -15,16 +15,17 @@
  */
 package consulo.diff.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.diff.DiffRequestFactory;
 import consulo.diff.DiffUserDataKeys;
-import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.Side;
 import consulo.fileEditor.FileEditorManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
@@ -32,7 +33,12 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "CompareFileWithEditor")
 public class CompareFileWithEditorAction extends BaseShowDiffAction {
+    public CompareFileWithEditorAction() {
+        super(ActionLocalize.actionComparefilewitheditorText(), ActionLocalize.actionComparefilewitheditorDescription());
+    }
+
     @Override
     protected boolean isAvailable(@Nonnull AnActionEvent e) {
         VirtualFile selectedFile = getSelectedFile(e);
@@ -80,9 +86,8 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
 
         ContentDiffRequest request = DiffRequestFactory.getInstance().createFromFiles(project, selectedFile, currentFile);
 
-        DiffContent editorContent = request.getContents().get(1);
-        if (editorContent instanceof DocumentContent) {
-            Editor[] editors = EditorFactory.getInstance().getEditors(((DocumentContent) editorContent).getDocument());
+        if (request.getContents().get(1) instanceof DocumentContent documentContent) {
+            Editor[] editors = EditorFactory.getInstance().getEditors(documentContent.getDocument());
             if (editors.length != 0) {
                 request.putUserData(
                     DiffUserDataKeys.SCROLL_TO_LINE,

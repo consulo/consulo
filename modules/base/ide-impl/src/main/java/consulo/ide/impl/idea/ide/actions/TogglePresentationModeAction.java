@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
@@ -25,6 +26,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -50,16 +52,25 @@ import java.util.Map;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "TogglePresentationMode")
 public class TogglePresentationModeAction extends AnAction implements DumbAware {
     private static final Map<Object, Object> ourSavedValues = new LinkedHashMap<>();
     private static float ourSavedScaleFactor = JBUI.scale(1f);
     private static int ourSavedConsoleFontSize;
 
+    public TogglePresentationModeAction() {
+        super(ActionLocalize.actionTogglepresentationmodeText(), ActionLocalize.actionTogglepresentationmodeDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         boolean selected = UISettings.getInstance().PRESENTATION_MODE;
-        e.getPresentation().setText(selected ? "Exit Presentation Mode" : "Enter Presentation Mode");
+        e.getPresentation().setTextValue(
+            selected
+                ? ActionLocalize.actionTogglepresentationmodeTextExit()
+                : ActionLocalize.actionTogglepresentationmodeTextEnter()
+        );
     }
 
     @Override
@@ -90,7 +101,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     }
 
     private static ActionCallback tweakFrameFullScreen(Project project, boolean inPresentation) {
-        IdeFrameEx frame = (IdeFrameEx)IdeFrameUtil.findActiveRootIdeFrame();
+        IdeFrameEx frame = (IdeFrameEx) IdeFrameUtil.findActiveRootIdeFrame();
         if (frame != null) {
             PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
             if (inPresentation) {

@@ -362,10 +362,9 @@
             <action id="Diff.ShowDiff" class="consulo.ui.ex.action.EmptyAction"
                     icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
             <!-- CommonShortcuts.getDiff() -->
-            <action id="CompareTwoFiles" class="consulo.diff.impl.internal.action.CompareFilesAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
-            <action id="CompareFileWithEditor" class="consulo.diff.impl.internal.action.CompareFileWithEditorAction"/>
-            <action id="CompareClipboardWithSelection" class="consulo.diff.impl.internal.action.CompareClipboardWithSelectionAction"/>
+            <reference ref="CompareTwoFiles"/>
+            <reference ref="CompareFileWithEditor"/>
+            <reference ref="CompareClipboardWithSelection"/>
 
             <separator/>
             <action id="Diff.FocusOppositePane" class="consulo.ui.ex.action.EmptyAction"/>
@@ -530,73 +529,7 @@
             </group>
 
             <!-- View -->
-            <group id="ViewMenu" popup="true">
-                <reference id="ToolWindowsGroup" />
-
-                <action id="EditSource" class="consulo.ide.impl.idea.ide.actions.EditSourceAction"/>
-                <action id="OpenInRightSplit" class="consulo.ide.impl.idea.ide.actions.OpenInRightSplitAction"
-                        icon="consulo.platform.base.PlatformIconGroup@actions.splitvertically"/>
-                <action id="ViewSource" class="consulo.ide.impl.idea.ide.actions.ViewSourceAction"/>
-                <separator/>
-                <group id="ViewRecentActions">
-                    <action id="RecentFiles" class="consulo.ide.impl.idea.ide.actions.ShowRecentFilesAction"/>
-                    <action id="SwitcherRecentEditedChangedToggleCheckBox"
-                            class="consulo.ide.impl.idea.ide.actions.Switcher$ToggleCheckBoxAction"
-                            text="Toggle Changed Only Files"/>
-                    <action id="RecentChangedFiles" class="consulo.ide.impl.idea.ide.actions.ShowRecentlyEditedFilesAction"/>
-                    <action id="RecentLocations" class="consulo.ide.impl.idea.ide.actions.RecentLocationsAction"/>
-                </group>
-                <separator/>
-                <group id="CompareActions">
-                    <group id="PairFileActions">
-                        <reference ref="CompareTwoFiles"/>
-                        <reference ref="CompareFileWithEditor"/>
-                    </group>
-                    <reference ref="CompareClipboardWithSelection"/>
-                </group>
-                <separator/>
-                <action id="QuickChangeScheme" class="consulo.ide.impl.idea.ide.actions.QuickChangeSchemesAction"/>
-                <group id="UIToggleActions">
-                    <separator/>
-                    <action id="ViewToolBar" class="consulo.ide.impl.idea.ide.actions.ViewToolbarAction"/>
-                    <action id="ViewToolButtons" class="consulo.ide.impl.idea.ide.actions.ViewToolWindowButtonsAction"/>
-                    <action id="ViewStatusBar" class="consulo.ide.impl.idea.ide.actions.ViewStatusBarAction"/>
-                    <group id="ViewStatusBarWidgetsGroup"
-                           class="consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup" popup="true"/>
-                </group>
-
-                <group id="EditorToggleActions" popup="true">
-                    <action id="EditorToggleShowWhitespaces"
-                            class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowWhitespacesAction"/>
-                    <action id="EditorToggleShowLineNumbers"
-                            class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowLineNumbersAction"/>
-                    <action id="EditorToggleShowIndentLines"
-                            class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowIndentLinesAction"/>
-                    <action id="EditorToggleUseSoftWraps" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsMenuAction"
-                            icon="consulo.platform.base.PlatformIconGroup@actions.togglesoftwrap"/>
-                </group>
-
-                <separator/>
-                <group id="EditorBidiTextDirection" popup="true">
-                    <action id="EditorSetContentBasedBidiTextDirection"
-                            class="consulo.ide.impl.idea.openapi.editor.actions.SetEditorBidiTextDirectionAction$ContentBased"/>
-                    <action id="EditorSetLtrBidiTextDirection"
-                            class="consulo.ide.impl.idea.openapi.editor.actions.SetEditorBidiTextDirectionAction$Ltr"/>
-                    <action id="EditorSetRtlBidiTextDirection"
-                            class="consulo.ide.impl.idea.openapi.editor.actions.SetEditorBidiTextDirectionAction$Rtl"/>
-                </group>
-
-                <separator/>
-
-                <!-- Mac OS Lion: In native apps toggle full screen mode is the last action in "View" menu -->
-                <group id="ToggleFullScreenGroup">
-                    <separator/>
-                    <action id="TogglePresentationMode" class="consulo.ide.impl.idea.ide.actions.TogglePresentationModeAction"/>
-                    <action id="TogglePresentationAssistant"
-                            class="consulo.ide.impl.presentationAssistant.action.TogglePresentationAssistantAction"/>
-                    <action id="ToggleFullScreen" class="consulo.ide.impl.idea.ide.actions.ToggleFullScreenAction"/>
-                </group>
-            </group>
+            <reference ref="ViewMenu"/>
 
             <!-- Go to -->
             <group id="GoToMenu" popup="true">
@@ -1246,11 +1179,6 @@
         </action>
 
         <action id="ProjectViewChangeView" class="consulo.ide.impl.idea.ide.projectView.actions.ChangeProjectViewAction"/>
-
-        <action id="RecentChanges" class="consulo.ide.impl.idea.history.integration.ui.actions.RecentChangesAction">
-            <keyboard-shortcut first-keystroke="alt shift C" keymap="$default"/>
-            <add-to-group group-id="ViewRecentActions" anchor="last"/>
-        </action>
 
         <!-- Go To -->
         <group id="GoToTargetEx">

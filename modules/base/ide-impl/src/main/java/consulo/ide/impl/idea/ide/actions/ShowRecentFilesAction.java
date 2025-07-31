@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -28,7 +30,12 @@ import jakarta.annotation.Nonnull;
  * @author max
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = IdeActions.ACTION_RECENT_FILES)
 public class ShowRecentFilesAction extends DumbAwareAction {
+    public ShowRecentFilesAction() {
+        super(ActionLocalize.actionRecentfilesText(), ActionLocalize.actionRecentfilesDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -36,7 +37,12 @@ import java.awt.*;
 /**
  * @author pegov
  */
+@ActionImpl(id = "ToggleFullScreen")
 public class ToggleFullScreenAction extends AnAction implements DumbAware {
+    public ToggleFullScreenAction() {
+        super(ActionLocalize.actionTogglefullscreenText(), ActionLocalize.actionTogglefullscreenDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -67,11 +73,11 @@ public class ToggleFullScreenAction extends AnAction implements DumbAware {
     private static IdeFrameEx getFrame() {
         Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
         if (focusOwner != null) {
-            Window awtWindow = focusOwner instanceof JFrame ? (Window)focusOwner : SwingUtilities.getWindowAncestor(focusOwner);
+            Window awtWindow = focusOwner instanceof JFrame frame ? frame : SwingUtilities.getWindowAncestor(focusOwner);
 
             consulo.ui.Window window = TargetAWT.from(awtWindow);
             if (window != null) {
-                return (IdeFrameEx)window.getUserData(IdeFrame.KEY);
+                return (IdeFrameEx) window.getUserData(IdeFrame.KEY);
             }
         }
         return null;

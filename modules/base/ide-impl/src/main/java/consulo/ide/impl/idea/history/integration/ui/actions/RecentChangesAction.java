@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.history.integration.ui.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.history.integration.ui.views.RecentChangesPopup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "RecentChanges")
 public class RecentChangesAction extends LocalHistoryAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    new RecentChangesPopup(e.getData(Project.KEY), getGateway(), getVcs()).show();
-  }
+    public RecentChangesAction() {
+        super(ActionLocalize.actionRecentchangesText());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        new RecentChangesPopup(e.getData(Project.KEY), getGateway(), getVcs()).show();
+    }
 }

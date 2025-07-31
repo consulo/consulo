@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.language.pom.NavigatableWithText;
 import consulo.language.pom.PomTargetPsiElement;
@@ -26,6 +27,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,6 +35,21 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
     private final boolean myFocusEditor;
 
     protected BaseNavigateToSourceAction(boolean focusEditor) {
+        myFocusEditor = focusEditor;
+    }
+
+    protected BaseNavigateToSourceAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, boolean focusEditor) {
+        super(text, description);
+        myFocusEditor = focusEditor;
+    }
+
+    protected BaseNavigateToSourceAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon,
+        boolean focusEditor
+    ) {
+        super(text, description, icon);
         myFocusEditor = focusEditor;
     }
 
@@ -56,9 +73,14 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
         e.getPresentation().setVisible((enabled || !inPopup) && (myFocusEditor || !(target instanceof NavigatableWithText)));
         e.getPresentation().setEnabled(enabled);
 
-        String navigateActionText = myFocusEditor && target instanceof NavigatableWithText navigatableWithText
-            ? navigatableWithText.getNavigateActionText(true) : null;
-        e.getPresentation().setText(navigateActionText == null ? getTemplatePresentation().getText() : navigateActionText);
+        LocalizeValue navigateActionText = myFocusEditor && target instanceof NavigatableWithText navigatableWithText
+            ? navigatableWithText.getNavigateActionText(true)
+            : LocalizeValue.empty();
+        e.getPresentation().setTextValue(
+            navigateActionText == LocalizeValue.empty()
+                ? getTemplatePresentation().getTextValue()
+                : navigateActionText
+        );
     }
 
     @Nullable

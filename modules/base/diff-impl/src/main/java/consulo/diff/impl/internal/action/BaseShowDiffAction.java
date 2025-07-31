@@ -18,19 +18,26 @@ package consulo.diff.impl.internal.action;
 import consulo.application.dumb.DumbAware;
 import consulo.diff.DiffManager;
 import consulo.diff.request.DiffRequest;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
-    public BaseShowDiffAction() {
+    protected BaseShowDiffAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        this(text, description, null);
+    }
+
+    protected BaseShowDiffAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
         setEnabledInModalContext(true);
     }
 

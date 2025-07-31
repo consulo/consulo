@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,26 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
+import consulo.diff.impl.internal.action.CompareFileWithEditorAction;
+import consulo.diff.impl.internal.action.CompareFilesAction;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.DefaultActionGroup;
 
-@ActionImpl(id = IdeActions.ACTION_EDIT_SOURCE)
-public class EditSourceAction extends BaseNavigateToSourceAction {
-    public EditSourceAction() {
-        super(
-            ActionLocalize.actionEditsourceText(),
-            ActionLocalize.actionEditsourceDescription(),
-            PlatformIconGroup.actionsEditsource(),
-            true
-        );
+/**
+ * @author UNV
+ * @since 2025-07-28
+ */
+@ActionImpl(
+    id = "PairFileActions",
+    children = {
+        @ActionRef(type = CompareFilesAction.class),
+        @ActionRef(type = CompareFileWithEditorAction.class)
+    }
+)
+public class CompareFilePairGroup extends DefaultActionGroup implements DumbAware {
+    public CompareFilePairGroup() {
+        super(ActionLocalize.groupPairfileactionsText(), false);
     }
 }

@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.presentationAssistant.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.presentationAssistant.PresentationAssistant;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,19 +28,20 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2017-08-21
  */
+@ActionImpl(id = "TogglePresentationAssistant")
 public class TogglePresentationAssistantAction extends ToggleAction {
-  public TogglePresentationAssistantAction() {
-    super("Presentation Mouse/Keyboard Assistant");
-  }
+    public TogglePresentationAssistantAction() {
+        super(ActionLocalize.actionTogglepresentationassistantText());
+    }
 
-  @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
-    return PresentationAssistant.getInstance().getConfiguration().myShowActionDescriptions;
-  }
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        return PresentationAssistant.getInstance().getConfiguration().myShowActionDescriptions;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-    PresentationAssistant.getInstance().setShowActionsDescriptions(state, e.getData(Project.KEY));
-  }
+    @Override
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        PresentationAssistant.getInstance().setShowActionsDescriptions(state, e.getData(Project.KEY));
+    }
 }

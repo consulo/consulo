@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,26 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.codeEditor.Editor;
+import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.DefaultActionGroup;
 
-@ActionImpl(id = "EditorToggleShowIndentLines")
-public class ToggleShowIndentLinesAction extends EditorToggleDecorationAction {
-    public ToggleShowIndentLinesAction() {
-        super(ActionLocalize.actionEditortoggleshowindentlinesText(), ActionLocalize.actionEditortoggleshowindentlinesDescription());
+/**
+ * @author UNV
+ * @since 2025-07-30
+ */
+@ActionImpl(
+    id = "EditorToggleActions",
+    children = {
+        @ActionRef(type = ToggleShowWhitespacesAction.class),
+        @ActionRef(type = ToggleShowLineNumbersAction.class),
+        @ActionRef(type = ToggleShowIndentLinesAction.class),
+        @ActionRef(type = ToggleUseSoftWrapsMenuAction.class)
     }
-
-    @Override
-    protected void setOption(Editor editor, boolean state) {
-        editor.getSettings().setIndentGuidesShown(state);
-    }
-
-    @Override
-    protected boolean getOption(Editor editor) {
-        return editor.getSettings().isIndentGuidesShown();
+)
+public class EditorToggleActionsGroup extends DefaultActionGroup implements DumbAware {
+    public EditorToggleActionsGroup() {
+        super(ActionLocalize.groupEditortoggleactionsText(), true);
     }
 }

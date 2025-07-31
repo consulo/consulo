@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.diff.DiffContentFactory;
@@ -31,6 +32,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
@@ -39,7 +41,12 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "CompareClipboardWithSelection")
 public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
+    public CompareClipboardWithSelectionAction() {
+        super(ActionLocalize.actionCompareclipboardwithselectionText(), ActionLocalize.actionCompareclipboardwithselectionDescription());
+    }
+
     @Nullable
     private static Editor getEditor(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);

@@ -15,13 +15,15 @@
  */
 package consulo.diff.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.diff.DiffRequestFactory;
 import consulo.diff.request.DiffRequest;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -34,11 +36,20 @@ import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Set;
 
+@ActionImpl(id = "CompareTwoFiles")
 public class CompareFilesAction extends BaseShowDiffAction {
     public static final Key<DiffRequest> DIFF_REQUEST = Key.create("CompareFilesAction.DiffRequest");
 
     public static final String LAST_USED_FILE_KEY = "two.files.diff.last.used.file";
     public static final String LAST_USED_FOLDER_KEY = "two.files.diff.last.used.folder";
+
+    public CompareFilesAction() {
+        super(
+            ActionLocalize.actionComparetwofilesText(),
+            ActionLocalize.actionComparetwofilesDescription(),
+            PlatformIconGroup.actionsDiff()
+        );
+    }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
