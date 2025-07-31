@@ -13,31 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.codeInsight.navigation.MethodDownHandler;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
-import consulo.ide.impl.idea.codeInsight.navigation.MethodDownHandler;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "MethodDown")
 public class MethodDownAction extends BaseCodeInsightAction {
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new MethodDownHandler();
-  }
+    public MethodDownAction() {
+        super(
+            ActionLocalize.actionMethoddownText(),
+            ActionLocalize.actionMethoddownDescription(),
+            PlatformIconGroup.actionsNextoccurence()
+        );
+    }
 
-  @Override
-  protected boolean isValidForLookup() {
-    return true;
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new MethodDownHandler();
+    }
 
-  @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
-    return MethodUpAction.checkValidForFile(file);
-  }
+    @Override
+    @RequiredReadAction
+    protected boolean isValidForLookup() {
+        return true;
+    }
+
+    @Override
+    @RequiredReadAction
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        return MethodUpAction.checkValidForFile(file);
+    }
 }

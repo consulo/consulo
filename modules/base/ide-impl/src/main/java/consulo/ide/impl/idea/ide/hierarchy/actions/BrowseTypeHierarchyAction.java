@@ -15,26 +15,27 @@
  */
 package consulo.ide.impl.idea.ide.hierarchy.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.hierarchy.TypeHierarchyProvider;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "TypeHierarchy")
 public final class BrowseTypeHierarchyAction extends BrowseHierarchyActionBase<TypeHierarchyProvider> {
     public BrowseTypeHierarchyAction() {
-        super(TypeHierarchyProvider.class);
+        super(ActionLocalize.actionTypehierarchyText(), ActionLocalize.actionTypehierarchyDescription(), TypeHierarchyProvider.class);
     }
 
     @Override
     @RequiredUIAccess
-    public final void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        if (!ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
-            presentation.setTextValue(IdeLocalize.actionBrowseTypeHierarchy());
+    public final void update(@Nonnull AnActionEvent e) {
+        if (!ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
+            e.getPresentation().setTextValue(IdeLocalize.actionBrowseTypeHierarchy());
         }
-        super.update(event);
+        super.update(e);
     }
 }

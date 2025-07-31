@@ -13,40 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.action.BaseCodeInsightAction;
-import consulo.ide.impl.idea.codeInsight.navigation.MethodUpHandler;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.Editor;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import consulo.language.editor.structureView.TemplateLanguageStructureViewBuilder;
-import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.codeInsight.navigation.MethodUpHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
-import consulo.project.Project;
+import consulo.language.editor.structureView.TemplateLanguageStructureViewBuilder;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "MethodUp")
 public class MethodUpAction extends BaseCodeInsightAction {
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new MethodUpHandler();
-  }
+    public MethodUpAction() {
+        super(
+            ActionLocalize.actionMethodupText(),
+            ActionLocalize.actionMethodupDescription(),
+            PlatformIconGroup.actionsPreviousoccurence()
+        );
+    }
 
-  @Override
-  protected boolean isValidForLookup() {
-    return true;
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new MethodUpHandler();
+    }
 
-  @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
-    return checkValidForFile(file);
-  }
+    @Override
+    protected boolean isValidForLookup() {
+        return true;
+    }
 
-  static boolean checkValidForFile(final PsiFile file) {
-    final StructureViewBuilder structureViewBuilder = PsiStructureViewFactory.createBuilderForFile(file);
-    return structureViewBuilder instanceof TreeBasedStructureViewBuilder || structureViewBuilder instanceof TemplateLanguageStructureViewBuilder;
-  }
+    @Override
+    @RequiredReadAction
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        return checkValidForFile(file);
+    }
+
+    @RequiredReadAction
+    static boolean checkValidForFile(PsiFile file) {
+        StructureViewBuilder structureViewBuilder = PsiStructureViewFactory.createBuilderForFile(file);
+        return structureViewBuilder instanceof TreeBasedStructureViewBuilder || structureViewBuilder instanceof TemplateLanguageStructureViewBuilder;
+    }
 }

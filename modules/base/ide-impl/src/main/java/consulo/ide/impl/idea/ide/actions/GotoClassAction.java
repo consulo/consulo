@@ -186,12 +186,12 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
                         return valueNavigatable;
                     }
 
-                    String presentableText = treeElement.getPresentation().getPresentableText();
+                    String presentableText = structureViewTreeElement.getPresentation().getPresentableText();
                     if (presentableText != null) {
                         int degree = matcher.matchingDegree(presentableText);
                         if (degree > max) {
                             max = degree;
-                            target = ((StructureViewTreeElement) treeElement).getValue();
+                            target = structureViewTreeElement.getValue();
                         }
                     }
                 }

@@ -29,6 +29,7 @@ import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
@@ -62,7 +63,8 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
     private static final Logger LOG = Logger.getInstance(BrowseHierarchyActionBase.class);
     private final Class<T> myHierarchyClass;
 
-    protected BrowseHierarchyActionBase(@Nonnull Class<T> hierarchyClass) {
+    protected BrowseHierarchyActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Class<T> hierarchyClass) {
+        super(text, description);
         myHierarchyClass = hierarchyClass;
     }
 

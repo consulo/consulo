@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.internal.ToolWindowManagerEx;
@@ -30,6 +31,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,6 +40,14 @@ import java.awt.*;
 import java.util.LinkedList;
 
 abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAware {
+    protected OccurenceNavigatorActionBase(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -108,7 +118,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
             return findNavigator(component);
         }
 
-        return (OccurenceNavigator)getOccurenceNavigatorFromContext(dataContext);
+        return (OccurenceNavigator) getOccurenceNavigatorFromContext(dataContext);
     }
 
     @Nullable
@@ -121,7 +131,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
                 return occurenceNavigator;
             }
             if (component instanceof JTabbedPane tabbedPane) {
-                JComponent selectedComponent = (JComponent)tabbedPane.getSelectedComponent();
+                JComponent selectedComponent = (JComponent) tabbedPane.getSelectedComponent();
                 if (selectedComponent != null) {
                     queue.addLast(selectedComponent);
                 }
@@ -163,6 +173,6 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         if (id == null) {
             return null;
         }
-        return (Component)findNavigator(mgr.getToolWindow(id).getComponent());
+        return (Component) findNavigator(mgr.getToolWindow(id).getComponent());
     }
 }

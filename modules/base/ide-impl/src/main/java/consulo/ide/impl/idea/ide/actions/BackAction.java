@@ -16,16 +16,23 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
+@ActionImpl(id = "Back")
 public class BackAction extends AnAction implements DumbAware {
+    public BackAction() {
+        super(ActionLocalize.actionBackText(), ActionLocalize.actionBackDescription(), PlatformIconGroup.actionsBack());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -34,9 +41,10 @@ public class BackAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        Project project = event.getData(Project.KEY);
-        presentation.setEnabled(project != null && !project.isDisposed() && IdeDocumentHistory.getInstance(project).isBackAvailable());
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        e.getPresentation().setEnabled(
+            project != null && !project.isDisposed() && IdeDocumentHistory.getInstance(project).isBackAvailable()
+        );
     }
 }
