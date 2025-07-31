@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
-import consulo.language.pom.NavigatableWithText;
+import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;

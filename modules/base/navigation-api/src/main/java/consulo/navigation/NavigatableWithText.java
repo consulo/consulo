@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.pom;
+package consulo.navigation;
 
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
