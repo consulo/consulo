@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.application.ReadAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
@@ -44,7 +45,7 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
     protected void update(@Nonnull VcsContext context, @Nonnull Presentation presentation) {
         Project project = context.getProject();
 
-        presentation.setEnabled(isEnabled(context));
+        presentation.setEnabled(ReadAction.compute(() -> isEnabled(context)));
         presentation.setVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
     }
 
