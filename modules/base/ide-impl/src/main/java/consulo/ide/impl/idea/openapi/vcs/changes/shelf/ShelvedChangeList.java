@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;

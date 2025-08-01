@@ -67,8 +67,9 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
         if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
             return;
         }
-        if (DumbService.getInstance(project).isDumb()) {
-            DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode());
+        DumbService dumbService = DumbService.getInstance(project);
+        if (dumbService.isDumb()) {
+            dumbService.showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode());
             return;
         }
         CommandProcessor.getInstance().newCommand()

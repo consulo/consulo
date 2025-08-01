@@ -18,7 +18,7 @@ package consulo.project.ui.view.tree;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.language.content.ProjectRootsUtil;
-import consulo.language.pom.NavigatableWithText;
+import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackageHelper;
 import consulo.language.util.ModuleUtilCore;

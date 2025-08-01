@@ -25,7 +25,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.versionControlSystem.impl.internal.change.ui.issueLink.IssueLinkRenderer;
 import consulo.ui.ex.awt.tree.TreeLinkMouseListener;

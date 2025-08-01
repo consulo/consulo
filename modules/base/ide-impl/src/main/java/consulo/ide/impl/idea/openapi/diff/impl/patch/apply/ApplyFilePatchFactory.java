@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch.apply;
 
-import consulo.ide.impl.idea.openapi.diff.impl.patch.BinaryFilePatch;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
+import consulo.versionControlSystem.change.patch.BinaryFilePatch;
+import consulo.versionControlSystem.change.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
 
 public class ApplyFilePatchFactory {

@@ -27,7 +27,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
-import consulo.language.pom.NavigatableWithText;
+import consulo.navigation.NavigatableWithText;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

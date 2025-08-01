@@ -15,27 +15,27 @@
  */
 package consulo.ide.impl.idea.ide.hierarchy.actions;
 
-import consulo.ide.localize.IdeLocalize;
+import consulo.annotation.component.ActionImpl;import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.hierarchy.CallHierarchyProvider;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "CallHierarchy")
 public final class BrowseCallHierarchyAction extends BrowseHierarchyActionBase<CallHierarchyProvider> {
     public BrowseCallHierarchyAction() {
-        super(CallHierarchyProvider.class);
+        super(ActionLocalize.actionCallhierarchyText(), ActionLocalize.actionCallhierarchyDescription(), CallHierarchyProvider.class);
     }
 
     @Override
     @RequiredUIAccess
-    public final void update(@Nonnull AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        if (!ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
-            presentation.setTextValue(IdeLocalize.actionBrowseCallHierarchy());
+    public final void update(@Nonnull AnActionEvent e) {
+        if (!ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
+            e.getPresentation().setTextValue(IdeLocalize.actionBrowseCallHierarchy());
         }
 
-        super.update(event);
+        super.update(e);
     }
 }

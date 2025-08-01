@@ -282,6 +282,11 @@
             <artifactId>consulo-project-ui-view-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-local-history-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <!--TODO [VISTALL] temp dependency-->
         <dependency>

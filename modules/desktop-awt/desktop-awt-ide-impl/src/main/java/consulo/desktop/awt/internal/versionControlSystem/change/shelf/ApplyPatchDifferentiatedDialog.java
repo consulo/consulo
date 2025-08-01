@@ -36,6 +36,8 @@ import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.versionControlSystem.change.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.versionControlSystem.impl.internal.util.ZipperUpdater;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;

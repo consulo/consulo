@@ -25,6 +25,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.logging.Logger;
+import consulo.versionControlSystem.change.patch.PatchEP;
 import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;

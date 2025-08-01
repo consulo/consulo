@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.InternalEditorKeys;
 import consulo.disposer.Disposer;
@@ -34,6 +35,7 @@ import consulo.language.editor.structureView.StructureViewCompositeModel;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PlaceHolder;
@@ -46,8 +48,10 @@ import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 
+@ActionImpl(id = "FileStructurePopup")
 public class ViewStructureAction extends DumbAwareAction {
     public ViewStructureAction() {
+        super(ActionLocalize.actionFilestructurepopupText(), ActionLocalize.actionFilestructurepopupDescription());
         setEnabledInModalContext(true);
     }
 
@@ -118,8 +122,9 @@ public class ViewStructureAction extends DumbAwareAction {
         FileEditor fileEditor = e.getData(FileEditor.KEY);
         Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : e.getData(Editor.KEY);
 
-        boolean enabled =
-            fileEditor != null && (!Boolean.TRUE.equals(InternalEditorKeys.SUPPLEMENTARY_KEY.get(editor))) && fileEditor.getStructureViewBuilder() != null;
+        boolean enabled = fileEditor != null
+            && !Boolean.TRUE.equals(InternalEditorKeys.SUPPLEMENTARY_KEY.get(editor))
+            && fileEditor.getStructureViewBuilder() != null;
         e.getPresentation().setEnabled(enabled);
     }
 

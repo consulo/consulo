@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
@@ -17,11 +18,16 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 @ActionImpl(id = "GotoSymbol")
 public class GotoSymbolAction extends GotoActionBase implements DumbAware {
-    public GotoSymbolAction() {
+    private final Application myApplication;
+
+    @Inject
+    public GotoSymbolAction(@Nonnull Application application) {
         super(ActionLocalize.actionGotosymbolText(), ActionLocalize.actionGotosymbolDescription());
+        myApplication = application;
     }
 
     @Override
@@ -62,6 +68,7 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
                 }
 
                 @Override
+                @RequiredReadAction
                 public void elementChosen(ChooseByNamePopup popup, Object element) {
                     GotoClassAction.handleSubMemberNavigation(popup, element);
                 }
@@ -73,6 +80,6 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
 
     @Override
     protected boolean hasContributors(DataContext dataContext) {
-        return Application.get().getExtensionPoint(GotoSymbolContributor.class).hasAnyExtensions();
+        return myApplication.getExtensionPoint(GotoSymbolContributor.class).hasAnyExtensions();
     }
 }

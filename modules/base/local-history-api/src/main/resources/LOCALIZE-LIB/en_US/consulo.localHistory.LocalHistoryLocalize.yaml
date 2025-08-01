@@ -1,0 +1,104 @@
+action.create.patch:
+    text: Create Patch...
+action.revert:
+    text: Revert
+action.revert.selection:
+    text: Revert Selection
+action.show.difference:
+    text: Show Difference
+config.dialog.title:
+    text: Local History
+config.period:
+    text: Keep local &history for (active working days)
+config.put.label.group:
+    text: Automatic Labeling on
+config.put.label.on.file.package.compilation:
+    text: File/package compilation
+config.put.label.on.project.compilation:
+    text: Project compilation
+config.put.label.on.project.make:
+    text: Project make
+config.put.label.on.project.opening:
+    text: Project opening
+config.put.label.on.running.debugging:
+    text: Running/Debugging
+config.put.label.on.unit.tests.failed:
+    text: Unit tests failed
+config.put.label.on.unit.tests.passed:
+    text: Unit tests passed
+content.not.available:
+    text: File content is not available
+create.patch.dialog.title:
+    text: Create Patch
+current.revision:
+    text: Current
+file.does.not.exist:
+    text: File does not exist
+message.cannot.create.patch.because.of.unavailable.content:
+    text: |-
+        Cannot create patch because content of some
+        of the selected files was not stored due to its big size.
+message.cannot.revert.because:
+    text: Cannot revert because {0}
+message.do.you.want.to.proceed:
+    text: |-
+        {0}
+
+        Do you want to proceed?
+message.error.during.create.patch:
+    text: 'Error during patch creation: {0}'
+message.error.during.revert:
+    text: 'Error during revert: {0}'
+message.patch.created:
+    text: Patch file has been created
+message.processing.left.revision:
+    text: Processing left revision...
+message.processing.revisions:
+    text: Processing revisions...
+message.processing.right.revision:
+    text: Processing right revision...
+put.label.dialog.title:
+    text: Put Label
+put.label.name:
+    text: 'Label &name:'
+recent.changes.popup.title:
+    text: Recent Changes
+recent.changes.to.changes:
+    text: There are no changes
+revert.error.directory.was.moved:
+    text: directory was moved
+revert.error.file.already.exists:
+    text: file already exists with same name
+revert.error.files.already.exist:
+    text: some files already exist
+revert.error.files.are.read.only:
+    text: some files are read-only
+revert.error.files.were.moved:
+    text: some files was moved to or from outside of the directory
+revert.error.parent.was.renamed:
+    text: parent was renamed
+revert.message.some.files.have.unversioned.content:
+    text: |-
+        Following files had big content which was not versioned.
+        {0}
+        Content of these files won''t be changed during revert that may result in code corruption.
+revisions.table.date:
+    text: Date
+revisions.table.filesCount:
+    text: '{0} file'
+revisions.table.period.old:
+    text: Old Changes
+revisions.table.period.older:
+    text: Older
+revisions.table.period.recent:
+    text: Last {0} Hours
+revisions.table.revision:
+    text: Revision
+system.label.external.change:
+    text: External change
+system.label.project.open:
+    text: Project open
+system.label.revert.to.change.date:
+    text: Reverted to ''{0}'' at {1}
+system.label.revert.to.date:
+    text: Reverted to {0}

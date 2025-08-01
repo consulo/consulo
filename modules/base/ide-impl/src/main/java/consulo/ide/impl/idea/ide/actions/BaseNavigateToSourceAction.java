@@ -19,7 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
-import consulo.language.pom.NavigatableWithText;
+import consulo.navigation.NavigatableWithText;
 import consulo.language.pom.PomTargetPsiElement;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.annotation.RequiredUIAccess;

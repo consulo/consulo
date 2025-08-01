@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;

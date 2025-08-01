@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.language.pom.NavigatableWithText;
+import consulo.navigation.NavigatableWithText;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;

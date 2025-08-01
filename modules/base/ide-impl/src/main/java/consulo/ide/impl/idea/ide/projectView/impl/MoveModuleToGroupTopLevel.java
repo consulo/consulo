@@ -70,10 +70,10 @@ public class MoveModuleToGroupTopLevel extends ActionGroup {
   }
 
   @RequiredReadAction
-  private static Collection<String> getTopLevelGroupNames(final DataContext dataContext) {
-    final Project project = dataContext.getData(Project.KEY);
+  private static Collection<String> getTopLevelGroupNames(DataContext dataContext) {
+    Project project = dataContext.getData(Project.KEY);
 
-    final ModifiableModuleModel model = dataContext.getData(LangDataKeys.MODIFIABLE_MODULE_MODEL);
+    ModifiableModuleModel model = dataContext.getData(LangDataKeys.MODIFIABLE_MODULE_MODEL);
 
     Module[] allModules;
     if ( model != null ) {
@@ -83,7 +83,7 @@ public class MoveModuleToGroupTopLevel extends ActionGroup {
     }
 
     Set<String> topLevelGroupNames = new HashSet<>();
-    for (final Module child : allModules) {
+    for (Module child : allModules) {
       String[] group;
       if ( model != null ) {
         group = model.getModuleGroupPath(child);

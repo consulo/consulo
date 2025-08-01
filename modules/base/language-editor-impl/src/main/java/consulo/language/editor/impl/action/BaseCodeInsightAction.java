@@ -29,6 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,6 +50,20 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
 
     protected BaseCodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, boolean lookForInjectedEditor) {
         super(text, description);
+        myLookForInjectedEditor = lookForInjectedEditor;
+    }
+
+    protected BaseCodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Image icon) {
+        this(text, description, icon, true);
+    }
+
+    protected BaseCodeInsightAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nonnull Image icon,
+        boolean lookForInjectedEditor
+    ) {
+        super(text, description, icon);
         myLookForInjectedEditor = lookForInjectedEditor;
     }
 

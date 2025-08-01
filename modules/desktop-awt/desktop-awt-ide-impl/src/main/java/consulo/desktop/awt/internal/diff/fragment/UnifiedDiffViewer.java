@@ -59,7 +59,7 @@ import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.diff.LineTokenizer;
+import consulo.diff.old.LineTokenizerOld;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -1257,7 +1257,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
             int lineNumber = lineFragment.getStartLine2();
 
-            LineTokenizer tokenizer = new LineTokenizer(insertedText.toString());
+            LineTokenizerOld tokenizer = new LineTokenizerOld(insertedText.toString());
             for (String line : tokenizer.execute()) {
                 addLine(lineNumber, line);
                 lineNumber++;

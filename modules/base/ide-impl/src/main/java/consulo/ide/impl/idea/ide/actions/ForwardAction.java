@@ -15,15 +15,23 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Forward")
 public class ForwardAction extends AnAction implements DumbAware {
+    public ForwardAction() {
+        super(ActionLocalize.actionForwardText(), ActionLocalize.actionForwardDescription(), PlatformIconGroup.actionsForward());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

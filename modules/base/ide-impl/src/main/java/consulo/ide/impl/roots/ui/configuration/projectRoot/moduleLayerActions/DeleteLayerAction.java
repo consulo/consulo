@@ -29,26 +29,26 @@ import consulo.ui.annotation.RequiredUIAccess;
  * @since 2014-07-30
  */
 public class DeleteLayerAction extends AnAction {
-  private ModuleEditor myModuleEditor;
+    private ModuleEditor myModuleEditor;
 
-  public DeleteLayerAction(ModuleEditor moduleEditor) {
-    super(LocalizeValue.localizeTODO("Delete layer"), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
-    myModuleEditor = moduleEditor;
-  }
+    public DeleteLayerAction(ModuleEditor moduleEditor) {
+        super(LocalizeValue.localizeTODO("Delete layer"), LocalizeValue.empty(), PlatformIconGroup.generalRemove());
+        myModuleEditor = moduleEditor;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
 
-    String currentLayerName = modifiableRootModelProxy.getCurrentLayerName();
+        String currentLayerName = modifiableRootModelProxy.getCurrentLayerName();
 
-    modifiableRootModelProxy.removeLayer(currentLayerName, true);
-  }
+        modifiableRootModelProxy.removeLayer(currentLayerName, true);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
-    e.getPresentation().setEnabled(modifiableRootModelProxy != null && modifiableRootModelProxy.getLayers().size() > 1);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
+        e.getPresentation().setEnabled(modifiableRootModelProxy != null && modifiableRootModelProxy.getLayers().size() > 1);
+    }
 }

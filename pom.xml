@@ -146,6 +146,7 @@
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
     <module>modules/base/local-history-api</module>
+    <module>modules/base/local-history-impl</module>
     <module>modules/base/module-impl</module>
     <module>modules/base/project-impl</module>
     <module>modules/base/application-content-impl</module>

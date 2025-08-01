@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
@@ -47,6 +48,7 @@ import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -69,13 +71,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+@ActionImpl(id = "GotoDeclaration")
 public class GotoDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
     private static final Logger LOG = Logger.getInstance(GotoDeclarationAction.class);
 
+    @Nonnull
     private final Application myApplication;
 
     @Inject
-    public GotoDeclarationAction(Application application) {
+    public GotoDeclarationAction(@Nonnull Application application) {
+        super(ActionLocalize.actionGotodeclarationText(), ActionLocalize.actionGotodeclarationDescription());
         myApplication = application;
     }
 

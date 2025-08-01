@@ -18,15 +18,15 @@ package consulo.ide.impl.idea.openapi.vcs.checkin;
 import consulo.ide.impl.idea.ide.todo.TodoFilter;
 import consulo.ide.impl.idea.ide.todo.TodoIndexPatternProvider;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.diff.ex.DiffFragment;
-import consulo.ide.impl.idea.openapi.diff.impl.ComparisonPolicy;
-import consulo.ide.impl.idea.openapi.diff.impl.fragments.LineFragment;
-import consulo.ide.impl.idea.openapi.diff.impl.highlighting.FragmentSide;
-import consulo.ide.impl.idea.openapi.diff.impl.processing.DiffCorrection;
-import consulo.ide.impl.idea.openapi.diff.impl.processing.DiffFragmentsProcessor;
-import consulo.ide.impl.idea.openapi.diff.impl.processing.DiffPolicy;
-import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
-import consulo.ide.impl.idea.openapi.diff.impl.util.TextDiffTypeEnum;
+import consulo.diff.old.DiffFragmentOld;
+import consulo.diff.old.ComparisonPolicyOld;
+import consulo.diff.old.LineFragment;
+import consulo.diff.old.FragmentSide;
+import consulo.diff.old.DiffCorrectionOld;
+import consulo.diff.old.DiffFragmentsProcessorOld;
+import consulo.diff.old.DiffPolicyOld;
+import consulo.diff.old.DiffString;
+import consulo.diff.old.TextDiffTypeEnum;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
@@ -329,11 +329,11 @@ public class TodoCheckinHandlerWorker {
 
   private static ArrayList<LineFragment> getLineFragments(final String fileName, String beforeContent, String afterContent) throws VcsException {
     try {
-      DiffFragment[] woFormattingBlocks =
-              DiffPolicy.LINES_WO_FORMATTING.buildFragments(DiffString.create(beforeContent), DiffString.create(afterContent));
-      DiffFragment[] step1lineFragments =
-              new DiffCorrection.TrueLineBlocks(ComparisonPolicy.IGNORE_SPACE).correctAndNormalize(woFormattingBlocks);
-      return new DiffFragmentsProcessor().process(step1lineFragments);
+      DiffFragmentOld[] woFormattingBlocks =
+              DiffPolicyOld.LINES_WO_FORMATTING.buildFragments(DiffString.create(beforeContent), DiffString.create(afterContent));
+      DiffFragmentOld[] step1lineFragments =
+              new DiffCorrectionOld.TrueLineBlocks(ComparisonPolicyOld.IGNORE_SPACE).correctAndNormalize(woFormattingBlocks);
+      return new DiffFragmentsProcessorOld().process(step1lineFragments);
     } catch (FilesTooBigForDiffException e) {
       throw new VcsException("File " + fileName + " is too big and there are too many changes to build a diff", e);
     }

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch.apply;
 
-import consulo.ide.impl.idea.openapi.diff.impl.patch.BinaryFilePatch;
+import consulo.versionControlSystem.change.patch.BinaryFilePatch;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.versionControlSystem.FilePath;

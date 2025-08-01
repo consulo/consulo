@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
@@ -36,11 +37,14 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.undoRedo.*;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.UndoProvider;
+import consulo.undoRedo.UndoableAction;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
+import consulo.undoRedo.internal.UndoManagerInternal;
 import consulo.util.lang.*;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -52,7 +56,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-public abstract class UndoManagerImpl implements UndoManager, Disposable {
+public abstract class UndoManagerImpl implements UndoManagerInternal, Disposable {
     private static final Logger LOG = Logger.getInstance(UndoManagerImpl.class);
 
     private static final int COMMANDS_TO_KEEP_LIVE_QUEUES = 100;
@@ -605,6 +609,12 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
             }
             clearUndoRedoQueue(each);
         }
+    }
+
+    @Override
+    public AccessToken underDocumentUndo(Document document) {
+        DocumentUndoProvider.startDocumentUndo(document);
+        return AccessToken.of(() -> DocumentUndoProvider.finishDocumentUndo(document));
     }
 
     private int getLastCommandTimestamp(@Nonnull DocumentReference ref) {

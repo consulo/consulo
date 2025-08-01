@@ -21,6 +21,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.change.patch.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

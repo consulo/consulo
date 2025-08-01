@@ -27,7 +27,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
-import consulo.versionControlSystem.impl.internal.change.SortByVcsRoots;
+import consulo.versionControlSystem.internal.SortByVcsRoots;
 import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.LocalFileSystem;

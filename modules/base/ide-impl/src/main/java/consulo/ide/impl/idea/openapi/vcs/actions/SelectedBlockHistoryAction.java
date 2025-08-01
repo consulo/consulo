@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.vcs.history.impl.VcsSelectionHistoryDialog;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
-import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
+import consulo.versionControlSystem.history.VcsSelectionUtil;
 import consulo.project.Project;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;

@@ -16,17 +16,34 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.OccurenceNavigator;
 
+@ActionImpl(id = "NextOccurence")
 public class NextOccurenceAction extends OccurenceNavigatorActionBase {
+    public NextOccurenceAction() {
+        super(
+            ActionLocalize.actionNextoccurenceText(),
+            ActionLocalize.actionNextoccurenceDescription(),
+            PlatformIconGroup.actionsNextoccurence()
+        );
+    }
+
+    @Override
     protected String getDescription(OccurenceNavigator navigator) {
         return navigator.getNextOccurenceActionName();
     }
 
+    @Override
     protected OccurenceNavigator.OccurenceInfo go(OccurenceNavigator navigator) {
         return navigator.goNextOccurence();
     }
 
+    @Override
+    @RequiredReadAction
     protected boolean hasOccurenceToGo(OccurenceNavigator navigator) {
         return navigator.hasNextOccurence();
     }

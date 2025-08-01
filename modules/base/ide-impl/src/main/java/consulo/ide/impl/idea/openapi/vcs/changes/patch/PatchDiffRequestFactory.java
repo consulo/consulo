@@ -28,7 +28,7 @@ import consulo.diff.merge.MergeResult;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffRequest;

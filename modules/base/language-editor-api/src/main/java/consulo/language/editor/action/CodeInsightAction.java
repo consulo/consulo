@@ -1,5 +1,4 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.language.editor.action;
 
 import consulo.application.Application;
@@ -20,6 +19,7 @@ import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -33,6 +33,10 @@ public abstract class CodeInsightAction extends AnAction {
 
     protected CodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
         super(text, description);
+    }
+
+    protected CodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Image icon) {
+        super(text, description, icon);
     }
 
     @Override

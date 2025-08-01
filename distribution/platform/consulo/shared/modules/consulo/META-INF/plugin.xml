@@ -532,21 +532,7 @@
             <reference ref="ViewMenu"/>
 
             <!-- Go to -->
-            <group id="GoToMenu" popup="true">
-                <action id="GotoLine" class="consulo.ide.impl.idea.ide.actions.GotoLineAction"/>
-                <separator/>
-                <action id="Back" class="consulo.ide.impl.idea.ide.actions.BackAction"
-                        icon="consulo.platform.base.PlatformIconGroup@actions.back"/>
-                <action id="Forward" class="consulo.ide.impl.idea.ide.actions.ForwardAction"
-                        icon="consulo.platform.base.PlatformIconGroup@actions.forward"/>
-                <action id="JumpToLastChange" class="consulo.ide.impl.idea.ide.actions.JumpToLastEditAction"/>
-                <separator/>
-                <action id="PreviousOccurence" class="consulo.ide.impl.idea.ide.actions.PreviousOccurenceAction"
-                        icon="consulo.platform.base.PlatformIconGroup@actions.previousoccurence"/>
-                <action id="NextOccurence" class="consulo.ide.impl.idea.ide.actions.NextOccurenceAction"
-                        icon="consulo.platform.base.PlatformIconGroup@actions.nextoccurence"/>
-                <separator/>
-            </group>
+            <reference ref="GoToMenu"/>
 
             <!-- Tools -->
             <group id="ToolsMenu" popup="true">
@@ -558,23 +544,7 @@
                 <separator/>
             </group>
 
-            <group id="WindowMenu" popup="true">
-                <reference ref="StoreDefaultLayout"/>
-                <reference ref="RestoreDefaultLayout"/>
-                <separator/>
-                <reference ref="ActiveToolwindowGroup"/>
-
-                <reference ref="EditorTabsGroup"/>
-
-                <reference ref="BackgroundTasks"/>
-
-                <separator/>
-                <group id="OpenProjectWindows" class="consulo.ide.impl.idea.openapi.wm.impl.ProjectWindowActionGroup">
-                    <action id="NextProjectWindow" class="consulo.ide.impl.idea.openapi.wm.impl.NextProjectWindow"/>
-                    <action id="PreviousProjectWindow" class="consulo.ide.impl.idea.openapi.wm.impl.PreviousProjectWindow"/>
-                    <separator/>
-                </group>
-            </group>
+            <reference ref="WindowMenu"/>
 
             <!-- Help -->
             <reference ref="HelpMenu"/>
@@ -768,16 +738,6 @@
 
         <group id="VersionControlsGroup">
             <reference ref="VcsFileGroupPopup"/>
-        </group>
-
-        <group id="GoToChangeMarkerGroup">
-            <separator/>
-            <action id="VcsShowNextChangeMarker" class="consulo.ide.impl.idea.openapi.vcs.actions.ShowNextChangeMarkerAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.nextoccurence"/>
-            <action id="VcsShowPrevChangeMarker" class="consulo.ide.impl.idea.openapi.vcs.actions.ShowPrevChangeMarkerAction"
-                    icon="consulo.platform.base.PlatformIconGroup@actions.previousoccurence"/>
-
-            <add-to-group group-id="GoToMenu" anchor="last"/>
         </group>
 
         <action id="Vcs.UpdateProject" class="consulo.ide.impl.idea.openapi.vcs.update.CommonUpdateProjectAction"
@@ -1115,37 +1075,6 @@
             <add-to-group group-id="EditSelectGroup" anchor="last"/>
         </group>
 
-        <group id="GoToCodeGroup">
-            <separator/>
-            <action id="SelectIn" class="consulo.ide.impl.idea.ide.actions.SelectInAction"/>
-            <action id="ShowNavBar" class="consulo.ide.impl.idea.ide.navigationToolbar.ShowNavBarAction"/>
-            <action id="GotoDeclaration" class="consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction"/>
-            <action id="GotoImplementation" class="consulo.ide.impl.idea.codeInsight.navigation.actions.GotoImplementationAction"/>
-            <action id="GotoTypeDeclaration" class="consulo.ide.impl.idea.codeInsight.navigation.actions.GotoTypeDeclarationAction"/>
-            <action id="GotoSuperMethod" class="consulo.ide.impl.idea.codeInsight.navigation.actions.GotoSuperAction"/>
-            <action id="GotoTest" class="consulo.ide.impl.idea.testIntegration.GotoTestOrCodeAction"/>
-            <action id="GotoRelated" class="consulo.ide.impl.idea.ide.actions.GotoRelatedFileAction"/>
-            <separator/>
-            <action id="FileStructurePopup" class="consulo.ide.impl.idea.ide.actions.ViewStructureAction"/>
-            <action id="ShowFilePath" class="consulo.ide.impl.idea.ide.actions.ShowFilePathAction"/>
-            <group id="HierarchyGroup">
-                <action id="TypeHierarchy" class="consulo.ide.impl.idea.ide.hierarchy.actions.BrowseTypeHierarchyAction"/>
-                <action id="MethodHierarchy" class="consulo.ide.impl.idea.ide.hierarchy.actions.BrowseMethodHierarchyAction"/>
-                <action id="CallHierarchy" class="consulo.ide.impl.idea.ide.hierarchy.actions.BrowseCallHierarchyAction"/>
-            </group>
-            <separator/>
-
-            <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="JumpToLastChange"/>
-        </group>
-
-        <group id="GoToErrorGroup">
-            <separator/>
-            <action id="GotoNextError" class="consulo.ide.impl.idea.codeInsight.daemon.impl.actions.GotoNextErrorAction"/>
-            <action id="GotoPreviousError" class="consulo.ide.impl.idea.codeInsight.daemon.impl.actions.GotoPreviousErrorAction"/>
-
-            <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="GoToCodeGroup"/>
-        </group>
-
         <!-- View -->
         <group id="QuickActions">
             <separator/>
@@ -1179,24 +1108,6 @@
         </action>
 
         <action id="ProjectViewChangeView" class="consulo.ide.impl.idea.ide.projectView.actions.ChangeProjectViewAction"/>
-
-        <!-- Go To -->
-        <group id="GoToTargetEx">
-            <reference ref="GotoClass"/>
-            <reference ref="GotoFile"/>
-            <reference ref="GotoSymbol"/>
-            <reference ref="GotoCustomRegion"/>
-
-            <add-to-group group-id="GoToMenu" anchor="first"/>
-        </group>
-
-        <group id="GoToMenuEx">
-            <separator/>
-            <action id="MethodDown" class="consulo.ide.impl.idea.codeInsight.navigation.actions.MethodDownAction"/>
-            <action id="MethodUp" class="consulo.ide.impl.idea.codeInsight.navigation.actions.MethodUpAction"/>
-            <separator/>
-            <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="GoToPreviousError"/>
-        </group>
 
         <group id="AnalyzeActions">
         </group>
@@ -1845,11 +1756,11 @@
             </group>
         </group>
 
-        <group id="LocalHistory" class="consulo.ide.impl.idea.history.integration.ui.actions.LocalHistoryGroup" popup="true">
-            <action id="LocalHistory.ShowHistory" class="consulo.ide.impl.idea.history.integration.ui.actions.ShowHistoryAction"/>
+        <group id="LocalHistory" class="consulo.localHistory.impl.internal.ui.action.LocalHistoryGroup" popup="true">
+            <action id="LocalHistory.ShowHistory" class="consulo.localHistory.impl.internal.ui.action.ShowHistoryAction"/>
             <action id="LocalHistory.ShowSelectionHistory"
-                    class="consulo.ide.impl.idea.history.integration.ui.actions.ShowSelectionHistoryAction"/>
-            <action id="LocalHistory.PutLabel" class="consulo.ide.impl.idea.history.integration.ui.actions.PutLabelAction"/>
+                    class="consulo.localHistory.impl.internal.ui.action.ShowSelectionHistoryAction"/>
+            <action id="LocalHistory.PutLabel" class="consulo.localHistory.impl.internal.ui.action.PutLabelAction"/>
 
             <add-to-group group-id="VersionControlsGroup" anchor="first"/>
         </group>
@@ -2001,7 +1912,6 @@
         </group>
 
         <action id="ModuleSettings" class="consulo.ide.impl.idea.ide.actions.ShowModulePropertiesAction"/>
-        <action id="OpenModuleSettings" class="consulo.ide.impl.idea.ide.actions.OpenModuleSettingsAction" use-shortcut-of="EditSource"/>
         <group id="MoveModuleToGroup" class="consulo.ide.impl.idea.ide.projectView.impl.MoveModuleToGroupTopLevel" popup="true"/>
 
         <reference ref="AnalyzeMenu">
@@ -2037,9 +1947,6 @@
 
         <reference ref="OpenModuleSettings">
             <add-to-group group-id="ProjectViewPopupMenuSettingsGroup" anchor="first"/>
-        </reference>
-        <reference ref="MoveModuleToGroup">
-            <add-to-group group-id="ProjectViewPopupMenuSettingsGroup" anchor="after" relative-to-action="OpenModuleSettings"/>
         </reference>
 
         <group id="StructureViewCompileGroup">

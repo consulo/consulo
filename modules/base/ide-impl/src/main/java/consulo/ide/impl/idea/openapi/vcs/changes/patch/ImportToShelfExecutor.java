@@ -17,10 +17,10 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchEP;
+import consulo.versionControlSystem.change.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.PatchEP;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangeList;

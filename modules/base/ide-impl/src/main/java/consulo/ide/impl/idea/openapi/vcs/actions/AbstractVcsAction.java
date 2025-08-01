@@ -15,16 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.VcsContext;
-import consulo.versionControlSystem.impl.internal.action.VcsContextWrapper;
+import consulo.versionControlSystem.internal.VcsContextWrapper;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -32,46 +35,56 @@ import static consulo.ide.impl.idea.util.containers.ContainerUtil.newHashSet;
 import static java.util.Collections.emptySet;
 
 public abstract class AbstractVcsAction extends DumbAwareAction {
+    protected AbstractVcsAction() {
+    }
 
-  @SuppressWarnings("unused") // Required for compatibility with external plugins.
-  public static Collection<AbstractVcs> getActiveVcses(@Nonnull VcsContext dataContext) {
-    Project project = dataContext.getProject();
+    protected AbstractVcsAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nullable Image icon
+    ) {
+        super(text, description, icon);
+    }
 
-    return project != null ? newHashSet(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss()) : emptySet();
-  }
+    @SuppressWarnings("unused") // Required for compatibility with external plugins.
+    public static Collection<AbstractVcs> getActiveVcses(@Nonnull VcsContext dataContext) {
+        Project project = dataContext.getProject();
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    //noinspection deprecation - required for compatibility with external plugins.
-    performUpdate(e.getPresentation(), VcsContextWrapper.createInstanceOn(e));
-  }
+        return project != null ? newHashSet(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss()) : emptySet();
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    actionPerformed(VcsContextWrapper.createCachedInstanceOn(e));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        //noinspection deprecation - required for compatibility with external plugins.
+        performUpdate(e.getPresentation(), VcsContextWrapper.createInstanceOn(e));
+    }
 
-  protected abstract void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        actionPerformed(VcsContextWrapper.createCachedInstanceOn(e));
+    }
 
-  @RequiredUIAccess
-  protected abstract void actionPerformed(@Nonnull VcsContext e);
+    protected abstract void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation);
 
-  /**
-   * @deprecated Only sync update is currently supported by {@link AbstractVcsAction}.
-   */
-  @SuppressWarnings("unused") // Required for compatibility with external plugins.
-  @Deprecated
-  protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
-    return true;
-  }
+    @RequiredUIAccess
+    protected abstract void actionPerformed(@Nonnull VcsContext e);
+
+    /**
+     * @deprecated Only sync update is currently supported by {@link AbstractVcsAction}.
+     */
+    @SuppressWarnings("unused") // Required for compatibility with external plugins.
+    @Deprecated
+    protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
+        return true;
+    }
 
 
-  /**
-   * @deprecated Use {@link AbstractVcsAction#update(VcsContext, Presentation)}.
-   */
-  @Deprecated
-  protected void performUpdate(@Nonnull Presentation presentation, @Nonnull VcsContext vcsContext) {
-    update(vcsContext, presentation);
-  }
+    /**
+     * @deprecated Use {@link AbstractVcsAction#update(VcsContext, Presentation)}.
+     */
+    @Deprecated
+    protected void performUpdate(@Nonnull Presentation presentation, @Nonnull VcsContext vcsContext) {
+        update(vcsContext, presentation);
+    }
 }

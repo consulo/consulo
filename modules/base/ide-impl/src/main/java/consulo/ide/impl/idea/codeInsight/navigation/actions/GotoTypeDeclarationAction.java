@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
@@ -28,17 +30,28 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.*;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@ActionImpl(id = "GotoTypeDeclaration")
 public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
+    private final Application myApplication;
+
+    @Inject
+    public GotoTypeDeclarationAction(Application application) {
+        super(ActionLocalize.actionGototypedeclarationText(), ActionLocalize.actionGototypedeclarationDescription());
+        myApplication = application;
+    }
+
     @Nonnull
     @Override
     protected CodeInsightActionHandler getHandler() {
@@ -52,7 +65,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
     @Override
     public void update(@Nonnull AnActionEvent event) {
-        if (!TypeDeclarationProvider.EP_NAME.hasAnyExtensions()) {
+        if (!myApplication.getExtensionPoint(TypeDeclarationProvider.class).hasAnyExtensions()) {
             event.getPresentation().setVisible(false);
         }
         else {
@@ -146,8 +159,8 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
     @Nullable
     @RequiredReadAction
-    private static PsiElement[] getSymbolTypeDeclarations(PsiElement targetElement, Editor editor, int offset) {
-        for (TypeDeclarationProvider provider : TypeDeclarationProvider.EP_NAME.getExtensionList()) {
+    private static PsiElement[] getSymbolTypeDeclarations(@Nonnull PsiElement targetElement, Editor editor, int offset) {
+        for (TypeDeclarationProvider provider : targetElement.getApplication().getExtensionList(TypeDeclarationProvider.class)) {
             PsiElement[] result = provider.getSymbolTypeDeclarations(targetElement, editor, offset);
             if (result != null) {
                 return result;

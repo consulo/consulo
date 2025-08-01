@@ -36,92 +36,92 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 public class GoToChangePopupBuilder {
-  public interface Chain extends DiffRequestChain {
-    @Nonnull
-    AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected);
-  }
-
-  @Nonnull
-  public static AnAction create(@Nonnull DiffRequestChain chain, @Nonnull Consumer<Integer> onSelected) {
-    if (chain instanceof Chain) {
-      return ((Chain)chain).createGoToChangeAction(onSelected);
-    }
-    return new SimpleGoToChangePopupAction(chain, onSelected);
-  }
-
-  public static abstract class BaseGoToChangePopupAction<Chain extends DiffRequestChain> extends GoToChangePopupAction {
-    @Nonnull
-    protected final Chain myChain;
-    @Nonnull
-    protected final Consumer<Integer> myOnSelected;
-
-    public BaseGoToChangePopupAction(@Nonnull Chain chain, @Nonnull Consumer<Integer> onSelected) {
-      myChain = chain;
-      myOnSelected = onSelected;
-    }
-
-    @Override
-    public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setEnabledAndVisible(myChain.getRequests().size() > 1);
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      JBPopup popup = createPopup(e);
-
-      InputEvent event = e.getInputEvent();
-      if (event instanceof MouseEvent) {
-        popup.show(new RelativePoint((MouseEvent)event));
-      }
-      else {
-        popup.showInBestPositionFor(e.getDataContext());
-      }
+    public interface Chain extends DiffRequestChain {
+        @Nonnull
+        AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected);
     }
 
     @Nonnull
-    protected abstract JBPopup createPopup(@Nonnull AnActionEvent e);
-  }
-
-  private static class SimpleGoToChangePopupAction extends BaseGoToChangePopupAction {
-
-    public SimpleGoToChangePopupAction(@Nonnull DiffRequestChain chain, @Nonnull Consumer<Integer> onSelected) {
-      super(chain, onSelected);
+    public static AnAction create(@Nonnull DiffRequestChain chain, @Nonnull Consumer<Integer> onSelected) {
+        if (chain instanceof Chain) {
+            return ((Chain) chain).createGoToChangeAction(onSelected);
+        }
+        return new SimpleGoToChangePopupAction(chain, onSelected);
     }
 
-    @Nonnull
-    @Override
-    protected JBPopup createPopup(@Nonnull AnActionEvent e) {
-      return JBPopupFactory.getInstance().createListPopup(new MyListPopupStep(e.getData(Project.KEY)));
+    public static abstract class BaseGoToChangePopupAction<Chain extends DiffRequestChain> extends GoToChangePopupAction {
+        @Nonnull
+        protected final Chain myChain;
+        @Nonnull
+        protected final Consumer<Integer> myOnSelected;
+
+        public BaseGoToChangePopupAction(@Nonnull Chain chain, @Nonnull Consumer<Integer> onSelected) {
+            myChain = chain;
+            myOnSelected = onSelected;
+        }
+
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+            e.getPresentation().setEnabledAndVisible(myChain.getRequests().size() > 1);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            JBPopup popup = createPopup(e);
+
+            InputEvent event = e.getInputEvent();
+            if (event instanceof MouseEvent) {
+                popup.show(new RelativePoint((MouseEvent) event));
+            }
+            else {
+                popup.showInBestPositionFor(e.getDataContext());
+            }
+        }
+
+        @Nonnull
+        protected abstract JBPopup createPopup(@Nonnull AnActionEvent e);
     }
 
-    private class MyListPopupStep extends BaseListPopupStep<DiffRequestProducer> {
-      private final Project myProject;
+    private static class SimpleGoToChangePopupAction extends BaseGoToChangePopupAction {
 
-      public MyListPopupStep(@Nullable Project project) {
-        super("Go To Change", myChain.getRequests());
-        setDefaultOptionIndex(myChain.getIndex());
-        myProject = project;
-      }
+        public SimpleGoToChangePopupAction(@Nonnull DiffRequestChain chain, @Nonnull Consumer<Integer> onSelected) {
+            super(chain, onSelected);
+        }
 
-      @Nonnull
-      @Override
-      public String getTextFor(DiffRequestProducer value) {
-        return value.getName();
-      }
+        @Nonnull
+        @Override
+        protected JBPopup createPopup(@Nonnull AnActionEvent e) {
+            return JBPopupFactory.getInstance().createListPopup(new MyListPopupStep(e.getData(Project.KEY)));
+        }
 
-      @Override
-      public boolean isSpeedSearchEnabled() {
-        return true;
-      }
+        private class MyListPopupStep extends BaseListPopupStep<DiffRequestProducer> {
+            private final Project myProject;
 
-      @Override
-      public PopupStep onChosen(final DiffRequestProducer selectedValue, boolean finalChoice) {
-        return doFinalStep(() -> {
-          int index = myChain.getRequests().indexOf(selectedValue);
-          myOnSelected.accept(index);
-        });
-      }
+            public MyListPopupStep(@Nullable Project project) {
+                super("Go To Change", myChain.getRequests());
+                setDefaultOptionIndex(myChain.getIndex());
+                myProject = project;
+            }
+
+            @Nonnull
+            @Override
+            public String getTextFor(DiffRequestProducer value) {
+                return value.getName();
+            }
+
+            @Override
+            public boolean isSpeedSearchEnabled() {
+                return true;
+            }
+
+            @Override
+            public PopupStep onChosen(final DiffRequestProducer selectedValue, boolean finalChoice) {
+                return doFinalStep(() -> {
+                    int index = myChain.getRequests().indexOf(selectedValue);
+                    myOnSelected.accept(index);
+                });
+            }
+        }
     }
-  }
 }

@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -23,7 +25,12 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "JumpToLastChange")
 public class JumpToLastEditAction extends AnAction implements DumbAware {
+    public JumpToLastEditAction() {
+        super(ActionLocalize.actionJumptolastchangeText(), ActionLocalize.actionJumptolastchangeDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -32,7 +39,7 @@ public class JumpToLastEditAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabled(project != null && IdeDocumentHistory.getInstance(project).isNavigatePreviousChangeAvailable());
     }
