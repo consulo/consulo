@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.versionControlSystem.change.LocalChangeList;

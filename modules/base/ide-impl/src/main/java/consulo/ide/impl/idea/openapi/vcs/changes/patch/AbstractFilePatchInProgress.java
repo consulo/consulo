@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.diff.chain.DiffRequestProducer;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchReader;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PathMerger;
 import consulo.util.lang.Comparing;

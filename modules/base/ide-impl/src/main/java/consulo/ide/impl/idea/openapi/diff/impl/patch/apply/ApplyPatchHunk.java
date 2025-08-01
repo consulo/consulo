@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch.apply;
 
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchException;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchStatus;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchHunk;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchLine;
+import consulo.versionControlSystem.change.patch.PatchHunk;
+import consulo.versionControlSystem.change.patch.PatchLine;
 
 import java.util.ArrayList;
 import java.util.List;

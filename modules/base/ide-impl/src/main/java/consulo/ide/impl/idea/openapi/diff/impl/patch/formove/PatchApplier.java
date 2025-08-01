@@ -20,7 +20,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchContext;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchStatus;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchAction;

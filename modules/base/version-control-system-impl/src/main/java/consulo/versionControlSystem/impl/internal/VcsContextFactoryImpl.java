@@ -22,7 +22,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.versionControlSystem.impl.internal.action.VcsContextWrapper;
+import consulo.versionControlSystem.internal.VcsContextWrapper;
 import consulo.versionControlSystem.impl.internal.change.LocalChangeListImpl;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

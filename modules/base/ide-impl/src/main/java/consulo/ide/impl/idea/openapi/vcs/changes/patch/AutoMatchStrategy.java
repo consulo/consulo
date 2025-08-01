@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.platform.Platform;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;

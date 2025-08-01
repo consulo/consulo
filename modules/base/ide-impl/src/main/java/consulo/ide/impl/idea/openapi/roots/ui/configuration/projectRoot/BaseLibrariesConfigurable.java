@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEdi
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.CreateNewLibraryAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.impl.idea.openapi.ui.NonEmptyInputValidator;
+import consulo.ui.ex.NonEmptyInputValidator;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;

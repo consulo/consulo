@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
 import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.BinaryFilePatch;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
+import consulo.versionControlSystem.change.patch.BinaryFilePatch;
+import consulo.versionControlSystem.change.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchFactory;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyTextFilePatch;

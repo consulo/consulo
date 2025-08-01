@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch.apply;
 
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchStatus;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.CharsetEP;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.internal.LoadTextUtil;

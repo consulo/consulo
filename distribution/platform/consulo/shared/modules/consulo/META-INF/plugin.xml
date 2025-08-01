@@ -1772,11 +1772,11 @@
             </group>
         </group>
 
-        <group id="LocalHistory" class="consulo.ide.impl.idea.history.integration.ui.actions.LocalHistoryGroup" popup="true">
-            <action id="LocalHistory.ShowHistory" class="consulo.ide.impl.idea.history.integration.ui.actions.ShowHistoryAction"/>
+        <group id="LocalHistory" class="consulo.localHistory.impl.internal.ui.action.LocalHistoryGroup" popup="true">
+            <action id="LocalHistory.ShowHistory" class="consulo.localHistory.impl.internal.ui.action.ShowHistoryAction"/>
             <action id="LocalHistory.ShowSelectionHistory"
-                    class="consulo.ide.impl.idea.history.integration.ui.actions.ShowSelectionHistoryAction"/>
-            <action id="LocalHistory.PutLabel" class="consulo.ide.impl.idea.history.integration.ui.actions.PutLabelAction"/>
+                    class="consulo.localHistory.impl.internal.ui.action.ShowSelectionHistoryAction"/>
+            <action id="LocalHistory.PutLabel" class="consulo.localHistory.impl.internal.ui.action.PutLabelAction"/>
 
             <add-to-group group-id="VersionControlsGroup" anchor="first"/>
         </group>

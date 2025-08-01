@@ -25,6 +25,7 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.localize;
   exports consulo.versionControlSystem.change;
   exports consulo.versionControlSystem.change.diff;
+  exports consulo.versionControlSystem.change.patch;
   exports consulo.versionControlSystem.base;
   exports consulo.versionControlSystem.history;
   exports consulo.versionControlSystem.ui;
@@ -39,7 +40,7 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.root;
   exports consulo.versionControlSystem.util;
   exports consulo.versionControlSystem.versionBrowser.ui.awt;
-  exports consulo.versionControlSystem.internal to consulo.ide.impl, consulo.version.control.system.impl;
+  exports consulo.versionControlSystem.internal to consulo.ide.impl, consulo.version.control.system.impl, consulo.local.history.impl;
 
   requires com.google.common;
   requires it.unimi.dsi.fastutil;

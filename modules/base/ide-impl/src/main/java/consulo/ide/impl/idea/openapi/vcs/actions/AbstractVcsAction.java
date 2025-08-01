@@ -25,7 +25,7 @@ import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.VcsContext;
-import consulo.versionControlSystem.impl.internal.action.VcsContextWrapper;
+import consulo.versionControlSystem.internal.VcsContextWrapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

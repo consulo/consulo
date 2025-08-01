@@ -122,6 +122,7 @@
                 <include>consulo:consulo-diff-api</include>
                 <include>consulo:consulo-diff-impl</include>
                 <include>consulo:consulo-local-history-api</include>
+                <include>consulo:consulo-local-history-impl</include>
                 <include>consulo:consulo-project-ui-view-api</include>
                 <include>consulo:consulo-project-ui-view-impl</include>
                 <include>consulo:consulo-application-content-impl</include>

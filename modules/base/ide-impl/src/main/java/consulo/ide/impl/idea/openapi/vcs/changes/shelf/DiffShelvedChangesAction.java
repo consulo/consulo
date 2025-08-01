@@ -47,6 +47,8 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.FilePathsHelper;
+import consulo.versionControlSystem.change.patch.PatchEP;
+import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;

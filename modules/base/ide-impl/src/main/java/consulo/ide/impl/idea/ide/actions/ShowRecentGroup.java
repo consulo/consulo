@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.history.integration.ui.actions.RecentChangesAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
 
@@ -32,8 +31,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = ShowRecentFilesAction.class),
         @ActionRef(type = ToggleChangedOnlyFilesAction.class),
         @ActionRef(type = ShowRecentlyEditedFilesAction.class),
-        @ActionRef(type = RecentLocationsAction.class),
-        @ActionRef(type = RecentChangesAction.class)
+        @ActionRef(type = RecentLocationsAction.class)
     }
 )
 public class ShowRecentGroup extends DefaultActionGroup implements DumbAware {

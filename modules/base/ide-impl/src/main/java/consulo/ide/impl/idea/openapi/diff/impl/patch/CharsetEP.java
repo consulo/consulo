@@ -20,6 +20,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.FilePathsHelper;
+import consulo.versionControlSystem.change.patch.PatchEP;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
