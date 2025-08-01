@@ -31,87 +31,86 @@ import java.util.List;
  * @since 2012-11-13
  */
 public abstract class AbstractMoveArrangementRuleAction extends AbstractArrangementRuleAction implements DumbAware {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ArrangementMatchingRulesControl control = getRulesControl(e);
-    if (control == null) {
-      e.getPresentation().setEnabled(false);
-      return;
-    }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ArrangementMatchingRulesControl control = getRulesControl(e);
+        if (control == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
 
-    final List<int[]> mappings = new ArrayList<int[]>();
-    fillMappings(control, mappings);
-    for (int[] mapping : mappings) {
-      if (mapping[0] != mapping[1]) {
-        e.getPresentation().setEnabled(true);
-        return;
-      }
-    }
-    e.getPresentation().setEnabled(false);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final ArrangementMatchingRulesControl control = getRulesControl(e);
-    if (control == null) {
-      return;
-    }
-
-    final int editing = control.getEditingRow() - 1;
-
-    control.runOperationIgnoreSelectionChange(new Runnable() {
-      @Override
-      public void run() {
-        control.hideEditor();
         final List<int[]> mappings = new ArrayList<int[]>();
         fillMappings(control, mappings);
-
-        if (mappings.isEmpty()) {
-          return;
-        }
-
-        int newRowToEdit = editing;
-        ArrangementMatchingRulesModel model = control.getModel();
-        Object value;
-        int from;
-        int to;
-        for (int[] pair : mappings) {
-          from = pair[0];
-          to = pair[1];
-          if (from != to) {
-            value = model.getElementAt(from);
-            model.removeRow(from);
-            model.insert(to, value);
-            if (newRowToEdit == from) {
-              newRowToEdit = to;
+        for (int[] mapping : mappings) {
+            if (mapping[0] != mapping[1]) {
+                e.getPresentation().setEnabled(true);
+                return;
             }
-          }
+        }
+        e.getPresentation().setEnabled(false);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final ArrangementMatchingRulesControl control = getRulesControl(e);
+        if (control == null) {
+            return;
         }
 
-        ListSelectionModel selectionModel = control.getSelectionModel();
-        for (int[] pair : mappings) {
-          selectionModel.addSelectionInterval(pair[1], pair[1]);
-        }
+        final int editing = control.getEditingRow() - 1;
+
+        control.runOperationIgnoreSelectionChange(new Runnable() {
+            @Override
+            public void run() {
+                control.hideEditor();
+                final List<int[]> mappings = new ArrayList<int[]>();
+                fillMappings(control, mappings);
+
+                if (mappings.isEmpty()) {
+                    return;
+                }
+
+                int newRowToEdit = editing;
+                ArrangementMatchingRulesModel model = control.getModel();
+                Object value;
+                int from;
+                int to;
+                for (int[] pair : mappings) {
+                    from = pair[0];
+                    to = pair[1];
+                    if (from != to) {
+                        value = model.getElementAt(from);
+                        model.removeRow(from);
+                        model.insert(to, value);
+                        if (newRowToEdit == from) {
+                            newRowToEdit = to;
+                        }
+                    }
+                }
+
+                ListSelectionModel selectionModel = control.getSelectionModel();
+                for (int[] pair : mappings) {
+                    selectionModel.addSelectionInterval(pair[1], pair[1]);
+                }
 
 
-        int visibleRow = -1;
-        if (newRowToEdit >= 0) {
-          control.showEditor(newRowToEdit);
-          visibleRow = newRowToEdit;
-        }
-        else if (!mappings.isEmpty()) {
-          visibleRow = mappings.get(0)[1];
-        }
+                int visibleRow = -1;
+                if (newRowToEdit >= 0) {
+                    control.showEditor(newRowToEdit);
+                    visibleRow = newRowToEdit;
+                }
+                else if (!mappings.isEmpty()) {
+                    visibleRow = mappings.get(0)[1];
+                }
 
-        if (visibleRow != -1) {
-          scrollRowToVisible(control, visibleRow);
-        }
-      }
-    });
-    control.repaintRows(0, control.getModel().getSize() - 1, true);
+                if (visibleRow != -1) {
+                    scrollRowToVisible(control, visibleRow);
+                }
+            }
+        });
+        control.repaintRows(0, control.getModel().getSize() - 1, true);
+    }
 
-  }
-
-  protected abstract void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings);
+    protected abstract void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings);
 }
