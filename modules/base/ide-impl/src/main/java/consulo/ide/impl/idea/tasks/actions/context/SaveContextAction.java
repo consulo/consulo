@@ -32,26 +32,26 @@ import jakarta.annotation.Nonnull;
  * @author Dmitry Avdeev
  */
 public class SaveContextAction extends BaseTaskAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = getProject(e);
-    saveContext(project);
-  }
-
-  public static void saveContext(Project project) {
-
-    String initial = null;
-    Editor textEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-    if (textEditor != null) {
-      PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(textEditor.getDocument());
-      if (file != null) {
-        initial = file.getName();
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        saveContext(project);
     }
-    String comment = Messages.showInputDialog(project, "Enter comment (optional):", "Save Context", null, initial, null);
-    if (comment != null) {
-      WorkingContextManager.getInstance(project).saveContext(null, StringUtil.isEmpty(comment) ? null : comment);
+
+    @RequiredUIAccess
+    public static void saveContext(Project project) {
+        String initial = null;
+        Editor textEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+        if (textEditor != null) {
+            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(textEditor.getDocument());
+            if (file != null) {
+                initial = file.getName();
+            }
+        }
+        String comment = Messages.showInputDialog(project, "Enter comment (optional):", "Save Context", null, initial, null);
+        if (comment != null) {
+            WorkingContextManager.getInstance(project).saveContext(null, StringUtil.isEmpty(comment) ? null : comment);
+        }
     }
-  }
 }

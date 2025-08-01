@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.impl.internal.action.BaseTaskAction;
@@ -31,13 +33,18 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Dennis.Ushakov
  */
+@ActionImpl(id = "tasks.show.task.description")
 public class ShowTaskDescription extends BaseTaskAction {
+    public ShowTaskDescription() {
+        super(LocalizeValue.localizeTODO("Show Description"));
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent event) {
         super.update(event);
         if (event.getPresentation().isEnabled()) {
-            final Presentation presentation = event.getPresentation();
-            final LocalTask activeTask = getActiveTask(event);
+            Presentation presentation = event.getPresentation();
+            LocalTask activeTask = getActiveTask(event);
             presentation.setEnabled(activeTask != null && activeTask.isIssue() && activeTask.getDescription() != null);
             if (activeTask == null || !activeTask.isIssue()) {
                 presentation.setTextValue(getTemplatePresentation().getTextValue());
@@ -51,9 +58,8 @@ public class ShowTaskDescription extends BaseTaskAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        final Project project = getProject(e);
-        assert project != null;
-        final LocalTask task = getActiveTask(e);
+        Project project = e.getRequiredData(Project.KEY);
+        LocalTask task = getActiveTask(e);
         FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickjavadoc.ctrln");
         CommandProcessor.getInstance().newCommand()
             .project(project)

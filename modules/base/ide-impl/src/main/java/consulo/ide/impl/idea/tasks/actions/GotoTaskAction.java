@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
@@ -28,6 +29,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -38,17 +40,23 @@ import java.util.function.Predicate;
 /**
  * @author Evgeny Zakrevsky
  */
+@ActionImpl(id = GotoTaskAction.ID)
 public class GotoTaskAction extends GotoActionBase implements DumbAware {
-    public static final CreateNewTaskAction CREATE_NEW_TASK_ACTION = new CreateNewTaskAction();
     public static final String ID = "tasks.goto";
+    public static final CreateNewTaskAction CREATE_NEW_TASK_ACTION = new CreateNewTaskAction();
 
-    public GotoTaskAction() {
+    @Nonnull
+    private final Application myApplication;
+
+    @Inject
+    public GotoTaskAction(@Nonnull Application application) {
         super(LocalizeValue.localizeTODO("Open Task..."), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
+        myApplication = application;
     }
 
     @Override
     @RequiredUIAccess
-    protected void gotoActionPerformed(AnActionEvent e) {
+    protected void gotoActionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
             perform(project);
@@ -127,7 +135,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
             }
         });
 
-        DefaultActionGroup group = new DefaultActionGroup(new ConfigureServersAction() {
+        DefaultActionGroup group = new DefaultActionGroup(new ConfigureServersAction(myApplication) {
             @Override
             protected void serversChanged() {
                 popup.rebuildList(true);
@@ -142,26 +150,30 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         popup.setMaximumListSizeLimit(10);
         popup.setListSizeIncreasing(10);
 
-        showNavigationPopup(new GotoActionCallback<>() {
-            @Override
-            public void elementChosen(ChooseByNamePopup popup, Object element) {
-                TaskManager taskManager = TaskManager.getManager(project);
-                if (element instanceof TaskPsiElement) {
-                    Task task = ((TaskPsiElement)element).getTask();
-                    LocalTask localTask = taskManager.findTask(task.getId());
-                    if (localTask != null) {
-                        taskManager.activateTask(localTask, !shiftPressed.get());
+        showNavigationPopup(
+            new GotoActionCallback<>() {
+                @Override
+                public void elementChosen(ChooseByNamePopup popup, Object element) {
+                    TaskManager taskManager = TaskManager.getManager(project);
+                    if (element instanceof TaskPsiElement taskPsiElem) {
+                        Task task = taskPsiElem.getTask();
+                        LocalTask localTask = taskManager.findTask(task.getId());
+                        if (localTask != null) {
+                            taskManager.activateTask(localTask, !shiftPressed.get());
+                        }
+                        else {
+                            showOpenTaskDialog(project, task);
+                        }
                     }
-                    else {
-                        showOpenTaskDialog(project, task);
+                    else if (element == CREATE_NEW_TASK_ACTION) {
+                        LocalTask localTask = taskManager.createLocalTask(CREATE_NEW_TASK_ACTION.getTaskName());
+                        showOpenTaskDialog(project, localTask);
                     }
                 }
-                else if (element == CREATE_NEW_TASK_ACTION) {
-                    LocalTask localTask = taskManager.createLocalTask(CREATE_NEW_TASK_ACTION.getTaskName());
-                    showOpenTaskDialog(project, localTask);
-                }
-            }
-        }, null, popup);
+            },
+            null,
+            popup
+        );
     }
 
     private static boolean processTasks(
@@ -179,7 +191,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         return true;
     }
 
-    private static void showOpenTaskDialog(final Project project, final Task task) {
+    private static void showOpenTaskDialog(Project project, Task task) {
         JBPopup hint = DocumentationManager.getInstance(project).getDocInfoHint();
         if (hint != null) {
             hint.cancel();
@@ -212,8 +224,8 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
 
         @Override
         public String getElementName(Object element) {
-            if (element instanceof TaskPsiElement) {
-                return TaskUtil.getTrimmedSummary(((TaskPsiElement)element).getTask());
+            if (element instanceof TaskPsiElement taskPsiElem) {
+                return TaskUtil.getTrimmedSummary(taskPsiElem.getTask());
             }
             else if (element == CREATE_NEW_TASK_ACTION) {
                 return CREATE_NEW_TASK_ACTION.getActionText();
@@ -229,12 +241,12 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
 
         @Override
         public void saveInitialCheckBoxState(boolean state) {
-            ((TaskManagerImpl)TaskManager.getManager(getProject())).getState().searchClosedTasks = state;
+            ((TaskManagerImpl) TaskManager.getManager(getProject())).getState().searchClosedTasks = state;
         }
 
         @Override
         public boolean loadInitialCheckBoxState() {
-            return ((TaskManagerImpl)TaskManager.getManager(getProject())).getState().searchClosedTasks;
+            return ((TaskManagerImpl) TaskManager.getManager(getProject())).getState().searchClosedTasks;
         }
     }
 
