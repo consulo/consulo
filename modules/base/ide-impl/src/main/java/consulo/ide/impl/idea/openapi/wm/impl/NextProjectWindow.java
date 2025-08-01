@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -24,22 +26,25 @@ import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "NextProjectWindow")
 public class NextProjectWindow extends AnAction implements DumbAware {
-  private final ActionManager myActionManager;
+    @Nonnull
+    private final ActionManager myActionManager;
 
-  @Inject
-  public NextProjectWindow(ActionManager actionManager) {
-    myActionManager = actionManager;
-  }
+    @Inject
+    public NextProjectWindow(@Nonnull ActionManager actionManager) {
+        super(ActionLocalize.actionNextprojectwindowText(), ActionLocalize.actionNextprojectwindowDescription());
+        myActionManager = actionManager;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    WindowDressing.getWindowActionGroup(myActionManager).activateNextWindow(e);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        WindowDressing.getWindowActionGroup(myActionManager).activateNextWindow(e);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(WindowDressing.getWindowActionGroup(myActionManager).isEnabled());
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(WindowDressing.getWindowActionGroup(myActionManager).isEnabled());
+    }
 }
