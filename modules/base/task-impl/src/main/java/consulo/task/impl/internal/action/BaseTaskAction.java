@@ -16,6 +16,7 @@
 package consulo.task.impl.internal.action;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
@@ -32,27 +33,22 @@ public abstract class BaseTaskAction extends AnAction implements DumbAware {
     protected BaseTaskAction() {
     }
 
-    protected BaseTaskAction(String text) {
+    protected BaseTaskAction(@Nonnull LocalizeValue text) {
         super(text);
     }
 
-    protected BaseTaskAction(@Nullable final String text, @Nullable final String description, @Nullable final Image icon) {
+    protected BaseTaskAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     @Override
     public void update(@Nonnull AnActionEvent event) {
-        event.getPresentation().setEnabled(getProject(event) != null);
-    }
-
-    @Nullable
-    public static Project getProject(@Nonnull AnActionEvent event) {
-        return event.getData(Project.KEY);
+        event.getPresentation().setEnabled(event.hasData(Project.KEY));
     }
 
     @Nullable
     public static TaskManager getTaskManager(@Nonnull AnActionEvent event) {
-        Project project = getProject(event);
+        Project project = event.getData(Project.KEY);
         if (project == null) {
             return null;
         }

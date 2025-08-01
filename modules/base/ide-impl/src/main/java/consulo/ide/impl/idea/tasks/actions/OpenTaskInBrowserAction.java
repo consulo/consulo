@@ -13,9 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.webBrowser.BrowserUtil;
 import consulo.project.Project;
 import consulo.task.TaskManager;
@@ -30,36 +31,41 @@ import jakarta.annotation.Nullable;
 /**
  * @author Dmitry Avdeev
  */
+@ActionImpl(id = "tasks.open.in.browser")
 public class OpenTaskInBrowserAction extends BaseTaskAction {
-  
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    String url = getIssueUrl(e);
-    if (url != null) {
-      BrowserUtil.launchBrowser(url);
+    public OpenTaskInBrowserAction() {
+        super(LocalizeValue.localizeTODO("Open in _Browser"));
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    super.update(event);
-    if (event.getPresentation().isEnabled()) {
-      Presentation presentation = event.getPresentation();
-      String url = getIssueUrl(event);
-      presentation.setEnabled(url != null);
-      Project project = getProject(event);
-      if (project == null || !TaskManager.getManager(project).getActiveTask().isIssue()) {
-        presentation.setTextValue(getTemplatePresentation().getTextValue());
-      } else {
-        presentation.setText("Open '" + TaskManager.getManager(project).getActiveTask().getPresentableName() + "' In _Browser");
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        String url = getIssueUrl(e);
+        if (url != null) {
+            BrowserUtil.launchBrowser(url);
+        }
     }
-  }
 
-  @Nullable
-  private static String getIssueUrl(AnActionEvent event) {
-    Project project = event.getData(Project.KEY);
-    return project == null ? null : TaskManager.getManager(project).getActiveTask().getIssueUrl();
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        if (e.getPresentation().isEnabled()) {
+            Presentation presentation = e.getPresentation();
+            String url = getIssueUrl(e);
+            presentation.setEnabled(url != null);
+            Project project = e.getData(Project.KEY);
+            if (project == null || !TaskManager.getManager(project).getActiveTask().isIssue()) {
+                presentation.setTextValue(getTemplatePresentation().getTextValue());
+            }
+            else {
+                presentation.setText("Open '" + TaskManager.getManager(project).getActiveTask().getPresentableName() + "' In _Browser");
+            }
+        }
+    }
+
+    @Nullable
+    private static String getIssueUrl(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        return project == null ? null : TaskManager.getManager(project).getActiveTask().getIssueUrl();
+    }
 }
