@@ -35,14 +35,7 @@ import java.util.Map;
 /**
  * @author max
  */
-@ActionImpl(
-    id = "WhatsNewAction",
-    parents = {@ActionParentRef(
-        value = @ActionRef(id = "HelpMenu"),
-        anchor = ActionRefAnchor.AFTER,
-        relatedToAction = @ActionRef(id = "OnlineDocAction")
-    )}
-)
+@ActionImpl(id = "WhatsNewAction")
 public class WhatsNewAction extends AnAction implements DumbAware {
     private final ConfigurationFileEditorManager myConfigurationFileEditorManager;
 

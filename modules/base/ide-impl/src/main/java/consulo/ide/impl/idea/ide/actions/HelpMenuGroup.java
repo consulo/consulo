@@ -40,6 +40,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = ShowLogAction.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = OnlineDocAction.class),
+        @ActionRef(id = "WhatsNewAction"),
         @ActionRef(type = RefCardAction.class),
         @ActionRef(type = OpenYoutubeAction.class),
         @ActionRef(type = JoinDiscordChannelAction.class),
