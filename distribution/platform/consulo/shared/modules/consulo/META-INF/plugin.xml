@@ -535,14 +535,7 @@
             <reference ref="GoToMenu"/>
 
             <!-- Tools -->
-            <group id="ToolsMenu" popup="true">
-                <action id="PsiViewer" class="consulo.ide.impl.idea.internal.psiView.PsiViewerAction"/>
-                <action id="PsiViewerForContext" class="consulo.ide.impl.idea.internal.psiView.PsiViewerForContextAction"/>
-                <separator/>
-                <action id="CreateLauncherScript" class="consulo.ide.impl.idea.ide.actions.CreateLauncherScriptAction"/>
-                <action id="CreateDesktopEntry" class="consulo.ide.impl.idea.ide.actions.CreateDesktopEntryAction"/>
-                <separator/>
-            </group>
+            <reference ref="ToolsMenu"/>
 
             <reference ref="WindowMenu"/>
 
@@ -1247,16 +1240,6 @@
             <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RefactoringMenu"/>
         </group>
 
-
-        <!-- Tools -->
-        <group id="ToolsBasicGroup">
-            <action id="SaveAsTemplate" class="consulo.ide.impl.idea.codeInsight.template.actions.SaveAsTemplateAction"/>
-            <action id="SaveFileAsTemplate" class="consulo.ide.impl.idea.ide.actions.SaveFileAsTemplateAction"/>
-            <separator/>
-
-            <add-to-group group-id="ToolsMenu" anchor="first"/>
-        </group>
-
         <action id="IdeScriptingConsole" class="consulo.ide.impl.idea.execution.console.RunIdeConsoleAction">
             <add-to-group group-id="Internal" anchor="last"/>
         </action>
@@ -1265,10 +1248,6 @@
         <action id="Scratch.ChangeLanguage" class="consulo.ide.impl.idea.ide.scratch.ScratchFileActions$LanguageAction">
             <add-to-group group-id="EditorPopupMenu"/>
         </action>
-
-        <group id="ExternalToolsGroup" class="consulo.ide.impl.idea.tools.ExternalToolsGroup">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </group>
 
         <group id="NewGroup" popup="true">
             <reference id="NewFile"/>
@@ -2331,31 +2310,6 @@
         <group id="RemoteServersViewPopup"/>
         <group id="RemoteServersViewToolbar.Top">
             <add-to-group group-id="Other.KeymapGroup"/>
-        </group>
-
-        <group id="working.context">
-            <action id="context.save" class="consulo.ide.impl.idea.tasks.actions.context.SaveContextAction" text="_Save Context...">
-                <keyboard-shortcut keymap="$default" first-keystroke="alt shift S"/>
-            </action>
-            <action id="context.load" class="consulo.ide.impl.idea.tasks.actions.context.LoadContextAction" text="_Load Context...">
-                <keyboard-shortcut keymap="$default" first-keystroke="alt shift L"/>
-                <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift L" remove="true"/>
-            </action>
-            <action id="context.clear" class="consulo.ide.impl.idea.tasks.actions.context.ClearContextAction" text="_Clear Context">
-                <keyboard-shortcut keymap="$default" first-keystroke="alt shift X"/>
-            </action>
-        </group>
-
-        <group id="tasks.and.contexts" text="_Tasks &amp; Contexts" popup="true">
-            <reference ref="task.actions"/>
-            <separator/>
-            <reference ref="working.context"/>
-        </group>
-
-        <group id="tasks.group">
-            <reference ref="tasks.and.contexts"/>
-            <separator/>
-            <add-to-group group-id="ToolsMenu" anchor="first"/>
         </group>
 
         <group id="tasks.toolbar.group" text="Tasks toolbar">

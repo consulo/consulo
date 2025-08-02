@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.tasks.actions.context;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
@@ -31,7 +33,12 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
+@ActionImpl(id = "context.save")
 public class SaveContextAction extends BaseTaskAction {
+    public SaveContextAction() {
+        super(LocalizeValue.localizeTODO("_Save Context..."));
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

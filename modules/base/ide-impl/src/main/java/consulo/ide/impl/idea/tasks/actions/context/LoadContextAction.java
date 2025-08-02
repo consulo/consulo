@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.tasks.actions.context;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.util.DateFormatUtil;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.tasks.actions.SwitchTaskAction;
@@ -45,13 +46,17 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * @author Dmitry Avdeev
  */
+@ActionImpl(id = "context.load")
 public class LoadContextAction extends BaseTaskAction {
     private static final int MAX_ROW_COUNT = 10;
+
+    public LoadContextAction() {
+        super(LocalizeValue.localizeTODO("_Load Context..."));
+    }
 
     @Override
     @RequiredUIAccess
@@ -95,7 +100,7 @@ public class LoadContextAction extends BaseTaskAction {
         List<LocalTask> tasks = taskManager.getLocalTasks();
         infos.addAll(ContainerUtil.mapNotNull(
             tasks,
-            (Function<LocalTask, ContextHolder>) task -> {
+            task -> {
                 if (task.isActive()) {
                     return null;
                 }
@@ -198,7 +203,6 @@ public class LoadContextAction extends BaseTaskAction {
     }
 
     abstract static class ContextHolder {
-
         abstract void load(boolean clear);
 
         abstract void remove();

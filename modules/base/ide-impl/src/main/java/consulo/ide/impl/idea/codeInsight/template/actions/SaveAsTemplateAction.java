@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.util.pointer.NamedPointer;
-import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
@@ -39,6 +39,7 @@ import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -52,10 +53,15 @@ import java.util.*;
  * @author mike
  * @since 2002-08-20
  */
+@ActionImpl(id = "SaveAsTemplate")
 public class SaveAsTemplateAction extends AnAction {
     private static final Logger LOG = Logger.getInstance(SaveAsTemplateAction.class);
     //FIXME [VISTALL] how remove this depend?
     private static final NamedPointer<Language> ourXmlLanguagePointer = LanguagePointerUtil.createPointer("XML");
+
+    public SaveAsTemplateAction() {
+        super(ActionLocalize.actionSaveastemplateText(), ActionLocalize.actionSaveastemplateDescription());
+    }
 
     @Override
     @RequiredUIAccess

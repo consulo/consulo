@@ -1254,6 +1254,15 @@
   <action id="SwitchHeaderSource">
     <keyboard-shortcut first-keystroke="F10"/>
   </action>
+  <action id="context.clear">
+    <keyboard-shortcut first-keystroke="alt shift X"/>
+  </action>
+  <action id="context.load">
+    <keyboard-shortcut first-keystroke="alt shift L"/>
+  </action>
+  <action id="context.save">
+    <keyboard-shortcut first-keystroke="alt shift S"/>
+  </action>
   <action id="tasks.close">
     <keyboard-shortcut first-keystroke="alt shift W"/>
   </action>

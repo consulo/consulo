@@ -15,12 +15,20 @@
  */
 package consulo.ide.impl.idea.tools;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
+
 import java.util.List;
 
 /**
  * @author traff
  */
+@ActionImpl(id = "ExternalToolsGroup")
 public class ExternalToolsGroup extends BaseExternalToolsGroup<Tool> {
+    public ExternalToolsGroup() {
+        super(ActionLocalize.groupExternaltoolsgroupText());
+    }
+
     @Override
     protected List<ToolsGroup<Tool>> getToolsGroups() {
         return ToolManager.getInstance().getGroups();
