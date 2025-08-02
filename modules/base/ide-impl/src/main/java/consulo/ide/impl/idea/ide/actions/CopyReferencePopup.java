@@ -89,6 +89,10 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
 
                         textPanel.add(titlePanel, BorderLayout.WEST);
                         textPanel.add(myInfoLabel, BorderLayout.CENTER);
+
+                        textPanel.setOpaque(false);
+                        titlePanel.setOpaque(false);
+
                         return layoutComponent(textPanel);
                     }
 

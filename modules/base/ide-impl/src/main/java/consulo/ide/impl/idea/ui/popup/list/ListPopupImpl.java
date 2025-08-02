@@ -255,20 +255,11 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
         selectFirstSelectableItem();
 
-        myList.setBorder(JBUI.Borders.empty(4));
+        myList.setBorder(JBUI.Borders.empty(6));
 
         ScrollingUtil.installActions(myList);
 
-        myList.setCellRenderer(new ColoredListCellRenderer() {
-            {
-                setIpad(UIUtil.getListCellPadding());
-            }
-            
-            @Override
-            protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                append(value.toString());
-            }
-        });
+        myList.setCellRenderer(getListElementRenderer());
 
         registerAction("handleSelection1", KeyEvent.VK_ENTER, 0, new AbstractAction() {
             @Override
@@ -578,6 +569,43 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         MyList() {
             super(myListModel);
             HintUpdateSupply.installSimpleHintUpdateSupply(this);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return removeSeparatorsHeight(super.getPreferredSize());
+        }
+
+        @Override
+        public Dimension getMinimumSize() {
+            return removeSeparatorsHeight(super.getMinimumSize());
+        }
+
+        @Override
+        public Dimension getMaximumSize() {
+            return removeSeparatorsHeight(super.getMaximumSize());
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return removeSeparatorsHeight(super.getPreferredScrollableViewportSize());
+        }
+
+        /**
+         * Hack for remove extra height produced by separators
+         */
+        private Dimension removeSeparatorsHeight(Dimension size) {
+            int separators = 0;
+            ListPopupModel model = getListModel();
+            for (int i = 0; i < model.getSize(); i++) {
+                Object o = model.get(i);
+                if (model.isSeparator(o)) {
+                    separators++;
+                }
+            }
+
+            size.height -= separators * JBUI.scale(21);
+            return size;
         }
 
         @Override

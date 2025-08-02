@@ -425,19 +425,22 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
                     super.setText(text);
                 }
             };
-            myTextLabel.setOpaque(true);
+            myTextLabel.setOpaque(false);
             myTextLabel.setBorder(JBUI.Borders.empty(1));
 
             myInfoLabel = new ErrorLabel();
-            myInfoLabel.setOpaque(true);
+            myInfoLabel.setOpaque(false);
             myInfoLabel.setBorder(JBUI.Borders.empty(1, DEFAULT_HGAP, 1, 1));
             myInfoLabel.setFont(FontUtil.minusOne(myInfoLabel.getFont()));
 
-            JPanel compoundPanel = new OpaquePanel(new BorderLayout(), JBColor.WHITE);
+            JPanel compoundPanel = new JPanel(new BorderLayout());
+            compoundPanel.setOpaque(false);
             myIconLabel = new IconComponent();
             myInfoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-            JPanel compoundTextPanel = new OpaquePanel(new BorderLayout(), compoundPanel.getBackground());
-            JPanel textPanel = new OpaquePanel(new BorderLayout(), compoundPanel.getBackground());
+            myIconLabel.setOpaque(false);
+
+            JPanel compoundTextPanel = new NonOpaquePanel(new BorderLayout());
+            JPanel textPanel = new NonOpaquePanel(new BorderLayout());
             compoundPanel.add(myIconLabel, BorderLayout.WEST);
             textPanel.add(myTextLabel, BorderLayout.WEST);
             textPanel.add(myInfoLabel, BorderLayout.CENTER);

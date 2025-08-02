@@ -19,6 +19,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.image.Image;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List implements ListCellRenderer<E> {
@@ -41,7 +42,7 @@ public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List im
             String text = myDescriptor.getTextFor(value);
 
             TitledSeparator separator = new TitledSeparator(text);
-            separator.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
+            separator.setBorder(JBUI.Borders.empty());
             separator.setOpaque(false);
             separator.setBackground(UIUtil.TRANSPARENT_COLOR);
             separator.getLabel().setOpaque(false);
@@ -52,8 +53,26 @@ public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List im
         Image icon = isSelected ? myDescriptor.getSelectedIconFor(value) : myDescriptor.getIconFor(value);
         JComponent result = configureComponent(myDescriptor.getTextFor(value), myDescriptor.getTooltipFor(value), icon, icon, isSelected, false, null, -1);
         myCurrentIndex = index;
-        myRendererComponent.setBackground(list.getBackground());
         customizeComponent(list, value, isSelected);
+
+        Border border = null;
+        if (cellHasFocus) {
+            if (isSelected) {
+                border = UIManager.getBorder("List.focusSelectedCellHighlightBorder");
+            }
+            if (border == null) {
+                border = UIManager.getBorder( "List.focusCellHighlightBorder");
+            }
+        }
+
+        if (border == null) {
+            border = UIManager.getBorder("List.cellNoFocusBorder");
+        }
+
+        if (border == null) {
+            border = JBUI.Borders.empty();
+        }
+        result.setBorder(border);
         return result;
     }
 
@@ -66,13 +85,16 @@ public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List im
     protected void createLabel() {
         myTextLabel = new ErrorLabel();
         myTextLabel.setBorder(JBUI.Borders.emptyBottom(1));
-        myTextLabel.setOpaque(true);
+        myTextLabel.setOpaque(false);
     }
 
     protected final JComponent layoutComponent(JComponent middleItemComponent) {
         myNextStepLabel = new JLabel();
         myNextStepLabel.setOpaque(false);
-        return JBUI.Panels.simplePanel(middleItemComponent).addToRight(myNextStepLabel).withBorder(getDefaultItemComponentBorder());
+        return JBUI.Panels.simplePanel(middleItemComponent)
+            .addToRight(myNextStepLabel)
+            .andTransparent()
+            .withBorder(getDefaultItemComponentBorder());
     }
 
     protected void customizeComponent(JList<? extends E> list, E value, boolean isSelected) {

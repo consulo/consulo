@@ -41,7 +41,7 @@ public class ActionGroupExpander {
                                                    PresentationFactory presentationFactory,
                                                    @Nonnull DataContext context,
                                                    String place) {
-        return new ActionUpdater(ActionManager.getInstance(),
+        List<AnAction> actions = new ActionUpdater(ActionManager.getInstance(),
             presentationFactory,
             context,
             place,
@@ -49,6 +49,12 @@ public class ActionGroupExpander {
             false,
             UIAccess.current()
         ).expandActionGroup(group, group instanceof CompactActionGroup);
+
+        if (!actions.isEmpty() && actions.getLast() instanceof AnSeparator) {
+            return actions.subList(0, actions.size() - 1);
+        }
+        
+        return actions;
     }
 
     @Nonnull
