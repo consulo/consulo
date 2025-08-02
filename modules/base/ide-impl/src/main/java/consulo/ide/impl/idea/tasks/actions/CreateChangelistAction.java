@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.task.LocalTask;
+import consulo.annotation.component.ActionImpl;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.impl.internal.action.BaseTaskAction;
@@ -29,40 +31,51 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
+@ActionImpl(id = "tasks.create.changelist")
 public class CreateChangelistAction extends BaseTaskAction {
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    super.update(event);
-    if (event.getPresentation().isEnabled()) {
-      TaskManager manager = getTaskManager(event);
-      Presentation presentation = event.getPresentation();
-
-      if (manager == null || !manager.isVcsEnabled()) {
-        presentation.setTextValue(getTemplatePresentation().getTextValue());
-        presentation.setEnabled(false);
-      }
-      else {
-        presentation.setEnabled(true);
-        if (manager.getActiveTask().getChangeLists().size() == 0) {
-          presentation.setText("Create changelist for '" + TaskUtil.getTrimmedSummary(manager.getActiveTask()) + "'");
-        }
-        else {
-          presentation.setText("Add changelist for '" + TaskUtil.getTrimmedSummary(manager.getActiveTask()) + "'");
-        }
-      }
+    public CreateChangelistAction() {
+      super(LocalizeValue.localizeTODO("Create Change_list..."));
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    TaskManagerImpl manager = (TaskManagerImpl)getTaskManager(e);
-    assert manager != null;
-    LocalTask activeTask = manager.getActiveTask();
-    String name =
-      Messages.showInputDialog(getProject(e), "Changelist name:", "Create Changelist", null, manager.getChangelistName(activeTask), null);
-    if (name != null) {
-      manager.createChangeList(activeTask, name);
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        super.update(event);
+        if (event.getPresentation().isEnabled()) {
+            TaskManager manager = getTaskManager(event);
+            Presentation presentation = event.getPresentation();
+
+            if (manager == null || !manager.isVcsEnabled()) {
+                presentation.setTextValue(getTemplatePresentation().getTextValue());
+                presentation.setEnabled(false);
+            }
+            else {
+                presentation.setEnabled(true);
+                if (manager.getActiveTask().getChangeLists().size() == 0) {
+                    presentation.setText("Create changelist for '" + TaskUtil.getTrimmedSummary(manager.getActiveTask()) + "'");
+                }
+                else {
+                    presentation.setText("Add changelist for '" + TaskUtil.getTrimmedSummary(manager.getActiveTask()) + "'");
+                }
+            }
+        }
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        TaskManagerImpl manager = (TaskManagerImpl) getTaskManager(e);
+        assert manager != null;
+        LocalTask activeTask = manager.getActiveTask();
+        String name = Messages.showInputDialog(
+            e.getData(Project.KEY),
+            "Changelist name:",
+            "Create Changelist",
+            null,
+            manager.getChangelistName(activeTask),
+            null
+        );
+        if (name != null) {
+            manager.createChangeList(activeTask, name);
+        }
+    }
 }

@@ -1254,4 +1254,16 @@
   <action id="SwitchHeaderSource">
     <keyboard-shortcut first-keystroke="F10"/>
   </action>
+  <action id="tasks.close">
+    <keyboard-shortcut first-keystroke="alt shift W"/>
+  </action>
+  <action id="tasks.goto">
+    <keyboard-shortcut first-keystroke="alt shift N"/>
+  </action>
+  <action id="tasks.open.in.browser">
+    <keyboard-shortcut first-keystroke="alt shift B"/>
+  </action>
+  <action id="tasks.switch">
+    <keyboard-shortcut first-keystroke="alt shift T"/>
+  </action>
 </keymap>

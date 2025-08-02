@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.execution.unscramble.AnalyzeStacktraceUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.Comment;
 import consulo.task.LocalTask;
@@ -28,38 +30,43 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
+@ActionImpl(id = "tasks.analyze.stacktrace")
 public class AnalyzeTaskStacktraceAction extends BaseTaskAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final LocalTask activeTask = getActiveTask(e);
-    final Project project = getProject(e);
-    assert activeTask != null;
-    assert project != null;
-    analyzeStacktrace(activeTask, project);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    super.update(event);
-    if (event.getPresentation().isEnabled()) {
-      Task activeTask = getActiveTask(event);
-      event.getPresentation().setEnabled(activeTask != null && hasTexts(activeTask));
+    public AnalyzeTaskStacktraceAction() {
+        super(LocalizeValue.localizeTODO("Analyze _Stacktrace From Task..."));
     }
-  }
 
-  public static boolean hasTexts(Task activeTask) {
-    return (activeTask.getDescription() != null || activeTask.getComments().length > 0);
-  }
-
-  public static void analyzeStacktrace(Task task, Project project) {
-    ChooseStacktraceDialog stacktraceDialog = new ChooseStacktraceDialog(project, task);
-    stacktraceDialog.show();
-    if (stacktraceDialog.isOK() && stacktraceDialog.getTraces().length > 0) {
-      Comment[] comments = stacktraceDialog.getTraces();
-      for (Comment comment : comments) {
-        AnalyzeStacktraceUtil.addConsole(project, null, task.getId(), comment.getText());
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        LocalTask activeTask = getActiveTask(e);
+        Project project = e.getRequiredData(Project.KEY);
+        assert activeTask != null;
+        analyzeStacktrace(activeTask, project);
     }
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        super.update(event);
+        if (event.getPresentation().isEnabled()) {
+            Task activeTask = getActiveTask(event);
+            event.getPresentation().setEnabled(activeTask != null && hasTexts(activeTask));
+        }
+    }
+
+    public static boolean hasTexts(Task activeTask) {
+        return (activeTask.getDescription() != null || activeTask.getComments().length > 0);
+    }
+
+    @RequiredUIAccess
+    public static void analyzeStacktrace(Task task, Project project) {
+        ChooseStacktraceDialog stacktraceDialog = new ChooseStacktraceDialog(project, task);
+        stacktraceDialog.show();
+        if (stacktraceDialog.isOK() && stacktraceDialog.getTraces().length > 0) {
+            Comment[] comments = stacktraceDialog.getTraces();
+            for (Comment comment : comments) {
+                AnalyzeStacktraceUtil.addConsole(project, null, task.getId(), comment.getText());
+            }
+        }
+    }
 }
