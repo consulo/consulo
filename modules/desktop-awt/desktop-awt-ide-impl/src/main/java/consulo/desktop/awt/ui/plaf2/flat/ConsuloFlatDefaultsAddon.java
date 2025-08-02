@@ -67,33 +67,5 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         uiDefaults.put("Menu.selectedCheckboxIcon", new FlatSelectedCheckboxIcon());
 
         uiDefaults.put("RootPaneUI", ConsuloFlatRootPaneUI.class.getName());
-
-        PlatformOperatingSystem os = Platform.current().os();
-        if (os instanceof WindowsOperatingSystem win && !win.isWindows11OrNewer()) {
-            for (Map.Entry<Object, Object> entry : uiDefaults.entrySet()) {
-                String key = entry.getKey().toString();
-
-                if (key.endsWith(".arc")) {
-                    uiDefaults.put(key, 0);
-                }
-            }
-
-            uiDefaults.put("ComboBox.selectionArc", 0);
-            uiDefaults.put("ComboBox.borderCornerRadius", 0);
-            uiDefaults.put("PopupMenu.borderCornerRadius", 0);
-            uiDefaults.put("ScrollBar.thumbArc", 0);
-            uiDefaults.put("ScrollBar.width", 10);
-            uiDefaults.put("ScrollBar.thumbInsets", new InsetsUIResource(0, 0, 0, 0));
-
-            uiDefaults.put("MenuItem.selectionArc", 0);
-            uiDefaults.put("MenuItem.selectionInsets", new InsetsUIResource(0, 0, 0, 0));
-
-            uiDefaults.put("MenuBar.selectionArc", 0);
-            uiDefaults.put("MenuBar.selectionEmbeddedInsets", new InsetsUIResource(0, 0, 0, 0));
-
-            uiDefaults.put("List.selectionArc", 0);
-            uiDefaults.put("Tree.selectionArc", 0);
-            uiDefaults.put("Table.selectionArc", 0);
-        }
     }
 }
