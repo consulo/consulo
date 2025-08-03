@@ -46,8 +46,14 @@ public class GenerateAction extends DumbAwareAction {
             JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
             false
         );
+        popup.pack(true, true);
 
         popup.showInBestPositionFor(dataContext);
+    }
+
+    @Override
+    public int getExecuteWeight() {
+        return 1_000_000;
     }
 
     @Override
@@ -75,22 +81,22 @@ public class GenerateAction extends DumbAwareAction {
         return (DefaultActionGroup) ActionManager.getInstance().getAction(IdeActions.GROUP_GENERATE);
     }
 
-    private static ActionGroup wrapGroup(DefaultActionGroup actionGroup, DataContext dataContext, @Nonnull Project project) {
-        final ActionGroup.Builder copy = ActionGroup.newImmutableBuilder();
-        for (final AnAction action : actionGroup.getChildren(null)) {
+    private static ActionGroup wrapGroup(ActionGroup actionGroup, DataContext dataContext, @Nonnull Project project) {
+        ActionGroup.Builder copy = ActionGroup.newImmutableBuilder();
+        for (AnAction action : actionGroup.getChildren(null)) {
             if (DumbService.isDumb(project) && !action.isDumbAware()) {
                 continue;
             }
 
             if (action instanceof GenerateActionPopupTemplateInjector) {
-                final AnAction editTemplateAction = ((GenerateActionPopupTemplateInjector) action).createEditTemplateAction(dataContext);
+                AnAction editTemplateAction = ((GenerateActionPopupTemplateInjector) action).createEditTemplateAction(dataContext);
                 if (editTemplateAction != null) {
                     copy.add(new GenerateWrappingGroup(action, editTemplateAction));
                     continue;
                 }
             }
-            if (action instanceof DefaultActionGroup) {
-                copy.add(wrapGroup((DefaultActionGroup) action, dataContext, project));
+            if (action instanceof ActionGroup g) {
+                copy.add(wrapGroup(g, dataContext, project));
             }
             else {
                 copy.add(action);
@@ -124,8 +130,8 @@ public class GenerateAction extends DumbAwareAction {
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
-            final Project project = e.getRequiredData(Project.KEY);
-            final DumbService dumbService = DumbService.getInstance(project);
+            Project project = e.getRequiredData(Project.KEY);
+            DumbService dumbService = DumbService.getInstance(project);
             try {
                 dumbService.setAlternativeResolveEnabled(true);
                 myAction.actionPerformed(e);

@@ -24,6 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -50,8 +51,14 @@ public class ActionGroupExpander {
             UIAccess.current()
         ).expandActionGroup(group, group instanceof CompactActionGroup);
 
-        if (!actions.isEmpty() && actions.getLast() instanceof AnSeparator) {
-            return actions.subList(0, actions.size() - 1);
+        actions = new ArrayList<>(actions);
+
+        while (!actions.isEmpty() && actions.getFirst() instanceof AnSeparator) {
+            actions.removeFirst();
+        }
+
+        while (!actions.isEmpty() && actions.getLast() instanceof AnSeparator) {
+            actions.removeLast();
         }
         
         return actions;

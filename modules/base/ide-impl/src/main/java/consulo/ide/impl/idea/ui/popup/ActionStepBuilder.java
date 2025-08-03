@@ -130,6 +130,11 @@ class ActionStepBuilder {
 
     private void appendAction(@Nonnull AnAction action) {
         if (action instanceof AnSeparator separator) {
+            if (myListModel.isEmpty()) {
+                // do not add separator at first
+                return;
+            }
+
             myListModel.add(new PopupFactoryImpl.ActionItem(action,
                 separator.getTextValue(),
                 null,
