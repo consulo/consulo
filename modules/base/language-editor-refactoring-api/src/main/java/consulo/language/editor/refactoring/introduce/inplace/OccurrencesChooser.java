@@ -12,14 +12,14 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.popup.GroupedItemsListRenderer;
-import consulo.ui.ex.awt.popup.ListItemDescriptorAdapter;
+import consulo.ui.ex.awt.popup.ListItemDescriptor;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -114,7 +114,7 @@ public abstract class OccurrencesChooser<T> {
 
         JBPopup popup = JBPopupFactory.getInstance()
             .createPopupChooserBuilder(model)
-            .setRenderer(new GroupedItemsListRenderer<C>(new ListItemDescriptorAdapter<C>() {
+            .setRenderer(new GroupedItemsListRenderer<C>(new ListItemDescriptor<>() {
                 @Override
                 public @Nullable String getTextFor(C value) {
                     if (value == null) {

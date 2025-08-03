@@ -15,9 +15,12 @@
  */
 package consulo.ui.ex.awt.popup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nullable;
 
+@Deprecated
+@DeprecationInfo("Use ListItemDescriptor")
 public abstract class ListItemDescriptorAdapter<T> implements ListItemDescriptor<T> {
   @Nullable
   @Override

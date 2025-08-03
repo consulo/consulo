@@ -9,23 +9,31 @@ public interface ListItemDescriptor<T> {
     String getTextFor(T value);
 
     @Nullable
-    String getTooltipFor(T value);
+    default String getTooltipFor(T value) {
+        return null;
+    }
 
     @Nullable
-    Image getIconFor(T value);
+    default Image getIconFor(T value) {
+        return null;
+    }
 
     default Image getSelectedIconFor(T value) {
         return getIconFor(value);
     }
 
     @Deprecated
-    boolean hasSeparatorAboveOf(T value);
+    default boolean hasSeparatorAboveOf(T value) {
+        return false;
+    }
 
     @Nullable
     @Deprecated
-    String getCaptionAboveOf(T value);
+    default String getCaptionAboveOf(T value) {
+        return null;
+    }
 
     default boolean isSeparator(T value) {
-        return true;
+        return false;
     }
 }
