@@ -233,7 +233,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
                 return TaskUtil.getTrimmedSummary(taskPsiElem.getTask());
             }
             else if (element == CREATE_NEW_TASK_ACTION) {
-                return CREATE_NEW_TASK_ACTION.getActionText();
+                return CREATE_NEW_TASK_ACTION.getActionText().get();
             }
             return null;
         }
@@ -258,8 +258,8 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
     public static class CreateNewTaskAction {
         private String taskName;
 
-        public String getActionText() {
-            return TaskLocalize.createNewTask0(taskName).get();
+        public LocalizeValue getActionText() {
+            return TaskLocalize.createNewTask0(taskName);
         }
 
         public void setTaskName(String taskName) {
