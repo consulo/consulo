@@ -161,8 +161,8 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
         myList.setCellRenderer(myCellRenderer);
 
         myList.setFocusable(false);
-        myList.setFixedCellWidth(50);
-        myList.setBorder(JBUI.Borders.empty());
+        myList.setFixedCellWidth(JBUI.scale(54));
+        myList.setBorder(JBUI.Borders.empty(6));
 
         // a new top level frame just got the focus. This is important to prevent screen readers
         // from announcing the title of the top level frame when the list is shown (or hidden),
