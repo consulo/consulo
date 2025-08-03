@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.projectView;
+package consulo.project.ui.view.internal;
 
 import consulo.project.ui.view.ProjectView;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -26,5 +26,5 @@ import jakarta.annotation.Nonnull;
  */
 public interface ProjectViewEx extends ProjectView {
   @RequiredUIAccess
-  void setupToolWindow(@Nonnull ToolWindow toolWindow, final boolean loadPaneExtensions);
+  void setupToolWindow(@Nonnull ToolWindow toolWindow, boolean loadPaneExtensions);
 }

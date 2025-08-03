@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.fileChooser.impl.FileTreeStructure;
 import consulo.project.Project;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
-import consulo.ide.impl.ui.tree.impl.TreeStructureWrappenModel;
+import consulo.ui.ex.tree.TreeStructureWrappenModel;
 
 import jakarta.annotation.Nullable;
 import java.util.Comparator;

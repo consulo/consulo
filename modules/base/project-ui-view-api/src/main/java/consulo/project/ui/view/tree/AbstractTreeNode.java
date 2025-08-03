@@ -9,7 +9,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.ui.ex.awt.tree.TreeNode;
+import consulo.ui.ex.tree.TreeNode;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusOwner;
 

@@ -111,7 +111,7 @@ public class AbstractTreeUi {
     private final Set<Runnable> myActiveWorkerTasks = new HashSet<>();
 
     private ProgressIndicator myProgress;
-    private consulo.ui.ex.awt.tree.TreeNode<Object> TREE_NODE_WRAPPER;
+    private consulo.ui.ex.tree.TreeNode<Object> TREE_NODE_WRAPPER;
 
     private boolean myRootNodeWasQueuedToInitialize;
     private boolean myRootNodeInitialized;
@@ -5335,7 +5335,7 @@ public class AbstractTreeUi {
      * @return {@code true} if element is {@code null} or if it contains a {@code null} value
      */
     private static boolean isNodeNull(Object element) {
-        if (element instanceof consulo.ui.ex.awt.tree.TreeNode node) {
+        if (element instanceof consulo.ui.ex.tree.TreeNode node) {
             element = node.getValue();
         }
         return element == null;

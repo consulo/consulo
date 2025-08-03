@@ -710,7 +710,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.ui.impl;
   exports consulo.ide.impl.ui.laf;
   exports consulo.ide.impl.ui.popup;
-  exports consulo.ide.impl.ui.tree.impl;
   exports consulo.ide.impl.usage;
   exports consulo.ide.impl.vcs;
   exports consulo.ide.impl.welcomeScreen;

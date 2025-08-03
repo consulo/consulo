@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBa
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
-import consulo.ide.impl.ui.tree.impl.TreeStructureWrappenModel;
+import consulo.ui.ex.tree.TreeStructureWrappenModel;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -45,6 +45,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.view.internal.ProjectViewEx;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.AbstractPsiBasedNode;

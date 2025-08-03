@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.ui.tree.impl;
+package consulo.ui.ex.tree;
 
-import consulo.application.AccessRule;
 import consulo.application.ReadAction;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -58,7 +54,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
             T element = (T) o;
             TreeNode<T> apply = nodeFactory.apply(element);
 
-            apply.setLeaf(o instanceof AbstractTreeNode && !((AbstractTreeNode) o).isAlwaysShowPlus());
+            apply.setLeaf(o instanceof consulo.ui.ex.tree.TreeNode && !((consulo.ui.ex.tree.TreeNode) o).isAlwaysShowPlus());
 
             apply.setRender((fileElement, itemPresentation) -> {
                 NodeDescriptor descriptor = myStructure.createDescriptor(element, null);
@@ -67,7 +63,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
 
                 itemPresentation.append(descriptor.toString());
                 try {
-                    AccessRule.read(() -> itemPresentation.withIcon(descriptor.getIcon()));
+                    ReadAction.compute(() -> itemPresentation.withIcon(descriptor.getIcon()));
                 }
                 catch (Exception e) {
                     e.printStackTrace();

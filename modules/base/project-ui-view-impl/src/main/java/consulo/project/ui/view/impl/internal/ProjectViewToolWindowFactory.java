@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.projectView.impl;
+package consulo.project.ui.view.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.projectView.ProjectViewEx;
+import consulo.project.ui.view.internal.ProjectViewEx;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;

@@ -339,8 +339,8 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
 
   private static boolean isValid(@Nonnull AbstractTreeStructure structure, Object element) {
     if (element == null) return false;
-    if (element instanceof consulo.ui.ex.awt.tree.TreeNode) {
-      consulo.ui.ex.awt.tree.TreeNode node = (consulo.ui.ex.awt.tree.TreeNode)element;
+    if (element instanceof consulo.ui.ex.tree.TreeNode) {
+      consulo.ui.ex.tree.TreeNode node = (consulo.ui.ex.tree.TreeNode)element;
       if (null == node.getValue()) return false;
     }
     if (element instanceof ValidateableNode) {

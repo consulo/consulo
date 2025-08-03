@@ -45,7 +45,7 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
 import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.projectView.ProjectViewEx;
+import consulo.project.ui.view.internal.ProjectViewEx;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.ide.localize.IdeLocalize;

@@ -23,7 +23,7 @@ import consulo.navigation.StatePreservingNavigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectViewInternalHelper;
-import consulo.ui.ex.awt.tree.TreeNode;
+import consulo.ui.ex.tree.TreeNode;
 import consulo.ui.ex.awt.tree.ValidateableNode;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;

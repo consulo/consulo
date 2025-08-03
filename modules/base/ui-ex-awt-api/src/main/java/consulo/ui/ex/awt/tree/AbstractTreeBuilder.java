@@ -124,7 +124,7 @@ public class AbstractTreeBuilder implements Disposable {
 
 
   @Nonnull
-  static consulo.ui.ex.awt.tree.TreeNode<Object> createSearchingTreeNodeWrapper() {
+  static consulo.ui.ex.tree.TreeNode<Object> createSearchingTreeNodeWrapper() {
     return new AbstractTreeNodeWrapper();
   }
 
@@ -451,14 +451,14 @@ public class AbstractTreeBuilder implements Disposable {
     return promise;
   }
 
-  private static class AbstractTreeNodeWrapper extends consulo.ui.ex.awt.tree.TreeNode<Object> {
+  private static class AbstractTreeNodeWrapper extends consulo.ui.ex.tree.TreeNode<Object> {
     AbstractTreeNodeWrapper() {
-      super(consulo.ui.ex.awt.tree.TreeNode.TREE_WRAPPER_VALUE);
+      super(consulo.ui.ex.tree.TreeNode.TREE_WRAPPER_VALUE);
     }
 
     @Override
     @Nonnull
-    public Collection<consulo.ui.ex.awt.tree.TreeNode> getChildren() {
+    public Collection<consulo.ui.ex.tree.TreeNode> getChildren() {
       return Collections.emptyList();
     }
 
@@ -470,7 +470,7 @@ public class AbstractTreeBuilder implements Disposable {
     public boolean equals(Object object) {
       if (object == this) return true;
       // this hack allows to find a node in a map without checking a class type
-      return object instanceof consulo.ui.ex.awt.tree.TreeNode treeNode && Comparing.equal(getEqualityObject(), treeNode.getEqualityObject());
+      return object instanceof consulo.ui.ex.tree.TreeNode treeNode && Comparing.equal(getEqualityObject(), treeNode.getEqualityObject());
     }
   }
 

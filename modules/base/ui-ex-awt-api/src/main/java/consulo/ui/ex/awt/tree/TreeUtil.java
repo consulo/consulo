@@ -27,7 +27,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Range;
-import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.Contract;
 
 import javax.accessibility.AccessibleContext;
@@ -959,7 +958,7 @@ public final class TreeUtil {
      * @see AbstractTreeNode#isAlwaysExpand
      */
     private static boolean isAlwaysExpand(@Nonnull TreePath path) {
-        consulo.ui.ex.awt.tree.TreeNode<?> node = getLastUserObject(consulo.ui.ex.awt.tree.TreeNode.class, path);
+        consulo.ui.ex.tree.TreeNode<?> node = getLastUserObject(consulo.ui.ex.tree.TreeNode.class, path);
         return node != null && node.isAlwaysExpand();
     }
 
