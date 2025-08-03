@@ -23,6 +23,7 @@ import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -59,6 +60,8 @@ public interface ActionToolbar {
             return true;
         }
     }
+
+    Key<ActionToolbar> KEY = Key.of(ActionToolbar.class);
 
     String ACTION_TOOLBAR_PROPERTY_KEY = "ACTION_TOOLBAR";
 

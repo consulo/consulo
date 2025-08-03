@@ -4,6 +4,7 @@ package consulo.desktop.awt.action.toolbar;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
 import consulo.desktop.awt.ui.plaf2.flat.InplaceComponent;
@@ -20,7 +21,9 @@ import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActionToolbar, QuickActionProvider, AlphaAnimated {
+public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActionToolbar, QuickActionProvider, AlphaAnimated, DataProvider {
     private static final Logger LOG = Logger.getInstance(SimpleActionToolbarImpl.class);
 
     protected static final String RIGHT_ALIGN_KEY = "RIGHT_ALIGN";
@@ -85,6 +88,15 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK | AWTEvent.COMPONENT_EVENT_MASK | AWTEvent.CONTAINER_EVENT_MASK);
         
         setMiniMode(false);
+    }
+
+    @Nullable
+    @Override
+    public Object getData(@Nonnull Key<?> dataId) {
+        if (dataId == ActionToolbar.KEY) {
+            return this;
+        }
+        return null;
     }
 
     @Override

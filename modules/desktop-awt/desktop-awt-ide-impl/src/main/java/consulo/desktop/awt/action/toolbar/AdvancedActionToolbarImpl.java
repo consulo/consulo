@@ -309,6 +309,10 @@ public class AdvancedActionToolbarImpl extends SimpleActionToolbarImpl {
         @Nullable
         @Override
         public Object getData(@Nonnull Key dataId) {
+            Object data = super.getData(dataId);
+            if (data != null) {
+                return data;
+            }
             return getDataContext().getData(dataId);
         }
 

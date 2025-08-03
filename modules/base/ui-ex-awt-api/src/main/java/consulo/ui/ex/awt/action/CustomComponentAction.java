@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt.action;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.Key;
@@ -22,6 +23,11 @@ import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
+/**
+ * @see consulo.ui.ex.action.CustomUIComponentAction
+ */
+@Deprecated
+@DeprecationInfo("Use CustomUIComponentAction")
 public interface CustomComponentAction {
   Key<JComponent> COMPONENT_KEY = Key.create("customComponent");
   Key<AnAction> ACTION_KEY = Key.create("customComponentAction");
