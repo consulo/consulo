@@ -26,7 +26,7 @@ import consulo.component.persist.Storage;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.application.internal.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.logging.Logger;

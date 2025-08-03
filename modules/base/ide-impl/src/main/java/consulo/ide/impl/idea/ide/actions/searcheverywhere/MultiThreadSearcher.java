@@ -9,6 +9,10 @@ import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.logging.Logger;
+import consulo.searchEverywhere.SEResultsEqualityProvider;
+import consulo.searchEverywhere.SearchEverywhereContributor;
+import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
+import consulo.searchEverywhere.WeightedSearchEverywhereContributor;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
@@ -20,8 +24,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static consulo.ide.impl.idea.ide.actions.searcheverywhere.SEResultsEqualityProvider.SEEqualElementsActionType.REPLACE;
-import static consulo.ide.impl.idea.ide.actions.searcheverywhere.SEResultsEqualityProvider.SEEqualElementsActionType.SKIP;
+import static consulo.searchEverywhere.SEResultsEqualityProvider.SEEqualElementsActionType.REPLACE;
+import static consulo.searchEverywhere.SEResultsEqualityProvider.SEEqualElementsActionType.SKIP;
 
 /**
  * @author msokolov

@@ -19,6 +19,8 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.project.Project;
+import consulo.searchEverywhere.SearchEverywhereContributor;
+import consulo.searchEverywhere.SearchEverywhereContributorFactory;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import jakarta.annotation.Nonnull;

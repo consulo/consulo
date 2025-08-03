@@ -4,6 +4,8 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementNavigationItem;
+import consulo.searchEverywhere.SEResultsEqualityProvider;
+import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

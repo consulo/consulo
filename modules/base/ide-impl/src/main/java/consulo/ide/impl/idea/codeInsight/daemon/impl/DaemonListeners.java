@@ -29,7 +29,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.application.internal.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.ide.todo.TodoConfigurationListener;
 import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;

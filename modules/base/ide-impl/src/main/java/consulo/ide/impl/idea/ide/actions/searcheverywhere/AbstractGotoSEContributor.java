@@ -30,6 +30,8 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.searchEverywhere.FoundItemDescriptor;
+import consulo.searchEverywhere.WeightedSearchEverywhereContributor;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -73,7 +75,6 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
     protected final Project myProject;
     protected final PsiElement psiContext;
-    protected boolean myEverywhere;
     protected ScopeDescriptor myScopeDescriptor;
 
     private final GlobalSearchScope myEverywhereScope;

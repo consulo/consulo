@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.internal.AppLifecycleListener;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;

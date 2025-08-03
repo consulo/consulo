@@ -23,7 +23,7 @@ import consulo.document.Document;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
+import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.localize.LocalizeValue;

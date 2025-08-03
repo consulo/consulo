@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.application.internal.AppLifecycleListener;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
 import consulo.util.lang.StringUtil;

@@ -22,7 +22,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.application.internal.AppLifecycleListener;
 import consulo.externalService.statistic.AbstractApplicationUsagesCollector;
 import consulo.externalService.statistic.UsagesCollector;
 import consulo.project.DumbService;

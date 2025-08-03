@@ -8,7 +8,7 @@ import consulo.application.util.matcher.FixingLayoutMatcher;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
+import consulo.searchEverywhere.FoundItemDescriptor;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.psi.PsiDirectory;

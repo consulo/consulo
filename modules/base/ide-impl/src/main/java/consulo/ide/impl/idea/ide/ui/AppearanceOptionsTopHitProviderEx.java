@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.localize.IdeLocalize;
-import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -40,7 +40,7 @@ public class AppearanceOptionsTopHitProviderEx extends OptionsTopHitProvider imp
 
   @Nonnull
   @Override
-  public Collection<BooleanOptionDescription> getOptions(@Nullable Project project) {
+  public Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project) {
     return ourOptions;
   }
 

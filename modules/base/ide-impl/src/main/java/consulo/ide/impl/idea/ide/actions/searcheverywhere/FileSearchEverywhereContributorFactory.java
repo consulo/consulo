@@ -18,6 +18,8 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.project.Project;
+import consulo.searchEverywhere.SearchEverywhereContributor;
+import consulo.searchEverywhere.SearchEverywhereContributorFactory;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 

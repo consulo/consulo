@@ -10,7 +10,7 @@ import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
+import consulo.searchEverywhere.FoundItemDescriptor;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.ide.impl.idea.util.SynchronizedCollectConsumer;
 import consulo.language.util.proximity.PsiProximityComparator;

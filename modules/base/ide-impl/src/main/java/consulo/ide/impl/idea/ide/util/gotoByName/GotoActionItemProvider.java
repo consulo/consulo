@@ -11,7 +11,7 @@ import consulo.application.util.registry.Registry;
 import consulo.configurable.SearchableOptionsRegistrar;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.SearchTopHitProvider;
+import consulo.ui.ex.action.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider;
 import consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider;

@@ -2,6 +2,8 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.searchEverywhere.SearchEverywhereContributor;
+import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;

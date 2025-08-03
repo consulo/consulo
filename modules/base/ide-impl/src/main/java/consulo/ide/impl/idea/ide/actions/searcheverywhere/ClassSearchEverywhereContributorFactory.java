@@ -20,6 +20,8 @@ import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.project.Project;
+import consulo.searchEverywhere.SearchEverywhereContributor;
+import consulo.searchEverywhere.SearchEverywhereContributorFactory;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 

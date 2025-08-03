@@ -1,5 +1,5 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.actions.searcheverywhere;
+package consulo.searchEverywhere;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -15,7 +15,7 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface SearchEverywhereManager {
-    public static final Key<JBPopup> SEARCH_EVERYWHERE_POPUP = new Key<>("SearchEverywherePopup");
+    public static final Key<JBPopup> SEARCH_EVERYWHERE_POPUP = Key.create("SearchEverywherePopup");
 
     static SearchEverywhereManager getInstance(Project project) {
         return project.getInstance(SearchEverywhereManager.class);
@@ -27,12 +27,12 @@ public interface SearchEverywhereManager {
         @Nonnull String contributorID,
         @Nullable String searchText,
         @Nonnull AnActionEvent initEvent
-    ); //todo change to contributor??? UX-1
+    );
 
     @Nonnull
     String getSelectedContributorID();
 
-    void setSelectedContributor(@Nonnull String contributorID); //todo change to contributor??? UX-1
+    void setSelectedContributor(@Nonnull String contributorID);
 
     void toggleEverywhereFilter();
 

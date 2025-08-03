@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
+import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
-import consulo.project.Project;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -64,7 +64,7 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
 
   @Nonnull
   @Override
-  public Collection<BooleanOptionDescription> getOptions(@Nullable Project project) {
+  public Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project) {
     return ourOptions;
   }
 

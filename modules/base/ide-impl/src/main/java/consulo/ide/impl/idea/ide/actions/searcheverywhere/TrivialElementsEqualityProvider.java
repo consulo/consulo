@@ -3,6 +3,8 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ExtensionImpl;
 
+import consulo.searchEverywhere.SEResultsEqualityProvider;
+import consulo.searchEverywhere.SearchEverywhereFoundElementInfo;
 import jakarta.annotation.Nonnull;
 
 import java.util.Objects;

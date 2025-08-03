@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.SearchTopHitProvider;
+import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
+import consulo.ui.ex.action.SearchTopHitProvider;
 
 import java.util.function.Consumer;
 
@@ -50,7 +50,7 @@ public class UISimpleSettingsProvider implements SearchTopHitProvider, OptionsTo
 
 
   @Override
-  public void consumeTopHits(String pattern, Consumer<Object> collector, Project project) {
+  public void consumeTopHits(String pattern, Consumer<Object> collector, ComponentManager project) {
     pattern = pattern.trim().toLowerCase();
     if (StringUtil.isBetween(pattern, "cyc", "cyclic ") || StringUtil.isBetween(pattern, "scr", "scroll ")) {
       collector.accept(CYCLING_SCROLLING);

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
+import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;

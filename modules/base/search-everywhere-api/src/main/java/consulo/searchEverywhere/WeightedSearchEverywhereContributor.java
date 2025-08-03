@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.actions.searcheverywhere;
+package consulo.searchEverywhere;
 
 import consulo.application.progress.ProgressIndicator;
 import jakarta.annotation.Nonnull;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public interface WeightedSearchEverywhereContributor<I> extends consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereContributor<I> {
+public interface WeightedSearchEverywhereContributor<I> extends SearchEverywhereContributor<I> {
     void fetchWeightedElements(
         @Nonnull String pattern,
         @Nonnull ProgressIndicator progressIndicator,

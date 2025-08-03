@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
+import consulo.searchEverywhere.FoundItemDescriptor;
 import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;

@@ -16,6 +16,8 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
+import consulo.searchEverywhere.SearchEverywhereCommandInfo;
+import consulo.searchEverywhere.SearchEverywhereContributor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;

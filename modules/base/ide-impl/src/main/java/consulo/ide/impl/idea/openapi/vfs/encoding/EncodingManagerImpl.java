@@ -21,7 +21,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.application.internal.AppLifecycleListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;

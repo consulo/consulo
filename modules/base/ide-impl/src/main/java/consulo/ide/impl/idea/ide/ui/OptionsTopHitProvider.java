@@ -17,11 +17,12 @@ package consulo.ide.impl.idea.ide.ui;
 
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
-import consulo.ide.impl.idea.ide.SearchTopHitProvider;
+import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.ex.action.SearchTopHitProvider;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -38,10 +39,10 @@ public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
   protected static final BiFunction<LocalizeManager, String, String> HTML_STRIP = (localizeManager, s) -> StringUtil.stripHtml(s, false);
 
   @Nonnull
-  public abstract Collection<BooleanOptionDescription> getOptions(@Nullable Project project);
+  public abstract Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project);
 
   @Override
-  public final void consumeTopHits(String pattern, Consumer<Object> collector, Project project) {
+  public final void consumeTopHits(String pattern, Consumer<Object> collector, ComponentManager project) {
     if (!pattern.startsWith("#")) return;
     pattern = pattern.substring(1);
     final List<String> parts = StringUtil.split(pattern, " ");

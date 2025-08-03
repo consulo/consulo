@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.ui.ex.action.ActionManager;
-import consulo.project.Project;
+import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.SearchTopHitProvider;
 
 import java.util.function.Consumer;
 
@@ -26,7 +27,7 @@ import java.util.function.Consumer;
  */
 public abstract class ActionsTopHitProvider implements SearchTopHitProvider {
   @Override
-  public void consumeTopHits(String pattern, Consumer<Object> collector, Project project) {
+  public void consumeTopHits(String pattern, Consumer<Object> collector, ComponentManager project) {
     final ActionManager actionManager = ActionManager.getInstance();
     for (String[] strings : getActionsMatrix()) {
       if (StringUtil.isBetween(pattern, strings[0], strings[1])) {
