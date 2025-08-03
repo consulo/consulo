@@ -13,111 +13,116 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.execution.unscramble.AnalyzeStacktraceUtil;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.task.Comment;
 import consulo.task.Task;
+import consulo.task.localize.TaskLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.execution.unscramble.AnalyzeStacktraceUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
 public class ChooseStacktraceDialog extends DialogWrapper {
+    private JList<Comment> myList;
+    private JPanel myPanel;
+    private JPanel myEditorPanel;
+    private AnalyzeStacktraceUtil.StacktraceEditorPanel myEditor;
 
-  private JList myList;
-  private JPanel myPanel;
-  private JPanel myEditorPanel;
-  private AnalyzeStacktraceUtil.StacktraceEditorPanel myEditor;
+    public ChooseStacktraceDialog(Project project, Task issue) {
+        super(project, false);
 
-  public ChooseStacktraceDialog(Project project, final Task issue) {
-    super(project, false);
-
-    setTitle("Choose Stacktrace to Analyze");
-    Comment[] comments = issue.getComments();
-    ArrayList<Comment> list = new ArrayList<Comment>(comments.length + 1);
-    final String description = issue.getDescription();
-    if (description != null) {
-      list.add(new Description(description));
-    }
-    ContainerUtil.addAll(list, comments);
-
-    myList.setModel(new CollectionListModel<Comment>(list));
-    myList.setCellRenderer(new ColoredListCellRenderer() {
-      @Override
-      protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        if (value instanceof Description) {
-          append("Description");
+        setTitle(TaskLocalize.dialogTitleChooseStacktraceToAnalyze());
+        Comment[] comments = issue.getComments();
+        List<Comment> list = new ArrayList<>(comments.length + 1);
+        String description = issue.getDescription();
+        if (description != null) {
+            list.add(new Description(description));
         }
-        else {
-          append("Commented by " + ((Comment)value).getAuthor() + " (" + ((Comment)value).getDate() + ")");
-        }
-      }
-    });
+        ContainerUtil.addAll(list, comments);
 
-    myEditor = AnalyzeStacktraceUtil.createEditorPanel(project, myDisposable);
-    myEditorPanel.add(myEditor, BorderLayout.CENTER);
-    myList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      public void valueChanged(ListSelectionEvent e) {
-        Object value = myList.getSelectedValue();
-        if (value instanceof Comment) {
-          myEditor.setText(((Comment)value).getText());
-        }
-        else {
-          myEditor.setText("");
-        }
-      }
-    });
-    myList.setSelectedValue(list.get(0), false);
-    init();
-  }
+        myList.setModel(new CollectionListModel<>(list));
+        myList.setCellRenderer(new ColoredListCellRenderer<>() {
+            @Override
+            protected void customizeCellRenderer(
+                @Nonnull JList<? extends Comment> list,
+                Comment value,
+                int index,
+                boolean selected,
+                boolean hasFocus
+            ) {
+                if (value instanceof Description) {
+                    append(TaskLocalize.labelDescription());
+                }
+                else {
+                    append(TaskLocalize.labelCommentedBy(value.getAuthor(), value.getDate()));
+                }
+            }
+        });
 
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myList;
-  }
-
-  protected JComponent createCenterPanel() {
-    return myPanel;
-  }
-
-  public Comment[] getTraces() {
-    return ArrayUtil.toObjectArray(Comment.class, myList.getSelectedValues());
-  }
-
-  private static class Description extends Comment {
-    private final String myDescription;
-
-    public Description(String description) {
-      myDescription = description;
+        myEditor = AnalyzeStacktraceUtil.createEditorPanel(project, myDisposable);
+        myEditorPanel.add(myEditor, BorderLayout.CENTER);
+        myList.getSelectionModel().addListSelectionListener(e -> {
+            if (myList.getSelectedValue() instanceof Comment comment) {
+                myEditor.setText(comment.getText());
+            }
+            else {
+                myEditor.setText("");
+            }
+        });
+        myList.setSelectedValue(list.get(0), false);
+        init();
     }
 
     @Override
-    public String getText() {
-      return myDescription;
+    @RequiredUIAccess
+    public JComponent getPreferredFocusedComponent() {
+        return myList;
     }
 
     @Override
-    public String getAuthor() {
-      return null;
+    protected JComponent createCenterPanel() {
+        return myPanel;
     }
 
-    @Override
-    public Date getDate() {
-      return null;
+    public Comment[] getTraces() {
+        return ArrayUtil.toObjectArray(Comment.class, myList.getSelectedValuesList());
     }
-  }
+
+    private static class Description extends Comment {
+        private final String myDescription;
+
+        public Description(String description) {
+            myDescription = description;
+        }
+
+        @Override
+        public String getText() {
+            return myDescription;
+        }
+
+        @Override
+        public String getAuthor() {
+            return null;
+        }
+
+        @Override
+        public Date getDate() {
+            return null;
+        }
+    }
 }

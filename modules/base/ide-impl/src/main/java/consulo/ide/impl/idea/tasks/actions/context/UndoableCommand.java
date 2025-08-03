@@ -29,7 +29,7 @@ import consulo.project.Project;
  */
 public class UndoableCommand {
     @RequiredUIAccess
-    public static void execute(final Project project, final UndoableAction action, String name, String groupId) {
+    public static void execute(Project project, UndoableAction action, String name, String groupId) {
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .name(LocalizeValue.ofNullable(name))

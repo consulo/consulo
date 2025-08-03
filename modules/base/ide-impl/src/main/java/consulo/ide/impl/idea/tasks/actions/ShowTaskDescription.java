@@ -20,10 +20,10 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.psi.PsiManager;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -36,7 +36,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "tasks.show.task.description")
 public class ShowTaskDescription extends BaseTaskAction {
     public ShowTaskDescription() {
-        super(LocalizeValue.localizeTODO("Show Description"));
+        super(TaskLocalize.actionTasksShowTaskDescriptionText());
     }
 
     @Override

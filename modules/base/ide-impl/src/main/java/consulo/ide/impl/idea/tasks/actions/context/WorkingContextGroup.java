@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.tasks.actions.context;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.localize.LocalizeValue;
+import consulo.task.localize.TaskLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
@@ -35,6 +35,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class WorkingContextGroup extends DefaultActionGroup implements DumbAware {
     public WorkingContextGroup() {
-        super(LocalizeValue.localizeTODO("Working Context"), false);
+        super(TaskLocalize.groupWorkingContextText(), false);
     }
 }

@@ -24,6 +24,7 @@ import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
@@ -35,7 +36,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "tasks.close")
 public class CloseTaskAction extends BaseTaskAction {
     public CloseTaskAction() {
-        super(LocalizeValue.localizeTODO("_Close Active Task..."));
+        super(TaskLocalize.actionTasksCloseText());
     }
 
     @Override
@@ -55,7 +56,7 @@ public class CloseTaskAction extends BaseTaskAction {
                     repository.setPreferredCloseTaskState(taskState);
                 }
                 catch (Exception e1) {
-                    Messages.showErrorDialog(project, e1.getMessage(), "Cannot Set State For Issue");
+                    Messages.showErrorDialog(project, e1.getMessage(), TaskLocalize.dialogTitleCannotSetStateForIssue().get());
                 }
             }
         }

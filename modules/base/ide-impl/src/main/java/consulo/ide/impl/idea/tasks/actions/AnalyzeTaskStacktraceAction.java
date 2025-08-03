@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.execution.unscramble.AnalyzeStacktraceUtil;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.Comment;
 import consulo.task.LocalTask;
 import consulo.task.Task;
 import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
@@ -33,7 +33,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "tasks.analyze.stacktrace")
 public class AnalyzeTaskStacktraceAction extends BaseTaskAction {
     public AnalyzeTaskStacktraceAction() {
-        super(LocalizeValue.localizeTODO("Analyze _Stacktrace From Task..."));
+        super(TaskLocalize.actionTasksAnalyzeStacktraceText());
     }
 
     @Override

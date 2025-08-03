@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tasks.actions.context;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.localize.LocalizeValue;
+import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
@@ -36,7 +36,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "context.save")
 public class SaveContextAction extends BaseTaskAction {
     public SaveContextAction() {
-        super(LocalizeValue.localizeTODO("_Save Context..."));
+        super(TaskLocalize.actionContextSaveText());
     }
 
     @Override
@@ -56,7 +56,13 @@ public class SaveContextAction extends BaseTaskAction {
                 initial = file.getName();
             }
         }
-        String comment = Messages.showInputDialog(project, "Enter comment (optional):", "Save Context", null, initial, null);
+        String comment = Messages.showInputDialog(project,
+            TaskLocalize.taskSaveContextActionMessage().get(),
+            TaskLocalize.taskSaveContextActionName().get(),
+            null,
+            initial,
+            null
+        );
         if (comment != null) {
             WorkingContextManager.getInstance(project).saveContext(null, StringUtil.isEmpty(comment) ? null : comment);
         }

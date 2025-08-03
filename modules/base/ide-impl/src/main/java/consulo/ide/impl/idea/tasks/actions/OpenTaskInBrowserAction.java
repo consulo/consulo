@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.localize.LocalizeValue;
+import consulo.task.localize.TaskLocalize;
 import consulo.webBrowser.BrowserUtil;
 import consulo.project.Project;
 import consulo.task.TaskManager;
@@ -34,7 +34,7 @@ import jakarta.annotation.Nullable;
 @ActionImpl(id = "tasks.open.in.browser")
 public class OpenTaskInBrowserAction extends BaseTaskAction {
     public OpenTaskInBrowserAction() {
-        super(LocalizeValue.localizeTODO("Open in _Browser"));
+        super(TaskLocalize.actionTasksOpenInBrowserText());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class OpenTaskInBrowserAction extends BaseTaskAction {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         String url = getIssueUrl(e);
         if (url != null) {
-            BrowserUtil.launchBrowser(url);
+            BrowserUtil.browse(url);
         }
     }
 
@@ -58,7 +58,9 @@ public class OpenTaskInBrowserAction extends BaseTaskAction {
                 presentation.setTextValue(getTemplatePresentation().getTextValue());
             }
             else {
-                presentation.setText("Open '" + TaskManager.getManager(project).getActiveTask().getPresentableName() + "' In _Browser");
+                presentation.setTextValue(
+                    TaskLocalize.actionOpenInBrowserText(TaskManager.getManager(project).getActiveTask().getPresentableName())
+                );
             }
         }
     }

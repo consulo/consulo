@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tasks.actions.context;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.localize.LocalizeValue;
+import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.GlobalUndoableAction;
@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "context.clear")
 public class ClearContextAction extends BaseTaskAction {
     public ClearContextAction() {
-        super(LocalizeValue.localizeTODO("_Clear Context"));
+        super(TaskLocalize.actionContextClearText());
     }
 
     @Override
@@ -49,6 +49,6 @@ public class ClearContextAction extends BaseTaskAction {
                 WorkingContextManager.getInstance(project).clearContext();
             }
         };
-        UndoableCommand.execute(project, action, "Clear context", "Context");
+        UndoableCommand.execute(project, action, TaskLocalize.taskClearContextActionName().get(), "Context");
     }
 }

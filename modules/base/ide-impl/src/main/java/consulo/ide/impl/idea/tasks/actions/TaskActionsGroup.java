@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.tasks.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.localize.ActionLocalize;
 import consulo.task.impl.internal.action.ConfigureServersAction;
+import consulo.task.localize.TaskLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 
@@ -44,6 +44,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 )
 public class TaskActionsGroup extends DefaultActionGroup implements DumbAware {
     public TaskActionsGroup() {
-        super(ActionLocalize.groupNewelementinmenuText(), false);
+        super(TaskLocalize.groupTaskActionsText(), false);
     }
 }

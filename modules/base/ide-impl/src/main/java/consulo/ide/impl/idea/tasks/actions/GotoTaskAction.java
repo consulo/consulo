@@ -22,6 +22,7 @@ import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.impl.internal.action.ConfigureServersAction;
 import consulo.task.impl.internal.action.TaskSearchSupport;
+import consulo.task.localize.TaskLocalize;
 import consulo.task.util.TaskUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -50,7 +51,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
 
     @Inject
     public GotoTaskAction(@Nonnull Application application) {
-        super(LocalizeValue.localizeTODO("Open Task..."), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
+        super(TaskLocalize.openTaskActionMenuText(), LocalizeValue.empty(), PlatformIconGroup.generalAdd());
         myApplication = application;
     }
 
@@ -118,22 +119,31 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
 
         popup.setShowListForEmptyPattern(true);
         popup.setSearchInAnyPlace(true);
-        popup.setAdText(LocalizeValue.localizeTODO("<html>Press SHIFT to merge with current context<br/>" +
-            "Pressing " +
-            KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_QUICK_JAVADOC)) +
-            " would show task description and comments</html>").get());
-        popup.registerAction("shiftPressed", KeyStroke.getKeyStroke("shift pressed SHIFT"), new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                shiftPressed.set(true);
+        popup.setAdText(
+            TaskLocalize.popupAdvertisementHtmlPressShiftToMergeWithCurrentContextBrPressingWouldShowTaskDescriptionCommentsHtml(
+                KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_QUICK_JAVADOC))
+            ).get()
+        );
+        popup.registerAction(
+            "shiftPressed",
+            KeyStroke.getKeyStroke("shift pressed SHIFT"),
+            new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    shiftPressed.set(true);
+                }
             }
-        });
-        popup.registerAction("shiftReleased", KeyStroke.getKeyStroke("released SHIFT"), new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                shiftPressed.set(false);
+        );
+        popup.registerAction(
+            "shiftReleased",
+            KeyStroke.getKeyStroke("released SHIFT"),
+            new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    shiftPressed.set(false);
+                }
             }
-        });
+        );
 
         DefaultActionGroup group = new DefaultActionGroup(new ConfigureServersAction(myApplication) {
             @Override
@@ -176,12 +186,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         );
     }
 
-    private static boolean processTasks(
-        List<Task> tasks,
-        Predicate<Object> consumer,
-        ProgressIndicator cancelled,
-        PsiManager psiManager
-    ) {
+    private static boolean processTasks(List<Task> tasks, Predicate<Object> consumer, ProgressIndicator cancelled, PsiManager psiManager) {
         for (Task task : tasks) {
             cancelled.checkCanceled();
             if (!consumer.test(new TaskPsiElement(psiManager, task))) {
@@ -191,19 +196,19 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         return true;
     }
 
-    private static void showOpenTaskDialog(Project project, Task task) {
+    private static void showOpenTaskDialog(@Nonnull Project project, Task task) {
         JBPopup hint = DocumentationManager.getInstance(project).getDocInfoHint();
         if (hint != null) {
             hint.cancel();
         }
-        Application.get().invokeLater(() -> new OpenTaskDialog(project, task).show());
+        project.getApplication().invokeLater(() -> new OpenTaskDialog(project, task).show());
     }
 
     private static class GotoTaskPopupModel extends SimpleChooseByNameModel {
         private ListCellRenderer myListCellRenderer;
 
         protected GotoTaskPopupModel(@Nonnull Project project) {
-            super(project, "Enter task name:", null);
+            super(project, TaskLocalize.enterTaskName().get(), null);
             myListCellRenderer = new TaskCellRenderer(project);
         }
 
@@ -236,7 +241,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         @Nonnull
         @Override
         public LocalizeValue getCheckBoxName() {
-            return LocalizeValue.localizeTODO("Include closed tasks");
+            return TaskLocalize.labelIncludeClosedTasks();
         }
 
         @Override
@@ -254,7 +259,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware {
         private String taskName;
 
         public String getActionText() {
-            return LocalizeValue.localizeTODO("Create New Task \'" + taskName + "\'").get();
+            return TaskLocalize.createNewTask0(taskName).get();
         }
 
         public void setTaskName(String taskName) {
