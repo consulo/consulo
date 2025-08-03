@@ -37,6 +37,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.event.*;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStepHandler {
     private static final Logger LOG = Logger.getInstance(ListPopupImpl.class);
@@ -470,6 +471,11 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     @Override
     public void addListSelectionListener(ListSelectionListener listSelectionListener) {
         myList.addListSelectionListener(listSelectionListener);
+    }
+
+    @Override
+    public void addSelectionListener(@Nonnull Consumer<Object> selectionListener) {
+        myList.addListSelectionListener(e -> selectionListener.accept(myList.getSelectedValue()));
     }
 
     private class MyMouseMotionListener extends MouseMotionAdapter {

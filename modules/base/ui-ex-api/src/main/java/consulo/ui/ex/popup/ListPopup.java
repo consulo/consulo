@@ -16,42 +16,47 @@
 
 package consulo.ui.ex.popup;
 
+import consulo.annotation.DeprecationInfo;
+import jakarta.annotation.Nonnull;
+
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.InputEvent;
+import java.util.function.Consumer;
 
 /**
  * A popup window displaying a list of items (or other actions).
  *
  * @author mike
- * @see consulo.ide.impl.idea.openapi.ui.popup.JBPopupFactory#createActionGroupPopup
- * @see consulo.ide.impl.idea.openapi.ui.popup.JBPopupFactory#createWizardStep
- * @since 6.0
+ * @see JBPopupFactory#createActionGroupPopup
  */
 public interface ListPopup extends JBPopup {
 
-  /**
-   * Returns the popup step currently displayed in the popup.
-   *
-   * @return the popup step.
-   */
-  ListPopupStep getListStep();
+    /**
+     * Returns the popup step currently displayed in the popup.
+     *
+     * @return the popup step.
+     */
+    ListPopupStep getListStep();
 
-  /**
-   * Handles the selection of the currently focused item in the popup step.
-   *
-   * @param handleFinalChoices If true, the action of the focused item is always executed
-   * (as if Enter was pressed). If false, and the focused item has a submenu, the submenu
-   * is opened (as if the right arrow key was pressed). 
-   */
-  void handleSelect(boolean handleFinalChoices);
+    /**
+     * Handles the selection of the currently focused item in the popup step.
+     *
+     * @param handleFinalChoices If true, the action of the focused item is always executed
+     *                           (as if Enter was pressed). If false, and the focused item has a submenu, the submenu
+     *                           is opened (as if the right arrow key was pressed).
+     */
+    void handleSelect(boolean handleFinalChoices);
 
-  void handleSelect(boolean handleFinalChoices, InputEvent e);
+    void handleSelect(boolean handleFinalChoices, InputEvent e);
 
-  /**
-   * If default selection is set, then handleSelect is invoked without showing a popup
-   * @param autoHandle
-   */
-  void setHandleAutoSelectionBeforeShow(boolean autoHandle);
+    /**
+     * If default selection is set, then handleSelect is invoked without showing a popup
+     */
+    void setHandleAutoSelectionBeforeShow(boolean autoHandle);
 
-  void addListSelectionListener(ListSelectionListener listSelectionListener);
+    @Deprecated
+    @DeprecationInfo("Use addSelectionListener")
+    void addListSelectionListener(ListSelectionListener listSelectionListener);
+
+    void addSelectionListener(@Nonnull Consumer<Object> selectionListener);
 }

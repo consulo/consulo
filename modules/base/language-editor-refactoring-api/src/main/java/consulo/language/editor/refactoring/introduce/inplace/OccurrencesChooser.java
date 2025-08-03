@@ -10,15 +10,16 @@ import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.util.TextRange;
 import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.popup.GroupedItemsListRenderer;
-import consulo.ui.ex.awt.popup.ListItemDescriptor;
-import consulo.ui.ex.popup.JBPopup;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.SimpleListPopupStepBuilder;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
 
 import java.util.*;
@@ -53,7 +54,7 @@ public abstract class OccurrencesChooser<T> {
         }
 
         @Override
-        public @Nls String formatDescription(int occurrencesCount) {
+        public String formatDescription(int occurrencesCount) {
             return switch (this) {
                 case NO -> RefactoringBundle.message("replace.this.occurrence.only");
                 case NO_WRITE -> RefactoringBundle.message("replace.all.occurrences.but.write");
@@ -79,7 +80,7 @@ public abstract class OccurrencesChooser<T> {
         myEditor = editor;
     }
 
-    public void showChooser(final T selectedOccurrence, final List<T> allOccurrences, final Consumer<? super ReplaceChoice> callback) {
+    public void showChooser(T selectedOccurrence, List<T> allOccurrences, Consumer<? super ReplaceChoice> callback) {
         if (allOccurrences.size() == 1) {
             callback.accept(ReplaceChoice.ALL);
         }
@@ -95,16 +96,17 @@ public abstract class OccurrencesChooser<T> {
      * use {@link #showChooser(Map, String, Consumer)}
      */
     @Deprecated
-    public void showChooser(final Consumer<? super ReplaceChoice> callback, final Map<ReplaceChoice, List<T>> occurrencesMap) {
-        showChooser(occurrencesMap, RefactoringBundle.message("replace.multiple.occurrences.found"), callback);
+    public void showChooser(Consumer<? super ReplaceChoice> callback, Map<ReplaceChoice, List<T>> occurrencesMap) {
+        showChooser(occurrencesMap, RefactoringLocalize.replaceMultipleOccurrencesFound(), callback);
     }
 
-    public void showChooser(final Map<ReplaceChoice, List<T>> occurrencesMap, @Nonnull Consumer<? super ReplaceChoice> callback) {
-        showChooser(occurrencesMap, RefactoringBundle.message("replace.multiple.occurrences.found"), callback);
+    public void showChooser(Map<ReplaceChoice, List<T>> occurrencesMap, @Nonnull Consumer<? super ReplaceChoice> callback) {
+        showChooser(occurrencesMap, RefactoringLocalize.replaceMultipleOccurrencesFound(), callback);
     }
 
-    public <C extends BaseReplaceChoice> void showChooser(final Map<C, List<T>> occurrencesMap,
-                                                          @Nls String title,
+    @SuppressWarnings("unchecked")
+    public <C extends BaseReplaceChoice> void showChooser(Map<C, List<T>> occurrencesMap,
+                                                          @Nonnull LocalizeValue title,
                                                           Consumer<? super C> callback) {
         if (occurrencesMap.size() == 1) {
             callback.accept(occurrencesMap.keySet().iterator().next());
@@ -112,46 +114,42 @@ public abstract class OccurrencesChooser<T> {
         }
         List<C> model = new ArrayList<>(occurrencesMap.keySet());
 
-        JBPopup popup = JBPopupFactory.getInstance()
-            .createPopupChooserBuilder(model)
-            .setRenderer(new GroupedItemsListRenderer<C>(new ListItemDescriptor<>() {
-                @Override
-                public @Nullable String getTextFor(C value) {
-                    if (value == null) {
-                        return "";
-                    }
-                    return value.formatDescription(occurrencesMap.get(value).size());
-                }
-            }))
-            .setItemSelectedCallback(value -> {
+        ListPopupStep<C> step = SimpleListPopupStepBuilder.newBuilder(model)
+            .withTitle(title)
+            .withTextBuilder(value -> {
                 if (value == null) {
-                    return;
+                    return "";
                 }
-                dropHighlighters();
-                final MarkupModel markupModel = myEditor.getMarkupModel();
-                final List<T> occurrenceList = occurrencesMap.get(value);
-                for (T occurrence : occurrenceList) {
-                    final TextRange textRange = getOccurrenceRange(occurrence);
-                    final RangeHighlighter rangeHighlighter = markupModel.addRangeHighlighter(
-                        EditorColors.SEARCH_RESULT_ATTRIBUTES, textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1,
-                        HighlighterTargetArea.EXACT_RANGE);
-                    myRangeHighlighters.add(rangeHighlighter);
-                }
+                return value.formatDescription(occurrencesMap.get(value).size());
             })
-            .setTitle(title)
-            .setMovable(true)
-            .setResizable(false)
-            .setRequestFocus(true)
-            .setItemChosenCallback(callback)
-            .addListener(new JBPopupListener() {
-                @Override
-                public void onClosed(@Nonnull LightweightWindowEvent event) {
-                    dropHighlighters();
-                }
-            })
-            .createPopup();
+            .withFinishAction(callback)
+            .build();
 
-        EditorPopupHelper.getInstance().showPopupInBestPositionFor(myEditor, popup);
+        ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(step);
+        listPopup.setRequestFocus(true);
+        listPopup.addListener(new JBPopupListener() {
+            @Override
+            public void onClosed(@Nonnull LightweightWindowEvent event) {
+                dropHighlighters();
+            }
+        });
+        listPopup.addSelectionListener(value -> {
+            if (value == null) {
+                return;
+            }
+            dropHighlighters();
+            MarkupModel markupModel = myEditor.getMarkupModel();
+            List<T> occurrenceList = occurrencesMap.get((C)value);
+            for (T occurrence : occurrenceList) {
+                TextRange textRange = getOccurrenceRange(occurrence);
+                RangeHighlighter rangeHighlighter = markupModel.addRangeHighlighter(
+                    EditorColors.SEARCH_RESULT_ATTRIBUTES, textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1,
+                    HighlighterTargetArea.EXACT_RANGE);
+                myRangeHighlighters.add(rangeHighlighter);
+            }
+        });
+
+        EditorPopupHelper.getInstance().showPopupInBestPositionFor(myEditor, listPopup);
     }
 
     protected abstract TextRange getOccurrenceRange(T occurrence);
