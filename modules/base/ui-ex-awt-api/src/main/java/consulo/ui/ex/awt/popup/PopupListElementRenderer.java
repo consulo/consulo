@@ -27,7 +27,7 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
     private JLabel myValueLabel;
 
     public PopupListElementRenderer(final AWTListPopup aPopup) {
-        super(new ListItemDescriptorAdapter<E>() {
+        super(new ListItemDescriptor<E>() {
             @Override
             public String getTextFor(E value) {
                 return aPopup.getListStep().getTextFor(value);
@@ -90,11 +90,11 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
         myValueLabel = new JLabel();
         myValueLabel.setEnabled(false);
         myValueLabel.setOpaque(false);
-        myValueLabel.setBorder(JBUI.Borders.empty(0, JBUIScale.scale(8), 1, 0));
+        myValueLabel.setBorder(JBUI.Borders.empty(0, JBUIScale.scale(8), 0, 0));
         myValueLabel.setForeground(UIManager.getColor("MenuItem.acceleratorForeground"));
         panel.add(myValueLabel, BorderLayout.CENTER);
         myShortcutLabel = new JLabel();
-        myShortcutLabel.setBorder(JBUI.Borders.empty(0, 0, 1, 3));
+        myShortcutLabel.setBorder(JBUI.Borders.empty(0, 0, 0, 3));
         myShortcutLabel.setForeground(UIManager.getColor("MenuItem.acceleratorForeground"));
         myShortcutLabel.setOpaque(false);
         panel.add(myShortcutLabel, BorderLayout.EAST);
