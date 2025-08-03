@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.tools;
 
 import java.util.List;
@@ -22,18 +21,18 @@ import java.util.List;
  * @author traff
  */
 public class ExternalToolsGroup extends BaseExternalToolsGroup<Tool> {
-  @Override
-  protected List<ToolsGroup<Tool>> getToolsGroups() {
-    return ToolManager.getInstance().getGroups();
-  }
+    @Override
+    protected List<ToolsGroup<Tool>> getToolsGroups() {
+        return ToolManager.getInstance().getGroups();
+    }
 
-  @Override
-  protected List<Tool> getToolsByGroupName(String groupName) {
-    return ToolManager.getInstance().getTools(groupName);
-  }
+    @Override
+    protected List<Tool> getToolsByGroupName(String groupName) {
+        return ToolManager.getInstance().getTools(groupName);
+    }
 
-  @Override
-  protected ToolAction createToolAction(Tool tool) {
-    return new ToolAction(tool);
-  }
+    @Override
+    protected ToolAction createToolAction(Tool tool) {
+        return new ToolAction(tool);
+    }
 }
