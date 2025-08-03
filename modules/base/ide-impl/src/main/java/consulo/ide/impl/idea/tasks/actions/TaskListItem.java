@@ -27,50 +27,49 @@ import consulo.ui.image.ImageEffects;
  * @since 2012-09-06
  */
 abstract class TaskListItem {
+    private final String myText;
+    private final Image myIcon;
+    private final String mySeparator;
+    private final boolean myTemp;
+    private final LocalTask myTask;
 
-  private final String myText;
-  private final Image myIcon;
-  private final String mySeparator;
-  private final boolean myTemp;
-  private final LocalTask myTask;
+    public TaskListItem(String text, Image icon) {
+        myText = text;
+        myIcon = icon;
+        mySeparator = null;
+        myTask = null;
+        myTemp = false;
+    }
 
-  public TaskListItem(String text, Image icon) {
-    myText = text;
-    myIcon = icon;
-    mySeparator = null;
-    myTask = null;
-    myTemp = false;
-  }
+    protected TaskListItem(LocalTask task, String separator, boolean temp) {
+        myTask = task;
+        mySeparator = separator;
+        myTemp = temp;
+        myText = TaskUtil.getTrimmedSummary(task);
+        myIcon = temp ? ImageEffects.transparent(task.getIcon(), 0.5f) : task.getIcon();
+    }
 
-  protected TaskListItem(LocalTask task, String separator, boolean temp) {
-    myTask = task;
-    mySeparator = separator;
-    myTemp = temp;
-    myText = TaskUtil.getTrimmedSummary(task);
-    myIcon = temp ? ImageEffects.transparent(task.getIcon(), 0.5f) : task.getIcon();
-  }
+    public String getText() {
+        return myText;
+    }
 
-  public String getText() {
-    return myText;
-  }
+    public Image getIcon() {
+        return myIcon;
+    }
 
-  public Image getIcon() {
-    return myIcon;
-  }
+    @Nullable
+    public String getSeparator() {
+        return mySeparator;
+    }
 
-  @Nullable
-  public String getSeparator() {
-    return mySeparator;
-  }
+    abstract void select();
 
-  abstract void select();
+    @Nullable
+    public LocalTask getTask() {
+        return myTask;
+    }
 
-  @Nullable
-  public LocalTask getTask() {
-    return myTask;
-  }
-
-  public boolean isTemp() {
-    return myTemp;
-  }
+    public boolean isTemp() {
+        return myTemp;
+    }
 }

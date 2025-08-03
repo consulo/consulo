@@ -1,28 +1,124 @@
-failure.login:
-  text: Login failed. Check your credentials.
-failure.permissions:
-  text: Request failed. Check your permissions.
-failure.server.message:
-  text: 'Request failed. Reason: {0}'
-failure.http.error:
-  text: 'Request failed with HTTP error: {0,number} {1}.'
-failure.configuration:
-  text: Not configured.
-jira.default.query:
-  text: assignee = currentUser() and resolution = Unresolved order by updated
-jira.failure.no.REST:
-  text: JIRA below 4.2.0 doesn't have REST API and is no longer supported.
-jira.failure.no.JQL:
-  text: JQL search cannot be used in JIRA versions prior 4.2.
-jira.failure.no.state.update:
-  text: Task state cannot be updated in JIRA versions prior 4.2.
-jira.failure.no.time.spent:
-  text: Time spent cannot be updated in JIRA versions prior 5.0.
-jira.failure.captcha:
-  text: Login failed. Enter captcha in web-interface.
-youtrack.default.query:
-  text: 'for: me sort by: updated #Unresolved'
+action.LoadContextAction.Anonymous.text.load:
+    text: Load
+action.LoadContextAction.Anonymous.text.remove:
+    text: Remove
+action.add.changelist.for.text:
+    text: Add Change List for ''{0}''
+action.context.clear.text:
+    text: _Clear Context
+action.context.load.text:
+    text: _Load Context…
+action.context.save.text:
+    text: _Save Context…
+action.create.changelist.for.text:
+    text: Create Change List for ''{0}''
+action.edit.text.with.mnemonic:
+    text: '&Edit'
+action.open.in.browser.text:
+    text: Open ''{0}'' In _Browser
+action.remove.text:
+    text: '&Remove'
+action.switch.to.text:
+    text: '&Switch to'
+action.tasks.analyze.stacktrace.text:
+    text: Analyze _Stack Trace From Task…
+action.tasks.close.text:
+    text: _Close Active Task…
+action.tasks.create.changelist.text:
+    text: Create Change_list…
+action.tasks.open.in.browser.text:
+    text: Open in _Browser
+action.tasks.show.task.description.text:
+    text: Show Description
+action.tasks.switch.text:
+    text: _Switch Task…
 bugzilla.failure.malformed.response:
-  text: Cannot decode server response. Check that XML-RPC plugin is enabled.
+    text: Cannot decode server response. Check that XML-RPC plugin is enabled.
 bugzilla.failure.no.version:
-  text: Cannot find Bugzilla version. Check that URL ends with "xmlrpc.cgi".
+    text: Cannot find Bugzilla version. Check that URL ends with "xmlrpc.cgi".
+command.name.load.context:
+    text: Load Context {0}
+create.new.task.0:
+    text: Create New Task ''{0}''
+dialog.message.changelist.associated.with.not.empty:
+    text: |-
+        Changelist associated with ''{0}'' is not empty.
+        Do you want to remove it and move the changes to the active changelist?
+dialog.message.changelist.name:
+    text: 'Change list name:'
+dialog.message.default.task.cannot.be.removed:
+    text: Default task cannot be removed
+dialog.title.cannot.remove:
+    text: Cannot Remove
+dialog.title.cannot.set.state.for.issue:
+    text: Cannot Set State For Issue
+dialog.title.changelist.not.empty:
+    text: Changelist Not Empty
+dialog.title.choose.stacktrace.to.analyze:
+    text: Choose Stacktrace to Analyze
+dialog.title.close.task:
+    text: Close Task
+dialog.title.create.changelist:
+    text: Create Change List
+dialog.title.open.task:
+    text: Open Task
+enter.task.name:
+    text: 'Enter task name:'
+failure.configuration:
+    text: Not configured.
+failure.http.error:
+    text: 'Request failed with HTTP error: {0,number} {1}.'
+failure.login:
+    text: Login failed. Check your credentials.
+failure.permissions:
+    text: Request failed. Check your permissions.
+failure.server.message:
+    text: 'Request failed. Reason: {0}'
+group.task.actions.text:
+    text: Task Actions
+group.tasks.and.contexts.text:
+    text: '&Tasks & Contexts'
+group.tasks.internal.text:
+    text: '&Tasks'
+group.working.context.text:
+    text: Working Context
+jira.default.query:
+    text: assignee = currentUser() and resolution = Unresolved order by updated
+jira.failure.captcha:
+    text: Login failed. Enter captcha in web-interface.
+jira.failure.no.JQL:
+    text: JQL search cannot be used in JIRA versions prior 4.2.
+jira.failure.no.REST:
+    text: JIRA below 4.2.0 doesn't have REST API and is no longer supported.
+jira.failure.no.state.update:
+    text: Task state cannot be updated in JIRA versions prior 4.2.
+jira.failure.no.time.spent:
+    text: Time spent cannot be updated in JIRA versions prior 5.0.
+label.commented.by:
+    text: Commented by {0} ({1})
+label.description:
+    text: Description
+label.include.closed.tasks:
+    text: Include closed tasks
+open.task.action.menu.text:
+    text: Open Task…
+popup.advertisement.html.press.shift.to.merge.with.current.context.br.pressing.would.show.task.description.comments.html:
+    text: <html>Press SHIFT to merge with current context<br/>Pressing {0} would show task description and comments</html>
+popup.advertisement.press.shift.to.merge.with.current.context:
+    text: Press SHIFT to merge with current context
+popup.title.load.context:
+    text: Load Context
+popup.title.merge.with.current.context:
+    text: Merge with Current Context
+popup.title.switch.to.task:
+    text: Switch to Task
+separator.recently.closed.tasks:
+    text: Recently Closed Tasks
+task.clear.context.action.name:
+    text: Clear context
+task.save.context.action.message:
+    text: 'Enter comment (optional):'
+task.save.context.action.name:
+    text: Save Context
+youtrack.default.query:
+    text: 'for: me sort by: updated #Unresolved'

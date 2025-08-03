@@ -18,9 +18,7 @@ package consulo.ide.impl.idea.tasks.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.awt.action.ComboBoxButtonImpl;
 import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.task.LocalTask;
@@ -33,56 +31,57 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.JBPopup;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev
  */
 public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
-  @Nonnull
-  @Override
-  public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
-    return SwitchTaskAction.createPopup(context, onDispose, false);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    Project project = e.getData(Project.KEY);
-    if (project == null || project.isDefault() || project.isDisposed()) {
-      presentation.setEnabled(false);
-      presentation.setTextValue(LocalizeValue.empty());
-      presentation.setIcon(null);
+    @Nonnull
+    @Override
+    public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
+        return SwitchTaskAction.createPopup(context, onDispose, false);
     }
-    else {
-      TaskManager taskManager = TaskManager.getManager(project);
-      LocalTask activeTask = taskManager.getActiveTask();
-      presentation.setEnabledAndVisible(true);
 
-      if (isImplicit(activeTask) && taskManager.getAllRepositories().length == 0 && !TaskSettings.getInstance().ALWAYS_DISPLAY_COMBO) {
-        presentation.setVisible(false);
-      }
-      else {
-        String s = getText(activeTask);
-        presentation.setText(s);
-        presentation.setIcon(activeTask.getIcon());
-        presentation.setDescription(activeTask.getSummary());
-      }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        Project project = e.getData(Project.KEY);
+        if (project == null || project.isDefault() || project.isDisposed()) {
+            presentation.setEnabled(false);
+            presentation.setTextValue(LocalizeValue.empty());
+            presentation.setIcon(null);
+        }
+        else {
+            TaskManager taskManager = TaskManager.getManager(project);
+            LocalTask activeTask = taskManager.getActiveTask();
+            presentation.setEnabledAndVisible(true);
+
+            if (isImplicit(activeTask) && taskManager.getAllRepositories().length == 0 && !TaskSettings.getInstance().ALWAYS_DISPLAY_COMBO) {
+                presentation.setVisible(false);
+            }
+            else {
+                String s = getText(activeTask);
+                presentation.setText(s);
+                presentation.setIcon(activeTask.getIcon());
+                presentation.setDescription(activeTask.getSummary());
+            }
+        }
     }
-  }
 
-  @Nonnull
-  @Override
-  protected DefaultActionGroup createPopupActionGroup(JComponent button) {
-    throw new IllegalArgumentException();
-  }
+    @Nonnull
+    @Override
+    protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+        throw new IllegalArgumentException();
+    }
 
-  private static boolean isImplicit(LocalTask activeTask) {
-    return activeTask.isDefault() && Comparing.equal(activeTask.getCreated(), activeTask.getUpdated());
-  }
+    private static boolean isImplicit(LocalTask activeTask) {
+        return activeTask.isDefault() && Comparing.equal(activeTask.getCreated(), activeTask.getUpdated());
+    }
 
-  private static String getText(LocalTask activeTask) {
-    String text = activeTask.getPresentableName();
-    return StringUtil.first(text, 50, true);
-  }
+    private static String getText(LocalTask activeTask) {
+        String text = activeTask.getPresentableName();
+        return StringUtil.first(text, 50, true);
+    }
 }

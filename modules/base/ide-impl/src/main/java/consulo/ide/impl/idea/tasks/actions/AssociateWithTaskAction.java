@@ -31,44 +31,44 @@ import jakarta.annotation.Nonnull;
  * @author Dmitry Avdeev
  */
 public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    boolean isChangelist = !e.hasData(VcsDataKeys.CHANGE_LISTS);
-    e.getPresentation().setVisible(isChangelist);
-    if (isChangelist) {
-      super.update(e);   
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        boolean isChangelist = !e.hasData(VcsDataKeys.CHANGE_LISTS);
+        e.getPresentation().setVisible(isChangelist);
+        if (isChangelist) {
+            super.update(e);
+        }
     }
-  }
 
-  @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
-    ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    if (lists == null) {
-      return false;
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
+        ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
+        if (lists == null) {
+            return false;
+        }
+        Project project = e.getRequiredData(Project.KEY);
+        TaskManager manager = TaskManager.getManager(project);
+        for (ChangeList list : lists) {
+            if (list instanceof LocalChangeList localChangeList && manager.getAssociatedTask(localChangeList) == null) {
+                return false;
+            }
+        }
+        return true;
     }
-    Project project = e.getRequiredData(Project.KEY);
-    TaskManager manager = TaskManager.getManager(project);
-    for (ChangeList list : lists) {
-      if (list instanceof LocalChangeList localChangeList && manager.getAssociatedTask(localChangeList) == null) {
-        return false;
-      }
-    }
-    return true;
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-    ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    if (lists == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
+        if (lists == null) {
+            return;
+        }
+        Project project = e.getRequiredData(Project.KEY);
+        TaskManager manager = TaskManager.getManager(project);
+        for (ChangeList list : lists) {
+            if (list instanceof LocalChangeList localChangeList) {
+                manager.trackContext(localChangeList);
+            }
+        }
     }
-    Project project = e.getRequiredData(Project.KEY);
-    TaskManager manager = TaskManager.getManager(project);
-    for (ChangeList list : lists) {
-      if (list instanceof LocalChangeList localChangeList) {
-        manager.trackContext(localChangeList);
-      }
-    }
-  }
 }

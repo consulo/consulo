@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionRef;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.fileChooser.FileChooser;
@@ -23,6 +24,7 @@ import consulo.fileChooser.PathChooserDialog;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProviderManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
@@ -49,6 +51,7 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@ActionRef(id = "OpenFile")
 public class OpenFileAction extends AnAction implements DumbAware {
     @Override
     @RequiredUIAccess
@@ -77,7 +80,9 @@ public class OpenFileAction extends AnAction implements DumbAware {
                 return showFiles;
             }
         };
-        descriptor.setTitle(showFiles ? "Open File or Project" : "Open Project");
+        descriptor.withTitleValue(
+            showFiles ? LocalizeValue.localizeTODO("Open File or Project") : LocalizeValue.localizeTODO("Open Project")
+        );
         // FIXME [VISTALL] we need this? descriptor.setDescription(getFileChooserDescription());
 
         descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
@@ -98,13 +103,13 @@ public class OpenFileAction extends AnAction implements DumbAware {
     }
 
     @Nonnull
-    private static String getFileChooserDescription() {
+    private static LocalizeValue getFileChooserDescription() {
         List<ProjectOpenProcessor> providers = ProjectOpenProcessors.getInstance().getProcessors();
         List<String> fileSamples = new ArrayList<>();
         for (ProjectOpenProcessor processor : providers) {
             processor.collectFileSamples(fileSamples::add);
         }
-        return IdeLocalize.importProjectChooserHeader(StringUtil.join(fileSamples, ", <br>")).get();
+        return IdeLocalize.importProjectChooserHeader(StringUtil.join(fileSamples, ", <br>"));
     }
 
     @RequiredUIAccess

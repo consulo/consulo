@@ -16,136 +16,118 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.List;
-
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.tasks.impl.TaskStateCombo;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.task.CustomTaskState;
 import consulo.task.LocalTask;
 import consulo.task.TaskRepository;
-import consulo.ide.impl.idea.tasks.impl.TaskStateCombo;
-import consulo.task.util.TaskUtil;
+import consulo.task.localize.TaskLocalize;
 import consulo.task.ui.TaskDialogPanel;
 import consulo.task.ui.TaskDialogPanelProvider;
+import consulo.task.util.TaskUtil;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import javax.swing.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
-public class CloseTaskDialog extends DialogWrapper
-{
-	private static final String UPDATE_STATE_ENABLED = "tasks.close.task.update.state.enabled";
+public class CloseTaskDialog extends DialogWrapper {
+    private static final String UPDATE_STATE_ENABLED = "tasks.close.task.update.state.enabled";
 
-	private final Project myProject;
-	private final LocalTask myTask;
-	private final List<TaskDialogPanel> myPanels;
+    private final Project myProject;
+    private final LocalTask myTask;
+    private final List<TaskDialogPanel> myPanels;
 
-	private JPanel myPanel;
-	private JLabel myTaskLabel;
-	private TaskStateCombo myStateCombo;
-	private JBCheckBox myUpdateState;
-	private JPanel myAdditionalPanel;
+    private JPanel myPanel;
+    private JLabel myTaskLabel;
+    private TaskStateCombo myStateCombo;
+    private JBCheckBox myUpdateState;
+    private JPanel myAdditionalPanel;
 
-	public CloseTaskDialog(Project project, final LocalTask task)
-	{
-		super(project, false);
-		myProject = project;
-		myTask = task;
+    public CloseTaskDialog(Project project, LocalTask task) {
+        super(project, false);
+        myProject = project;
+        myTask = task;
 
-		setTitle("Close Task");
-		myTaskLabel.setText(TaskUtil.getTrimmedSummary(task));
-		myTaskLabel.setIcon(TargetAWT.to(task.getIcon()));
+        setTitle(TaskLocalize.dialogTitleCloseTask());
+        myTaskLabel.setText(TaskUtil.getTrimmedSummary(task));
+        myTaskLabel.setIcon(TargetAWT.to(task.getIcon()));
 
-		if(!TaskStateCombo.stateUpdatesSupportedFor(task))
-		{
-			myUpdateState.setVisible(false);
-			myStateCombo.setVisible(false);
-		}
+        if (!TaskStateCombo.stateUpdatesSupportedFor(task)) {
+            myUpdateState.setVisible(false);
+            myStateCombo.setVisible(false);
+        }
 
-		final boolean stateUpdatesEnabled = PropertiesComponent.getInstance(myProject).getBoolean(UPDATE_STATE_ENABLED);
-		myUpdateState.setSelected(stateUpdatesEnabled);
-		myStateCombo.setEnabled(stateUpdatesEnabled);
-		myUpdateState.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				final boolean selected = myUpdateState.isSelected();
-				myStateCombo.setEnabled(selected);
-				PropertiesComponent.getInstance(myProject).setValue(UPDATE_STATE_ENABLED, String.valueOf(selected));
-				if(selected)
-				{
-					myStateCombo.scheduleUpdateOnce();
-				}
-			}
-		});
+        boolean stateUpdatesEnabled = PropertiesComponent.getInstance(myProject).getBoolean(UPDATE_STATE_ENABLED);
+        myUpdateState.setSelected(stateUpdatesEnabled);
+        myStateCombo.setEnabled(stateUpdatesEnabled);
+        myUpdateState.addActionListener(e -> {
+            boolean selected = myUpdateState.isSelected();
+            myStateCombo.setEnabled(selected);
+            PropertiesComponent.getInstance(myProject).setValue(UPDATE_STATE_ENABLED, String.valueOf(selected));
+            if (selected) {
+                myStateCombo.scheduleUpdateOnce();
+            }
+        });
 
-		myStateCombo.showHintLabel(false);
-		if(myUpdateState.isSelected())
-		{
-			myStateCombo.scheduleUpdateOnce();
-		}
+        myStateCombo.showHintLabel(false);
+        if (myUpdateState.isSelected()) {
+            myStateCombo.scheduleUpdateOnce();
+        }
 
-		myAdditionalPanel.setLayout(new BoxLayout(myAdditionalPanel, BoxLayout.Y_AXIS));
-		myPanels = TaskDialogPanelProvider.getCloseTaskPanels(project, task);
-		for(TaskDialogPanel panel : myPanels)
-		{
-			myAdditionalPanel.add(panel.getPanel());
-		}
+        myAdditionalPanel.setLayout(new BoxLayout(myAdditionalPanel, BoxLayout.Y_AXIS));
+        myPanels = TaskDialogPanelProvider.getCloseTaskPanels(project, task);
+        for (TaskDialogPanel panel : myPanels) {
+            myAdditionalPanel.add(panel.getPanel());
+        }
 
-		init();
-	}
+        init();
+    }
 
-	@Override
-	protected void doOKAction()
-	{
-		for(TaskDialogPanel panel : myPanels)
-		{
-			panel.commit();
-		}
-		super.doOKAction();
-	}
+    @Override
+    protected void doOKAction() {
+        for (TaskDialogPanel panel : myPanels) {
+            panel.commit();
+        }
+        super.doOKAction();
+    }
 
-	protected JComponent createCenterPanel()
-	{
-		return myPanel;
-	}
+    @Override
+    protected JComponent createCenterPanel() {
+        return myPanel;
+    }
 
-	@Nullable
-	@Override
-	public JComponent getPreferredFocusedComponent()
-	{
-		return myStateCombo.isVisible() && myUpdateState.isSelected() ? myStateCombo.getComboBox() : null;
-	}
+    @Nullable
+    @Override
+    @RequiredUIAccess
+    public JComponent getPreferredFocusedComponent() {
+        return myStateCombo.isVisible() && myUpdateState.isSelected() ? myStateCombo.getComboBox() : null;
+    }
 
-	@Nullable
-	CustomTaskState getCloseIssueState()
-	{
-		return myUpdateState.isSelected() ? myStateCombo.getSelectedState() : null;
-	}
+    @Nullable
+    CustomTaskState getCloseIssueState() {
+        return myUpdateState.isSelected() ? myStateCombo.getSelectedState() : null;
+    }
 
-	private void createUIComponents()
-	{
-		myStateCombo = new TaskStateCombo(myProject, myTask)
-		{
-			@Nullable
-			@Override
-			protected CustomTaskState getPreferredState(@Nonnull TaskRepository repository, @Nonnull Collection<CustomTaskState> available)
-			{
-				return repository.getPreferredCloseTaskState();
-			}
-		};
-	}
+    private void createUIComponents() {
+        myStateCombo = new TaskStateCombo(myProject, myTask) {
+            @Nullable
+            @Override
+            protected CustomTaskState getPreferredState(
+                @Nonnull TaskRepository repository,
+                @Nonnull Collection<CustomTaskState> available
+            ) {
+                return repository.getPreferredCloseTaskState();
+            }
+        };
+    }
 }

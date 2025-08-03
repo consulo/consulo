@@ -16,18 +16,36 @@
 package consulo.ide.impl.idea.tools;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Eugene Belyaev
  */
 public abstract class BaseExternalToolsGroup<T extends Tool> extends SimpleActionGroup implements DumbAware {
+    private static final Set<String> PROJECT_VIEWS = Set.of(
+        ActionPlaces.PROJECT_VIEW_POPUP,
+        ActionPlaces.COMMANDER_POPUP,
+        ActionPlaces.J2EE_VIEW_POPUP,
+        ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP,
+        ActionPlaces.CALL_HIERARCHY_VIEW_POPUP,
+        ActionPlaces.METHOD_HIERARCHY_VIEW_POPUP,
+        ActionPlaces.FAVORITES_VIEW_POPUP,
+        ActionPlaces.SCOPE_VIEW_POPUP,
+        ActionPlaces.NAVIGATION_BAR_POPUP
+    );
+
+    protected BaseExternalToolsGroup(@Nonnull LocalizeValue text) {
+        super(text);
+    }
+
     @Override
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
@@ -87,21 +105,10 @@ public abstract class BaseExternalToolsGroup<T extends Tool> extends SimpleActio
         if (!tool.isEnabled()) {
             return false;
         }
-        if (ActionPlaces.EDITOR_POPUP.equals(context) ||
-            ActionPlaces.EDITOR_TAB_POPUP.equals(context)) {
+        if (ActionPlaces.EDITOR_POPUP.equals(context) || ActionPlaces.EDITOR_TAB_POPUP.equals(context)) {
             return tool.isShownInEditor();
         }
-        else if (
-            ActionPlaces.PROJECT_VIEW_POPUP.equals(context) ||
-                ActionPlaces.COMMANDER_POPUP.equals(context) ||
-                ActionPlaces.J2EE_VIEW_POPUP.equals(context) ||
-                ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP.equals(context) ||
-                ActionPlaces.CALL_HIERARCHY_VIEW_POPUP.equals(context) ||
-                ActionPlaces.METHOD_HIERARCHY_VIEW_POPUP.equals(context) ||
-                ActionPlaces.FAVORITES_VIEW_POPUP.equals(context) ||
-                ActionPlaces.SCOPE_VIEW_POPUP.equals(context) ||
-                ActionPlaces.NAVIGATION_BAR_POPUP.equals(context)
-        ) {
+        else if (PROJECT_VIEWS.contains(context)) {
             return tool.isShownInProjectViews();
         }
         else if (ActionPlaces.MAIN_MENU.equals(context)) {

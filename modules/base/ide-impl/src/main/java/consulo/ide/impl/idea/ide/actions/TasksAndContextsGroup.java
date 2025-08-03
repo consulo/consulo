@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.tasks.actions;
+package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.task.impl.internal.action.ConfigureServersAction;
+import consulo.ide.impl.idea.tasks.actions.TaskActionsGroup;
+import consulo.ide.impl.idea.tasks.actions.context.WorkingContextGroup;
+import consulo.localize.LocalizeValue;
 import consulo.task.localize.TaskLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -28,22 +30,15 @@ import consulo.ui.ex.action.DefaultActionGroup;
  * @since 2025-08-01
  */
 @ActionImpl(
-    id = "task.actions",
+    id = "tasks.and.contexts",
     children = {
-        @ActionRef(type = SwitchTaskAction.class),
-        @ActionRef(type = GotoTaskAction.class),
-        @ActionRef(type = CloseTaskAction.class),
+        @ActionRef(type = TaskActionsGroup.class),
         @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = CreateChangelistAction.class),
-        @ActionRef(type = ShowTaskDescription.class),
-        @ActionRef(type = OpenTaskInBrowserAction.class),
-        @ActionRef(type = AnalyzeTaskStacktraceAction.class),
-        @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = ConfigureServersAction.class)
+        @ActionRef(type = WorkingContextGroup.class)
     }
 )
-public class TaskActionsGroup extends DefaultActionGroup implements DumbAware {
-    public TaskActionsGroup() {
-        super(TaskLocalize.groupTaskActionsText(), false);
+public class TasksAndContextsGroup extends DefaultActionGroup implements DumbAware {
+    public TasksAndContextsGroup() {
+        super(TaskLocalize.groupTasksAndContextsText(), true);
     }
 }

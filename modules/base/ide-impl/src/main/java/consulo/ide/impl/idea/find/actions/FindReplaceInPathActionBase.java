@@ -24,6 +24,7 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author UNV
@@ -45,7 +46,7 @@ public abstract class FindReplaceInPathActionBase extends AnAction implements Du
         myNotificationService = notificationService;
     }
 
-    protected void showNotAvailableMessage(AnActionEvent e, Project project) {
+    protected void showNotAvailableMessage(@Nonnull AnActionEvent e, @Nullable Project project) {
         myNotificationService.newWarn(NOTIFICATION_GROUP)
             .content(LocalizeValue.localizeTODO("'" + e.getPresentation().getText() + "' is not available while search is in progress"))
             .notify(project);

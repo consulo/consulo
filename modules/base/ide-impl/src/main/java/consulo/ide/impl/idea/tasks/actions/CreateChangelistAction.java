@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.task.localize.TaskLocalize;
 import consulo.task.util.TaskUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -34,7 +34,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "tasks.create.changelist")
 public class CreateChangelistAction extends BaseTaskAction {
     public CreateChangelistAction() {
-      super(LocalizeValue.localizeTODO("Create Change_list..."));
+      super(TaskLocalize.actionTasksCreateChangelistText());
     }
 
     @Override
@@ -51,10 +51,10 @@ public class CreateChangelistAction extends BaseTaskAction {
             else {
                 presentation.setEnabled(true);
                 if (manager.getActiveTask().getChangeLists().size() == 0) {
-                    presentation.setText("Create changelist for '" + TaskUtil.getTrimmedSummary(manager.getActiveTask()) + "'");
+                    presentation.setTextValue(TaskLocalize.actionCreateChangelistForText(TaskUtil.getTrimmedSummary(manager.getActiveTask())));
                 }
                 else {
-                    presentation.setText("Add changelist for '" + TaskUtil.getTrimmedSummary(manager.getActiveTask()) + "'");
+                    presentation.setTextValue(TaskLocalize.actionAddChangelistForText(TaskUtil.getTrimmedSummary(manager.getActiveTask())));
                 }
             }
         }
@@ -68,8 +68,8 @@ public class CreateChangelistAction extends BaseTaskAction {
         LocalTask activeTask = manager.getActiveTask();
         String name = Messages.showInputDialog(
             e.getData(Project.KEY),
-            "Changelist name:",
-            "Create Changelist",
+            TaskLocalize.dialogMessageChangelistName().get(),
+            TaskLocalize.dialogTitleCreateChangelist().get(),
             null,
             manager.getChangelistName(activeTask),
             null

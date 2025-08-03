@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.localize.ApplicationLocalize;
@@ -26,6 +27,7 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
@@ -36,7 +38,6 @@ import consulo.project.ui.notification.Notifications;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -49,8 +50,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
+@ActionImpl(id = "CreateDesktopEntry")
 public class CreateDesktopEntryAction extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(CreateDesktopEntryAction.class);
+
+    public CreateDesktopEntryAction() {
+        super(ActionLocalize.actionCreatedesktopentryText(), ActionLocalize.actionCreatedesktopentryDescription());
+    }
 
     public static boolean isAvailable() {
         return Platform.current().os().isUnix() && SystemInfo.hasXdgOpen();
@@ -74,7 +80,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         ProgressManager.getInstance().run(new Task.Backgroundable(project, event.getPresentation().getTextValue()) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
-                createDesktopEntry((Project)getProject(), indicator, globalEntry);
+                createDesktopEntry((Project) getProject(), indicator, globalEntry);
             }
         });
     }

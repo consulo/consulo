@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.fileTemplates.impl.AllFileTemplatesConfigurable;
 import consulo.ide.impl.idea.ide.fileTemplates.ui.ConfigureTemplatesDialog;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -28,7 +29,12 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "SaveFileAsTemplate")
 public class SaveFileAsTemplateAction extends AnAction {
+    public SaveFileAsTemplateAction() {
+        super(ActionLocalize.actionSavefileastemplateText(), ActionLocalize.actionSavefileastemplateDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

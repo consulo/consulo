@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.tasks.actions.context;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.util.DateFormatUtil;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.tasks.actions.SwitchTaskAction;
 import consulo.ide.impl.idea.tasks.context.LoadContextUndoableAction;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
@@ -28,6 +28,7 @@ import consulo.task.icon.TaskIconGroup;
 import consulo.task.impl.internal.action.BaseTaskAction;
 import consulo.task.impl.internal.context.ContextInfo;
 import consulo.task.impl.internal.context.WorkingContextManager;
+import consulo.task.localize.TaskLocalize;
 import consulo.task.util.TaskUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -45,13 +46,17 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * @author Dmitry Avdeev
  */
+@ActionImpl(id = "context.load")
 public class LoadContextAction extends BaseTaskAction {
     private static final int MAX_ROW_COUNT = 10;
+
+    public LoadContextAction() {
+        super(TaskLocalize.actionContextLoadText());
+    }
 
     @Override
     @RequiredUIAccess
@@ -67,7 +72,7 @@ public class LoadContextAction extends BaseTaskAction {
                 @RequiredUIAccess
                 void load(boolean clear) {
                     LoadContextUndoableAction undoableAction = LoadContextUndoableAction.createAction(manager, clear, info.name);
-                    UndoableCommand.execute(project, undoableAction, "Load context " + info.comment, "Context");
+                    UndoableCommand.execute(project, undoableAction, TaskLocalize.commandNameLoadContext(info.comment).get(), "Context");
                 }
 
                 @Override
@@ -95,7 +100,7 @@ public class LoadContextAction extends BaseTaskAction {
         List<LocalTask> tasks = taskManager.getLocalTasks();
         infos.addAll(ContainerUtil.mapNotNull(
             tasks,
-            (Function<LocalTask, ContextHolder>) task -> {
+            task -> {
                 if (task.isActive()) {
                     return null;
                 }
@@ -104,7 +109,12 @@ public class LoadContextAction extends BaseTaskAction {
                     @RequiredUIAccess
                     void load(boolean clear) {
                         LoadContextUndoableAction undoableAction = LoadContextUndoableAction.createAction(manager, clear, task);
-                        UndoableCommand.execute(project, undoableAction, "Load context " + TaskUtil.getTrimmedSummary(task), "Context");
+                        UndoableCommand.execute(
+                            project,
+                            undoableAction,
+                            TaskLocalize.commandNameLoadContext(TaskUtil.getTrimmedSummary(task)).get(),
+                            "Context"
+                        );
                     }
 
                     @Override
@@ -158,7 +168,7 @@ public class LoadContextAction extends BaseTaskAction {
             null,
             MAX_ROW_COUNT
         );
-        popup.setAdText("Press SHIFT to merge with current context");
+        popup.setAdText(TaskLocalize.popupAdvertisementPressShiftToMergeWithCurrentContext().get());
         popup.registerAction(
             "shiftPressed",
             KeyStroke.getKeyStroke("shift pressed SHIFT"),
@@ -167,7 +177,7 @@ public class LoadContextAction extends BaseTaskAction {
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull ActionEvent e) {
                     shiftPressed.set(true);
-                    popup.setCaption("Merge with Current Context");
+                    popup.setCaption(TaskLocalize.popupTitleMergeWithCurrentContext().get());
                 }
             }
         );
@@ -179,7 +189,7 @@ public class LoadContextAction extends BaseTaskAction {
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull ActionEvent e) {
                     shiftPressed.set(false);
-                    popup.setCaption("Load Context");
+                    popup.setCaption(TaskLocalize.popupTitleLoadContext().get());
                 }
             }
         );
@@ -198,7 +208,6 @@ public class LoadContextAction extends BaseTaskAction {
     }
 
     abstract static class ContextHolder {
-
         abstract void load(boolean clear);
 
         abstract void remove();
@@ -216,7 +225,7 @@ public class LoadContextAction extends BaseTaskAction {
         if (!StringUtil.isEmpty(comment)) {
             text = comment + " (" + text + ")";
         }
-        final AnAction loadAction = new AnAction(LocalizeValue.localizeTODO("Load")) {
+        final AnAction loadAction = new AnAction(TaskLocalize.actionLoadcontextactionAnonymousTextLoad()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -235,7 +244,7 @@ public class LoadContextAction extends BaseTaskAction {
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 return new AnAction[]{
                     loadAction,
-                    new AnAction(LocalizeValue.localizeTODO("Remove")) {
+                    new AnAction(TaskLocalize.actionLoadcontextactionAnonymousTextRemove()) {
                         @Override
                         @RequiredUIAccess
                         public void actionPerformed(@Nonnull AnActionEvent e) {

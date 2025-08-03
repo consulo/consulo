@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.internal.psiView;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -22,20 +24,31 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "PsiViewer")
 public class PsiViewerAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    new PsiViewerDialog(project, false, null, null).show();
-  }
+    @Nonnull
+    private final Application myApplication;
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && Application.get().isInternal());
-  }
+    @Inject
+    public PsiViewerAction(@Nonnull Application application) {
+        super(ActionLocalize.actionPsiviewerText());
+        myApplication = application;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        new PsiViewerDialog(project, false, null, null).show();
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && myApplication.isInternal());
+    }
 }

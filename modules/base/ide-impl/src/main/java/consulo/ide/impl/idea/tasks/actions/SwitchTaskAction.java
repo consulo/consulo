@@ -20,13 +20,13 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.ChangeListInfo;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
@@ -54,7 +54,7 @@ import java.util.List;
 @ActionImpl(id = "tasks.switch")
 public class SwitchTaskAction extends BaseTaskAction {
     public SwitchTaskAction() {
-      super(LocalizeValue.localizeTODO("_Switch Task..."));
+      super(TaskLocalize.actionTasksSwitchText());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class SwitchTaskAction extends BaseTaskAction {
         final SimpleReference<JComponent> componentRef = SimpleReference.create();
         List<TaskListItem> items = project == null ? Collections.<TaskListItem>emptyList() :
             createPopupActionGroup(project, shiftPressed, dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
-        final String title = withTitle ? "Switch to Task" : null;
+        final String title = withTitle ? TaskLocalize.popupTitleSwitchToTask().get() : null;
         ListPopupStep<TaskListItem> step = new MultiSelectionListPopupStep<>(title, items) {
             @Override
             public PopupStep<?> onChosen(List<TaskListItem> selectedValues, boolean finalChoice) {
@@ -124,7 +124,7 @@ public class SwitchTaskAction extends BaseTaskAction {
             return popup;
         }
 
-        popup.setAdText("Press SHIFT to merge with current context");
+        popup.setAdText(TaskLocalize.popupAdvertisementPressShiftToMergeWithCurrentContext().get());
 
         popup.registerAction(
             "shiftPressed",
@@ -134,7 +134,7 @@ public class SwitchTaskAction extends BaseTaskAction {
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull ActionEvent e) {
                     shiftPressed.set(true);
-                    popup.setCaption("Merge with Current Context");
+                    popup.setCaption(TaskLocalize.popupTitleMergeWithCurrentContext().get());
                 }
             }
         );
@@ -146,7 +146,7 @@ public class SwitchTaskAction extends BaseTaskAction {
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull ActionEvent e) {
                     shiftPressed.set(false);
-                    popup.setCaption("Switch to Task");
+                    popup.setCaption(TaskLocalize.popupTitleSwitchToTask().get());
                 }
             }
         );
@@ -173,7 +173,7 @@ public class SwitchTaskAction extends BaseTaskAction {
         final TaskManager manager = TaskManager.getManager(project);
         final LocalTask task = tasks.get(0).getTask();
         if (tasks.size() == 1 && task != null) {
-            group.add(new AnAction(LocalizeValue.localizeTODO("&Switch to")) {
+            group.add(new AnAction(TaskLocalize.actionSwitchToText()) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -181,7 +181,7 @@ public class SwitchTaskAction extends BaseTaskAction {
                 }
             });
         }
-        AnAction remove = new AnAction(LocalizeValue.localizeTODO("&Remove")) {
+        AnAction remove = new AnAction(TaskLocalize.actionRemoveText()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -243,7 +243,7 @@ public class SwitchTaskAction extends BaseTaskAction {
             for (int i = 0, tempSize = temp.size(); i < Math.min(tempSize, 15); i++) {
                 final LocalTask task = temp.get(i);
 
-                group.add(new TaskListItem(task, i == 0 ? "Recently Closed Tasks" : null, true) {
+                group.add(new TaskListItem(task, i == 0 ? TaskLocalize.separatorRecentlyClosedTasks().get() : null, true) {
                     @Override
                     void select() {
                         manager.activateTask(task, !shiftPressed.get());
@@ -257,7 +257,7 @@ public class SwitchTaskAction extends BaseTaskAction {
     @RequiredUIAccess
     public static void removeTask(@Nonnull Project project, LocalTask task, TaskManager manager) {
         if (task.isDefault()) {
-            Messages.showInfoMessage(project, "Default task cannot be removed", "Cannot Remove");
+            Messages.showInfoMessage(project, TaskLocalize.dialogMessageDefaultTaskCannotBeRemoved().get(), TaskLocalize.dialogTitleCannotRemove().get());
         }
         else {
 
@@ -276,9 +276,8 @@ public class SwitchTaskAction extends BaseTaskAction {
                 if (!list.getChanges().isEmpty()) {
                     int result = Messages.showYesNoCancelDialog(
                         project,
-                        "Changelist associated with '" + task.getSummary() + "' is not empty.\n" +
-                            "Do you want to remove it and move the changes to the active changelist?",
-                        "Changelist Not Empty",
+                        TaskLocalize.dialogMessageChangelistAssociatedWithNotEmpty(task.getSummary()).get(),
+                        TaskLocalize.dialogTitleChangelistNotEmpty().get(),
                         UIUtil.getWarningIcon()
                     );
                     switch (result) {
