@@ -178,12 +178,6 @@ checkbox.block.comment.at.first.column:
     text: Block comment at first column
 checkbox.caret.blinking.ms:
     text: 'Caret blinking (ms):'
-checkbox.collapse.annotations:
-    text: Annotations
-checkbox.collapse.anonymous.classes:
-    text: Anonymous classes
-checkbox.collapse.closures:
-    text: '"Closures" (anonymous classes implementing one method)'
 checkbox.collapse.end.of.line.comments:
     text: End of line comments sequence
 checkbox.collapse.file.header:
@@ -202,8 +196,6 @@ checkbox.collapse.method.bodies:
     text: Method bodies
 checkbox.collapse.simple.property.accessors:
     text: Simple property accessors
-checkbox.collapse.suppress.warnings:
-    text: @SuppressWarnings
 checkbox.collapse.title.imports:
     text: Imports
 checkbox.collapse.xml.tags:
