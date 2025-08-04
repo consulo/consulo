@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
@@ -36,7 +35,7 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
 
     @Inject
     public ShowSettingsAction(Provider<ShowSettingsUtil> showSettingsUtil) {
-        super(settingsTitle(), settingsDescription(), PlatformIconGroup.generalSettings());
+        super(CommonLocalize.actionSettings(), CommonLocalize.actionSettingsDescription(), PlatformIconGroup.generalSettings());
         myShowSettingsUtil = showSettingsUtil;
     }
 
@@ -45,9 +44,6 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
         if (Platform.current().os().isMac() && e.getPlace().equals(ActionPlaces.MAIN_MENU)) {
             // It's called from Preferences in App menu.
             e.getPresentation().setVisible(false);
-        }
-        if (e.getPlace().equals(ActionPlaces.WELCOME_SCREEN)) {
-            e.getPresentation().setTextValue(settingsTitle());
         }
     }
 
@@ -60,19 +56,5 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
         }
 
         myShowSettingsUtil.get().showSettingsDialog(project);
-    }
-
-    @Nonnull
-    private static LocalizeValue settingsTitle() {
-        return Platform.current().os().isMac()
-            ? CommonLocalize.actionSettingsMac()
-            : CommonLocalize.actionSettings();
-    }
-
-    @Nonnull
-    private static LocalizeValue settingsDescription() {
-        return Platform.current().os().isMac()
-            ? CommonLocalize.actionSettingsDescriptionMac()
-            : CommonLocalize.actionSettingsDescription();
     }
 }
