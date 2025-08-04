@@ -59,7 +59,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
   private final VcsLogUiPropertiesImpl.MainVcsLogUiPropertiesListener myPropertiesListener;
 
   @Nonnull
-  private VisiblePack myVisiblePack;
+  private volatile VisiblePack myVisiblePack = VisiblePack.EMPTY;
 
   public VcsLogUiImpl(
     @Nonnull VcsLogDataImpl logData,
@@ -278,9 +278,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
 
   @Override
   @Nonnull
-  @RequiredUIAccess
   public VisiblePack getDataPack() {
-    UIAccess.assertIsUIThread();
     return myVisiblePack;
   }
 
