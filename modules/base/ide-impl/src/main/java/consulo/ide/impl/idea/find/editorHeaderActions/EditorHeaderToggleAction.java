@@ -2,19 +2,17 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.find.SearchSession;
 import consulo.localize.LocalizeValue;
+import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CheckboxAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.action.CheckboxAction;
-import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
-
-import javax.swing.*;
 
 public abstract class EditorHeaderToggleAction extends CheckboxAction implements DumbAware {
     protected EditorHeaderToggleAction(@Nonnull LocalizeValue text) {
@@ -55,12 +53,12 @@ public abstract class EditorHeaderToggleAction extends CheckboxAction implements
         return true;
     }
 
+    @RequiredUIAccess
     @Nonnull
     @Override
-    public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
-        JComponent customComponent = super.createCustomComponent(presentation, place);
+    public CheckBox createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+        CheckBox customComponent = super.createCustomComponent(presentation, place);
         customComponent.setFocusable(false);
-        customComponent.setOpaque(false);
         return customComponent;
     }
 

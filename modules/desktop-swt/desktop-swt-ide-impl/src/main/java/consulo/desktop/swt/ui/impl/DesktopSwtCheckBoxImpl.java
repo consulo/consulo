@@ -17,64 +17,69 @@ package consulo.desktop.swt.ui.impl;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
+import consulo.ui.CheckBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
 public class DesktopSwtCheckBoxImpl extends SWTComponentDelegate<Button> implements CheckBox {
-  private LocalizeValue myText = LocalizeValue.empty();
+    private LocalizeValue myText = LocalizeValue.empty();
 
-  private boolean myValue;
+    private boolean myValue;
 
-  @Override
-  protected void initialize(Button component) {
-    super.initialize(component);
+    @Override
+    protected void initialize(Button component) {
+        super.initialize(component);
 
-    component.setSelection(myValue);
-    component.setText(myText.get());
-  }
-
-  @Override
-  protected Button createSWT(Composite parent) {
-    return new Button(parent, SWT.CHECK);
-  }
-
-  @Nonnull
-  @Override
-  public Boolean getValue() {
-    return myValue;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(@Nonnull Boolean value, boolean fireListeners) {
-    myValue = value;
-    
-    if(myComponent != null) {
-      myComponent.setSelection(myValue);
+        component.setSelection(myValue);
+        component.setText(myText.get());
     }
-  }
 
-  @Nonnull
-  @Override
-  public LocalizeValue getLabelText() {
-    return myText;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setLabelText(@Nonnull LocalizeValue labelText) {
-    myText = labelText;
-
-    if(myComponent != null) {
-      myComponent.setText(myText.get());
+    @Override
+    protected Button createSWT(Composite parent) {
+        return new Button(parent, SWT.CHECK);
     }
-  }
+
+    @Nonnull
+    @Override
+    public Boolean getValue() {
+        return myValue;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+        myValue = value;
+
+        if (myComponent != null) {
+            myComponent.setSelection(myValue);
+        }
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getLabelText() {
+        return myText;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setLabelText(@Nonnull LocalizeValue labelText) {
+        myText = labelText;
+
+        if (myComponent != null) {
+            myComponent.setText(myText.get());
+        }
+    }
+
+    @Override
+    public void addStyle(CheckBoxStyle style) {
+
+    }
 }

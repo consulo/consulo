@@ -18,6 +18,7 @@ package consulo.web.internal.ui;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
+import consulo.ui.CheckBoxStyle;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -59,6 +60,11 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
 
     public WebCheckBoxImpl() {
         super(false);
+    }
+
+    @Override
+    public void addStyle(CheckBoxStyle style) {
+
     }
 
     @Nonnull

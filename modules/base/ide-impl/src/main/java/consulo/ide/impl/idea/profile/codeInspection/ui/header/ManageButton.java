@@ -19,11 +19,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awt.action.CheckboxAction;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import jakarta.annotation.Nonnull;
 
@@ -65,7 +61,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     return group;
   }
 
-  private class ShareToTeamCheckBoxAction extends CheckboxAction implements DumbAware {
+  private class ShareToTeamCheckBoxAction extends ToggleAction implements DumbAware {
     public ShareToTeamCheckBoxAction() {
       super("Share to team members");
     }

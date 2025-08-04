@@ -26,7 +26,7 @@ import javax.swing.*;
 public class DesktopAWTLayoutStyleHandler {
     public static void addStyle(LayoutStyle style, JComponent component) {
         switch (style) {
-            case TRANSPARENT:
+            case TRANSPARENT_BACKGROUND:
                 component.setOpaque(false);
                 break;
         }

@@ -2,6 +2,7 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.ide.impl.idea.find.SearchSession;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
@@ -10,6 +11,7 @@ public class ToggleSelectionOnlyAction extends EditorHeaderToggleAction {
     super("In &Selection");
   }
 
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);

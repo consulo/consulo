@@ -28,10 +28,10 @@ import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.util.LanguageUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.action.CheckboxAction;
 import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
@@ -114,7 +114,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
     }
 
-    private class ShowOnlyCleanupInspectionsAction extends CheckboxAction implements DumbAware {
+    private class ShowOnlyCleanupInspectionsAction extends ToggleAction implements DumbAware {
         public ShowOnlyCleanupInspectionsAction() {
             super("Show Only Cleanup Inspections");
         }
@@ -130,10 +130,10 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
     }
 
-    private class ShowAvailableOnlyOnAnalyzeInspectionsAction extends CheckboxAction implements DumbAware {
+    private class ShowAvailableOnlyOnAnalyzeInspectionsAction extends ToggleAction implements DumbAware {
 
         public ShowAvailableOnlyOnAnalyzeInspectionsAction() {
-            super("Show Only \"Available only for Analyze | Inspect Code\"");
+            super(LocalizeValue.localizeTODO("Show Only \"Available only for Analyze | Inspect Code\""));
         }
 
         @Override
@@ -147,7 +147,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
     }
 
-    private class ShowWithSpecifiedSeverityInspectionsAction extends CheckboxAction implements DumbAware {
+    private class ShowWithSpecifiedSeverityInspectionsAction extends ToggleAction implements DumbAware {
 
         private final HighlightSeverity mySeverity;
 
@@ -175,12 +175,12 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
     }
 
-    private class ShowEnabledOrDisabledInspectionsAction extends CheckboxAction implements DumbAware {
+    private class ShowEnabledOrDisabledInspectionsAction extends ToggleAction implements DumbAware {
 
         private final Boolean myShowEnabledActions;
 
         public ShowEnabledOrDisabledInspectionsAction(boolean showEnabledActions) {
-            super("Show Only " + (showEnabledActions ? "Enabled" : "Disabled"));
+            super(LocalizeValue.localizeTODO("Show Only " + (showEnabledActions ? "Enabled" : "Disabled")));
             myShowEnabledActions = showEnabledActions;
         }
 
@@ -197,7 +197,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
     }
 
-    private class LanguageFilterAction extends CheckboxAction implements DumbAware {
+    private class LanguageFilterAction extends consulo.ui.ex.action.CheckboxAction implements DumbAware {
 
         private final Language myLanguage;
 

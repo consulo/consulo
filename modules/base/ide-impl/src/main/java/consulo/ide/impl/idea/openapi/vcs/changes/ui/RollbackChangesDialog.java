@@ -19,6 +19,7 @@ import consulo.application.impl.internal.LaterInvocator;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
@@ -157,7 +158,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     myOperationName = UIUtil.removeMnemonic(myOperationName);
     setTitle(VcsLocalize.changesActionRollbackCustomTitle(myOperationName));
     setCancelButtonText(CommonLocalize.buttonClose().get());
-    myBrowser.setToggleActionTitle("&Include in " + myOperationName.toLowerCase());
+    myBrowser.setToggleActionTitle(LocalizeValue.localizeTODO("&Include in " + myOperationName.toLowerCase()));
 
     myDeleteLocallyAddedFiles = CheckBox.create(VcsLocalize.changesCheckboxDeleteLocallyAddedFiles());
     myDeleteLocallyAddedFiles.setValue(PropertiesComponent.getInstance().isTrueValue(DELETE_LOCALLY_ADDED_FILES_KEY));

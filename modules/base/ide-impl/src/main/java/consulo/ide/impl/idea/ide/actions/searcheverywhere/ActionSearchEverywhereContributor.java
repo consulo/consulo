@@ -17,6 +17,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.searchEverywhere.CheckBoxSearchEverywhereToggleAction;
 import consulo.searchEverywhere.SearchEverywhereContributor;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;

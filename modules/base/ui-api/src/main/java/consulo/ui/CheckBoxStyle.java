@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
-
-import consulo.ui.ComponentStyle;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 2025-02-25
+ * @since 2025-08-04
  */
-public enum LayoutStyle implements ComponentStyle {
+public enum CheckBoxStyle implements ComponentStyle {
     TRANSPARENT_BACKGROUND
 }

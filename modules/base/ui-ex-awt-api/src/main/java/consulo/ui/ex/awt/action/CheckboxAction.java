@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt.action;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
@@ -34,6 +35,8 @@ import java.awt.event.ActionListener;
 /**
  * @author max
  */
+@Deprecated
+@DeprecationInfo("Use consulo.ui.ex.action.CheckboxAction")
 public abstract class CheckboxAction extends ToggleAction implements CustomComponentAction {
     protected CheckboxAction() {
     }

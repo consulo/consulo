@@ -169,6 +169,7 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         myAlphaContext.paint(g, () -> super.paint(g));
     }
 
+    @RequiredUIAccess
     private void actionsUpdated(@Nonnull List<? extends AnAction> visibleActions, boolean shouldRebuildUI) {
         Dimension oldSize = getPreferredSize();
 
@@ -194,11 +195,12 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         repaint();
     }
 
-    private void fillToolBar(@Nonnull final List<? extends AnAction> actions) {
+    @RequiredUIAccess
+    private void fillToolBar(@Nonnull List<? extends AnAction> actions) {
         removeAll();
 
         boolean isLastElementSeparator = false;
-        final List<AnAction> rightAligned = new ArrayList<>();
+        List<AnAction> rightAligned = new ArrayList<>();
         for (int i = 0; i < actions.size(); i++) {
             AnAction action = actions.get(i);
             if (action instanceof RightAlignedToolbarAction) {
@@ -222,6 +224,9 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
             else if (action instanceof CustomComponentAction) {
                 add(CUSTOM_COMPONENT_CONSTRAINT, getCustomComponent(action));
             }
+            else if (action instanceof CustomUIComponentAction) {
+                add(CUSTOM_COMPONENT_CONSTRAINT, getCustomUIComponent(action));
+            }
             else {
                 add(ACTION_BUTTON_CONSTRAINT, createToolbarButton(action).getComponent());
             }
@@ -229,7 +234,17 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
         }
 
         for (AnAction action : rightAligned) {
-            JComponent button = action instanceof CustomComponentAction ? getCustomComponent(action) : createToolbarButton(action).getComponent();
+            JComponent button;
+            if (action instanceof CustomComponentAction) {
+                button = getCustomComponent(action);
+            }
+            else if (action instanceof CustomUIComponentAction) {
+                button = getCustomUIComponent(action);
+            }
+            else {
+                button = createToolbarButton(action).getComponent();
+            }
+
             if (!isInsideNavBar()) {
                 button.putClientProperty(RIGHT_ALIGN_KEY, Boolean.TRUE);
             }
@@ -238,15 +253,37 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     }
 
     @Nonnull
+    @RequiredUIAccess
+    private JComponent getCustomUIComponent(@Nonnull AnAction action) {
+        Presentation presentation = myEngine.getPresentation(action);
+        consulo.ui.Component customComponent = presentation.getClientProperty(CustomUIComponentAction.COMPONENT_KEY);
+        if (customComponent == null) {
+            customComponent = ((CustomUIComponentAction) action).createCustomComponent(presentation, myEngine.getPlace());
+            presentation.putClientProperty(CustomUIComponentAction.COMPONENT_KEY, customComponent);
+
+            JComponent component = (JComponent) TargetAWT.to(customComponent);
+
+            UIUtil.putClientProperty(component, CustomUIComponentAction.ACTION_KEY, action);
+
+            tweakActionComponentUI(component);
+
+            return component;
+        }
+        return (JComponent) TargetAWT.to(customComponent);
+    }
+
+    @Nonnull
+    @RequiredUIAccess
     private JComponent getCustomComponent(@Nonnull AnAction action) {
         Presentation presentation = myEngine.getPresentation(action);
         JComponent customComponent = presentation.getClientProperty(CustomComponentAction.COMPONENT_KEY);
         if (customComponent == null) {
-            customComponent = ((CustomComponentAction) action).createCustomComponent(presentation, getPlace());
+            customComponent = ((CustomComponentAction) action).createCustomComponent(presentation, myEngine.getPlace());
             presentation.putClientProperty(CustomComponentAction.COMPONENT_KEY, customComponent);
             UIUtil.putClientProperty(customComponent, CustomComponentAction.ACTION_KEY, action);
+
+            tweakActionComponentUI(customComponent);
         }
-        tweakActionComponentUI(customComponent);
 
         return customComponent;
     }
@@ -314,12 +351,10 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
     }
 
     @Override
-    public void setTargetComponent(final JComponent component) {
+    public void setTargetComponent(JComponent component) {
         if (myTargetComponent == null) {
             putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
         }
-
-        myTargetComponent = component;
 
         if (myTargetComponent != component) {
             myTargetComponent = component;

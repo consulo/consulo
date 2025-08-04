@@ -108,7 +108,8 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         repaint();
     }
 
-    private void fillToolBar(@Nonnull final List<? extends AnAction> actions) {
+    @RequiredUIAccess
+    private void fillToolBar(@Nonnull List<? extends AnAction> actions) {
         boolean isLastElementSeparator = false;
         for (int i = 0; i < actions.size(); i++) {
             AnAction action = actions.get(i);
@@ -129,11 +130,34 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
             else if (action instanceof CustomComponentAction) {
                 add(getCustomComponent(action));
             }
+            else if (action instanceof CustomUIComponentAction) {
+                add(getCustomUIComponent(action));
+            }
             else {
                 add(createToolbarButton(action).getComponent());
             }
             isLastElementSeparator = false;
         }
+    }
+
+    @Nonnull
+    @RequiredUIAccess
+    private JComponent getCustomUIComponent(@Nonnull AnAction action) {
+        Presentation presentation = myEngine.getPresentation(action);
+        consulo.ui.Component customComponent = presentation.getClientProperty(CustomUIComponentAction.COMPONENT_KEY);
+        if (customComponent == null) {
+            customComponent = ((CustomUIComponentAction) action).createCustomComponent(presentation, myEngine.getPlace());
+            presentation.putClientProperty(CustomUIComponentAction.COMPONENT_KEY, customComponent);
+
+            JComponent component = (JComponent) TargetAWT.to(customComponent);
+
+            UIUtil.putClientProperty(component, CustomUIComponentAction.ACTION_KEY, action);
+
+            tweakActionComponentUI(action, component);
+
+            return component;
+        }
+        return (JComponent) TargetAWT.to(customComponent);
     }
 
     @Nonnull
@@ -145,9 +169,9 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
             customComponent = ((CustomComponentAction) action).createCustomComponent(presentation, myEngine.getPlace());
             presentation.putClientProperty(CustomComponentAction.COMPONENT_KEY, customComponent);
             UIUtil.putClientProperty(customComponent, CustomComponentAction.ACTION_KEY, action);
-        }
 
-        tweakActionComponentUI(action, customComponent);
+            tweakActionComponentUI(action, customComponent);
+        }
 
         return customComponent;
     }
@@ -259,8 +283,6 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         if (myTargetComponent == null) {
             putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
         }
-
-        myTargetComponent = component;
 
         if (myTargetComponent != component) {
             myTargetComponent = component;

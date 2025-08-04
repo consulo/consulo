@@ -19,61 +19,60 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface CheckBox extends ValueComponent<Boolean>, HasFocus, HasMnemonic {
-  @Nonnull
-  @RequiredUIAccess
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("Please don't use not localize text")
-  static CheckBox create(@Nonnull String label) {
-    return create(LocalizeValue.of(label));
-  }
+public interface CheckBox extends ValueComponent<Boolean>, HasFocus, HasMnemonic, HasComponentStyle<CheckBoxStyle> {
+    @Nonnull
+    @RequiredUIAccess
+    @Deprecated(forRemoval = true)
+    @DeprecationInfo("Please don't use not localize text")
+    static CheckBox create(@Nonnull String label) {
+        return create(LocalizeValue.of(label));
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("Please don't use not localize text")
-  static CheckBox create(@Nonnull String label, boolean selected) {
-    return create(LocalizeValue.of(label), selected);
-  }
+    @Nonnull
+    @RequiredUIAccess
+    @Deprecated(forRemoval = true)
+    @DeprecationInfo("Please don't use not localize text")
+    static CheckBox create(@Nonnull String label, boolean selected) {
+        return create(LocalizeValue.of(label), selected);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  static CheckBox create(@Nonnull LocalizeValue label) {
-    return create(label, false);
-  }
+    @Nonnull
+    @RequiredUIAccess
+    static CheckBox create(@Nonnull LocalizeValue label) {
+        return create(label, false);
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  static CheckBox create(@Nonnull LocalizeValue label, boolean selected) {
-    CheckBox box = UIInternal.get()._Components_checkBox();
-    box.setLabelText(label);
-    box.setValue(selected);
-    return box;
-  }
+    @Nonnull
+    @RequiredUIAccess
+    static CheckBox create(@Nonnull LocalizeValue label, boolean selected) {
+        CheckBox box = UIInternal.get()._Components_checkBox();
+        box.setLabelText(label);
+        box.setValue(selected);
+        return box;
+    }
 
-  @Nonnull
-  @Override
-  Boolean getValue();
+    @Nonnull
+    @Override
+    Boolean getValue();
 
-  @Override
-  @RequiredUIAccess
-  default void setValue(@Nonnull Boolean value) {
-    setValue(value, true);
-  }
+    @Override
+    @RequiredUIAccess
+    default void setValue(@Nonnull Boolean value) {
+        setValue(value, true);
+    }
 
-  @RequiredUIAccess
-  void setValue(@Nonnull Boolean value, boolean fireListeners);
+    @RequiredUIAccess
+    void setValue(@Nonnull Boolean value, boolean fireListeners);
 
-  @Nonnull
-  LocalizeValue getLabelText();
+    @Nonnull
+    LocalizeValue getLabelText();
 
-  @RequiredUIAccess
-  void setLabelText(@Nonnull LocalizeValue labelText);
+    @RequiredUIAccess
+    void setLabelText(@Nonnull LocalizeValue labelText);
 }

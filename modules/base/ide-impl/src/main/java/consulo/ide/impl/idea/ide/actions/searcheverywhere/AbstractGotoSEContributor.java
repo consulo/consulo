@@ -31,6 +31,7 @@ import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.searchEverywhere.FoundItemDescriptor;
+import consulo.searchEverywhere.SearchEverywhereToggleAction;
 import consulo.searchEverywhere.WeightedSearchEverywhereContributor;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;

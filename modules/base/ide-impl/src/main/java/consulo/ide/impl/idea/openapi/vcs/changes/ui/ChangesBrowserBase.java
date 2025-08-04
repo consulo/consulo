@@ -22,6 +22,7 @@ import consulo.diff.DiffDialogHints;
 import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
 import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
@@ -34,7 +35,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.action.CheckboxAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
@@ -82,7 +82,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements ChangesBro
   protected final JPanel myHeaderPanel;
   private JComponent myBottomPanel;
   private DefaultActionGroup myToolBarGroup;
-  private String myToggleActionTitle = VcsLocalize.commitDialogIncludeActionName().get();
+  private LocalizeValue myToggleActionTitle = VcsLocalize.commitDialogIncludeActionName();
 
   private JComponent myDiffBottomComponent;
 
@@ -194,7 +194,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements ChangesBro
     myDiffBottomComponent = diffBottomComponent;
   }
 
-  public void setToggleActionTitle(final String toggleActionTitle) {
+  public void setToggleActionTitle(LocalizeValue toggleActionTitle) {
     myToggleActionTitle = toggleActionTitle;
   }
 
