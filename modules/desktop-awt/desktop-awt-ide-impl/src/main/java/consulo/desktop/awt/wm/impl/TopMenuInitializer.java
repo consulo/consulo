@@ -58,7 +58,7 @@ public class TopMenuInitializer {
       });
     }
 
-    if (desktop.isSupported(Desktop.Action.APP_PRINT_FILE)) {
+    if (desktop.isSupported(Desktop.Action.APP_PREFERENCES)) {
       desktop.setPreferencesHandler(e -> {
         final Project project = getNotNullProject();
         final ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
