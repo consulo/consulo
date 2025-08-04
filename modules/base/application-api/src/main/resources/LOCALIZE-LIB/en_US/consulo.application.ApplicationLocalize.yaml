@@ -179,21 +179,21 @@ checkbox.block.comment.at.first.column:
 checkbox.caret.blinking.ms:
     text: 'Caret blinking (ms):'
 checkbox.collapse.annotations:
-    text: <html>Annotations</html>
+    text: Annotations
 checkbox.collapse.anonymous.classes:
-    text: <html>Anonymous classes</html>
+    text: Anonymous classes
 checkbox.collapse.closures:
-    text: <html>"Closures" (anonymous classes implementing one method)</html>
+    text: '"Closures" (anonymous classes implementing one method)'
 checkbox.collapse.end.of.line.comments:
-    text: <html>End of line comments sequence</html>
+    text: End of line comments sequence
 checkbox.collapse.file.header:
     text: File header
 checkbox.collapse.generic.constructor.parameters:
-    text: <html>Generic constructor and method parameters</html>
+    text: Generic constructor and method parameters
 checkbox.collapse.html.style.attribute:
     text: HTML 'style' attribute
 checkbox.collapse.i18n.messages:
-    text: <html>I18n strings</html>
+    text: I18n strings
 checkbox.collapse.inner.classes:
     text: Inner classes
 checkbox.collapse.javadoc.comments:
@@ -201,9 +201,9 @@ checkbox.collapse.javadoc.comments:
 checkbox.collapse.method.bodies:
     text: Method bodies
 checkbox.collapse.simple.property.accessors:
-    text: <html>Simple property accessors<html>
+    text: Simple property accessors
 checkbox.collapse.suppress.warnings:
-    text: <html>@SuppressWarnings</html>
+    text: @SuppressWarnings
 checkbox.collapse.title.imports:
     text: Imports
 checkbox.collapse.xml.tags:
