@@ -15,38 +15,38 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.document.FileDocumentManager;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackProgressModifier;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Streams;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
@@ -61,16 +61,16 @@ public class RollbackAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
-    final boolean visible = project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss();
+    boolean visible = project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss();
     e.getPresentation().setEnabledAndVisible(visible);
     if (!visible) return;
 
-    final Change[] leadSelection = e.getData(VcsDataKeys.CHANGE_LEAD_SELECTION);
+    Change[] leadSelection = e.getData(VcsDataKeys.CHANGE_LEAD_SELECTION);
     boolean isEnabled = (leadSelection != null && leadSelection.length > 0)
       || Boolean.TRUE.equals(e.getData(VcsDataKeys.HAVE_LOCALLY_DELETED))
       || Boolean.TRUE.equals(e.getData(VcsDataKeys.HAVE_MODIFIED_WITHOUT_EDITING))
       || Boolean.TRUE.equals(e.getData(VcsDataKeys.HAVE_SELECTED_CHANGES))
-      || hasReversibleFiles(e)
+      || ReadAction.compute(() -> hasReversibleFiles(e))
       || currentChangelistNotEmpty(project);
     e.getPresentation().setEnabled(isEnabled);
     String operationName = RollbackUtil.getRollbackOperationName(project);
@@ -80,9 +80,10 @@ public class RollbackAction extends AnAction implements DumbAware {
     }
   }
 
+  @RequiredReadAction
   private static boolean hasReversibleFiles(@Nonnull AnActionEvent e) {
     ChangeListManager manager = ChangeListManager.getInstance(e.getRequiredData(Project.KEY));
-    Set<VirtualFile> modifiedWithoutEditing = ContainerUtil.newHashSet(manager.getModifiedWithoutEditing());
+    Set<VirtualFile> modifiedWithoutEditing = new HashSet<>(manager.getModifiedWithoutEditing());
 
     return Streams.notNullize(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM)).anyMatch(
       file -> manager.haveChangesUnder(file) != ThreeState.NO || manager.isFileAffected(file) || modifiedWithoutEditing.contains(file)
@@ -99,7 +100,7 @@ public class RollbackAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(Project.KEY);
-    final String title = ActionPlaces.CHANGES_VIEW_TOOLBAR.equals(e.getPlace())
+    String title = ActionPlaces.CHANGES_VIEW_TOOLBAR.equals(e.getPlace())
       ? null : "Can not " + RollbackUtil.getRollbackOperationName(project) + " now";
     if (ChangeListManager.getInstance(project).isFreezedWithNotification(title)) {
       return;
@@ -115,7 +116,7 @@ public class RollbackAction extends AnAction implements DumbAware {
 
     List<Change> changes = getChanges(project, e);
 
-    final LinkedHashSet<VirtualFile> modifiedWithoutEditing = getModifiedWithoutEditing(e, project);
+    LinkedHashSet<VirtualFile> modifiedWithoutEditing = getModifiedWithoutEditing(e, project);
     if (modifiedWithoutEditing != null && !modifiedWithoutEditing.isEmpty()) {
       hasChanges = true;
       rollbackModifiedWithoutEditing(project, modifiedWithoutEditing);
@@ -135,13 +136,13 @@ public class RollbackAction extends AnAction implements DumbAware {
   }
 
   @Nonnull
-  private static List<Change> getChanges(final Project project, final AnActionEvent e) {
+  private static List<Change> getChanges(Project project, AnActionEvent e) {
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
     if (changes == null) {
-      final VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+      VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
       if (files != null) {
-        final ChangeListManager clManager = ChangeListManager.getInstance(project);
-        final List<Change> changesList = new ArrayList<>();
+        ChangeListManager clManager = ChangeListManager.getInstance(project);
+        List<Change> changesList = new ArrayList<>();
         for (VirtualFile vf : files) {
           changesList.addAll(clManager.getChangesIn(vf));
         }
@@ -151,19 +152,19 @@ public class RollbackAction extends AnAction implements DumbAware {
       }
     }
     if (changes != null && changes.length > 0) {
-      return ContainerUtil.newArrayList(changes);
+      return List.of(changes);
     }
     return Collections.emptyList();
   }
 
   @Nullable
-  private static LinkedHashSet<VirtualFile> getModifiedWithoutEditing(final AnActionEvent e, Project project) {
-    final List<VirtualFile> modifiedWithoutEditing = e.getData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
+  private static LinkedHashSet<VirtualFile> getModifiedWithoutEditing(AnActionEvent e, Project project) {
+    List<VirtualFile> modifiedWithoutEditing = e.getData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
     if (modifiedWithoutEditing != null && modifiedWithoutEditing.size() > 0) {
       return new LinkedHashSet<>(modifiedWithoutEditing);
     }
 
-    final VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
+    VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (virtualFiles != null && virtualFiles.length > 0) {
       LinkedHashSet<VirtualFile> result = new LinkedHashSet<>(Arrays.asList(virtualFiles));
       result.retainAll(ChangeListManager.getInstance(project).getModifiedWithoutEditing());
@@ -173,9 +174,9 @@ public class RollbackAction extends AnAction implements DumbAware {
     return null;
   }
 
-  @NonNls
-  private static void rollbackModifiedWithoutEditing(final Project project, final LinkedHashSet<VirtualFile> modifiedWithoutEditing) {
-    final String operationName = StringUtil.decapitalize(UIUtil.removeMnemonic(RollbackUtil.getRollbackOperationName(project)));
+  @RequiredUIAccess
+  private static void rollbackModifiedWithoutEditing(Project project, LinkedHashSet<VirtualFile> modifiedWithoutEditing) {
+    String operationName = StringUtil.decapitalize(UIUtil.removeMnemonic(RollbackUtil.getRollbackOperationName(project)));
     LocalizeValue message = (modifiedWithoutEditing.size() == 1)
       ? VcsLocalize.rollbackModifiedWithoutEditingConfirmSingle(
       operationName,
@@ -189,14 +190,14 @@ public class RollbackAction extends AnAction implements DumbAware {
     if (rc != Messages.YES) {
       return;
     }
-    final List<VcsException> exceptions = new ArrayList<>();
+    List<VcsException> exceptions = new ArrayList<>();
 
-    final ProgressManager progressManager = ProgressManager.getInstance();
-    final Runnable action = () -> {
-      final ProgressIndicator indicator = progressManager.getProgressIndicator();
+    ProgressManager progressManager = ProgressManager.getInstance();
+    Runnable action = () -> {
+      ProgressIndicator indicator = progressManager.getProgressIndicator();
       try {
         ChangesUtil.processVirtualFilesByVcs(project, modifiedWithoutEditing, (vcs, items) -> {
-          final RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
+          RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
           if (rollbackEnvironment != null) {
             if (indicator != null) {
               indicator.setText(
@@ -222,7 +223,7 @@ public class RollbackAction extends AnAction implements DumbAware {
         );
       }
 
-      VfsUtil.markDirty(true, false, VfsUtilCore.toVirtualFileArray(modifiedWithoutEditing));
+      VirtualFileUtil.markDirty(true, false, VirtualFileUtil.toVirtualFileArray(modifiedWithoutEditing));
 
       VirtualFileManager.getInstance().asyncRefresh(() -> {
         for (VirtualFile virtualFile : modifiedWithoutEditing) {
