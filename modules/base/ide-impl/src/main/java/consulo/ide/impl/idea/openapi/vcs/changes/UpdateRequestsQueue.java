@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * ChangeListManager updates scheduler.
@@ -63,15 +62,19 @@ public class UpdateRequestsQueue {
   private final StartupManager myStartupManager;
   private final boolean myTrackHeavyLatch;
 
-  public UpdateRequestsQueue(Project project, @Nonnull ChangeListScheduler scheduler, Runnable delegate) {
+  public UpdateRequestsQueue(@Nonnull Project project,
+                             @Nonnull ProjectLevelVcsManager projectLevelVcsManager,
+                             @Nonnull StartupManager startupManager,
+                             @Nonnull ChangeListScheduler scheduler,
+                             Runnable delegate) {
     myProject = project;
     myScheduler = scheduler;
 
     myTrackHeavyLatch = Boolean.parseBoolean(System.getProperty(ourHeavyLatchOptimization));
 
     myDelegate = delegate;
-    myPlVcsManager = ProjectLevelVcsManager.getInstance(myProject);
-    myStartupManager = StartupManager.getInstance(myProject);
+    myPlVcsManager = projectLevelVcsManager;
+    myStartupManager = startupManager;
     myLock = new Object();
     myWaitingUpdateCompletionQueue = new ArrayList<>();
     // not initialized

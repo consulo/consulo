@@ -60,9 +60,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx, StorableComponent {
-  public static final int NORMAL_PROJECT_PROFILE = 1 << 30;
-  public static final int DEFAULT_PROJECT_PROFILE = 1 << 31;
-
   private static final Logger LOG = Logger.getInstance(ProjectImpl.class);
 
   public static final String NAME_FILE = ".name";
@@ -118,7 +115,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public int getProfiles() {
-    return myParent.getProfiles() | (isDefault() ? DEFAULT_PROJECT_PROFILE : NORMAL_PROJECT_PROFILE);
+    return myParent.getProfiles() | (isDefault() ? DEFAULT_PROJECT : REGULAR_PROJECT);
   }
 
   @Nullable

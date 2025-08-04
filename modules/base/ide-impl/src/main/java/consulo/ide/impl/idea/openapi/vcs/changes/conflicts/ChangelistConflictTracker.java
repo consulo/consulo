@@ -65,12 +65,13 @@ public class ChangelistConflictTracker {
                                    @Nonnull ChangeListManager changeListManager,
                                    @Nonnull FileStatusManager fileStatusManager,
                                    @Nonnull EditorNotifications editorNotifications,
-                                   @Nonnull ApplicationConcurrency applicationConcurrency) {
+                                   @Nonnull ApplicationConcurrency applicationConcurrency,
+                                   @Nonnull FileDocumentManager fileDocumentManager) {
     myProject = project;
 
     myChangeListManager = changeListManager;
     myEditorNotifications = editorNotifications;
-    myDocumentManager = FileDocumentManager.getInstance();
+    myDocumentManager = fileDocumentManager;
     myFileStatusManager = fileStatusManager;
     myCheckSetLock = new Object();
     myCheckSet = new HashSet<>();

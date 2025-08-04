@@ -53,6 +53,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.DirectoryIndexExcludePolicy;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.NotificationType;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
@@ -68,6 +69,7 @@ import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.impl.internal.change.*;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
+import consulo.versionControlSystem.internal.ChangesViewI;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
@@ -158,23 +160,34 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         Project project,
         VcsConfiguration config,
         ApplicationConcurrency applicationConcurrency,
-        EditorNotifications editorNotifications
+        EditorNotifications editorNotifications,
+        FileStatusManager fileStatusManager,
+        FileDocumentManager fileDocumentManager,
+        ChangesViewI changesViewI,
+        StartupManager startupManager,
+        ProjectLevelVcsManager projectLevelVcsManager
     ) {
         myProject = project;
         myConfig = config;
         myFreezeName = new AtomicReference<>(null);
         myAdditionalInfo = null;
-        myChangesViewManager = myProject.isDefault() ? new DummyChangesView(myProject) : ChangesViewManager.getInstance(myProject);
-        myFileStatusManager = FileStatusManager.getInstance(myProject);
+        myChangesViewManager = changesViewI;
+        myFileStatusManager = fileStatusManager;
         myComposite = new FileHolderComposite(project);
         myIgnoredFilesComponent = new IgnoredFilesComponent(myProject, true);
-        myUpdater = new UpdateRequestsQueue(myProject, myScheduler, this::updateImmediately);
+        myUpdater = new UpdateRequestsQueue(myProject, projectLevelVcsManager, startupManager, myScheduler, this::updateImmediately);
 
         myWorker = new ChangeListWorker(myProject, new MyChangesDeltaForwarder(myProject, myScheduler));
         myDelayedNotificator = new DelayedNotificator(myListeners, myScheduler);
         myModifier = new Modifier(myWorker, myDelayedNotificator);
 
-        myConflictTracker = new ChangelistConflictTracker(project, this, myFileStatusManager, editorNotifications, applicationConcurrency);
+        myConflictTracker = new ChangelistConflictTracker(project,
+            this,
+            myFileStatusManager,
+            editorNotifications,
+            applicationConcurrency,
+            fileDocumentManager
+        );
 
         myListeners.addListener(new ChangeListListener() {
             @Override

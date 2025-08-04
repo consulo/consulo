@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -27,32 +24,5 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-public class DummyChangesView implements ChangesViewI {
-  @Inject
-  public DummyChangesView(Project project) {
-  }
-
-  @Override
-  public void refreshChangesViewNodeAsync(VirtualFile file) {
-  }
-
-  @Override
-  public void scheduleRefresh() {
-  }
-
-  @Override
-  public void selectFile(VirtualFile vFile) {
-  }
-
-  @Override
-  public void updateProgressText(String text, boolean isError) {
-  }
-
-  @Override
-  public void setBusy(boolean b) {
-  }
-
-  @Override
-  public void setShowFlattenMode(boolean state) {
-  }
+public class UnifiedChangesView extends StubChangesView {
 }

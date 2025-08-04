@@ -42,7 +42,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Singleton
-@ServiceImpl(profiles = ProjectImpl.DEFAULT_PROJECT_PROFILE)
+@ServiceImpl(profiles = ProjectImpl.DEFAULT_PROJECT)
 public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   private static final String ROOT_TAG_NAME = "defaultProject";
 

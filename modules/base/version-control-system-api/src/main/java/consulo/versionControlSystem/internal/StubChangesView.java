@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
- * @author irengrig
+ * @author VISTALL
+ * @since 2025-08-04
  */
-@ServiceAPI(ComponentScope.PROJECT)
-public interface ChangesViewI {
-  void scheduleRefresh();
+public class StubChangesView implements ChangesViewI {
+    @Override
+    public void scheduleRefresh() {
 
-  void selectFile(VirtualFile vFile);
+    }
 
-  void refreshChangesViewNodeAsync(VirtualFile file);
+    @Override
+    public void selectFile(VirtualFile vFile) {
 
-  void updateProgressText(final String text, final boolean isError);
+    }
 
-  void setBusy(boolean b);
+    @Override
+    public void refreshChangesViewNodeAsync(VirtualFile file) {
 
-  void setShowFlattenMode(boolean state);
+    }
+
+    @Override
+    public void updateProgressText(String text, boolean isError) {
+
+    }
+
+    @Override
+    public void setBusy(boolean b) {
+
+    }
+
+    @Override
+    public void setShowFlattenMode(boolean state) {
+
+    }
 }

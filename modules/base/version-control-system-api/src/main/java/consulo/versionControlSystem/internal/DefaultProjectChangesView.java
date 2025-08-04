@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project.internal;
+package consulo.versionControlSystem.internal;
 
-import consulo.project.Project;
-import jakarta.annotation.Nonnull;
+import consulo.annotation.component.ServiceImpl;
+import consulo.project.internal.ProjectEx;
+import jakarta.inject.Singleton;
 
-public interface ProjectEx extends Project {
-    int REGULAR_PROJECT = 1 << 30;
-    int DEFAULT_PROJECT = 1 << 31;
+/**
+ * @author VISTALL
+ * @since 2025-08-04
+ */
+@Singleton
+@ServiceImpl(profiles = ProjectEx.DEFAULT_PROJECT)
+public class DefaultProjectChangesView extends StubChangesView {
 
-    void setProjectName(@Nonnull String name);
 }

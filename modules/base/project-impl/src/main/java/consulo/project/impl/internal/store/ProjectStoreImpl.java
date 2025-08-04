@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Singleton
-@ServiceImpl(profiles = ProjectImpl.NORMAL_PROJECT_PROFILE)
+@ServiceImpl(profiles = ProjectImpl.REGULAR_PROJECT)
 public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
   protected ProjectImpl myProject;
   private String myPresentableUrl;
