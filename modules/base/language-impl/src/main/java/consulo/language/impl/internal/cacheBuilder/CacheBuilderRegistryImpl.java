@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.lang.cacheBuilder;
+package consulo.language.impl.internal.cacheBuilder;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.language.cacheBuilder.CacheBuilderRegistry;
+import consulo.language.cacheBuilder.FileWordsScannerProvider;
 import consulo.language.cacheBuilder.WordsScanner;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.Map;
 

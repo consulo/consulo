@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.lang.parameterInfo;
-
-import consulo.language.editor.parameterInfo.ParameterInfoUIContext;
+package consulo.language.editor.parameterInfo;
 
 import jakarta.annotation.Nullable;
 

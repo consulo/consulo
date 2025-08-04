@@ -1,8 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.lang;
+package consulo.language;
 
-import consulo.language.Language;
-import consulo.language.MetaLanguage;
 import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;

@@ -375,11 +375,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persistence;
   exports consulo.ide.impl.idea.internal.tree;
   exports consulo.ide.impl.idea.internal.validation;
-  exports consulo.ide.impl.idea.lang;
-  exports consulo.ide.impl.idea.lang.cacheBuilder;
   exports consulo.ide.impl.idea.lang.customFolding;
-  exports consulo.ide.impl.idea.lang.folding;
-  exports consulo.ide.impl.idea.lang.parameterInfo;
   exports consulo.ide.impl.idea.model.search.impl;
   exports consulo.ide.impl.idea.moduleDependencies;
   exports consulo.ide.impl.idea.navigation;

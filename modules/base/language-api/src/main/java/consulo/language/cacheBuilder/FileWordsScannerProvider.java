@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang.cacheBuilder;
+package consulo.language.cacheBuilder;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointCacheKey;
-import consulo.language.cacheBuilder.WordsScanner;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;

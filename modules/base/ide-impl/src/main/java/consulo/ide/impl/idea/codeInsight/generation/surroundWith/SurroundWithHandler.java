@@ -13,7 +13,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
-import consulo.ide.impl.idea.lang.folding.CustomFoldingSurroundDescriptor;
+import consulo.language.editor.internal.CustomFoldingSurroundDescriptor;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.ide.localize.IdeLocalize;

@@ -7,7 +7,7 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorFontType;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoUIContextEx;
+import consulo.language.editor.parameterInfo.ParameterInfoUIContextEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.hint.HintColorUtil;

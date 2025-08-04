@@ -1,25 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+package consulo.language;
 
-package consulo.ide.impl.idea.lang;
-
-import consulo.language.Language;
-import consulo.language.MetaLanguage;
+import consulo.language.util.LanguageUtil;
 
 import jakarta.annotation.Nonnull;
 
-final class MetaLanguageMatcher extends LanguageMatcher {
+final class MetaLanguageKindMatcher extends LanguageMatcher {
 
-  private final
   @Nonnull
-  MetaLanguage myLanguage;
+  private final MetaLanguage myLanguage;
 
-  MetaLanguageMatcher(@Nonnull MetaLanguage language) {
+  MetaLanguageKindMatcher(@Nonnull MetaLanguage language) {
     myLanguage = language;
   }
 
   @Override
   public boolean matchesLanguage(@Nonnull Language language) {
-    return myLanguage.matchesLanguage(language);
+    return LanguageUtil.hierarchy(language).filter(myLanguage::matchesLanguage).isNotEmpty();
   }
 
   @Override
@@ -27,7 +24,7 @@ final class MetaLanguageMatcher extends LanguageMatcher {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    MetaLanguageMatcher matcher = (MetaLanguageMatcher)o;
+    MetaLanguageKindMatcher matcher = (MetaLanguageKindMatcher)o;
 
     if (!myLanguage.equals(matcher.myLanguage)) return false;
 
@@ -41,6 +38,6 @@ final class MetaLanguageMatcher extends LanguageMatcher {
 
   @Override
   public String toString() {
-    return myLanguage + " (meta)";
+    return myLanguage + " (meta) with dialects";
   }
 }

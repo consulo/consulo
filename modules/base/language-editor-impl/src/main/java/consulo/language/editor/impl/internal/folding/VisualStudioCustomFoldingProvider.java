@@ -13,50 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang.customFolding;
+package consulo.language.editor.impl.internal.folding;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.folding.CustomFoldingProvider;
 
 /**
- * Custom folding provider for <a href="http://ui.netbeans.org/docs/ui/code_folding/cf_uispec.html#menus">NetBeans folding conventions.</a>
+ * Supports <a href="http://msdn.microsoft.com/en-us/library/9a1ybwek%28v=vs.100%29.aspx">VisualStudio custom foldings.</a>
  * @author Rustam Vishnyakov
  */
 @ExtensionImpl
-public class NetBeansCustomFoldingProvider extends CustomFoldingProvider {
+public class VisualStudioCustomFoldingProvider extends CustomFoldingProvider {
   @Override
   public boolean isCustomRegionStart(String elementText) {
-    return elementText.contains("<editor-fold");
+    return elementText.contains("region") && elementText.matches("..?\\s*region.*");
   }
 
   @Override
   public boolean isCustomRegionEnd(String elementText) {
-    return elementText.contains("</editor-fold");
+    return elementText.contains("endregion");
   }
 
   @Override
   public String getPlaceholderText(String elementText) {
-    String customText = elementText.replaceFirst(".*desc\\s*=\\s*\"(.*)\".*", "$1").trim();
-    return customText.isEmpty() ? "..." : customText;
+    return elementText.replaceFirst("..?\\s*region(.*)","$1").trim();
   }
 
   @Override
   public String getDescription() {
-    return "<editor-fold...> Comments";
+    return "region...endregion Comments";
   }
 
   @Override
   public String getStartString() {
-    return "<editor-fold desc=\"?\">";
+    return "region ?";
   }
 
   @Override
   public String getEndString() {
-    return "</editor-fold>";
-  }
-
-  @Override
-  public boolean isCollapsedByDefault(String text) {
-    return text.matches(".*defaultstate\\s*=\\s*\"collapsed\".*");
+    return "endregion";
   }
 }

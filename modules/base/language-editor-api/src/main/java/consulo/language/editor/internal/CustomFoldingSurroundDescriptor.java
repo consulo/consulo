@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang.folding;
+package consulo.language.editor.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
