@@ -58,9 +58,11 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     private final Trinity<String, Supplier<Charset>, Consumer<Charset>> myGlobalMapping;
 
     @Inject
-    public FileEncodingConfigurable(@Nonnull Project project,
-                                    @Nonnull ApplicationEncodingManager applicationEncodingManager,
-                                    @Nonnull EncodingProjectManager encodingProjectManager) {
+    public FileEncodingConfigurable(
+        @Nonnull Project project,
+        @Nonnull ApplicationEncodingManager applicationEncodingManager,
+        @Nonnull EncodingProjectManager encodingProjectManager
+    ) {
         super(project, createMappings(project));
         myBOMForUTF8Combo.setModel(new EnumComboBoxModel<>(EncodingProjectManagerImpl.BOMForNewUTF8Files.class));
         myBOMForUTF8Combo.addItemListener(e -> updateExplanationLabelText());
@@ -91,7 +93,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
 
     private void updateExplanationLabelText() {
         EncodingProjectManagerImpl.BOMForNewUTF8Files item =
-            (EncodingProjectManagerImpl.BOMForNewUTF8Files)myBOMForUTF8Combo.getSelectedItem();
+            (EncodingProjectManagerImpl.BOMForNewUTF8Files) myBOMForUTF8Combo.getSelectedItem();
         String I = Application.get().getName().get();
         if (item != null) {
             switch (item) {
@@ -151,7 +153,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
 
     @Override
     protected void renderValue(@Nullable Object target, @Nonnull Charset t, @Nonnull ColoredTextContainer renderer) {
-        VirtualFile file = target instanceof VirtualFile ? (VirtualFile)target : null;
+        VirtualFile file = target instanceof VirtualFile ? (VirtualFile) target : null;
         EncodingUtil.FailReason result = file == null || file.isDirectory() ? null : EncodingUtil.checkCanConvertAndReload(file);
 
         String encodingText = t.displayName();
@@ -162,7 +164,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     @Nonnull
     @Override
     protected ActionGroup createActionListGroup(@Nullable Object target, @Nonnull Consumer<? super Charset> onChosen) {
-        VirtualFile file = target instanceof VirtualFile ? (VirtualFile)target : null;
+        VirtualFile file = target instanceof VirtualFile ? (VirtualFile) target : null;
         byte[] b = null;
         try {
             b = file == null || file.isDirectory() ? null : file.contentsToByteArray();
@@ -172,7 +174,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
         byte[] bytes = b;
         Document document = file == null ? null : FileDocumentManager.getInstance().getDocument(file);
 
-        return new ChangeFileEncodingAction(true) {
+        return new ChangeFileEncodingAction(myProject.getApplication(), true) {
             @Override
             @RequiredUIAccess
             protected boolean chosen(Document document, Editor editor, VirtualFile virtualFile, byte[] bytes, @Nonnull Charset charset) {
@@ -243,7 +245,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
         if (super.isModified()) {
             return true;
         }
-        EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(myProject);
+        EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl) EncodingProjectManager.getInstance(myProject);
         boolean same = Comparing.equal(encodingManager.getDefaultCharsetForPropertiesFiles(null), myPropsCharset)
             && encodingManager.isNative2AsciiForPropertiesFiles() == myTransparentNativeToAsciiCheckBox.isSelected()
             && encodingManager.getBOMForNewUTF8Files() == myBOMForUTF8Combo.getSelectedItem();
@@ -259,11 +261,11 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     @RequiredUIAccess
     public void apply() throws ConfigurationException {
         super.apply();
-        EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(myProject);
+        EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl) EncodingProjectManager.getInstance(myProject);
         encodingManager.setDefaultCharsetForPropertiesFiles(null, myPropsCharset);
         encodingManager.setNative2AsciiForPropertiesFiles(null, myTransparentNativeToAsciiCheckBox.isSelected());
         EncodingProjectManagerImpl.BOMForNewUTF8Files option = ObjectUtil.notNull(
-            (EncodingProjectManagerImpl.BOMForNewUTF8Files)myBOMForUTF8Combo.getSelectedItem(),
+            (EncodingProjectManagerImpl.BOMForNewUTF8Files) myBOMForUTF8Combo.getSelectedItem(),
             EncodingProjectManagerImpl.BOMForNewUTF8Files.NEVER
         );
         encodingManager.setBOMForNewUtf8Files(option);
@@ -272,7 +274,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     @Override
     @RequiredUIAccess
     public void reset() {
-        EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(myProject);
+        EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl) EncodingProjectManager.getInstance(myProject);
         myTransparentNativeToAsciiCheckBox.setSelected(encodingManager.isNative2AsciiForPropertiesFiles());
         myPropsCharset = encodingManager.getDefaultCharsetForPropertiesFiles(null);
         myBOMForUTF8Combo.setSelectedItem(encodingManager.getBOMForNewUTF8Files());
@@ -287,7 +289,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
 
     @Nonnull
     private static PerFileMappingsEx<Charset> createMappings(@Nonnull Project project) {
-        EncodingProjectManagerImpl prjManager = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(project);
+        EncodingProjectManagerImpl prjManager = (EncodingProjectManagerImpl) EncodingProjectManager.getInstance(project);
         return new PerFileMappingsEx<>() {
             @Nonnull
             @Override

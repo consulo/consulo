@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -24,10 +26,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
+@ActionImpl(id = "CloseProject")
 public class CloseProjectAction extends AnAction implements DumbAware {
     private WelcomeFrameManager myWelcomeFrameManager;
     private final ProjectManager myProjectManager;
@@ -39,6 +41,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
         ProjectManager projectManager,
         RecentProjectsManager recentProjectsManager
     ) {
+        super(ActionLocalize.actionCloseprojectText(), ActionLocalize.actionCloseprojectDescription());
         myWelcomeFrameManager = welcomeFrameManager;
         myProjectManager = projectManager;
         myRecentProjectsManager = recentProjectsManager;

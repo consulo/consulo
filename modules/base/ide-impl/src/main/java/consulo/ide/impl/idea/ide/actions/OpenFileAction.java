@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.fileChooser.FileChooser;
@@ -24,15 +24,17 @@ import consulo.fileChooser.PathChooserDialog;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProviderManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.localize.LocalizeValue;
-import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
@@ -51,8 +53,12 @@ import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@ActionRef(id = "OpenFile")
+@ActionImpl(id = "OpenFile")
 public class OpenFileAction extends AnAction implements DumbAware {
+    public OpenFileAction() {
+        super(ActionLocalize.actionOpenfileText(), ActionLocalize.actionOpenfileDescription(), PlatformIconGroup.nodesFolderopened());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

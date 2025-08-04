@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.desktop.awt.welcomeScreen.NewRecentProjectPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -32,36 +33,33 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "ManageRecentProjects")
 public class ManageRecentProjectsAction extends DumbAwareAction {
-  public ManageRecentProjectsAction() {
-    super(ActionLocalize.actionManagerecentprojectsText());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Disposable disposable = Disposable.newDisposable();
-    NewRecentProjectPanel panel = new NewRecentProjectPanel(disposable, false);
-    JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel.getRootPanel(), panel.getList())
-      .setTitle(LocalizeValue.localizeTODO("Recent Projects"))
-      .setFocusable(true)
-      .setRequestFocus(true)
-      .setMayBeParent(true)
-      .setMovable(true)
-      .createPopup();
-    Disposer.register(popup, disposable);
-    Project project = e.getRequiredData(Project.KEY);
-    popup.showCenteredInCurrentWindow(project);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    boolean enable = false;
-    if (project != null) {
-      enable = RecentProjectsManager.getInstance().getRecentProjectsActions(false).length > 0;
+    public ManageRecentProjectsAction() {
+        super(ActionLocalize.actionManagerecentprojectsText());
     }
 
-    e.getPresentation().setEnabledAndVisible(enable);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Disposable disposable = Disposable.newDisposable();
+        NewRecentProjectPanel panel = new NewRecentProjectPanel(disposable, false);
+        JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel.getRootPanel(), panel.getList())
+            .setTitle(LocalizeValue.localizeTODO("Recent Projects"))
+            .setFocusable(true)
+            .setRequestFocus(true)
+            .setMayBeParent(true)
+            .setMovable(true)
+            .createPopup();
+        Disposer.register(popup, disposable);
+        Project project = e.getRequiredData(Project.KEY);
+        popup.showCenteredInCurrentWindow(project);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(
+            e.hasData(Project.KEY) && RecentProjectsManager.getInstance().getRecentProjectsActions(false).length > 0
+        );
+    }
 }

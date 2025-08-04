@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ide.impl.startup.customize.StartupCustomizeManager;
@@ -26,19 +28,21 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 09/01/2021
+ * @since 2021-01-09
  */
+@ActionImpl(id = "ShowStartupManagerAction")
 public class ShowStartupManagerAction extends DumbAwareAction {
-  private final Provider<StartupCustomizeManager> myStartupCustomizeManager;
+    private final Provider<StartupCustomizeManager> myStartupCustomizeManager;
 
-  @Inject
-  public ShowStartupManagerAction(Provider<StartupCustomizeManager> startupCustomizeManager) {
-    myStartupCustomizeManager = startupCustomizeManager;
-  }
+    @Inject
+    public ShowStartupManagerAction(Provider<StartupCustomizeManager> startupCustomizeManager) {
+        super(ActionLocalize.actionShowstartupmanageractionText(), ActionLocalize.actionShowstartupmanageractionDescription());
+        myStartupCustomizeManager = startupCustomizeManager;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    myStartupCustomizeManager.get().showAsync(false);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        myStartupCustomizeManager.get().showAsync(false);
+    }
 }

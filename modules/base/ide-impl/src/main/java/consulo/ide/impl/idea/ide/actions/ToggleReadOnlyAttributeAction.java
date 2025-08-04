@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -30,7 +30,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +40,17 @@ import java.util.ArrayList;
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "ToggleReadOnlyAttribute")
 public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware {
+    @Nonnull
+    private final Application myApplication;
+
+    @Inject
+    public ToggleReadOnlyAttributeAction(@Nonnull Application application) {
+        super(ActionLocalize.actionTogglereadonlyattributeText(), ActionLocalize.actionTogglereadonlyattributeDescription());
+        myApplication = application;
+    }
+
     static VirtualFile[] getFiles(DataContext dataContext) {
         ArrayList<VirtualFile> filesList = new ArrayList<>();
         VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
@@ -81,7 +93,7 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-        Application.get().runWriteAction(() -> {
+        myApplication.runWriteAction(() -> {
             // Save all documents. We won't be able to save changes to the files that became read-only afterwards.
             FileDocumentManager.getInstance().saveAllDocuments();
 

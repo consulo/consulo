@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -29,29 +30,30 @@ import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Print")
 public class PrintAction extends AnAction implements DumbAware {
-  public PrintAction() {
-    super();
-  }
-
-  @Override
-  @RequiredReadAction
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public PrintAction() {
+        super(ActionLocalize.actionPrintText(), ActionLocalize.actionPrintDescription(), PlatformIconGroup.generalPrint());
     }
-    PrintManager.executePrint(e.getDataContext());
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e){
-    Presentation presentation = e.getPresentation();
-    VirtualFile file = ReadAction.compute(() -> e.getData(VirtualFile.KEY));
-    if (file != null && file.isDirectory()) {
-      presentation.setEnabled(true);
-      return;
+    @Override
+    @RequiredReadAction
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        PrintManager.executePrint(e.getDataContext());
     }
-    presentation.setEnabled(ReadAction.compute(() -> e.hasData(PsiFile.KEY)) || e.hasData(Editor.KEY));
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        VirtualFile file = ReadAction.compute(() -> e.getData(VirtualFile.KEY));
+        if (file != null && file.isDirectory()) {
+            presentation.setEnabled(true);
+            return;
+        }
+        presentation.setEnabled(ReadAction.compute(() -> e.hasData(PsiFile.KEY)) || e.hasData(Editor.KEY));
+    }
 }

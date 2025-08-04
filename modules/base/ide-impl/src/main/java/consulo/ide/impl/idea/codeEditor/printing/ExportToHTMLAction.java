@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.codeEditor.printing;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,7 +32,12 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 
+@ActionImpl(id = "ExportToHTML")
 public class ExportToHTMLAction extends AnAction {
+    public ExportToHTMLAction() {
+        super(ActionLocalize.actionExporttohtmlText(), ActionLocalize.actionExporttohtmlDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -44,7 +51,7 @@ public class ExportToHTMLAction extends AnAction {
         catch (FileNotFoundException ex) {
             JOptionPane.showMessageDialog(
                 null,
-                CodeEditorBundle.message("file.not.found", ex.getMessage()),
+                CodeEditorLocalize.fileNotFound(ex.getMessage()).get(),
                 CommonLocalize.titleError().get(),
                 JOptionPane.ERROR_MESSAGE
             );

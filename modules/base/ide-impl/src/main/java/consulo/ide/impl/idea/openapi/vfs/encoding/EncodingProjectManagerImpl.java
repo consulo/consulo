@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressManager;
 import consulo.component.persist.PersistentStateComponent;
@@ -23,6 +24,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Maps;
@@ -202,7 +204,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    public void setEncoding(@Nullable final VirtualFile virtualFileOrDir, @Nullable final Charset charset) {
+    public void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset) {
         Charset oldCharset;
 
         if (virtualFileOrDir == null) {
@@ -233,11 +235,19 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         reload(virtualFileOrDir, project, (FileDocumentManagerImpl) FileDocumentManager.getInstance());
     }
 
-    private static void reload(@Nonnull VirtualFile virtualFile, @Nonnull Project project, @Nonnull FileDocumentManagerImpl documentManager) {
-        WriteAction.runLater(() -> ProjectLocator.computeWithPreferredProject(virtualFile, project, () -> {
-            documentManager.contentsChanged(new VFileContentChangeEvent(null, virtualFile, 0, 0, false));
-            return null;
-        }));
+    private static void reload(
+        @Nonnull VirtualFile virtualFile,
+        @Nonnull Project project,
+        @Nonnull FileDocumentManagerImpl documentManager
+    ) {
+        WriteAction.runLater(() -> ProjectLocator.computeWithPreferredProject(
+            virtualFile,
+            project,
+            () -> {
+                documentManager.contentsChanged(new VFileContentChangeEvent(null, virtualFile, 0, 0, false));
+                return null;
+            }
+        ));
     }
 
     @Override
@@ -275,10 +285,11 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     public void setMapping(@Nonnull Map<? extends VirtualFile, ? extends Charset> mapping) {
-        myProject.getApplication().assertIsWriteThread();
+        Application app = myProject.getApplication();
+        app.assertIsWriteThread();
         FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
-        final Map<VirtualFilePointer, Charset> newMap = new HashMap<>(mapping.size());
-        final Map<VirtualFilePointer, Charset> oldMap = new HashMap<>(myMapping);
+        Map<VirtualFilePointer, Charset> newMap = new HashMap<>(mapping.size());
+        Map<VirtualFilePointer, Charset> oldMap = new HashMap<>(myMapping);
 
         // ChangeFileEncodingAction should not start progress "reload files..."
         suppressReloadDuring(() -> {
@@ -298,7 +309,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
                     }
                     VirtualFilePointer pointer = VirtualFilePointerManager.getInstance().create(virtualFile, this, null);
 
-                    if (!virtualFile.isDirectory() && !Comparing.equal(charset, oldMap.get(pointer))) {
+                    if (!virtualFile.isDirectory() && !Objects.equals(charset, oldMap.get(pointer))) {
                         Document document;
                         byte[] bytes;
                         try {
@@ -312,7 +323,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
                             continue;
                         }
                         // ask whether to reload/convert when in doubt
-                        boolean changed = new ChangeFileEncodingAction().chosen(document, null, virtualFile, bytes, charset);
+                        boolean changed = new ChangeFileEncodingAction(app).chosen(document, null, virtualFile, bytes, charset);
 
                         if (!changed) {
                             continue;
@@ -326,7 +337,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         myMapping.clear();
         myMapping.putAll(newMap);
 
-        final Set<VirtualFilePointer> changed = new HashSet<>(oldMap.keySet());
+        Set<VirtualFilePointer> changed = new HashSet<>(oldMap.keySet());
         for (Map.Entry<VirtualFilePointer, Charset> entry : newMap.entrySet()) {
             VirtualFilePointer file = entry.getKey();
             Charset charset = entry.getValue();
@@ -409,7 +420,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
 
         return VirtualFileVisitor.CONTINUE == VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor<Void>() {
             @Override
-            public boolean visitFile(@Nonnull final VirtualFile file) {
+            public boolean visitFile(@Nonnull VirtualFile file) {
                 return processor.test(file);
             }
         });
@@ -442,7 +453,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         }
     }
 
-    private void tryStartReloadWithProgress(@Nonnull final Runnable reloadAction) {
+    private void tryStartReloadWithProgress(@Nonnull Runnable reloadAction) {
         Boolean suppress = SUPPRESS_RELOAD.get();
         if (Objects.equals(suppress, Boolean.TRUE)) {
             return;
@@ -456,7 +467,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         );
     }
 
-    private void reloadAllFilesUnder(@Nullable final VirtualFile root) {
+    private void reloadAllFilesUnder(@Nullable VirtualFile root) {
         tryStartReloadWithProgress(() -> processSubFiles(root, file -> {
             if (!(file instanceof InternalNewVirtualFile)) {
                 return true;
@@ -475,8 +486,9 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    public boolean isNative2Ascii(@Nonnull final VirtualFile virtualFile) {
-        return FileTypeRegistry.getInstance().isFileOfType(virtualFile, InternalStdFileTypes.PROPERTIES) && myNative2AsciiForPropertiesFiles;
+    public boolean isNative2Ascii(@Nonnull VirtualFile virtualFile) {
+        return FileTypeRegistry.getInstance()
+            .isFileOfType(virtualFile, InternalStdFileTypes.PROPERTIES) && myNative2AsciiForPropertiesFiles;
     }
 
     @Override
@@ -485,7 +497,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    public void setNative2AsciiForPropertiesFiles(final VirtualFile virtualFile, final boolean native2Ascii) {
+    public void setNative2AsciiForPropertiesFiles(VirtualFile virtualFile, boolean native2Ascii) {
         if (myNative2AsciiForPropertiesFiles != native2Ascii) {
             myNative2AsciiForPropertiesFiles = native2Ascii;
             EncodingManagerImpl.firePropertyChange(null, PROP_NATIVE2ASCII_SWITCH, !native2Ascii, native2Ascii, myProject);
@@ -506,12 +518,12 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
 
     @Override
     @Nullable
-    public Charset getDefaultCharsetForPropertiesFiles(@Nullable final VirtualFile virtualFile) {
+    public Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
         return myDefaultCharsetForPropertiesFiles;
     }
 
     @Override
-    public void setDefaultCharsetForPropertiesFiles(@Nullable final VirtualFile virtualFile, @Nullable Charset charset) {
+    public void setDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile, @Nullable Charset charset) {
         Charset old = myDefaultCharsetForPropertiesFiles;
         if (!Comparing.equal(old, charset)) {
             myDefaultCharsetForPropertiesFiles = charset;

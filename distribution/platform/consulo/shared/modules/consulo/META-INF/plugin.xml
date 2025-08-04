@@ -440,66 +440,8 @@
         <action id="PinToolwindowTab" class="consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction"/>
         <action id="CloseEditor" class="consulo.ide.impl.idea.ide.actions.CloseEditorAction"/>
 
-        <group id="ChangeLineSeparators" popup="true">
-            <action id="ConvertToWindowsLineSeparators"
-                    class="consulo.ide.impl.idea.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
-            <action id="ConvertToUnixLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToUnixLineSeparatorsAction"/>
-            <action id="ConvertToMacLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToMacLineSeparatorsAction"/>
-        </group>
-
         <group id="MainMenu">
-            <group id="FileMenu" popup="true">
-                <group id="FileOpenGroup">
-                    <action id="OpenFile" class="consulo.ide.impl.idea.ide.actions.OpenFileAction"
-                            icon="consulo.platform.base.PlatformIconGroup@nodes.folderopened"/>
-                    <group id="$LRU" popup="true">
-                        <group id="RecentProjectListGroup" class="consulo.ide.impl.idea.ide.actions.RecentProjectsGroup" popup="false"/>
-                    </group>
-                    <action id="CloseProject" class="consulo.ide.impl.idea.ide.actions.CloseProjectAction"/>
-                </group>
-                <separator/>
-                <group id="FileMainSettingsGroup">
-                    <action id="ShowSettings" class="consulo.ide.impl.idea.ide.actions.ShowSettingsAction"/>
-                    <action id="ShowProjectStructureSettings" class="consulo.ide.impl.idea.ide.actions.ShowStructureSettingsAction"
-                            icon="consulo.platform.base.PlatformIconGroup@general.projectstructure"/>
-                    <group id="FileOtherSettingsGroup" class="consulo.ui.ex.action.SmartPopupActionGroup">
-                        <action id="TemplateProjectProperties" class="consulo.ide.impl.idea.ide.actions.TemplateProjectPropertiesAction"/>
-                        <action id="TemplateProjectStructure" class="consulo.ide.impl.idea.ide.actions.TemplateProjectStructureAction"/>
-                        <group id="FileSettingsGroup"/>
-                    </group>
-                    <group id="FilePropertiesGroup" popup="true">
-                        <action id="ChangeFileEncodingAction" class="consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction"/>
-                        <action id="AssociateWithFileType" class="consulo.ide.impl.idea.ide.actions.AssociateFileTypeAction"/>
-                        <action id="ToggleReadOnlyAttribute" class="consulo.ide.impl.idea.ide.actions.ToggleReadOnlyAttributeAction"/>
-
-                        <group id="ChangeLineSeparators" popup="true" class="consulo.ui.ex.action.NonTrivialActionGroup">
-                            <action id="ConvertToWindowsLineSeparators"
-                                    class="consulo.ide.impl.idea.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
-                            <action id="ConvertToUnixLineSeparators"
-                                    class="consulo.ide.impl.idea.codeStyle.ConvertToUnixLineSeparatorsAction"/>
-                            <action id="ConvertToMacLineSeparators"
-                                    class="consulo.ide.impl.idea.codeStyle.ConvertToMacLineSeparatorsAction"/>
-                        </group>
-
-                    </group>
-                    <separator/>
-                    <group id="ExportImportGroup">
-                        <action id="ImportSettings" class="consulo.ide.impl.idea.ide.actions.ImportSettingsAction"/>
-                        <action id="ExportSettings" class="consulo.ide.impl.idea.ide.actions.ExportSettingsAction"/>
-                    </group>
-                    <action id="ShowStartupManagerAction" class="consulo.ide.impl.actions.ShowStartupManagerAction"/>
-                </group>
-                <separator/>
-                <action id="SaveAll" class="consulo.ide.impl.idea.ide.actions.SaveAllAction"
-                        icon="consulo.platform.base.PlatformIconGroup@actions.menu_saveall"/>
-                <action id="Synchronize" class="consulo.ide.impl.idea.ide.actions.SynchronizeAction"
-                        icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-                <action id="InvalidateCaches" class="consulo.ide.impl.idea.ide.actions.InvalidateCachesAction"/>
-                <separator/>
-                <action id="TogglePowerSave" class="consulo.ide.impl.idea.ide.actions.TogglePowerSaveAction"/>
-                <separator/>
-                <action id="Exit" class="consulo.ide.impl.idea.ide.actions.ExitAction"/>
-            </group>
+            <reference ref="FileMenu"/>
 
             <!-- Edit -->
             <group id="EditMenu" popup="true">
@@ -948,7 +890,7 @@
 
         <action id="IncrementalSearch" class="consulo.ide.impl.idea.codeInsight.navigation.actions.IncrementalSearchAction"/>
         <action id="AddToFavoritesPopup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddToFavoritesPopupAction"/>
-        <group id="AddToFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddToFavoritesActionGroup" popup="true"/>
+        <reference ref="AddToFavorites"/>
         <group id="AddAllToFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddAllToFavoritesActionGroup"
                popup="true"/>
         <action id="AddNewFavoritesList" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddNewFavoritesListAction"/>
@@ -1015,21 +957,6 @@
             <!--
             <add-to-group group-id="FileMenu" anchor="after" relative-to-action="Synchronize"/>
             -->
-        </action>
-
-
-        <group id="PrintExportGroup">
-            <separator/>
-            <action id="ExportToHTML" class="consulo.ide.impl.idea.codeEditor.printing.ExportToHTMLAction"/>
-            <action id="Print" class="consulo.ide.impl.idea.codeEditor.printing.PrintAction"
-                    icon="consulo.platform.base.PlatformIconGroup@general.print"/>
-            <reference ref="AddToFavorites"/>
-
-            <add-to-group group-id="FileMenu" anchor="after" relative-to-action="InvalidateCaches"/>
-        </group>
-
-        <action id="ChangeTemplateDataLanguage" class="consulo.ide.impl.psi.templateLanguages.ChangeTemplateDataLanguageAction">
-            <add-to-group group-id="FileMenu" anchor="before" relative-to-action="ToggleReadOnlyAttribute"/>
         </action>
 
         <action id="CopyAbsolutePath" class="consulo.ide.impl.idea.ide.actions.CopyAbsolutePathProvider" use-shortcut-of="CopyPaths"/>
@@ -1377,12 +1304,6 @@
             <reference ref="ExternalToolsGroup"/>
             <separator/>
             <reference ref="ProjectViewPopupMenuSettingsGroup"/>
-        </group>
-
-        <group id="Bom.Group">
-            <action id="AddBom" class="consulo.ide.impl.idea.openapi.editor.actions.AddBomAction"/>
-            <action id="RemoveBom" class="consulo.ide.impl.idea.openapi.editor.actions.RemoveBomAction"/>
-            <add-to-group group-id="FilePropertiesGroup" anchor="after" relative-to-action="ChangeFileEncodingAction"/>
         </group>
 
         <group id="RevealGroup" popup="true">
@@ -1835,14 +1756,6 @@
                 icon="consulo.platform.base.PlatformIconGroup@nodes.module">
             <add-to-group group-id="FileChooserToolbar" anchor="after" relative-to-action="FileChooser.GotoProject"/>
         </action>
-
-
-        <!-- File -->
-        <group id="OpenProjectGroup">
-            <reference id="NewElementInMenu"/>
-
-            <add-to-group group-id="FileOpenGroup" anchor="first"/>
-        </group>
 
         <group>
             <add-to-group group-id="ExportImportGroup" anchor="first"/>

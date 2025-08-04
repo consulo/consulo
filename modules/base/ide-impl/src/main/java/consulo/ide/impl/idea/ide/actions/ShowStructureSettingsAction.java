@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -22,11 +25,21 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ShowProjectStructureSettings")
 public class ShowStructureSettingsAction extends AnAction implements DumbAware {
+    public ShowStructureSettingsAction() {
+        super(
+            ActionLocalize.actionShowprojectstructuresettingsText(),
+            ActionLocalize.actionShowprojectstructuresettingsDescription(),
+            PlatformIconGroup.generalProjectstructure()
+        );
+    }
+
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             project = ProjectManager.getInstance().getDefaultProject();

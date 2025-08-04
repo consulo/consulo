@@ -16,19 +16,25 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
+@ActionImpl(id = "SaveAll")
 public class SaveAllAction extends AnAction implements DumbAware {
+    @Nonnull
     private final Application myApplication;
 
     @Inject
-    public SaveAllAction(Application application) {
+    public SaveAllAction(@Nonnull Application application) {
+        super(ActionLocalize.actionSaveallText(), ActionLocalize.actionSaveallDescription(), PlatformIconGroup.actionsMenu_saveall());
         myApplication = application;
     }
 

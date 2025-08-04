@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.platform.Platform;
@@ -30,6 +31,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+@ActionImpl(id = "ShowSettings")
 public class ShowSettingsAction extends AnAction implements DumbAware {
     private final Provider<ShowSettingsUtil> myShowSettingsUtil;
 

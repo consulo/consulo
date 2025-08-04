@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.CommonBundle;
 import consulo.application.dumb.DumbAware;
@@ -36,6 +37,7 @@ import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -66,14 +68,18 @@ import java.util.zip.ZipOutputStream;
 /**
  * @author cdr
  */
+@ActionImpl(id = "ExportSettings")
 public class ExportSettingsAction extends AnAction implements DumbAware {
     public static final String INSTALLED_TXT = "installed.txt";
 
+    @Nonnull
     private final Application myApplication;
+    @Nonnull
     private final IApplicationStore myApplicationStore;
 
     @Inject
-    public ExportSettingsAction(Application application, IApplicationStore applicationStore) {
+    public ExportSettingsAction(@Nonnull Application application, @Nonnull IApplicationStore applicationStore) {
+        super(ActionLocalize.actionExportsettingsText(), ActionLocalize.actionExportsettingsDescription());
         myApplication = application;
         myApplicationStore = applicationStore;
     }

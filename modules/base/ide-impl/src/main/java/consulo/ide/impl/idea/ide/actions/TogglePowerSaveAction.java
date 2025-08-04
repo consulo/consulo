@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.PowerSaveMode;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
@@ -25,7 +27,12 @@ import jakarta.annotation.Nonnull;
 /**
  * @author yole
  */
+@ActionImpl(id = "TogglePowerSave")
 public class TogglePowerSaveAction extends ToggleAction implements DumbAware {
+    public TogglePowerSaveAction() {
+        super(ActionLocalize.actionTogglepowersaveText(), ActionLocalize.actionTogglepowersaveDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public boolean isSelected(@Nonnull AnActionEvent e) {

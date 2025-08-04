@@ -19,34 +19,34 @@ package consulo.ui.ex.action;
  * @author yole
  */
 public class SmartPopupActionGroup extends DefaultActionGroup {
-  private boolean myIsPopupCalculated;
+    private boolean myIsPopupCalculated;
 
-  @Override
-  public boolean isPopup() {
-    if (!myIsPopupCalculated) {
-      setPopup(getChildrenCountRecursive(this) > 1);
-      myIsPopupCalculated = true;
+    @Override
+    public boolean isPopup() {
+        if (!myIsPopupCalculated) {
+            setPopup(getChildrenCountRecursive(this) > 1);
+            myIsPopupCalculated = true;
+        }
+        return super.isPopup();
     }
-    return super.isPopup();
-  }
 
-  private static int getChildrenCountRecursive(ActionGroup group) {
-    AnAction[] children;
-    if (group instanceof DefaultActionGroup) {
-      children = ((DefaultActionGroup) group).getChildActionsOrStubs();
+    private static int getChildrenCountRecursive(ActionGroup group) {
+        AnAction[] children;
+        if (group instanceof DefaultActionGroup defaultActionGroup) {
+            children = defaultActionGroup.getChildActionsOrStubs();
+        }
+        else {
+            children = group.getChildren(null);
+        }
+        int count = 0;
+        for (AnAction child : children) {
+            if (child instanceof ActionGroup actionGroup) {
+                count += getChildrenCountRecursive(actionGroup);
+            }
+            else {
+                count++;
+            }
+        }
+        return count;
     }
-    else {
-      children = group.getChildren(null);
-    }
-    int count = 0;
-    for (AnAction child : children) {
-      if (child instanceof ActionGroup) {
-        count += getChildrenCountRecursive((ActionGroup) child);
-      }
-      else {
-        count++;
-      }
-    }
-    return count;
-  }
 }

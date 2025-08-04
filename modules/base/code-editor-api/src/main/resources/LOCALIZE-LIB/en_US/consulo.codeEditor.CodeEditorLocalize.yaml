@@ -46,6 +46,8 @@ errors.panel.go.to.errors.first.radio:
     text: Go to high priority problems only
 errors.panel.go.to.next.error.warning.radio:
     text: Go to next problem
+file.not.found:
+    text: 'File not found: {0}'
 forced.soft.wrap.dont.show.again.message:
     text: Don't show again
 forced.soft.wrap.hide.message:

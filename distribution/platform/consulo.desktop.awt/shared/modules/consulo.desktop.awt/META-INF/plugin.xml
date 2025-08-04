@@ -116,13 +116,6 @@
             <add-to-group group-id="Internal" anchor="last"/>
         </group>
 
-        <group popup="false">
-            <separator/>
-            <action class="consulo.desktop.awt.action.ManageRecentProjectsAction" id="ManageRecentProjects"/>
-            <add-to-group group-id="$LRU"/>
-        </group>
-
-
         <group id="DirDiffMenu">
             <action id="DirDiffMenu.SetCopyToRight" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetCopyToRight"
                     text="Set Copy to Right"

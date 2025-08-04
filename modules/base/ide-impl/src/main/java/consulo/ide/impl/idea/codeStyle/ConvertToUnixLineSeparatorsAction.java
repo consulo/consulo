@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.codeStyle;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.ide.impl.idea.util.LineSeparator;
 
 /**
  * @author Nikolai Matveev
  */
+@ActionImpl(id = "ConvertToUnixLineSeparators")
 public class ConvertToUnixLineSeparatorsAction extends AbstractConvertLineSeparatorsAction {
     public ConvertToUnixLineSeparatorsAction() {
         super(ApplicationLocalize.comboboxCrlfUnix(), LineSeparator.LF);
