@@ -59,7 +59,7 @@ public final class VirtualFileUtil {
 
     @Nullable
     public static VirtualFile getUserHomeDir() {
-        final Path path = Platform.current().user().homePath();
+        Path path = Platform.current().user().homePath();
         return LocalFileSystem.getInstance().findFileByNioFile(path);
     }
 
@@ -217,11 +217,11 @@ public final class VirtualFileUtil {
      * @return file name
      */
     @Nullable
-    public static String extractFileName(@Nullable final String urlOrPath) {
+    public static String extractFileName(@Nullable String urlOrPath) {
         if (urlOrPath == null) {
             return null;
         }
-        final int index = urlOrPath.lastIndexOf(VirtualFileUtil.VFS_SEPARATOR_CHAR);
+        int index = urlOrPath.lastIndexOf(VirtualFileUtil.VFS_SEPARATOR_CHAR);
         return index < 0 ? null : urlOrPath.substring(index + 1);
     }
 
@@ -335,7 +335,7 @@ public final class VirtualFileUtil {
         return virtualFile;
     }
 
-    public static VirtualFile createDirectories(@Nonnull final String directoryPath) throws IOException {
+    public static VirtualFile createDirectories(@Nonnull String directoryPath) throws IOException {
         return WriteAction.compute(() -> {
             VirtualFile res = createDirectoryIfMissing(directoryPath);
             return res;
@@ -356,7 +356,7 @@ public final class VirtualFileUtil {
     @Nullable
     public static VirtualFile createDirectoryIfMissing(@Nonnull String directoryPath) throws IOException {
         String path = FileUtil.toSystemIndependentName(directoryPath);
-        final VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+        VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
         if (file == null) {
             int pos = path.lastIndexOf('/');
             if (pos < 0) {
@@ -366,7 +366,7 @@ public final class VirtualFileUtil {
             if (parent == null) {
                 return null;
             }
-            final String dirName = path.substring(pos + 1);
+            String dirName = path.substring(pos + 1);
             VirtualFile child = parent.findChild(dirName);
             if (child != null && child.isDirectory()) {
                 return child;
@@ -397,7 +397,7 @@ public final class VirtualFileUtil {
 
     @Nonnull
     public static String fixIDEAUrl(@Nonnull String ideaUrl) {
-        final String ideaProtocolMarker = "://";
+        String ideaProtocolMarker = "://";
         int idx = ideaUrl.indexOf(ideaProtocolMarker);
         if (idx >= 0) {
             String s = ideaUrl.substring(0, idx);
@@ -405,7 +405,7 @@ public final class VirtualFileUtil {
             if (s.equals("jar") || s.equals(StandardFileSystems.ZIP_PROTOCOL)) {
                 s = "jar:file";
             }
-            final String urlWithoutProtocol = ideaUrl.substring(idx + ideaProtocolMarker.length());
+            String urlWithoutProtocol = ideaUrl.substring(idx + ideaProtocolMarker.length());
             ideaUrl = s + ":" + (urlWithoutProtocol.startsWith("/") ? "" : "/") + urlWithoutProtocol;
         }
 
@@ -576,7 +576,7 @@ public final class VirtualFileUtil {
      * Returns {@code true} if given virtual file represents broken or recursive symbolic link.
      */
     public static boolean isInvalidLink(@Nonnull VirtualFile link) {
-        final VirtualFile target = link.getCanonicalFile();
+        VirtualFile target = link.getCanonicalFile();
         return target == null || target.equals(link) || isAncestor(target, link, true);
     }
 
@@ -610,7 +610,7 @@ public final class VirtualFileUtil {
      */
     @Nonnull
     public static VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir, @Nonnull String newName) throws IOException {
-        final VirtualFile newChild = toDir.createChildData(requestor, newName);
+        VirtualFile newChild = toDir.createChildData(requestor, newName);
         newChild.setBinaryContent(file.contentsToByteArray());
         return newChild;
     }
@@ -630,7 +630,7 @@ public final class VirtualFileUtil {
     }
 
     public static boolean iterateChildrenRecursively(@Nonnull final VirtualFile root, @Nullable final VirtualFileFilter filter, @Nonnull final Predicate<VirtualFile> iterator) {
-        final VirtualFileVisitor.Result result = visitChildrenRecursively(root, new VirtualFileVisitor() {
+        VirtualFileVisitor.Result result = visitChildrenRecursively(root, new VirtualFileVisitor() {
             @Nonnull
             @Override
             public Result visitFileEx(@Nonnull VirtualFile file) {
@@ -651,7 +651,7 @@ public final class VirtualFileUtil {
     public static VirtualFileVisitor.Result visitChildrenRecursively(@Nonnull VirtualFile file, @Nonnull VirtualFileVisitor<?> visitor) throws VirtualFileVisitor.VisitorException {
         boolean pushed = false;
         try {
-            final boolean visited = visitor.allowVisitFile(file);
+            boolean visited = visitor.allowVisitFile(file);
             if (visited) {
                 VirtualFileVisitor.Result result = visitor.visitFileEx(file);
                 if (result.skipChildren) {
@@ -712,7 +712,7 @@ public final class VirtualFileUtil {
             return visitChildrenRecursively(file, visitor);
         }
         catch (VirtualFileVisitor.VisitorException e) {
-            final Throwable cause = e.getCause();
+            Throwable cause = e.getCause();
             if (eClass.isInstance(cause)) {
                 throw eClass.cast(cause);
             }
@@ -766,8 +766,8 @@ public final class VirtualFileUtil {
         }
     }
 
-    public static void processFileRecursivelyWithoutIgnored(@Nonnull final VirtualFile root, @Nonnull final Predicate<VirtualFile> processor) {
-        final FileTypeRegistry ftm = FileTypeRegistry.getInstance();
+    public static void processFileRecursivelyWithoutIgnored(@Nonnull VirtualFile root, @Nonnull Predicate<VirtualFile> processor) {
+        FileTypeRegistry ftm = FileTypeRegistry.getInstance();
         processFilesRecursively(root, processor, vf -> !ftm.isFileIgnored(vf));
     }
 
@@ -777,12 +777,12 @@ public final class VirtualFileUtil {
         }
 
         if (root.isDirectory()) {
-            final LinkedList<VirtualFile[]> queue = new LinkedList<>();
+            LinkedList<VirtualFile[]> queue = new LinkedList<>();
 
             queue.add(root.getChildren());
 
             do {
-                final VirtualFile[] files = queue.removeFirst();
+                VirtualFile[] files = queue.removeFirst();
 
                 for (VirtualFile file : files) {
                     if (!processor.test(file)) {
@@ -805,12 +805,12 @@ public final class VirtualFileUtil {
         }
 
         if (root.isDirectory() && directoryFilter.apply(root)) {
-            final LinkedList<VirtualFile[]> queue = new LinkedList<>();
+            LinkedList<VirtualFile[]> queue = new LinkedList<>();
 
             queue.add(root.getChildren());
 
             do {
-                final VirtualFile[] files = queue.removeFirst();
+                VirtualFile[] files = queue.removeFirst();
 
                 for (VirtualFile file : files) {
                     if (!processor.test(file)) {
@@ -882,10 +882,10 @@ public final class VirtualFileUtil {
 
     public static String getUrlForLibraryRoot(@Nonnull File libraryRoot) {
         String path = FileUtil.toSystemIndependentName(libraryRoot.getAbsolutePath());
-        final FileType fileTypeByFileName = FileTypeRegistry.getInstance().getFileTypeByFileName(libraryRoot.getName());
+        FileType fileTypeByFileName = FileTypeRegistry.getInstance().getFileTypeByFileName(libraryRoot.getName());
         if (fileTypeByFileName instanceof ArchiveFileType) {
 
-            final String protocol = ((ArchiveFileType) fileTypeByFileName).getProtocol();
+            String protocol = ((ArchiveFileType) fileTypeByFileName).getProtocol();
 
             return VirtualFileManager.constructUrl(protocol, path + ArchiveFileSystem.ARCHIVE_SEPARATOR);
         }
@@ -925,7 +925,7 @@ public final class VirtualFileUtil {
             }
             VirtualFile[] path = getPathComponents(directory);
             Set<VirtualFile> filesSet;
-            final VirtualFile firstPart = path[0];
+            VirtualFile firstPart = path[0];
             if (map.containsKey(firstPart)) {
                 filesSet = map.get(firstPart);
             }
