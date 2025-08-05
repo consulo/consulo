@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.actions;
 
 import consulo.content.scope.SearchScope;
@@ -37,49 +36,53 @@ import jakarta.annotation.Nonnull;
  * @since 2005-01-16
  */
 public class BackwardDependenciesAction extends BaseAnalysisAction {
-  private ScopeChooserCombo myScopeChooserCombo;
+    private ScopeChooserCombo myScopeChooserCombo;
 
-  public BackwardDependenciesAction() {
-    super(
-      AnalysisScopeLocalize.actionBackwardDependencyAnalysis().get(),
-      AnalysisScopeLocalize.actionAnalysisNoun().get()
-    );
-  }
+    public BackwardDependenciesAction() {
+        super(
+            AnalysisScopeLocalize.actionBackwardDependencyAnalysis().get(),
+            AnalysisScopeLocalize.actionAnalysisNoun().get()
+        );
+    }
 
-  @Override
-  protected void analyze(@Nonnull final Project project, final AnalysisScope scope) {
-    scope.setSearchInLibraries(true); //find library usages in project
-    final SearchScope selectedScope = myScopeChooserCombo.getSelectedScope();
-    new BackwardDependenciesHandler(project, scope, selectedScope != null ? new AnalysisScope(selectedScope, project) : new AnalysisScope(project)).analyze();
-    dispose();
-  }
+    @Override
+    protected void analyze(@Nonnull final Project project, final AnalysisScope scope) {
+        scope.setSearchInLibraries(true); //find library usages in project
+        final SearchScope selectedScope = myScopeChooserCombo.getSelectedScope();
+        new BackwardDependenciesHandler(
+            project,
+            scope,
+            selectedScope != null ? new AnalysisScope(selectedScope, project) : new AnalysisScope(project)
+        ).analyze();
+        dispose();
+    }
 
-  @Override
-  protected boolean acceptNonProjectDirectories() {
-    return true;
-  }
+    @Override
+    protected boolean acceptNonProjectDirectories() {
+        return true;
+    }
 
-  @Override
-  protected void canceled() {
-    super.canceled();
-    dispose();
-  }
+    @Override
+    protected void canceled() {
+        super.canceled();
+        dispose();
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
-    DockLayout dockLayout = DockLayout.create();
-    dockLayout.left(Label.create(LocalizeValue.localizeTODO("Scope to Analyze Usages in ")));
+    @RequiredUIAccess
+    @Override
+    protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
+        DockLayout dockLayout = DockLayout.create();
+        dockLayout.left(Label.create(LocalizeValue.localizeTODO("Scope to Analyze Usages in ")));
 
-    myScopeChooserCombo = new ScopeChooserCombo();
-    myScopeChooserCombo.init(project, null);
+        myScopeChooserCombo = new ScopeChooserCombo();
+        myScopeChooserCombo.init(project, null);
 
-    dockLayout.right(TargetAWT.wrap(myScopeChooserCombo));
-    layout.add(dockLayout);
-  }
+        dockLayout.right(TargetAWT.wrap(myScopeChooserCombo));
+        layout.add(dockLayout);
+    }
 
-  private void dispose() {
-    Disposer.dispose(myScopeChooserCombo);
-    myScopeChooserCombo = null;
-  }
+    private void dispose() {
+        Disposer.dispose(myScopeChooserCombo);
+        myScopeChooserCombo = null;
+    }
 }

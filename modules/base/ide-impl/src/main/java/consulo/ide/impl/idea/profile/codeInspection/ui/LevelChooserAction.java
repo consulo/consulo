@@ -41,89 +41,89 @@ import java.util.TreeSet;
  * @author Dmitry Batkovich
  */
 public abstract class LevelChooserAction extends ComboBoxAction implements DumbAware {
+    private final SeverityRegistrarImpl mySeverityRegistrar;
+    private HighlightSeverity myChosen = null;
 
-  private final SeverityRegistrarImpl mySeverityRegistrar;
-  private HighlightSeverity myChosen = null;
-
-  public LevelChooserAction(final InspectionProfileImpl profile) {
-    this((SeverityRegistrarImpl)((SeverityProvider)profile.getProfileManager()).getOwnSeverityRegistrar());
-  }
-
-  public LevelChooserAction(final SeverityRegistrarImpl severityRegistrar) {
-    mySeverityRegistrar = severityRegistrar;
-  }
-
-  @Nonnull
-  @Override
-  public DefaultActionGroup createPopupActionGroup(JComponent component) {
-    final DefaultActionGroup group = new DefaultActionGroup();
-    for (final HighlightSeverity severity : getSeverities(mySeverityRegistrar)) {
-      final HighlightSeverityAction action = new HighlightSeverityAction(severity);
-      if (myChosen == null) {
-        setChosen(action.getSeverity());
-      }
-      group.add(action);
+    public LevelChooserAction(final InspectionProfileImpl profile) {
+        this((SeverityRegistrarImpl) ((SeverityProvider) profile.getProfileManager()).getOwnSeverityRegistrar());
     }
-    group.addSeparator();
-    group.add(new DumbAwareAction("Edit severities...") {
-      @Override
-      @RequiredUIAccess
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        final SeverityEditorDialog dlg = new SeverityEditorDialog(e.getData(Project.KEY), myChosen, mySeverityRegistrar);
-        if (dlg.showAndGet()) {
-          final HighlightInfoType type = dlg.getSelectedType();
-          if (type != null) {
-            final HighlightSeverity severity = type.getSeverity(null);
+
+    public LevelChooserAction(final SeverityRegistrarImpl severityRegistrar) {
+        mySeverityRegistrar = severityRegistrar;
+    }
+
+    @Nonnull
+    @Override
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
+        final DefaultActionGroup group = new DefaultActionGroup();
+        for (final HighlightSeverity severity : getSeverities(mySeverityRegistrar)) {
+            final HighlightSeverityAction action = new HighlightSeverityAction(severity);
+            if (myChosen == null) {
+                setChosen(action.getSeverity());
+            }
+            group.add(action);
+        }
+        group.addSeparator();
+        group.add(new DumbAwareAction("Edit severities...") {
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                final SeverityEditorDialog dlg = new SeverityEditorDialog(e.getData(Project.KEY), myChosen, mySeverityRegistrar);
+                if (dlg.showAndGet()) {
+                    final HighlightInfoType type = dlg.getSelectedType();
+                    if (type != null) {
+                        final HighlightSeverity severity = type.getSeverity(null);
+                        setChosen(severity);
+                        onChosen(severity);
+                    }
+                }
+            }
+        });
+        return group;
+    }
+
+    public static SortedSet<HighlightSeverity> getSeverities(final SeverityRegistrarImpl severityRegistrar) {
+        final SortedSet<HighlightSeverity> severities = new TreeSet<>(severityRegistrar);
+        for (final SeverityRegistrarImpl.SeverityBasedTextAttributes type : SeverityUtil.getRegisteredHighlightingInfoTypes(
+            severityRegistrar)) {
+            severities.add(type.getSeverity());
+        }
+        severities.add(HighlightSeverity.ERROR);
+        severities.add(HighlightSeverity.WARNING);
+        severities.add(HighlightSeverity.WEAK_WARNING);
+        severities.add(HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING);
+        return severities;
+    }
+
+    protected abstract void onChosen(final HighlightSeverity severity);
+
+    public void setChosen(final HighlightSeverity severity) {
+        myChosen = severity;
+        final Presentation templatePresentation = getTemplatePresentation();
+        templatePresentation.setText(SingleInspectionProfilePanel.renderSeverity(severity));
+        templatePresentation.setIcon(HighlightDisplayLevel.find(severity).getIcon());
+    }
+
+    private class HighlightSeverityAction extends DumbAwareAction {
+        private final HighlightSeverity mySeverity;
+
+        public HighlightSeverity getSeverity() {
+            return mySeverity;
+        }
+
+        private HighlightSeverityAction(final HighlightSeverity severity) {
+            mySeverity = severity;
+            final Presentation presentation = getTemplatePresentation();
+            presentation.setText(SingleInspectionProfilePanel.renderSeverity(severity));
+            presentation.setIcon(HighlightDisplayLevel.find(severity).getIcon());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            final HighlightSeverity severity = getSeverity();
             setChosen(severity);
             onChosen(severity);
-          }
         }
-      }
-    });
-    return group;
-  }
-
-  public static SortedSet<HighlightSeverity> getSeverities(final SeverityRegistrarImpl severityRegistrar) {
-    final SortedSet<HighlightSeverity> severities = new TreeSet<>(severityRegistrar);
-    for (final SeverityRegistrarImpl.SeverityBasedTextAttributes type : SeverityUtil.getRegisteredHighlightingInfoTypes(severityRegistrar)) {
-      severities.add(type.getSeverity());
     }
-    severities.add(HighlightSeverity.ERROR);
-    severities.add(HighlightSeverity.WARNING);
-    severities.add(HighlightSeverity.WEAK_WARNING);
-    severities.add(HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING);
-    return severities;
-  }
-
-  protected abstract void onChosen(final HighlightSeverity severity);
-
-  public void setChosen(final HighlightSeverity severity) {
-    myChosen = severity;
-    final Presentation templatePresentation = getTemplatePresentation();
-    templatePresentation.setText(SingleInspectionProfilePanel.renderSeverity(severity));
-    templatePresentation.setIcon(HighlightDisplayLevel.find(severity).getIcon());
-  }
-
-  private class HighlightSeverityAction extends DumbAwareAction {
-    private final HighlightSeverity mySeverity;
-
-    public HighlightSeverity getSeverity() {
-      return mySeverity;
-    }
-
-    private HighlightSeverityAction(final HighlightSeverity severity) {
-      mySeverity = severity;
-      final Presentation presentation = getTemplatePresentation();
-      presentation.setText(SingleInspectionProfilePanel.renderSeverity(severity));
-      presentation.setIcon(HighlightDisplayLevel.find(severity).getIcon());
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      final HighlightSeverity severity = getSeverity();
-      setChosen(severity);
-      onChosen(severity);
-    }
-  }
 }

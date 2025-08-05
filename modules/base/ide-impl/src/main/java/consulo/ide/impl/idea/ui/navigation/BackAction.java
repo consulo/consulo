@@ -20,18 +20,17 @@ import consulo.ui.ex.action.AnActionEvent;
 import javax.swing.*;
 
 public class BackAction extends NavigationAction {
+    public BackAction(JComponent c) {
+        super(c, "Back");
+    }
 
-  public BackAction(JComponent c) {
-    super(c, "Back");
-  }
+    @Override
+    protected void doUpdate(final AnActionEvent e) {
+        e.getPresentation().setEnabled(getHistory(e).canGoBack());
+    }
 
-  @Override
-  protected void doUpdate(final AnActionEvent e) {
-    e.getPresentation().setEnabled(getHistory(e).canGoBack());
-  }
-
-  @Override
-  public void actionPerformed(final AnActionEvent e) {
-    getHistory(e).back();
-  }
+    @Override
+    public void actionPerformed(final AnActionEvent e) {
+        getHistory(e).back();
+    }
 }

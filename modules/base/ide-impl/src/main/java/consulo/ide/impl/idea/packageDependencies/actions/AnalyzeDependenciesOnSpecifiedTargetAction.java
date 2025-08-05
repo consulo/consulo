@@ -32,31 +32,31 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
-  public static final Key<GlobalSearchScope> TARGET_SCOPE_KEY = Key.create("MODULE_DEPENDENCIES_TARGET_SCOPE");
+    public static final Key<GlobalSearchScope> TARGET_SCOPE_KEY = Key.create("MODULE_DEPENDENCIES_TARGET_SCOPE");
 
-  public AnalyzeDependenciesOnSpecifiedTargetAction() {
-    super(LocalizeValue.localizeTODO("Analyze Dependencies on Specified Target"));
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Module module = e.getRequiredData(LangDataKeys.MODULE_CONTEXT);
-    GlobalSearchScope targetScope = e.getRequiredData(TARGET_SCOPE_KEY);
-    new AnalyzeDependenciesOnSpecifiedTargetHandler(module.getProject(), new AnalysisScope(module), targetScope).analyze();
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
-    final GlobalSearchScope scope = e.getData(TARGET_SCOPE_KEY);
-    final Presentation presentation = e.getPresentation();
-    if (module != null && scope != null) {
-      presentation.setVisible(true);
-      presentation.setText("Analyze Dependencies of Module '" + module.getName() + "' on " + scope.getDisplayName());
+    public AnalyzeDependenciesOnSpecifiedTargetAction() {
+        super(LocalizeValue.localizeTODO("Analyze Dependencies on Specified Target"));
     }
-    else {
-      presentation.setVisible(false);
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Module module = e.getRequiredData(LangDataKeys.MODULE_CONTEXT);
+        GlobalSearchScope targetScope = e.getRequiredData(TARGET_SCOPE_KEY);
+        new AnalyzeDependenciesOnSpecifiedTargetHandler(module.getProject(), new AnalysisScope(module), targetScope).analyze();
     }
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
+        final GlobalSearchScope scope = e.getData(TARGET_SCOPE_KEY);
+        final Presentation presentation = e.getPresentation();
+        if (module != null && scope != null) {
+            presentation.setVisible(true);
+            presentation.setText("Analyze Dependencies of Module '" + module.getName() + "' on " + scope.getDisplayName());
+        }
+        else {
+            presentation.setVisible(false);
+        }
+    }
 }

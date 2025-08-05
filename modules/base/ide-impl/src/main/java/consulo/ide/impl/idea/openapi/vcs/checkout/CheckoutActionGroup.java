@@ -24,28 +24,31 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 public class CheckoutActionGroup extends ActionGroup implements DumbAware {
+    private AnAction[] myChildren;
 
-  private AnAction[] myChildren;
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    if (!CheckoutProvider.EXTENSION_POINT_NAME.hasAnyExtensions()) {
-      e.getPresentation().setVisible(false);
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        if (!CheckoutProvider.EXTENSION_POINT_NAME.hasAnyExtensions()) {
+            e.getPresentation().setVisible(false);
+        }
     }
-  }
 
-  @Override
-  @Nonnull
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    if (myChildren == null) {
-      List<CheckoutProvider> extensionList = CheckoutProvider.EXTENSION_POINT_NAME.getExtensionList();
-      myChildren = extensionList.stream().sorted(new CheckoutProvider.CheckoutProviderComparator()).map(CheckoutAction::new).toArray(AnAction[]::new);
+    @Nonnull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        if (myChildren == null) {
+            List<CheckoutProvider> extensionList = CheckoutProvider.EXTENSION_POINT_NAME.getExtensionList();
+            myChildren = extensionList.stream()
+                .sorted(new CheckoutProvider.CheckoutProviderComparator())
+                .map(CheckoutAction::new)
+                .toArray(AnAction[]::new);
+        }
+        return myChildren;
     }
-    return myChildren;
-  }
 }

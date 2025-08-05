@@ -31,6 +31,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,93 +42,97 @@ import java.util.Set;
  * @author Dmitry Batkovich
  */
 public abstract class ScopesChooser extends ComboBoxAction implements DumbAware {
-  public static final String TITLE = "Select a scope to change its settings";
+    public static final String TITLE = "Select a scope to change its settings";
 
-  private final List<Descriptor> myDefaultDescriptors;
-  private final InspectionProfileImpl myInspectionProfile;
-  private final Project myProject;
-  private final Set<String> myExcludedScopeNames;
+    private final List<Descriptor> myDefaultDescriptors;
+    private final InspectionProfileImpl myInspectionProfile;
+    private final Project myProject;
+    private final Set<String> myExcludedScopeNames;
 
-  public ScopesChooser(final List<Descriptor> defaultDescriptors,
-                       final InspectionProfileImpl inspectionProfile,
-                       final Project project,
-                       final String[] excludedScopeNames) {
-    myDefaultDescriptors = defaultDescriptors;
-    myInspectionProfile = inspectionProfile;
-    myProject = project;
-    myExcludedScopeNames = excludedScopeNames == null ? Collections.<String>emptySet() : ContainerUtil.newHashSet(excludedScopeNames);
-    setPopupTitle(TITLE);
-    getTemplatePresentation().setText("In All Scopes");
-  }
-
-  @Nonnull
-  @Override
-  public DefaultActionGroup createPopupActionGroup(JComponent component) {
-    final DefaultActionGroup group = new DefaultActionGroup();
-
-    final List<NamedScope> predefinedScopes = new ArrayList<>();
-    final List<NamedScope> customScopes = new ArrayList<>();
-    for (final NamedScopesHolder holder : NamedScopesHolder.getAllNamedScopeHolders(myProject)) {
-      Collections.addAll(customScopes, holder.getEditableScopes());
-      predefinedScopes.addAll(holder.getPredefinedScopes());
-    }
-    predefinedScopes.remove(DefaultScopesProvider.getAllScope());
-    for (NamedScope predefinedScope : predefinedScopes) {
-      if (predefinedScope instanceof NonProjectFilesScope) {
-        predefinedScopes.remove(predefinedScope);
-        break;
-      }
+    public ScopesChooser(
+        final List<Descriptor> defaultDescriptors,
+        final InspectionProfileImpl inspectionProfile,
+        final Project project,
+        final String[] excludedScopeNames
+    ) {
+        myDefaultDescriptors = defaultDescriptors;
+        myInspectionProfile = inspectionProfile;
+        myProject = project;
+        myExcludedScopeNames = excludedScopeNames == null ? Collections.<String>emptySet() : ContainerUtil.newHashSet(excludedScopeNames);
+        setPopupTitle(TITLE);
+        getTemplatePresentation().setText("In All Scopes");
     }
 
-    fillActionGroup(group, predefinedScopes, myDefaultDescriptors, myInspectionProfile, myExcludedScopeNames);
-    group.addSeparator();
-    fillActionGroup(group, customScopes, myDefaultDescriptors, myInspectionProfile, myExcludedScopeNames);
+    @Nonnull
+    @Override
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
+        final DefaultActionGroup group = new DefaultActionGroup();
 
-    group.addSeparator();
-    group.add(new DumbAwareAction("Edit Scopes Order...") {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        final ScopesOrderDialog dlg = new ScopesOrderDialog(myInspectionProfile, myProject);
-        if (dlg.showAndGet()) {
-          onScopesOrderChanged();
+        final List<NamedScope> predefinedScopes = new ArrayList<>();
+        final List<NamedScope> customScopes = new ArrayList<>();
+        for (final NamedScopesHolder holder : NamedScopesHolder.getAllNamedScopeHolders(myProject)) {
+            Collections.addAll(customScopes, holder.getEditableScopes());
+            predefinedScopes.addAll(holder.getPredefinedScopes());
         }
-      }
-    });
-
-    return group;
-  }
-
-  protected abstract void onScopesOrderChanged();
-
-  protected abstract void onScopeAdded();
-
-  private void fillActionGroup(final DefaultActionGroup group,
-                               final List<NamedScope> scopes,
-                               final List<Descriptor> defaultDescriptors,
-                               final InspectionProfileImpl inspectionProfile,
-                               final Set<String> excludedScopeNames) {
-    for (final NamedScope scope : scopes) {
-      final String scopeName = scope.getName();
-      if (excludedScopeNames.contains(scopeName)) {
-        continue;
-      }
-      group.add(new DumbAwareAction(scopeName) {
-        @Override
-        @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-          for (final Descriptor defaultDescriptor : defaultDescriptors) {
-            inspectionProfile.addScope(
-                defaultDescriptor.getToolWrapper().createCopy(),
-                scope,
-                defaultDescriptor.getLevel(),
-                true,
-                e.getData(Project.KEY)
-            );
-          }
-          onScopeAdded();
+        predefinedScopes.remove(DefaultScopesProvider.getAllScope());
+        for (NamedScope predefinedScope : predefinedScopes) {
+            if (predefinedScope instanceof NonProjectFilesScope) {
+                predefinedScopes.remove(predefinedScope);
+                break;
+            }
         }
-      });
+
+        fillActionGroup(group, predefinedScopes, myDefaultDescriptors, myInspectionProfile, myExcludedScopeNames);
+        group.addSeparator();
+        fillActionGroup(group, customScopes, myDefaultDescriptors, myInspectionProfile, myExcludedScopeNames);
+
+        group.addSeparator();
+        group.add(new DumbAwareAction("Edit Scopes Order...") {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                final ScopesOrderDialog dlg = new ScopesOrderDialog(myInspectionProfile, myProject);
+                if (dlg.showAndGet()) {
+                    onScopesOrderChanged();
+                }
+            }
+        });
+
+        return group;
     }
-  }
+
+    protected abstract void onScopesOrderChanged();
+
+    protected abstract void onScopeAdded();
+
+    private void fillActionGroup(
+        final DefaultActionGroup group,
+        final List<NamedScope> scopes,
+        final List<Descriptor> defaultDescriptors,
+        final InspectionProfileImpl inspectionProfile,
+        final Set<String> excludedScopeNames
+    ) {
+        for (final NamedScope scope : scopes) {
+            final String scopeName = scope.getName();
+            if (excludedScopeNames.contains(scopeName)) {
+                continue;
+            }
+            group.add(new DumbAwareAction(scopeName) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent e) {
+                    for (final Descriptor defaultDescriptor : defaultDescriptors) {
+                        inspectionProfile.addScope(
+                            defaultDescriptor.getToolWrapper().createCopy(),
+                            scope,
+                            defaultDescriptor.getLevel(),
+                            true,
+                            e.getData(Project.KEY)
+                        );
+                    }
+                    onScopeAdded();
+                }
+            });
+        }
+    }
 }

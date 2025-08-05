@@ -59,466 +59,496 @@ import java.util.*;
 import java.util.List;
 
 public class DualView extends JPanel {
-  private final CardLayout myCardLayout;
-  private TreeTableView myTreeView;
+    private final CardLayout myCardLayout;
+    private TreeTableView myTreeView;
 
-  private JTable myCurrentView = null;
+    private JTable myCurrentView = null;
 
-  private TableView myFlatView;
-  @NonNls private static final String TREE = "TREE";
-  @NonNls private static final String FLAT = "FLAT";
-  private TreeCellRenderer myTreeCellRenderer;
-  private boolean myRootVisible;
-  private boolean myTableRefreshingIsLocked = false;
-  private CellWrapper myCellWrapper;
+    private TableView myFlatView;
+    @NonNls
+    private static final String TREE = "TREE";
+    @NonNls
+    private static final String FLAT = "FLAT";
+    private TreeCellRenderer myTreeCellRenderer;
+    private boolean myRootVisible;
+    private boolean myTableRefreshingIsLocked = false;
+    private CellWrapper myCellWrapper;
 
-  private final Storage.PropertiesComponentStorage myFlatStorage;
-  private final Storage.PropertiesComponentStorage myTreeStorage;
-  private final PropertyChangeListener myPropertyChangeListener;
+    private final Storage.PropertiesComponentStorage myFlatStorage;
+    private final Storage.PropertiesComponentStorage myTreeStorage;
+    private final PropertyChangeListener myPropertyChangeListener;
 
-  private boolean myZipByHeight;
+    private boolean myZipByHeight;
 
-  public DualView(Object root, DualViewColumnInfo[] columns, @NonNls String columnServiceKey, Project project) {
-    super(new CardLayout());
+    public DualView(Object root, DualViewColumnInfo[] columns, @NonNls String columnServiceKey, Project project) {
+        super(new CardLayout());
 
-    myTreeStorage = new Storage.PropertiesComponentStorage(columnServiceKey + "_tree",
-                                                           PropertiesComponent.getInstance(project));
-    myFlatStorage = new Storage.PropertiesComponentStorage(columnServiceKey + "_flat",
-                                                           PropertiesComponent.getInstance(project));
+        myTreeStorage = new Storage.PropertiesComponentStorage(
+            columnServiceKey + "_tree",
+            PropertiesComponent.getInstance(project)
+        );
+        myFlatStorage = new Storage.PropertiesComponentStorage(
+            columnServiceKey + "_flat",
+            PropertiesComponent.getInstance(project)
+        );
 
-    myCardLayout = (CardLayout)getLayout();
+        myCardLayout = (CardLayout) getLayout();
 
-    add(createTreeComponent(columns, (TreeNode)root), TREE);
+        add(createTreeComponent(columns, (TreeNode) root), TREE);
 
-    add(createFlatComponent(columns), FLAT);
+        add(createFlatComponent(columns), FLAT);
 
-    (myTreeView.getTreeViewModel()).addTreeModelListener(new TreeModelListener() {
-      public void treeNodesInserted(TreeModelEvent e) {
+        (myTreeView.getTreeViewModel()).addTreeModelListener(new TreeModelListener() {
+            public void treeNodesInserted(TreeModelEvent e) {
+                refreshFlatModel();
+            }
+
+            public void treeNodesRemoved(TreeModelEvent e) {
+                refreshFlatModel();
+            }
+
+            public void treeStructureChanged(TreeModelEvent e) {
+                refreshFlatModel();
+            }
+
+            public void treeNodesChanged(TreeModelEvent e) {
+                refreshFlatModel();
+            }
+        });
+
+        setRootVisible(true);
+
+        switchToTheFlatMode();
+
+        restoreState();
+
+        myPropertyChangeListener = new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                saveState();
+            }
+        };
+
+        addWidthListenersTo(myTreeView);
+        addWidthListenersTo(myFlatView);
+    }
+
+    private void addWidthListenersTo(JTable treeView) {
+        TableColumnModel columnModel = treeView.getColumnModel();
+        int columnCount = columnModel.getColumnCount();
+        for (int i = 0; i < columnCount; i++) {
+            columnModel.getColumn(i).addPropertyChangeListener(myPropertyChangeListener);
+        }
+    }
+
+    public void restoreState() {
+        BaseTableView.restore(myFlatStorage, myFlatView);
+        BaseTableView.restore(myTreeStorage, myTreeView);
+    }
+
+    public void lockTableRefreshing() {
+        myTableRefreshingIsLocked = true;
+    }
+
+    public void unlockTableRefreshingAndRefresh() {
+        myTableRefreshingIsLocked = false;
         refreshFlatModel();
-      }
+    }
 
-      public void treeNodesRemoved(TreeModelEvent e) {
+    private void refreshFlatModel() {
+        if (myTableRefreshingIsLocked) {
+            return;
+        }
+        ((ListTableModel) myFlatView.getModel()).setItems(myTreeView.getFlattenItems());
+    }
+
+    private ColumnInfo[] createTreeColumns(DualViewColumnInfo[] columns) {
+        Collection<ColumnInfo> result = new ArrayList<ColumnInfo>();
+
+        final ColumnInfo firstColumn = columns[0];
+        ColumnInfo firstTreeColumn = new ColumnInfo(firstColumn.getName()) {
+            public Object valueOf(Object object) {
+                return firstColumn.valueOf(object);
+            }
+
+            public Class getColumnClass() {
+                return TreeTableModel.class;
+            }
+
+            public boolean isCellEditable(Object o) {
+                return true;
+            }
+        };
+        result.add(firstTreeColumn);
+        for (int i = 1; i < columns.length; i++) {
+            DualViewColumnInfo column = columns[i];
+            if (column.shouldBeShownIsTheTree()) {
+                result.add(column);
+            }
+        }
+
+        return result.toArray(new ColumnInfo[result.size()]);
+    }
+
+    public void switchToTheFlatMode() {
+        if (myFlatView == myCurrentView) {
+            return;
+        }
+        copySelection(myTreeView, myFlatView);
+        changeViewTo(myFlatView);
+        myCardLayout.show(this, FLAT);
+    }
+
+    private void changeViewTo(JTable view) {
+        myCurrentView = view;
+        if (myCurrentView != null) {
+            myCurrentView.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+            if (myCurrentView instanceof JBTable) {
+                ((JBTable) myCurrentView).setStriped(true);
+            }
+            final int row = myCurrentView.getSelectedRow();
+            myCurrentView.scrollRectToVisible(myCurrentView.getCellRect(row, 0, true));
+        }
+    }
+
+    private static void copySelection(SelectionProvider from, SelectionProvider to) {
+        to.clearSelection();
+
+        Collection selection = from.getSelection();
+
+        for (Iterator each = selection.iterator(); each.hasNext(); ) {
+            to.addSelection(each.next());
+        }
+    }
+
+    public void switchToTheTreeMode() {
+        if (myTreeView == myCurrentView) {
+            return;
+        }
+        copySelection(myFlatView, myTreeView);
+        changeViewTo(myTreeView);
+        myCardLayout.show(this, TREE);
+    }
+
+    private Component createTreeComponent(DualViewColumnInfo[] columns, TreeNode root) {
+        myTreeView = new TreeTableView(new ListTreeTableModelOnColumns(root, createTreeColumns(columns))) {
+            public TableCellRenderer getCellRenderer(int row, int column) {
+                return createWrappedRenderer(super.getCellRenderer(row, column));
+            }
+        };
+        myTreeView.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        JPanel result = new JPanel(new BorderLayout());
+        result.add(ScrollPaneFactory.createScrollPane(myTreeView), BorderLayout.CENTER);
+        return result;
+    }
+
+    private Component createFlatComponent(DualViewColumnInfo[] columns) {
+
+        ArrayList<ColumnInfo> shownColumns = new ArrayList<ColumnInfo>();
+
+        for (int i = 0; i < columns.length; i++) {
+            DualViewColumnInfo column = columns[i];
+            if (column.shouldBeShownIsTheTable()) {
+                shownColumns.add(column);
+            }
+        }
+
+        ListTableModel flatModel = new ListTableModel(shownColumns.toArray(new ColumnInfo[shownColumns.size()]));
+        myFlatView = new TableView(flatModel) {
+            public TableCellRenderer getCellRenderer(int row, int column) {
+                return createWrappedRenderer(super.getCellRenderer(row, column));
+            }
+
+            @Nonnull
+            @Override
+            public Component prepareRenderer(@Nonnull TableCellRenderer renderer, int row, int column) {
+                final Component c = super.prepareRenderer(renderer, row, column);
+                if (c instanceof JComponent && !myFlatView.getCellSelectionEnabled()) {
+                    ((JComponent) c).setBorder(null);
+                }
+                return c;
+            }
+        };
+        myFlatView.setCellSelectionEnabled(false);
+        myFlatView.setColumnSelectionAllowed(false);
+        myFlatView.setRowSelectionAllowed(true);
+
         refreshFlatModel();
-      }
 
-      public void treeStructureChanged(TreeModelEvent e) {
+        JPanel result = new JPanel(new BorderLayout());
+        result.add(ScrollPaneFactory.createScrollPane(myFlatView), BorderLayout.CENTER);
+        return result;
+    }
+
+    private TableCellRenderer createWrappedRenderer(final TableCellRenderer renderer) {
+        if (myCellWrapper == null) {
+            return renderer;
+        }
+        else {
+            return new TableCellRendererWrapper(renderer);
+        }
+    }
+
+    public void expandAll() {
+        expandPath(myTreeView.getTree(), new TreePath(myTreeView.getTree().getModel().getRoot()));
+    }
+
+    public void collapseAll() {
+        collapsePath(myTreeView.getTree(), new TreePath(myTreeView.getTree().getModel().getRoot()));
+    }
+
+    private void expandPath(JTree tree, TreePath path) {
+        tree.expandPath(path);
+
+        final TreeNode node = ((TreeNode) path.getLastPathComponent());
+        final Enumeration children = node.children();
+        while (children.hasMoreElements()) {
+            TreeNode child = (TreeNode) children.nextElement();
+            expandPath(tree, path.pathByAddingChild(child));
+        }
+    }
+
+    private void collapsePath(JTree tree, TreePath path) {
+
+        final TreeNode node = ((TreeNode) path.getLastPathComponent());
+        final Enumeration children = node.children();
+        while (children.hasMoreElements()) {
+            TreeNode child = (TreeNode) children.nextElement();
+            collapsePath(tree, path.pathByAddingChild(child));
+        }
+
+        if (!((path.getLastPathComponent() == tree.getModel().getRoot()) && !myRootVisible)) {
+            tree.collapsePath(path);
+        }
+    }
+
+    public List getSelection() {
+        ArrayList result = new ArrayList();
+        SelectionProvider visibleTable = (SelectionProvider) getVisibleTable();
+        Collection selection = visibleTable.getSelection();
+        for (Iterator each = selection.iterator(); each.hasNext(); ) {
+            result.add(each.next());
+        }
+        return result;
+    }
+
+    private JTable getVisibleTable() {
+        return myCurrentView;
+    }
+
+    public void setShowGrid(boolean aBoolean) {
+        myTreeView.setShowGrid(aBoolean);
+    }
+
+    public void setSelectionInterval(int first, int last) {
+        final int treeRowCount = myTreeView.getModel().getRowCount();
+        if (first < 0 || last < 0) {
+            return;
+        }
+
+        if (first < treeRowCount && last < treeRowCount) {
+            myTreeView.getSelectionModel().addSelectionInterval(first, last);
+        }
+
+        final int flatRowCount = myFlatView.getRowCount();
+        if (first < flatRowCount && last < flatRowCount) {
+            myFlatView.getSelectionModel().addSelectionInterval(first, last);
+        }
+    }
+
+    public void addListSelectionListener(ListSelectionListener listSelectionListener) {
+        myTreeView.getSelectionModel().addListSelectionListener(listSelectionListener);
+        myFlatView.getSelectionModel().addListSelectionListener(listSelectionListener);
+    }
+
+    public void changeColumnSet(DualViewColumnInfo[] columns) {
+        myTreeView.setTableModel(new ListTreeTableModelOnColumns(
+            (TreeNode) myTreeView.getTreeViewModel().getRoot(),
+            createTreeColumns(columns)
+        ));
+        myFlatView.setModelAndUpdateColumns(new ListTableModel(columns));
+        if (myTreeCellRenderer != null) {
+            myTreeView.setTreeCellRenderer(myTreeCellRenderer);
+        }
+        setRootVisible(myRootVisible);
+
         refreshFlatModel();
-      }
 
-      public void treeNodesChanged(TreeModelEvent e) {
-        refreshFlatModel();
-      }
-    });
+        addWidthListenersTo(myTreeView);
+        addWidthListenersTo(myFlatView);
+    }
 
-    setRootVisible(true);
+    public Tree getTree() {
+        return myTreeView.getTree();
+    }
 
-    switchToTheFlatMode();
+    public TreeTableView getTreeView() {
+        return myTreeView;
+    }
 
-    restoreState();
+    public TableView getFlatView() {
+        return myFlatView;
+    }
 
-    myPropertyChangeListener = new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent evt) {
+    public void setViewBorder(Border border) {
+        if (myTreeView != null) {
+            ((JComponent) myTreeView.getParent().getParent()).setBorder(border);
+        }
+        if (myFlatView != null) {
+            ((JComponent) myFlatView.getParent().getParent()).setBorder(border);
+        }
+    }
+
+    public void setRootVisible(boolean aBoolean) {
+        myRootVisible = aBoolean;
+        myTreeView.setRootVisible(myRootVisible);
+    }
+
+    public void setTreeCellRenderer(TreeCellRenderer cellRenderer) {
+        myTreeCellRenderer = cellRenderer;
+        myTreeView.setTreeCellRenderer(cellRenderer);
+    }
+
+    public AnAction getExpandAllAction() {
+        return new AnAction(UILocalize.treeViewExpandAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall()) {
+            @Override
+            public void update(@Nonnull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                presentation.setVisible(true);
+                presentation.setEnabled(myCurrentView == myTreeView);
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                expandAll();
+            }
+        };
+    }
+
+    public AnAction getCollapseAllAction() {
+        return new AnAction(UILocalize.treeViewCollapseAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall()) {
+            @Override
+            public void update(@Nonnull AnActionEvent e) {
+                Presentation presentation = e.getPresentation();
+                presentation.setVisible(true);
+                presentation.setEnabled(myCurrentView == myTreeView);
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                collapseAll();
+            }
+        };
+    }
+
+    public void setCellWrapper(CellWrapper wrapper) {
+        myCellWrapper = wrapper;
+    }
+
+    public void installEditSourceOnDoubleClickHandler() {
+        EditSourceOnDoubleClickHandler.install(myTreeView);
+        EditSourceOnDoubleClickHandler.install(myFlatView);
+    }
+
+    public void installDoubleClickHandler(AnAction action) {
+        action.registerCustomShortcutSet(CommonShortcuts.DOUBLE_CLICK_1, myFlatView);
+        action.registerCustomShortcutSet(CommonShortcuts.DOUBLE_CLICK_1, myTreeView);
+    }
+
+    public void dispose() {
         saveState();
-      }
-    };
-
-    addWidthListenersTo(myTreeView);
-    addWidthListenersTo(myFlatView);
-  }
-
-  private void addWidthListenersTo(JTable treeView) {
-    TableColumnModel columnModel = treeView.getColumnModel();
-    int columnCount = columnModel.getColumnCount();
-    for (int i = 0; i < columnCount; i++) {
-      columnModel.getColumn(i).addPropertyChangeListener(myPropertyChangeListener);
-    }
-  }
-
-  public void restoreState() {
-    BaseTableView.restore(myFlatStorage, myFlatView);
-    BaseTableView.restore(myTreeStorage, myTreeView);
-  }
-
-  public void lockTableRefreshing() {
-    myTableRefreshingIsLocked = true;
-  }
-
-  public void unlockTableRefreshingAndRefresh() {
-    myTableRefreshingIsLocked = false;
-    refreshFlatModel();
-  }
-
-  private void refreshFlatModel() {
-    if (myTableRefreshingIsLocked) return;
-    ((ListTableModel)myFlatView.getModel()).setItems(myTreeView.getFlattenItems());
-  }
-
-  private ColumnInfo[] createTreeColumns(DualViewColumnInfo[] columns) {
-    Collection<ColumnInfo> result = new ArrayList<ColumnInfo>();
-
-    final ColumnInfo firstColumn = columns[0];
-    ColumnInfo firstTreeColumn = new ColumnInfo(firstColumn.getName()) {
-      public Object valueOf(Object object) {
-        return firstColumn.valueOf(object);
-      }
-
-      public Class getColumnClass() {
-        return TreeTableModel.class;
-      }
-
-      public boolean isCellEditable(Object o) {
-        return true;
-      }
-    };
-    result.add(firstTreeColumn);
-    for (int i = 1; i < columns.length; i++) {
-      DualViewColumnInfo column = columns[i];
-      if (column.shouldBeShownIsTheTree()) result.add(column);
     }
 
-    return result.toArray(new ColumnInfo[result.size()]);
-  }
-
-  public void switchToTheFlatMode() {
-    if (myFlatView == myCurrentView) return;
-    copySelection(myTreeView, myFlatView);
-    changeViewTo(myFlatView);
-    myCardLayout.show(this, FLAT);
-  }
-
-  private void changeViewTo(JTable view) {
-    myCurrentView = view;
-    if (myCurrentView != null) {
-      myCurrentView.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-      if (myCurrentView instanceof JBTable) {
-        ((JBTable)myCurrentView).setStriped(true);
-      }
-      final int row = myCurrentView.getSelectedRow();
-      myCurrentView.scrollRectToVisible(myCurrentView.getCellRect(row, 0, true));
-    }
-  }
-
-  private static void copySelection(SelectionProvider from, SelectionProvider to) {
-    to.clearSelection();
-
-    Collection selection = from.getSelection();
-
-    for (Iterator each = selection.iterator(); each.hasNext();) {
-      to.addSelection(each.next());
-    }
-  }
-
-  public void switchToTheTreeMode() {
-    if (myTreeView == myCurrentView) return;
-    copySelection(myFlatView, myTreeView);
-    changeViewTo(myTreeView);
-    myCardLayout.show(this, TREE);
-  }
-
-  private Component createTreeComponent(DualViewColumnInfo[] columns, TreeNode root) {
-    myTreeView = new TreeTableView(new ListTreeTableModelOnColumns(root, createTreeColumns(columns))) {
-      public TableCellRenderer getCellRenderer(int row, int column) {
-        return createWrappedRenderer(super.getCellRenderer(row, column));
-      }
-    };
-    myTreeView.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-    JPanel result = new JPanel(new BorderLayout());
-    result.add(ScrollPaneFactory.createScrollPane(myTreeView), BorderLayout.CENTER);
-    return result;
-  }
-
-  private Component createFlatComponent(DualViewColumnInfo[] columns) {
-
-    ArrayList<ColumnInfo> shownColumns = new ArrayList<ColumnInfo>();
-
-    for (int i = 0; i < columns.length; i++) {
-      DualViewColumnInfo column = columns[i];
-      if (column.shouldBeShownIsTheTable()) shownColumns.add(column);
+    public void saveState() {
+        BaseTableView.store(myFlatStorage, myFlatView);
+        BaseTableView.store(myTreeStorage, myTreeView);
     }
 
-    ListTableModel flatModel = new ListTableModel(shownColumns.toArray(new ColumnInfo[shownColumns.size()]));
-    myFlatView = new TableView(flatModel) {
-      public TableCellRenderer getCellRenderer(int row, int column) {
-        return createWrappedRenderer(super.getCellRenderer(row, column));
-      }
+    public void setRoot(final TreeNode node, final List<Object> selection) {
+        final List<Object> currentlySelected = myFlatView.getSelectedObjects();
+        final List<Object> targetSelection = (currentlySelected != null && (!currentlySelected.isEmpty())) ? currentlySelected : selection;
+        //final Object obj = myFlatView.getSelectedObject() != null ? myFlatView.getSelectedObject() : selection;
 
-      @Nonnull
-      @Override
-      public Component prepareRenderer(@Nonnull TableCellRenderer renderer, int row, int column) {
-        final Component c = super.prepareRenderer(renderer, row, column);
-        if (c instanceof JComponent && !myFlatView.getCellSelectionEnabled()) {
-          ((JComponent)c).setBorder(null);
+        myTreeView.getTreeViewModel().setRoot(node);
+
+        if ((targetSelection != null) && (!targetSelection.isEmpty())) {
+            final List items = myFlatView.getItems();
+            for (Object selElement : targetSelection) {
+                if (items.contains(selElement)) {
+                    final int idx = items.indexOf(selElement);
+                    setSelectionInterval(idx, idx);
+                }
+            }
         }
-        return c;
-      }
-    };
-    myFlatView.setCellSelectionEnabled(false);
-    myFlatView.setColumnSelectionAllowed(false);
-    myFlatView.setRowSelectionAllowed(true);
-
-    refreshFlatModel();
-
-    JPanel result = new JPanel(new BorderLayout());
-    result.add(ScrollPaneFactory.createScrollPane(myFlatView), BorderLayout.CENTER);
-    return result;
-  }
-
-  private TableCellRenderer createWrappedRenderer(final TableCellRenderer renderer) {
-    if (myCellWrapper == null) {
-      return renderer;
-    }
-    else {
-      return new TableCellRendererWrapper(renderer);
-    }
-  }
-
-  public void expandAll() {
-    expandPath(myTreeView.getTree(), new TreePath(myTreeView.getTree().getModel().getRoot()));
-  }
-
-  public void collapseAll() {
-    collapsePath(myTreeView.getTree(), new TreePath(myTreeView.getTree().getModel().getRoot()));
-  }
-
-  private void expandPath(JTree tree, TreePath path) {
-    tree.expandPath(path);
-
-    final TreeNode node = ((TreeNode)path.getLastPathComponent());
-    final Enumeration children = node.children();
-    while (children.hasMoreElements()) {
-      TreeNode child = (TreeNode)children.nextElement();
-      expandPath(tree, path.pathByAddingChild(child));
-    }
-  }
-
-  private void collapsePath(JTree tree, TreePath path) {
-
-    final TreeNode node = ((TreeNode)path.getLastPathComponent());
-    final Enumeration children = node.children();
-    while (children.hasMoreElements()) {
-      TreeNode child = (TreeNode)children.nextElement();
-      collapsePath(tree, path.pathByAddingChild(child));
     }
 
-    if (!((path.getLastPathComponent() == tree.getModel().getRoot()) && !myRootVisible)) {
-      tree.collapsePath(path);
-    }
-  }
-
-  public List getSelection() {
-    ArrayList result = new ArrayList();
-    SelectionProvider visibleTable = (SelectionProvider)getVisibleTable();
-    Collection selection = visibleTable.getSelection();
-    for (Iterator each = selection.iterator(); each.hasNext();) {
-      result.add(each.next());
-    }
-    return result;
-  }
-
-  private JTable getVisibleTable() {
-    return myCurrentView;
-  }
-
-  public void setShowGrid(boolean aBoolean) {
-    myTreeView.setShowGrid(aBoolean);
-  }
-
-  public void setSelectionInterval(int first, int last) {
-    final int treeRowCount = myTreeView.getModel().getRowCount();
-    if (first < 0 || last < 0) return;
-
-    if (first < treeRowCount && last < treeRowCount) {
-      myTreeView.getSelectionModel().addSelectionInterval(first, last);
+    public void rebuild() {
+        ((AbstractTableModel) myFlatView.getModel()).fireTableDataChanged();
+        ((AbstractTableModel) myTreeView.getModel()).fireTableDataChanged();
     }
 
-    final int flatRowCount = myFlatView.getRowCount();
-    if (first < flatRowCount && last < flatRowCount) {
-      myFlatView.getSelectionModel().addSelectionInterval(first, last);
-    }
-  }
+    public class TableCellRendererWrapper implements TableCellRenderer {
+        private final TableCellRenderer myRenderer;
 
-  public void addListSelectionListener(ListSelectionListener listSelectionListener) {
-    myTreeView.getSelectionModel().addListSelectionListener(listSelectionListener);
-    myFlatView.getSelectionModel().addListSelectionListener(listSelectionListener);
-  }
-
-  public void changeColumnSet(DualViewColumnInfo[] columns) {
-    myTreeView.setTableModel(new ListTreeTableModelOnColumns((TreeNode)myTreeView.getTreeViewModel().getRoot(),
-                                                             createTreeColumns(columns)));
-    myFlatView.setModelAndUpdateColumns(new ListTableModel(columns));
-    if (myTreeCellRenderer != null) myTreeView.setTreeCellRenderer(myTreeCellRenderer);
-    setRootVisible(myRootVisible);
-
-    refreshFlatModel();
-
-    addWidthListenersTo(myTreeView);
-    addWidthListenersTo(myFlatView);
-  }
-
-  public Tree getTree() {
-    return myTreeView.getTree();
-  }
-
-  public TreeTableView getTreeView() {
-    return myTreeView;
-  }
-
-  public TableView getFlatView() {
-    return myFlatView;
-  }
-
-  public void setViewBorder(Border border) {
-    if (myTreeView != null) ((JComponent)myTreeView.getParent().getParent()).setBorder(border);
-    if (myFlatView != null) ((JComponent)myFlatView.getParent().getParent()).setBorder(border);
-  }
-
-  public void setRootVisible(boolean aBoolean) {
-    myRootVisible = aBoolean;
-    myTreeView.setRootVisible(myRootVisible);
-  }
-
-  public void setTreeCellRenderer(TreeCellRenderer cellRenderer) {
-    myTreeCellRenderer = cellRenderer;
-    myTreeView.setTreeCellRenderer(cellRenderer);
-  }
-
-  public AnAction getExpandAllAction() {
-    return new AnAction(UILocalize.treeViewExpandAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall()) {
-      @Override
-      public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        presentation.setVisible(true);
-        presentation.setEnabled(myCurrentView == myTreeView);
-      }
-
-      @Override
-      @RequiredUIAccess
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        expandAll();
-      }
-    };
-  }
-
-  public AnAction getCollapseAllAction() {
-    return new AnAction(UILocalize.treeViewCollapseAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall()) {
-      @Override
-      public void update(@Nonnull AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        presentation.setVisible(true);
-        presentation.setEnabled(myCurrentView == myTreeView);
-      }
-
-      @Override
-      @RequiredUIAccess
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        collapseAll();
-      }
-    };
-  }
-
-  public void setCellWrapper(CellWrapper wrapper) {
-    myCellWrapper = wrapper;
-  }
-
-  public void installEditSourceOnDoubleClickHandler() {
-    EditSourceOnDoubleClickHandler.install(myTreeView);
-    EditSourceOnDoubleClickHandler.install(myFlatView);
-  }
-
-  public void installDoubleClickHandler(AnAction action) {
-    action.registerCustomShortcutSet(CommonShortcuts.DOUBLE_CLICK_1, myFlatView);
-    action.registerCustomShortcutSet(CommonShortcuts.DOUBLE_CLICK_1, myTreeView);
-  }
-
-  public void dispose() {
-    saveState();
-  }
-
-  public void saveState() {
-    BaseTableView.store(myFlatStorage, myFlatView);
-    BaseTableView.store(myTreeStorage, myTreeView);
-  }
-
-  public void setRoot(final TreeNode node, final List<Object> selection) {
-    final List<Object> currentlySelected = myFlatView.getSelectedObjects();
-    final List<Object> targetSelection = (currentlySelected != null && (! currentlySelected.isEmpty())) ? currentlySelected : selection;
-    //final Object obj = myFlatView.getSelectedObject() != null ? myFlatView.getSelectedObject() : selection;
-
-    myTreeView.getTreeViewModel().setRoot(node);
-
-    if ((targetSelection != null) && (! targetSelection.isEmpty())) {
-      final List items = myFlatView.getItems();
-      for (Object selElement : targetSelection) {
-        if (items.contains(selElement)) {
-          final int idx = items.indexOf(selElement);
-          setSelectionInterval(idx, idx);
+        public TableCellRendererWrapper(final TableCellRenderer renderer) {
+            myRenderer = renderer;
         }
-      }
-    }
-  }
 
-  public void rebuild() {
-    ((AbstractTableModel)myFlatView.getModel()).fireTableDataChanged();
-    ((AbstractTableModel)myTreeView.getModel()).fireTableDataChanged();
-  }
-
-  public class TableCellRendererWrapper implements TableCellRenderer {
-    private final TableCellRenderer myRenderer;
-
-    public TableCellRendererWrapper(final TableCellRenderer renderer) {
-      myRenderer = renderer;
-    }
-
-    public TableCellRenderer getRenderer() {
-      return myRenderer;
-    }
-
-    public Component getTableCellRendererComponent(JTable table,
-                                                   Object value,
-                                                   boolean isSelected,
-                                                   boolean hasFocus,
-                                                   int row,
-                                                   int column) {
-      Component result = myRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-      Object treeNode = null;
-
-      final int modelRow = table.convertRowIndexToModel(row);
-
-      if (myCurrentView == myTreeView) {
-        TreePath path = myTreeView.getTree().getPathForRow(modelRow);
-        if (path != null) {
-          treeNode = path.getLastPathComponent();
+        public TableCellRenderer getRenderer() {
+            return myRenderer;
         }
-      }
-      else if (myCurrentView == myFlatView) {
-        treeNode = myFlatView.getItems().get(modelRow);
-      }
 
-      myCellWrapper.wrap(result, table, value, isSelected, hasFocus, row, column, treeNode);
-      return result;
+        public Component getTableCellRendererComponent(
+            JTable table,
+            Object value,
+            boolean isSelected,
+            boolean hasFocus,
+            int row,
+            int column
+        ) {
+            Component result = myRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            Object treeNode = null;
+
+            final int modelRow = table.convertRowIndexToModel(row);
+
+            if (myCurrentView == myTreeView) {
+                TreePath path = myTreeView.getTree().getPathForRow(modelRow);
+                if (path != null) {
+                    treeNode = path.getLastPathComponent();
+                }
+            }
+            else if (myCurrentView == myFlatView) {
+                treeNode = myFlatView.getItems().get(modelRow);
+            }
+
+            myCellWrapper.wrap(result, table, value, isSelected, hasFocus, row, column, treeNode);
+            return result;
+        }
     }
-  }
 
-  @Override
-  public Dimension getPreferredSize() {
-    final Dimension was = super.getPreferredSize();
-    if (! myZipByHeight) return was;
-    final int tableHeight = myFlatView.getTableHeader().getHeight() + myFlatView.getTableViewModel().getRowCount() *
-                                                                      myFlatView.getRowHeight();
-    return new Dimension(was.width, tableHeight);
-  }
+    @Override
+    public Dimension getPreferredSize() {
+        final Dimension was = super.getPreferredSize();
+        if (!myZipByHeight) {
+            return was;
+        }
+        final int tableHeight = myFlatView.getTableHeader().getHeight() + myFlatView.getTableViewModel().getRowCount() *
+            myFlatView.getRowHeight();
+        return new Dimension(was.width, tableHeight);
+    }
 
-  @Override
-  public Dimension getMinimumSize() {
-    return myZipByHeight ? getPreferredSize() : super.getMinimumSize();
-  }
+    @Override
+    public Dimension getMinimumSize() {
+        return myZipByHeight ? getPreferredSize() : super.getMinimumSize();
+    }
 
-  public void setZipByHeight(boolean zipByHeight) {
-    myZipByHeight = zipByHeight;
-  }
+    public void setZipByHeight(boolean zipByHeight) {
+        myZipByHeight = zipByHeight;
+    }
 
-  public void setEmptyText(@Nonnull String text) {
-    myTreeView.getEmptyText().setText(text);
-    myFlatView.getEmptyText().setText(text);
-  }
+    public void setEmptyText(@Nonnull String text) {
+        myTreeView.getEmptyText().setText(text);
+        myFlatView.getEmptyText().setText(text);
+    }
 }

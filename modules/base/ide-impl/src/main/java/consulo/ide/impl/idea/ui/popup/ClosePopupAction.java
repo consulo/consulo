@@ -35,8 +35,8 @@ public class ClosePopupAction extends DumbAwareAction {
         myPopup = popup;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         myPopup.cancel(e.getInputEvent());
     }

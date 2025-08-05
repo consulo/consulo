@@ -23,17 +23,17 @@ import consulo.application.dumb.DumbAware;
  * @author irengrig
  */
 public abstract class BaseLineStatusRangeAction extends AnAction implements DumbAware {
-  protected final LineStatusTracker myLineStatusTracker;
-  protected final Range myRange;
+    protected final LineStatusTracker myLineStatusTracker;
+    protected final Range myRange;
 
-  BaseLineStatusRangeAction(final LineStatusTracker lineStatusTracker, final Range range) {
-    myLineStatusTracker = lineStatusTracker;
-    myRange = range;
-  }
+    BaseLineStatusRangeAction(final LineStatusTracker lineStatusTracker, final Range range) {
+        myLineStatusTracker = lineStatusTracker;
+        myRange = range;
+    }
 
-  public void update(final AnActionEvent e) {
-    e.getPresentation().setEnabled(isEnabled());
-  }
+    public void update(final AnActionEvent e) {
+        e.getPresentation().setEnabled(isEnabled());
+    }
 
-  public abstract boolean isEnabled();
+    public abstract boolean isEnabled();
 }
