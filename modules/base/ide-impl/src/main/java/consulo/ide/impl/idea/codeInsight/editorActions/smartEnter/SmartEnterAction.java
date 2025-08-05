@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.smartEnter;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -31,6 +32,7 @@ import consulo.language.editor.action.SmartEnterProcessor;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 
@@ -41,9 +43,10 @@ import java.util.List;
 /**
  * @author max
  */
+@ActionImpl(id = "EditorCompleteStatement")
 public class SmartEnterAction extends EditorAction {
     public SmartEnterAction() {
-        super(new Handler());
+        super(ActionLocalize.actionEditorcompletestatementText(), new Handler());
         setInjectedContext(true);
     }
 

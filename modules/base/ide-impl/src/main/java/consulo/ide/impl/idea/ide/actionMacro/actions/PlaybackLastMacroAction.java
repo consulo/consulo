@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -25,16 +27,21 @@ import jakarta.annotation.Nonnull;
 /**
  * @author max
  */
+@ActionImpl(id = "PlaybackLastMacro")
 public class PlaybackLastMacroAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ActionMacroManager.getInstance().playbackLastMacro();
-  }
+    public PlaybackLastMacroAction() {
+        super(ActionLocalize.actionPlaybacklastmacroText(), ActionLocalize.actionPlaybacklastmacroDescription());
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    ActionMacroManager macroManager = ActionMacroManager.getInstance();
-    e.getPresentation().setEnabled(!macroManager.isPlaying() && macroManager.hasRecentMacro());
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ActionMacroManager.getInstance().playbackLastMacro();
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        ActionMacroManager macroManager = ActionMacroManager.getInstance();
+        e.getPresentation().setEnabled(!macroManager.isPlaying() && macroManager.hasRecentMacro());
+    }
 }

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.completion;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.action.CodeInsightAction;
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -33,7 +34,8 @@ import jakarta.annotation.Nullable;
 public abstract class NextPrevParameterAction extends CodeInsightAction {
     private final boolean myNext;
 
-    protected NextPrevParameterAction(boolean next) {
+    protected NextPrevParameterAction(@Nonnull LocalizeValue text, boolean next) {
+        super(text, LocalizeValue.empty());
         myNext = next;
     }
 
@@ -63,8 +65,8 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
     }
 
     private class Handler implements CodeInsightActionHandler {
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
             TemplateParameterTraversalPolicy policy = findSuitableTraversalPolicy(editor, file);
             if (policy != null) {
@@ -77,18 +79,6 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
         @Override
         public boolean startInWriteAction() {
             return false;
-        }
-    }
-
-    public static class Next extends NextPrevParameterAction {
-        public Next() {
-            super(true);
-        }
-    }
-
-    public static class Prev extends NextPrevParameterAction {
-        public Prev() {
-            super(false);
         }
     }
 }

@@ -44,6 +44,12 @@ action.AddToFavoritesPopup.description:
     text: Add selected node to favorites
 action.AddToFavoritesPopup.text:
     text: Add to Favorites
+action.NextTemplateParameter.text:
+    text: Next Parameter
+action.PrevTemplateParameter.text:
+    text: Previous Parameter
+group.TemplateParametersNavigation.text:
+    text: Template Parameters Navigation
 action.Annotate.description:
     text: Show information about last modification date and author for each line
 action.Annotate.text:

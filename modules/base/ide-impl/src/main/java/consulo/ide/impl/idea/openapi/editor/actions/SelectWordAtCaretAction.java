@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.impl.internal.action.TextComponentEditorAction;
-import consulo.language.editor.action.SelectWordUtil;
-import consulo.language.editor.action.BraceMatchingUtil;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.impl.internal.action.TextComponentEditorAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.editor.action.BraceMatchingUtil;
+import consulo.language.editor.action.SelectWordUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -37,9 +38,10 @@ import java.util.List;
  * @author max
  * @since 2002-05-14
  */
+@ActionImpl(id = "EditorSelectWord")
 public class SelectWordAtCaretAction extends TextComponentEditorAction implements DumbAware {
     public SelectWordAtCaretAction() {
-        super(new DefaultHandler());
+        super(ActionLocalize.actionEditorselectwordText(), new DefaultHandler());
         setInjectedContext(true);
     }
 

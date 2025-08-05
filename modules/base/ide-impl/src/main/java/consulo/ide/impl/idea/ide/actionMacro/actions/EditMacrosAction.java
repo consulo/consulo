@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacro;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager;
 import consulo.ide.impl.idea.ide.actionMacro.EditMacrosDialog;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -29,7 +31,12 @@ import jakarta.annotation.Nonnull;
  * @author max
  * @since 2003-07-22
  */
+@ActionImpl(id = "EditMacros")
 public class EditMacrosAction extends AnAction implements DumbAware {
+    public EditMacrosAction() {
+        super(ActionLocalize.actionEditmacrosText(), ActionLocalize.actionEditmacrosDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -39,7 +46,7 @@ public class EditMacrosAction extends AnAction implements DumbAware {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        final ActionMacroManager manager = ActionMacroManager.getInstance();
+        ActionMacroManager manager = ActionMacroManager.getInstance();
         ActionMacro[] macros = manager.getAllMacros();
         e.getPresentation().setEnabled(macros != null && macros.length > 0);
     }
