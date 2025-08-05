@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ui.debugger.extensions;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -40,174 +39,176 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 
 @ExtensionImpl
-public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListener, ListSelectionListener  {
+public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListener, ListSelectionListener {
+    private static final Logger LOG = Logger.getInstance(FocusDebugger.class);
 
-  private static final Logger LOG = Logger.getInstance(FocusDebugger.class);
+    private JComponent myComponent;
 
-  private JComponent myComponent;
-
-  private JList myLog;
-  private DefaultListModel myLogModel;
-  private JEditorPane myAllocation;
-
-  @Override
-  public JComponent getComponent() {
-    if (myComponent == null) {
-      myComponent = init();
-    }
-
-    return myComponent;
-  }
-
-  private JComponent init() {
-    final JPanel result = new JPanel(new BorderLayout());
-
-    myLogModel = new DefaultListModel();
-    myLog = new JBList(myLogModel);
-    myLog.setCellRenderer(new FocusElementRenderer());
-
-
-    myAllocation = new JEditorPane();
-    final DefaultCaret caret = new DefaultCaret();
-    myAllocation.setCaret(caret);
-    caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-    myAllocation.setEditable(false);
-
-
-    final Splitter splitter = new Splitter(true);
-    splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myLog));
-    splitter.setSecondComponent(ScrollPaneFactory.createScrollPane(myAllocation));
-
-    myLog.addListSelectionListener(this);
-
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
-
-    result.add(splitter, BorderLayout.CENTER);
-
-
-    final DefaultActionGroup group = new DefaultActionGroup();
-    group.add(new ClearAction());
-
-    result.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent(), BorderLayout.NORTH);
-
-    return result;
-  }
-
-  class ClearAction extends AnAction {
-    ClearAction() {
-      super("Clear", "", PlatformIconGroup.actionsClose());
-    }
+    private JList myLog;
+    private DefaultListModel myLogModel;
+    private JEditorPane myAllocation;
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
-      myLogModel.clear();
-    }
-  }
-
-  @Override
-  public void valueChanged(ListSelectionEvent e) {
-    if (myLog.getSelectedIndex() == -1) {
-      myAllocation.setText(null);
-    } else {
-      FocusElement element = (FocusElement)myLog.getSelectedValue();
-      final StringWriter s = new StringWriter();
-      final PrintWriter writer = new PrintWriter(s);
-      element.getAllocation().printStackTrace(writer);
-      myAllocation.setText(s.toString());
-    }
-  }
-
-  private boolean isInsideDebuggerDialog(Component c) {
-    final Window debuggerWindow = SwingUtilities.getWindowAncestor(myComponent);
-    if (!(debuggerWindow instanceof Dialog)) return false;
-
-    return c == debuggerWindow || SwingUtilities.getWindowAncestor(c) == debuggerWindow;
-  }
-
-  @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    final Object newValue = evt.getNewValue();
-    final Object oldValue = evt.getOldValue();
-
-    boolean affectsDebugger = false;
-
-    if (newValue instanceof Component && isInsideDebuggerDialog((Component)newValue)) {
-      affectsDebugger |= true;
-    }
-
-    if (oldValue instanceof Component && isInsideDebuggerDialog((Component)oldValue)) {
-      affectsDebugger |= true;
-    }
-
-
-
-    final SimpleColoredText text = new SimpleColoredText();
-    text.append(evt.getPropertyName(), maybeGrayOut(new SimpleTextAttributes(SimpleTextAttributes.STYLE_UNDERLINE, null), affectsDebugger));
-    text.append(" newValue=", maybeGrayOut(SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES, affectsDebugger));
-    text.append(evt.getNewValue() + "", maybeGrayOut(SimpleTextAttributes.REGULAR_ATTRIBUTES, affectsDebugger));
-    text.append(" oldValue=" + evt.getOldValue(), maybeGrayOut(SimpleTextAttributes.REGULAR_ATTRIBUTES, affectsDebugger));
-
-
-    myLogModel.addElement(new FocusElement(text, new Throwable()));
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (myLog != null && myLog.isShowing()) {
-          final int h = myLog.getFixedCellHeight();
-          myLog.scrollRectToVisible(new Rectangle(0, myLog.getPreferredSize().height - h, myLog.getWidth(), h));
-          if (myLog.getModel().getSize() > 0) {
-            myLog.setSelectedIndex(myLog.getModel().getSize() - 1);
-          }
+    public JComponent getComponent() {
+        if (myComponent == null) {
+            myComponent = init();
         }
-      }
-    });
-  }
 
-  private SimpleTextAttributes maybeGrayOut(SimpleTextAttributes attr, boolean greyOut) {
-    return greyOut ? attr.derive(attr.getStyle(), Color.gray, attr.getBgColor(), attr.getWaveColor()) : attr;
-  }
+        return myComponent;
+    }
 
-  static class FocusElementRenderer extends ColoredListCellRenderer {
+    private JComponent init() {
+        final JPanel result = new JPanel(new BorderLayout());
+
+        myLogModel = new DefaultListModel();
+        myLog = new JBList(myLogModel);
+        myLog.setCellRenderer(new FocusElementRenderer());
+
+
+        myAllocation = new JEditorPane();
+        final DefaultCaret caret = new DefaultCaret();
+        myAllocation.setCaret(caret);
+        caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+        myAllocation.setEditable(false);
+
+
+        final Splitter splitter = new Splitter(true);
+        splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myLog));
+        splitter.setSecondComponent(ScrollPaneFactory.createScrollPane(myAllocation));
+
+        myLog.addListSelectionListener(this);
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
+
+        result.add(splitter, BorderLayout.CENTER);
+
+
+        final DefaultActionGroup group = new DefaultActionGroup();
+        group.add(new ClearAction());
+
+        result.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent(), BorderLayout.NORTH);
+
+        return result;
+    }
+
+    class ClearAction extends AnAction {
+        ClearAction() {
+            super("Clear", "", PlatformIconGroup.actionsClose());
+        }
+
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            myLogModel.clear();
+        }
+    }
+
     @Override
-    protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-      clear();
-      final FocusElement element = (FocusElement)value;
-      final SimpleColoredText text = element.getText();
-      final ArrayList<String> strings = text.getTexts();
-      final ArrayList<SimpleTextAttributes> attributes = element.getText().getAttributes();
-      for (int i = 0; i < strings.size(); i++) {
-        append(strings.get(i), attributes.get(i));
-      }
-    }
-  }
-
-  static class FocusElement {
-    private final SimpleColoredText myText;
-    private final Throwable myAllocation;
-
-    FocusElement(SimpleColoredText text, Throwable allocation) {
-      myText = text;
-      myAllocation = allocation;
+    public void valueChanged(ListSelectionEvent e) {
+        if (myLog.getSelectedIndex() == -1) {
+            myAllocation.setText(null);
+        }
+        else {
+            FocusElement element = (FocusElement) myLog.getSelectedValue();
+            final StringWriter s = new StringWriter();
+            final PrintWriter writer = new PrintWriter(s);
+            element.getAllocation().printStackTrace(writer);
+            myAllocation.setText(s.toString());
+        }
     }
 
-    public SimpleColoredText getText() {
-      return myText;
+    private boolean isInsideDebuggerDialog(Component c) {
+        final Window debuggerWindow = SwingUtilities.getWindowAncestor(myComponent);
+        if (!(debuggerWindow instanceof Dialog)) {
+            return false;
+        }
+
+        return c == debuggerWindow || SwingUtilities.getWindowAncestor(c) == debuggerWindow;
     }
 
-    public Throwable getAllocation() {
-      return myAllocation;
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final Object newValue = evt.getNewValue();
+        final Object oldValue = evt.getOldValue();
+
+        boolean affectsDebugger = false;
+
+        if (newValue instanceof Component && isInsideDebuggerDialog((Component) newValue)) {
+            affectsDebugger |= true;
+        }
+
+        if (oldValue instanceof Component && isInsideDebuggerDialog((Component) oldValue)) {
+            affectsDebugger |= true;
+        }
+
+
+        final SimpleColoredText text = new SimpleColoredText();
+        text.append(
+            evt.getPropertyName(),
+            maybeGrayOut(new SimpleTextAttributes(SimpleTextAttributes.STYLE_UNDERLINE, null), affectsDebugger)
+        );
+        text.append(" newValue=", maybeGrayOut(SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES, affectsDebugger));
+        text.append(evt.getNewValue() + "", maybeGrayOut(SimpleTextAttributes.REGULAR_ATTRIBUTES, affectsDebugger));
+        text.append(" oldValue=" + evt.getOldValue(), maybeGrayOut(SimpleTextAttributes.REGULAR_ATTRIBUTES, affectsDebugger));
+
+        myLogModel.addElement(new FocusElement(text, new Throwable()));
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (myLog != null && myLog.isShowing()) {
+                    final int h = myLog.getFixedCellHeight();
+                    myLog.scrollRectToVisible(new Rectangle(0, myLog.getPreferredSize().height - h, myLog.getWidth(), h));
+                    if (myLog.getModel().getSize() > 0) {
+                        myLog.setSelectedIndex(myLog.getModel().getSize() - 1);
+                    }
+                }
+            }
+        });
     }
-  }
 
+    private SimpleTextAttributes maybeGrayOut(SimpleTextAttributes attr, boolean greyOut) {
+        return greyOut ? attr.derive(attr.getStyle(), Color.gray, attr.getBgColor(), attr.getWaveColor()) : attr;
+    }
 
-  @Override
-  public String getName() {
-    return "Focus";
-  }
+    static class FocusElementRenderer extends ColoredListCellRenderer {
+        @Override
+        protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+            clear();
+            final FocusElement element = (FocusElement) value;
+            final SimpleColoredText text = element.getText();
+            final ArrayList<String> strings = text.getTexts();
+            final ArrayList<SimpleTextAttributes> attributes = element.getText().getAttributes();
+            for (int i = 0; i < strings.size(); i++) {
+                append(strings.get(i), attributes.get(i));
+            }
+        }
+    }
 
-  @Override
-  public void disposeUiResources() {
-    myComponent = null;
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(this);
-  }
+    static class FocusElement {
+        private final SimpleColoredText myText;
+        private final Throwable myAllocation;
+
+        FocusElement(SimpleColoredText text, Throwable allocation) {
+            myText = text;
+            myAllocation = allocation;
+        }
+
+        public SimpleColoredText getText() {
+            return myText;
+        }
+
+        public Throwable getAllocation() {
+            return myAllocation;
+        }
+    }
+
+    @Override
+    public String getName() {
+        return "Focus";
+    }
+
+    @Override
+    public void disposeUiResources() {
+        myComponent = null;
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(this);
+    }
 }

@@ -26,19 +26,19 @@ import java.awt.datatransfer.StringSelection;
  * @author irengrig
  */
 public class CopyLineStatusRangeAction extends BaseLineStatusRangeAction {
-  CopyLineStatusRangeAction(final LineStatusTracker lineStatusTracker, final Range range) {
-    super(lineStatusTracker, range);
-    ActionImplUtil.copyFrom(this, IdeActions.ACTION_COPY);
-  }
+    CopyLineStatusRangeAction(final LineStatusTracker lineStatusTracker, final Range range) {
+        super(lineStatusTracker, range);
+        ActionImplUtil.copyFrom(this, IdeActions.ACTION_COPY);
+    }
 
-  @Override
-  public boolean isEnabled() {
-    return Range.DELETED == myRange.getType() || Range.MODIFIED == myRange.getType();
-  }
+    @Override
+    public boolean isEnabled() {
+        return Range.DELETED == myRange.getType() || Range.MODIFIED == myRange.getType();
+    }
 
-  @Override
-  public void actionPerformed(final AnActionEvent e) {
-    final String content = myLineStatusTracker.getVcsContent(myRange) + "\n";
-    CopyPasteManager.getInstance().setContents(new StringSelection(content));
-  }
+    @Override
+    public void actionPerformed(final AnActionEvent e) {
+        final String content = myLineStatusTracker.getVcsContent(myRange) + "\n";
+        CopyPasteManager.getInstance().setContents(new StringSelection(content));
+    }
 }

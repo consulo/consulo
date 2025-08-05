@@ -20,18 +20,17 @@ import consulo.ui.ex.action.AnActionEvent;
 import javax.swing.*;
 
 public class ForwardAction extends NavigationAction {
+    public ForwardAction(JComponent c) {
+        super(c, "Forward");
+    }
 
-  public ForwardAction(JComponent c) {
-    super(c, "Forward");
-  }
+    @Override
+    protected void doUpdate(final AnActionEvent e) {
+        e.getPresentation().setEnabled(getHistory(e).canGoForward());
+    }
 
-  @Override
-  protected void doUpdate(final AnActionEvent e) {
-    e.getPresentation().setEnabled(getHistory(e).canGoForward());
-  }
-
-  @Override
-  public void actionPerformed(final AnActionEvent e) {
-    getHistory(e).forward();
-  }
+    @Override
+    public void actionPerformed(final AnActionEvent e) {
+        getHistory(e).forward();
+    }
 }

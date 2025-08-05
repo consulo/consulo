@@ -46,126 +46,133 @@ import java.util.Set;
  */
 @ExtensionImpl(id = ProjectPatternProvider.FILE, order = "last")
 public class ProjectPatternProvider extends PatternDialectProvider {
+    public static final String FILE = "file";
 
-  public static final String FILE = "file";
+    private static final Logger LOG = Logger.getInstance(ProjectPatternProvider.class);
 
-  private static final Logger LOG = Logger.getInstance(ProjectPatternProvider.class);
-
-
-  @Override
-  public TreeModel createTreeModel(final Project project, final Marker marker) {
-    return FileTreeModelBuilder.createTreeModel(project, false, marker);
-  }
-
-  @Override
-  public TreeModel createTreeModel(
-    final Project project,
-    final Set<PsiFile> deps,
-    final Marker marker,
-    final DependenciesPanel.DependencyPanelSettings settings
-  ) {
-    return FileTreeModelBuilder.createTreeModel(project, false, deps, marker, settings);
-  }
-
-  @Override
-  public String getDisplayName() {
-    return IdeLocalize.titleProject().get();
-  }
-
-  @Override
-  @Nonnull
-  public String getId() {
-    return FILE;
-  }
-
-  @Override
-  public AnAction[] createActions(Project project, final Runnable update) {
-    return new AnAction[]{new CompactEmptyMiddlePackagesAction(update)};
-  }
-
-  @Override
-  @Nullable
-  public PackageSet createPackageSet(final PackageDependenciesNode node, final boolean recursively) {
-    if (node instanceof ModuleGroupNode moduleGroupNode) {
-      if (!recursively) {
-        return null;
-      }
-      @NonNls final String modulePattern = "group:" + moduleGroupNode.getModuleGroup().toString();
-      return new FilePatternPackageSet(modulePattern, "*//*");
-    }
-    else if (node instanceof ModuleNode moduleNode) {
-      if (!recursively) {
-        return null;
-      }
-      final String modulePattern = moduleNode.getModuleName();
-      return new FilePatternPackageSet(modulePattern, "*/");
+    @Override
+    public TreeModel createTreeModel(final Project project, final Marker marker) {
+        return FileTreeModelBuilder.createTreeModel(project, false, marker);
     }
 
-    else if (node instanceof DirectoryNode directoryNode) {
-      String pattern = directoryNode.getFQName();
-      if (pattern != null) {
-        if (pattern.length() > 0) {
-          pattern += recursively ? "//*" : "/*";
+    @Override
+    public TreeModel createTreeModel(
+        final Project project,
+        final Set<PsiFile> deps,
+        final Marker marker,
+        final DependenciesPanel.DependencyPanelSettings settings
+    ) {
+        return FileTreeModelBuilder.createTreeModel(project, false, deps, marker, settings);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return IdeLocalize.titleProject().get();
+    }
+
+    @Override
+    @Nonnull
+    public String getId() {
+        return FILE;
+    }
+
+    @Override
+    public AnAction[] createActions(Project project, final Runnable update) {
+        return new AnAction[]{new CompactEmptyMiddlePackagesAction(update)};
+    }
+
+    @Override
+    @Nullable
+    public PackageSet createPackageSet(final PackageDependenciesNode node, final boolean recursively) {
+        if (node instanceof ModuleGroupNode moduleGroupNode) {
+            if (!recursively) {
+                return null;
+            }
+            @NonNls final String modulePattern = "group:" + moduleGroupNode.getModuleGroup().toString();
+            return new FilePatternPackageSet(modulePattern, "*//*");
         }
-        else {
-          pattern += recursively ? "*/" : "*";
+        else if (node instanceof ModuleNode moduleNode) {
+            if (!recursively) {
+                return null;
+            }
+            final String modulePattern = moduleNode.getModuleName();
+            return new FilePatternPackageSet(modulePattern, "*/");
         }
-      }
-      return new FilePatternPackageSet(getModulePattern(node), pattern);
-    }
-    else if (node instanceof FileNode fNode) {
-      if (recursively) return null;
-      final PsiFile file = (PsiFile)fNode.getPsiElement();
-      if (file == null) return null;
-      final VirtualFile virtualFile = file.getVirtualFile();
-      LOG.assertTrue(virtualFile != null);
-      final VirtualFile contentRoot = ProjectRootManager.getInstance(file.getProject()).getFileIndex().getContentRootForFile(virtualFile);
-      if (contentRoot == null) return null;
-      final String fqName = VfsUtilCore.getRelativePath(virtualFile, contentRoot, '/');
-      if (fqName != null) return new FilePatternPackageSet(getModulePattern(node), fqName);
-    }
-    return null;
-  }
 
-  @Override
-  public Image getIcon() {
-    return AllIcons.General.ProjectTab;
-  }
-
-  private static final class CompactEmptyMiddlePackagesAction extends ToggleAction {
-    private final Runnable myUpdate;
-
-    CompactEmptyMiddlePackagesAction(Runnable update) {
-      super(
-        IdeLocalize.actionCompactEmptyMiddlePackages(),
-        IdeLocalize.actionCompactEmptyMiddlePackages(),
-        PlatformIconGroup.objectbrowserCompactemptypackages()
-      );
-      myUpdate = update;
-    }
-
-    @Override
-    public boolean isSelected(@Nonnull AnActionEvent event) {
-      return DependencyUISettings.getInstance().UI_COMPACT_EMPTY_MIDDLE_PACKAGES;
+        else if (node instanceof DirectoryNode directoryNode) {
+            String pattern = directoryNode.getFQName();
+            if (pattern != null) {
+                if (pattern.length() > 0) {
+                    pattern += recursively ? "//*" : "/*";
+                }
+                else {
+                    pattern += recursively ? "*/" : "*";
+                }
+            }
+            return new FilePatternPackageSet(getModulePattern(node), pattern);
+        }
+        else if (node instanceof FileNode fNode) {
+            if (recursively) {
+                return null;
+            }
+            final PsiFile file = (PsiFile) fNode.getPsiElement();
+            if (file == null) {
+                return null;
+            }
+            final VirtualFile virtualFile = file.getVirtualFile();
+            LOG.assertTrue(virtualFile != null);
+            final VirtualFile contentRoot =
+                ProjectRootManager.getInstance(file.getProject()).getFileIndex().getContentRootForFile(virtualFile);
+            if (contentRoot == null) {
+                return null;
+            }
+            final String fqName = VfsUtilCore.getRelativePath(virtualFile, contentRoot, '/');
+            if (fqName != null) {
+                return new FilePatternPackageSet(getModulePattern(node), fqName);
+            }
+        }
+        return null;
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
-      DependencyUISettings.getInstance().UI_COMPACT_EMPTY_MIDDLE_PACKAGES = flag;
-      myUpdate.run();
+    public Image getIcon() {
+        return AllIcons.General.ProjectTab;
     }
 
-    @Override
-    public void update(@Nonnull AnActionEvent e) {
-      super.update(e);
-      Project eventProject = e.getData(Project.KEY);
-      if (eventProject == null) {
-        return;
-      }
-      e.getPresentation().setVisible(
-          FILE.equals(DependencyUISettings.getInstance().getScopeType())
-              && ReadAction.compute(() -> PsiPackageSupportProviders.isPackageSupported(eventProject))
-      );
+    private static final class CompactEmptyMiddlePackagesAction extends ToggleAction {
+        private final Runnable myUpdate;
+
+        CompactEmptyMiddlePackagesAction(Runnable update) {
+            super(
+                IdeLocalize.actionCompactEmptyMiddlePackages(),
+                IdeLocalize.actionCompactEmptyMiddlePackages(),
+                PlatformIconGroup.objectbrowserCompactemptypackages()
+            );
+            myUpdate = update;
+        }
+
+        @Override
+        public boolean isSelected(@Nonnull AnActionEvent event) {
+            return DependencyUISettings.getInstance().UI_COMPACT_EMPTY_MIDDLE_PACKAGES;
+        }
+
+        @Override
+        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+            DependencyUISettings.getInstance().UI_COMPACT_EMPTY_MIDDLE_PACKAGES = flag;
+            myUpdate.run();
+        }
+
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+            super.update(e);
+            Project eventProject = e.getData(Project.KEY);
+            if (eventProject == null) {
+                return;
+            }
+            e.getPresentation().setVisible(
+                FILE.equals(DependencyUISettings.getInstance().getScopeType())
+                    && ReadAction.compute(() -> PsiPackageSupportProviders.isPackageSupported(eventProject))
+            );
+        }
     }
-  }
 }

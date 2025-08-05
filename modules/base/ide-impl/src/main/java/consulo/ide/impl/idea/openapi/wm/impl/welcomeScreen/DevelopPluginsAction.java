@@ -32,15 +32,15 @@ import jakarta.annotation.Nullable;
  */
 @ActionImpl(id = "WelcomeScreen.DevelopPlugins")
 public class DevelopPluginsAction extends AnAction implements DumbAware {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
-    BrowserUtil.browse("https://consulo.dev");
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull final AnActionEvent e) {
+        BrowserUtil.browse("https://consulo.dev");
+    }
 
-  @Nullable
-  @Override
-  protected Image getTemplateIcon() {
-    return PlatformIconGroup.nodesPlugin();
-  }
+    @Nullable
+    @Override
+    protected Image getTemplateIcon() {
+        return PlatformIconGroup.nodesPlugin();
+    }
 }

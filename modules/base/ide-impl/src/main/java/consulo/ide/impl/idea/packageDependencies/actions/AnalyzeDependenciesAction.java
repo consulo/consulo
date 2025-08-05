@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.actions;
 
 import consulo.language.editor.impl.action.BaseAnalysisAction;
@@ -30,45 +29,47 @@ import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
 
 public class AnalyzeDependenciesAction extends BaseAnalysisAction {
-  private CheckBox myTransitiveCB;
-  private IntBox myDeepField;
+    private CheckBox myTransitiveCB;
+    private IntBox myDeepField;
 
-  public AnalyzeDependenciesAction() {
-    super(AnalysisScopeBundle.message("action.forward.dependency.analysis"), AnalysisScopeBundle.message("action.analysis.noun"));
-  }
+    public AnalyzeDependenciesAction() {
+        super(AnalysisScopeBundle.message("action.forward.dependency.analysis"), AnalysisScopeBundle.message("action.analysis.noun"));
+    }
 
-  @Override
-  protected void analyze(@Nonnull final Project project, @Nonnull AnalysisScope scope) {
-    new AnalyzeDependenciesHandler(project,
-                                   scope,
-                                   myTransitiveCB.getValue() ? myDeepField.getValueOrError() : 0).analyze();
+    @Override
+    protected void analyze(@Nonnull final Project project, @Nonnull AnalysisScope scope) {
+        new AnalyzeDependenciesHandler(
+            project,
+            scope,
+            myTransitiveCB.getValue() ? myDeepField.getValueOrError() : 0
+        ).analyze();
 
-    clear();
-  }
+        clear();
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
-    DockLayout dockLayout = DockLayout.create();
-    layout.add(dockLayout);
+    @RequiredUIAccess
+    @Override
+    protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
+        DockLayout dockLayout = DockLayout.create();
+        layout.add(dockLayout);
 
-    dockLayout.left(
-      myTransitiveCB = CheckBox.create(LocalizeValue.localizeTODO("Show transitive dependencies. Do not travel deeper than")));
+        dockLayout.left(
+            myTransitiveCB = CheckBox.create(LocalizeValue.localizeTODO("Show transitive dependencies. Do not travel deeper than")));
 
-    dockLayout.right(myDeepField = IntBox.create(5));
+        dockLayout.right(myDeepField = IntBox.create(5));
 
-    myDeepField.setEnabled(false);
-    myTransitiveCB.addValueListener(event -> myDeepField.setEnabled(event.getValue()));
-  }
+        myDeepField.setEnabled(false);
+        myTransitiveCB.addValueListener(event -> myDeepField.setEnabled(event.getValue()));
+    }
 
-  @Override
-  protected void canceled() {
-    super.canceled();
-    clear();
-  }
+    @Override
+    protected void canceled() {
+        super.canceled();
+        clear();
+    }
 
-  private void clear() {
-    myTransitiveCB = null;
-    myDeepField = null;
-  }
+    private void clear() {
+        myTransitiveCB = null;
+        myDeepField = null;
+    }
 }
