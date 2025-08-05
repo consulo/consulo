@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.impl.softwrap;
+package consulo.codeEditor.internal;
+
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.disposer.Disposable;
+import jakarta.annotation.Nonnull;
 
 /**
- * Strategy interface for ruling if soft wraps should be processed.
- * <p/>
- * Implementations of this interface are not obliged to be thread-safe.
- *
- * @author Denis Zhdanov
- * @since 10/6/10 8:08 AM
+ * @author VISTALL
+ * @since 2025-08-05
  */
-public interface SoftWrapApplianceStrategy {
-
-  /**
-   * Allows to answer if soft wraps should be processed.
-   *
-   * @return    <code>true</code> if soft wraps should be processed; <code>false</code> otherwise
-   */
-  boolean processSoftWraps();
+public interface ErrorStripeMarkupModel extends MarkupModel {
+    void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent);
 }

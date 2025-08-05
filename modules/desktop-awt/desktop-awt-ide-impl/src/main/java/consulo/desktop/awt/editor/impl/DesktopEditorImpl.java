@@ -60,8 +60,7 @@ import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyListener;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.FoldingPopupManager;
-import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
+import consulo.codeEditor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.EditorPopupHandler;
@@ -79,7 +78,6 @@ import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Gray;
-import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.touchBar.TouchBarController;
@@ -139,7 +137,6 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 public final class DesktopEditorImpl extends CodeEditorBase
     implements RealEditorWithEditorView, DesktopAWTEditor, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {

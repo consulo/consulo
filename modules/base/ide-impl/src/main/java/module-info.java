@@ -402,9 +402,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.editor.ex.util;
   exports consulo.ide.impl.idea.openapi.editor.highlighter;
   exports consulo.ide.impl.idea.openapi.editor.impl;
-  exports consulo.ide.impl.idea.openapi.editor.impl.event;
-  exports consulo.ide.impl.idea.openapi.editor.impl.softwrap;
-  exports consulo.ide.impl.idea.openapi.editor.markup;
   exports consulo.ide.impl.idea.openapi.editor.richcopy;
   exports consulo.ide.impl.idea.openapi.editor.richcopy.model;
   exports consulo.ide.impl.idea.openapi.editor.richcopy.settings;

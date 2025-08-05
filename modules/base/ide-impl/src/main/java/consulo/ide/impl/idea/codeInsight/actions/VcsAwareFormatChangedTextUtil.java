@@ -20,7 +20,7 @@ import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
+import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 import consulo.ide.impl.idea.openapi.vcs.ex.Range;

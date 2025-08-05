@@ -30,6 +30,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
+import consulo.document.internal.DocumentFactory;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.codeStyle.*;
@@ -279,7 +280,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
             }
         }
         if (myDocumentBeforeChanges == null) {
-            myDocumentBeforeChanges = ((InternalEditorFactory)EditorFactory.getInstance()).createUnsafeDocument(file.getText(), false);
+            myDocumentBeforeChanges = DocumentFactory.getInstance().createDocument(file.getText(), false);
         }
         else {
             myDocumentBeforeChanges.replaceString(0, myDocumentBeforeChanges.getTextLength(), file.getText());

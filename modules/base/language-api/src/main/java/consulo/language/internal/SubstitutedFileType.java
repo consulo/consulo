@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.psi.stub;
+package consulo.language.internal;
 
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
@@ -47,8 +47,8 @@ public class SubstitutedFileType extends LanguageFileType {
       return fileType;
     }
     if (fileType instanceof LanguageFileType) {
-      final Language language = ((LanguageFileType)fileType).getLanguage();
-      final Language substitutedLanguage = LanguageSubstitutors.substituteLanguage(language, file, project);
+      Language language = ((LanguageFileType)fileType).getLanguage();
+      Language substitutedLanguage = LanguageSubstitutors.substituteLanguage(language, file, project);
       LanguageFileType substFileType = substitutedLanguage.getAssociatedFileType();
       if (!substitutedLanguage.equals(language) && substFileType != null) {
         return new SubstitutedFileType(fileType, substFileType, substitutedLanguage);

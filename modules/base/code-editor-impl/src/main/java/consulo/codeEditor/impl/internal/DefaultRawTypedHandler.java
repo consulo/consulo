@@ -1,16 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.editor.impl;
+package consulo.codeEditor.impl.internal;
 
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.*;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.DocumentRunnable;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.undoRedo.internal.CommandToken;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
@@ -52,7 +52,7 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
             .start();
         myInOuterCommand = myCurrentCommandToken == null;
         try {
-            if (!EditorModificationUtil.requestWriting(editor)) {
+            if (!CodeEditorInternalHelper.getInstance().requestWriting(editor)) {
                 return;
             }
             Application.get().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {

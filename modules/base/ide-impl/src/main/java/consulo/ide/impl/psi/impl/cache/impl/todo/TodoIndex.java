@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.impl.cache.impl.todo;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
+import consulo.language.editor.internal.PlatformIdTableBuilding;
 import consulo.index.io.DataIndexer;
 import consulo.index.io.ID;
 import consulo.index.io.IntInlineKeyDescriptor;

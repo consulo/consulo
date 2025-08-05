@@ -21,7 +21,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
+import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;

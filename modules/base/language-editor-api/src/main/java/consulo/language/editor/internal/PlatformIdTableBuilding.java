@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.cache.impl.id;
+package consulo.language.editor.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
+import consulo.index.io.DataIndexer;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import consulo.language.custom.CustomSyntaxTableFileType;
+import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
+import consulo.language.file.LanguageFileType;
+import consulo.language.internal.SubstitutedFileType;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.stub.BaseFilterLexer;
+import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.IndexPatternUtil;
 import consulo.language.psi.stub.OccurrenceConsumer;
 import consulo.language.psi.stub.todo.TodoIndexEntry;
 import consulo.language.psi.stub.todo.TodoIndexer;
 import consulo.language.psi.stub.todo.VersionedTodoIndexer;
-import consulo.index.io.DataIndexer;
-import consulo.language.Language;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.TokenSet;
-import consulo.language.editor.highlight.HighlighterFactory;
-import consulo.language.editor.highlight.LexerEditorHighlighter;
-import consulo.language.file.LanguageFileType;
-import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
-import consulo.language.parser.ParserDefinition;
-import consulo.language.psi.search.IndexPattern;
-import consulo.language.psi.stub.FileContent;
 import consulo.language.util.CommentUtilCore;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
@@ -45,9 +45,9 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -68,9 +68,9 @@ public class PlatformIdTableBuilding {
   public static DataIndexer<TodoIndexEntry, Integer, FileContent> getTodoIndexer(
     FileType fileType,
     Project project,
-    final VirtualFile virtualFile
+    VirtualFile virtualFile
   ) {
-    final DataIndexer<TodoIndexEntry, Integer, FileContent> extIndexer;
+    DataIndexer<TodoIndexEntry, Integer, FileContent> extIndexer;
     if (fileType instanceof SubstitutedFileType && !((SubstitutedFileType)fileType).isSameFileType()) {
       SubstitutedFileType sft = (SubstitutedFileType)fileType;
       extIndexer = new CompositeTodoIndexer(
@@ -87,10 +87,10 @@ public class PlatformIdTableBuilding {
     }
 
     if (fileType instanceof LanguageFileType) {
-      final Language lang = ((LanguageFileType)fileType).getLanguage();
-      final ParserDefinition parserDef = ParserDefinition.forLanguage(lang);
+      Language lang = ((LanguageFileType)fileType).getLanguage();
+      ParserDefinition parserDef = ParserDefinition.forLanguage(lang);
       LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(lang, project, virtualFile);
-      final TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens(languageVersion) : null;
+      TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens(languageVersion) : null;
       if (commentTokens != null) {
         return new TokenSetTodoIndexer(commentTokens, languageVersion, virtualFile, project);
       }
@@ -103,11 +103,11 @@ public class PlatformIdTableBuilding {
     return null;
   }
 
-  public static boolean checkCanUseCachedEditorHighlighter(final CharSequence chars, final EditorHighlighter editorHighlighter) {
+  public static boolean checkCanUseCachedEditorHighlighter(CharSequence chars, EditorHighlighter editorHighlighter) {
     assert editorHighlighter instanceof LexerEditorHighlighter;
-    final boolean b = ((LexerEditorHighlighter)editorHighlighter).checkContentIsEqualTo(chars);
+    boolean b = ((LexerEditorHighlighter)editorHighlighter).checkContentIsEqualTo(chars);
     if (!b) {
-      final Logger logger = Logger.getInstance(PlatformIdTableBuilding.class);
+      Logger logger = Logger.getInstance(PlatformIdTableBuilding.class);
       logger.warn("Unexpected mismatch of editor highlighter content with indexing content");
     }
     return b;
@@ -169,7 +169,7 @@ public class PlatformIdTableBuilding {
     private final VirtualFile myFile;
     private final Project myProject;
 
-    public TokenSetTodoIndexer(@Nonnull final TokenSet commentTokens, @Nullable LanguageVersion languageVersion, @Nonnull final VirtualFile file, @Nullable Project project) {
+    public TokenSetTodoIndexer(@Nonnull TokenSet commentTokens, @Nullable LanguageVersion languageVersion, @Nonnull VirtualFile file, @Nullable Project project) {
       myCommentTokens = commentTokens;
       myLanguageVersion = languageVersion;
       myFile = file;
@@ -179,13 +179,13 @@ public class PlatformIdTableBuilding {
     @Override
     @Nonnull
     @RequiredReadAction
-    public Map<TodoIndexEntry, Integer> map(final FileContent inputData) {
+    public Map<TodoIndexEntry, Integer> map(FileContent inputData) {
       if (IndexPatternUtil.getIndexPatternCount() > 0) {
-        final CharSequence chars = inputData.getContentAsText();
-        final OccurrenceConsumer occurrenceConsumer = new OccurrenceConsumer(null, true);
+        CharSequence chars = inputData.getContentAsText();
+        OccurrenceConsumer occurrenceConsumer = new OccurrenceConsumer(null, true);
         EditorHighlighter highlighter;
 
-        final EditorHighlighter editorHighlighter = inputData.getUserData(EDITOR_HIGHLIGHTER);
+        EditorHighlighter editorHighlighter = inputData.getUserData(EDITOR_HIGHLIGHTER);
         if (editorHighlighter != null && checkCanUseCachedEditorHighlighter(chars, editorHighlighter)) {
           highlighter = editorHighlighter;
         }
@@ -194,9 +194,9 @@ public class PlatformIdTableBuilding {
           highlighter.setText(chars);
         }
 
-        final int documentLength = chars.length();
+        int documentLength = chars.length();
         BaseFilterLexer.TodoScanningState todoScanningState = null;
-        final HighlighterIterator iterator = highlighter.createIterator(0);
+        HighlighterIterator iterator = highlighter.createIterator(0);
 
         Map<Language, LanguageVersion> languageVersionCache = new LinkedHashMap<>();
         if (myLanguageVersion != null) {
@@ -204,7 +204,7 @@ public class PlatformIdTableBuilding {
         }
 
         while (!iterator.atEnd()) {
-          final IElementType token = (IElementType)iterator.getTokenType();
+          IElementType token = (IElementType)iterator.getTokenType();
 
           if (myCommentTokens.contains(token) || isCommentToken(languageVersionCache, token)) {
             int start = iterator.getStart();
@@ -216,9 +216,9 @@ public class PlatformIdTableBuilding {
           }
           iterator.advance();
         }
-        final Map<TodoIndexEntry, Integer> map = new HashMap<>();
+        Map<TodoIndexEntry, Integer> map = new HashMap<>();
         for (IndexPattern pattern : IndexPatternUtil.getIndexPatterns()) {
-          final int count = occurrenceConsumer.getOccurrenceCount(pattern);
+          int count = occurrenceConsumer.getOccurrenceCount(pattern);
           if (count > 0) {
             map.put(new TodoIndexEntry(pattern.getPatternString(), pattern.isCaseSensitive()), count);
           }

@@ -22,4 +22,5 @@ import consulo.fileEditor.TextEditor;
  * @since 10/11/2022
  */
 public interface RealTextEditor extends TextEditor {
+    void updateModifiedProperty();
 }

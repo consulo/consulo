@@ -16,18 +16,18 @@
 package consulo.desktop.awt.editor.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.application.Application;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.RealEditor;
 import consulo.document.Document;
+import consulo.document.internal.DocumentFactory;
+import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,20 +36,20 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class DesktopEditorFactoryImpl extends EditorFactoryImpl {
-  @Inject
-  public DesktopEditorFactoryImpl(Application application) {
-    super(application);
+    @Inject
+    public DesktopEditorFactoryImpl(Application application, DocumentFactory documentFactory) {
+        super(application, documentFactory);
 
-    LaterInvocator.addModalityStateListener((entering, modalEntity) -> {
-      for (Editor editor : myEditors) {
-        ((DesktopEditorImpl)editor).beforeModalityStateChanged();
-      }
-    }, application);
-  }
+        LaterInvocator.addModalityStateListener((entering, modalEntity) -> {
+            for (Editor editor : myEditors) {
+                ((DesktopEditorImpl) editor).beforeModalityStateChanged();
+            }
+        }, application);
+    }
 
-  @Nonnull
-  @Override
-  protected RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
-    return new DesktopEditorImpl(document, isViewer, project, kind);
-  }
+    @Nonnull
+    @Override
+    protected RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
+        return new DesktopEditorImpl(document, isViewer, project, kind);
+    }
 }

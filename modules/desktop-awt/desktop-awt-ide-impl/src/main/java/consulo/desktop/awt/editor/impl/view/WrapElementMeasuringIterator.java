@@ -4,7 +4,7 @@ package consulo.desktop.awt.editor.impl.view;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.Inlay;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.softwrap.WrapElementIterator;
+import consulo.codeEditor.impl.internal.WrapElementIterator;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;

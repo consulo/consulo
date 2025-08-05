@@ -20,7 +20,8 @@ import consulo.application.Application;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.RealEditor;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
+import consulo.document.internal.DocumentFactory;
+import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.project.Project;
 import consulo.web.internal.ui.editor.WebEditorImpl;
 import jakarta.annotation.Nonnull;
@@ -34,14 +35,14 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class WebEditorFactoryImpl extends EditorFactoryImpl {
-  @Inject
-  public WebEditorFactoryImpl(Application application) {
-    super(application);
-  }
+    @Inject
+    public WebEditorFactoryImpl(Application application, DocumentFactory documentFactory) {
+        super(application, documentFactory);
+    }
 
-  @Nonnull
-  @Override
-  protected RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
-    return new WebEditorImpl(document, isViewer, project, kind);
-  }
+    @Nonnull
+    @Override
+    protected RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
+        return new WebEditorImpl(document, isViewer, project, kind);
+    }
 }

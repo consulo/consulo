@@ -21,7 +21,7 @@ import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.util.TextDiffType;
-import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
+import consulo.codeEditor.markup.LineMarkerRendererEx;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;

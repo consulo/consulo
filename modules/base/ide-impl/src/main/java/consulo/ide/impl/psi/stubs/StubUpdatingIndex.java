@@ -33,7 +33,7 @@ import consulo.index.io.data.DataInputOutputUtil;
 import consulo.language.Language;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.LanguageFileType;
-import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
+import consulo.language.internal.SubstitutedFileType;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.stub.*;
 import consulo.logging.Logger;

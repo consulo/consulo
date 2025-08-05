@@ -29,6 +29,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.document.Document;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -158,6 +159,10 @@ public interface CodeEditorInternalHelper {
 
     @RequiredReadAction
     default void checkNotIndentLines(Project project, Document document, List<Integer> nonModifiableLines, int startIndex, int endIndex) {
+    }
 
+    @RequiredUIAccess
+    default boolean requestWriting(Editor editor) {
+        return true;
     }
 }

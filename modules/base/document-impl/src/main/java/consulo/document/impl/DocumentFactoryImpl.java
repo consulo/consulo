@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.ex;
+package consulo.document.impl;
 
-import consulo.codeEditor.internal.ErrorStripeEvent;
-import consulo.codeEditor.internal.ErrorStripeListener;
-
+import consulo.annotation.component.ServiceImpl;
+import consulo.document.internal.DocumentEx;
+import consulo.document.internal.DocumentFactory;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
- * @author max
+ * @author VISTALL
+ * @since 2025-08-05
  */
-public abstract class ErrorStripeAdapter implements ErrorStripeListener {
-
-  @Override
-  public void errorMarkerClicked(@Nonnull ErrorStripeEvent e) {
-  }
+@ServiceImpl
+@Singleton
+public class DocumentFactoryImpl implements DocumentFactory {
+    @Nonnull
+    @Override
+    public DocumentEx createDocument(@Nonnull CharSequence chars, boolean acceptSlashR, boolean forUseInNonAWTThread) {
+        return new DocumentImpl(chars, acceptSlashR, forUseInNonAWTThread);
+    }
 }

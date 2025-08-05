@@ -24,14 +24,17 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.fileEditor.*;
+import consulo.fileEditor.FileEditorLocation;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.TextEditorLocation;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.RealTextEditor;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorState;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
@@ -40,197 +43,200 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**
  * @author Vladimir Kondratyev
  */
 public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor {
-  public final Project myProject;
+    public final Project myProject;
 
-  private final PropertyChangeSupport myChangeSupport;
-  @Nonnull
-  private final TextEditorComponent myComponent;
+    private final PropertyChangeSupport myChangeSupport;
+    @Nonnull
+    private final TextEditorComponent myComponent;
 
-  @Nonnull
-  public final VirtualFile myFile;
- 
-  private final AsyncEditorLoader myAsyncLoader;
+    @Nonnull
+    public final VirtualFile myFile;
 
-  protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
+    private final AsyncEditorLoader myAsyncLoader;
 
-  @RequiredUIAccess
-  public TextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final TextEditorProviderImpl provider) {
-    myProject = project;
-    myFile = file;
-    myChangeSupport = new PropertyChangeSupport(this);
-    myTextEditorComponentContainerFactory = provider.myTextEditorComponentContainerFactory;
-    myComponent = createEditorComponent(project, file);
-    Disposer.register(this, myComponent);
+    protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
 
-    myAsyncLoader = new AsyncEditorLoader(this, myComponent, provider);
-    myAsyncLoader.start();
-  }
+    @RequiredUIAccess
+    public TextEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file, TextEditorProviderImpl provider) {
+        myProject = project;
+        myFile = file;
+        myChangeSupport = new PropertyChangeSupport(this);
+        myTextEditorComponentContainerFactory = provider.myTextEditorComponentContainerFactory;
+        myComponent = createEditorComponent(project, file);
+        Disposer.register(this, myComponent);
 
-  @Nonnull
-  public Runnable loadEditorInBackground() {
-    EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myFile, scheme, myProject);
-    EditorEx editor = (EditorEx)getEditor();
-    highlighter.setText(editor.getDocument().getImmutableCharSequence());
-    return () -> editor.setHighlighter(highlighter);
-  }
-
-  @Nonnull
-  protected TextEditorComponent createEditorComponent(final Project project, final VirtualFile file) {
-    return new TextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
-  }
-
-  @Override
-  public void dispose() {
-  }
-
-  @Override
-  @Nonnull
-  public JComponent getComponent() {
-    return myComponent.getComponentContainer().getComponent();
-  }
-
-  @Nullable
-  @Override
-  public Component getUIComponent() {
-    return myComponent.getComponentContainer().getUIComponent();
-  }
-
-  @Nullable
-  @Override
-  public Component getPreferredFocusedUIComponent() {
-    return getUIComponent();
-  }
-
-  @Override
-  @Nonnull
-  public JComponent getPreferredFocusedComponent() {
-    return getActiveEditor().getContentComponent();
-  }
-
-  @Override
-  @Nonnull
-  public Editor getEditor() {
-    return getActiveEditor();
-  }
-
-  /**
-   * @see DesktopTextEditorComponent#getEditor()
-   */
-  @Nonnull
-  private Editor getActiveEditor() {
-    return myComponent.getEditor();
-  }
-
-  @Override
-  @Nonnull
-  public String getName() {
-    return "Text";
-  }
-
-  @Override
-  @Nonnull
-  public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
-    return myAsyncLoader.getEditorState(level);
-  }
-
-  @Override
-  public void setState(@Nonnull final FileEditorState state) {
-    myAsyncLoader.setEditorState((TextEditorState)state, true);
-  }
-
-  @Override
-  public boolean isModified() {
-    return myComponent.isModified();
-  }
-
-  @Override
-  public boolean isValid() {
-    return myComponent.isEditorValid();
-  }
-
-  @Override
-  public void selectNotify() {
-    myComponent.selectNotify();
-  }
-
-  @Override
-  public void deselectNotify() {
-  }
-
-  public void updateModifiedProperty() {
-    myComponent.updateModifiedProperty();
-  }
-
-  public void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
-    myChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
-  }
-
-  @Override
-  public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
-    myChangeSupport.addPropertyChangeListener(listener);
-  }
-
-  @Override
-  public void removePropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
-    myChangeSupport.removePropertyChangeListener(listener);
-  }
-
-  @Override
-  public BackgroundEditorHighlighter getBackgroundHighlighter() {
-    return null;
-  }
-
-  @Override
-  public FileEditorLocation getCurrentLocation() {
-    return new TextEditorLocation(getEditor().getCaretModel().getLogicalPosition(), this);
-  }
-
-  @Override
-  @RequiredReadAction
-  public StructureViewBuilder getStructureViewBuilder() {
-    Document document = myComponent.getEditor().getDocument();
-    VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-    if (file == null || !file.isValid()) return null;
-
-    for (StructureViewBuilderProvider provider : myProject.getApplication().getExtensionList(StructureViewBuilderProvider.class)) {
-      StructureViewBuilder builder = provider.getStructureViewBuilder(file.getFileType(), file, myProject);
-      if (builder != null) {
-        return builder;
-      }
+        myAsyncLoader = new AsyncEditorLoader(this, myComponent, provider);
+        myAsyncLoader.start();
     }
-    return null;
-  }
 
-  @Nullable
-  @Override
-  public VirtualFile getFile() {
-    return FileDocumentManager.getInstance().getFile(myComponent.getEditor().getDocument());
-  }
+    @Nonnull
+    public Runnable loadEditorInBackground() {
+        EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+        EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myFile, scheme, myProject);
+        EditorEx editor = (EditorEx) getEditor();
+        highlighter.setText(editor.getDocument().getImmutableCharSequence());
+        return () -> editor.setHighlighter(highlighter);
+    }
 
-  @Override
-  public boolean canNavigateTo(@Nonnull final Navigatable navigatable) {
-    return navigatable instanceof OpenFileDescriptor && (((OpenFileDescriptor)navigatable).getLine() != -1 || ((OpenFileDescriptor)navigatable).getOffset() >= 0);
-  }
+    @Nonnull
+    protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
+        return new TextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
+    }
 
-  @Override
-  public void navigateTo(@Nonnull final Navigatable navigatable) {
-    ((OpenFileDescriptorImpl)navigatable).navigateIn(getEditor());
-  }
+    @Override
+    public void dispose() {
+    }
 
-  @Override
-  public String toString() {
-    return "Editor: " + myComponent.getFile();
-  }
+    @Override
+    @Nonnull
+    public JComponent getComponent() {
+        return myComponent.getComponentContainer().getComponent();
+    }
+
+    @Nullable
+    @Override
+    public Component getUIComponent() {
+        return myComponent.getComponentContainer().getUIComponent();
+    }
+
+    @Nullable
+    @Override
+    public Component getPreferredFocusedUIComponent() {
+        return getUIComponent();
+    }
+
+    @Override
+    @Nonnull
+    public JComponent getPreferredFocusedComponent() {
+        return getActiveEditor().getContentComponent();
+    }
+
+    @Override
+    @Nonnull
+    public Editor getEditor() {
+        return getActiveEditor();
+    }
+
+    /**
+     * @see DesktopTextEditorComponent#getEditor()
+     */
+    @Nonnull
+    private Editor getActiveEditor() {
+        return myComponent.getEditor();
+    }
+
+    @Override
+    @Nonnull
+    public String getName() {
+        return "Text";
+    }
+
+    @Override
+    @Nonnull
+    public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+        return myAsyncLoader.getEditorState(level);
+    }
+
+    @Override
+    public void setState(@Nonnull FileEditorState state) {
+        myAsyncLoader.setEditorState((TextEditorState) state, true);
+    }
+
+    @Override
+    public boolean isModified() {
+        return myComponent.isModified();
+    }
+
+    @Override
+    public boolean isValid() {
+        return myComponent.isEditorValid();
+    }
+
+    @Override
+    public void selectNotify() {
+        myComponent.selectNotify();
+    }
+
+    @Override
+    public void deselectNotify() {
+    }
+
+    @Override
+    public void updateModifiedProperty() {
+        myComponent.updateModifiedProperty();
+    }
+
+    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        myChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    @Override
+    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+        myChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+        myChangeSupport.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public BackgroundEditorHighlighter getBackgroundHighlighter() {
+        return null;
+    }
+
+    @Override
+    public FileEditorLocation getCurrentLocation() {
+        return new TextEditorLocation(getEditor().getCaretModel().getLogicalPosition(), this);
+    }
+
+    @Override
+    @RequiredReadAction
+    public StructureViewBuilder getStructureViewBuilder() {
+        Document document = myComponent.getEditor().getDocument();
+        VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+        if (file == null || !file.isValid()) {
+            return null;
+        }
+
+        for (StructureViewBuilderProvider provider : myProject.getApplication().getExtensionList(StructureViewBuilderProvider.class)) {
+            StructureViewBuilder builder = provider.getStructureViewBuilder(file.getFileType(), file, myProject);
+            if (builder != null) {
+                return builder;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public VirtualFile getFile() {
+        return FileDocumentManager.getInstance().getFile(myComponent.getEditor().getDocument());
+    }
+
+    @Override
+    public boolean canNavigateTo(@Nonnull Navigatable navigatable) {
+        return navigatable instanceof OpenFileDescriptor && (((OpenFileDescriptor) navigatable).getLine() != -1 || ((OpenFileDescriptor) navigatable).getOffset() >= 0);
+    }
+
+    @Override
+    public void navigateTo(@Nonnull Navigatable navigatable) {
+        ((OpenFileDescriptorImpl) navigatable).navigateIn(getEditor());
+    }
+
+    @Override
+    public String toString() {
+        return "Editor: " + myComponent.getFile();
+    }
 }

@@ -16,14 +16,12 @@
 package consulo.language.editor.impl.internal.markup;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.markup.MarkupModel;
-import consulo.disposer.Disposable;
+import consulo.codeEditor.internal.ErrorStripeMarkupModel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.PopupHandler;
-
 import jakarta.annotation.Nonnull;
 
-public interface EditorMarkupModel extends MarkupModel {
+public interface EditorMarkupModel extends ErrorStripeMarkupModel {
   @Nonnull
   Editor getEditor();
 
@@ -33,8 +31,6 @@ public interface EditorMarkupModel extends MarkupModel {
   void setErrorStripeRenderer(ErrorStripeRenderer renderer);
 
   ErrorStripeRenderer getErrorStripeRenderer();
-
-  void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent);
 
   @RequiredUIAccess
   void setErrorPanelPopupHandler(@Nonnull PopupHandler handler);

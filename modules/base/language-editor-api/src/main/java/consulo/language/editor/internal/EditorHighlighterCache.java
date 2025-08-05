@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.impl;
+package consulo.language.editor.internal;
 
-import consulo.language.lexer.Lexer;
-import consulo.document.Document;
-import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.codeEditor.EditorHighlighter;
+import consulo.document.Document;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
+import consulo.language.editor.highlight.LexerEditorHighlighterLexer;
+import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
-import consulo.language.editor.highlight.LexerEditorHighlighterLexer;
-import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.SoftReference;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

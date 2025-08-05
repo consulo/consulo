@@ -16,7 +16,7 @@ import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.util.FileContentUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
+import consulo.language.editor.internal.EditorEventMulticasterImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

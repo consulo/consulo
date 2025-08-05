@@ -10,6 +10,7 @@ import consulo.language.ast.FileASTNode;
 import consulo.language.ast.LighterAST;
 import consulo.language.ast.TreeBackedLighterAST;
 import consulo.language.file.LanguageFileType;
+import consulo.language.internal.SubstitutedFileType;
 import consulo.language.psi.LanguageSubstitutors;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

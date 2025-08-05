@@ -18,7 +18,7 @@ package consulo.web.internal.ui.editor;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
-import consulo.language.editor.impl.internal.markup.ErrorStripeListener;
+import consulo.codeEditor.internal.ErrorStripeListener;
 import consulo.codeEditor.impl.MarkupModelImpl;
 import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
 import consulo.ui.ex.awt.PopupHandler;

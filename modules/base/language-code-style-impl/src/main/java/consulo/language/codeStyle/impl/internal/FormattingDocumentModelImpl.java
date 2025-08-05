@@ -16,9 +16,8 @@
 
 package consulo.language.codeStyle.impl.internal;
 
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.internal.InternalEditorFactory;
 import consulo.document.Document;
+import consulo.document.internal.DocumentFactory;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -70,8 +69,8 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
             return new FormattingDocumentModelImpl(document, file);
         }
         else {
-            InternalEditorFactory factory = (InternalEditorFactory) EditorFactory.getInstance();
-            return new FormattingDocumentModelImpl(factory.createUnsafeDocument(file.getText(), false), file);
+            DocumentFactory factory = DocumentFactory.getInstance();
+            return new FormattingDocumentModelImpl(factory.createDocument(file.getText(), false), file);
         }
 
     }

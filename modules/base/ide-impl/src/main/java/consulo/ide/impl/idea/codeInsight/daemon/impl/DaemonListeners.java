@@ -32,7 +32,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.application.internal.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.ide.todo.TodoConfigurationListener;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
+import consulo.codeEditor.internal.EditorEventMulticasterEx;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonListener;
 import consulo.language.editor.Pass;

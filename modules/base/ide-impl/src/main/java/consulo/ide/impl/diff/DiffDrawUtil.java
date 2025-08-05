@@ -29,7 +29,7 @@ import consulo.diff.util.LineRange;
 import consulo.diff.util.TextDiffType;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
+import consulo.codeEditor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.color.ColorValue;

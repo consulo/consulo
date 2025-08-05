@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.internal.psi.stub;
 
+import consulo.language.internal.SubstitutedFileType;
 import consulo.language.psi.stub.IndexedFile;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;

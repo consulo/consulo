@@ -34,9 +34,10 @@ import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
+import consulo.language.editor.internal.EditorHighlighterCache;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -54,6 +55,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -101,6 +103,12 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     @Inject
     public LanguageCodeEditorInternalHelper(Provider<DaemonCodeAnalyzerSettings> daemonCodeAnalyzerSettings) {
         myDaemonCodeAnalyzerSettings = daemonCodeAnalyzerSettings;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean requestWriting(Editor editor) {
+        return EditorModificationUtil.requestWriting(editor);
     }
 
     @Nullable

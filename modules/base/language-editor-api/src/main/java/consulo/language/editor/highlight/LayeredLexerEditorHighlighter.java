@@ -1,10 +1,8 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.highlight;
 
-import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.HighlighterClient;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.codeEditor.internal.InternalEditorFactory;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -12,6 +10,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
+import consulo.document.internal.DocumentFactory;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
@@ -401,7 +400,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         private final TextAttributesKey myBackground;
 
         private Mapper(@Nonnull LayerDescriptor descriptor) {
-            doc = ((InternalEditorFactory) EditorFactory.getInstance()).createUnsafeDocument("", true);
+            doc = DocumentFactory.getInstance().createDocument("", true);
 
             mySyntaxHighlighter = descriptor.getLayerHighlighter();
             myBackground = descriptor.getBackgroundKey();

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.ide.impl.idea.openapi.editor.ex.ErrorStripeAdapter;
-import consulo.language.editor.impl.internal.markup.ErrorStripeEvent;
+import consulo.codeEditor.internal.ErrorStripeEvent;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.project.Project;

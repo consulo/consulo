@@ -18,6 +18,8 @@ package consulo.desktop.awt.editor.impl;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.MarkupModelImpl;
+import consulo.codeEditor.internal.ErrorStripeEvent;
+import consulo.codeEditor.internal.ErrorStripeListener;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.RangeHighlighterEx;

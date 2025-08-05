@@ -27,7 +27,7 @@ import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
+import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.fileEditor.util.FileContentUtil;
 import consulo.language.Language;
 import consulo.language.editor.highlight.HighlighterFactory;

@@ -8,7 +8,7 @@ import consulo.codeEditor.event.EditorEventMulticaster;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.statusBar.EditorBasedWidget;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
+import consulo.codeEditor.internal.EditorEventMulticasterEx;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;

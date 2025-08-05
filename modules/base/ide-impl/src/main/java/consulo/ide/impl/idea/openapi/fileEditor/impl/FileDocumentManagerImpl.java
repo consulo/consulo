@@ -22,11 +22,11 @@ import consulo.document.internal.FileDocumentManagerEx;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
+import consulo.fileEditor.internal.RealTextEditor;
 import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.language.codeStyle.CodeStyle;
+import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.internal.pom.PomAspectGuard;
@@ -512,7 +512,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
             for (FileEditor editor : fileEditorManager.getAllEditors(file)) {
-                if (editor instanceof TextEditorImpl textEditor) {
+                if (editor instanceof RealTextEditor textEditor) {
                     textEditor.updateModifiedProperty();
                 }
             }

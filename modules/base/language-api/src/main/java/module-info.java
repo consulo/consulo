@@ -82,6 +82,7 @@ module consulo.language.api {
         consulo.language.impl;
     exports consulo.language.internal.custom to
         consulo.ide.impl,
+        consulo.language.editor.api,
         consulo.language.editor.impl;
 
     // cache value impl visitor

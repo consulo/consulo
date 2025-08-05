@@ -47,7 +47,7 @@ public final class LaterInvocator {
 
   private static final FlushQueue ourEdtQueue = new FlushQueue(SwingUtilities::invokeLater);
 
-  public static void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
+  public static void addModalityStateListener(@RequiredUIAccess @Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
     if (!ourModalityStateMulticaster.getListeners().contains(listener)) {
       ourModalityStateMulticaster.addListener(listener, parentDisposable);
     }

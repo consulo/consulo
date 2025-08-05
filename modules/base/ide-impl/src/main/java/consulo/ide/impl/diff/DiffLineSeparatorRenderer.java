@@ -24,7 +24,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.diff.DiffColors;
 import consulo.diff.impl.internal.util.DiffImplUtil;
-import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
+import consulo.codeEditor.markup.LineMarkerRendererEx;
 import consulo.codeEditor.markup.LineSeparatorRenderer;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;

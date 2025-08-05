@@ -16,6 +16,7 @@ module consulo.undo.redo.api {
         consulo.ide.impl,
         consulo.language.editor.refactoring.api,
         consulo.local.history.impl,
+        consulo.code.editor.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.os.mac;
 

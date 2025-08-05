@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.impl.internal.markup;
+package consulo.codeEditor.internal;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighter;

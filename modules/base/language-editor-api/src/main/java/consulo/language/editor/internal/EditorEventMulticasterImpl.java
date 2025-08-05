@@ -1,19 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.editor.impl.event;
+package consulo.language.editor.internal;
 
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.event.*;
+import consulo.codeEditor.internal.EditorEventMulticasterEx;
+import consulo.codeEditor.internal.ErrorStripeListener;
+import consulo.codeEditor.internal.ErrorStripeMarkupModel;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.document.internal.*;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
-import consulo.language.editor.impl.internal.markup.ErrorStripeListener;
+import consulo.document.internal.DocumentEx;
+import consulo.document.internal.EditReadOnlyListener;
+import consulo.document.internal.EditorDocumentPriorities;
+import consulo.document.internal.PrioritizedDocumentListener;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeListener;
@@ -111,7 +114,7 @@ public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
       }
     });
 
-    ((EditorMarkupModel)editor.getMarkupModel()).addErrorMarkerListener(myErrorStripeMulticaster.getMulticaster(), ((RealEditor)editor).getDisposable());
+    ((ErrorStripeMarkupModel)editor.getMarkupModel()).addErrorMarkerListener(myErrorStripeMulticaster.getMulticaster(), ((RealEditor)editor).getDisposable());
     editor.getCaretModel().addCaretListener(myCaretMulticaster.getMulticaster());
     editor.getSelectionModel().addSelectionListener(mySelectionMulticaster.getMulticaster());
     editor.getScrollingModel().addVisibleAreaListener(myVisibleAreaMulticaster.getMulticaster());

@@ -6,6 +6,7 @@ import consulo.index.io.DataIndexer;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.ID;
 import consulo.index.io.KeyDescriptor;
+import consulo.language.internal.SubstitutedFileType;
 import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;

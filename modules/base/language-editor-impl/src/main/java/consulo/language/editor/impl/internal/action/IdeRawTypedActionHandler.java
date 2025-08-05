@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.impl;
+package consulo.language.editor.impl.internal.action;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
