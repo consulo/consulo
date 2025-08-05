@@ -17,14 +17,14 @@
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.psi.util.EditSourceUtil;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.dataContext.GetDataRule;
-import consulo.util.dataholder.Key;
-import consulo.navigation.Navigatable;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.EditSourceUtil;
+import consulo.navigation.Navigatable;
+import consulo.navigation.OpenFileDescriptor;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -38,7 +38,7 @@ public class NavigatableRule implements GetDataRule<Navigatable> {
   @Override
   public Navigatable getData(@Nonnull DataProvider dataProvider) {
     final Navigatable navigatable = dataProvider.getDataUnchecked(Navigatable.KEY);
-    if (navigatable != null && navigatable instanceof OpenFileDescriptorImpl openFileDescriptor) {
+    if (navigatable != null && navigatable instanceof OpenFileDescriptor openFileDescriptor) {
       if (openFileDescriptor.getFile().isValid()) {
         return openFileDescriptor;
       }

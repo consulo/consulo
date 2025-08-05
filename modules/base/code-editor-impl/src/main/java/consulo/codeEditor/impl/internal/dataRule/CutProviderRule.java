@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.impl.dataRules;
+package consulo.codeEditor.impl.internal.dataRule;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.CutProvider;
@@ -34,7 +34,7 @@ public class CutProviderRule implements GetDataRule<CutProvider> {
 
   @Override
   public CutProvider getData(@Nonnull DataProvider dataProvider) {
-    final Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
+    Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getCutProvider() : null;
   }
 }

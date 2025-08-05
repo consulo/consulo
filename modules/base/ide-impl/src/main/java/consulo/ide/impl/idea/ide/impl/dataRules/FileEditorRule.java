@@ -35,12 +35,12 @@ public class FileEditorRule implements GetDataRule<FileEditor> {
 
   @Override
   public FileEditor getData(@Nonnull DataProvider dataProvider) {
-    final Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
+    Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     if (editor == null) {
       return null;
     }
 
-    final Boolean aBoolean = editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY);
+    Boolean aBoolean = editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY);
     if (aBoolean != null && aBoolean) {
       return null;
     }

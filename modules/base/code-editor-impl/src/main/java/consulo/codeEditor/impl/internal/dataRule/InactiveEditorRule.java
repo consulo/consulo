@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,40 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs;
+package consulo.codeEditor.impl.internal.dataRule;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
-import consulo.versionControlSystem.VcsDataKeys;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.stream.Stream;
-
+/**
+ * @author max
+ */
 @ExtensionImpl
-public class VirtualFileStreamRule implements GetDataRule<Stream<VirtualFile>> {
-  @Nonnull
-  @Override
-  public Key<Stream<VirtualFile>> getKey() {
-    return VcsDataKeys.VIRTUAL_FILE_STREAM;
-  }
-
-  @Nullable
-  @Override
-  public Stream<VirtualFile> getData(@Nonnull DataProvider dataProvider) {
-    VirtualFile[] files = dataProvider.getDataUnchecked(VirtualFile.KEY_OF_ARRAY);
-    if (files != null) {
-      return Stream.of(files);
+public class InactiveEditorRule implements GetDataRule<Editor> {
+    @Nonnull
+    @Override
+    public Key<Editor> getKey() {
+        return EditorKeys.EDITOR_EVEN_IF_INACTIVE;
     }
 
-    VirtualFile file = dataProvider.getDataUnchecked(VirtualFile.KEY);
-    if (file != null) {
-      return Stream.of(file);
+    @Override
+    @Nullable
+    public Editor getData(@Nonnull DataProvider dataProvider) {
+        return dataProvider.getDataUnchecked(Editor.KEY);
     }
-
-    return null;
-  }
 }

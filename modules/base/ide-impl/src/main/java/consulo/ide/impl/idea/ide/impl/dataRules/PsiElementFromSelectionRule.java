@@ -34,7 +34,7 @@ public class PsiElementFromSelectionRule implements GetDataRule<PsiElement> {
 
   @Override
   public PsiElement getData(@Nonnull DataProvider dataProvider) {
-    final Object element = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
+    Object element = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
     return element instanceof PsiElement psiElement && psiElement.isValid() ? psiElement : null;
   }
 }

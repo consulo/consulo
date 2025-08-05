@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.impl.dataRules;
+package consulo.language.impl.internal.dataRule;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
@@ -39,7 +39,7 @@ public class PsiFileRule implements GetDataRule<PsiFile> {
   @Override
   @RequiredReadAction
   public PsiFile getData(@Nonnull DataProvider dataProvider) {
-    final PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
+    PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
     if (element != null) {
       return element.getContainingFile();
     }

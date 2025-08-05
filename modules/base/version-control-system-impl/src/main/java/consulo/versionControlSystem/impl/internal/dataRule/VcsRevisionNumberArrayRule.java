@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.history;
+package consulo.versionControlSystem.impl.internal.dataRule;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
-import consulo.versionControlSystem.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListByDateComparator;
-import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-
+import consulo.versionControlSystem.versionBrowser.CommittedChangeListByDateComparator;
+import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -47,7 +47,7 @@ public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber
     return VcsDataKeys.VCS_REVISION_NUMBERS;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public VcsRevisionNumber[] getData(@Nonnull DataProvider dataProvider) {
     List<VcsRevisionNumber> revisionNumbers = getRevisionNumbers(dataProvider);

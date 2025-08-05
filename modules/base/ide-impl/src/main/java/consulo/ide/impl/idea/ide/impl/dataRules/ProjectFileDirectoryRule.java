@@ -39,7 +39,7 @@ public class ProjectFileDirectoryRule implements GetDataRule<VirtualFile> {
   public VirtualFile getData(@Nonnull DataProvider dataProvider) {
     VirtualFile dir = dataProvider.getDataUnchecked(Project.PROJECT_FILE_DIRECTORY);
     if (dir == null) {
-      final Project project = dataProvider.getDataUnchecked(Project.KEY);
+      Project project = dataProvider.getDataUnchecked(Project.KEY);
       if (project != null) {
         dir = project.getBaseDir();
       }

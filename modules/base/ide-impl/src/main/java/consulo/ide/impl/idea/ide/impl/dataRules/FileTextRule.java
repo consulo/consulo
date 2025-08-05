@@ -41,22 +41,22 @@ public class FileTextRule implements GetDataRule<String> {
 
   @Override
   public String getData(@Nonnull DataProvider dataProvider) {
-    final VirtualFile virtualFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
+    VirtualFile virtualFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
     if (virtualFile == null) {
       return null;
     }
 
-    final FileType fileType = virtualFile.getFileType();
+    FileType fileType = virtualFile.getFileType();
     if (fileType.isBinary() || fileType.isReadOnly()) {
       return null;
     }
 
-    final Project project = dataProvider.getDataUnchecked(Project.KEY);
+    Project project = dataProvider.getDataUnchecked(Project.KEY);
     if (project == null) {
       return null;
     }
 
-    final Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
+    Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
     if (document == null) {
       return null;
     }

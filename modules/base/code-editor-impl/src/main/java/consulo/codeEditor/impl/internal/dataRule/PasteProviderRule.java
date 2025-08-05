@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.impl.dataRules;
+package consulo.codeEditor.impl.internal.dataRule;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
@@ -34,7 +34,7 @@ public class PasteProviderRule implements GetDataRule<PasteProvider> {
 
   @Override
   public PasteProvider getData(@Nonnull DataProvider dataProvider) {
-    final Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
+    Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getPasteProvider() : null;
   }
 }

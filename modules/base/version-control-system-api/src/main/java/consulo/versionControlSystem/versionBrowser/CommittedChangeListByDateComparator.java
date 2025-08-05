@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem.versionBrowser;
 
 import consulo.util.lang.Comparing;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import java.util.Collections;
 import java.util.Comparator;

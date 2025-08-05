@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.impl.internal.dataRule;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.GetDataRule;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesSelection;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,7 +43,7 @@ public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
     return getChangesSelection(dataProvider);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public ChangesSelection getChangesSelection(@Nonnull DataProvider dataProvider) {
     Change currentChange = dataProvider.getDataUnchecked(VcsDataKeys.CURRENT_CHANGE);
 

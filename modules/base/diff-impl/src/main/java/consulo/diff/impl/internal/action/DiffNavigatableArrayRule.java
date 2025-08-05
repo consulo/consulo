@@ -33,7 +33,7 @@ public class DiffNavigatableArrayRule implements GetDataRule<Navigatable[]> {
 
   @Override
   public Navigatable[] getData(@Nonnull DataProvider dataProvider) {
-    final Navigatable element = dataProvider.getDataUnchecked(DiffDataKeys.NAVIGATABLE);
+    Navigatable element = dataProvider.getDataUnchecked(DiffDataKeys.NAVIGATABLE);
     if (element == null) {
       return null;
     }
