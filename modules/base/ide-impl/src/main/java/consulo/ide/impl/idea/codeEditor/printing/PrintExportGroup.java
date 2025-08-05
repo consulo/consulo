@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeEditor.printing;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddToFavoritesActionGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -33,7 +32,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = ExportToHTMLAction.class),
         @ActionRef(type = PrintAction.class),
-        @ActionRef(type = AddToFavoritesActionGroup.class)
+        @ActionRef(id = "AddToFavorites")
     }
 )
 public class PrintExportGroup extends DefaultActionGroup implements DumbAware {
