@@ -22,9 +22,9 @@ import consulo.ide.impl.idea.codeInsight.folding.impl.CollapseExpandDocCommentsH
 import jakarta.annotation.Nonnull;
 
 public class CollapseDocCommentsAction extends BaseCodeInsightAction {
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new CollapseExpandDocCommentsHandler(false);
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new CollapseExpandDocCommentsHandler(false);
+    }
 }

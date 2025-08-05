@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.completion.actions;
 
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
@@ -22,15 +21,12 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
- *  @author peter
+ * @author peter
  */
 public class CodeCompletionAction extends BaseCodeCompletionAction {
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_BASIC);
-    invokeCompletion(e, CompletionType.BASIC, 1);
-  }
-
-
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_BASIC);
+        invokeCompletion(e, CompletionType.BASIC, 1);
+    }
 }

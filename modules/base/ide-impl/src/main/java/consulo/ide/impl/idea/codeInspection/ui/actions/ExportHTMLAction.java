@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.ui.actions;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -71,258 +70,261 @@ import java.util.*;
  * @since 2006-01-11
  */
 public class ExportHTMLAction extends AnAction implements DumbAware {
-  private final InspectionResultsView myView;
-   private static final String PROBLEMS = "problems";
-  private static final String HTML = "HTML";
-  private static final String XML = "XML";
+    private final InspectionResultsView myView;
+    private static final String PROBLEMS = "problems";
+    private static final String HTML = "HTML";
+    private static final String XML = "XML";
 
-  public ExportHTMLAction(InspectionResultsView view) {
-    super(
-      InspectionLocalize.inspectionActionExportHtml(),
-      LocalizeValue.empty(),
-      AllIcons.Actions.Export
-    );
-    myView = view;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ListPopup popup = JBPopupFactory.getInstance().createListPopup(
-      new BaseListPopupStep<String>(InspectionLocalize.inspectionActionExportPopupTitle().get(), new String[]{HTML, XML}) {
-        @Override
-        public PopupStep onChosen(String selectedValue, boolean finalChoice) {
-          return doFinalStep(() -> exportHTML(Comparing.strEqual(selectedValue, HTML)));
-        }
-      });
-    InspectionResultsView.showPopup(e, popup);
-  }
-
-  private void exportHTML(boolean exportToHTML) {
-    ExportToHTMLDialog exportToHTMLDialog = new ExportToHTMLDialog(myView.getProject(), exportToHTML);
-    ExportToHTMLSettings exportToHTMLSettings = ExportToHTMLSettings.getInstance(myView.getProject());
-    if (exportToHTMLSettings.OUTPUT_DIRECTORY == null) {
-      exportToHTMLSettings.OUTPUT_DIRECTORY = ContainerPathManager.get().getHomePath() + File.separator + "inspections";
+    public ExportHTMLAction(InspectionResultsView view) {
+        super(
+            InspectionLocalize.inspectionActionExportHtml(),
+            LocalizeValue.empty(),
+            AllIcons.Actions.Export
+        );
+        myView = view;
     }
-    exportToHTMLDialog.reset();
-    exportToHTMLDialog.show();
-    if (!exportToHTMLDialog.isOK()) {
-      return;
-    }
-    exportToHTMLDialog.apply();
 
-    String outputDirectoryName = exportToHTMLSettings.OUTPUT_DIRECTORY;
-    ApplicationManager.getApplication().invokeLater(() -> {
-      Runnable exportRunnable = () -> {
-        if (!exportToHTML) {
-          dupm2XML(outputDirectoryName);
-        } else {
-          HTMLExportFrameMaker maker = new HTMLExportFrameMaker(outputDirectoryName, myView.getProject());
-          maker.start();
-          try {
-            InspectionTreeNode root = myView.getTree().getRoot();
-            TreeUtil.traverse(root, node -> {
-              if (node instanceof InspectionNode) {
-                ApplicationManager.getApplication().runReadAction(() -> exportHTML(maker, (InspectionNode)node));
-              }
-              return true;
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ListPopup popup = JBPopupFactory.getInstance().createListPopup(
+            new BaseListPopupStep<String>(InspectionLocalize.inspectionActionExportPopupTitle().get(), new String[]{HTML, XML}) {
+                @Override
+                public PopupStep onChosen(String selectedValue, boolean finalChoice) {
+                    return doFinalStep(() -> exportHTML(Comparing.strEqual(selectedValue, HTML)));
+                }
             });
-          }
-          catch (ProcessCanceledException e) {
-            // Do nothing here.
-          }
+        InspectionResultsView.showPopup(e, popup);
+    }
 
-          maker.done();
+    private void exportHTML(boolean exportToHTML) {
+        ExportToHTMLDialog exportToHTMLDialog = new ExportToHTMLDialog(myView.getProject(), exportToHTML);
+        ExportToHTMLSettings exportToHTMLSettings = ExportToHTMLSettings.getInstance(myView.getProject());
+        if (exportToHTMLSettings.OUTPUT_DIRECTORY == null) {
+            exportToHTMLSettings.OUTPUT_DIRECTORY = ContainerPathManager.get().getHomePath() + File.separator + "inspections";
         }
-      };
+        exportToHTMLDialog.reset();
+        exportToHTMLDialog.show();
+        if (!exportToHTMLDialog.isOK()) {
+            return;
+        }
+        exportToHTMLDialog.apply();
 
-      if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
-        exportRunnable,
-        exportToHTML
-          ? InspectionLocalize.inspectionGeneratingHtmlProgressTitle().get()
-          : InspectionLocalize.inspectionGeneratingXmlProgressTitle().get(),
-        true,
-        myView.getProject()
-      )) {
-        return;
-      }
+        String outputDirectoryName = exportToHTMLSettings.OUTPUT_DIRECTORY;
+        ApplicationManager.getApplication().invokeLater(() -> {
+            Runnable exportRunnable = () -> {
+                if (!exportToHTML) {
+                    dupm2XML(outputDirectoryName);
+                }
+                else {
+                    HTMLExportFrameMaker maker = new HTMLExportFrameMaker(outputDirectoryName, myView.getProject());
+                    maker.start();
+                    try {
+                        InspectionTreeNode root = myView.getTree().getRoot();
+                        TreeUtil.traverse(root, node -> {
+                            if (node instanceof InspectionNode) {
+                                ApplicationManager.getApplication().runReadAction(() -> exportHTML(maker, (InspectionNode) node));
+                            }
+                            return true;
+                        });
+                    }
+                    catch (ProcessCanceledException e) {
+                        // Do nothing here.
+                    }
 
-      if (exportToHTML && exportToHTMLSettings.OPEN_IN_BROWSER) {
-        BrowserUtil.browse(new File(exportToHTMLSettings.OUTPUT_DIRECTORY, "index.html"));
-      }
-    });
-  }
+                    maker.done();
+                }
+            };
 
-  private void dupm2XML(String outputDirectoryName) {
-    try {
-      new File(outputDirectoryName).mkdirs();
-      InspectionTreeNode root = myView.getTree().getRoot();
-      IOException[] ex = new IOException[1];
-      TreeUtil.traverse(root, node -> {
-        if (node instanceof InspectionNode toolNode) {
-          Element problems = new Element(PROBLEMS);
-          InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
+            if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
+                exportRunnable,
+                exportToHTML
+                    ? InspectionLocalize.inspectionGeneratingHtmlProgressTitle().get()
+                    : InspectionLocalize.inspectionGeneratingXmlProgressTitle().get(),
+                true,
+                myView.getProject()
+            )) {
+                return;
+            }
 
-          Set<InspectionToolWrapper> toolWrappers = getWorkedTools(toolNode);
-          for (InspectionToolWrapper wrapper : toolWrappers) {
-            InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(wrapper);
-            presentation.exportResults(problems);
-          }
-          ProjectPathMacroManager.getInstance(myView.getProject()).collapsePaths(problems);
-          try {
+            if (exportToHTML && exportToHTMLSettings.OPEN_IN_BROWSER) {
+                BrowserUtil.browse(new File(exportToHTMLSettings.OUTPUT_DIRECTORY, "index.html"));
+            }
+        });
+    }
+
+    private void dupm2XML(String outputDirectoryName) {
+        try {
+            new File(outputDirectoryName).mkdirs();
+            InspectionTreeNode root = myView.getTree().getRoot();
+            IOException[] ex = new IOException[1];
+            TreeUtil.traverse(root, node -> {
+                if (node instanceof InspectionNode toolNode) {
+                    Element problems = new Element(PROBLEMS);
+                    InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
+
+                    Set<InspectionToolWrapper> toolWrappers = getWorkedTools(toolNode);
+                    for (InspectionToolWrapper wrapper : toolWrappers) {
+                        InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(wrapper);
+                        presentation.exportResults(problems);
+                    }
+                    ProjectPathMacroManager.getInstance(myView.getProject()).collapsePaths(problems);
+                    try {
+                        JDOMUtil.writeDocument(
+                            new Document(problems),
+                            outputDirectoryName + File.separator + toolWrapper.getShortName() + InspectionApplication.XML_EXTENSION,
+                            CodeStyleSettingsManager.getSettings(null).getLineSeparator()
+                        );
+                    }
+                    catch (IOException e) {
+                        ex[0] = e;
+                    }
+                }
+                return true;
+            });
+            if (ex[0] != null) {
+                throw ex[0];
+            }
+            Element element = new Element(InspectionApplication.INSPECTIONS_NODE);
+            String profileName = myView.getCurrentProfileName();
+            if (profileName != null) {
+                element.setAttribute(InspectionApplication.PROFILE, profileName);
+            }
             JDOMUtil.writeDocument(
-              new Document(problems),
-              outputDirectoryName + File.separator + toolWrapper.getShortName() + InspectionApplication.XML_EXTENSION,
-              CodeStyleSettingsManager.getSettings(null).getLineSeparator()
+                new Document(element),
+                outputDirectoryName + File.separator + InspectionApplication.DESCRIPTIONS + InspectionApplication.XML_EXTENSION,
+                CodeStyleSettingsManager.getSettings(null).getLineSeparator()
             );
-          }
-          catch (IOException e) {
-            ex[0] = e;
-          }
         }
-        return true;
-      });
-      if (ex[0] != null) {
-        throw ex[0];
-      }
-      Element element = new Element(InspectionApplication.INSPECTIONS_NODE);
-      String profileName = myView.getCurrentProfileName();
-      if (profileName != null) {
-        element.setAttribute(InspectionApplication.PROFILE, profileName);
-      }
-      JDOMUtil.writeDocument(
-        new Document(element),
-        outputDirectoryName + File.separator + InspectionApplication.DESCRIPTIONS + InspectionApplication.XML_EXTENSION,
-        CodeStyleSettingsManager.getSettings(null).getLineSeparator()
-      );
-    }
-    catch (IOException e) {
-      SwingUtilities.invokeLater(() -> Messages.showErrorDialog(myView, e.getMessage()));
-    }
-  }
-
-  @Nonnull
-  private Set<InspectionToolWrapper> getWorkedTools(@Nonnull InspectionNode node) {
-    Set<InspectionToolWrapper> result = new HashSet<>();
-    InspectionToolWrapper wrapper = node.getToolWrapper();
-    if (myView.getCurrentProfileName() != null){
-      result.add(wrapper);
-      return result;
-    }
-    String shortName = wrapper.getShortName();
-    GlobalInspectionContextImpl context = myView.getGlobalInspectionContext();
-    Tools tools = context.getTools().get(shortName);
-    if (tools != null) {   //dummy entry points tool
-      for (ScopeToolState state : tools.getTools()) {
-        InspectionToolWrapper toolWrapper = state.getTool();
-        result.add(toolWrapper);
-      }
-    }
-    return result;
-  }
-
-  @RequiredReadAction
-  private void exportHTML(HTMLExportFrameMaker frameMaker, InspectionNode node) {
-    final Set<InspectionToolWrapper> toolWrappers = getWorkedTools(node);
-    InspectionToolWrapper toolWrapper = node.getToolWrapper();
-
-    final HTMLExporter exporter =
-      new HTMLExporter(frameMaker.getRootFolder() + "/" + toolWrapper.getShortName(), myView.getGlobalInspectionContext().getPresentation(toolWrapper).getComposer());
-    frameMaker.startInspection(toolWrapper);
-    HTMLExportUtil.runExport(myView.getProject(), new ThrowableRunnable<>() {
-      @Override
-      @RequiredReadAction
-      public void run() throws IOException {
-        exportHTML(toolWrappers, exporter);
-        exporter.generateReferencedPages();
-      }
-    });
-  }
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  @RequiredReadAction
-  private void exportHTML(@Nonnull Set<InspectionToolWrapper> toolWrappers, HTMLExporter exporter) throws IOException {
-    StringBuffer packageIndex = new StringBuffer();
-    packageIndex.append("<html><body>");
-
-    Map<String, Set<RefEntity>> content = new HashMap<>();
-
-    for (InspectionToolWrapper toolWrapper : toolWrappers) {
-      InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(toolWrapper);
-      Map<String, Set<RefEntity>> toolContent = presentation.getContent();
-      if (toolContent != null) {
-        content.putAll(toolContent);
-      }
+        catch (IOException e) {
+            SwingUtilities.invokeLater(() -> Messages.showErrorDialog(myView, e.getMessage()));
+        }
     }
 
-    Set<RefEntity> defaultPackageEntities = content.remove(null);
-    if (defaultPackageEntities != null) {
-      content.put("default package" , defaultPackageEntities);
+    @Nonnull
+    private Set<InspectionToolWrapper> getWorkedTools(@Nonnull InspectionNode node) {
+        Set<InspectionToolWrapper> result = new HashSet<>();
+        InspectionToolWrapper wrapper = node.getToolWrapper();
+        if (myView.getCurrentProfileName() != null) {
+            result.add(wrapper);
+            return result;
+        }
+        String shortName = wrapper.getShortName();
+        GlobalInspectionContextImpl context = myView.getGlobalInspectionContext();
+        Tools tools = context.getTools().get(shortName);
+        if (tools != null) {   //dummy entry points tool
+            for (ScopeToolState state : tools.getTools()) {
+                InspectionToolWrapper toolWrapper = state.getTool();
+                result.add(toolWrapper);
+            }
+        }
+        return result;
     }
 
-    List<String> packageNames = new ArrayList<>(content.keySet());
+    @RequiredReadAction
+    private void exportHTML(HTMLExportFrameMaker frameMaker, InspectionNode node) {
+        final Set<InspectionToolWrapper> toolWrappers = getWorkedTools(node);
+        InspectionToolWrapper toolWrapper = node.getToolWrapper();
 
-    Collections.sort(packageNames);
-    for (String packageName : packageNames) {
-      appendPackageReference(packageIndex, packageName);
-      List<RefEntity> packageContent = new ArrayList<>(content.get(packageName));
-      Collections.sort(packageContent, RefEntityAlphabeticalComparator.getInstance());
-      StringBuffer contentIndex = new StringBuffer();
-      contentIndex.append("<html><body>");
-      for (RefEntity refElement : packageContent) {
-        refElement = refElement.getRefManager().getRefinedElement(refElement);
-        contentIndex.append("<a HREF=\"");
-        contentIndex.append(exporter.getURL(refElement));
-        contentIndex.append("\" target=\"elementFrame\">");
-        contentIndex.append(refElement.getName());
-        contentIndex.append("</a><br>");
-
-        exporter.createPage(refElement);
-      }
-
-      contentIndex.append("</body></html>");
-      HTMLExportUtil.writeFile(exporter.getRootFolder(), packageName + "-index.html", contentIndex, myView.getProject());
+        final HTMLExporter exporter =
+            new HTMLExporter(
+                frameMaker.getRootFolder() + "/" + toolWrapper.getShortName(),
+                myView.getGlobalInspectionContext().getPresentation(toolWrapper).getComposer()
+            );
+        frameMaker.startInspection(toolWrapper);
+        HTMLExportUtil.runExport(myView.getProject(), new ThrowableRunnable<>() {
+            @Override
+            @RequiredReadAction
+            public void run() throws IOException {
+                exportHTML(toolWrappers, exporter);
+                exporter.generateReferencedPages();
+            }
+        });
     }
 
-    Set<RefModule> modules = new HashSet<>();
-    for (InspectionToolWrapper toolWrapper : toolWrappers) {
-      InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(toolWrapper);
-      Set<RefModule> problems = presentation.getModuleProblems();
-      if (problems != null) {
-        modules.addAll(problems);
-      }
+    @SuppressWarnings({"HardCodedStringLiteral"})
+    @RequiredReadAction
+    private void exportHTML(@Nonnull Set<InspectionToolWrapper> toolWrappers, HTMLExporter exporter) throws IOException {
+        StringBuffer packageIndex = new StringBuffer();
+        packageIndex.append("<html><body>");
+
+        Map<String, Set<RefEntity>> content = new HashMap<>();
+
+        for (InspectionToolWrapper toolWrapper : toolWrappers) {
+            InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(toolWrapper);
+            Map<String, Set<RefEntity>> toolContent = presentation.getContent();
+            if (toolContent != null) {
+                content.putAll(toolContent);
+            }
+        }
+
+        Set<RefEntity> defaultPackageEntities = content.remove(null);
+        if (defaultPackageEntities != null) {
+            content.put("default package", defaultPackageEntities);
+        }
+
+        List<String> packageNames = new ArrayList<>(content.keySet());
+
+        Collections.sort(packageNames);
+        for (String packageName : packageNames) {
+            appendPackageReference(packageIndex, packageName);
+            List<RefEntity> packageContent = new ArrayList<>(content.get(packageName));
+            Collections.sort(packageContent, RefEntityAlphabeticalComparator.getInstance());
+            StringBuffer contentIndex = new StringBuffer();
+            contentIndex.append("<html><body>");
+            for (RefEntity refElement : packageContent) {
+                refElement = refElement.getRefManager().getRefinedElement(refElement);
+                contentIndex.append("<a HREF=\"");
+                contentIndex.append(exporter.getURL(refElement));
+                contentIndex.append("\" target=\"elementFrame\">");
+                contentIndex.append(refElement.getName());
+                contentIndex.append("</a><br>");
+
+                exporter.createPage(refElement);
+            }
+
+            contentIndex.append("</body></html>");
+            HTMLExportUtil.writeFile(exporter.getRootFolder(), packageName + "-index.html", contentIndex, myView.getProject());
+        }
+
+        Set<RefModule> modules = new HashSet<>();
+        for (InspectionToolWrapper toolWrapper : toolWrappers) {
+            InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(toolWrapper);
+            Set<RefModule> problems = presentation.getModuleProblems();
+            if (problems != null) {
+                modules.addAll(problems);
+            }
+        }
+
+        List<RefModule> sortedModules = new ArrayList<>(modules);
+        Collections.sort(sortedModules, RefEntityAlphabeticalComparator.getInstance());
+        for (RefModule module : sortedModules) {
+            appendPackageReference(packageIndex, module.getName());
+            StringBuffer contentIndex = new StringBuffer();
+            contentIndex.append("<html><body>");
+
+            contentIndex.append("<a HREF=\"");
+            contentIndex.append(exporter.getURL(module));
+            contentIndex.append("\" target=\"elementFrame\">");
+            contentIndex.append(module.getName());
+            contentIndex.append("</a><br>");
+            exporter.createPage(module);
+
+            contentIndex.append("</body></html>");
+            HTMLExportUtil.writeFile(exporter.getRootFolder(), module.getName() + "-index.html", contentIndex, myView.getProject());
+        }
+
+        packageIndex.append("</body></html>");
+
+        HTMLExportUtil.writeFile(exporter.getRootFolder(), "index.html", packageIndex, myView.getProject());
     }
 
-    List<RefModule> sortedModules = new ArrayList<>(modules);
-    Collections.sort(sortedModules, RefEntityAlphabeticalComparator.getInstance());
-    for (RefModule module : sortedModules) {
-      appendPackageReference(packageIndex, module.getName());
-      StringBuffer contentIndex = new StringBuffer();
-      contentIndex.append("<html><body>");
-
-      contentIndex.append("<a HREF=\"");
-      contentIndex.append(exporter.getURL(module));
-      contentIndex.append("\" target=\"elementFrame\">");
-      contentIndex.append(module.getName());
-      contentIndex.append("</a><br>");
-      exporter.createPage(module);
-
-      contentIndex.append("</body></html>");
-      HTMLExportUtil.writeFile(exporter.getRootFolder(), module.getName() + "-index.html", contentIndex, myView.getProject());
+    @SuppressWarnings({"HardCodedStringLiteral"})
+    private static void appendPackageReference(StringBuffer packageIndex, String packageName) {
+        packageIndex.append("<a HREF=\"");
+        packageIndex.append(packageName);
+        packageIndex.append("-index.html\" target=\"packageFrame\">");
+        packageIndex.append(packageName);
+        packageIndex.append("</a><br>");
     }
-
-    packageIndex.append("</body></html>");
-
-    HTMLExportUtil.writeFile(exporter.getRootFolder(), "index.html", packageIndex, myView.getProject());
-  }
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  private static void appendPackageReference(StringBuffer packageIndex, String packageName) {
-    packageIndex.append("<a HREF=\"");
-    packageIndex.append(packageName);
-    packageIndex.append("-index.html\" target=\"packageFrame\">");
-    packageIndex.append(packageName);
-    packageIndex.append("</a><br>");
-  }
-
 }

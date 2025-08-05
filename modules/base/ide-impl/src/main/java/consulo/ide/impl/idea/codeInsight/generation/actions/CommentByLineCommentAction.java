@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -33,25 +32,27 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 public class CommentByLineCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
-  public CommentByLineCommentAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Nonnull
-  @Override
-  protected MultiCaretCodeInsightActionHandler getHandler() {
-    return new CommentByLineCommentHandler();
-  }
-
-  @Override
-  protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull final PsiFile file) {
-    final FileType fileType = file.getFileType();
-    if (fileType instanceof AbstractFileType) {
-      return ((AbstractFileType)fileType).getCommenter() != null;
+    public CommentByLineCommentAction() {
+        setEnabledInModalContext(true);
     }
 
-    if (Commenter.forLanguage(file.getLanguage()) != null || Commenter.forLanguage(file.getViewProvider().getBaseLanguage()) != null) return true;
-    PsiElement host = InjectedLanguageManager.getInstance(project).getInjectionHost(file);
-    return host != null && Commenter.forLanguage(host.getLanguage()) != null;
-  }
+    @Nonnull
+    @Override
+    protected MultiCaretCodeInsightActionHandler getHandler() {
+        return new CommentByLineCommentHandler();
+    }
+
+    @Override
+    protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull final PsiFile file) {
+        final FileType fileType = file.getFileType();
+        if (fileType instanceof AbstractFileType) {
+            return ((AbstractFileType) fileType).getCommenter() != null;
+        }
+
+        if (Commenter.forLanguage(file.getLanguage()) != null || Commenter.forLanguage(file.getViewProvider().getBaseLanguage()) != null) {
+            return true;
+        }
+        PsiElement host = InjectedLanguageManager.getInstance(project).getInjectionHost(file);
+        return host != null && Commenter.forLanguage(host.getLanguage()) != null;
+    }
 }

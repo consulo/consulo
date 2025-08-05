@@ -29,61 +29,62 @@ import java.lang.ref.WeakReference;
 
 /**
  * Expands {@link AnAction} contract for documentation-related actions that may be called from the IDE tooltip.
- * 
+ *
  * @author Denis Zhdanov
- * @since 7/26/12 12:28 PM
+ * @since 2012-07-26
  */
 public abstract class AbstractDocumentationTooltipAction extends AnAction {
+    @Nullable
+    private WeakReference<PsiElement> myDocAnchor;
+    @Nullable
+    private WeakReference<PsiElement> myOriginalElement;
 
-  @Nullable
-  private WeakReference<PsiElement> myDocAnchor;
-  @Nullable
-  private WeakReference<PsiElement> myOriginalElement;
+    public void setDocInfo(@Nonnull PsiElement docAnchor, @Nonnull PsiElement originalElement) {
+        myDocAnchor = new PatchedWeakReference<PsiElement>(docAnchor);
+        myOriginalElement = new PatchedWeakReference<PsiElement>(originalElement);
+    }
 
-  public void setDocInfo(@Nonnull PsiElement docAnchor, @Nonnull PsiElement originalElement) {
-    myDocAnchor = new PatchedWeakReference<PsiElement>(docAnchor);
-    myOriginalElement = new PatchedWeakReference<PsiElement>(originalElement);
-  }
-  
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setVisible(getDocInfo() != null);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setVisible(getDocInfo() != null);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Pair<PsiElement, PsiElement> info = getDocInfo();
-    if (info == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Pair<PsiElement, PsiElement> info = getDocInfo();
+        if (info == null) {
+            return;
+        }
+        doActionPerformed(e.getDataContext(), info.first, info.second);
+        myDocAnchor = null;
+        myOriginalElement = null;
     }
-    doActionPerformed(e.getDataContext(), info.first, info.second);
-    myDocAnchor = null;
-    myOriginalElement = null;
-  }
-  
-  protected abstract void doActionPerformed(@Nonnull DataContext context,
-                                            @Nonnull PsiElement docAnchor,
-                                            @Nonnull PsiElement originalElement);
-  
-  @Nullable
-  private Pair<PsiElement/* doc anchor */, PsiElement /* original element */> getDocInfo() {
-    WeakReference<PsiElement> docAnchorRef = myDocAnchor;
-    if (docAnchorRef == null) {
-      return null;
+
+    protected abstract void doActionPerformed(
+        @Nonnull DataContext context,
+        @Nonnull PsiElement docAnchor,
+        @Nonnull PsiElement originalElement
+    );
+
+    @Nullable
+    private Pair<PsiElement/* doc anchor */, PsiElement /* original element */> getDocInfo() {
+        WeakReference<PsiElement> docAnchorRef = myDocAnchor;
+        if (docAnchorRef == null) {
+            return null;
+        }
+        PsiElement docAnchor = docAnchorRef.get();
+        if (docAnchor == null) {
+            return null;
+        }
+        WeakReference<PsiElement> originalElementRef = myOriginalElement;
+        if (originalElementRef == null) {
+            return null;
+        }
+        PsiElement originalElement = originalElementRef.get();
+        if (originalElement == null) {
+            return null;
+        }
+        return Pair.create(docAnchor, originalElement);
     }
-    PsiElement docAnchor = docAnchorRef.get();
-    if (docAnchor == null) {
-      return null;
-    }
-    WeakReference<PsiElement> originalElementRef = myOriginalElement;
-    if (originalElementRef == null) {
-      return null;
-    }
-    PsiElement originalElement = originalElementRef.get();
-    if (originalElement == null) {
-      return null;
-    }
-    return Pair.create(docAnchor, originalElement);
-  }
 }

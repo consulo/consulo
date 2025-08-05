@@ -31,22 +31,22 @@ import java.util.List;
  * @since 2007-06-28
  */
 public class DumpConfigurationTypesAction extends AnAction implements DumbAware {
-  public DumpConfigurationTypesAction() {
-    super("Dump Configurations");
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final List<ConfigurationType> factories = RunManager.getInstance(project).getConfigurationFactories();
-    for (ConfigurationType factory : factories) {
-      System.out.println(factory.getDisplayName() + " : " + factory.getId());
+    public DumpConfigurationTypesAction() {
+        super("Dump Configurations");
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.hasData(Project.KEY));
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        final List<ConfigurationType> factories = RunManager.getInstance(project).getConfigurationFactories();
+        for (ConfigurationType factory : factories) {
+            System.out.println(factory.getDisplayName() + " : " + factory.getId());
+        }
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
+    }
 }

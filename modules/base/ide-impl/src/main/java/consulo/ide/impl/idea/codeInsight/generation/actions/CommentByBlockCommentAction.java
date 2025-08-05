@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -31,26 +30,30 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 public class CommentByBlockCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
-  public CommentByBlockCommentAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Nonnull
-  @Override
-  protected MultiCaretCodeInsightActionHandler getHandler() {
-    return new CommentByBlockCommentHandler();
-  }
-
-  @Override
-  protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull final PsiFile file) {
-    final FileType fileType = file.getFileType();
-    if (fileType instanceof AbstractFileType) {
-      return ((AbstractFileType)fileType).getCommenter() != null;
+    public CommentByBlockCommentAction() {
+        setEnabledInModalContext(true);
     }
 
-    Commenter commenter = Commenter.forLanguage(file.getLanguage());
-    if (commenter == null) commenter = Commenter.forLanguage(file.getViewProvider().getBaseLanguage());
-    if (commenter == null) return false;
-    return commenter.getBlockCommentPrefix() != null && commenter.getBlockCommentSuffix() != null;
-  }
+    @Nonnull
+    @Override
+    protected MultiCaretCodeInsightActionHandler getHandler() {
+        return new CommentByBlockCommentHandler();
+    }
+
+    @Override
+    protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull final PsiFile file) {
+        final FileType fileType = file.getFileType();
+        if (fileType instanceof AbstractFileType) {
+            return ((AbstractFileType) fileType).getCommenter() != null;
+        }
+
+        Commenter commenter = Commenter.forLanguage(file.getLanguage());
+        if (commenter == null) {
+            commenter = Commenter.forLanguage(file.getViewProvider().getBaseLanguage());
+        }
+        if (commenter == null) {
+            return false;
+        }
+        return commenter.getBlockCommentPrefix() != null && commenter.getBlockCommentSuffix() != null;
+    }
 }
