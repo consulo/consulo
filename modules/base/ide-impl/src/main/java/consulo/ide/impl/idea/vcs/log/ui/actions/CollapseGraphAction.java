@@ -22,21 +22,21 @@ import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
 import jakarta.annotation.Nonnull;
 
 public class CollapseGraphAction extends CollapseOrExpandGraphAction {
-  @Nonnull
-  private static final String COLLAPSE = "Collapse";
+    @Nonnull
+    private static final String COLLAPSE = "Collapse";
 
-  public CollapseGraphAction() {
-    super(COLLAPSE);
-  }
+    public CollapseGraphAction() {
+        super(COLLAPSE);
+    }
 
-  @Override
-  protected void executeAction(@Nonnull VcsLogUiImpl vcsLogUi) {
-    vcsLogUi.collapseAll();
-  }
+    @Override
+    protected void executeAction(@Nonnull VcsLogUiImpl vcsLogUi) {
+        vcsLogUi.collapseAll();
+    }
 
-  @Nonnull
-  @Override
-  protected String getPrefix() {
-    return COLLAPSE + " ";
-  }
+    @Nonnull
+    @Override
+    protected String getPrefix() {
+        return COLLAPSE + " ";
+    }
 }

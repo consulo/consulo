@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
@@ -40,40 +39,47 @@ import java.util.Map;
  * @author peter
  */
 public class DumpLookupElementWeights extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance(DumpLookupElementWeights.class);
+    private static final Logger LOG = Logger.getInstance(DumpLookupElementWeights.class);
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Editor editor = e.getData(Editor.KEY);
-    dumpLookupElementWeights(LookupManager.getActiveLookup(editor));
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-    final Editor editor = e.getData(Editor.KEY);
-    presentation.setEnabled(editor != null && LookupManager.getActiveLookup(editor) != null);
-  }
-
-  public static void dumpLookupElementWeights(final LookupEx lookup) {
-    LookupElement selected = lookup.getCurrentItem();
-    String sb = "selected: " + selected;
-    if (selected != null) {
-      sb += "\nprefix: " + lookup.itemPattern(selected);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Editor editor = e.getData(Editor.KEY);
+        dumpLookupElementWeights(LookupManager.getActiveLookup(editor));
     }
-    sb += "\nweights:\n" + StringUtil.join(getLookupElementWeights(lookup, true), "\n");
-    System.out.println(sb);
-    LOG.info(sb);
-    try {
-      CopyPasteManager.getInstance().setContents(new StringSelection(sb));
-    }
-    catch (Exception ignore) {
-    }
-  }
 
-  public static List<String> getLookupElementWeights(LookupEx lookup, boolean hideSingleValued) {
-    final Map<LookupElement, List<Pair<String, Object>>> weights = lookup.getRelevanceObjects(lookup.getItems(), hideSingleValued);
-    return ContainerUtil.map(weights.entrySet(), entry -> entry.getKey().getLookupString() + "\t" + StringUtil.join(entry.getValue(), pair -> pair.first + "=" + pair.second, ", "));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final Presentation presentation = e.getPresentation();
+        final Editor editor = e.getData(Editor.KEY);
+        presentation.setEnabled(editor != null && LookupManager.getActiveLookup(editor) != null);
+    }
+
+    public static void dumpLookupElementWeights(final LookupEx lookup) {
+        LookupElement selected = lookup.getCurrentItem();
+        String sb = "selected: " + selected;
+        if (selected != null) {
+            sb += "\nprefix: " + lookup.itemPattern(selected);
+        }
+        sb += "\nweights:\n" + StringUtil.join(getLookupElementWeights(lookup, true), "\n");
+        System.out.println(sb);
+        LOG.info(sb);
+        try {
+            CopyPasteManager.getInstance().setContents(new StringSelection(sb));
+        }
+        catch (Exception ignore) {
+        }
+    }
+
+    public static List<String> getLookupElementWeights(LookupEx lookup, boolean hideSingleValued) {
+        final Map<LookupElement, List<Pair<String, Object>>> weights = lookup.getRelevanceObjects(lookup.getItems(), hideSingleValued);
+        return ContainerUtil.map(
+            weights.entrySet(),
+            entry -> entry.getKey().getLookupString() + "\t" + StringUtil.join(
+                entry.getValue(),
+                pair -> pair.first + "=" + pair.second,
+                ", "
+            )
+        );
+    }
 }

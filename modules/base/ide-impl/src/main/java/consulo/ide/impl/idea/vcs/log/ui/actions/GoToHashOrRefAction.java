@@ -30,30 +30,30 @@ import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 public class GoToHashOrRefAction extends DumbAwareAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    VcsLogUtil.triggerUsage(e);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        VcsLogUtil.triggerUsage(e);
 
-    Project project = e.getRequiredData(Project.KEY);
-    final VcsLog log = e.getRequiredData(VcsLog.KEY);
-    final VcsLogUiImpl logUi = (VcsLogUiImpl)e.getRequiredData(VcsLogUi.KEY);
+        Project project = e.getRequiredData(Project.KEY);
+        final VcsLog log = e.getRequiredData(VcsLog.KEY);
+        final VcsLogUiImpl logUi = (VcsLogUiImpl) e.getRequiredData(VcsLogUi.KEY);
 
-    Set<VirtualFile> visibleRoots = VcsLogUtil.getVisibleRoots(logUi);
-    GoToHashOrRefPopup popup = new GoToHashOrRefPopup(
-      project,
-      logUi.getDataPack().getRefs(),
-      visibleRoots,
-      log::jumpToReference,
-      vcsRef -> logUi.jumpToCommit(vcsRef.getCommitHash(), vcsRef.getRoot()),
-      logUi.getColorManager(),
-      new VcsGoToRefComparator(logUi.getDataPack().getLogProviders())
-    );
-    popup.show(logUi.getTable());
-  }
+        Set<VirtualFile> visibleRoots = VcsLogUtil.getVisibleRoots(logUi);
+        GoToHashOrRefPopup popup = new GoToHashOrRefPopup(
+            project,
+            logUi.getDataPack().getRefs(),
+            visibleRoots,
+            log::jumpToReference,
+            vcsRef -> logUi.jumpToCommit(vcsRef.getCommitHash(), vcsRef.getRoot()),
+            logUi.getColorManager(),
+            new VcsGoToRefComparator(logUi.getDataPack().getLogProviders())
+        );
+        popup.show(logUi.getTable());
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(VcsLog.KEY) && e.hasData(VcsLogUi.KEY));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(VcsLog.KEY) && e.hasData(VcsLogUi.KEY));
+    }
 }

@@ -33,38 +33,44 @@ import jakarta.annotation.Nonnull;
  * @since 2012-02-24
  */
 public class DumpDirectoryInfoAction extends AnAction {
-  public static final Logger LOG = Logger.getInstance(DumpDirectoryInfoAction.class);
+    public static final Logger LOG = Logger.getInstance(DumpDirectoryInfoAction.class);
 
-  public DumpDirectoryInfoAction() {
-    super("Dump Directory Info");
-  }
+    public DumpDirectoryInfoAction() {
+        super("Dump Directory Info");
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final DirectoryIndex index = DirectoryIndex.getInstance(project);
-    final VirtualFile root = e.getData(VirtualFile.KEY);
-    ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
-      final ContentIterator contentIterator = fileOrDir -> {
-        LOG.info(fileOrDir.getPath());
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        final DirectoryIndex index = DirectoryIndex.getInstance(project);
+        final VirtualFile root = e.getData(VirtualFile.KEY);
+        ProgressManager.getInstance().runProcessWithProgressSynchronously(
+            () -> {
+                final ContentIterator contentIterator = fileOrDir -> {
+                    LOG.info(fileOrDir.getPath());
 
-        final DirectoryInfo directoryInfo = index.getInfoForDirectory(fileOrDir);
-        if (directoryInfo != null) {
-          LOG.info(directoryInfo.toString());
-        }
-        return true;
-      };
-      if (root != null) {
-        ProjectRootManager.getInstance(project).getFileIndex().iterateContentUnderDirectory(root, contentIterator);
-      } else {
-        ProjectRootManager.getInstance(project).getFileIndex().iterateContent(contentIterator);
-      }
-    }, "Dumping directory index", true, project);
-  }
+                    final DirectoryInfo directoryInfo = index.getInfoForDirectory(fileOrDir);
+                    if (directoryInfo != null) {
+                        LOG.info(directoryInfo.toString());
+                    }
+                    return true;
+                };
+                if (root != null) {
+                    ProjectRootManager.getInstance(project).getFileIndex().iterateContentUnderDirectory(root, contentIterator);
+                }
+                else {
+                    ProjectRootManager.getInstance(project).getFileIndex().iterateContent(contentIterator);
+                }
+            },
+            "Dumping directory index",
+            true,
+            project
+        );
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.hasData(Project.KEY));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
+    }
 }

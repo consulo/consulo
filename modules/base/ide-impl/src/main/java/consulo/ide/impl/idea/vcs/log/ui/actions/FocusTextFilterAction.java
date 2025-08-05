@@ -27,25 +27,25 @@ import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 
 public class FocusTextFilterAction extends DumbAwareAction {
-  public FocusTextFilterAction() {
-    super("Focus Text Filter", "Focus text filter or move focus back to the commits list", null);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.getData(VcsLogUi.KEY) instanceof VcsLogUiImpl);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    MainFrame mainFrame = ((VcsLogUiImpl)e.getRequiredData(VcsLogUi.KEY)).getMainFrame();
-    if (mainFrame.getTextFilter().getTextEditor().hasFocus()) {
-      ProjectIdeFocusManager.getInstance(project).requestFocus(mainFrame.getGraphTable(), true);
+    public FocusTextFilterAction() {
+        super("Focus Text Filter", "Focus text filter or move focus back to the commits list", null);
     }
-    else {
-      ProjectIdeFocusManager.getInstance(project).requestFocus(mainFrame.getTextFilter(), true);
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.getData(VcsLogUi.KEY) instanceof VcsLogUiImpl);
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        MainFrame mainFrame = ((VcsLogUiImpl) e.getRequiredData(VcsLogUi.KEY)).getMainFrame();
+        if (mainFrame.getTextFilter().getTextEditor().hasFocus()) {
+            ProjectIdeFocusManager.getInstance(project).requestFocus(mainFrame.getGraphTable(), true);
+        }
+        else {
+            ProjectIdeFocusManager.getInstance(project).requestFocus(mainFrame.getTextFilter(), true);
+        }
+    }
 }

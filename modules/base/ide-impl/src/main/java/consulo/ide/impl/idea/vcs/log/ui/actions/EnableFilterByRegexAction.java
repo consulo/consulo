@@ -19,9 +19,8 @@ import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 
 public class EnableFilterByRegexAction extends BooleanPropertyToggleAction {
-
-  @Override
-  protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
-    return MainVcsLogUiProperties.TEXT_FILTER_REGEX;
-  }
+    @Override
+    protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
+        return MainVcsLogUiProperties.TEXT_FILTER_REGEX;
+    }
 }

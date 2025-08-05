@@ -30,44 +30,44 @@ import java.util.Collection;
 import java.util.List;
 
 public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
-  @Nonnull
-  private static final String MATCH_CASE = "Match Case";
+    @Nonnull
+    private static final String MATCH_CASE = "Match Case";
 
-  @Override
-  protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
-    return MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE;
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-
-    VcsLogUi ui = e.getData(VcsLogUi.KEY);
-    VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
-    if (ui != null && properties != null && properties.exists(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE)) {
-      boolean regexEnabled = properties.exists(MainVcsLogUiProperties.TEXT_FILTER_REGEX)
-        && properties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX);
-      if (!regexEnabled) {
-        e.getPresentation().setText(MATCH_CASE);
-      }
-      else {
-        Collection<VcsLogProvider> providers =
-          ContainerUtil.newLinkedHashSet(ui.getDataPack().getLogProviders().values());
-        List<VcsLogProvider> supported =
-          ContainerUtil.filter(providers, p -> VcsLogProperties.get(p, VcsLogProperties.CASE_INSENSITIVE_REGEX));
-        e.getPresentation().setVisible(true);
-        e.getPresentation().setEnabled(!supported.isEmpty());
-        if (providers.size() == supported.size() || supported.isEmpty()) {
-          e.getPresentation().setText(MATCH_CASE);
-        }
-        else {
-          String supportedText = StringUtil.join(
-            ContainerUtil.map(supported, p -> p.getSupportedVcs().getName().toLowerCase()),
-            ", "
-          );
-          e.getPresentation().setText(MATCH_CASE + " (" + supportedText + " only)");
-        }
-      }
+    @Override
+    protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
+        return MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE;
     }
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+
+        VcsLogUi ui = e.getData(VcsLogUi.KEY);
+        VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
+        if (ui != null && properties != null && properties.exists(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE)) {
+            boolean regexEnabled = properties.exists(MainVcsLogUiProperties.TEXT_FILTER_REGEX)
+                && properties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX);
+            if (!regexEnabled) {
+                e.getPresentation().setText(MATCH_CASE);
+            }
+            else {
+                Collection<VcsLogProvider> providers =
+                    ContainerUtil.newLinkedHashSet(ui.getDataPack().getLogProviders().values());
+                List<VcsLogProvider> supported =
+                    ContainerUtil.filter(providers, p -> VcsLogProperties.get(p, VcsLogProperties.CASE_INSENSITIVE_REGEX));
+                e.getPresentation().setVisible(true);
+                e.getPresentation().setEnabled(!supported.isEmpty());
+                if (providers.size() == supported.size() || supported.isEmpty()) {
+                    e.getPresentation().setText(MATCH_CASE);
+                }
+                else {
+                    String supportedText = StringUtil.join(
+                        ContainerUtil.map(supported, p -> p.getSupportedVcs().getName().toLowerCase()),
+                        ", "
+                    );
+                    e.getPresentation().setText(MATCH_CASE + " (" + supportedText + " only)");
+                }
+            }
+        }
+    }
 }

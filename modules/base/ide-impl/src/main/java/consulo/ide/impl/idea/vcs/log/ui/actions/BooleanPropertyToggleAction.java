@@ -28,52 +28,54 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class BooleanPropertyToggleAction extends ToggleAction implements DumbAware {
-  public BooleanPropertyToggleAction() {
-  }
-
-  public BooleanPropertyToggleAction(@Nullable String text) {
-    super(text);
-  }
-
-  public BooleanPropertyToggleAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
-
-  protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-    super(text, description);
-  }
-
-  protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
-
-  protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text) {
-    super(text);
-  }
-
-  protected abstract VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty();
-
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
-    if (properties == null || !properties.exists(getProperty())) return false;
-    return properties.get(getProperty());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void setSelected(AnActionEvent e, boolean state) {
-    VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
-    if (properties != null && properties.exists(getProperty())) {
-      properties.set(getProperty(), state);
+    public BooleanPropertyToggleAction() {
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
-    e.getPresentation().setEnabledAndVisible(properties != null && properties.exists(getProperty()));
+    public BooleanPropertyToggleAction(@Nullable String text) {
+        super(text);
+    }
 
-    super.update(e);
-  }
+    public BooleanPropertyToggleAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
+    protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
+
+    protected BooleanPropertyToggleAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
+
+    protected abstract VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty();
+
+    @Override
+    public boolean isSelected(AnActionEvent e) {
+        VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
+        if (properties == null || !properties.exists(getProperty())) {
+            return false;
+        }
+        return properties.get(getProperty());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setSelected(AnActionEvent e, boolean state) {
+        VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
+        if (properties != null && properties.exists(getProperty())) {
+            properties.set(getProperty(), state);
+        }
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
+        e.getPresentation().setEnabledAndVisible(properties != null && properties.exists(getProperty()));
+
+        super.update(e);
+    }
 }
