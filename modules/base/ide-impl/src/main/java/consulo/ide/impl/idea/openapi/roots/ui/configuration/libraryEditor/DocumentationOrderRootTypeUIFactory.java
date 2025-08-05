@@ -44,69 +44,76 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
-
-  @Nonnull
-  @Override
-  public String getOrderRootTypeId() {
-    return "documentation";
-  }
-
-  @Nonnull
-  @Override
-  public SdkPathEditor createPathEditor(Sdk sdk) {
-    return new DocumentationPathsEditor(sdk);
-  }
-
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.filetypesText();
-  }
-
-  @Nonnull
-  @Override
-  public String getNodeText() {
-    return ProjectBundle.message("library.javadocs.node");
-  }
-
-  static class DocumentationPathsEditor extends SdkPathEditor {
-    private final Sdk mySdk;
-
-    public DocumentationPathsEditor(Sdk sdk) {
-      super(ProjectBundle.message("library.javadocs.node"), DocumentationOrderRootType.getInstance(), FileChooserDescriptorFactory.createMultipleJavaPathDescriptor(), sdk);
-      mySdk = sdk;
-    }
-
+    @Nonnull
     @Override
-    protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
-      AnAction specifyUrlButton = new DumbAwareAction(ProjectLocalize.sdkPathsSpecifyUrlButton(), LocalizeValue.of(), PlatformIconGroup.nodesPpweb()) {
-        {
-          setShortcutSet(CustomShortcutSet.fromString("alt S"));
-        }
-        @RequiredUIAccess
-        @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-          onSpecifyUrlButtonClicked();
-        }
-
-        @RequiredUIAccess
-        @Override
-        public void update(@Nonnull AnActionEvent e) {
-          e.getPresentation().setEnabled(myEnabled);
-        }
-      };
-      toolbarDecorator.addExtraAction(specifyUrlButton);
+    public String getOrderRootTypeId() {
+        return "documentation";
     }
 
-    private void onSpecifyUrlButtonClicked() {
-      final String defaultDocsUrl = mySdk == null ? "" : StringUtil.notNullize(((SdkType)mySdk.getSdkType()).getDefaultDocumentationUrl(mySdk), "");
-      VirtualFile virtualFile = DocumentationUtil.showSpecifyJavadocUrlDialog(myComponent, defaultDocsUrl);
-      if (virtualFile != null) {
-        addElement(virtualFile);
-        setModified(true);
-        requestDefaultFocus();
-        setSelectedRoots(new Object[]{virtualFile});
-      }
+    @Nonnull
+    @Override
+    public SdkPathEditor createPathEditor(Sdk sdk) {
+        return new DocumentationPathsEditor(sdk);
     }
-  }
+
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.filetypesText();
+    }
+
+    @Nonnull
+    @Override
+    public String getNodeText() {
+        return ProjectBundle.message("library.javadocs.node");
+    }
+
+    static class DocumentationPathsEditor extends SdkPathEditor {
+        private final Sdk mySdk;
+
+        public DocumentationPathsEditor(Sdk sdk) {
+            super(
+                ProjectBundle.message("library.javadocs.node"),
+                DocumentationOrderRootType.getInstance(),
+                FileChooserDescriptorFactory.createMultipleJavaPathDescriptor(),
+                sdk
+            );
+            mySdk = sdk;
+        }
+
+        @Override
+        protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
+            AnAction specifyUrlButton =
+                new DumbAwareAction(ProjectLocalize.sdkPathsSpecifyUrlButton(), LocalizeValue.of(), PlatformIconGroup.nodesPpweb()) {
+                    {
+                        setShortcutSet(CustomShortcutSet.fromString("alt S"));
+                    }
+
+                    @RequiredUIAccess
+                    @Override
+                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                        onSpecifyUrlButtonClicked();
+                    }
+
+                    @RequiredUIAccess
+                    @Override
+                    public void update(@Nonnull AnActionEvent e) {
+                        e.getPresentation().setEnabled(myEnabled);
+                    }
+                };
+            toolbarDecorator.addExtraAction(specifyUrlButton);
+        }
+
+        private void onSpecifyUrlButtonClicked() {
+            final String defaultDocsUrl =
+                mySdk == null ? "" : StringUtil.notNullize(((SdkType) mySdk.getSdkType()).getDefaultDocumentationUrl(mySdk), "");
+            VirtualFile virtualFile = DocumentationUtil.showSpecifyJavadocUrlDialog(myComponent, defaultDocsUrl);
+            if (virtualFile != null) {
+                addElement(virtualFile);
+                setModified(true);
+                requestDefaultFocus();
+                setSelectedRoots(new Object[]{virtualFile});
+            }
+        }
+    }
 }

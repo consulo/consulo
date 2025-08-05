@@ -12,21 +12,21 @@ import javax.swing.*;
 import java.util.function.Supplier;
 
 public class DefaultCustomComponentAction extends AnAction implements CustomComponentAction {
-  @Nonnull
-  private final Supplier<? extends JComponent> myProducer;
+    @Nonnull
+    private final Supplier<? extends JComponent> myProducer;
 
-  public DefaultCustomComponentAction(@Nonnull Supplier<? extends JComponent> producer) {
-    myProducer = producer;
-  }
+    public DefaultCustomComponentAction(@Nonnull Supplier<? extends JComponent> producer) {
+        myProducer = producer;
+    }
 
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    //do nothing
-  }
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        //do nothing
+    }
 
-  @Nonnull
-  @Override
-  public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
-    return myProducer.get();
-  }
+    @Nonnull
+    @Override
+    public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+        return myProducer.get();
+    }
 }
