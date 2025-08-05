@@ -26,6 +26,7 @@ import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.ide.newModule.NewOrImportModuleUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -40,12 +41,14 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.io.File;
@@ -56,6 +59,15 @@ import java.io.File;
 @ActionImpl(id = "NewProject")
 public class NewProjectAction extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(NewProjectAction.class);
+
+    @Inject
+    public NewProjectAction() {
+        super(ActionLocalize.actionNewprojectText(), ActionLocalize.actionNewprojectDescription());
+    }
+
+    public NewProjectAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 
     static class SlideNewProjectPanel extends NewProjectPanel {
         private final WelcomeScreenSlider owner;

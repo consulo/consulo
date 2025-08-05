@@ -519,12 +519,6 @@
             <reference ref="UnsplitAll"/>
         </group>
 
-        <group id="WelcomeScreen.QuickStart">
-            <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.impl.newProject.actions.WelcomeNewProjectAction"/>
-            <action id="WelcomeScreen.OpenProject" class="consulo.ide.impl.newProject.actions.WelcomeOpenFileAction"/>
-            <action id="WelcomeScreen.GetFromVcs" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomeGetFromVcsAction"/>
-        </group>
-
         <group id="WelcomeScreen.Configure">
             <action id="WelcomeScreen.Settings" class="consulo.ide.impl.idea.ide.actions.ShowSettingsAction"/>
             <action id="WelcomeScreen.Plugins" class="consulo.ide.impl.idea.ide.actions.ShowPluginManagerAction"/>

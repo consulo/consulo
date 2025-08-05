@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.newProject.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
 import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.awt.TitlelessDecorator;
-import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -33,7 +33,16 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2024-11-24
  */
+@ActionImpl(id = "WelcomeScreen.CreateNewProject")
 public class WelcomeNewProjectAction extends NewProjectAction {
+    public WelcomeNewProjectAction() {
+        super(
+            ActionLocalize.actionWelcomescreenCreatenewprojectText(),
+            ActionLocalize.actionWelcomescreenCreatenewprojectDescription(),
+            PlatformIconGroup.welcomeCreatenewproject()
+        );
+    }
+
     @Override
     public boolean displayTextInToolbar() {
         return true;
@@ -41,16 +50,18 @@ public class WelcomeNewProjectAction extends NewProjectAction {
 
     @Nonnull
     @RequiredUIAccess
-    public JComponent createSlide(@Nonnull Disposable parentDisposable,
-                                  @Nonnull WelcomeScreenSlider owner,
-                                  @Nonnull TitlelessDecorator titlelessDecorator) {
+    public JComponent createSlide(
+        @Nonnull Disposable parentDisposable,
+        @Nonnull WelcomeScreenSlider owner,
+        @Nonnull TitlelessDecorator titlelessDecorator
+    ) {
         owner.setTitle(IdeLocalize.titleNewProject().get());
 
         return new SlideNewProjectPanel(parentDisposable, owner, null, null, titlelessDecorator);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         WelcomeScreenSlider slider = e.getRequiredData(WelcomeScreenSlider.KEY);
         TitlelessDecorator titlelessDecorator = slider.getTitlelessDecorator();
@@ -60,17 +71,11 @@ public class WelcomeNewProjectAction extends NewProjectAction {
         JComponent panel = createSlide(slider.getDisposable(), slider, titlelessDecorator);
 
         JBCardLayout layout = (JBCardLayout) sliderPanel.getLayout();
-        
+
         String id = getClass().getName();
 
         sliderPanel.add(panel, id);
 
         layout.swipe(sliderPanel, id, JBCardLayout.SwipeDirection.FORWARD);
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.welcomeCreatenewproject();
     }
 }
