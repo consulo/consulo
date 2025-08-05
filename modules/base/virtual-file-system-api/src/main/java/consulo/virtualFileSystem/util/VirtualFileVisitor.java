@@ -26,6 +26,8 @@ public abstract class VirtualFileVisitor<T> {
     }
   }
 
+  public static final Option[] EMPTY_OPTIONS = new Option[0];
+
   public static final Option NO_FOLLOW_SYMLINKS = new Option();
   public static final Option SKIP_ROOT = new Option();
   public static final Option ONE_LEVEL_DEEP = limit(1);

@@ -629,8 +629,17 @@ public final class VirtualFileUtil {
         return VirtualFileManager.constructUrl(URLUtil.FILE_PROTOCOL, path);
     }
 
-    public static boolean iterateChildrenRecursively(@Nonnull final VirtualFile root, @Nullable final VirtualFileFilter filter, @Nonnull final Predicate<VirtualFile> iterator) {
-        VirtualFileVisitor.Result result = visitChildrenRecursively(root, new VirtualFileVisitor() {
+    public static boolean iterateChildrenRecursively(@Nonnull VirtualFile root,
+                                                     @Nullable VirtualFileFilter filter,
+                                                     @Nonnull Predicate<VirtualFile> iterator) {
+        return iterateChildrenRecursively(root, filter, iterator, VirtualFileVisitor.EMPTY_OPTIONS);
+    }
+
+    public static boolean iterateChildrenRecursively(@Nonnull VirtualFile root,
+                                                     @Nullable VirtualFileFilter filter,
+                                                     @Nonnull Predicate<VirtualFile> iterator,
+                                                     @Nonnull VirtualFileVisitor.Option... options) {
+        VirtualFileVisitor.Result result = visitChildrenRecursively(root, new VirtualFileVisitor(options) {
             @Nonnull
             @Override
             public Result visitFileEx(@Nonnull VirtualFile file) {
