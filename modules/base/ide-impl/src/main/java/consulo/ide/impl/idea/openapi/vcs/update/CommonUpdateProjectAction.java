@@ -15,16 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-
 import consulo.versionControlSystem.update.ActionInfo;
 
 public class CommonUpdateProjectAction extends AbstractCommonUpdateAction {
-  public CommonUpdateProjectAction() {
-    super(ActionInfo.UPDATE, ScopeInfo.PROJECT, true);
-  }
+    public CommonUpdateProjectAction() {
+        super(ActionInfo.UPDATE, ScopeInfo.PROJECT, true);
+    }
 
-  protected boolean filterRootsBeforeAction() {
-    return false;
-  }
-
+    protected boolean filterRootsBeforeAction() {
+        return false;
+    }
 }

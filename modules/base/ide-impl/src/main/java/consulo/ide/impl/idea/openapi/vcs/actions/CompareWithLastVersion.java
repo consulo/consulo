@@ -20,14 +20,14 @@ import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
 
-public class CompareWithLastVersion extends AbstractShowDiffAction{
-  @Override
-  protected VcsBackgroundableActions getKey() {
-    return VcsBackgroundableActions.COMPARE_WITH;
-  }
+public class CompareWithLastVersion extends AbstractShowDiffAction {
+    @Override
+    protected VcsBackgroundableActions getKey() {
+        return VcsBackgroundableActions.COMPARE_WITH;
+    }
 
-  @Override
-  protected DiffActionExecutor getExecutor(final DiffProvider diffProvider, final VirtualFile selectedFile, final Project project) {
-    return new DiffActionExecutor.DeletionAwareExecutor(diffProvider, selectedFile, project, getKey());
-  }
+    @Override
+    protected DiffActionExecutor getExecutor(final DiffProvider diffProvider, final VirtualFile selectedFile, final Project project) {
+        return new DiffActionExecutor.DeletionAwareExecutor(diffProvider, selectedFile, project, getKey());
+    }
 }

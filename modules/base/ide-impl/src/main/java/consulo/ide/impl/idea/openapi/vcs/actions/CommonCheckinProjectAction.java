@@ -30,59 +30,58 @@ import java.util.ArrayList;
 
 
 public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
-
-  protected FilePath[] getRoots(final VcsContext context) {
-    Project project = context.getProject();
-    ArrayList<FilePath> virtualFiles = new ArrayList<>();
-    final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
-    for(AbstractVcs vcs: vcsManager.getAllActiveVcss()) {
-      if (vcs.getCheckinEnvironment() != null) {
-        VirtualFile[] roots = vcsManager.getRootsUnderVcs(vcs);
-        for (VirtualFile root : roots) {
-          virtualFiles.add(new FilePathImpl(root));
+    protected FilePath[] getRoots(final VcsContext context) {
+        Project project = context.getProject();
+        ArrayList<FilePath> virtualFiles = new ArrayList<>();
+        final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+        for (AbstractVcs vcs : vcsManager.getAllActiveVcss()) {
+            if (vcs.getCheckinEnvironment() != null) {
+                VirtualFile[] roots = vcsManager.getRootsUnderVcs(vcs);
+                for (VirtualFile root : roots) {
+                    virtualFiles.add(new FilePathImpl(root));
+                }
+            }
         }
-      }
-    }
-    return virtualFiles.toArray(new FilePath[virtualFiles.size()]);
-  }
-
-  @Override
-  protected boolean approximatelyHasRoots(VcsContext dataContext) {
-    Project project = dataContext.getProject();
-    final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
-    return vcsManager.hasAnyMappings();
-  }
-
-  @Override
-  protected void update(VcsContext vcsContext, @Nonnull Presentation presentation) {
-    Project project = vcsContext.getProject();
-    if (project == null) {
-      presentation.setEnabledAndVisible(false);
-      return;
-    }
-    final ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(project);
-    if (! plVcsManager.hasActiveVcss()) {
-      presentation.setEnabledAndVisible(false);
-      return;
+        return virtualFiles.toArray(new FilePath[virtualFiles.size()]);
     }
 
-    String actionName = getActionName(vcsContext) + "...";
-    presentation.setText(actionName);
+    @Override
+    protected boolean approximatelyHasRoots(VcsContext dataContext) {
+        Project project = dataContext.getProject();
+        final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
+        return vcsManager.hasAnyMappings();
+    }
 
-    presentation.setEnabled(! plVcsManager.isBackgroundVcsOperationRunning());
-    presentation.setVisible(true);
-  }
+    @Override
+    protected void update(VcsContext vcsContext, @Nonnull Presentation presentation) {
+        Project project = vcsContext.getProject();
+        if (project == null) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
+        final ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(project);
+        if (!plVcsManager.hasActiveVcss()) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
 
-  protected String getActionName(VcsContext dataContext) {
-    return VcsLocalize.actionNameCommitProject().get();
-  }
+        String actionName = getActionName(vcsContext) + "...";
+        presentation.setText(actionName);
 
-  @Override
-  protected String getMnemonicsFreeActionName(VcsContext context) {
-    return VcsLocalize.vcsCommandNameCheckinNoMnemonics().get();
-  }
+        presentation.setEnabled(!plVcsManager.isBackgroundVcsOperationRunning());
+        presentation.setVisible(true);
+    }
 
-  protected boolean filterRootsBeforeAction() {
-    return false;
-  }
+    protected String getActionName(VcsContext dataContext) {
+        return VcsLocalize.actionNameCommitProject().get();
+    }
+
+    @Override
+    protected String getMnemonicsFreeActionName(VcsContext context) {
+        return VcsLocalize.vcsCommandNameCheckinNoMnemonics().get();
+    }
+
+    protected boolean filterRootsBeforeAction() {
+        return false;
+    }
 }

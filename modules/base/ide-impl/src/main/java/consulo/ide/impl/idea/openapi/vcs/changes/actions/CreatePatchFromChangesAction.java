@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -44,97 +43,99 @@ import java.util.List;
  * @author yole
  */
 public class CreatePatchFromChangesAction extends AnAction implements DumbAware {
-  public CreatePatchFromChangesAction() {
-    super(
-      VcsLocalize.actionNameCreatePatchForSelectedRevisions(),
-      VcsLocalize.actionDescriptionCreatePatchForSelectedRevisions(),
-      PlatformIconGroup.filetypesPatch()
-    );
-  }
+    public CreatePatchFromChangesAction() {
+        super(
+            VcsLocalize.actionNameCreatePatchForSelectedRevisions(),
+            VcsLocalize.actionDescriptionCreatePatchForSelectedRevisions(),
+            PlatformIconGroup.filetypesPatch()
+        );
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    final Change[] changes = e.getData(VcsDataKeys.CHANGES);
-    if (changes == null || changes.length == 0) return;
-    String commitMessage = null;
-    ShelvedChangeList[] shelvedChangeLists = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
-    if (shelvedChangeLists != null && shelvedChangeLists.length > 0) {
-      commitMessage = shelvedChangeLists [0].DESCRIPTION;
-    }
-    else {
-      ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
-      if (changeLists != null && changeLists.length > 0) {
-        commitMessage = changeLists [0].getComment();
-      }
-    }
-    if (commitMessage == null) {
-      commitMessage = e.getData(VcsDataKeys.PRESET_COMMIT_MESSAGE);
-    }
-    if (commitMessage == null) {
-      commitMessage = "";
-    }
-    List<Change> changeCollection = new ArrayList<>();
-    Collections.addAll(changeCollection, changes);
-    createPatch(project, commitMessage, changeCollection);
-  }
-
-  public static void createPatch(Project project, String commitMessage, List<Change> changeCollection) {
-    project = project == null ? ProjectManager.getInstance().getDefaultProject() : project;
-    final CreatePatchCommitExecutor executor = new CreatePatchCommitExecutor(project);
-    CommitSession commitSession = executor.createCommitSession();
-    if (commitSession instanceof CommitSessionContextAware commitSessionContextAware) {
-      commitSessionContextAware.setContext(new CommitContext());
-    }
-    DialogWrapper sessionDialog = new SessionDialog(executor.getActionText(), project, commitSession, changeCollection, commitMessage);
-    sessionDialog.show();
-    if (!sessionDialog.isOK()) {
-      return;
-    }
-    preloadContent(project, changeCollection);
-
-    commitSession.execute(changeCollection, commitMessage);
-  }
-
-  private static void preloadContent(final Project project, final List<Change> changes) {
-    // to avoid multiple progress dialogs, preload content under one progress
-    ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-      @Override
-      public void run() {
-        for (Change change: changes) {
-          checkLoadContent(change.getBeforeRevision());
-          checkLoadContent(change.getAfterRevision());
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        final Change[] changes = e.getData(VcsDataKeys.CHANGES);
+        if (changes == null || changes.length == 0) {
+            return;
         }
-      }
-
-      private void checkLoadContent(final ContentRevision revision) {
-        ProgressManager.checkCanceled();
-        if (revision != null && !(revision instanceof BinaryContentRevision)) {
-          try {
-            revision.getContent();
-          }
-          catch (VcsException e1) {
-            // ignore at the moment
-          }
+        String commitMessage = null;
+        ShelvedChangeList[] shelvedChangeLists = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+        if (shelvedChangeLists != null && shelvedChangeLists.length > 0) {
+            commitMessage = shelvedChangeLists[0].DESCRIPTION;
         }
-      }
-    }, VcsLocalize.createPatchLoadingContentProgress(), true, project);
-  }
+        else {
+            ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
+            if (changeLists != null && changeLists.length > 0) {
+                commitMessage = changeLists[0].getComment();
+            }
+        }
+        if (commitMessage == null) {
+            commitMessage = e.getData(VcsDataKeys.PRESET_COMMIT_MESSAGE);
+        }
+        if (commitMessage == null) {
+            commitMessage = "";
+        }
+        List<Change> changeCollection = new ArrayList<>();
+        Collections.addAll(changeCollection, changes);
+        createPatch(project, commitMessage, changeCollection);
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final Boolean haveSelectedChanges = e.getData(VcsDataKeys.HAVE_SELECTED_CHANGES);
-    Change[] changes;
-    ChangeList[] data1 = e.getData(VcsDataKeys.CHANGE_LISTS);
-    ShelvedChangeList[] data2 = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
-    ShelvedChangeList[] data3 = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+    public static void createPatch(Project project, String commitMessage, List<Change> changeCollection) {
+        project = project == null ? ProjectManager.getInstance().getDefaultProject() : project;
+        final CreatePatchCommitExecutor executor = new CreatePatchCommitExecutor(project);
+        CommitSession commitSession = executor.createCommitSession();
+        if (commitSession instanceof CommitSessionContextAware commitSessionContextAware) {
+            commitSessionContextAware.setContext(new CommitContext());
+        }
+        DialogWrapper sessionDialog = new SessionDialog(executor.getActionText(), project, commitSession, changeCollection, commitMessage);
+        sessionDialog.show();
+        if (!sessionDialog.isOK()) {
+            return;
+        }
+        preloadContent(project, changeCollection);
 
-    int sum = data1 == null ? 0 : data1.length;
-    sum += data2 == null ? 0 : data2.length;
-    sum += data3 == null ? 0 : data3.length;
+        commitSession.execute(changeCollection, commitMessage);
+    }
 
-    e.getPresentation().setEnabled(Boolean.TRUE.equals(haveSelectedChanges) && (sum == 1) &&
-                                   ((changes = e.getData(VcsDataKeys.CHANGES)) != null && changes.length > 0));
-  }
+    private static void preloadContent(final Project project, final List<Change> changes) {
+        // to avoid multiple progress dialogs, preload content under one progress
+        ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
+            @Override
+            public void run() {
+                for (Change change : changes) {
+                    checkLoadContent(change.getBeforeRevision());
+                    checkLoadContent(change.getAfterRevision());
+                }
+            }
+
+            private void checkLoadContent(final ContentRevision revision) {
+                ProgressManager.checkCanceled();
+                if (revision != null && !(revision instanceof BinaryContentRevision)) {
+                    try {
+                        revision.getContent();
+                    }
+                    catch (VcsException e1) {
+                        // ignore at the moment
+                    }
+                }
+            }
+        }, VcsLocalize.createPatchLoadingContentProgress(), true, project);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final Boolean haveSelectedChanges = e.getData(VcsDataKeys.HAVE_SELECTED_CHANGES);
+        Change[] changes;
+        ChangeList[] data1 = e.getData(VcsDataKeys.CHANGE_LISTS);
+        ShelvedChangeList[] data2 = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+        ShelvedChangeList[] data3 = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+
+        int sum = data1 == null ? 0 : data1.length;
+        sum += data2 == null ? 0 : data2.length;
+        sum += data3 == null ? 0 : data3.length;
+
+        e.getPresentation().setEnabled(Boolean.TRUE.equals(haveSelectedChanges) && (sum == 1)
+            && ((changes = e.getData(VcsDataKeys.CHANGES)) != null && changes.length > 0));
+    }
 }

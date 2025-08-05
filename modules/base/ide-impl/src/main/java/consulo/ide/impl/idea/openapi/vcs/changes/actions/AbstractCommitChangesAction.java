@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ui.ex.action.ActionPlaces;
@@ -32,44 +31,44 @@ import consulo.versionControlSystem.change.ChangeListManager;
  * @author yole
  */
 public abstract class AbstractCommitChangesAction extends AbstractCommonCheckinAction {
-  protected FilePath[] getRoots(VcsContext context) {
-    return getAllContentRoots(context);
-  }
-
-  @Override
-  protected boolean approximatelyHasRoots(VcsContext dataContext) {
-    final Project project = dataContext.getProject();
-    final ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
-    return manager.hasAnyMappings();
-  }
-
-  protected boolean filterRootsBeforeAction() {
-    return false;
-  }
-
-  @Override
-  protected void update(final VcsContext vcsContext, final Presentation presentation) {
-    super.update(vcsContext, presentation);
-    if (presentation.isVisible() && presentation.isEnabled()) {
-      final ChangeList[] selectedChangeLists = vcsContext.getSelectedChangeLists();
-      final Change[] selectedChanges = vcsContext.getSelectedChanges();
-      if (vcsContext.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
-        if (selectedChangeLists != null && selectedChangeLists.length > 0) {
-          presentation.setEnabled(selectedChangeLists.length == 1);
-        }
-        else {
-          presentation.setEnabled (selectedChanges != null && selectedChanges.length > 0);
-        }
-      }
-      if (presentation.isEnabled() && selectedChanges != null) {
-        final ChangeListManager changeListManager = ChangeListManager.getInstance(vcsContext.getProject());
-        for (Change c: selectedChanges) {
-          if (c.getFileStatus() == FileStatus.HIJACKED && changeListManager.getChangeList(c) == null) {
-            presentation.setEnabled(false);
-            break;
-          }
-        }
-      }
+    protected FilePath[] getRoots(VcsContext context) {
+        return getAllContentRoots(context);
     }
-  }
+
+    @Override
+    protected boolean approximatelyHasRoots(VcsContext dataContext) {
+        final Project project = dataContext.getProject();
+        final ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
+        return manager.hasAnyMappings();
+    }
+
+    protected boolean filterRootsBeforeAction() {
+        return false;
+    }
+
+    @Override
+    protected void update(final VcsContext vcsContext, final Presentation presentation) {
+        super.update(vcsContext, presentation);
+        if (presentation.isVisible() && presentation.isEnabled()) {
+            final ChangeList[] selectedChangeLists = vcsContext.getSelectedChangeLists();
+            final Change[] selectedChanges = vcsContext.getSelectedChanges();
+            if (vcsContext.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
+                if (selectedChangeLists != null && selectedChangeLists.length > 0) {
+                    presentation.setEnabled(selectedChangeLists.length == 1);
+                }
+                else {
+                    presentation.setEnabled(selectedChanges != null && selectedChanges.length > 0);
+                }
+            }
+            if (presentation.isEnabled() && selectedChanges != null) {
+                final ChangeListManager changeListManager = ChangeListManager.getInstance(vcsContext.getProject());
+                for (Change c : selectedChanges) {
+                    if (c.getFileStatus() == FileStatus.HIJACKED && changeListManager.getChangeList(c) == null) {
+                        presentation.setEnabled(false);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }

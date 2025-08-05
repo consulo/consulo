@@ -44,80 +44,80 @@ import javax.swing.*;
  * @author yole
  */
 public class ChangeListDetailsAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    ChangeList[] changeLists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
-    if (changeLists.length > 0 && changeLists[0] instanceof CommittedChangeList committedChangeList) {
-      showDetailsPopup(project, committedChangeList);
-    }
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    e.getPresentation().setEnabled(
-      project != null && changeLists != null && changeLists.length == 1
-        && changeLists[0] instanceof CommittedChangeList
-    );
-  }
-
-  public static void showDetailsPopup(final Project project, final CommittedChangeList changeList) {
-    StringBuilder detailsBuilder = new StringBuilder("<html><head>");
-    detailsBuilder.append(UIUtil.getCssFontDeclaration(UIUtil.getLabelFont())).append("</head><body>");
-    final AbstractVcs vcs = changeList.getVcs();
-    CachingCommittedChangesProvider provider = null;
-    if (vcs != null) {
-      provider = vcs.getCachingCommittedChangesProvider();
-      if (provider != null && provider.getChangelistTitle() != null) {
-        detailsBuilder.append(provider.getChangelistTitle()).append(" #").append(changeList.getNumber()).append("<br>");
-      }
-    }
-    @NonNls String committer = "<b>" + changeList.getCommitterName() + "</b>";
-    detailsBuilder.append(VcsLocalize.changelistDetailsCommittedFormat(
-      committer,
-      DateFormatUtil.formatPrettyDateTime(changeList.getCommitDate())
-    ).get());
-    detailsBuilder.append("<br>");
-
-    if (provider != null) {
-      final CommittedChangeList originalChangeList;
-      if (changeList instanceof ReceivedChangeList receivedChangeList) {
-        originalChangeList = receivedChangeList.getBaseList();
-      }
-      else {
-        originalChangeList = changeList;
-      }
-      for (ChangeListColumn column: provider.getColumns()) {
-        if (ChangeListColumn.isCustom(column)) {
-          String value = column.getValue(originalChangeList).toString();
-          if (value.length() == 0) {
-            value = "<none>";
-          }
-          detailsBuilder.append(column.getTitle()).append(": ").append(XmlStringUtil.escapeString(value)).append("<br>");
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        ChangeList[] changeLists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
+        if (changeLists.length > 0 && changeLists[0] instanceof CommittedChangeList committedChangeList) {
+            showDetailsPopup(project, committedChangeList);
         }
-      }
     }
 
-    detailsBuilder.append(IssueLinkHtmlRenderer.formatTextWithLinks(project, changeList.getComment()));
-    detailsBuilder.append("</body></html>");
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
+        e.getPresentation().setEnabled(
+            project != null && changeLists != null && changeLists.length == 1
+                && changeLists[0] instanceof CommittedChangeList
+        );
+    }
 
-    JEditorPane editorPane = new JEditorPane(UIUtil.HTML_MIME, detailsBuilder.toString());
-    editorPane.setEditable(false);
-    editorPane.setBackground(HintUtil.INFORMATION_COLOR);
-    editorPane.select(0, 0);
-    editorPane.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(editorPane);
-    final JBPopup hint =
-      JBPopupFactory.getInstance().createComponentPopupBuilder(scrollPane, editorPane)
-        .setDimensionServiceKey(project, "changelist.details.popup", false)
-        .setResizable(true)
-        .setMovable(true)
-        .setRequestFocus(true)
-        .setTitle(VcsLocalize.changelistDetailsTitle())
-        .createPopup();
-    hint.showInBestPositionFor(DataManager.getInstance().getDataContext());
-  }
+    public static void showDetailsPopup(final Project project, final CommittedChangeList changeList) {
+        StringBuilder detailsBuilder = new StringBuilder("<html><head>");
+        detailsBuilder.append(UIUtil.getCssFontDeclaration(UIUtil.getLabelFont())).append("</head><body>");
+        final AbstractVcs vcs = changeList.getVcs();
+        CachingCommittedChangesProvider provider = null;
+        if (vcs != null) {
+            provider = vcs.getCachingCommittedChangesProvider();
+            if (provider != null && provider.getChangelistTitle() != null) {
+                detailsBuilder.append(provider.getChangelistTitle()).append(" #").append(changeList.getNumber()).append("<br>");
+            }
+        }
+        @NonNls String committer = "<b>" + changeList.getCommitterName() + "</b>";
+        detailsBuilder.append(VcsLocalize.changelistDetailsCommittedFormat(
+            committer,
+            DateFormatUtil.formatPrettyDateTime(changeList.getCommitDate())
+        ).get());
+        detailsBuilder.append("<br>");
+
+        if (provider != null) {
+            final CommittedChangeList originalChangeList;
+            if (changeList instanceof ReceivedChangeList receivedChangeList) {
+                originalChangeList = receivedChangeList.getBaseList();
+            }
+            else {
+                originalChangeList = changeList;
+            }
+            for (ChangeListColumn column : provider.getColumns()) {
+                if (ChangeListColumn.isCustom(column)) {
+                    String value = column.getValue(originalChangeList).toString();
+                    if (value.length() == 0) {
+                        value = "<none>";
+                    }
+                    detailsBuilder.append(column.getTitle()).append(": ").append(XmlStringUtil.escapeString(value)).append("<br>");
+                }
+            }
+        }
+
+        detailsBuilder.append(IssueLinkHtmlRenderer.formatTextWithLinks(project, changeList.getComment()));
+        detailsBuilder.append("</body></html>");
+
+        JEditorPane editorPane = new JEditorPane(UIUtil.HTML_MIME, detailsBuilder.toString());
+        editorPane.setEditable(false);
+        editorPane.setBackground(HintUtil.INFORMATION_COLOR);
+        editorPane.select(0, 0);
+        editorPane.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(editorPane);
+        final JBPopup hint =
+            JBPopupFactory.getInstance().createComponentPopupBuilder(scrollPane, editorPane)
+                .setDimensionServiceKey(project, "changelist.details.popup", false)
+                .setResizable(true)
+                .setMovable(true)
+                .setRequestFocus(true)
+                .setTitle(VcsLocalize.changelistDetailsTitle())
+                .createPopup();
+        hint.showInBestPositionFor(DataManager.getInstance().getDataContext());
+    }
 }

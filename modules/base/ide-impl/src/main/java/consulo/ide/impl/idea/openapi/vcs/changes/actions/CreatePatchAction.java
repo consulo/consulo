@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.versionControlSystem.VcsBundle;
@@ -28,19 +27,19 @@ import jakarta.annotation.Nullable;
  * @author yole
  */
 public class CreatePatchAction extends AbstractCommitChangesAction {
-  @Override
-  protected String getActionName(VcsContext dataContext) {
-    return VcsBundle.message("create.patch.commit.action.title");
-  }
+    @Override
+    protected String getActionName(VcsContext dataContext) {
+        return VcsBundle.message("create.patch.commit.action.title");
+    }
 
-  @Override
-  protected String getMnemonicsFreeActionName(VcsContext context) {
-    return getActionName(context);
-  }
+    @Override
+    protected String getMnemonicsFreeActionName(VcsContext context) {
+        return getActionName(context);
+    }
 
-  @Override
-  @Nullable
-  protected CommitExecutor getExecutor(Project project) {
-    return new CreatePatchCommitExecutor(project);
-  }
+    @Override
+    @Nullable
+    protected CommitExecutor getExecutor(Project project) {
+        return new CreatePatchCommitExecutor(project);
+    }
 }
