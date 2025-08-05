@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -37,30 +36,37 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class AutoIndentLinesAction extends BaseCodeInsightAction implements DumbAware {
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project, boolean forUpdate) {
-    Editor editor = getBaseEditor(dataContext, project);
-    if (editor == null) return null;
-    Document document = editor.getDocument();
-    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-    PsiFile psiFile = documentManager.getCachedPsiFile(document);
-    if (psiFile == null) return editor;
-    if (!forUpdate) documentManager.commitDocument(document);
-    int startLineOffset = DocumentUtil.getLineStartOffset(editor.getSelectionModel().getSelectionStart(), document);
-    return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile, startLineOffset);
-  }
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project, boolean forUpdate) {
+        Editor editor = getBaseEditor(dataContext, project);
+        if (editor == null) {
+            return null;
+        }
+        Document document = editor.getDocument();
+        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+        PsiFile psiFile = documentManager.getCachedPsiFile(document);
+        if (psiFile == null) {
+            return editor;
+        }
+        if (!forUpdate) {
+            documentManager.commitDocument(document);
+        }
+        int startLineOffset = DocumentUtil.getLineStartOffset(editor.getSelectionModel().getSelectionStart(), document);
+        return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile, startLineOffset);
+    }
 
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new AutoIndentLinesHandler();
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new AutoIndentLinesHandler();
+    }
 
-  @Override
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
-    final FileType fileType = file.getFileType();
-    return fileType instanceof LanguageFileType && FormattingModelBuilder.forContext(((LanguageFileType)fileType).getLanguage(), file) != null;
-  }
+    @Override
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
+        final FileType fileType = file.getFileType();
+        return fileType instanceof LanguageFileType
+            && FormattingModelBuilder.forContext(((LanguageFileType) fileType).getLanguage(), file) != null;
+    }
 }

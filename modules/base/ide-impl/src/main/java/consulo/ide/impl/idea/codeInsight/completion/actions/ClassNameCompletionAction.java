@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.completion.actions;
 
 import consulo.language.editor.completion.CompletionType;
 import consulo.ui.ex.action.AnActionEvent;
 
-public class ClassNameCompletionAction extends BaseCodeCompletionAction{
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    invokeCompletion(e, CompletionType.BASIC, 2);
-  }
-
-
+public class ClassNameCompletionAction extends BaseCodeCompletionAction {
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        invokeCompletion(e, CompletionType.BASIC, 2);
+    }
 }

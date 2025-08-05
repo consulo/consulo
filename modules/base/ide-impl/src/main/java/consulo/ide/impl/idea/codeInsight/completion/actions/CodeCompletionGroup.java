@@ -27,32 +27,32 @@ import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 public class CodeCompletionGroup extends DefaultActionGroup implements DumbAware {
-  @Override
-  public void update(@Nonnull AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null){
-      presentation.setEnabled(false);
-      return;
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        DataContext dataContext = event.getDataContext();
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        Editor editor = dataContext.getData(Editor.KEY);
+        if (editor == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        if (file == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        presentation.setEnabled(true);
     }
 
-    Editor editor = dataContext.getData(Editor.KEY);
-    if (editor == null){
-      presentation.setEnabled(false);
-      return;
+    @Override
+    public boolean disableIfNoVisibleChildren() {
+        return false;
     }
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    if (file == null){
-      presentation.setEnabled(false);
-      return;
-    }
-
-    presentation.setEnabled(true);
-  }
-
-  @Override
-  public boolean disableIfNoVisibleChildren() {
-    return false;
-  }
 }

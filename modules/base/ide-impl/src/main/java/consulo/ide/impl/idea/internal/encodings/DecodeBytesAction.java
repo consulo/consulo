@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 
 public class DecodeBytesAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    new EncodingViewer().show();
-  }
+    public void actionPerformed(AnActionEvent e) {
+        new EncodingViewer().show();
+    }
 }

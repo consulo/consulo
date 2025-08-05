@@ -31,21 +31,20 @@ import java.awt.datatransfer.StringSelection;
  * @since 2011-03-29
  */
 public class CopyQuickDocAction extends AnAction implements DumbAware, HintManagerImpl.ActionToIgnore {
+    public CopyQuickDocAction() {
+        setEnabledInModalContext(true);
+    }
 
-  public CopyQuickDocAction() {
-    setEnabledInModalContext(true);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        String selected = e.getRequiredData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
+        CopyPasteManager.getInstance().setContents(new StringSelection(selected));
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    String selected = e.getRequiredData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
-    CopyPasteManager.getInstance().setContents(new StringSelection(selected));
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    String selected = e.getData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
-    e.getPresentation().setEnabled(selected != null && !selected.isEmpty());
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        String selected = e.getData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
+        e.getPresentation().setEnabled(selected != null && !selected.isEmpty());
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.folding.impl.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
@@ -26,9 +25,9 @@ import jakarta.annotation.Nonnull;
  * @author ven
  */
 public class CollapseSelectionAction extends BaseCodeInsightAction implements DumbAware {
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new CollapseSelectionHandler();
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new CollapseSelectionHandler();
+    }
 }
