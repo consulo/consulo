@@ -37,70 +37,82 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 /**
  * @author nik
  */
 public class ExtractArtifactAction extends LayoutTreeActionBase {
-  public ExtractArtifactAction(ArtifactEditorEx editor) {
-    super(ProjectLocalize.actionNameExtractArtifact().get(), editor);
-  }
-
-  @Override
-  protected boolean isEnabled() {
-    return myArtifactEditor.getLayoutTreeComponent().getSelection().getCommonParentElement() != null;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
-    final LayoutTreeSelection selection = treeComponent.getSelection();
-    final CompositePackagingElement<?> parent = selection.getCommonParentElement();
-    if (parent == null) return;
-    final PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
-    if (parentNode == null) return;
-
-    if (!treeComponent.checkCanModifyChildren(parent, parentNode, selection.getNodes())) {
-      return;
+    public ExtractArtifactAction(ArtifactEditorEx editor) {
+        super(ProjectLocalize.actionNameExtractArtifact().get(), editor);
     }
 
-
-    final Collection<? extends PackagingElement> selectedElements = selection.getElements();
-    String initialName = "artifact";
-    if (selectedElements.size() == 1) {
-      initialName = PathUtil.suggestFileName(ContainerUtil.getFirstItem(selectedElements, null).createPresentation(myArtifactEditor.getContext()).getPresentableName());
+    @Override
+    protected boolean isEnabled() {
+        return myArtifactEditor.getLayoutTreeComponent().getSelection().getCommonParentElement() != null;
     }
-    IExtractArtifactDialog dialog = showDialog(treeComponent, initialName);
-    if (dialog == null) return;
 
-    final Project project = myArtifactEditor.getContext().getProject();
-    final ModifiableArtifactModel model = myArtifactEditor.getContext().getOrCreateModifiableArtifactModel();
-    final ModifiableArtifact artifact = model.addArtifact(dialog.getArtifactName(), dialog.getArtifactType());
-    treeComponent.editLayout(new Runnable() {
-      @Override
-      public void run() {
-        for (PackagingElement<?> element : selectedElements) {
-          artifact.getRootElement().addOrFindChild(ArtifactUtil.copyWithChildren(element, project));
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
+        final LayoutTreeSelection selection = treeComponent.getSelection();
+        final CompositePackagingElement<?> parent = selection.getCommonParentElement();
+        if (parent == null) {
+            return;
         }
-        for (PackagingElement element : selectedElements) {
-          parent.removeChild(element);
+        final PackagingElementNode<?> parentNode = selection.getNodes().get(0).getParentNode();
+        if (parentNode == null) {
+            return;
         }
-        ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(project);
-        parent.addOrFindChild(new ArtifactPackagingElement(pointerManager, pointerManager.create(artifact, myArtifactEditor.getContext().getArtifactModel())));
-      }
-    });
-    treeComponent.rebuildTree();
-  }
 
-  @Nullable
-  protected IExtractArtifactDialog showDialog(LayoutTreeComponent treeComponent, String initialName) {
-    final ExtractArtifactDialog dialog = new ExtractArtifactDialog(myArtifactEditor.getContext(), treeComponent, initialName);
-    dialog.show();
-    if (!dialog.isOK()) {
-      return null;
+        if (!treeComponent.checkCanModifyChildren(parent, parentNode, selection.getNodes())) {
+            return;
+        }
+
+
+        final Collection<? extends PackagingElement> selectedElements = selection.getElements();
+        String initialName = "artifact";
+        if (selectedElements.size() == 1) {
+            initialName = PathUtil.suggestFileName(ContainerUtil.getFirstItem(selectedElements, null)
+                .createPresentation(myArtifactEditor.getContext())
+                .getPresentableName());
+        }
+        IExtractArtifactDialog dialog = showDialog(treeComponent, initialName);
+        if (dialog == null) {
+            return;
+        }
+
+        final Project project = myArtifactEditor.getContext().getProject();
+        final ModifiableArtifactModel model = myArtifactEditor.getContext().getOrCreateModifiableArtifactModel();
+        final ModifiableArtifact artifact = model.addArtifact(dialog.getArtifactName(), dialog.getArtifactType());
+        treeComponent.editLayout(new Runnable() {
+            @Override
+            public void run() {
+                for (PackagingElement<?> element : selectedElements) {
+                    artifact.getRootElement().addOrFindChild(ArtifactUtil.copyWithChildren(element, project));
+                }
+                for (PackagingElement element : selectedElements) {
+                    parent.removeChild(element);
+                }
+                ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(project);
+                parent.addOrFindChild(new ArtifactPackagingElement(
+                    pointerManager,
+                    pointerManager.create(artifact, myArtifactEditor.getContext().getArtifactModel())
+                ));
+            }
+        });
+        treeComponent.rebuildTree();
     }
-    return dialog;
-  }
+
+    @Nullable
+    protected IExtractArtifactDialog showDialog(LayoutTreeComponent treeComponent, String initialName) {
+        final ExtractArtifactDialog dialog = new ExtractArtifactDialog(myArtifactEditor.getContext(), treeComponent, initialName);
+        dialog.show();
+        if (!dialog.isOK()) {
+            return null;
+        }
+        return dialog;
+    }
 }

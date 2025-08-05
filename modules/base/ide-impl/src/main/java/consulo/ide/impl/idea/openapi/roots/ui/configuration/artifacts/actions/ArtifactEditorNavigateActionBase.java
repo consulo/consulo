@@ -22,31 +22,32 @@ import consulo.project.ProjectBundle;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
  * @author nik
  */
 public abstract class ArtifactEditorNavigateActionBase extends DumbAwareAction {
-  public ArtifactEditorNavigateActionBase(JComponent contextComponent) {
-    super(ProjectBundle.message("action.name.facet.navigate"));
-    registerCustomShortcutSet(CommonShortcuts.getEditSource(), contextComponent);
-  }
-
-  @Override
-  public void update(final AnActionEvent e) {
-    final TreeNodePresentation presentation = getPresentation();
-    e.getPresentation().setEnabled(presentation != null && presentation.canNavigateToSource());
-  }
-
-  @Nullable
-  protected abstract TreeNodePresentation getPresentation();
-
-  @Override
-  public void actionPerformed(final AnActionEvent e) {
-    final TreeNodePresentation presentation = getPresentation();
-    if (presentation != null) {
-      presentation.navigateToSource();
+    public ArtifactEditorNavigateActionBase(JComponent contextComponent) {
+        super(ProjectBundle.message("action.name.facet.navigate"));
+        registerCustomShortcutSet(CommonShortcuts.getEditSource(), contextComponent);
     }
-  }
+
+    @Override
+    public void update(final AnActionEvent e) {
+        final TreeNodePresentation presentation = getPresentation();
+        e.getPresentation().setEnabled(presentation != null && presentation.canNavigateToSource());
+    }
+
+    @Nullable
+    protected abstract TreeNodePresentation getPresentation();
+
+    @Override
+    public void actionPerformed(final AnActionEvent e) {
+        final TreeNodePresentation presentation = getPresentation();
+        if (presentation != null) {
+            presentation.navigateToSource();
+        }
+    }
 }

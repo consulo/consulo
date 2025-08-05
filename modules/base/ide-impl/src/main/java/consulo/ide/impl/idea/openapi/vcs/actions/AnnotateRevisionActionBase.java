@@ -33,139 +33,154 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AnnotateRevisionActionBase extends AnAction {
-  public AnnotateRevisionActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
+    public AnnotateRevisionActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 
-  @Nullable
-  protected abstract AbstractVcs getVcs(@Nonnull AnActionEvent e);
+    @Nullable
+    protected abstract AbstractVcs getVcs(@Nonnull AnActionEvent e);
 
-  @Nullable
-  protected abstract VirtualFile getFile(@Nonnull AnActionEvent e);
+    @Nullable
+    protected abstract VirtualFile getFile(@Nonnull AnActionEvent e);
 
-  @Nullable
-  protected abstract VcsFileRevision getFileRevision(@Nonnull AnActionEvent e);
+    @Nullable
+    protected abstract VcsFileRevision getFileRevision(@Nonnull AnActionEvent e);
 
-  @Nullable
-  protected Editor getEditor(@Nonnull AnActionEvent e) {
-    return null;
-  }
+    @Nullable
+    protected Editor getEditor(@Nonnull AnActionEvent e) {
+        return null;
+    }
 
-  protected int getAnnotatedLine(@Nonnull AnActionEvent e) {
-    Editor editor = getEditor(e);
-    return editor == null ? 0 : editor.getCaretModel().getLogicalPosition().line;
-  }
+    protected int getAnnotatedLine(@Nonnull AnActionEvent e) {
+        Editor editor = getEditor(e);
+        return editor == null ? 0 : editor.getCaretModel().getLogicalPosition().line;
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(isEnabled(e));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(isEnabled(e));
+    }
 
-  public boolean isEnabled(@Nonnull AnActionEvent e) {
-    if (!e.hasData(Project.KEY)) return false;
+    public boolean isEnabled(@Nonnull AnActionEvent e) {
+        if (!e.hasData(Project.KEY)) {
+            return false;
+        }
 
-    VcsFileRevision fileRevision = getFileRevision(e);
-    if (fileRevision == null) return false;
+        VcsFileRevision fileRevision = getFileRevision(e);
+        if (fileRevision == null) {
+            return false;
+        }
 
-    VirtualFile file = getFile(e);
-    if (file == null) return false;
+        VirtualFile file = getFile(e);
+        if (file == null) {
+            return false;
+        }
 
-    AbstractVcs vcs = getVcs(e);
-    if (vcs == null) return false;
+        AbstractVcs vcs = getVcs(e);
+        if (vcs == null) {
+            return false;
+        }
 
-    AnnotationProvider provider = vcs.getAnnotationProvider();
-    if (provider == null || !provider.isAnnotationValid(fileRevision)) return false;
+        AnnotationProvider provider = vcs.getAnnotationProvider();
+        if (provider == null || !provider.isAnnotationValid(fileRevision)) {
+            return false;
+        }
 
-    return !VcsAnnotateUtil.getBackgroundableLock(vcs.getProject(), file).isLocked();
-  }
+        return !VcsAnnotateUtil.getBackgroundableLock(vcs.getProject(), file).isLocked();
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final VcsFileRevision fileRevision = getFileRevision(e);
-    final VirtualFile file = getFile(e);
-    final AbstractVcs vcs = getVcs(e);
-    assert vcs != null;
-    assert file != null;
-    assert fileRevision != null;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final VcsFileRevision fileRevision = getFileRevision(e);
+        final VirtualFile file = getFile(e);
+        final AbstractVcs vcs = getVcs(e);
+        assert vcs != null;
+        assert file != null;
+        assert fileRevision != null;
 
-    final Editor editor = getEditor(e);
-    final CharSequence oldContent = editor == null ? null : editor.getDocument().getImmutableCharSequence();
-    final int oldLine = getAnnotatedLine(e);
+        final Editor editor = getEditor(e);
+        final CharSequence oldContent = editor == null ? null : editor.getDocument().getImmutableCharSequence();
+        final int oldLine = getAnnotatedLine(e);
 
-    final AnnotationProvider annotationProvider = vcs.getAnnotationProvider();
-    assert annotationProvider != null;
+        final AnnotationProvider annotationProvider = vcs.getAnnotationProvider();
+        assert annotationProvider != null;
 
-    final Ref<FileAnnotation> fileAnnotationRef = new Ref<>();
-    final Ref<Integer> newLineRef = new Ref<>();
-    final Ref<VcsException> exceptionRef = new Ref<>();
+        final Ref<FileAnnotation> fileAnnotationRef = new Ref<>();
+        final Ref<Integer> newLineRef = new Ref<>();
+        final Ref<VcsException> exceptionRef = new Ref<>();
 
-    VcsAnnotateUtil.getBackgroundableLock(vcs.getProject(), file).lock();
+        VcsAnnotateUtil.getBackgroundableLock(vcs.getProject(), file).lock();
 
-    Semaphore semaphore = new Semaphore(0);
-    AtomicBoolean shouldOpenEditorInSync = new AtomicBoolean(true);
+        Semaphore semaphore = new Semaphore(0);
+        AtomicBoolean shouldOpenEditorInSync = new AtomicBoolean(true);
 
-    ProgressManager.getInstance().run(new Task.Backgroundable(vcs.getProject(), VcsLocalize.retrievingAnnotations().get(), true) {
-      @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(vcs.getProject(), VcsLocalize.retrievingAnnotations().get(), true) {
+            @Override
+            public void run(@Nonnull ProgressIndicator indicator) {
+                try {
+                    FileAnnotation fileAnnotation = annotationProvider.annotate(file, fileRevision);
+
+                    int newLine = translateLine(oldContent, fileAnnotation.getAnnotatedContent(), oldLine);
+
+                    fileAnnotationRef.set(fileAnnotation);
+                    newLineRef.set(newLine);
+
+                    shouldOpenEditorInSync.set(false);
+                    semaphore.release();
+                }
+                catch (VcsException e) {
+                    exceptionRef.set(e);
+                }
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void onFinished() {
+                VcsAnnotateUtil.getBackgroundableLock(vcs.getProject(), file).unlock();
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void onSuccess() {
+                if (!exceptionRef.isNull()) {
+                    AbstractVcsHelper.getInstance((Project) myProject)
+                        .showError(exceptionRef.get(), VcsLocalize.operationNameAnnotate().get());
+                }
+                if (fileAnnotationRef.isNull()) {
+                    return;
+                }
+
+                AbstractVcsHelper.getInstance((Project) myProject).showAnnotation(fileAnnotationRef.get(), file, vcs, newLineRef.get());
+            }
+        });
+
         try {
-          FileAnnotation fileAnnotation = annotationProvider.annotate(file, fileRevision);
+            semaphore.tryAcquire(ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS, TimeUnit.MILLISECONDS);
 
-          int newLine = translateLine(oldContent, fileAnnotation.getAnnotatedContent(), oldLine);
+            // We want to let Backgroundable task open editor if it was fast enough.
+            // This will remove blinking on editor opening (step 1 - editor opens, step 2 - annotations are shown).
+            if (shouldOpenEditorInSync.get()) {
+                CharSequence content = LoadTextUtil.loadText(file);
+                int newLine = translateLine(oldContent, content, oldLine);
 
-          fileAnnotationRef.set(fileAnnotation);
-          newLineRef.set(newLine);
-
-          shouldOpenEditorInSync.set(false);
-          semaphore.release();
+                OpenFileDescriptorImpl openFileDescriptor = new OpenFileDescriptorImpl(vcs.getProject(), file, newLine, 0);
+                FileEditorManager.getInstance(vcs.getProject()).openTextEditor(openFileDescriptor, true);
+            }
         }
-        catch (VcsException e) {
-          exceptionRef.set(e);
+        catch (InterruptedException ignore) {
         }
-      }
+    }
 
-      @Override
-      @RequiredUIAccess
-      public void onFinished() {
-        VcsAnnotateUtil.getBackgroundableLock(vcs.getProject(), file).unlock();
-      }
-
-      @Override
-      @RequiredUIAccess
-      public void onSuccess() {
-        if (!exceptionRef.isNull()) {
-          AbstractVcsHelper.getInstance((Project)myProject).showError(exceptionRef.get(), VcsLocalize.operationNameAnnotate().get());
+    private static int translateLine(@Nullable CharSequence oldContent, @Nullable CharSequence newContent, int line) {
+        if (oldContent == null || newContent == null) {
+            return line;
         }
-        if (fileAnnotationRef.isNull()) return;
-
-        AbstractVcsHelper.getInstance((Project)myProject).showAnnotation(fileAnnotationRef.get(), file, vcs, newLineRef.get());
-      }
-    });
-
-    try {
-      semaphore.tryAcquire(ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS, TimeUnit.MILLISECONDS);
-
-      // We want to let Backgroundable task open editor if it was fast enough.
-      // This will remove blinking on editor opening (step 1 - editor opens, step 2 - annotations are shown).
-      if (shouldOpenEditorInSync.get()) {
-        CharSequence content = LoadTextUtil.loadText(file);
-        int newLine = translateLine(oldContent, content, oldLine);
-
-        OpenFileDescriptorImpl openFileDescriptor = new OpenFileDescriptorImpl(vcs.getProject(), file, newLine, 0);
-        FileEditorManager.getInstance(vcs.getProject()).openTextEditor(openFileDescriptor, true);
-      }
+        try {
+            return Diff.translateLine(oldContent, newContent, line, true);
+        }
+        catch (FilesTooBigForDiffException ignore) {
+            return line;
+        }
     }
-    catch (InterruptedException ignore) {
-    }
-  }
-
-  private static int translateLine(@Nullable CharSequence oldContent, @Nullable CharSequence newContent, int line) {
-    if (oldContent == null || newContent == null) return line;
-    try {
-      return Diff.translateLine(oldContent, newContent, line, true);
-    }
-    catch (FilesTooBigForDiffException ignore) {
-      return line;
-    }
-  }
 }

@@ -26,34 +26,37 @@ import consulo.ui.color.ColorValue;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class AnnotateActionGroup extends ActionGroup {
-  private final AnAction[] myActions;
+    private final AnAction[] myActions;
 
-  public AnnotateActionGroup(@Nonnull List<AnnotationFieldGutter> gutters,
-                             @Nonnull EditorGutterComponentEx gutterComponent,
-                             @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> bgColorMap) {
-    super("View", true);
-    final List<AnAction> actions = new ArrayList<>();
-    for (AnnotationFieldGutter g : gutters) {
-      if (g.getID() != null) {
-        actions.add(new ShowHideAspectAction(g, gutterComponent));
-      }
+    public AnnotateActionGroup(
+        @Nonnull List<AnnotationFieldGutter> gutters,
+        @Nonnull EditorGutterComponentEx gutterComponent,
+        @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> bgColorMap
+    ) {
+        super("View", true);
+        final List<AnAction> actions = new ArrayList<>();
+        for (AnnotationFieldGutter g : gutters) {
+            if (g.getID() != null) {
+                actions.add(new ShowHideAspectAction(g, gutterComponent));
+            }
+        }
+        actions.add(AnSeparator.getInstance());
+        if (bgColorMap != null) {
+            actions.add(new ShowAnnotationColorsAction(gutterComponent));
+        }
+        actions.add(new ShowShortenNames(gutterComponent));
+        myActions = actions.toArray(new AnAction[actions.size()]);
     }
-    actions.add(AnSeparator.getInstance());
-    if (bgColorMap != null) {
-      actions.add(new ShowAnnotationColorsAction(gutterComponent));
-    }
-    actions.add(new ShowShortenNames(gutterComponent));
-    myActions = actions.toArray(new AnAction[actions.size()]);
-  }
 
-  @Nonnull
-  @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    return myActions;
-  }
+    @Nonnull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        return myActions;
+    }
 }

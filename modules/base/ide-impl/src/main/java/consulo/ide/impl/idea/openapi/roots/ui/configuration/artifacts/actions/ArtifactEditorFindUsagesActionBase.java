@@ -26,26 +26,26 @@ import java.awt.*;
  * @author nik
  */
 public abstract class ArtifactEditorFindUsagesActionBase extends FindUsagesInProjectStructureActionBase {
-  private final Tree myTree;
-  protected final ArtifactsStructureConfigurableContext myArtifactContext;
+    private final Tree myTree;
+    protected final ArtifactsStructureConfigurableContext myArtifactContext;
 
-  public ArtifactEditorFindUsagesActionBase(Tree tree, ArtifactsStructureConfigurableContext artifactContext) {
-    super(tree);
-    myTree = tree;
-    myArtifactContext = artifactContext;
-  }
+    public ArtifactEditorFindUsagesActionBase(Tree tree, ArtifactsStructureConfigurableContext artifactContext) {
+        super(tree);
+        myTree = tree;
+        myArtifactContext = artifactContext;
+    }
 
-  @Override
-  protected boolean isEnabled() {
-    return getSelectedElement() != null;
-  }
+    @Override
+    protected boolean isEnabled() {
+        return getSelectedElement() != null;
+    }
 
-  @Override
-  protected RelativePoint getPointToShowResults() {
-    final int selectedRow = myTree.getSelectionRows()[0];
-    final Rectangle rowBounds = myTree.getRowBounds(selectedRow);
-    final Point location = rowBounds.getLocation();
-    location.y += rowBounds.height;
-    return new RelativePoint(myTree, location);
-  }
+    @Override
+    protected RelativePoint getPointToShowResults() {
+        final int selectedRow = myTree.getSelectionRows()[0];
+        final Rectangle rowBounds = myTree.getRowBounds(selectedRow);
+        final Point location = rowBounds.getLocation();
+        location.y += rowBounds.height;
+        return new RelativePoint(myTree, location);
+    }
 }

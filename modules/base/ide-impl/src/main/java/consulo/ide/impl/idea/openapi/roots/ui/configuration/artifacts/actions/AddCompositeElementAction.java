@@ -29,24 +29,25 @@ import java.util.List;
  * @author nik
  */
 public class AddCompositeElementAction extends DumbAwareAction {
-  private final ArtifactEditorEx myArtifactEditor;
-  private final CompositePackagingElementType<?> myElementType;
+    private final ArtifactEditorEx myArtifactEditor;
+    private final CompositePackagingElementType<?> myElementType;
 
-  public AddCompositeElementAction(ArtifactEditorEx artifactEditor, CompositePackagingElementType elementType) {
-    super(ProjectLocalize.artifactsCreateAction(elementType.getPresentableName()));
-    myArtifactEditor = artifactEditor;
-    myElementType = elementType;
-    getTemplatePresentation().setIcon(elementType.getIcon());
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    myArtifactEditor.addNewPackagingElement(myElementType);
-  }
-
-  public static void addCompositeCreateActions(List<AnAction> actions, final ArtifactEditorEx artifactEditor) {
-    for (CompositePackagingElementType packagingElementType : PackagingElementFactory.getInstance(artifactEditor.getContext().getProject()).getCompositeElementTypes()) {
-      actions.add(new AddCompositeElementAction(artifactEditor, packagingElementType));
+    public AddCompositeElementAction(ArtifactEditorEx artifactEditor, CompositePackagingElementType elementType) {
+        super(ProjectLocalize.artifactsCreateAction(elementType.getPresentableName()));
+        myArtifactEditor = artifactEditor;
+        myElementType = elementType;
+        getTemplatePresentation().setIcon(elementType.getIcon());
     }
-  }
+
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        myArtifactEditor.addNewPackagingElement(myElementType);
+    }
+
+    public static void addCompositeCreateActions(List<AnAction> actions, final ArtifactEditorEx artifactEditor) {
+        for (CompositePackagingElementType packagingElementType : PackagingElementFactory.getInstance(artifactEditor.getContext()
+            .getProject()).getCompositeElementTypes()) {
+            actions.add(new AddCompositeElementAction(artifactEditor, packagingElementType));
+        }
+    }
 }

@@ -26,80 +26,87 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.ui.ex.RelativePoint;
 
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
  * @author nik
  */
 public abstract class FindUsagesInProjectStructureActionBase extends AnAction implements DumbAware {
-  private final JComponent myParentComponent;
+    private final JComponent myParentComponent;
 
-  public FindUsagesInProjectStructureActionBase(JComponent parentComponent) {
-    super(ProjectBundle.message("find.usages.action.text"), ProjectBundle.message("find.usages.action.text"), AllIcons.Actions.Find);
-    registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_USAGES).getShortcutSet(), parentComponent);
-    myParentComponent = parentComponent;
-  }
+    public FindUsagesInProjectStructureActionBase(JComponent parentComponent) {
+        super(ProjectBundle.message("find.usages.action.text"), ProjectBundle.message("find.usages.action.text"), AllIcons.Actions.Find);
+        registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_USAGES).getShortcutSet(), parentComponent);
+        myParentComponent = parentComponent;
+    }
 
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(false);
-    // todo e.getPresentation().setEnabled(isEnabled());
-  }
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(false);
+        // todo e.getPresentation().setEnabled(isEnabled());
+    }
 
-  protected abstract boolean isEnabled();
+    protected abstract boolean isEnabled();
 
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final ProjectStructureElement selected = getSelectedElement();
-    if (selected == null) return;
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        final ProjectStructureElement selected = getSelectedElement();
+        if (selected == null) {
+            return;
+        }
 
-    //final Collection<ProjectStructureElementUsage> usages = getContext().getDaemonAnalyzer().getUsages(selected);
-    //if (usages.isEmpty()) {
-    //  Messages.showInfoMessage(myParentComponent, FindBundle.message("find.usage.view.no.usages.text"), FindBundle.message("find.pointcut.applications.not.found.title"));
-    //  return;
-    //}
-    //
-    //RelativePoint point = getPointToShowResults();
-    //final ProjectStructureElementUsage[] usagesArray = usages.toArray(new ProjectStructureElementUsage[usages.size()]);
-    //Arrays.sort(usagesArray, (o1, o2) -> o1.getPresentableName().compareToIgnoreCase(o2.getPresentableName()));
-    //
-    //BaseListPopupStep<ProjectStructureElementUsage> step =
-    //  new BaseListPopupStep<ProjectStructureElementUsage>(ProjectBundle.message("dependencies.used.in.popup.title"), usagesArray) {
-    //    @Override
-    //    public PopupStep onChosen(final ProjectStructureElementUsage selected, final boolean finalChoice) {
-    //      selected.getPlace().navigate(myProject);
-    //      return FINAL_CHOICE;
-    //    }
-    //
-    //    @Nonnull
-    //    @Override
-    //    public String getTextFor(ProjectStructureElementUsage value) {
-    //      return value.getPresentableName();
-    //    }
-    //
-    //    @Override
-    //    public Image getIconFor(ProjectStructureElementUsage selection) {
-    //      return selection.getIcon();
-    //    }
-    //  };
-    //new ListPopupImpl(step) {
-    //  @Override
-    //  protected ListCellRenderer getListElementRenderer() {
-    //    return new ListCellRendererWithRightAlignedComponent<ProjectStructureElementUsage>() {
-    //      @Override
-    //      protected void customize(ProjectStructureElementUsage value) {
-    //        setLeftText(value.getPresentableName());
-    //        setIcon(TargetAWT.to(value.getIcon()));
-    //        setRightForeground(Color.GRAY);
-    //        setRightText(value.getPresentableLocationInElement());
-    //      }
-    //    };
-    //  }
-    //}.show(point);
-  }
+        //final Collection<ProjectStructureElementUsage> usages = getContext().getDaemonAnalyzer().getUsages(selected);
+        //if (usages.isEmpty()) {
+        //    Messages.showInfoMessage(
+        //        myParentComponent,
+        //        FindBundle.message("find.usage.view.no.usages.text"),
+        //        FindBundle.message("find.pointcut.applications.not.found.title")
+        //    );
+        //    return;
+        //}
+        //
+        //RelativePoint point = getPointToShowResults();
+        //final ProjectStructureElementUsage[] usagesArray = usages.toArray(new ProjectStructureElementUsage[usages.size()]);
+        //Arrays.sort(usagesArray, (o1, o2) -> o1.getPresentableName().compareToIgnoreCase(o2.getPresentableName()));
+        //
+        //BaseListPopupStep<ProjectStructureElementUsage> step =
+        //    new BaseListPopupStep<ProjectStructureElementUsage>(ProjectBundle.message("dependencies.used.in.popup.title"), usagesArray) {
+        //        @Override
+        //        public PopupStep onChosen(final ProjectStructureElementUsage selected, final boolean finalChoice) {
+        //                  selected.getPlace().navigate(myProject);
+        //            return FINAL_CHOICE;
+        //        }
+        //
+        //        @Nonnull
+        //        @Override
+        //        public String getTextFor(ProjectStructureElementUsage value) {
+        //            return value.getPresentableName();
+        //        }
+        //
+        //        @Override
+        //        public Image getIconFor(ProjectStructureElementUsage selection) {
+        //            return selection.getIcon();
+        //        }
+        //    };
+        //new ListPopupImpl(step) {
+        //    @Override
+        //    protected ListCellRenderer getListElementRenderer() {
+        //        return new ListCellRendererWithRightAlignedComponent<ProjectStructureElementUsage>() {
+        //            @Override
+        //            protected void customize(ProjectStructureElementUsage value) {
+        //                setLeftText(value.getPresentableName());
+        //                setIcon(TargetAWT.to(value.getIcon()));
+        //                setRightForeground(Color.GRAY);
+        //                setRightText(value.getPresentableLocationInElement());
+        //            }
+        //        };
+        //    }
+        //}.show(point);
+    }
 
-  @Nullable
-  protected abstract ProjectStructureElement getSelectedElement();
+    @Nullable
+    protected abstract ProjectStructureElement getSelectedElement();
 
-  protected abstract RelativePoint getPointToShowResults();
+    protected abstract RelativePoint getPointToShowResults();
 }

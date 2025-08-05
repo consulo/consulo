@@ -24,21 +24,21 @@ import consulo.compiler.artifact.element.PackagingElementType;
 import jakarta.annotation.Nonnull;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class AddNewPackagingElementAction extends DumbAwareAction {
-  private final PackagingElementType<?> myType;
-  private final ArtifactEditorEx myArtifactEditor;
+    private final PackagingElementType<?> myType;
+    private final ArtifactEditorEx myArtifactEditor;
 
-  public AddNewPackagingElementAction(PackagingElementType<?> type, ArtifactEditorEx artifactEditor) {
-    super(type.getPresentableName(), LocalizeValue.of(), type.getIcon());
-    myType = type;
-    myArtifactEditor = artifactEditor;
-  }
+    public AddNewPackagingElementAction(PackagingElementType<?> type, ArtifactEditorEx artifactEditor) {
+        super(type.getPresentableName(), LocalizeValue.of(), type.getIcon());
+        myType = type;
+        myArtifactEditor = artifactEditor;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    myArtifactEditor.addNewPackagingElement(myType);
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        myArtifactEditor.addNewPackagingElement(myType);
+    }
 }

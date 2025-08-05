@@ -41,57 +41,67 @@ import java.util.List;
  * @author nik
  */
 public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActionBase {
-  public ExtractIntoDefaultLocationAction(SourceItemsTree sourceItemsTree, ArtifactEditorEx artifactEditor) {
-    super(sourceItemsTree, artifactEditor);
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    final String pathForClasses = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES);
-    final Presentation presentation = e.getPresentation();
-    if (onlyJarsSelected() && pathForClasses != null) {
-      presentation.setText("Extract Into " + getTargetLocationText(Collections.singleton(pathForClasses)));
-      presentation.setVisible(true);
+    public ExtractIntoDefaultLocationAction(SourceItemsTree sourceItemsTree, ArtifactEditorEx artifactEditor) {
+        super(sourceItemsTree, artifactEditor);
     }
-    else {
-      presentation.setVisible(false);
-    }
-  }
 
-  private boolean onlyJarsSelected() {
-    for (PackagingSourceItem item : mySourceItemsTree.getSelectedItems()) {
-      if (item.isProvideElements() && (!item.getKindOfProducedElements().containsJarFiles() || item.getKindOfProducedElements().containsDirectoriesWithClasses())) {
-        return false;
-      }
+    @Override
+    public void update(AnActionEvent e) {
+        final String pathForClasses =
+            myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES);
+        final Presentation presentation = e.getPresentation();
+        if (onlyJarsSelected() && pathForClasses != null) {
+            presentation.setText("Extract Into " + getTargetLocationText(Collections.singleton(pathForClasses)));
+            presentation.setVisible(true);
+        }
+        else {
+            presentation.setVisible(false);
+        }
     }
-    return true;
-  }
 
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final String pathForClasses = myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES);
-    if (pathForClasses != null) {
-      final List<PackagingElement<?>> extracted = new ArrayList<PackagingElement<?>>();
-      for (PackagingSourceItem item : mySourceItemsTree.getSelectedItems()) {
-        final ArtifactEditorContext context = myArtifactEditor.getContext();
-        final List<? extends PackagingElement<?>> elements = item.createElements(context);
-        ArtifactUtil.processElementsWithSubstitutions(elements, context, context.getArtifactType(), PackagingElementPath.EMPTY, new PackagingElementProcessor<PackagingElement<?>>() {
-          @Override
-          public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
-            if (element instanceof FileCopyPackagingElement copyPackagingElement) {
-              final VirtualFile file = copyPackagingElement.findFile();
-              if (file != null) {
-                final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
-                if (archiveRoot != null) {
-                  extracted.add(PackagingElementFactory.getInstance(e.getRequiredData(Project.KEY)).createExtractedDirectory(archiveRoot));
-                }
-              }
+    private boolean onlyJarsSelected() {
+        for (PackagingSourceItem item : mySourceItemsTree.getSelectedItems()) {
+            if (item.isProvideElements() && (!item.getKindOfProducedElements().containsJarFiles() || item.getKindOfProducedElements()
+                .containsDirectoriesWithClasses())) {
+                return false;
             }
-            return true;
-          }
-        });
-      }
-      myArtifactEditor.getLayoutTreeComponent().putElements(pathForClasses, extracted);
+        }
+        return true;
     }
-  }
+
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        final String pathForClasses =
+            myArtifactEditor.getArtifact().getArtifactType().getDefaultPathFor(PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES);
+        if (pathForClasses != null) {
+            final List<PackagingElement<?>> extracted = new ArrayList<PackagingElement<?>>();
+            for (PackagingSourceItem item : mySourceItemsTree.getSelectedItems()) {
+                final ArtifactEditorContext context = myArtifactEditor.getContext();
+                final List<? extends PackagingElement<?>> elements = item.createElements(context);
+                ArtifactUtil.processElementsWithSubstitutions(
+                    elements,
+                    context,
+                    context.getArtifactType(),
+                    PackagingElementPath.EMPTY,
+                    new PackagingElementProcessor<PackagingElement<?>>() {
+                        @Override
+                        public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
+                            if (element instanceof FileCopyPackagingElement copyPackagingElement) {
+                                final VirtualFile file = copyPackagingElement.findFile();
+                                if (file != null) {
+                                    final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
+                                    if (archiveRoot != null) {
+                                        extracted.add(PackagingElementFactory.getInstance(e.getRequiredData(Project.KEY))
+                                            .createExtractedDirectory(archiveRoot));
+                                    }
+                                }
+                            }
+                            return true;
+                        }
+                    }
+                );
+            }
+            myArtifactEditor.getLayoutTreeComponent().putElements(pathForClasses, extracted);
+        }
+    }
 }

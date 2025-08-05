@@ -24,23 +24,23 @@ import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 public class FileDeleteAction extends DeleteAction {
-  public FileDeleteAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  protected DeleteProvider getDeleteProvider(DataContext dataContext) {
-    return new VirtualFileDeleteProvider();
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent event) {
-    final Boolean available = event.getData(FileChooserKeys.DELETE_ACTION_AVAILABLE);
-    if (available != null && !available) {
-      event.getPresentation().setEnabledAndVisible(false);
-      return;
+    public FileDeleteAction() {
+        setEnabledInModalContext(true);
     }
 
-    super.update(event);
-  }
+    @Override
+    protected DeleteProvider getDeleteProvider(DataContext dataContext) {
+        return new VirtualFileDeleteProvider();
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent event) {
+        final Boolean available = event.getData(FileChooserKeys.DELETE_ACTION_AVAILABLE);
+        if (available != null && !available) {
+            event.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+
+        super.update(event);
+    }
 }

@@ -25,15 +25,15 @@ import jakarta.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 public class DefaultCompactActionGroup extends DefaultActionGroup implements CompactActionGroup {
-  public DefaultCompactActionGroup() {
-    super();
-  }
+    public DefaultCompactActionGroup() {
+        super();
+    }
 
-  public DefaultCompactActionGroup(@Nonnull AnAction... actions) {
-    super(actions);
-  }
+    public DefaultCompactActionGroup(@Nonnull AnAction... actions) {
+        super(actions);
+    }
 
-  public DefaultCompactActionGroup(String shortName, boolean popup) {
-    super(shortName, popup);
-  }
+    public DefaultCompactActionGroup(String shortName, boolean popup) {
+        super(shortName, popup);
+    }
 }

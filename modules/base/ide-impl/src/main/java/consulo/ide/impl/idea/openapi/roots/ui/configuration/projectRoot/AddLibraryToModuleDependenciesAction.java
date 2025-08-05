@@ -30,34 +30,36 @@ import jakarta.annotation.Nonnull;
  * @author nik
  */
 public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
-  @Nonnull
-  private final Project myProject;
-  @Nonnull
-  private final BaseLibrariesConfigurable myConfigurable;
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final BaseLibrariesConfigurable myConfigurable;
 
-  public AddLibraryToModuleDependenciesAction(@Nonnull Project project, @Nonnull BaseLibrariesConfigurable configurable) {
-    super("Add to Modules...", "Add the library to the dependencies list of chosen modules", null);
-    myProject = project;
-    myConfigurable = configurable;
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final ProjectStructureElement element = myConfigurable.getSelectedElement();
-    boolean visible = false;
-    if (element instanceof LibraryProjectStructureElement) {
-      final LibraryEx library = (LibraryEx)((LibraryProjectStructureElement)element).getLibrary();
-      visible = !LibraryEditingUtil.getSuitableModules(myProject, library.getKind(), library).isEmpty();
+    public AddLibraryToModuleDependenciesAction(@Nonnull Project project, @Nonnull BaseLibrariesConfigurable configurable) {
+        super("Add to Modules...", "Add the library to the dependencies list of chosen modules", null);
+        myProject = project;
+        myConfigurable = configurable;
     }
-    e.getPresentation().setVisible(visible);
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final LibraryProjectStructureElement element = (LibraryProjectStructureElement)myConfigurable.getSelectedElement();
-    if (element == null) return;
-    final Library library = element.getLibrary();
-    LibraryEditingUtil.showDialogAndAddLibraryToDependencies(library, myProject, false);
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final ProjectStructureElement element = myConfigurable.getSelectedElement();
+        boolean visible = false;
+        if (element instanceof LibraryProjectStructureElement) {
+            final LibraryEx library = (LibraryEx) ((LibraryProjectStructureElement) element).getLibrary();
+            visible = !LibraryEditingUtil.getSuitableModules(myProject, library.getKind(), library).isEmpty();
+        }
+        e.getPresentation().setVisible(visible);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final LibraryProjectStructureElement element = (LibraryProjectStructureElement) myConfigurable.getSelectedElement();
+        if (element == null) {
+            return;
+        }
+        final Library library = element.getLibrary();
+        LibraryEditingUtil.showDialogAndAddLibraryToDependencies(library, myProject, false);
+    }
 }
