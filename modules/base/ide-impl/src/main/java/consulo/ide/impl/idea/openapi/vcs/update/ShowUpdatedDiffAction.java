@@ -54,174 +54,178 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final DataContext dc = e.getDataContext();
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final DataContext dc = e.getDataContext();
 
-    final Presentation presentation = e.getPresentation();
+        final Presentation presentation = e.getPresentation();
 
-    //presentation.setVisible(isVisible(dc));
-    presentation.setEnabled(isVisible(dc) && isEnabled(dc));
-  }
-
-  private boolean isVisible(final DataContext dc) {
-    return dc.hasData(Project.KEY) && dc.hasData(VcsDataKeys.LABEL_BEFORE) && dc.hasData(VcsDataKeys.LABEL_AFTER);
-  }
-
-  private boolean isEnabled(final DataContext dc) {
-    return dc.hasData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    Iterable<Pair<FilePath, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
-    Label before = (Label)e.getRequiredData(VcsDataKeys.LABEL_BEFORE);
-    Label after = (Label)e.getRequiredData(VcsDataKeys.LABEL_AFTER);
-    FilePath selectedUrl = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_SELECTED_PATH);
-
-    MyDiffRequestChain requestChain = new MyDiffRequestChain(project, iterable, before, after, selectedUrl);
-    DiffManager.getInstance().showDiff(project, requestChain, DiffDialogHints.FRAME);
-  }
-
-  private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-    @Nullable
-    private final Project myProject;
-    @Nonnull
-    private final Label myBefore;
-    @Nonnull
-    private final Label myAfter;
-    @Nonnull
-    private final List<MyDiffRequestProducer> myRequests = new ArrayList<>();
-
-    private int myIndex;
-
-    public MyDiffRequestChain(
-      @Nullable Project project,
-      @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
-      @Nonnull Label before,
-      @Nonnull Label after,
-      @Nullable FilePath filePath
-    ) {
-      myProject = project;
-      myBefore = before;
-      myAfter = after;
-
-      int selected = -1;
-      for (Pair<FilePath, FileStatus> pair : iterable) {
-        if (selected == -1 && pair.first.equals(filePath)) selected = myRequests.size();
-        myRequests.add(new MyDiffRequestProducer(pair.first, pair.second));
-      }
-      if (selected != -1) myIndex = selected;
+        //presentation.setVisible(isVisible(dc));
+        presentation.setEnabled(isVisible(dc) && isEnabled(dc));
     }
 
-    @Nonnull
-    @Override
-    public List<MyDiffRequestProducer> getRequests() {
-      return myRequests;
+    private boolean isVisible(final DataContext dc) {
+        return dc.hasData(Project.KEY) && dc.hasData(VcsDataKeys.LABEL_BEFORE) && dc.hasData(VcsDataKeys.LABEL_AFTER);
+    }
+
+    private boolean isEnabled(final DataContext dc) {
+        return dc.hasData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
     }
 
     @Override
-    public int getIndex() {
-      return myIndex;
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        Iterable<Pair<FilePath, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
+        Label before = (Label) e.getRequiredData(VcsDataKeys.LABEL_BEFORE);
+        Label after = (Label) e.getRequiredData(VcsDataKeys.LABEL_AFTER);
+        FilePath selectedUrl = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_SELECTED_PATH);
+
+        MyDiffRequestChain requestChain = new MyDiffRequestChain(project, iterable, before, after, selectedUrl);
+        DiffManager.getInstance().showDiff(project, requestChain, DiffDialogHints.FRAME);
     }
 
-    @Override
-    public void setIndex(int index) {
-      myIndex = index;
-    }
-
-    @Nonnull
-    @Override
-    public AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected) {
-      return new ChangeGoToChangePopupAction.Fake<>(this, myIndex, onSelected) {
+    private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
+        @Nullable
+        private final Project myProject;
         @Nonnull
-        @Override
-        protected FilePath getFilePath(int index) {
-          return myRequests.get(index).getFilePath();
+        private final Label myBefore;
+        @Nonnull
+        private final Label myAfter;
+        @Nonnull
+        private final List<MyDiffRequestProducer> myRequests = new ArrayList<>();
+
+        private int myIndex;
+
+        public MyDiffRequestChain(
+            @Nullable Project project,
+            @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
+            @Nonnull Label before,
+            @Nonnull Label after,
+            @Nullable FilePath filePath
+        ) {
+            myProject = project;
+            myBefore = before;
+            myAfter = after;
+
+            int selected = -1;
+            for (Pair<FilePath, FileStatus> pair : iterable) {
+                if (selected == -1 && pair.first.equals(filePath)) {
+                    selected = myRequests.size();
+                }
+                myRequests.add(new MyDiffRequestProducer(pair.first, pair.second));
+            }
+            if (selected != -1) {
+                myIndex = selected;
+            }
         }
 
         @Nonnull
         @Override
-        protected FileStatus getFileStatus(int index) {
-          return myRequests.get(index).getFileStatus();
+        public List<MyDiffRequestProducer> getRequests() {
+            return myRequests;
         }
-      };
-    }
 
-    private class MyDiffRequestProducer implements DiffRequestProducer {
-      @Nonnull
-      private final FileStatus myFileStatus;
-      @Nonnull
-      private final FilePath myFilePath;
-
-      public MyDiffRequestProducer(@Nonnull FilePath filePath, @Nonnull FileStatus fileStatus) {
-        myFilePath = filePath;
-        myFileStatus = fileStatus;
-      }
-
-      @Nonnull
-      @Override
-      public String getName() {
-        return getFilePath().getPath();
-      }
-
-      @Nonnull
-      public FilePath getFilePath() {
-        return myFilePath;
-      }
-
-      @Nonnull
-      public FileStatus getFileStatus() {
-        return myFileStatus;
-      }
-
-      @Nonnull
-      @Override
-      public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
-              throws DiffRequestProducerException, ProcessCanceledException {
-        try {
-          DiffContent content1;
-          DiffContent content2;
-
-          DiffContentFactoryEx contentFactory = DiffContentFactoryEx.getInstanceEx();
-
-          if (FileStatus.ADDED.equals(myFileStatus)) {
-            content1 = contentFactory.createEmpty();
-          }
-          else {
-            byte[] bytes1 = loadContent(myFilePath, myBefore);
-            content1 = contentFactory.createFromBytes(myProject, bytes1, myFilePath);
-          }
-
-          if (FileStatus.DELETED.equals(myFileStatus)) {
-            content2 = contentFactory.createEmpty();
-          }
-          else {
-            byte[] bytes2 = loadContent(myFilePath, myAfter);
-            content2 = contentFactory.createFromBytes(myProject, bytes2, myFilePath);
-          }
-
-          String title = DiffRequestFactoryEx.getInstanceEx().getContentTitle(myFilePath);
-          return new SimpleDiffRequest(title, content1, content2, "Before update", "After update");
+        @Override
+        public int getIndex() {
+            return myIndex;
         }
-        catch (IOException e) {
-          throw new DiffRequestProducerException("Can't load content", e);
+
+        @Override
+        public void setIndex(int index) {
+            myIndex = index;
         }
-      }
+
+        @Nonnull
+        @Override
+        public AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected) {
+            return new ChangeGoToChangePopupAction.Fake<>(this, myIndex, onSelected) {
+                @Nonnull
+                @Override
+                protected FilePath getFilePath(int index) {
+                    return myRequests.get(index).getFilePath();
+                }
+
+                @Nonnull
+                @Override
+                protected FileStatus getFileStatus(int index) {
+                    return myRequests.get(index).getFileStatus();
+                }
+            };
+        }
+
+        private class MyDiffRequestProducer implements DiffRequestProducer {
+            @Nonnull
+            private final FileStatus myFileStatus;
+            @Nonnull
+            private final FilePath myFilePath;
+
+            public MyDiffRequestProducer(@Nonnull FilePath filePath, @Nonnull FileStatus fileStatus) {
+                myFilePath = filePath;
+                myFileStatus = fileStatus;
+            }
+
+            @Nonnull
+            @Override
+            public String getName() {
+                return getFilePath().getPath();
+            }
+
+            @Nonnull
+            public FilePath getFilePath() {
+                return myFilePath;
+            }
+
+            @Nonnull
+            public FileStatus getFileStatus() {
+                return myFileStatus;
+            }
+
+            @Nonnull
+            @Override
+            public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
+                throws DiffRequestProducerException, ProcessCanceledException {
+                try {
+                    DiffContent content1;
+                    DiffContent content2;
+
+                    DiffContentFactoryEx contentFactory = DiffContentFactoryEx.getInstanceEx();
+
+                    if (FileStatus.ADDED.equals(myFileStatus)) {
+                        content1 = contentFactory.createEmpty();
+                    }
+                    else {
+                        byte[] bytes1 = loadContent(myFilePath, myBefore);
+                        content1 = contentFactory.createFromBytes(myProject, bytes1, myFilePath);
+                    }
+
+                    if (FileStatus.DELETED.equals(myFileStatus)) {
+                        content2 = contentFactory.createEmpty();
+                    }
+                    else {
+                        byte[] bytes2 = loadContent(myFilePath, myAfter);
+                        content2 = contentFactory.createFromBytes(myProject, bytes2, myFilePath);
+                    }
+
+                    String title = DiffRequestFactoryEx.getInstanceEx().getContentTitle(myFilePath);
+                    return new SimpleDiffRequest(title, content1, content2, "Before update", "After update");
+                }
+                catch (IOException e) {
+                    throw new DiffRequestProducerException("Can't load content", e);
+                }
+            }
+        }
+
+        @Nonnull
+        private static byte[] loadContent(@Nonnull FilePath filePointer, @Nonnull Label label) throws DiffRequestProducerException {
+            String path = filePointer.getPresentableUrl();
+            ByteContent byteContent = label.getByteContent(FileUtil.toSystemIndependentName(path));
+
+            if (byteContent == null || byteContent.isDirectory() || byteContent.getBytes() == null) {
+                throw new DiffRequestProducerException("Can't load content");
+            }
+
+            return byteContent.getBytes();
+        }
     }
-
-    @Nonnull
-    private static byte[] loadContent(@Nonnull FilePath filePointer, @Nonnull Label label) throws DiffRequestProducerException {
-      String path = filePointer.getPresentableUrl();
-      ByteContent byteContent = label.getByteContent(FileUtil.toSystemIndependentName(path));
-
-      if (byteContent == null || byteContent.isDirectory() || byteContent.getBytes() == null) {
-        throw new DiffRequestProducerException("Can't load content");
-      }
-
-      return byteContent.getBytes();
-    }
-  }
 }

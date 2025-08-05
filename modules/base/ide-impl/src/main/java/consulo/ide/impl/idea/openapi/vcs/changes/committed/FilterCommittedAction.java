@@ -27,24 +27,24 @@ import jakarta.annotation.Nonnull;
  * @author yole
  */
 public class FilterCommittedAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
-    assert panel != null;
-    panel.setChangesFilter();
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
+        assert panel != null;
+        panel.setChangesFilter();
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
-      e.getPresentation().setVisible(panel != null && panel.getRepositoryLocation() != null);
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
+            e.getPresentation().setVisible(panel != null && panel.getRepositoryLocation() != null);
+        }
+        else {
+            e.getPresentation().setVisible(false);
+        }
     }
-    else {
-      e.getPresentation().setVisible(false);
-    }
-  }
 }

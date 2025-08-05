@@ -23,35 +23,35 @@ import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 public class CleanUnshelvedAction extends DumbAwareAction {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    final Project project = e.getData(Project.KEY);
-    final Presentation presentation = e.getPresentation();
-    if (project == null) {
-      presentation.setEnabledAndVisible(false);
-      return;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        final Project project = e.getData(Project.KEY);
+        final Presentation presentation = e.getPresentation();
+        if (project == null) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
+        presentation.setVisible(true);
+        presentation.setEnabled(!ShelveChangesManager.getInstance(project).getRecycledShelvedChangeLists().isEmpty());
     }
-    presentation.setVisible(true);
-    presentation.setEnabled(!ShelveChangesManager.getInstance(project).getRecycledShelvedChangeLists().isEmpty());
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    CleanUnshelvedFilterDialog dialog = new CleanUnshelvedFilterDialog(project);
-    dialog.show();
-    if (dialog.isOK()) {
-      if (dialog.isUnshelvedWithFilterSelected()) {
-        ShelveChangesManager.getInstance(project).cleanUnshelved(false, dialog.getTimeLimitInMillis());
-      }
-      else if (dialog.isAllUnshelvedSelected()) {
-        ShelveChangesManager.getInstance(project).clearRecycled();
-      }
-      else {
-        ShelveChangesManager.getInstance(project).cleanUnshelved(true, System.currentTimeMillis());
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        CleanUnshelvedFilterDialog dialog = new CleanUnshelvedFilterDialog(project);
+        dialog.show();
+        if (dialog.isOK()) {
+            if (dialog.isUnshelvedWithFilterSelected()) {
+                ShelveChangesManager.getInstance(project).cleanUnshelved(false, dialog.getTimeLimitInMillis());
+            }
+            else if (dialog.isAllUnshelvedSelected()) {
+                ShelveChangesManager.getInstance(project).clearRecycled();
+            }
+            else {
+                ShelveChangesManager.getInstance(project).cleanUnshelved(true, System.currentTimeMillis());
+            }
+        }
     }
-  }
 }

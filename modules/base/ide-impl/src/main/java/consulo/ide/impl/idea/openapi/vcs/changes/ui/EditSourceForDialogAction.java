@@ -30,28 +30,28 @@ import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public class EditSourceForDialogAction extends EditSourceAction {
-  @Nonnull
-  private final Component mySourceComponent;
+    @Nonnull
+    private final Component mySourceComponent;
 
-  public EditSourceForDialogAction(@Nonnull Component component) {
-    super();
-    Presentation presentation = getTemplatePresentation();
-    presentation.setTextValue(ActionLocalize.actionEditsourceText());
-    presentation.setIcon(PlatformIconGroup.actionsEditsource());
-    presentation.setDescriptionValue(ActionLocalize.actionEditsourceDescription());
-    mySourceComponent = component;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
-    if (navigatableArray != null && navigatableArray.length > 0) {
-      Application.get().invokeLater(() -> OpenSourceUtil.navigate(navigatableArray));
-      DialogWrapper dialog = DialogWrapper.findInstance(mySourceComponent);
-      if (dialog != null && dialog.isModal()) {
-        dialog.doCancelAction();
-      }
+    public EditSourceForDialogAction(@Nonnull Component component) {
+        super();
+        Presentation presentation = getTemplatePresentation();
+        presentation.setTextValue(ActionLocalize.actionEditsourceText());
+        presentation.setIcon(PlatformIconGroup.actionsEditsource());
+        presentation.setDescriptionValue(ActionLocalize.actionEditsourceDescription());
+        mySourceComponent = component;
     }
-  }
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
+        if (navigatableArray != null && navigatableArray.length > 0) {
+            Application.get().invokeLater(() -> OpenSourceUtil.navigate(navigatableArray));
+            DialogWrapper dialog = DialogWrapper.findInstance(mySourceComponent);
+            if (dialog != null && dialog.isModal()) {
+                dialog.doCancelAction();
+            }
+        }
+    }
 }

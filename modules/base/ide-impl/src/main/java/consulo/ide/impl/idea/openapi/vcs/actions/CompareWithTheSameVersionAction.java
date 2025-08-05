@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 
-public class CompareWithTheSameVersionAction extends AbstractShowDiffAction{
-  @Override
-  protected VcsBackgroundableActions getKey() {
-    return VcsBackgroundableActions.COMPARE_WITH;
-  }
+public class CompareWithTheSameVersionAction extends AbstractShowDiffAction {
+    @Override
+    protected VcsBackgroundableActions getKey() {
+        return VcsBackgroundableActions.COMPARE_WITH;
+    }
 }

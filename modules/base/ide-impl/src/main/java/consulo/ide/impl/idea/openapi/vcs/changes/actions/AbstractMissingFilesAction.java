@@ -38,45 +38,47 @@ import java.util.List;
  * @since 2006-11-02
  */
 public abstract class AbstractMissingFilesAction extends AnAction implements DumbAware {
-  @Override
-  public void update(AnActionEvent e) {
-    List<FilePath> files = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
-    boolean enabled = files != null && !files.isEmpty();
-    e.getPresentation().setEnabledAndVisible(enabled);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final List<FilePath> files = e.getRequiredData(ChangesListView.MISSING_FILES_DATA_KEY);
-    final ProgressManager progressManager = ProgressManager.getInstance();
-    final Runnable action = () -> {
-      final List<VcsException> allExceptions = new ArrayList<>();
-      ChangesUtil.processFilePathsByVcs(project, files, (vcs, items) -> {
-        final List<VcsException> exceptions = processFiles(vcs, files);
-        if (exceptions != null) {
-          allExceptions.addAll(exceptions);
-        }
-      });
-
-      for (FilePath file : files) {
-        VcsDirtyScopeManager.getInstance(project).fileDirty(file);
-      }
-      ChangesViewManager.getInstance(project).scheduleRefresh();
-      if (allExceptions.size() > 0) {
-        AbstractVcsHelper.getInstance(project).showErrors(allExceptions, "VCS Errors");
-      }
-    };
-    if (synchronously()) {
-      action.run();
-    } else {
-      progressManager.runProcessWithProgressSynchronously(action, getName(), true, project);
+    @Override
+    public void update(AnActionEvent e) {
+        List<FilePath> files = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
+        boolean enabled = files != null && !files.isEmpty();
+        e.getPresentation().setEnabledAndVisible(enabled);
     }
-  }
 
-  protected abstract boolean synchronously();
-  protected abstract String getName();
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        final List<FilePath> files = e.getRequiredData(ChangesListView.MISSING_FILES_DATA_KEY);
+        final ProgressManager progressManager = ProgressManager.getInstance();
+        final Runnable action = () -> {
+            final List<VcsException> allExceptions = new ArrayList<>();
+            ChangesUtil.processFilePathsByVcs(project, files, (vcs, items) -> {
+                final List<VcsException> exceptions = processFiles(vcs, files);
+                if (exceptions != null) {
+                    allExceptions.addAll(exceptions);
+                }
+            });
 
-  protected abstract List<VcsException> processFiles(final AbstractVcs vcs, final List<FilePath> files);
+            for (FilePath file : files) {
+                VcsDirtyScopeManager.getInstance(project).fileDirty(file);
+            }
+            ChangesViewManager.getInstance(project).scheduleRefresh();
+            if (allExceptions.size() > 0) {
+                AbstractVcsHelper.getInstance(project).showErrors(allExceptions, "VCS Errors");
+            }
+        };
+        if (synchronously()) {
+            action.run();
+        }
+        else {
+            progressManager.runProcessWithProgressSynchronously(action, getName(), true, project);
+        }
+    }
+
+    protected abstract boolean synchronously();
+
+    protected abstract String getName();
+
+    protected abstract List<VcsException> processFiles(final AbstractVcs vcs, final List<FilePath> files);
 }

@@ -15,16 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-
 import consulo.versionControlSystem.update.ActionInfo;
 
 public class CommonUpdateFileOrDirectoryAction extends AbstractCommonUpdateAction {
-  public CommonUpdateFileOrDirectoryAction() {
-    super(ActionInfo.UPDATE, ScopeInfo.FILES, true);
-  }
+    public CommonUpdateFileOrDirectoryAction() {
+        super(ActionInfo.UPDATE, ScopeInfo.FILES, true);
+    }
 
-  protected boolean filterRootsBeforeAction() {
-    return true;
-  }
-  
+    protected boolean filterRootsBeforeAction() {
+        return true;
+    }
 }

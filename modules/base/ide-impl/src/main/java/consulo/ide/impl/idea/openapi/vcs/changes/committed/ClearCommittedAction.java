@@ -31,33 +31,35 @@ import jakarta.annotation.Nonnull;
  * @since 2012-04-23
  */
 public class ClearCommittedAction extends AnAction implements DumbAware {
-  public ClearCommittedAction() {
-    super("Clear", "Clears cached revisions", PlatformIconGroup.generalRemove());
-  }
+    public ClearCommittedAction() {
+        super("Clear", "Clears cached revisions", PlatformIconGroup.generalRemove());
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
-    assert panel != null;
-    if (panel.isInLoad()) return;
-    if (panel.getRepositoryLocation() == null) {
-      panel.clearCaches();
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
+        assert panel != null;
+        if (panel.isInLoad()) {
+            return;
+        }
+        if (panel.getRepositoryLocation() == null) {
+            panel.clearCaches();
+        }
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project != null) {
-      CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
-      RepositoryLocation rl = panel == null ? null : panel.getRepositoryLocation();
-      e.getPresentation().setVisible(rl == null);
-      e.getPresentation().setEnabled(panel != null && (! panel.isInLoad()));
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
+            RepositoryLocation rl = panel == null ? null : panel.getRepositoryLocation();
+            e.getPresentation().setVisible(rl == null);
+            e.getPresentation().setEnabled(panel != null && (!panel.isInLoad()));
+        }
+        else {
+            e.getPresentation().setEnabledAndVisible(false);
+        }
     }
-    else {
-      e.getPresentation().setEnabledAndVisible(false);
-    }
-  }
 }

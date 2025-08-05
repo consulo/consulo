@@ -29,33 +29,35 @@ import jakarta.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 public class CopyRevisionNumberFromAnnotateAction extends AnAction implements UpToDateLineNumberListener {
-  private final FileAnnotation myAnnotation;
-  private int myLineNumber = -1;
+    private final FileAnnotation myAnnotation;
+    private int myLineNumber = -1;
 
-  public CopyRevisionNumberFromAnnotateAction(FileAnnotation annotation) {
-    super("Copy revision number");
-    myAnnotation = annotation;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    if (myLineNumber < 0) return;
-    final VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(myLineNumber);
-    if (revisionNumber != null) {
-      final String revision = revisionNumber.asString();
-      CopyPasteManager.getInstance().setContents(new TextTransferable(revision));
+    public CopyRevisionNumberFromAnnotateAction(FileAnnotation annotation) {
+        super("Copy revision number");
+        myAnnotation = annotation;
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final boolean enabled = myLineNumber >= 0 && myAnnotation.getLineRevisionNumber(myLineNumber) != null;
-    e.getPresentation().setEnabledAndVisible(enabled);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        if (myLineNumber < 0) {
+            return;
+        }
+        final VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(myLineNumber);
+        if (revisionNumber != null) {
+            final String revision = revisionNumber.asString();
+            CopyPasteManager.getInstance().setContents(new TextTransferable(revision));
+        }
+    }
 
-  @Override
-  public void accept(Integer integer) {
-    myLineNumber = integer;
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final boolean enabled = myLineNumber >= 0 && myAnnotation.getLineRevisionNumber(myLineNumber) != null;
+        e.getPresentation().setEnabledAndVisible(enabled);
+    }
+
+    @Override
+    public void accept(Integer integer) {
+        myLineNumber = integer;
+    }
 }

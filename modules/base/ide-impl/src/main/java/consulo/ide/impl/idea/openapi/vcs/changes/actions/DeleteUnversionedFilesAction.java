@@ -27,20 +27,20 @@ import jakarta.annotation.Nonnull;
  * @since 2006-11-02
  */
 public class DeleteUnversionedFilesAction extends AnAction {
-  public DeleteUnversionedFilesAction() {
-    super("Delete", "Delete", PlatformIconGroup.generalRemove());
-  }
+    public DeleteUnversionedFilesAction() {
+        super("Delete", "Delete", PlatformIconGroup.generalRemove());
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    DeleteProvider deleteProvider = e.getRequiredData(DeleteProvider.KEY);
-    deleteProvider.deleteElement(e.getDataContext());
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        DeleteProvider deleteProvider = e.getRequiredData(DeleteProvider.KEY);
+        deleteProvider.deleteElement(e.getDataContext());
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    DeleteProvider deleteProvider = e.getData(DeleteProvider.KEY);
-    e.getPresentation().setVisible(deleteProvider != null && deleteProvider.canDeleteElement(e.getDataContext()));
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        DeleteProvider deleteProvider = e.getData(DeleteProvider.KEY);
+        e.getPresentation().setVisible(deleteProvider != null && deleteProvider.canDeleteElement(e.getDataContext()));
+    }
 }

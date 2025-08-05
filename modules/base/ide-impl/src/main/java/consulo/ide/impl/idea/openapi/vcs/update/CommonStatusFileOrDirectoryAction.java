@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.versionControlSystem.update.ActionInfo;
 
-public class CommonStatusFileOrDirectoryAction extends AbstractCommonUpdateAction{
-  public CommonStatusFileOrDirectoryAction() {
-    super(ActionInfo.STATUS, ScopeInfo.FILES, false);
-  }
+public class CommonStatusFileOrDirectoryAction extends AbstractCommonUpdateAction {
+    public CommonStatusFileOrDirectoryAction() {
+        super(ActionInfo.STATUS, ScopeInfo.FILES, false);
+    }
 
-  protected boolean filterRootsBeforeAction() {
-    return true;
-  }
+    protected boolean filterRootsBeforeAction() {
+        return true;
+    }
 }

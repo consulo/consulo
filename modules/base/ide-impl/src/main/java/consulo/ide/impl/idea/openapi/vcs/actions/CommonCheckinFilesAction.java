@@ -44,90 +44,92 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
-  @Override
-  protected String getActionName(@Nonnull VcsContext dataContext) {
-    String actionName = Optional.ofNullable(dataContext.getProject())
-                                .map(project -> getCommonVcs(getRootsStream(dataContext), project))
-                                .map(AbstractVcs::getCheckinEnvironment)
-                                .map(CheckinEnvironment::getCheckinOperationName)
-                                .orElse(VcsLocalize.vcsCommandNameCheckin().get());
+    @Override
+    protected String getActionName(@Nonnull VcsContext dataContext) {
+        String actionName = Optional.ofNullable(dataContext.getProject())
+            .map(project -> getCommonVcs(getRootsStream(dataContext), project))
+            .map(AbstractVcs::getCheckinEnvironment)
+            .map(CheckinEnvironment::getCheckinOperationName)
+            .orElse(VcsLocalize.vcsCommandNameCheckin().get());
 
-    return modifyCheckinActionName(dataContext, actionName);
-  }
-
-  private String modifyCheckinActionName(@Nonnull VcsContext dataContext, String checkinActionName) {
-    String result = checkinActionName;
-    List<FilePath> roots = getRootsStream(dataContext).limit(2).collect(Collectors.toList());
-
-    if (!roots.isEmpty()) {
-      String messageKey = roots.get(0).isDirectory() ? "action.name.checkin.directory" : "action.name.checkin.file";
-      result = VcsBundle.message(StringUtil.pluralize(messageKey, roots.size()), checkinActionName);
+        return modifyCheckinActionName(dataContext, actionName);
     }
 
-    return result;
-  }
+    private String modifyCheckinActionName(@Nonnull VcsContext dataContext, String checkinActionName) {
+        String result = checkinActionName;
+        List<FilePath> roots = getRootsStream(dataContext).limit(2).collect(Collectors.toList());
 
-  @Override
-  protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
-    return modifyCheckinActionName(context, VcsLocalize.vcsCommandNameCheckinNoMnemonics().get());
-  }
+        if (!roots.isEmpty()) {
+            String messageKey = roots.get(0).isDirectory() ? "action.name.checkin.directory" : "action.name.checkin.file";
+            result = VcsBundle.message(StringUtil.pluralize(messageKey, roots.size()), checkinActionName);
+        }
 
-  @Nullable
-  @Override
-  protected LocalChangeList getInitiallySelectedChangeList(@Nonnull VcsContext context, @Nonnull Project project) {
-    ChangeListManager manager = ChangeListManager.getInstance(project);
-    LocalChangeList defaultChangeList = manager.getDefaultChangeList();
-    LocalChangeList result = null;
-
-    for (FilePath root : getRoots(context)) {
-      if (root.getVirtualFile() == null) continue;
-
-      Collection<Change> changes = manager.getChangesIn(root);
-      if (defaultChangeList != null && containsAnyChange(defaultChangeList, changes)) {
-        return defaultChangeList;
-      }
-      result = changes.stream().findFirst().map(manager::getChangeList).orElse(null);
+        return result;
     }
 
-    return ObjectUtil.chooseNotNull(result, defaultChangeList);
-  }
+    @Override
+    protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+        return modifyCheckinActionName(context, VcsLocalize.vcsCommandNameCheckinNoMnemonics().get());
+    }
 
-  @Override
-  protected boolean approximatelyHasRoots(@Nonnull VcsContext dataContext) {
-    FileStatusManager manager = FileStatusManager.getInstance(dataContext.getProject());
+    @Nullable
+    @Override
+    protected LocalChangeList getInitiallySelectedChangeList(@Nonnull VcsContext context, @Nonnull Project project) {
+        ChangeListManager manager = ChangeListManager.getInstance(project);
+        LocalChangeList defaultChangeList = manager.getDefaultChangeList();
+        LocalChangeList result = null;
 
-    return getRootsStream(dataContext)
-      .map(FilePath::getVirtualFile)
-      .filter(Objects::nonNull)
-      .anyMatch(file -> isApplicableRoot(file, manager.getStatus(file), dataContext));
-  }
+        for (FilePath root : getRoots(context)) {
+            if (root.getVirtualFile() == null) {
+                continue;
+            }
 
-  protected boolean isApplicableRoot(@Nonnull VirtualFile file, @Nonnull FileStatus status, @Nonnull VcsContext dataContext) {
-    return status != FileStatus.UNKNOWN && status != FileStatus.IGNORED;
-  }
+            Collection<Change> changes = manager.getChangesIn(root);
+            if (defaultChangeList != null && containsAnyChange(defaultChangeList, changes)) {
+                return defaultChangeList;
+            }
+            result = changes.stream().findFirst().map(manager::getChangeList).orElse(null);
+        }
 
-  @Nonnull
-  @Override
-  protected FilePath[] getRoots(@Nonnull VcsContext context) {
-    return context.getSelectedFilePaths();
-  }
+        return ObjectUtil.chooseNotNull(result, defaultChangeList);
+    }
 
-  @Nonnull
-  protected Stream<FilePath> getRootsStream(@Nonnull VcsContext context) {
-    return context.getSelectedFilePathsStream();
-  }
+    @Override
+    protected boolean approximatelyHasRoots(@Nonnull VcsContext dataContext) {
+        FileStatusManager manager = FileStatusManager.getInstance(dataContext.getProject());
 
-  private static boolean containsAnyChange(@Nonnull LocalChangeList changeList, @Nonnull Collection<Change> changes) {
-    return changes.stream().anyMatch(changeList.getChanges()::contains);
-  }
+        return getRootsStream(dataContext)
+            .map(FilePath::getVirtualFile)
+            .filter(Objects::nonNull)
+            .anyMatch(file -> isApplicableRoot(file, manager.getStatus(file), dataContext));
+    }
 
-  @Nullable
-  private static AbstractVcs getCommonVcs(@Nonnull Stream<FilePath> roots, @Nonnull Project project) {
-    return Streams.getIfSingle(
-      roots.map(root -> VcsUtil.getVcsFor(project, root))
-           .filter(Objects::nonNull)
-           .distinct()
-           .limit(Math.min(2, ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length))
-    );
-  }
+    protected boolean isApplicableRoot(@Nonnull VirtualFile file, @Nonnull FileStatus status, @Nonnull VcsContext dataContext) {
+        return status != FileStatus.UNKNOWN && status != FileStatus.IGNORED;
+    }
+
+    @Nonnull
+    @Override
+    protected FilePath[] getRoots(@Nonnull VcsContext context) {
+        return context.getSelectedFilePaths();
+    }
+
+    @Nonnull
+    protected Stream<FilePath> getRootsStream(@Nonnull VcsContext context) {
+        return context.getSelectedFilePathsStream();
+    }
+
+    private static boolean containsAnyChange(@Nonnull LocalChangeList changeList, @Nonnull Collection<Change> changes) {
+        return changes.stream().anyMatch(changeList.getChanges()::contains);
+    }
+
+    @Nullable
+    private static AbstractVcs getCommonVcs(@Nonnull Stream<FilePath> roots, @Nonnull Project project) {
+        return Streams.getIfSingle(
+            roots.map(root -> VcsUtil.getVcsFor(project, root))
+                .filter(Objects::nonNull)
+                .distinct()
+                .limit(Math.min(2, ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length))
+        );
+    }
 }

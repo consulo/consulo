@@ -33,31 +33,31 @@ import java.awt.datatransfer.StringSelection;
  * The action that copies a revision number text to clipboard
  */
 public class CopyRevisionNumberAction extends DumbAwareAction {
-  public CopyRevisionNumberAction() {
-    super(VcsLocalize.historyCopyRevisionNumber(), VcsLocalize.historyCopyRevisionNumber(), PlatformIconGroup.actionsCopy());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    VcsRevisionNumber revision = e.getData(VcsDataKeys.VCS_REVISION_NUMBER);
-    if (revision == null) {
-      VcsFileRevision fileRevision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
-      if (fileRevision != null) {
-        revision = fileRevision.getRevisionNumber();
-      }
-    }
-    if (revision == null) {
-      return;
+    public CopyRevisionNumberAction() {
+        super(VcsLocalize.historyCopyRevisionNumber(), VcsLocalize.historyCopyRevisionNumber(), PlatformIconGroup.actionsCopy());
     }
 
-    String rev = revision instanceof ShortVcsRevisionNumber ? ((ShortVcsRevisionNumber)revision).toShortString() : revision.asString();
-    CopyPasteManager.getInstance().setContents(new StringSelection(rev));
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        VcsRevisionNumber revision = e.getData(VcsDataKeys.VCS_REVISION_NUMBER);
+        if (revision == null) {
+            VcsFileRevision fileRevision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
+            if (fileRevision != null) {
+                revision = fileRevision.getRevisionNumber();
+            }
+        }
+        if (revision == null) {
+            return;
+        }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-      e.getPresentation().setEnabled(e.hasData(VcsDataKeys.VCS_FILE_REVISION) || e.hasData(VcsDataKeys.VCS_REVISION_NUMBER));
-  }
+        String rev = revision instanceof ShortVcsRevisionNumber ? ((ShortVcsRevisionNumber) revision).toShortString() : revision.asString();
+        CopyPasteManager.getInstance().setContents(new StringSelection(rev));
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setEnabled(e.hasData(VcsDataKeys.VCS_FILE_REVISION) || e.hasData(VcsDataKeys.VCS_REVISION_NUMBER));
+    }
 }

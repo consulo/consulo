@@ -25,28 +25,28 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 public class DeleteAlreadyUnshelvedAction extends AnAction {
-  public DeleteAlreadyUnshelvedAction() {
-    super(VcsLocalize.deleteAllAlreadyUnshelved());
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final int result = Messages.showYesNoDialog(
-      project,
-      VcsLocalize.deleteAllAlreadyUnshelvedConfirmation().get(),
-      VcsLocalize.deleteAllAlreadyUnshelved().get(),
-      UIUtil.getWarningIcon()
-    );
-    if (result == Messages.YES) {
-      final ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
-      manager.clearRecycled();
+    public DeleteAlreadyUnshelvedAction() {
+        super(VcsLocalize.deleteAllAlreadyUnshelved());
     }
-  }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        final int result = Messages.showYesNoDialog(
+            project,
+            VcsLocalize.deleteAllAlreadyUnshelvedConfirmation().get(),
+            VcsLocalize.deleteAllAlreadyUnshelved().get(),
+            UIUtil.getWarningIcon()
+        );
+        if (result == Messages.YES) {
+            final ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
+            manager.clearRecycled();
+        }
+    }
 }
