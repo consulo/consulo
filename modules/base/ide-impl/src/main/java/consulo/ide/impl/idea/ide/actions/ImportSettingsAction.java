@@ -15,16 +15,18 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.start.ImportSettingsFilenameFilter;
+import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.update.UpdateSettings;
-import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,6 +37,7 @@ import consulo.util.collection.MultiMap;
 import consulo.util.io.FileUtil;
 import consulo.util.io.zip.ZipUtil;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import java.awt.*;
 import java.io.File;
@@ -48,11 +51,16 @@ import java.util.zip.ZipFile;
 /**
  * @author cdr
  */
+@ActionImpl(id = "ImportSettings")
 public class ImportSettingsAction extends AnAction implements DumbAware {
+    @Nonnull
     private final Application myApplication;
+    @Nonnull
     private final IApplicationStore myApplicationStore;
 
-    public ImportSettingsAction(Application application, IApplicationStore applicationStore) {
+    @Inject
+    public ImportSettingsAction(@Nonnull Application application, @Nonnull IApplicationStore applicationStore) {
+        super(ActionLocalize.actionImportsettingsText(), ActionLocalize.actionImportsettingsDescription());
         myApplication = application;
         myApplicationStore = applicationStore;
     }
@@ -171,8 +179,8 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         return "'" + FileUtil.toSystemDependentName(file.getPath()) + "'";
     }
 
-    private static String promptLocationMessage() {
-        return IdeLocalize.messagePleaseEnsureCorrectSettings().get();
+    private static LocalizeValue promptLocationMessage() {
+        return IdeLocalize.messagePleaseEnsureCorrectSettings();
     }
 
     @Nonnull

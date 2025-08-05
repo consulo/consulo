@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.templateLanguages;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.localize.LanguageLocalize;
@@ -22,6 +23,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.template.ConfigurableTemplateLanguageFileViewProvider;
 import consulo.language.template.TemplateDataLanguageMappings;
 import consulo.language.template.TemplateLanguageFileViewProvider;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -32,7 +34,12 @@ import jakarta.annotation.Nonnull;
 /**
  * @author peter
  */
+@ActionImpl(id = "ChangeTemplateDataLanguage")
 public class ChangeTemplateDataLanguageAction extends AnAction {
+    public ChangeTemplateDataLanguageAction() {
+        super(ActionLocalize.actionChangetemplatedatalanguageText());
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setVisible(false);

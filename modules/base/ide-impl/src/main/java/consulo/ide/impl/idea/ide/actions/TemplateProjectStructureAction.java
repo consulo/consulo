@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -25,7 +27,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "TemplateProjectStructure")
 public class TemplateProjectStructureAction extends AnAction implements DumbAware {
+    public TemplateProjectStructureAction() {
+        super(ActionLocalize.actionTemplateprojectstructureText(), ActionLocalize.actionTemplateprojectstructureDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

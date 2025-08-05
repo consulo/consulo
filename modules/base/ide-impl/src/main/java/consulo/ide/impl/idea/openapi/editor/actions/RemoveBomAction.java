@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -33,98 +35,99 @@ import java.util.List;
 
 /**
  * Allows to remove <a href="http://unicode.org/faq/utf_bom.html">file's BOM</a> (if any).
- * 
+ *
  * @author Denis Zhdanov
- * @since 3/30/11 11:14 AM
+ * @since 2011-03-30
  */
+@ActionImpl(id = "RemoveBom")
 public class RemoveBomAction extends AnAction implements DumbAware {
+    private static final Logger LOG = Logger.getInstance(RemoveBomAction.class);
 
-  private static final Logger LOG = Logger.getInstance(RemoveBomAction.class);
-  
-  public RemoveBomAction() {
-    super("Remove BOM");
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    VirtualFile[] files = e.getRequiredData(VirtualFile.KEY_OF_ARRAY);
-    List<VirtualFile> filesToProcess = getFilesWithBom(files, true);
-    for (VirtualFile virtualFile : filesToProcess) {
-      byte[] bom = virtualFile.getBOM();
-      assert bom != null;
-      if (virtualFile instanceof NewVirtualFile file) {
-        virtualFile.setBOM(null);
-        try {
-          byte[] bytes = file.contentsToByteArray();
-          byte[] contentWithStrippedBom = new byte[bytes.length - bom.length];
-          System.arraycopy(bytes, bom.length, contentWithStrippedBom, 0, contentWithStrippedBom.length);
-          file.setBinaryContent(contentWithStrippedBom);
-        }
-        catch (IOException ex) {
-          LOG.warn("Unexpected exception occurred on attempt to remove BOM from file " + file, ex);
-        }
-      }
-    }
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
-    if (files == null) {
-      e.getPresentation().setEnabled(false);
-      return;
+    public RemoveBomAction() {
+        super(IdeLocalize.removeBom());
     }
 
-    boolean enabled = false;
-    for (VirtualFile file:files) {
-      if (file.isDirectory()) {  // Accurate calculation is very costly especially in presence of excluded directories!
-        enabled = true;
-        break;
-      } else if (file.getBOM() != null) {
-        enabled = true;
-        break;
-      }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        VirtualFile[] files = e.getRequiredData(VirtualFile.KEY_OF_ARRAY);
+        List<VirtualFile> filesToProcess = getFilesWithBom(files, true);
+        for (VirtualFile virtualFile : filesToProcess) {
+            byte[] bom = virtualFile.getBOM();
+            assert bom != null;
+            if (virtualFile instanceof NewVirtualFile file) {
+                virtualFile.setBOM(null);
+                try {
+                    byte[] bytes = file.contentsToByteArray();
+                    byte[] contentWithStrippedBom = new byte[bytes.length - bom.length];
+                    System.arraycopy(bytes, bom.length, contentWithStrippedBom, 0, contentWithStrippedBom.length);
+                    file.setBinaryContent(contentWithStrippedBom);
+                }
+                catch (IOException ex) {
+                    LOG.warn("Unexpected exception occurred on attempt to remove BOM from file " + file, ex);
+                }
+            }
+        }
     }
 
-    e.getPresentation().setEnabled(enabled);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        if (files == null) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
 
-  /**
-   * Recursively traverses contents of the given file roots (any root may be directory) and returns files that have
-   * {@link VirtualFile#getBOM() BOM} defined.
-   * 
-   * @param roots   VFS roots to traverse
-   * @param all     flag the defines if all files with {@link VirtualFile#getBOM() BOM} should be collected or just any of them
-   * @return        collection of detected files with defined {@link VirtualFile#getBOM() BOM} if any; empty collection otherwise
-   */
-  @Nonnull
-  private static List<VirtualFile> getFilesWithBom(@Nonnull VirtualFile[] roots, boolean all) {
-    List<VirtualFile> result = new ArrayList<>();
-    for (VirtualFile root : roots) {
-      if (!all && !result.isEmpty()) {
-        break;
-      }
-      getFilesWithBom(root, result, all);
+        boolean enabled = false;
+        for (VirtualFile file : files) {
+            if (file.isDirectory()) {  // Accurate calculation is very costly especially in presence of excluded directories!
+                enabled = true;
+                break;
+            }
+            else if (file.getBOM() != null) {
+                enabled = true;
+                break;
+            }
+        }
+
+        e.getPresentation().setEnabled(enabled);
     }
-    return result;
-  }
-  
-  private static void getFilesWithBom(@Nonnull VirtualFile root, @Nonnull final List<VirtualFile> result, final boolean all) {
-    VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor() {
-      @Override
-      public boolean visitFile(@Nonnull VirtualFile file) {
-        if (file.isDirectory()) {
-          if (!all && !result.isEmpty()) {
-            return false;
-          }
+
+    /**
+     * Recursively traverses contents of the given file roots (any root may be directory) and returns files that have
+     * {@link VirtualFile#getBOM() BOM} defined.
+     *
+     * @param roots VFS roots to traverse
+     * @param all   flag the defines if all files with {@link VirtualFile#getBOM() BOM} should be collected or just any of them
+     * @return collection of detected files with defined {@link VirtualFile#getBOM() BOM} if any; empty collection otherwise
+     */
+    @Nonnull
+    private static List<VirtualFile> getFilesWithBom(@Nonnull VirtualFile[] roots, boolean all) {
+        List<VirtualFile> result = new ArrayList<>();
+        for (VirtualFile root : roots) {
+            if (!all && !result.isEmpty()) {
+                break;
+            }
+            getFilesWithBom(root, result, all);
         }
-        else if (file.getBOM() != null) {
-          result.add(file);
-        }
-        return true;
-      }
-    });
-  }
+        return result;
+    }
+
+    private static void getFilesWithBom(@Nonnull VirtualFile root, @Nonnull final List<VirtualFile> result, final boolean all) {
+        VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor() {
+            @Override
+            public boolean visitFile(@Nonnull VirtualFile file) {
+                if (file.isDirectory()) {
+                    if (!all && !result.isEmpty()) {
+                        return false;
+                    }
+                }
+                else if (file.getBOM() != null) {
+                    result.add(file);
+                }
+                return true;
+            }
+        });
+    }
 }

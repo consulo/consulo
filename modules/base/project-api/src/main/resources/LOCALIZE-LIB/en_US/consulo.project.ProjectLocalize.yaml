@@ -464,6 +464,8 @@ output.tab.title:
     text: Output
 path.0.is.invalid.error.message:
     text: Path ''{0}'' is invalid
+popup.recent.projects.title:
+    text: Recent Projects
 progress.text.searching.frameworks:
     text: Searching for frameworks. Please wait.
 progress.title.deleting.files:

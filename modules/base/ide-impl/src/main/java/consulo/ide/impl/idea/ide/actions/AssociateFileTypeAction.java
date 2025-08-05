@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.scratch.ScratchRootType;
 import consulo.language.file.FileTypeManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
@@ -29,7 +31,12 @@ import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "AssociateWithFileType")
 public class AssociateFileTypeAction extends AnAction {
+    public AssociateFileTypeAction() {
+        super(ActionLocalize.actionAssociatewithfiletypeText(), ActionLocalize.actionAssociatewithfiletypeDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

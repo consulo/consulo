@@ -54,7 +54,7 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
     @Nullable
     @Override
     protected ListPopup createPopup(DataContext context) {
-        ChangeFileEncodingAction action = new ChangeFileEncodingAction();
+        ChangeFileEncodingAction action = new ChangeFileEncodingAction(myProject.getApplication());
         action.getTemplatePresentation().setTextValue(IdeLocalize.actionPresentationEncodingpanelText());
         return action.createPopup(context);
     }

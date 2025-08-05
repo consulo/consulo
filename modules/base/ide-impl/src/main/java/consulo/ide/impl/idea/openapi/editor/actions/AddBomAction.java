@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -22,53 +23,61 @@ import java.nio.charset.Charset;
 /**
  * Adds <a href="http://unicode.org/faq/utf_bom.html">file's BOM</a> to files with UTF-XXX encoding.
  */
+@ActionImpl(id = "AddBom")
 public class AddBomAction extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance(AddBomAction.class);
+    private static final Logger LOG = Logger.getInstance(AddBomAction.class);
 
-  public AddBomAction() {
-    super(IdeLocalize.addBom());
-  }
+    public AddBomAction() {
+        super(IdeLocalize.addBom());
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    VirtualFile file = e.getData(VirtualFile.KEY);
-    boolean enabled = file != null && file.getBOM() == null && CharsetToolkit.getPossibleBom(file.getCharset()) != null; // support adding BOM to a single file only for the time being
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        VirtualFile file = e.getData(VirtualFile.KEY);
+        // support adding BOM to a single file only for the time being
+        boolean enabled = file != null && file.getBOM() == null && CharsetToolkit.getPossibleBom(file.getCharset()) != null;
 
-    e.getPresentation().setEnabled(enabled);
-    e.getPresentation().setVisible(enabled || ActionPlaces.isMainMenuOrActionSearch(e.getPlace()));
-    e.getPresentation().setDescriptionValue(IdeLocalize.addByteOrderMarkTo(enabled ? file.getName() : LocalizeValue.localizeTODO("<N/A>")));
-  }
+        e.getPresentation().setEnabled(enabled);
+        e.getPresentation().setVisible(enabled || ActionPlaces.isMainMenuOrActionSearch(e.getPlace()));
+        e.getPresentation().setDescriptionValue(
+            IdeLocalize.addByteOrderMarkTo(enabled ? file.getName() : LocalizeValue.localizeTODO("<N/A>"))
+        );
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    VirtualFile file = e.getRequiredData(VirtualFile.KEY);
-    doAddBOM(file);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        VirtualFile file = e.getRequiredData(VirtualFile.KEY);
+        doAddBOM(file);
+    }
 
-  private static void doAddBOM(@Nonnull VirtualFile virtualFile) {
-    byte[] bom = virtualFile.getBOM();
-    if (bom != null) return;
-    Charset charset = virtualFile.getCharset();
-    byte[] possibleBom = CharsetToolkit.getPossibleBom(charset);
-    if (possibleBom == null) return;
+    private static void doAddBOM(@Nonnull VirtualFile virtualFile) {
+        byte[] bom = virtualFile.getBOM();
+        if (bom != null) {
+            return;
+        }
+        Charset charset = virtualFile.getCharset();
+        byte[] possibleBom = CharsetToolkit.getPossibleBom(charset);
+        if (possibleBom == null) {
+            return;
+        }
 
-    virtualFile.setBOM(possibleBom);
-    NewVirtualFile file = (NewVirtualFile)virtualFile;
-    try {
-      byte[] bytes = file.contentsToByteArray();
-      byte[] contentWithAddedBom = ArrayUtil.mergeArrays(possibleBom, bytes);
-      WriteAction.runAndWait(() -> {
+        virtualFile.setBOM(possibleBom);
+        NewVirtualFile file = (NewVirtualFile) virtualFile;
         try {
-          file.setBinaryContent(contentWithAddedBom);
+            byte[] bytes = file.contentsToByteArray();
+            byte[] contentWithAddedBom = ArrayUtil.mergeArrays(possibleBom, bytes);
+            WriteAction.runAndWait(() -> {
+                try {
+                    file.setBinaryContent(contentWithAddedBom);
+                }
+                catch (IOException e) {
+                    LOG.warn("Unexpected exception occurred in file " + file, e);
+                }
+            });
         }
-        catch (IOException e) {
-          LOG.warn("Unexpected exception occurred in file " + file, e);
+        catch (IOException ex) {
+            LOG.warn("Unexpected exception occurred in file " + file, ex);
         }
-      });
     }
-    catch (IOException ex) {
-      LOG.warn("Unexpected exception occurred in file " + file, ex);
-    }
-  }
 }

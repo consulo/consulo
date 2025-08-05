@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
@@ -24,13 +24,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-@ActionRef(id = "RecentProjectListGroup")
+@ActionImpl(id = "RecentProjectListGroup")
 public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     private final Provider<RecentProjectsManager> myRecentProjectsManager;
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -22,9 +23,9 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.undoRedo.GlobalUndoableAction;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -35,9 +36,10 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -46,19 +48,25 @@ import java.nio.charset.Charset;
 /**
  * @author cdr
  */
+@ActionImpl(id = "ChangeFileEncodingAction")
 public class ChangeFileEncodingAction extends AnAction implements DumbAware {
-    private final boolean allowDirectories;
+    @Nonnull
+    private final Application myApplication;
+    private final boolean myAllowDirectories;
 
-    public ChangeFileEncodingAction() {
-        this(false);
+    @Inject
+    public ChangeFileEncodingAction(@Nonnull Application application) {
+        this(application, false);
     }
 
-    public ChangeFileEncodingAction(boolean allowDirectories) {
-        this.allowDirectories = allowDirectories;
+    public ChangeFileEncodingAction(@Nonnull Application application, boolean allowDirectories) {
+        super(ActionLocalize.actionChangefileencodingactionText(), ActionLocalize.actionChangefileencodingactionDescription());
+        myApplication = application;
+        myAllowDirectories = allowDirectories;
     }
 
     private boolean checkEnabled(@Nonnull VirtualFile virtualFile) {
-        if (allowDirectories && virtualFile.isDirectory()) {
+        if (myAllowDirectories && virtualFile.isDirectory()) {
             return true;
         }
         FileDocumentManager documentManager = FileDocumentManager.getInstance();
@@ -88,7 +96,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
     @Nullable
     public ListPopup createPopup(@Nonnull DataContext dataContext) {
-        final VirtualFile virtualFile = dataContext.getData(VirtualFile.KEY);
+        VirtualFile virtualFile = dataContext.getData(VirtualFile.KEY);
         if (virtualFile == null) {
             return null;
         }
@@ -98,12 +106,12 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
         }
         Editor editor = dataContext.getData(Editor.KEY);
         FileDocumentManager documentManager = FileDocumentManager.getInstance();
-        final Document document = documentManager.getDocument(virtualFile);
-        if (!allowDirectories && virtualFile.isDirectory() || document == null && !virtualFile.isDirectory()) {
+        Document document = documentManager.getDocument(virtualFile);
+        if (!myAllowDirectories && virtualFile.isDirectory() || document == null && !virtualFile.isDirectory()) {
             return null;
         }
 
-        final byte[] bytes;
+        byte[] bytes;
         try {
             bytes = virtualFile.isDirectory() ? null : VfsUtilCore.loadBytes(virtualFile);
         }
@@ -155,11 +163,11 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     // returns true if charset was changed, false if failed
     @RequiredUIAccess
     protected boolean chosen(
-        final Document document,
-        final Editor editor,
-        @Nullable final VirtualFile virtualFile,
+        Document document,
+        Editor editor,
+        @Nullable VirtualFile virtualFile,
         byte[] bytes,
-        @Nonnull final Charset charset
+        @Nonnull Charset charset
     ) {
         if (virtualFile == null) {
             return false;
@@ -168,13 +176,14 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
         EncodingUtil.Magic8 isSafeToConvert = EncodingUtil.isSafeToConvertTo(virtualFile, text, bytes, charset);
         EncodingUtil.Magic8 isSafeToReload = EncodingUtil.isSafeToReloadIn(virtualFile, text, bytes, charset);
 
-        final Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
-        return changeTo(project, document, editor, virtualFile, charset, isSafeToConvert, isSafeToReload);
+        Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
+        return changeTo(myApplication, project, document, editor, virtualFile, charset, isSafeToConvert, isSafeToReload);
     }
 
     @RequiredUIAccess
     public static boolean changeTo(
-        Project project,
+        @Nonnull Application application,
+        @Nullable Project project,
         @Nonnull Document document,
         Editor editor,
         @Nonnull VirtualFile virtualFile,
@@ -182,14 +191,16 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
         @Nonnull EncodingUtil.Magic8 isSafeToConvert,
         @Nonnull EncodingUtil.Magic8 isSafeToReload
     ) {
-        final Charset oldCharset = virtualFile.getCharset();
+        Charset oldCharset = virtualFile.getCharset();
+        @RequiredUIAccess
         final Runnable undo;
+        @RequiredUIAccess
         final Runnable redo;
 
         if (isSafeToConvert == EncodingUtil.Magic8.ABSOLUTELY && isSafeToReload == EncodingUtil.Magic8.ABSOLUTELY) {
             //change and forget
-            undo = () -> EncodingManager.getInstance().setEncoding(virtualFile, oldCharset);
-            redo = () -> EncodingManager.getInstance().setEncoding(virtualFile, charset);
+            undo = () -> application.getInstance(ApplicationEncodingManager.class).setEncoding(virtualFile, oldCharset);
+            redo = () -> application.getInstance(ApplicationEncodingManager.class).setEncoding(virtualFile, charset);
         }
         else {
             IncompatibleEncodingDialog dialog = new IncompatibleEncodingDialog(virtualFile, charset, isSafeToReload, isSafeToConvert);
@@ -207,18 +218,16 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
             }
         }
 
-        final UndoableAction action = new GlobalUndoableAction(virtualFile) {
+        UndoableAction action = new GlobalUndoableAction(virtualFile) {
             @Override
             public void undo() {
                 // invoke later because changing document inside undo/redo is not allowed
-                Application application = Application.get();
                 application.invokeLater(undo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
             }
 
             @Override
             public void redo() {
                 // invoke later because changing document inside undo/redo is not allowed
-                Application application = Application.get();
                 application.invokeLater(redo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
             }
         };

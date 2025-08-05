@@ -2110,6 +2110,8 @@ recent.locations.popup.title:
     text: Recent Locations
 recent.locations.title.text:
     text: Show changed only
+remove.BOM:
+    text: Remove BOM
 repository.url.title:
     text: Repository URL
 run.anything.action.tooltip.text:
