@@ -15,15 +15,15 @@
  */
 package consulo.ui.ex.internal;
 
-import consulo.component.util.localize.AbstractBundle;
-import consulo.application.CommonBundle;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.CommonBundle;
+import consulo.component.util.localize.AbstractBundle;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ResourceBundle;
 
 /**
@@ -31,77 +31,93 @@ import java.util.ResourceBundle;
  * @since 2020-06-01
  */
 public interface LocalizeHelper {
-  static LocalizeHelper build(PluginDescriptor plugin) {
-    String localize = plugin.getLocalize();
-    if (!StringUtil.isEmpty(localize)) {
-      return new DefaultLocalizeHelper(localize);
+    boolean DISABLED = Boolean.getBoolean("consulo.disable.legacy.action.localize");
+
+    static LocalizeHelper build(PluginDescriptor plugin) {
+        if (DISABLED) {
+            return DisabledLocalizeHelper.INSTANCE;
+        }
+
+        String localize = plugin.getLocalize();
+        if (!StringUtil.isEmpty(localize)) {
+            return new DefaultLocalizeHelper(localize);
+        }
+
+        String resourceBundleBaseName = plugin.getResourceBundleBaseName();
+        if (!StringUtil.isEmpty(resourceBundleBaseName)) {
+            return new ResourceBundleLocalizeHelper(resourceBundleBaseName, plugin.getPluginClassLoader());
+        }
+
+        return FallbackLocalizeHelper.INSTANCE;
     }
 
-    String resourceBundleBaseName = plugin.getResourceBundleBaseName();
-    if (!StringUtil.isEmpty(resourceBundleBaseName)) {
-      return new ResourceBundleLocalizeHelper(resourceBundleBaseName, plugin.getPluginClassLoader());
+    class DisabledLocalizeHelper implements LocalizeHelper {
+        static final DisabledLocalizeHelper INSTANCE = new DisabledLocalizeHelper();
+
+        @Nonnull
+        @Override
+        public LocalizeValue getValue(@Nonnull String key) {
+            return LocalizeValue.of(key);
+        }
     }
 
-    return FallbackLocalizeHelper.INSTANCE;
-  }
+    public static class DefaultLocalizeHelper implements LocalizeHelper {
+        private final String myLocalize;
 
-  public static class DefaultLocalizeHelper implements LocalizeHelper {
-    private final String myLocalize;
+        public DefaultLocalizeHelper(String localize) {
+            myLocalize = localize;
+        }
 
-    public DefaultLocalizeHelper(String localize) {
-      myLocalize = localize;
+        @Nonnull
+        @Override
+        public LocalizeValue getValue(@Nonnull String key) {
+            return LocalizeKey.of(myLocalize, key).getValue();
+        }
+    }
+
+    public static class ResourceBundleLocalizeHelper implements LocalizeHelper {
+        private final String myResourceBundleBaseName;
+        private final ClassLoader myPluginClassLoader;
+
+        private ResourceBundle myResourceBundle;
+
+        public ResourceBundleLocalizeHelper(String resourceBundleBaseName, ClassLoader pluginClassLoader) {
+            myResourceBundleBaseName = resourceBundleBaseName;
+            myPluginClassLoader = pluginClassLoader;
+        }
+
+        @Nonnull
+        @Override
+        public String getText(String key) {
+            if (myResourceBundle == null) {
+                myResourceBundle = AbstractBundle.getResourceBundle(myResourceBundleBaseName, myPluginClassLoader);
+            }
+
+            return CommonBundle.message(myResourceBundle, key);
+        }
+
+        @Nonnull
+        @Override
+        public LocalizeValue getValue(@Nonnull String key) {
+            return LocalizeValue.of(getText(key));
+        }
+    }
+
+    public static class FallbackLocalizeHelper extends DefaultLocalizeHelper {
+        private static final FallbackLocalizeHelper INSTANCE = new FallbackLocalizeHelper();
+
+        public FallbackLocalizeHelper() {
+            super("consulo.platform.base.ActionLocalize");
+        }
     }
 
     @Nonnull
-    @Override
-    public LocalizeValue getValue(@Nonnull String key) {
-      return LocalizeKey.of(myLocalize, key).getValue();
-    }
-  }
-
-  public static class ResourceBundleLocalizeHelper implements LocalizeHelper {
-    private final String myResourceBundleBaseName;
-    private final ClassLoader myPluginClassLoader;
-
-    private ResourceBundle myResourceBundle;
-
-    public ResourceBundleLocalizeHelper(String resourceBundleBaseName, ClassLoader pluginClassLoader) {
-      myResourceBundleBaseName = resourceBundleBaseName;
-      myPluginClassLoader = pluginClassLoader;
+    @Deprecated
+    @DeprecationInfo("Use #getValue()")
+    default String getText(String key) {
+        return getValue(key).getValue();
     }
 
     @Nonnull
-    @Override
-    public String getText(String key) {
-      if (myResourceBundle == null) {
-        myResourceBundle = AbstractBundle.getResourceBundle(myResourceBundleBaseName, myPluginClassLoader);
-      }
-
-      return CommonBundle.message(myResourceBundle, key);
-    }
-
-    @Nonnull
-    @Override
-    public LocalizeValue getValue(@Nonnull String key) {
-      return LocalizeValue.of(getText(key));
-    }
-  }
-
-  public static class FallbackLocalizeHelper extends DefaultLocalizeHelper {
-    private static final FallbackLocalizeHelper INSTANCE = new FallbackLocalizeHelper();
-
-    public FallbackLocalizeHelper() {
-      super("consulo.platform.base.ActionLocalize");
-    }
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use #getValue()")
-  default String getText(String key) {
-    return getValue(key).getValue();
-  }
-
-  @Nonnull
-  LocalizeValue getValue(@Nonnull String key);
+    LocalizeValue getValue(@Nonnull String key);
 }
