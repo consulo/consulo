@@ -18,7 +18,6 @@ package consulo.language.editor.impl.internal.completion;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.document.DocumentWindow;
 import consulo.document.internal.DocumentFactory;
@@ -91,7 +90,7 @@ public class OffsetsInFile {
 
   @Nonnull
   public OffsetsInFile replaceInCopy(PsiFile fileCopy, int startOffset, int endOffset, String replacement) {
-    DocumentFactory documentFactory = (DocumentFactory)EditorFactory.getInstance();
+    DocumentFactory documentFactory = DocumentFactory.getInstance();
 
     Document tempDocument = documentFactory.createDocument(offsets.getDocument().getImmutableCharSequence(), true);
 
