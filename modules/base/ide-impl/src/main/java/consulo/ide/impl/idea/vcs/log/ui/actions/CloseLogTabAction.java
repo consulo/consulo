@@ -31,45 +31,51 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class CloseLogTabAction extends CloseTabToolbarAction {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    if (!e.hasData(Project.KEY)) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        if (!e.hasData(Project.KEY)) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+        ContentManager contentManager = getContentManager(e.getRequiredData(Project.KEY));
+        if (contentManager == null || getTabbedContent(contentManager) == null) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+        e.getPresentation().setEnabledAndVisible(true);
     }
-    ContentManager contentManager = getContentManager(e.getRequiredData(Project.KEY));
-    if (contentManager == null || getTabbedContent(contentManager) == null) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
-    }
-    e.getPresentation().setEnabledAndVisible(true);
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    ContentManager contentManager = getContentManager(e.getRequiredData(Project.KEY));
-    if (contentManager == null) return;
-    Content selectedContent = getTabbedContent(contentManager);
-    if (selectedContent != null) {
-      ContentsUtil.closeContentTab(contentManager, selectedContent);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        ContentManager contentManager = getContentManager(e.getRequiredData(Project.KEY));
+        if (contentManager == null) {
+            return;
+        }
+        Content selectedContent = getTabbedContent(contentManager);
+        if (selectedContent != null) {
+            ContentsUtil.closeContentTab(contentManager, selectedContent);
+        }
     }
-  }
 
-  @Nullable
-  private static Content getTabbedContent(@Nonnull ContentManager contentManager) {
-    Content content = contentManager.getSelectedContent();
-    if (content != null) {
-      if (ContentUtilEx.isContentTab(content, VcsLogContentProvider.TAB_NAME)) return content;
+    @Nullable
+    private static Content getTabbedContent(@Nonnull ContentManager contentManager) {
+        Content content = contentManager.getSelectedContent();
+        if (content != null) {
+            if (ContentUtilEx.isContentTab(content, VcsLogContentProvider.TAB_NAME)) {
+                return content;
+            }
+        }
+        return null;
     }
-    return null;
-  }
 
-  @Nullable
-  private static ContentManager getContentManager(@Nonnull Project project) {
-    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
-    if (toolWindow == null) return null;
-    return toolWindow.getContentManager();
-  }
+    @Nullable
+    private static ContentManager getContentManager(@Nonnull Project project) {
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
+        if (toolWindow == null) {
+            return null;
+        }
+        return toolWindow.getContentManager();
+    }
 }

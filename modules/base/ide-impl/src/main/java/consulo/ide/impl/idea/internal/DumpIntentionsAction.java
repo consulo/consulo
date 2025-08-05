@@ -43,75 +43,76 @@ import java.util.Map;
  * @since 2007-06-28
  */
 public class DumpIntentionsAction extends AnAction implements DumbAware {
-  public DumpIntentionsAction() {
-    super("Dump Intentions");
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final VirtualFile file =
-      IdeaFileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), e.getData(Project.KEY), null);
-    if (file != null) {
-      final List<IntentionActionMetaData> list = IntentionManagerSettings.getInstance().getMetaData();
-      final File root = VfsUtil.virtualToIoFile(file);
-      Element el = new Element("root");
-      Map<String, Element> categoryMap = new HashMap<>();
-      for (IntentionActionMetaData metaData : list) {
-
-        try {
-          Element metadataElement = new Element("intention");
-          metadataElement.setAttribute("text", metaData.getActionText());
-          metadataElement.setAttribute("description", metaData.getDescription().getText());
-
-          String key = StringUtil.join(metaData.myCategory, ".");
-          Element element = getCategoryElement(categoryMap, el, metaData, key, metaData.myCategory.length - 1);
-          element.addContent(metadataElement);
-        }
-        catch (IOException e1) {
-          e1.printStackTrace();
-        }
-      }
-
-      try {
-        JDOMUtil.writeDocument(new Document(el), new File(root, "intentions.xml"), "\n");
-      }
-      catch (IOException e1) {
-        e1.printStackTrace();
-      }
+    public DumpIntentionsAction() {
+        super("Dump Intentions");
     }
-  }
 
-  private static Element getCategoryElement(
-    Map<String, Element> categoryMap,
-    Element rootElement,
-    IntentionActionMetaData metaData,
-    String key,
-    int idx
-  ) {
-    Element element = categoryMap.get(key);
-    if (element == null) {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final VirtualFile file =
+            IdeaFileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), e.getData(Project.KEY), null);
+        if (file != null) {
+            final List<IntentionActionMetaData> list = IntentionManagerSettings.getInstance().getMetaData();
+            final File root = VfsUtil.virtualToIoFile(file);
+            Element el = new Element("root");
+            Map<String, Element> categoryMap = new HashMap<>();
+            for (IntentionActionMetaData metaData : list) {
 
-      element = new Element("category");
-      element.setAttribute("name", metaData.myCategory[idx]);
-      categoryMap.put(key, element);
-      if (idx == 0) {
-        rootElement.addContent(element);
-      } else {
-        getCategoryElement(
-          categoryMap,
-          rootElement,
-          metaData,
-          StringUtil.join(metaData.myCategory, 0, metaData.myCategory.length - 1, "."),
-          idx - 1
-        ).addContent(element);
-      }
+                try {
+                    Element metadataElement = new Element("intention");
+                    metadataElement.setAttribute("text", metaData.getActionText());
+                    metadataElement.setAttribute("description", metaData.getDescription().getText());
+
+                    String key = StringUtil.join(metaData.myCategory, ".");
+                    Element element = getCategoryElement(categoryMap, el, metaData, key, metaData.myCategory.length - 1);
+                    element.addContent(metadataElement);
+                }
+                catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            try {
+                JDOMUtil.writeDocument(new Document(el), new File(root, "intentions.xml"), "\n");
+            }
+            catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
-    return element;
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.hasData(Project.KEY));
-  }
+    private static Element getCategoryElement(
+        Map<String, Element> categoryMap,
+        Element rootElement,
+        IntentionActionMetaData metaData,
+        String key,
+        int idx
+    ) {
+        Element element = categoryMap.get(key);
+        if (element == null) {
+
+            element = new Element("category");
+            element.setAttribute("name", metaData.myCategory[idx]);
+            categoryMap.put(key, element);
+            if (idx == 0) {
+                rootElement.addContent(element);
+            }
+            else {
+                getCategoryElement(
+                    categoryMap,
+                    rootElement,
+                    metaData,
+                    StringUtil.join(metaData.myCategory, 0, metaData.myCategory.length - 1, "."),
+                    idx - 1
+                ).addContent(element);
+            }
+        }
+        return element;
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
+    }
 }

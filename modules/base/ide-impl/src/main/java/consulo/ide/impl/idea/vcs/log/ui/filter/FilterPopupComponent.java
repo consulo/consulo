@@ -27,59 +27,57 @@ import jakarta.annotation.Nullable;
  * Base class for components which allow to set up filter for the VCS Log, by displaying a popup with available choices.
  */
 abstract class FilterPopupComponent<Filter extends VcsLogFilter> extends VcsLogPopupComponent {
+    /**
+     * Special value that indicates that no filtering is on.
+     */
+    protected static final String ALL = "All";
+    @Nonnull
+    protected final FilterModel<Filter> myFilterModel;
 
-  /**
-   * Special value that indicates that no filtering is on.
-   */
-  protected static final String ALL = "All";
-  @Nonnull
-  protected final FilterModel<Filter> myFilterModel;
-
-  FilterPopupComponent(@Nonnull String filterName, @Nonnull FilterModel<Filter> filterModel) {
-    super(filterName);
-    myFilterModel = filterModel;
-  }
-
-  @Override
-  public String getCurrentText() {
-    Filter filter = myFilterModel.getFilter();
-    return filter == null ? ALL : getText(filter);
-  }
-
-  @Override
-  public void installChangeListener(@Nonnull Runnable onChange) {
-    myFilterModel.addSetFilterListener(onChange);
-  }
-
-  @Nonnull
-  protected abstract String getText(@Nonnull Filter filter);
-
-  @Nullable
-  protected abstract String getToolTip(@Nonnull Filter filter);
-
-  @Override
-  public String getToolTipText() {
-    Filter filter = myFilterModel.getFilter();
-    return filter == null ? null : getToolTip(filter);
-  }
-
-  /**
-   * Returns the special action that indicates that no filtering is selected in this component.
-   */
-  @Nonnull
-  protected AnAction createAllAction() {
-    return new AllAction();
-  }
-
-  private class AllAction extends DumbAwareAction {
-
-    AllAction() {
-      super(ALL);
+    FilterPopupComponent(@Nonnull String filterName, @Nonnull FilterModel<Filter> filterModel) {
+        super(filterName);
+        myFilterModel = filterModel;
     }
 
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      myFilterModel.setFilter(null);
+    public String getCurrentText() {
+        Filter filter = myFilterModel.getFilter();
+        return filter == null ? ALL : getText(filter);
     }
-  }
+
+    @Override
+    public void installChangeListener(@Nonnull Runnable onChange) {
+        myFilterModel.addSetFilterListener(onChange);
+    }
+
+    @Nonnull
+    protected abstract String getText(@Nonnull Filter filter);
+
+    @Nullable
+    protected abstract String getToolTip(@Nonnull Filter filter);
+
+    @Override
+    public String getToolTipText() {
+        Filter filter = myFilterModel.getFilter();
+        return filter == null ? null : getToolTip(filter);
+    }
+
+    /**
+     * Returns the special action that indicates that no filtering is selected in this component.
+     */
+    @Nonnull
+    protected AnAction createAllAction() {
+        return new AllAction();
+    }
+
+    private class AllAction extends DumbAwareAction {
+        AllAction() {
+            super(ALL);
+        }
+
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            myFilterModel.setFilter(null);
+        }
+    }
 }

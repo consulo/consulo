@@ -14,157 +14,157 @@ import static consulo.util.lang.ObjectUtil.tryCast;
  * @author Sergey.Malenkov
  */
 public abstract class ListActions extends SwingActionDelegate {
-  private ListActions(String actionId) {
-    super(actionId);
-  }
-
-  @Override
-  protected JList getComponent(AnActionEvent event) {
-    JList list = tryCast(super.getComponent(event), JList.class);
-    return list == null || getSupply(list) != null ? null : list;
-  }
-
-  public static final class Home extends ListActions {
-    @NonNls
-    public static final String ID = "selectFirstRow";
-
-    public Home() {
-      super(ID);
+    private ListActions(String actionId) {
+        super(actionId);
     }
-  }
 
-  public static final class ShiftHome extends ListActions {
-    @NonNls
-    public static final String ID = "selectFirstRowExtendSelection";
-
-    public ShiftHome() {
-      super(ID);
+    @Override
+    protected JList getComponent(AnActionEvent event) {
+        JList list = tryCast(super.getComponent(event), JList.class);
+        return list == null || getSupply(list) != null ? null : list;
     }
-  }
 
-  public static final class End extends ListActions {
-    @NonNls
-    public static final String ID = "selectLastRow";
+    public static final class Home extends ListActions {
+        @NonNls
+        public static final String ID = "selectFirstRow";
 
-    public End() {
-      super(ID);
+        public Home() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class ShiftEnd extends ListActions {
-    @NonNls
-    public static final String ID = "selectLastRowExtendSelection";
+    public static final class ShiftHome extends ListActions {
+        @NonNls
+        public static final String ID = "selectFirstRowExtendSelection";
 
-    public ShiftEnd() {
-      super(ID);
+        public ShiftHome() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class Up extends ListActions {
-    @NonNls
-    public static final String ID = "selectPreviousRow";
+    public static final class End extends ListActions {
+        @NonNls
+        public static final String ID = "selectLastRow";
 
-    public Up() {
-      super(ID);
+        public End() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class ShiftUp extends ListActions {
-    @NonNls
-    public static final String ID = "selectPreviousRowExtendSelection";
+    public static final class ShiftEnd extends ListActions {
+        @NonNls
+        public static final String ID = "selectLastRowExtendSelection";
 
-    public ShiftUp() {
-      super(ID);
+        public ShiftEnd() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class Down extends ListActions {
-    @NonNls
-    public static final String ID = "selectNextRow";
+    public static final class Up extends ListActions {
+        @NonNls
+        public static final String ID = "selectPreviousRow";
 
-    public Down() {
-      super(ID);
+        public Up() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class ShiftDown extends ListActions {
-    @NonNls
-    public static final String ID = "selectNextRowExtendSelection";
+    public static final class ShiftUp extends ListActions {
+        @NonNls
+        public static final String ID = "selectPreviousRowExtendSelection";
 
-    public ShiftDown() {
-      super(ID);
+        public ShiftUp() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class Left extends ListActions {
-    @NonNls
-    public static final String ID = "selectPreviousColumn";
+    public static final class Down extends ListActions {
+        @NonNls
+        public static final String ID = "selectNextRow";
 
-    public Left() {
-      super(ID);
+        public Down() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class ShiftLeft extends ListActions {
-    @NonNls
-    public static final String ID = "selectPreviousColumnExtendSelection";
+    public static final class ShiftDown extends ListActions {
+        @NonNls
+        public static final String ID = "selectNextRowExtendSelection";
 
-    public ShiftLeft() {
-      super(ID);
+        public ShiftDown() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class Right extends ListActions {
-    @NonNls
-    public static final String ID = "selectNextColumn";
+    public static final class Left extends ListActions {
+        @NonNls
+        public static final String ID = "selectPreviousColumn";
 
-    public Right() {
-      super(ID);
+        public Left() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class ShiftRight extends ListActions {
-    @NonNls
-    public static final String ID = "selectNextColumnExtendSelection";
+    public static final class ShiftLeft extends ListActions {
+        @NonNls
+        public static final String ID = "selectPreviousColumnExtendSelection";
 
-    public ShiftRight() {
-      super(ID);
+        public ShiftLeft() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class PageUp extends ListActions {
-    @NonNls
-    public static final String ID = "scrollUp";
+    public static final class Right extends ListActions {
+        @NonNls
+        public static final String ID = "selectNextColumn";
 
-    public PageUp() {
-      super(ID);
+        public Right() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class ShiftPageUp extends ListActions {
-    @NonNls
-    public static final String ID = "scrollUpExtendSelection";
+    public static final class ShiftRight extends ListActions {
+        @NonNls
+        public static final String ID = "selectNextColumnExtendSelection";
 
-    public ShiftPageUp() {
-      super(ID);
+        public ShiftRight() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class PageDown extends ListActions {
-    @NonNls
-    public static final String ID = "scrollDown";
+    public static final class PageUp extends ListActions {
+        @NonNls
+        public static final String ID = "scrollUp";
 
-    public PageDown() {
-      super(ID);
+        public PageUp() {
+            super(ID);
+        }
     }
-  }
 
-  public static final class ShiftPageDown extends ListActions {
-    @NonNls
-    public static final String ID = "scrollDownExtendSelection";
+    public static final class ShiftPageUp extends ListActions {
+        @NonNls
+        public static final String ID = "scrollUpExtendSelection";
 
-    public ShiftPageDown() {
-      super(ID);
+        public ShiftPageUp() {
+            super(ID);
+        }
     }
-  }
+
+    public static final class PageDown extends ListActions {
+        @NonNls
+        public static final String ID = "scrollDown";
+
+        public PageDown() {
+            super(ID);
+        }
+    }
+
+    public static final class ShiftPageDown extends ListActions {
+        @NonNls
+        public static final String ID = "scrollDownExtendSelection";
+
+        public ShiftPageDown() {
+            super(ID);
+        }
+    }
 }

@@ -45,78 +45,90 @@ import java.util.*;
 import java.util.List;
 
 class MultilinePopupBuilder {
-  private static final char[] SEPARATORS = {'|', '\n'};
+    private static final char[] SEPARATORS = {'|', '\n'};
 
-  @Nonnull
-  private final EditorTextField myTextField;
+    @Nonnull
+    private final EditorTextField myTextField;
 
-  MultilinePopupBuilder(@Nonnull Project project,
-                        @Nonnull final Collection<String> values,
-                        @Nonnull String initialValue,
-                        boolean supportsNegativeValues) {
-    myTextField = createTextField(project, values, supportsNegativeValues, initialValue);
-  }
+    MultilinePopupBuilder(
+        @Nonnull Project project,
+        @Nonnull final Collection<String> values,
+        @Nonnull String initialValue,
+        boolean supportsNegativeValues
+    ) {
+        myTextField = createTextField(project, values, supportsNegativeValues, initialValue);
+    }
 
-  @Nonnull
-  private static EditorTextField createTextField(@Nonnull Project project,
-                                                 Collection<String> values,
-                                                 boolean supportsNegativeValues,
-                                                 @Nonnull String initialValue) {
-    TextFieldWithCompletion textField =
-            new TextFieldWithCompletion(project, new MyCompletionProvider(values, supportsNegativeValues), initialValue, false, true, false) {
-              @Override
-              protected EditorEx createEditor() {
-                EditorEx editor = super.createEditor();
-                SoftWrapsEditorCustomization.ENABLED.accept(editor);
-                return editor;
-              }
+    @Nonnull
+    private static EditorTextField createTextField(
+        @Nonnull Project project,
+        Collection<String> values,
+        boolean supportsNegativeValues,
+        @Nonnull String initialValue
+    ) {
+        TextFieldWithCompletion textField =
+            new TextFieldWithCompletion(
+                project,
+                new MyCompletionProvider(values, supportsNegativeValues),
+                initialValue,
+                false,
+                true,
+                false
+            ) {
+                @Override
+                protected EditorEx createEditor() {
+                    EditorEx editor = super.createEditor();
+                    SoftWrapsEditorCustomization.ENABLED.accept(editor);
+                    return editor;
+                }
             };
-    textField.setBorder(new CompoundBorder(JBUI.Borders.empty(2), textField.getBorder()));
-    return textField;
-  }
+        textField.setBorder(new CompoundBorder(JBUI.Borders.empty(2), textField.getBorder()));
+        return textField;
+    }
 
-  @Nonnull
-  JBPopup createPopup() {
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(myTextField, BorderLayout.CENTER);
-    ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, myTextField)
+    @Nonnull
+    JBPopup createPopup() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(myTextField, BorderLayout.CENTER);
+        ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, myTextField)
             .setCancelOnClickOutside(true)
             .setAdText(KeymapUtil.getShortcutsText(CommonShortcuts.CTRL_ENTER.getShortcuts()) + " to finish")
             .setRequestFocus(true)
             .setResizable(true)
             .setMayBeParent(true);
 
-    final JBPopup popup = builder.createPopup();
-    popup.setMinimumSize(new JBDimension(200, 90));
-    AnAction okAction = new DumbAwareAction() {
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        unregisterCustomShortcutSet(popup.getContent());
-        popup.closeOk(e.getInputEvent());
-      }
-    };
-    okAction.registerCustomShortcutSet(CommonShortcuts.CTRL_ENTER, popup.getContent());
-    return popup;
-  }
-
-  @Nonnull
-  List<String> getSelectedValues() {
-    return ContainerUtil.mapNotNull(StringUtil.tokenize(myTextField.getText(), new String(SEPARATORS)), value -> {
-      String trimmed = value.trim();
-      return trimmed.isEmpty() ? null : trimmed;
-    });
-  }
-
-  private static class MyCompletionProvider extends ValuesCompletionProviderDumbAware<String> {
-    MyCompletionProvider(@Nonnull Collection<String> values, boolean supportsNegativeValues) {
-      super(new DefaultTextCompletionValueDescriptor.StringValueDescriptor(),
-            supportsNegativeValues ? ContainerUtil.append(Chars.asList(SEPARATORS), '-') : Chars.asList(SEPARATORS), values, false);
+        final JBPopup popup = builder.createPopup();
+        popup.setMinimumSize(new JBDimension(200, 90));
+        AnAction okAction = new DumbAwareAction() {
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                unregisterCustomShortcutSet(popup.getContent());
+                popup.closeOk(e.getInputEvent());
+            }
+        };
+        okAction.registerCustomShortcutSet(CommonShortcuts.CTRL_ENTER, popup.getContent());
+        return popup;
     }
 
-    @Nullable
-    @Override
-    public String getAdvertisement() {
-      return "Select one or more values separated with | or new lines";
+    @Nonnull
+    List<String> getSelectedValues() {
+        return ContainerUtil.mapNotNull(StringUtil.tokenize(myTextField.getText(), new String(SEPARATORS)), value -> {
+            String trimmed = value.trim();
+            return trimmed.isEmpty() ? null : trimmed;
+        });
     }
-  }
+
+    private static class MyCompletionProvider extends ValuesCompletionProviderDumbAware<String> {
+        MyCompletionProvider(@Nonnull Collection<String> values, boolean supportsNegativeValues) {
+            super(new DefaultTextCompletionValueDescriptor.StringValueDescriptor(),
+                supportsNegativeValues ? ContainerUtil.append(Chars.asList(SEPARATORS), '-') : Chars.asList(SEPARATORS), values, false
+            );
+        }
+
+        @Nullable
+        @Override
+        public String getAdvertisement() {
+            return "Select one or more values separated with | or new lines";
+        }
+    }
 }

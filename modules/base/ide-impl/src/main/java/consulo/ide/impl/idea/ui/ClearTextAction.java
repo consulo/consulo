@@ -29,25 +29,24 @@ import java.awt.*;
  * @author Anna.Kozlova
  */
 public class ClearTextAction extends AnAction implements DumbAware {
-
-  public ClearTextAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    if (e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTextComponent textComponent) {
-      textComponent.setText("");
+    public ClearTextAction() {
+        setEnabledInModalContext(true);
     }
-  }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(
-        e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTextComponent textComponent
-            && textComponent.getText().length() > 0
-            && textComponent.isEditable()
-    );
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        if (e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTextComponent textComponent) {
+            textComponent.setText("");
+        }
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(
+            e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTextComponent textComponent
+                && textComponent.getText().length() > 0
+                && textComponent.isEditable()
+        );
+    }
 }

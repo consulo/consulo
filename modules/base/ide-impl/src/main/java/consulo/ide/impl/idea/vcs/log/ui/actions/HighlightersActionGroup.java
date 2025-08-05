@@ -35,37 +35,40 @@ import java.util.List;
 import static consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties.VcsLogHighlighterProperty;
 
 public class HighlightersActionGroup extends ActionGroup {
-  @Nonnull
-  @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    List<AnAction> actions = new ArrayList<>();
-
-    if (e != null) {
-      if (e.hasData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES)) {
-        actions.add(new AnSeparator("Highlight"));
-        for (VcsLogHighlighterFactory factory : Extensions.getExtensions(VcsLogUiImpl.LOG_HIGHLIGHTER_FACTORY_EP, e.getData(Project.KEY))) {
-          if (factory.showMenuItem()) {
-            actions.add(new EnableHighlighterAction(factory));
-          }
-        }
-      }
-    }
-
-    return actions.toArray(new AnAction[actions.size()]);
-  }
-
-  private static class EnableHighlighterAction extends BooleanPropertyToggleAction {
     @Nonnull
-    private final VcsLogHighlighterFactory myFactory;
-
-    private EnableHighlighterAction(@Nonnull VcsLogHighlighterFactory factory) {
-      super(factory.getTitle());
-      myFactory = factory;
-    }
-
     @Override
-    protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
-      return VcsLogHighlighterProperty.get(myFactory.getId());
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        List<AnAction> actions = new ArrayList<>();
+
+        if (e != null) {
+            if (e.hasData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES)) {
+                actions.add(new AnSeparator("Highlight"));
+                for (VcsLogHighlighterFactory factory : Extensions.getExtensions(
+                    VcsLogUiImpl.LOG_HIGHLIGHTER_FACTORY_EP,
+                    e.getData(Project.KEY)
+                )) {
+                    if (factory.showMenuItem()) {
+                        actions.add(new EnableHighlighterAction(factory));
+                    }
+                }
+            }
+        }
+
+        return actions.toArray(new AnAction[actions.size()]);
     }
-  }
+
+    private static class EnableHighlighterAction extends BooleanPropertyToggleAction {
+        @Nonnull
+        private final VcsLogHighlighterFactory myFactory;
+
+        private EnableHighlighterAction(@Nonnull VcsLogHighlighterFactory factory) {
+            super(factory.getTitle());
+            myFactory = factory;
+        }
+
+        @Override
+        protected VcsLogUiProperties.VcsLogUiProperty<Boolean> getProperty() {
+            return VcsLogHighlighterProperty.get(myFactory.getId());
+        }
+    }
 }

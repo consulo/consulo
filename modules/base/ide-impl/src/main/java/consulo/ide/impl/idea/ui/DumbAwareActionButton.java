@@ -27,22 +27,22 @@ import jakarta.annotation.Nullable;
  * @author gregsh
  */
 public abstract class DumbAwareActionButton extends AnActionButton implements DumbAware {
-  public DumbAwareActionButton(String text) {
-    super(text);
-  }
+    public DumbAwareActionButton(String text) {
+        super(text);
+    }
 
-  protected DumbAwareActionButton(@Nonnull LocalizeValue text) {
-    super(text);
-  }
+    protected DumbAwareActionButton(@Nonnull LocalizeValue text) {
+        super(text);
+    }
 
-  protected DumbAwareActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-    super(text, description);
-  }
+    protected DumbAwareActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
-  protected DumbAwareActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
+    protected DumbAwareActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 
-  public DumbAwareActionButton() {
-  }
+    public DumbAwareActionButton() {
+    }
 }
