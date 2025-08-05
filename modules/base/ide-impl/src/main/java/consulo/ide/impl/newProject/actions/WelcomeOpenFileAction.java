@@ -15,24 +15,27 @@
  */
 package consulo.ide.impl.newProject.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.actions.OpenFileAction;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
+import consulo.platform.base.localize.ActionLocalize;
 
 /**
  * @author VISTALL
  * @since 2024-11-24
  */
+@ActionImpl(id = "WelcomeScreen.OpenProject")
 public class WelcomeOpenFileAction extends OpenFileAction {
+    public WelcomeOpenFileAction() {
+        super(
+            ActionLocalize.actionWelcomescreenOpenprojectText(),
+            ActionLocalize.actionWelcomescreenOpenprojectDescription(),
+            PlatformIconGroup.welcomeOpenproject()
+        );
+    }
+
     @Override
     public boolean displayTextInToolbar() {
         return true;
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.welcomeOpenproject();
     }
 }
