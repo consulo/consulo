@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -26,6 +27,7 @@ import jakarta.annotation.Nonnull;
  * @author max
  * @since 2002-05-14
  */
+@ActionImpl(id = "EditorUnSelectWord")
 public class UnselectWordAtCaretAction extends EditorAction implements DumbAware {
     public UnselectWordAtCaretAction() {
         super(new Handler());

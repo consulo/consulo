@@ -253,17 +253,6 @@
                 description="Allows to execute any command"/>
         <action id="SettingsEntryPoint" class="consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction"/>
 
-        <group id="TemplateParametersNavigation">
-            <action id="NextTemplateParameter" class="consulo.ide.impl.idea.codeInsight.completion.NextPrevParameterAction$Next"
-                    text="Next Parameter">
-                <keyboard-shortcut first-keystroke="TAB" keymap="$default"/>
-            </action>
-            <action id="PrevTemplateParameter" class="consulo.ide.impl.idea.codeInsight.completion.NextPrevParameterAction$Prev"
-                    text="Previous Parameter">
-                <keyboard-shortcut first-keystroke="shift TAB" keymap="$default"/>
-            </action>
-        </group>
-
         <group id="EditorActions">
             <reference id="EditorPageUp"/>
             <reference id="EditorPageDown"/>
@@ -444,31 +433,7 @@
             <reference ref="FileMenu"/>
 
             <!-- Edit -->
-            <group id="EditMenu" popup="true">
-                <reference ref="$Undo"/>
-                <reference ref="$Redo"/>
-                <separator/>
-                <reference ref="CutCopyPasteGroup"/>
-                <reference ref="EditCreateDeleteGroup"/>
-                <separator/>
-                <reference ref="FindMenuGroup"/>
-                <group id="Macros" popup="true">
-                    <group id="StandardMacroActions">
-                        <action id="PlaybackLastMacro" class="consulo.ide.impl.idea.ide.actionMacro.actions.PlaybackLastMacroAction"/>
-                        <action id="StartStopMacroRecording"
-                                class="consulo.ide.impl.idea.ide.actionMacro.actions.StartStopMacroRecordingAction"/>
-                        <action id="EditMacros" class="consulo.ide.impl.idea.ide.actionMacro.actions.EditMacrosAction"/>
-                        <action id="PlaySavedMacrosAction" class="consulo.ide.impl.idea.ide.actionMacro.actions.PlaySavedMacros"/>
-                    </group>
-                    <separator/>
-                    <group id="MacrosGroup" class="consulo.ide.impl.idea.ide.actionMacro.actions.MacrosGroup"/>
-                </group>
-                <reference ref="EditorToggleColumnMode"/>
-                <reference ref="EditSelectGroup"/>
-                <separator/>
-                <reference ref="EditSmartGroup"/>
-                <reference ref="TemplateParametersNavigation"/>
-            </group>
+            <reference ref="EditMenu"/>
 
             <!-- View -->
             <reference ref="ViewMenu"/>
@@ -911,8 +876,8 @@
         </group>
 
         <group id="LangCodeInsightActions">
-            <action id="EditorSelectWord" class="consulo.ide.impl.idea.openapi.editor.actions.SelectWordAtCaretAction"/>
-            <action id="EditorUnSelectWord" class="consulo.ide.impl.idea.openapi.editor.actions.UnselectWordAtCaretAction"/>
+            <reference ref="EditorSelectWord"/>
+            <reference ref="EditorUnSelectWord"/>
 
             <add-to-group group-id="EditorActions" anchor="last"/>
         </group>
@@ -946,7 +911,7 @@
                     class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockStartWithSelectionAction"/>
             <action id="EditorCodeBlockEndWithSelection"
                     class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockEndWithSelectionAction"/>
-            <action id="EditorCompleteStatement" class="consulo.ide.impl.idea.codeInsight.editorActions.smartEnter.SmartEnterAction"/>
+            <reference ref="EditorCompleteStatement"/>
 
             <add-to-group group-id="EditorActions" anchor="last"/>
         </group>
@@ -987,13 +952,6 @@
             <add-to-group group-id="EditorTabPopupMenu" anchor="after" relative-to-action="CopyPaths"/>
             <add-to-group group-id="Copy.Paste.Special" anchor="first"/>
         </action>
-
-        <group id="EditSelectWordGroup">
-            <reference ref="EditorSelectWord"/>
-            <reference ref="EditorUnSelectWord"/>
-
-            <add-to-group group-id="EditSelectGroup" anchor="last"/>
-        </group>
 
         <!-- View -->
         <group id="QuickActions">
@@ -1760,11 +1718,6 @@
         <group>
             <add-to-group group-id="ExportImportGroup" anchor="first"/>
         </group>
-
-        <!-- Edit -->
-        <reference ref="EditorCompleteStatement">
-            <add-to-group group-id="EditSmartGroup" anchor="first"/>
-        </reference>
 
         <!-- View -->
         <reference ref="DelegateMethods">

@@ -28,6 +28,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(
     id = "EditSmartGroup",
     children = {
+        @ActionRef(id = "EditorCompleteStatement"),
         @ActionRef(type = JoinLinesAction.class),
         @ActionRef(id = "FillParagraph"),
         @ActionRef(type = DuplicateAction.class),

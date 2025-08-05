@@ -1805,6 +1805,8 @@ plugin.version.label:
     text: Version
 popup.title.edit.shortcuts:
     text: Edit Shortcuts
+popup.title.play.saved.macros:
+    text: Play Saved Macros
 popup.title.select.library.type:
     text: Select Library Type
 predefined.scope.problems.name:

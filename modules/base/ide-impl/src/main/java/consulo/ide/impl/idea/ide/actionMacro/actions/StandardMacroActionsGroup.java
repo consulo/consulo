@@ -13,30 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.impl.idea.ide.actionMacro.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.editor.actions.SelectWordAtCaretAction;
-import consulo.ide.impl.idea.openapi.editor.actions.UnselectWordAtCaretAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author UNV
- * @since 2025-07-27
+ * @since 2025-08-05
  */
 @ActionImpl(
-    id = "EditSelectGroup",
+    id = "StandardMacroActions",
     children = {
-        @ActionRef(type = SelectAllAction.class),
-        @ActionRef(type = SelectWordAtCaretAction.class),
-        @ActionRef(type = UnselectWordAtCaretAction.class)
+        @ActionRef(type = PlaybackLastMacroAction.class),
+        @ActionRef(type = StartStopMacroRecordingAction.class),
+        @ActionRef(type = EditMacrosAction.class),
+        @ActionRef(type = PlaySavedMacros.class)
     }
 )
-public class EditorSelectActionsGroup extends DefaultActionGroup implements DumbAware {
-    public EditorSelectActionsGroup() {
-        super(ActionLocalize.groupEditselectgroupText(), true);
+public class StandardMacroActionsGroup extends DefaultActionGroup implements DumbAware {
+    public StandardMacroActionsGroup() {
+        super(ActionLocalize.groupStandardmacroactionsText(), false);
     }
 }

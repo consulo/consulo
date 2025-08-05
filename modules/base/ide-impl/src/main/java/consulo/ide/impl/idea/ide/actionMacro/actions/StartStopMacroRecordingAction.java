@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager;
 import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -29,41 +31,39 @@ import jakarta.annotation.Nonnull;
 /**
  * @author max
  */
+@ActionImpl(id = "StartStopMacroRecording")
 public class StartStopMacroRecordingAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public StartStopMacroRecordingAction() {
+        super(ActionLocalize.actionStartstopmacrorecordingText(), ActionLocalize.actionStartstopmacrorecordingDescription());
     }
 
-    if (!ActionMacroManager.getInstance().isRecording()) {
-      final ActionMacroManager manager = ActionMacroManager.getInstance();
-      manager.startRecording(project, IdeLocalize.macroNoname().get());
-    }
-    else {
-      ActionMacroManager.getInstance().stopRecording(project);
-    }
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
-
-    boolean isRecording = ActionMacroManager.getInstance().isRecording();
-
-    e.getPresentation().setTextValue(
-        isRecording
-            ? IdeLocalize.actionStopMacroRecording()
-            : IdeLocalize.actionStartMacroRecording()
-    );
-
-    if (ActionPlaces.STATUS_BAR_PLACE.equals(e.getPlace())) {
-      e.getPresentation().setIcon(PlatformIconGroup.actionsSuspend());
+        ActionMacroManager manager = ActionMacroManager.getInstance();
+        if (!manager.isRecording()) {
+            manager.startRecording(project, IdeLocalize.macroNoname().get());
+        }
+        else {
+            manager.stopRecording(project);
+        }
     }
-    else {
-      e.getPresentation().setIcon(null);
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
+
+        e.getPresentation().setTextValue(
+            ActionMacroManager.getInstance().isRecording()
+                ? IdeLocalize.actionStopMacroRecording()
+                : IdeLocalize.actionStartMacroRecording()
+        );
+
+        e.getPresentation().setIcon(ActionPlaces.STATUS_BAR_PLACE.equals(e.getPlace()) ? PlatformIconGroup.actionsSuspend() : null);
     }
-  }
 }

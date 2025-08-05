@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacro;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -25,24 +26,25 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author max
  * @since 2003-07-22
  */
+@ActionImpl(id = "MacrosGroup")
 public class MacrosGroup extends ActionGroup {
-  @Nonnull
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    ArrayList<AnAction> actions = new ArrayList<AnAction>();
-    final ActionManagerEx actionManager = ((ActionManagerEx) ActionManager.getInstance());
-    String[] ids = actionManager.getActionIds(ActionMacro.MACRO_ACTION_PREFIX);
+    @Nonnull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        List<AnAction> actions = new ArrayList<>();
+        ActionManagerEx actionManager = ((ActionManagerEx) ActionManager.getInstance());
+        String[] ids = actionManager.getActionIds(ActionMacro.MACRO_ACTION_PREFIX);
 
-    for (String id : ids) {
-      actions.add(actionManager.getAction(id));
+        for (String id : ids) {
+            actions.add(actionManager.getAction(id));
+        }
+
+        return actions.toArray(new AnAction[actions.size()]);
     }
-
-    return actions.toArray(new AnAction[actions.size()]);
-  }
-
-
 }
