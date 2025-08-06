@@ -2,13 +2,14 @@
 package consulo.ide.impl.idea.codeInsight.completion.actions;
 
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionHandlerBase;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.completion.CompletionType;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
@@ -24,6 +25,13 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction implement
         setInjectedContext(true);
     }
 
+    protected BaseCodeCompletionAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+        setEnabledInModalContext(true);
+        setInjectedContext(true);
+    }
+
+    @RequiredUIAccess
     protected void invokeCompletion(AnActionEvent e, CompletionType type, int time) {
         Editor editor = e.getRequiredData(Editor.KEY);
         Project project = editor.getProject();

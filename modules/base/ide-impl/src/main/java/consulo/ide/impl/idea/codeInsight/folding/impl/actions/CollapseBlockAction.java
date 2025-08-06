@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.folding.impl.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModelEx;
@@ -16,14 +18,20 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
+@ActionImpl(id = "CollapseBlock")
 public class CollapseBlockAction extends BaseCodeInsightAction {
     private static final Logger LOG = Logger.getInstance(CollapseBlockAction.class);
+
+    public CollapseBlockAction() {
+        super(ActionLocalize.actionCollapseblockText(), ActionLocalize.actionCollapseblockDescription());
+    }
 
     @Nonnull
     @Override
@@ -32,14 +40,16 @@ public class CollapseBlockAction extends BaseCodeInsightAction {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         return executor(project, editor, file, false);
     }
 
-    private static boolean executor(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file, boolean executeAction) {
-        final InjectedLanguageManager instance = InjectedLanguageManager.getInstance(project);
+    @RequiredReadAction
+    private static boolean executor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, boolean executeAction) {
+        InjectedLanguageManager instance = InjectedLanguageManager.getInstance(project);
         while (true) {
-            final List<CollapseBlockHandler> handlers = CollapseBlockHandler.forLanguage(file.getLanguage());
+            List<CollapseBlockHandler> handlers = CollapseBlockHandler.forLanguage(file.getLanguage());
             if (handlers.isEmpty()) {
                 if (!instance.isInjectedFragment(file) || !(editor instanceof EditorWindow)) {
                     return false;
@@ -52,22 +62,18 @@ public class CollapseBlockAction extends BaseCodeInsightAction {
                 continue;
             }
             if (executeAction) {
-                final Editor finalEditor = editor;
-                final PsiFile finalFile = file;
+                Editor finalEditor = editor;
+                PsiFile finalFile = file;
                 handlers.forEach(handler -> invoke(handler, finalEditor, finalFile));
             }
             return true;
         }
     }
 
-    private static void invoke(
-        @Nonnull CollapseBlockHandler collapseBlockHandler,
-        @Nonnull final Editor editor,
-        @Nonnull final PsiFile file
-    ) {
+    private static void invoke(@Nonnull CollapseBlockHandler collapseBlockHandler, @Nonnull Editor editor, @Nonnull PsiFile file) {
         int[] targetCaretOffset = {-1};
         editor.getFoldingModel().runBatchFoldingOperation(() -> {
-            final EditorFoldingInfoImpl info = (EditorFoldingInfoImpl) EditorFoldingInfo.get(editor);
+            EditorFoldingInfoImpl info = (EditorFoldingInfoImpl) EditorFoldingInfo.get(editor);
             FoldingModelEx model = (FoldingModelEx) editor.getFoldingModel();
             int offset = editor.getCaretModel().getOffset();
             PsiElement element = file.findElementAt(offset - 1);

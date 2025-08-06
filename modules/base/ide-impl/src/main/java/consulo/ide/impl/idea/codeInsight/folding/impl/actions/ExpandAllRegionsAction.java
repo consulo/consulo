@@ -15,50 +15,56 @@
  */
 package consulo.ide.impl.idea.codeInsight.folding.impl.actions;
 
-import consulo.language.editor.folding.CodeFoldingManager;
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.action.EditorAction;
-import consulo.project.Project;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 import java.util.List;
 
+@ActionImpl(id = "ExpandAllRegions")
 public class ExpandAllRegionsAction extends EditorAction {
     public ExpandAllRegionsAction() {
-        super(new BaseFoldingHandler() {
-            @Override
-            public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-                Project project = editor.getProject();
-                assert project != null;
-                PsiDocumentManager.getInstance(project).commitAllDocuments();
-                CodeFoldingManager codeFoldingManager = CodeFoldingManager.getInstance(project);
-                codeFoldingManager.updateFoldRegions(editor);
+        super(
+            ActionLocalize.actionExpandallregionsText(),
+            ActionLocalize.actionExpandallregionsDescription(),
+            new BaseFoldingHandler() {
+                @Override
+                public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+                    Project project = editor.getProject();
+                    assert project != null;
+                    PsiDocumentManager.getInstance(project).commitAllDocuments();
+                    CodeFoldingManager codeFoldingManager = CodeFoldingManager.getInstance(project);
+                    codeFoldingManager.updateFoldRegions(editor);
 
-                List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
-                editor.getFoldingModel().runBatchFoldingOperation(() -> {
-                    boolean anythingDone = false;
-                    for (FoldRegion region : regions) {
-                        // try to restore to default state at first
-                        Boolean collapsedByDefault = codeFoldingManager.isCollapsedByDefault(region);
-                        if (!region.isExpanded() && (collapsedByDefault == null || !collapsedByDefault)) {
-                            region.setExpanded(true);
-                            anythingDone = true;
-                        }
-                    }
-
-                    if (!anythingDone) {
+                    List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
+                    editor.getFoldingModel().runBatchFoldingOperation(() -> {
+                        boolean anythingDone = false;
                         for (FoldRegion region : regions) {
-                            region.setExpanded(true);
+                            // try to restore to default state at first
+                            Boolean collapsedByDefault = codeFoldingManager.isCollapsedByDefault(region);
+                            if (!region.isExpanded() && (collapsedByDefault == null || !collapsedByDefault)) {
+                                region.setExpanded(true);
+                                anythingDone = true;
+                            }
                         }
-                    }
-                });
+
+                        if (!anythingDone) {
+                            for (FoldRegion region : regions) {
+                                region.setExpanded(true);
+                            }
+                        }
+                    });
+                }
             }
-        });
+        );
     }
 }

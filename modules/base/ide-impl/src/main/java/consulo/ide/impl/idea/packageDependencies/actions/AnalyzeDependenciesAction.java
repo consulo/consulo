@@ -15,9 +15,13 @@
  */
 package consulo.ide.impl.idea.packageDependencies.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.language.editor.impl.action.BaseAnalysisAction;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -28,16 +32,20 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(
+    id = "ShowPackageDeps",
+    parents = @ActionParentRef(value = @ActionRef(id = "ShowPackageDepsGroup"), anchor = ActionRefAnchor.FIRST)
+)
 public class AnalyzeDependenciesAction extends BaseAnalysisAction {
     private CheckBox myTransitiveCB;
     private IntBox myDeepField;
 
     public AnalyzeDependenciesAction() {
-        super(AnalysisScopeBundle.message("action.forward.dependency.analysis"), AnalysisScopeBundle.message("action.analysis.noun"));
+        super(AnalysisScopeLocalize.actionForwardDependencyAnalysis().get(), AnalysisScopeLocalize.actionAnalysisNoun().get());
     }
 
     @Override
-    protected void analyze(@Nonnull final Project project, @Nonnull AnalysisScope scope) {
+    protected void analyze(@Nonnull Project project, @Nonnull AnalysisScope scope) {
         new AnalyzeDependenciesHandler(
             project,
             scope,

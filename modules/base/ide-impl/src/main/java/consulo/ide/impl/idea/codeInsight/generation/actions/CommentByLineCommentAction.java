@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -26,13 +28,16 @@ import consulo.language.Commenter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "CommentByLineComment")
 public class CommentByLineCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
     public CommentByLineCommentAction() {
+        super(ActionLocalize.actionCommentbylinecommentText(), ActionLocalize.actionCommentbylinecommentDescription());
         setEnabledInModalContext(true);
     }
 
@@ -43,10 +48,11 @@ public class CommentByLineCommentAction extends MultiCaretCodeInsightAction impl
     }
 
     @Override
-    protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull final PsiFile file) {
-        final FileType fileType = file.getFileType();
-        if (fileType instanceof AbstractFileType) {
-            return ((AbstractFileType) fileType).getCommenter() != null;
+    @RequiredReadAction
+    protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
+        FileType fileType = file.getFileType();
+        if (fileType instanceof AbstractFileType abstractFileType) {
+            return abstractFileType.getCommenter() != null;
         }
 
         if (Commenter.forLanguage(file.getLanguage()) != null || Commenter.forLanguage(file.getViewProvider().getBaseLanguage()) != null) {

@@ -13,34 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.unwrap;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.refactoring.unwrap.UnwrapDescriptor;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 
-public class UnwrapAction extends BaseCodeInsightAction{
-  public UnwrapAction() {
-    super(true);
-    setEnabledInModalContext(true);
-  }
+@ActionImpl(id = "Unwrap")
+public class UnwrapAction extends BaseCodeInsightAction {
+    public UnwrapAction() {
+        super(ActionLocalize.actionUnwrapText(), ActionLocalize.actionUnwrapDescription(), true);
+        setEnabledInModalContext(true);
+    }
 
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler(){
-    return new UnwrapHandler();
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new UnwrapHandler();
+    }
 
-  @Override
-  @RequiredReadAction
-  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    return !UnwrapDescriptor.forLanguage(file.getLanguage()).isEmpty();
-  }
+    @Override
+    @RequiredReadAction
+    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        return !UnwrapDescriptor.forLanguage(file.getLanguage()).isEmpty();
+    }
 }

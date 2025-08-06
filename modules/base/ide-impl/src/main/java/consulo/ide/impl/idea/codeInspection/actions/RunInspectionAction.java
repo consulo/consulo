@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.content.scope.SearchScope;
 import consulo.externalService.statistic.FeatureUsageTracker;
@@ -39,10 +40,12 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -50,115 +53,127 @@ import java.util.Arrays;
 /**
  * @author Konstantin Bulenkov
  */
+@ActionImpl(id = "RunInspection")
 public class RunInspectionAction extends GotoActionBase {
-  private static final Logger LOGGER = Logger.getInstance(RunInspectionAction.class);
+    private static final Logger LOGGER = Logger.getInstance(RunInspectionAction.class);
 
-  public RunInspectionAction() {
-    super(IdeLocalize.gotoInspectionActionText(), LocalizeValue.empty());
-  }
+    private final Application myApplication;
 
-  @Override
-  protected void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) return;
+    @Inject
+    public RunInspectionAction(Application application) {
+        super(IdeLocalize.gotoInspectionActionText(), LocalizeValue.empty());
+        myApplication = application;
+    }
 
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
+    @Override
+    protected void gotoActionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-    final PsiElement psiElement = e.getData(PsiElement.KEY);
-    final PsiFile psiFile = e.getData(PsiFile.KEY);
-    final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.goto.inspection");
+        final PsiElement psiElement = e.getData(PsiElement.KEY);
+        final PsiFile psiFile = e.getData(PsiFile.KEY);
+        final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
 
-    final GotoInspectionModel model = new GotoInspectionModel(project);
-    showNavigationPopup(e, model, new GotoActionCallback<>() {
-      @Override
-      protected ChooseByNameFilter<Object> createFilter(@Nonnull ChooseByNamePopup popup) {
-        popup.setSearchInAnyPlace(true);
-        return super.createFilter(popup);
-      }
+        FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.goto.inspection");
 
-      @Override
-      public void elementChosen(ChooseByNamePopup popup, final Object element) {
-        Application.get().invokeLater(
-          () -> runInspection(project, ((InspectionToolWrapper)element).getShortName(), virtualFile, psiElement, psiFile)
+        showNavigationPopup(
+            e,
+            new GotoInspectionModel(project),
+            new GotoActionCallback<>() {
+                @Override
+                protected ChooseByNameFilter<Object> createFilter(@Nonnull ChooseByNamePopup popup) {
+                    popup.setSearchInAnyPlace(true);
+                    return super.createFilter(popup);
+                }
+
+                @Override
+                public void elementChosen(ChooseByNamePopup popup, Object element) {
+                    myApplication.invokeLater(
+                        () -> runInspection(project, ((InspectionToolWrapper) element).getShortName(), virtualFile, psiElement, psiFile)
+                    );
+                }
+            },
+            false
         );
-      }
-    }, false);
-  }
-
-  private static void runInspection(
-    @Nonnull Project project,
-    @Nonnull String shortName,
-    @Nullable VirtualFile virtualFile,
-    PsiElement psiElement,
-    PsiFile psiFile
-  ) {
-    final InspectionManagerImpl managerEx = (InspectionManagerImpl)InspectionManager.getInstance(project);
-    final Module module = virtualFile != null ? ModuleUtilCore.findModuleForFile(virtualFile, project) : null;
-
-    AnalysisScope analysisScope = null;
-    if (psiFile != null) {
-      analysisScope = new AnalysisScope(psiFile);
-    }
-    else {
-      if (virtualFile != null && virtualFile.isDirectory()) {
-        final PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
-        if (psiDirectory != null) {
-          analysisScope = new AnalysisScope(psiDirectory);
-        }
-      }
-      if (analysisScope == null && virtualFile != null) {
-        analysisScope = new AnalysisScope(project, Arrays.asList(virtualFile));
-      }
-      if (analysisScope == null) {
-        analysisScope = new AnalysisScope(project);
-      }
     }
 
-    final FileFilterPanel fileFilterPanel = new FileFilterPanel();
-    fileFilterPanel.init();
-
-    final BaseAnalysisActionDialog dialog = new BaseAnalysisActionDialog(
-      AnalysisScopeLocalize.specifyAnalysisScope(InspectionLocalize.inspectionActionTitle()).get(),
-      AnalysisScopeLocalize.analysisScopeTitle(InspectionLocalize.inspectionActionNoun()).get(),
-      project,
-      analysisScope,
-      module != null ? module.getName() : null,
-      true,
-      AnalysisUIOptions.getInstance(project), psiElement
+    @RequiredUIAccess
+    private static void runInspection(
+        @Nonnull Project project,
+        @Nonnull String shortName,
+        @Nullable VirtualFile virtualFile,
+        PsiElement psiElement,
+        PsiFile psiFile
     ) {
+        InspectionManagerImpl managerEx = (InspectionManagerImpl) InspectionManager.getInstance(project);
+        final Module module = virtualFile != null ? ModuleUtilCore.findModuleForFile(virtualFile, project) : null;
 
-      @Override
-      protected JComponent getAdditionalActionSettings(Project project) {
-        return fileFilterPanel.getPanel();
-      }
-
-      @Override
-      public AnalysisScope getScope(@Nonnull AnalysisScope defaultScope) {
-        final AnalysisScope scope = super.getScope(defaultScope);
-        final SearchScope filterScope = fileFilterPanel.getSearchScope();
-        if (filterScope == null) {
-          return scope;
+        AnalysisScope analysisScope = null;
+        if (psiFile != null) {
+            analysisScope = new AnalysisScope(psiFile);
         }
-        final SearchScope filteredScope = filterScope.intersectWith(scope.toSearchScope());
-        return new AnalysisScope(filteredScope, project);
-      }
-    };
+        else {
+            if (virtualFile != null && virtualFile.isDirectory()) {
+                PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
+                if (psiDirectory != null) {
+                    analysisScope = new AnalysisScope(psiDirectory);
+                }
+            }
+            if (analysisScope == null && virtualFile != null) {
+                analysisScope = new AnalysisScope(project, Arrays.asList(virtualFile));
+            }
+            if (analysisScope == null) {
+                analysisScope = new AnalysisScope(project);
+            }
+        }
 
-    final InspectionProfile currentProfile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-    final AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
-    AnalysisScope scope = dialog.getScope(uiOptions, analysisScope, project, module);
-    PsiElement element = psiFile == null ? psiElement : psiFile;
-    final InspectionToolWrapper toolWrapper = currentProfile.getInspectionTool(shortName, project);
-    LOGGER.assertTrue(toolWrapper != null, "Missed inspection: " + shortName);
+        final FileFilterPanel fileFilterPanel = new FileFilterPanel();
+        fileFilterPanel.init();
 
-    dialog.setShowInspectInjectedCode(!(toolWrapper.getLanguage() instanceof InjectableLanguage));
+        BaseAnalysisActionDialog dialog = new BaseAnalysisActionDialog(
+            AnalysisScopeLocalize.specifyAnalysisScope(InspectionLocalize.inspectionActionTitle()).get(),
+            AnalysisScopeLocalize.analysisScopeTitle(InspectionLocalize.inspectionActionNoun()).get(),
+            project,
+            analysisScope,
+            module != null ? module.getName() : null,
+            true,
+            AnalysisUIOptions.getInstance(project), psiElement
+        ) {
 
-    if (!dialog.showAndGet()) {
-      return;
+            @Override
+            protected JComponent getAdditionalActionSettings(@Nonnull Project project) {
+                return fileFilterPanel.getPanel();
+            }
+
+            @Override
+            public AnalysisScope getScope(@Nonnull AnalysisScope defaultScope) {
+                AnalysisScope scope = super.getScope(defaultScope);
+                SearchScope filterScope = fileFilterPanel.getSearchScope();
+                if (filterScope == null) {
+                    return scope;
+                }
+                SearchScope filteredScope = filterScope.intersectWith(scope.toSearchScope());
+                return new AnalysisScope(filteredScope, project);
+            }
+        };
+
+        InspectionProfile currentProfile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
+        AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
+        AnalysisScope scope = dialog.getScope(uiOptions, analysisScope, project, module);
+        PsiElement element = psiFile == null ? psiElement : psiFile;
+        InspectionToolWrapper toolWrapper = currentProfile.getInspectionTool(shortName, project);
+        LOGGER.assertTrue(toolWrapper != null, "Missed inspection: " + shortName);
+
+        dialog.setShowInspectInjectedCode(!(toolWrapper.getLanguage() instanceof InjectableLanguage));
+
+        if (!dialog.showAndGet()) {
+            return;
+        }
+
+        RunInspectionIntention.rerunInspection(toolWrapper, managerEx, scope, element);
     }
-
-    RunInspectionIntention.rerunInspection(toolWrapper, managerEx, scope, element);
-  }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.impl.action.BaseAnalysisAction;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
@@ -24,7 +25,6 @@ import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileMana
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 import consulo.ide.localize.IdeLocalize;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.scope.AnalysisScope;
@@ -39,17 +39,20 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.MutableListModel;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@ActionImpl(id = "InspectCode")
 public class CodeInspectionAction extends BaseAnalysisAction {
     private GlobalInspectionContextImpl myGlobalInspectionContext = null;
     protected InspectionProfile myExternalProfile = null;
 
+    @Inject
     public CodeInspectionAction() {
-        super(InspectionsBundle.message("inspection.action.title"), InspectionsBundle.message("inspection.action.noun"));
+        super(InspectionLocalize.inspectionActionTitle().get(), InspectionLocalize.inspectionActionNoun().get());
     }
 
     public CodeInspectionAction(String title, String analysisNoon) {

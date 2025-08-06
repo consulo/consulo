@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packageDependencies.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposer;
 import consulo.find.ui.ScopeChooserCombo;
@@ -35,6 +36,7 @@ import jakarta.annotation.Nonnull;
  * @author anna
  * @since 2005-01-16
  */
+@ActionImpl(id = "ShowBackwardPackageDeps")
 public class BackwardDependenciesAction extends BaseAnalysisAction {
     private ScopeChooserCombo myScopeChooserCombo;
 
@@ -46,9 +48,9 @@ public class BackwardDependenciesAction extends BaseAnalysisAction {
     }
 
     @Override
-    protected void analyze(@Nonnull final Project project, final AnalysisScope scope) {
+    protected void analyze(@Nonnull Project project, AnalysisScope scope) {
         scope.setSearchInLibraries(true); //find library usages in project
-        final SearchScope selectedScope = myScopeChooserCombo.getSelectedScope();
+        SearchScope selectedScope = myScopeChooserCombo.getSelectedScope();
         new BackwardDependenciesHandler(
             project,
             scope,

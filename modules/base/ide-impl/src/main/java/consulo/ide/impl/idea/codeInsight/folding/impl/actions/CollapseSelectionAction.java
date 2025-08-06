@@ -15,16 +15,23 @@
  */
 package consulo.ide.impl.idea.codeInsight.folding.impl.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.folding.impl.CollapseSelectionHandler;
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author ven
  */
+@ActionImpl(id = "CollapseSelection")
 public class CollapseSelectionAction extends BaseCodeInsightAction implements DumbAware {
+    public CollapseSelectionAction() {
+        super(ActionLocalize.actionCollapseselectionText(), ActionLocalize.actionCollapseselectionDescription());
+    }
+
     @Nonnull
     @Override
     protected CodeInsightActionHandler getHandler() {

@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
+import consulo.platform.base.localize.ActionLocalize;
 
 /**
  * @author Dennis.Ushakov
  */
+@ActionImpl(id = "MoveLineDown")
 public class MoveLineDownAction extends EditorAction {
     public MoveLineDownAction() {
-        super(new MoveLineHandler(true));
+        super(ActionLocalize.actionMovelinedownText(), ActionLocalize.actionMovelinedownDescription(), new MoveLineHandler(true));
     }
 }

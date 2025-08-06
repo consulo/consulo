@@ -15,17 +15,27 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
 import consulo.language.editor.completion.CompletionType;
 import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
+@ActionImpl(id = "CodeCompletion")
 public class CodeCompletionAction extends BaseCodeCompletionAction {
+    public CodeCompletionAction() {
+        super(ActionLocalize.actionCodecompletionText(), ActionLocalize.actionCodecompletionDescription());
+    }
+
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_BASIC);
         invokeCompletion(e, CompletionType.BASIC, 1);
     }

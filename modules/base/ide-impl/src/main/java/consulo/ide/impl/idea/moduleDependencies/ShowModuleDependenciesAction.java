@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.moduleDependencies;
 
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
@@ -23,6 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -40,78 +41,88 @@ import java.awt.*;
  * @author anna
  * @since 2005-02-09
  */
+@ActionImpl(id = "ShowModulesDependencies")
 public class ShowModuleDependenciesAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(Project.KEY);
-    ModulesDependenciesPanel panel;
-    AnalysisScope scope = new AnalysisScope(project);
-    Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
-    if (modules != null){
-      panel = new ModulesDependenciesPanel(project, modules);
-      scope = new AnalysisScope(modules);
-    } else {
-      PsiElement element = e.getData(PsiFile.KEY);
-      final Module module = element != null ? ModuleUtil.findModuleForPsiElement(element) : null;
-      if (module != null && ModuleManager.getInstance(project).getModules().length > 1){
-        MyModuleOrProjectScope dlg = new MyModuleOrProjectScope(module.getName());
-        dlg.show();
-        if (dlg.isOK()){
-          if (!dlg.useProjectScope()){
-            panel = new ModulesDependenciesPanel(project, new Module[]{module});
-            scope = new AnalysisScope(module);
-          } else {
-            panel = new ModulesDependenciesPanel(project);
-          }
-        } else {
-          return;
-        }
-      } else {
-        panel = new ModulesDependenciesPanel(project);
-      }
-    }
-
-    Content content = ContentFactory.getInstance().createContent(
-      panel,
-      AnalysisScopeLocalize.moduleDependenciesToolwindowTitle(StringUtil.capitalize(scope.getDisplayName())).get(),
-      false
-    );
-    content.setDisposer(panel);
-    panel.setContent(content);
-    DependenciesAnalyzeManager.getInstance(project).addContent(content);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.hasData(Project.KEY));
-  }
-
-  private static class MyModuleOrProjectScope extends DialogWrapper{
-    private final JRadioButton myProjectScope;
-    private final JRadioButton myModuleScope;
-    protected MyModuleOrProjectScope(String moduleName) {
-      super(false);
-      setTitle(AnalysisScopeLocalize.moduleDependenciesScopeDialogTitle());
-      ButtonGroup group = new ButtonGroup();
-      myProjectScope = new JRadioButton(AnalysisScopeLocalize.moduleDependenciesScopeDialogProjectButton().get());
-      myModuleScope = new JRadioButton(AnalysisScopeLocalize.moduleDependenciesScopeDialogModuleButton(moduleName).get());
-      group.add(myProjectScope);
-      group.add(myModuleScope);
-      myProjectScope.setSelected(true);
-      init();
+    public ShowModuleDependenciesAction() {
+        super(ActionLocalize.actionShowmodulesdependenciesText(), ActionLocalize.actionShowmodulesdependenciesDescription());
     }
 
     @Override
-    protected JComponent createCenterPanel() {
-      JPanel panel = new JPanel(new GridLayout(2, 1));
-      panel.add(myProjectScope);
-      panel.add(myModuleScope);
-      return panel;
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getRequiredData(Project.KEY);
+        ModulesDependenciesPanel panel;
+        AnalysisScope scope = new AnalysisScope(project);
+        Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
+        if (modules != null) {
+            panel = new ModulesDependenciesPanel(project, modules);
+            scope = new AnalysisScope(modules);
+        }
+        else {
+            PsiElement element = e.getData(PsiFile.KEY);
+            Module module = element != null ? element.getModule() : null;
+            if (module != null && ModuleManager.getInstance(project).getModules().length > 1) {
+                MyModuleOrProjectScope dlg = new MyModuleOrProjectScope(module.getName());
+                dlg.show();
+                if (dlg.isOK()) {
+                    if (!dlg.useProjectScope()) {
+                        panel = new ModulesDependenciesPanel(project, new Module[]{module});
+                        scope = new AnalysisScope(module);
+                    }
+                    else {
+                        panel = new ModulesDependenciesPanel(project);
+                    }
+                }
+                else {
+                    return;
+                }
+            }
+            else {
+                panel = new ModulesDependenciesPanel(project);
+            }
+        }
+
+        Content content = ContentFactory.getInstance().createContent(
+            panel,
+            AnalysisScopeLocalize.moduleDependenciesToolwindowTitle(StringUtil.capitalize(scope.getDisplayName())).get(),
+            false
+        );
+        content.setDisposer(panel);
+        panel.setContent(content);
+        DependenciesAnalyzeManager.getInstance(project).addContent(content);
     }
 
-    public boolean useProjectScope(){
-      return myProjectScope.isSelected();
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
-  }
+
+    private static class MyModuleOrProjectScope extends DialogWrapper {
+        private final JRadioButton myProjectScope;
+        private final JRadioButton myModuleScope;
+
+        protected MyModuleOrProjectScope(String moduleName) {
+            super(false);
+            setTitle(AnalysisScopeLocalize.moduleDependenciesScopeDialogTitle());
+            ButtonGroup group = new ButtonGroup();
+            myProjectScope = new JRadioButton(AnalysisScopeLocalize.moduleDependenciesScopeDialogProjectButton().get());
+            myModuleScope = new JRadioButton(AnalysisScopeLocalize.moduleDependenciesScopeDialogModuleButton(moduleName).get());
+            group.add(myProjectScope);
+            group.add(myModuleScope);
+            myProjectScope.setSelected(true);
+            init();
+        }
+
+        @Override
+        protected JComponent createCenterPanel() {
+            JPanel panel = new JPanel(new GridLayout(2, 1));
+            panel.add(myProjectScope);
+            panel.add(myModuleScope);
+            return panel;
+        }
+
+        public boolean useProjectScope() {
+            return myProjectScope.isSelected();
+        }
+    }
 }

@@ -34,10 +34,10 @@ public class CodeCleanupAction extends CodeInspectionAction {
 
     @Override
     protected void runInspections(Project project, AnalysisScope scope) {
-        final InspectionProfile profile =
+        InspectionProfile profile =
             myExternalProfile != null ? myExternalProfile : InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-        final InspectionManager managerEx = InspectionManager.getInstance(project);
-        final GlobalInspectionContextBase globalContext = (GlobalInspectionContextBase) managerEx.createNewGlobalContext(false);
+        InspectionManager managerEx = InspectionManager.getInstance(project);
+        GlobalInspectionContextBase globalContext = (GlobalInspectionContextBase) managerEx.createNewGlobalContext(false);
         globalContext.codeCleanup(project, scope, profile, getTemplatePresentation().getText(), null, false);
     }
 

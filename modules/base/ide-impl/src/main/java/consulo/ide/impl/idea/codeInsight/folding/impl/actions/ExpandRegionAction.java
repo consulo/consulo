@@ -13,26 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.folding.impl.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.internal.FoldingUtil;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "ExpandRegion")
 public class ExpandRegionAction extends EditorAction {
     public ExpandRegionAction() {
-        super(new BaseFoldingHandler() {
-            @Override
-            public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-                expandRegionAtCaret(editor.getProject(), editor);
+        super(
+            ActionLocalize.actionExpandregionText(),
+            ActionLocalize.actionExpandregionDescription(),
+            new BaseFoldingHandler() {
+                @Override
+                public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+                    expandRegionAtCaret(editor.getProject(), editor);
+                }
             }
-        });
+        );
     }
 
     private static void expandRegionAtCaret(Project project, @Nullable Editor editor) {

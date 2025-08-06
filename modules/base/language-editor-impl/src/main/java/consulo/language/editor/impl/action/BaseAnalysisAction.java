@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
@@ -47,7 +47,6 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -66,9 +65,9 @@ public abstract class BaseAnalysisAction extends AnAction {
     @Override
     public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();
-        final DataContext dataContext = event.getDataContext();
-        final Project project = event.getData(Project.KEY);
-        final boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
+        DataContext dataContext = event.getDataContext();
+        Project project = event.getData(Project.KEY);
+        boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
         presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
     }
 
@@ -81,7 +80,7 @@ public abstract class BaseAnalysisAction extends AnAction {
         AnalysisScope scope = getInspectionScope(dataContext);
         LOG.assertTrue(scope != null);
         final boolean rememberScope = e.getPlace().equals(ActionPlaces.MAIN_MENU);
-        final AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
+        AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
         PsiElement element = dataContext.getData(PsiElement.KEY);
         BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(
             AnalysisScopeLocalize.specifyAnalysisScope(myTitle).get(),
@@ -94,11 +93,13 @@ public abstract class BaseAnalysisAction extends AnAction {
             element
         ) {
             @Override
-            protected void extendMainLayout(VerticalLayout layout, Project project) {
+            @RequiredUIAccess
+            protected void extendMainLayout(@Nonnull VerticalLayout layout, @Nonnull Project project) {
                 BaseAnalysisAction.this.extendMainLayout(this, layout, project);
             }
 
             @Override
+            @RequiredUIAccess
             protected void doHelpAction() {
                 HelpManager.getInstance().invokeHelp(getHelpTopic());
             }
@@ -114,7 +115,7 @@ public abstract class BaseAnalysisAction extends AnAction {
             canceled();
             return;
         }
-        final int oldScopeType = uiOptions.SCOPE_TYPE;
+        int oldScopeType = uiOptions.SCOPE_TYPE;
         scope = dlg.getScope(scope);
         if (!rememberScope) {
             uiOptions.SCOPE_TYPE = oldScopeType;
@@ -125,7 +126,6 @@ public abstract class BaseAnalysisAction extends AnAction {
         analyze(project, scope);
     }
 
-    @NonNls
     protected String getHelpTopic() {
         return "reference.dialogs.analyzeDependencies.scope";
     }
@@ -136,6 +136,7 @@ public abstract class BaseAnalysisAction extends AnAction {
     protected abstract void analyze(@Nonnull Project project, @Nonnull AnalysisScope scope);
 
     @Nullable
+    @RequiredReadAction
     private AnalysisScope getInspectionScope(@Nonnull DataContext dataContext) {
         if (!dataContext.hasData(Project.KEY)) {
             return null;
@@ -147,6 +148,7 @@ public abstract class BaseAnalysisAction extends AnAction {
     }
 
     @Nullable
+    @RequiredReadAction
     private AnalysisScope getInspectionScopeImpl(@Nonnull DataContext dataContext) {
         //Possible scopes: file, directory, package, project, module.
         Project projectContext = dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT);
@@ -154,16 +156,16 @@ public abstract class BaseAnalysisAction extends AnAction {
             return new AnalysisScope(projectContext);
         }
 
-        final AnalysisScope analysisScope = dataContext.getData(AnalysisScope.KEY);
+        AnalysisScope analysisScope = dataContext.getData(AnalysisScope.KEY);
         if (analysisScope != null) {
             return analysisScope;
         }
 
-        final PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+        PsiFile psiFile = dataContext.getData(PsiFile.KEY);
         if (psiFile != null && psiFile.getManager().isInProject(psiFile)) {
-            final VirtualFile file = psiFile.getVirtualFile();
+            VirtualFile file = psiFile.getVirtualFile();
             if (file != null && file.isValid() && file.getFileType() instanceof ArchiveFileType && acceptNonProjectDirectories()) {
-                final VirtualFile jarRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
+                VirtualFile jarRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
                 if (jarRoot != null) {
                     PsiDirectory psiDirectory = psiFile.getManager().findDirectory(jarRoot);
                     if (psiDirectory != null) {
