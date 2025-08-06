@@ -15,27 +15,31 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.PsiReference;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "ChangeSignature")
 public class ChangeSignatureAction extends BasePlatformRefactoringAction {
     public ChangeSignatureAction() {
+        super(ActionLocalize.actionChangesignatureText(), ActionLocalize.actionChangesignatureDescription());
         setInjectedContext(true);
     }
 
@@ -45,40 +49,37 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
     }
 
     @Override
+    @RequiredReadAction
     public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
         return elements.length == 1 && findTargetMember(elements[0]) != null;
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isAvailableOnElementInEditorAndFile(
-        @Nonnull final PsiElement element,
-        @Nonnull final Editor editor,
+        @Nonnull PsiElement element,
+        @Nonnull Editor editor,
         @Nonnull PsiFile file,
         @Nonnull DataContext context
     ) {
         PsiElement targetMember = findTargetMember(element);
         if (targetMember == null) {
-            final ChangeSignatureHandler targetHandler = getChangeSignatureHandler(file.getLanguage());
-            if (targetHandler != null) {
-                return true;
-            }
-            return false;
+            ChangeSignatureHandler targetHandler = getChangeSignatureHandler(file.getLanguage());
+            return targetHandler != null;
         }
-        final ChangeSignatureHandler targetHandler = getChangeSignatureHandler(targetMember.getLanguage());
-        if (targetHandler == null) {
-            return false;
-        }
-        return true;
+        ChangeSignatureHandler targetHandler = getChangeSignatureHandler(targetMember.getLanguage());
+        return targetHandler != null;
     }
 
     @Nullable
+    @RequiredReadAction
     private static PsiElement findTargetMember(@Nullable PsiElement element) {
         if (element == null) {
             return null;
         }
-        final ChangeSignatureHandler fileHandler = getChangeSignatureHandler(element.getLanguage());
+        ChangeSignatureHandler fileHandler = getChangeSignatureHandler(element.getLanguage());
         if (fileHandler != null) {
-            final PsiElement targetMember = fileHandler.findTargetMember(element);
+            PsiElement targetMember = fileHandler.findTargetMember(element);
             if (targetMember != null) {
                 return targetMember;
             }
@@ -107,11 +108,11 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
             @RequiredUIAccess
             public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
                 editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
-                final PsiElement targetMember = findTargetMember(element);
+                PsiElement targetMember = findTargetMember(element);
                 if (targetMember == null) {
-                    final ChangeSignatureHandler handler = getChangeSignatureHandler(file.getLanguage());
+                    ChangeSignatureHandler handler = getChangeSignatureHandler(file.getLanguage());
                     if (handler != null) {
-                        final String notFoundMessage = handler.getTargetNotFoundMessage();
+                        String notFoundMessage = handler.getTargetNotFoundMessage();
                         if (notFoundMessage != null) {
                             CommonRefactoringUtil.showErrorHint(
                                 project,
@@ -124,7 +125,7 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
                     }
                     return;
                 }
-                final ChangeSignatureHandler handler = getChangeSignatureHandler(targetMember.getLanguage());
+                ChangeSignatureHandler handler = getChangeSignatureHandler(targetMember.getLanguage());
                 if (handler == null) {
                     return;
                 }
@@ -132,15 +133,16 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
             }
 
             @Override
+            @RequiredUIAccess
             public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
                 if (elements.length != 1) {
                     return;
                 }
-                final PsiElement targetMember = findTargetMember(elements[0]);
+                PsiElement targetMember = findTargetMember(elements[0]);
                 if (targetMember == null) {
                     return;
                 }
-                final ChangeSignatureHandler handler = getChangeSignatureHandler(targetMember.getLanguage());
+                ChangeSignatureHandler handler = getChangeSignatureHandler(targetMember.getLanguage());
                 if (handler == null) {
                     return;
                 }

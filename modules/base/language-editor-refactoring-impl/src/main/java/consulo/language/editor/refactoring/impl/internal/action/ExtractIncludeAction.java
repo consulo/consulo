@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.ReadAction;
 import consulo.language.Language;
 import consulo.language.editor.refactoring.LanguageExtractIncludeHandler;
@@ -25,7 +27,7 @@ import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -33,13 +35,19 @@ import jakarta.annotation.Nullable;
 /**
  * @author ven
  */
+@ActionImpl(id = "ExtractInclude")
 public class ExtractIncludeAction extends BasePlatformRefactoringAction {
+    public ExtractIncludeAction() {
+        super(ActionLocalize.actionExtractincludeText(), ActionLocalize.actionExtractincludeDescription());
+    }
+
     @Override
     public boolean isAvailableInEditorOnly() {
         return true;
     }
 
     @Override
+    @RequiredReadAction
     public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
         return false;
     }
@@ -52,7 +60,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
     @Override
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        final RefactoringActionHandler handler = ReadAction.compute(() -> getHandler(e.getDataContext()));
+        RefactoringActionHandler handler = ReadAction.compute(() -> getHandler(e.getDataContext()));
         if (handler instanceof TitledHandler titledHandler) {
             e.getPresentation().setTextValue(titledHandler.getActionTitleValue());
         }
@@ -63,7 +71,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
 
     @Override
     protected boolean isAvailableForFile(PsiFile file) {
-        final Language baseLanguage = file.getViewProvider().getBaseLanguage();
+        Language baseLanguage = file.getViewProvider().getBaseLanguage();
         return LanguageExtractIncludeHandler.forLanguage(baseLanguage) != null;
     }
 

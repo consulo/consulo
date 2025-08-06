@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.refactoring.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -27,86 +29,90 @@ import consulo.ui.ex.popup.ListPopup;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "Refactorings.QuickListPopupAction")
 public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
-  @Override
-  @RequiredUIAccess
-  protected void fillActions(
-    @Nullable final Project project,
-    @Nonnull final DefaultActionGroup group,
-    @Nonnull final DataContext dataContext
-  ) {
-    if (project == null) {
-      return;
+    public RefactoringQuickListPopupAction() {
+        super(
+            LocalizeValue.localizeTODO("Refactor This..."),
+            LocalizeValue.localizeTODO("Context aware popup with list of refactoring actions")
+        );
     }
 
-    final ActionManager actionManager = ActionManager.getInstance();
-    final AnAction action = actionManager.getAction(IdeActions.GROUP_REFACTOR);
-    collectEnabledChildren(action, group, dataContext, actionManager, false);
-  }
+    @Override
+    @RequiredUIAccess
+    protected void fillActions(@Nullable Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
+        if (project == null) {
+            return;
+        }
 
-  @RequiredUIAccess
-  private static void collectEnabledChildren(
-    AnAction action,
-    @Nonnull DefaultActionGroup destinationGroup,
-    @Nonnull DataContext dataContext,
-    @Nonnull ActionManager actionManager,
-    boolean popup
-  ) {
-    if (action instanceof DefaultActionGroup) {
-      final AnAction[] children = ((DefaultActionGroup)action).getChildren(null);
-      for (AnAction child : children) {
-        if (child instanceof DefaultActionGroup) {
-          final boolean isPopup = ((DefaultActionGroup)child).isPopup();
-          if (isPopup) {
-            destinationGroup.add(new AnSeparator(child.getTemplatePresentation().getText()));
-          }
-          collectEnabledChildren(child, destinationGroup, dataContext, actionManager, isPopup || popup);
-          if (isPopup) {
-            destinationGroup.add(AnSeparator.getInstance());
-          }
-        } else if (child instanceof AnSeparator && !popup) {
-          destinationGroup.add(child);
+        ActionManager actionManager = ActionManager.getInstance();
+        AnAction action = actionManager.getAction(IdeActions.GROUP_REFACTOR);
+        collectEnabledChildren(action, group, dataContext, actionManager, false);
+    }
+
+    @RequiredUIAccess
+    private static void collectEnabledChildren(
+        AnAction action,
+        @Nonnull DefaultActionGroup destinationGroup,
+        @Nonnull DataContext dataContext,
+        @Nonnull ActionManager actionManager,
+        boolean popup
+    ) {
+        if (action instanceof DefaultActionGroup group) {
+            for (AnAction child : group.getChildren(null)) {
+                if (child instanceof DefaultActionGroup childGroup) {
+                    boolean isPopup = childGroup.isPopup();
+                    if (isPopup) {
+                        destinationGroup.add(new AnSeparator(child.getTemplatePresentation().getText()));
+                    }
+                    collectEnabledChildren(child, destinationGroup, dataContext, actionManager, isPopup || popup);
+                    if (isPopup) {
+                        destinationGroup.add(AnSeparator.getInstance());
+                    }
+                }
+                else if (child instanceof AnSeparator && !popup) {
+                    destinationGroup.add(child);
+                }
+                else if (child instanceof BaseRefactoringAction baseRefactoringAction
+                    && baseRefactoringAction.hasAvailableHandler(dataContext)) {
+                    Presentation presentation = new Presentation();
+                    AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, presentation, actionManager, 0);
+                    child.update(event);
+                    if (presentation.isEnabled() && presentation.isVisible()) {
+                        destinationGroup.add(child);
+                    }
+                }
+            }
+        }
+    }
+
+
+    @Override
+    protected void showPopup(AnActionEvent e, ListPopup popup) {
+        Editor editor = e.getData(Editor.KEY);
+        if (editor != null) {
+            editor.showPopupInBestPositionFor(popup);
         }
         else {
-          if (child instanceof BaseRefactoringAction && ((BaseRefactoringAction)child).hasAvailableHandler(dataContext)) {
-            final Presentation presentation = new Presentation();
-            final AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, presentation, actionManager, 0);
-            child.update(event);
-            if (presentation.isEnabled() && presentation.isVisible()) {
-              destinationGroup.add(child);
-            }
-          }
+            super.showPopup(e, popup);
         }
-      }
     }
-  }
 
-
-  @Override
-  protected void showPopup(AnActionEvent e, ListPopup popup) {
-    final Editor editor = e.getData(Editor.KEY);
-    if (editor != null) {
-      editor.showPopupInBestPositionFor(popup);
-    } else {
-      super.showPopup(e, popup);
+    @Override
+    protected boolean isEnabled() {
+        return true;
     }
-  }
 
-  @Override
-  protected boolean isEnabled() {
-    return true;
-  }
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+        e.getPresentation().setVisible(
+            e.getPlace() == ActionPlaces.MAIN_MENU || e.getPlace() == ActionPlaces.ACTION_PLACE_QUICK_LIST_POPUP_ACTION
+        );
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setVisible(
-      e.getPlace() == ActionPlaces.MAIN_MENU || e.getPlace() == ActionPlaces.ACTION_PLACE_QUICK_LIST_POPUP_ACTION
-    );
-  }
-
-  @Override
-  protected String getPopupTitle(AnActionEvent e) {
-    return "Refactor This";
-  }
+    @Override
+    protected String getPopupTitle(AnActionEvent e) {
+        return "Refactor This";
+    }
 }

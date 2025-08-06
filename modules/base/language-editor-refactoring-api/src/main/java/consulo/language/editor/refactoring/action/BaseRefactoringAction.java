@@ -34,6 +34,7 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -50,6 +51,13 @@ import java.util.function.Predicate;
 
 public abstract class BaseRefactoringAction extends AnAction {
     private final Predicate<Language> myLanguageCondition = this::isAvailableForLanguage;
+
+    protected BaseRefactoringAction() {
+    }
+
+    protected BaseRefactoringAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
     protected abstract boolean isAvailableInEditorOnly();
 
@@ -71,11 +79,11 @@ public abstract class BaseRefactoringAction extends AnAction {
     }
 
     public boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
-        final RefactoringActionHandler handler = getHandler(dataContext);
+        RefactoringActionHandler handler = getHandler(dataContext);
         if (handler != null) {
             if (handler instanceof ContextAwareActionHandler contextAwareActionHandler) {
-                final Editor editor = dataContext.getData(Editor.KEY);
-                final PsiFile file = dataContext.getData(PsiFile.KEY);
+                Editor editor = dataContext.getData(Editor.KEY);
+                PsiFile file = dataContext.getData(PsiFile.KEY);
                 if (editor != null && file != null && !contextAwareActionHandler.isAvailableForQuickList(editor, file, dataContext)) {
                     return false;
                 }
@@ -94,8 +102,8 @@ public abstract class BaseRefactoringAction extends AnAction {
         DataContext dataContext = e.getDataContext();
         Project project = e.getRequiredData(Project.KEY);
         PsiDocumentManager.getInstance(project).commitAllDocuments();
-        final Editor editor = e.getData(Editor.KEY);
-        final PsiElement[] elements = getPsiElementArray(dataContext);
+        Editor editor = e.getData(Editor.KEY);
+        PsiElement[] elements = getPsiElementArray(dataContext);
 
         Runnable markEventCount = UIAccess.current().markEventCount();
         RefactoringActionHandler handler;
@@ -122,7 +130,7 @@ public abstract class BaseRefactoringAction extends AnAction {
         }
 
         if (InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
-            final LookupEx lookup = LookupManager.getActiveLookup(editor);
+            LookupEx lookup = LookupManager.getActiveLookup(editor);
             if (lookup != null) {
                 assert editor != null;
                 Document doc = editor.getDocument();
@@ -139,7 +147,7 @@ public abstract class BaseRefactoringAction extends AnAction {
         markEventCount.run();
 
         if (editor != null) {
-            final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
             if (file == null) {
                 return;
             }
@@ -179,8 +187,8 @@ public abstract class BaseRefactoringAction extends AnAction {
                 hideAction(e);
                 return;
             }
-            final PsiElement[] elements = getPsiElementArray(dataContext);
-            final boolean isEnabled = isEnabledOnDataContext(dataContext) || elements.length != 0 && isEnabledOnElements(elements);
+            PsiElement[] elements = getPsiElementArray(dataContext);
+            boolean isEnabled = isEnabledOnDataContext(dataContext) || elements.length != 0 && isEnabledOnElements(elements);
             if (!isEnabled) {
                 disableAction(e);
             }
@@ -224,8 +232,8 @@ public abstract class BaseRefactoringAction extends AnAction {
     }
 
     @RequiredReadAction
-    public static PsiElement getElementAtCaret(final Editor editor, final PsiFile file) {
-        final int offset = fixCaretOffset(editor);
+    public static PsiElement getElementAtCaret(Editor editor, PsiFile file) {
+        int offset = fixCaretOffset(editor);
         PsiElement element = file.findElementAt(offset);
         if (element == null && offset == file.getTextLength()) {
             element = file.findElementAt(offset - 1);
@@ -237,8 +245,8 @@ public abstract class BaseRefactoringAction extends AnAction {
         return element;
     }
 
-    private static int fixCaretOffset(final Editor editor) {
-        final int caret = editor.getCaretModel().getOffset();
+    private static int fixCaretOffset(Editor editor) {
+        int caret = editor.getCaretModel().getOffset();
         if (editor.getSelectionModel().hasSelection() && caret == editor.getSelectionModel().getSelectionEnd()) {
             return Math.max(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd() - 1);
         }
@@ -246,7 +254,7 @@ public abstract class BaseRefactoringAction extends AnAction {
         return caret;
     }
 
-    private static void disableAction(final AnActionEvent e) {
+    private static void disableAction(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(false);
     }
 

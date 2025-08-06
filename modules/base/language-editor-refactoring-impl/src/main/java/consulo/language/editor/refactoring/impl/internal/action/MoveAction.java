@@ -13,46 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.Language;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.move.MoveHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "Move")
 public class MoveAction extends BaseRefactoringAction {
+    public MoveAction() {
+        super(ActionLocalize.actionMoveText(), ActionLocalize.actionMoveDescription());
+        setInjectedContext(true);
+    }
 
-  public MoveAction() {
-    setInjectedContext(true);
-  }
+    @Override
+    public boolean isAvailableInEditorOnly() {
+        return false;
+    }
 
-  @Override
-  public boolean isAvailableInEditorOnly() {
-    return false;
-  }
+    @Override
+    protected boolean isAvailableForLanguage(Language language) {
+        // move is supported in any language
+        return true;
+    }
 
-  @Override
-  protected boolean isAvailableForLanguage(Language language){
-    // move is supported in any language
-    return true;
-  }
+    @Override
+    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+        return MoveHandler.canMove(elements, null);
+    }
 
-  @Override
-  public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
-    return MoveHandler.canMove(elements, null);
-  }
+    @Override
+    protected boolean isEnabledOnDataContext(DataContext dataContext) {
+        return MoveHandler.canMove(dataContext);
+    }
 
-  @Override
-  protected boolean isEnabledOnDataContext(DataContext dataContext) {
-    return MoveHandler.canMove(dataContext);
-  }
-
-  @Override
-  public RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
-    return new MoveHandler();
-  }
+    @Override
+    public RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
+        return new MoveHandler();
+    }
 }
