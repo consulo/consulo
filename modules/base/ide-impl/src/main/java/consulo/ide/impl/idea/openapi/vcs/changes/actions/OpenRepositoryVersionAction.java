@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
 import consulo.ide.impl.idea.openapi.vcs.vfs.ContentRevisionVirtualFile;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -32,6 +32,8 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+
+import java.util.Objects;
 
 /**
  * @author yole
@@ -59,17 +61,18 @@ public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     Change[] changes = e.getData(VcsDataKeys.SELECTED_CHANGES);
+    boolean isModalContext = Objects.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT), Boolean.TRUE);
     e.getPresentation().setEnabled(
       project != null && changes != null
         && (!CommittedChangesBrowserUseCase.IN_AIR.equals(e.getData(CommittedChangesBrowserUseCase.DATA_KEY)))
         && hasValidChanges(changes)
-        && IdeaModalityState.nonModal().equals(IdeaModalityState.current())
+        && !isModalContext
     );
   }
 
-  private static boolean hasValidChanges(final Change[] changes) {
+  private static boolean hasValidChanges(Change[] changes) {
     for (Change c: changes) {
-      final ContentRevision contentRevision = c.getAfterRevision();
+      ContentRevision contentRevision = c.getAfterRevision();
       if (contentRevision != null && !contentRevision.getFile().isDirectory()) {
         return true;
       }

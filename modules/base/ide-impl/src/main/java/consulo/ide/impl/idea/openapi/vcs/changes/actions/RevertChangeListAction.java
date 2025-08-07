@@ -15,24 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.VcsDataKeys;
-import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.util.containers.Convertor;
 
 /**
  * @author yole
  */
 public class RevertChangeListAction extends RevertCommittedStuffAbstractAction {
   public RevertChangeListAction() {
-    super(new Convertor<AnActionEvent, Change[]>() {
-      public Change[] convert(AnActionEvent e) {
-        return e.getData(VcsDataKeys.CHANGES);
-      }
-    }, new Convertor<AnActionEvent, Change[]>() {
-      public Change[] convert(AnActionEvent e) {
-        return e.getData(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN);
-      }
-    });
+    super(e -> e.getData(VcsDataKeys.CHANGES), e -> e.getData(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN));
   }
 }

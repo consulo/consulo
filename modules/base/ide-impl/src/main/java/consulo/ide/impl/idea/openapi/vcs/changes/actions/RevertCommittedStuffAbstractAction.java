@@ -20,15 +20,10 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.document.FileDocumentManager;
-import consulo.versionControlSystem.change.patch.BinaryFilePatch;
-import consulo.versionControlSystem.change.patch.FilePatch;
-import consulo.versionControlSystem.change.patch.IdeaTextPatchBuilder;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesPreprocess;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangeListChooser;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,6 +35,9 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.patch.BinaryFilePatch;
+import consulo.versionControlSystem.change.patch.FilePatch;
+import consulo.versionControlSystem.change.patch.IdeaTextPatchBuilder;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -47,86 +45,90 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 abstract class RevertCommittedStuffAbstractAction extends AnAction implements DumbAware {
-  private final Convertor<AnActionEvent, Change[]> myForUpdateConvertor;
-  private final Convertor<AnActionEvent, Change[]> myForPerformConvertor;
-  private static final Logger LOG = Logger.getInstance(RevertCommittedStuffAbstractAction.class);
+    private final Function<AnActionEvent, Change[]> myForUpdateConvertor;
+    private final Function<AnActionEvent, Change[]> myForPerformConvertor;
 
-  public RevertCommittedStuffAbstractAction(
-    final Convertor<AnActionEvent, Change[]> forUpdateConvertor,
-    final Convertor<AnActionEvent, Change[]> forPerformConvertor
-  ) {
-    myForUpdateConvertor = forUpdateConvertor;
-    myForPerformConvertor = forPerformConvertor;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final VirtualFile baseDir = project.getBaseDir();
-    assert baseDir != null;
-    final Change[] changes = myForPerformConvertor.convert(e);
-    if (changes == null || changes.length == 0) return;
-    final List<Change> changesList = new ArrayList<>();
-    Collections.addAll(changesList, changes);
-    FileDocumentManager.getInstance().saveAllDocuments();
-
-    String defaultName = null;
-    final ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    if (changeLists != null && changeLists.length > 0) {
-      defaultName = VcsLocalize.revertChangesDefaultName(changeLists[0].getName()).get();
+    public RevertCommittedStuffAbstractAction(
+        Function<AnActionEvent, Change[]> forUpdateConvertor,
+        Function<AnActionEvent, Change[]> forPerformConvertor
+    ) {
+        myForUpdateConvertor = forUpdateConvertor;
+        myForPerformConvertor = forPerformConvertor;
     }
 
-    final ChangeListChooser chooser = new ChangeListChooser(
-      project,
-      ChangeListManager.getInstance(project).getChangeListsCopy(),
-      null,
-      "Select Target Changelist",
-      defaultName
-    );
-    chooser.show();
-    if (!chooser.isOK()) return;
-
-    final List<FilePatch> patches = new ArrayList<>();
-    ProgressManager.getInstance().run(new Task.Backgroundable(
-      project,
-      VcsLocalize.revertChangesTitle().get(),
-      true,
-      BackgroundFromStartOption.getInstance()
-    ) {
-      @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
-        try {
-          final List<Change> preprocessed = ChangesPreprocess.preprocessChangesRemoveDeletedForDuplicateMoved(changesList);
-          patches.addAll(IdeaTextPatchBuilder.buildPatch(project, preprocessed, baseDir.getPresentableUrl(), true));
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        final VirtualFile baseDir = project.getBaseDir();
+        assert baseDir != null;
+        Change[] changes = myForPerformConvertor.apply(e);
+        if (changes == null || changes.length == 0) {
+            return;
         }
-        catch (final VcsException ex) {
-          WaitForProgressToShow.runOrInvokeLaterAboveProgress(
-            () -> Messages.showErrorDialog(
-              project,
-              "Failed to revert changes: " + ex.getMessage(),
-              VcsLocalize.revertChangesTitle().get()
-            ),
+        final List<Change> changesList = new ArrayList<>();
+        Collections.addAll(changesList, changes);
+        FileDocumentManager.getInstance().saveAllDocuments();
+
+        String defaultName = null;
+        ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
+        if (changeLists != null && changeLists.length > 0) {
+            defaultName = VcsLocalize.revertChangesDefaultName(changeLists[0].getName()).get();
+        }
+
+        final ChangeListChooser chooser = new ChangeListChooser(
+            project,
+            ChangeListManager.getInstance(project).getChangeListsCopy(),
             null,
-            (Project)myProject
-          );
-          indicator.cancel();
+            "Select Target Changelist",
+            defaultName
+        );
+        chooser.show();
+        if (!chooser.isOK()) {
+            return;
         }
-      }
 
-      @RequiredUIAccess
-      @Override
-      public void onSuccess() {
-        new PatchApplier<BinaryFilePatch>(project, baseDir, patches, chooser.getSelectedList(), null, null).execute();
-      }
-    });
-  }
+        final List<FilePatch> patches = new ArrayList<>();
+        ProgressManager.getInstance().run(new Task.Backgroundable(
+            project,
+            VcsLocalize.revertChangesTitle().get(),
+            true,
+            BackgroundFromStartOption.getInstance()
+        ) {
+            @Override
+            public void run(@Nonnull ProgressIndicator indicator) {
+                try {
+                    List<Change> preprocessed = ChangesPreprocess.preprocessChangesRemoveDeletedForDuplicateMoved(changesList);
+                    patches.addAll(IdeaTextPatchBuilder.buildPatch(project, preprocessed, baseDir.getPresentableUrl(), true));
+                }
+                catch (VcsException ex) {
+                    WaitForProgressToShow.runOrInvokeLaterAboveProgress(
+                        () -> Messages.showErrorDialog(
+                            project,
+                            "Failed to revert changes: " + ex.getMessage(),
+                            VcsLocalize.revertChangesTitle().get()
+                        ),
+                        null,
+                        (Project) myProject
+                    );
+                    indicator.cancel();
+                }
+            }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final Change[] changes = myForUpdateConvertor.convert(e);
-    e.getPresentation().setEnabled(e.hasData(Project.KEY) && changes != null && changes.length > 0);
-  }
+            @RequiredUIAccess
+            @Override
+            public void onSuccess() {
+                new PatchApplier<BinaryFilePatch>(project, baseDir, patches, chooser.getSelectedList(), null, null).execute();
+            }
+        });
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Change[] changes = myForUpdateConvertor.apply(e);
+        e.getPresentation().setEnabled(e.hasData(Project.KEY) && changes != null && changes.length > 0);
+    }
 }
