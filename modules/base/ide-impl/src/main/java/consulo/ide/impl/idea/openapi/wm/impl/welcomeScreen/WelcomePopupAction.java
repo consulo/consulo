@@ -17,33 +17,29 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 /**
  * @author Vladislav.Kaznacheev
  */
 public abstract class WelcomePopupAction extends AnAction implements DumbAware {
+    protected WelcomePopupAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 
     protected abstract void fillActions(DefaultActionGroup group);
 
@@ -59,14 +55,14 @@ public abstract class WelcomePopupAction extends AnAction implements DumbAware {
      */
     protected abstract boolean isSilentlyChooseSingleOption();
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         final DefaultActionGroup group = new DefaultActionGroup();
         fillActions(group);
 
         if (group.getChildrenCount() == 1 && isSilentlyChooseSingleOption()) {
-            final AnAction[] children = group.getChildren(null);
+            AnAction[] children = group.getChildren(null);
             children[0].actionPerformed(e);
             return;
         }
@@ -82,13 +78,9 @@ public abstract class WelcomePopupAction extends AnAction implements DumbAware {
             });
         }
 
-        final DataContext context = e.getDataContext();
-        final ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup(null,
-                group,
-                context,
-                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                true);
+        DataContext context = e.getDataContext();
+        ListPopup popup =
+            JBPopupFactory.getInstance().createActionGroupPopup(null, group, context, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, true);
 
         InputDetails inputDetails = Objects.requireNonNull(e.getInputDetails());
 

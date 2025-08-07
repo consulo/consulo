@@ -2321,7 +2321,7 @@ action.WelcomeScreen.OpenDirectoryProject.description:
 action.WelcomeScreen.OpenDirectoryProject.text:
     text: Open Directory
 action.WelcomeScreen.OpenProject.description:
-    text: Open {0} project. <br/>You can also open a project by drag and drop onto Welcome screen.
+    text: Open a project. <br/>You can also open a project by drag and drop onto Welcome screen.
 action.WelcomeScreen.OpenProject.text:
     text: Open or Import Project
 action.WelcomeScreen.Plugins.description:
