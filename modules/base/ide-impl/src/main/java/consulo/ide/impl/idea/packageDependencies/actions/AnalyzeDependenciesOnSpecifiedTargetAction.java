@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.packageDependencies.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -37,7 +37,7 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
     public static final Key<GlobalSearchScope> TARGET_SCOPE_KEY = Key.create("MODULE_DEPENDENCIES_TARGET_SCOPE");
 
     public AnalyzeDependenciesOnSpecifiedTargetAction() {
-        super(LocalizeValue.localizeTODO("Analyze Dependencies on Specified Target"));
+        super(CodeInsightLocalize.actionShowDependenciesOnTargetText());
     }
 
     @Override
@@ -55,7 +55,9 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
         Presentation presentation = e.getPresentation();
         if (module != null && scope != null) {
             presentation.setVisible(true);
-            presentation.setText("Analyze Dependencies of Module '" + module.getName() + "' on " + scope.getDisplayName());
+            presentation.setTextValue(
+                CodeInsightLocalize.actionShowDependenciesOnTargetOnScopeText(module.getName(), scope.getDisplayName())
+            );
         }
         else {
             presentation.setVisible(false);

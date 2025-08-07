@@ -44,12 +44,6 @@ action.AddToFavoritesPopup.description:
     text: Add selected node to favorites
 action.AddToFavoritesPopup.text:
     text: Add to Favorites
-action.NextTemplateParameter.text:
-    text: Next Parameter
-action.PrevTemplateParameter.text:
-    text: Previous Parameter
-group.TemplateParametersNavigation.text:
-    text: Template Parameters Navigation
 action.Annotate.description:
     text: Show information about last modification date and author for each line
 action.Annotate.text:
@@ -1516,6 +1510,8 @@ action.NextTab.description:
     text: Activate next tab
 action.NextTab.text:
     text: Select Ne_xt Tab
+action.NextTemplateParameter.text:
+    text: Next Parameter
 action.NextTemplateVariable.text:
     text: Next Template Variable or Finish In-Place Refactoring
 action.OnlineDocAction.description:
@@ -1582,6 +1578,8 @@ action.PrevSplitter.description:
     text: Goto previous splitter window
 action.PrevSplitter.text:
     text: Goto Previous Splitter
+action.PrevTemplateParameter.text:
+    text: Previous Parameter
 action.PreviousDiff.description:
     text: Move to the previous difference
 action.PreviousDiff.text:
@@ -2690,6 +2688,8 @@ group.StandardMacroActions.text:
     text: Standard Macro Actions
 group.TabsPlacementGroup.text:
     text: Tabs Placement
+group.TemplateParametersNavigation.text:
+    text: Template Parameters Navigation
 group.TodoMainGroup.text:
     text: TODO
 group.TodoViewGroupByGroup.text:

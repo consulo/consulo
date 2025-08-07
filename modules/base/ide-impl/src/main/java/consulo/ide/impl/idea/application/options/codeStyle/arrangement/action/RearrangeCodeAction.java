@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.codeInsight.actions.RearrangeCodeProcessor;
 import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -38,7 +39,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "RearrangeCode")
 public class RearrangeCodeAction extends AnAction {
     public RearrangeCodeAction() {
-        super();
+        super(ActionLocalize.actionRearrangecodeText(), ActionLocalize.actionRearrangecodeDescription());
     }
 
     @Override
