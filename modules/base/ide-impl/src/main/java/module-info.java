@@ -536,7 +536,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.refactoring.inline;
   exports consulo.ide.impl.idea.refactoring.introduce.inplace;
   exports consulo.ide.impl.idea.refactoring.lang;
-  exports consulo.ide.impl.idea.refactoring.rename;
   exports consulo.ide.impl.idea.refactoring.ui;
   exports consulo.ide.impl.idea.refactoring.util;
   exports consulo.ide.impl.idea.reference;

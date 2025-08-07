@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring.rename;
+package consulo.language.editor.refactoring.rename;
 
-import consulo.codeEditor.Editor;
 import consulo.application.ui.NonFocusableSetting;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
-import consulo.language.editor.refactoring.rename.RenameDialog;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
