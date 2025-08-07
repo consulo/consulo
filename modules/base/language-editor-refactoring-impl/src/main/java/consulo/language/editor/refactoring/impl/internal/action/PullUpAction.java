@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "MembersPullUp")
 public class PullUpAction extends BasePlatformRefactoringAction {
-  public PullUpAction() {
-    setInjectedContext(true);
-  }
+    public PullUpAction() {
+        super(ActionLocalize.actionMemberspullupText(), ActionLocalize.actionMemberspullupText());
+        setInjectedContext(true);
+    }
 
-  @Override
-  public boolean isAvailableInEditorOnly() {
-    return false;
-  }
+    @Override
+    public boolean isAvailableInEditorOnly() {
+        return false;
+    }
 
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
-    return provider.getPullUpHandler();
-  }
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+        return provider.getPullUpHandler();
+    }
 }

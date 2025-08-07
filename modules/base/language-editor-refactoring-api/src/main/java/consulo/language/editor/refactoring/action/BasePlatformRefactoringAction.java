@@ -24,6 +24,7 @@ import consulo.language.editor.refactoring.ElementsHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,6 +33,13 @@ import jakarta.annotation.Nullable;
  */
 public abstract class BasePlatformRefactoringAction extends BaseRefactoringAction {
     private Boolean myHidden = null;
+
+    protected BasePlatformRefactoringAction() {
+    }
+
+    protected BasePlatformRefactoringAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
     @Override
     @RequiredReadAction
@@ -73,7 +81,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
             return null;
         }
 
-        final Language[] languages = dataContext.getData(LangDataKeys.CONTEXT_LANGUAGES);
+        Language[] languages = dataContext.getData(LangDataKeys.CONTEXT_LANGUAGES);
         if (languages != null) {
             for (Language language : languages) {
                 RefactoringActionHandler handler = getHandler(language, element);
@@ -96,6 +104,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isAvailableOnElementInEditorAndFile(
         @Nonnull PsiElement element,
         @Nonnull Editor editor,
@@ -106,18 +115,19 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
     }
 
     @Override
-    protected boolean isAvailableForLanguage(final Language language) {
+    protected boolean isAvailableForLanguage(Language language) {
         RefactoringSupportProvider refactoringSupportProvider = RefactoringSupportProvider.forLanguage(language);
         // any language mean default provider
         return refactoringSupportProvider.getLanguage() != Language.ANY;
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
         if (elements.length > 0) {
             Language language = elements[0].getLanguage();
-            RefactoringActionHandler handler = getHandler(language, elements[0]);
-            return handler instanceof ElementsHandler && ((ElementsHandler) handler).isEnabledOnElements(elements);
+            return getHandler(language, elements[0]) instanceof ElementsHandler elementsHandler
+                && elementsHandler.isEnabledOnElements(elements);
         }
         return false;
     }
@@ -135,7 +145,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
         if (myHidden == null) {
             myHidden = calcHidden();
         }
-        return myHidden.booleanValue();
+        return myHidden;
     }
 
     private boolean calcHidden() {

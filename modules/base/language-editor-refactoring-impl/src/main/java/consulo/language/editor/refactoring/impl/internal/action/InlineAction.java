@@ -15,6 +15,9 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
@@ -27,8 +30,10 @@ import consulo.language.editor.refactoring.inline.InlineHandler;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 import java.util.List;
 
@@ -36,55 +41,66 @@ import java.util.List;
  * @author Jeka
  * @since 2001-08-28
  */
+@ActionImpl(id = "Inline")
 public class InlineAction extends BasePlatformRefactoringAction {
-  public InlineAction() {
-    setInjectedContext(true);
-  }
+    @Nonnull
+    private final Application myApplication;
 
-  @Override
-  public boolean isAvailableInEditorOnly() {
-    return false;
-  }
-
-  @Override
-  protected boolean isAvailableOnElementInEditorAndFile(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext context) {
-    return hasInlineActionHandler(element, PsiUtilBase.getLanguageInEditor(editor, element.getProject()), editor);
-  }
-
-  @Override
-  public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
-    return elements.length == 1 && hasInlineActionHandler(elements[0], null, null);
-  }
-
-  private static boolean hasInlineActionHandler(PsiElement element, @Nullable Language editorLanguage, Editor editor) {
-    for (InlineActionHandler handler : InlineActionHandler.EP_NAME.getExtensionList()) {
-      if (handler.isEnabledOnElement(element, editor)) {
-        return true;
-      }
+    @Inject
+    public InlineAction(@Nonnull Application application) {
+        super(ActionLocalize.actionInlineText(), ActionLocalize.actionInlineDescription());
+        setInjectedContext(true);
+        myApplication = application;
     }
-    return InlineHandler.forLanguage(editorLanguage != null ? editorLanguage : element.getLanguage()).size() > 0;
-  }
 
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
-    return new InlineRefactoringActionHandler();
-  }
-
-  @Override
-  protected RefactoringActionHandler getHandler(@Nonnull Language language, PsiElement element) {
-    RefactoringActionHandler handler = super.getHandler(language, element);
-    if (handler != null) return handler;
-    List<InlineHandler> handlers = InlineHandler.forLanguage(language);
-    return handlers.isEmpty() ? null : new InlineRefactoringActionHandler();
-  }
-
-  @Override
-  protected boolean isAvailableForLanguage(Language language) {
-    for (InlineActionHandler handler : InlineActionHandler.EP_NAME.getExtensionList()) {
-      if (handler.isEnabledForLanguage(language)) {
-        return true;
-      }
+    @Override
+    public boolean isAvailableInEditorOnly() {
+        return false;
     }
-    return InlineHandler.forLanguage(language).size() > 0;
-  }
+
+    @Override
+    @RequiredReadAction
+    protected boolean isAvailableOnElementInEditorAndFile(
+        @Nonnull PsiElement element,
+        @Nonnull Editor editor,
+        @Nonnull PsiFile file,
+        @Nonnull DataContext context
+    ) {
+        return hasInlineActionHandler(element, PsiUtilBase.getLanguageInEditor(editor, element.getProject()), editor);
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+        return elements.length == 1 && hasInlineActionHandler(elements[0], null, null);
+    }
+
+    @RequiredReadAction
+    private boolean hasInlineActionHandler(PsiElement element, @Nullable Language editorLanguage, Editor editor) {
+        return myApplication.getExtensionPoint(InlineActionHandler.class)
+            .anyMatchSafe(handler -> handler.isEnabledOnElement(element, editor))
+            || !InlineHandler.forLanguage(editorLanguage != null ? editorLanguage : element.getLanguage()).isEmpty();
+    }
+
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+        return new InlineRefactoringActionHandler();
+    }
+
+    @Override
+    protected RefactoringActionHandler getHandler(@Nonnull Language language, PsiElement element) {
+        RefactoringActionHandler handler = super.getHandler(language, element);
+        if (handler != null) {
+            return handler;
+        }
+        List<InlineHandler> handlers = InlineHandler.forLanguage(language);
+        return handlers.isEmpty() ? null : new InlineRefactoringActionHandler();
+    }
+
+    @Override
+    protected boolean isAvailableForLanguage(Language language) {
+        return myApplication.getExtensionPoint(InlineActionHandler.class)
+            .anyMatchSafe(handler -> handler.isEnabledForLanguage(language))
+            || InlineHandler.forLanguage(language).size() > 0;
+    }
 }

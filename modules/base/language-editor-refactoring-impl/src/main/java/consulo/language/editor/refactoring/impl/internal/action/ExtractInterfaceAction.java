@@ -15,13 +15,17 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "ExtractInterface")
 public class ExtractInterfaceAction extends ExtractSuperActionBase {
     public ExtractInterfaceAction() {
+        super(ActionLocalize.actionExtractinterfaceText(), ActionLocalize.actionExtractinterfaceDescription());
         setInjectedContext(true);
     }
 

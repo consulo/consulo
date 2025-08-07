@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "MemberPushDown")
 public class PushDownAction extends BasePlatformRefactoringAction {
-  public PushDownAction() {
-    setInjectedContext(true);
-  }
+    public PushDownAction() {
+        super(ActionLocalize.actionMemberpushdownText(), ActionLocalize.actionMemberpushdownDescription());
+        setInjectedContext(true);
+    }
 
-  @Override
-  public boolean isAvailableInEditorOnly() {
-    return false;
-  }
+    @Override
+    public boolean isAvailableInEditorOnly() {
+        return false;
+    }
 
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
-    return provider.getPushDownHandler();
-  }
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+        return provider.getPushDownHandler();
+    }
 }

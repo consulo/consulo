@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
@@ -23,6 +24,8 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,8 +34,19 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
+@ActionImpl(id = "CopyElement")
 public class CopyElementAction extends AnAction {
+    @Inject
+    public CopyElementAction() {
+        super(ActionLocalize.actionCopyelementText(), ActionLocalize.actionCopyelementDescription());
+    }
+
+    public CopyElementAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

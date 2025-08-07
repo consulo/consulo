@@ -13,32 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
-import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.psi.PsiElement;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "IntroduceConstant")
 public class IntroduceConstantAction extends BasePlatformRefactoringAction {
-  public IntroduceConstantAction() {
-    setInjectedContext(true);
-  }
+    public IntroduceConstantAction() {
+        super(ActionLocalize.actionIntroduceconstantText(), ActionLocalize.actionIntroduceconstantDescription());
+        setInjectedContext(true);
+    }
 
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
-    return provider.getIntroduceConstantHandler();
-  }
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+        return provider.getIntroduceConstantHandler();
+    }
 
-  @Override
-  protected boolean isAvailableInEditorOnly() {
-    return true;
-  }
+    @Override
+    protected boolean isAvailableInEditorOnly() {
+        return true;
+    }
 
-  @Override
-  protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
-    return false;
-  }
+    @Override
+    @RequiredReadAction
+    protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+        return false;
+    }
 }

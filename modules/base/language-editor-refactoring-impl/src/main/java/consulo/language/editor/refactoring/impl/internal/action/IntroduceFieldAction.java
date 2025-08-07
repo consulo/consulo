@@ -13,32 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "IntroduceField")
 public class IntroduceFieldAction extends BasePlatformRefactoringAction {
-  public IntroduceFieldAction() {
-    setInjectedContext(true);
-  }
+    public IntroduceFieldAction() {
+        super(ActionLocalize.actionIntroducefieldText(), ActionLocalize.actionIntroducefieldDescription());
+        setInjectedContext(true);
+    }
 
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
-    return provider.getIntroduceFieldHandler();
-  }
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+        return provider.getIntroduceFieldHandler();
+    }
 
-  @Override
-  protected boolean isAvailableInEditorOnly() {
-    return true;
-  }
+    @Override
+    protected boolean isAvailableInEditorOnly() {
+        return true;
+    }
 
-  @Override
-  protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
-    return false;
-  }
+    @Override
+    @RequiredReadAction
+    protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+        return false;
+    }
 }

@@ -15,29 +15,38 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
-import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.psi.PsiElement;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
  * @since 2002-05-06
  */
+@ActionImpl(id = "IntroduceParameter")
 public class IntroduceParameterAction extends BasePlatformRefactoringAction {
-  @Override
-  protected boolean isAvailableInEditorOnly() {
-    return true;
-  }
+    public IntroduceParameterAction() {
+        super(ActionLocalize.actionIntroduceparameterText(), ActionLocalize.actionIntroduceparameterDescription());
+    }
 
-  @Override
-  protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
-    return false;
-  }
+    @Override
+    protected boolean isAvailableInEditorOnly() {
+        return true;
+    }
 
-  @Override
-  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
-    return provider.getIntroduceParameterHandler();
-  }
+    @Override
+    @RequiredReadAction
+    protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+        return false;
+    }
+
+    @Override
+    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+        return provider.getIntroduceParameterHandler();
+    }
 }
