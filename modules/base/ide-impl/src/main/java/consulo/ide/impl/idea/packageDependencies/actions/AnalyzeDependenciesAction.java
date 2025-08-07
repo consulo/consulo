@@ -15,29 +15,44 @@
  */
 package consulo.ide.impl.idea.packageDependencies.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.language.editor.impl.action.BaseAnalysisAction;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(
+    id = IdeActions.ACTION_ANALYZE_DEPENDENCIES,
+    parents = @ActionParentRef(value = @ActionRef(id = "ShowPackageDepsGroup"), anchor = ActionRefAnchor.FIRST)
+)
 public class AnalyzeDependenciesAction extends BaseAnalysisAction {
     private CheckBox myTransitiveCB;
     private IntBox myDeepField;
 
     public AnalyzeDependenciesAction() {
-        super(AnalysisScopeBundle.message("action.forward.dependency.analysis"), AnalysisScopeBundle.message("action.analysis.noun"));
+        super(
+            ActionLocalize.actionShowpackagedepsText(),
+            ActionLocalize.actionShowpackagedepsDescription(),
+            AnalysisScopeLocalize.actionForwardDependencyAnalysis(),
+            AnalysisScopeLocalize.actionAnalysisNoun()
+        );
     }
 
     @Override
-    protected void analyze(@Nonnull final Project project, @Nonnull AnalysisScope scope) {
+    protected void analyze(@Nonnull Project project, @Nonnull AnalysisScope scope) {
         new AnalyzeDependenciesHandler(
             project,
             scope,
@@ -47,15 +62,15 @@ public class AnalyzeDependenciesAction extends BaseAnalysisAction {
         clear();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
         DockLayout dockLayout = DockLayout.create();
         layout.add(dockLayout);
 
-        dockLayout.left(
-            myTransitiveCB = CheckBox.create(LocalizeValue.localizeTODO("Show transitive dependencies. Do not travel deeper than")));
+        myTransitiveCB = CheckBox.create(LocalizeValue.localizeTODO("Show transitive dependencies. Do not travel deeper than"));
 
+        dockLayout.left(myTransitiveCB);
         dockLayout.right(myDeepField = IntBox.create(5));
 
         myDeepField.setEnabled(false);

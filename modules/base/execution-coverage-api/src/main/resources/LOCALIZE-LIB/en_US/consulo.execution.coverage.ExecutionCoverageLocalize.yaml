@@ -1,23 +1,23 @@
-action.GenerateCoverageReport.description:
+action.generate.coverage.report.description:
     text: Export coverage report to HTML
-action.GenerateCoverageReport.text:
+action.generate.coverage.report.text:
     text: _Generate Coverage Report…
-action.HideCoverage.description:
+action.hide.coverage.description:
     text: Close all opened coverage reports
-action.HideCoverage.text:
+action.hide.coverage.text:
     text: Hide Coverage
 action.ImportCoverage.description:
     text: Import a report collected in CI from disk
 action.ImportCoverage.text:
     text: Import External Coverage Report…
-action.SwitchCoverage.description:
+action.switch.coverage.description:
     text: Inspect previously opened coverage reports
-action.SwitchCoverage.text:
+action.switch.coverage.text:
     text: Manage Coverage Reports…
-action.show.tests.covering.line.description:
-    text: Show tests covering line
 action.name.cover:
     text: Cover
+action.show.tests.covering.line.description:
+    text: Show tests covering line
 action.show.tests.covering.line.text:
     text: Show Tests Covering Line
 branch.coverage.message:
@@ -154,6 +154,8 @@ following.test.could.not.be.found.1:
     text: 'Following {0, choice, 1#test|2#tests} could not be found: {1}'
 generate.coverage.report.for:
     text: 'Generate Coverage Report for: ''''{0}'''''
+group.coverage.menu.text:
+    text: Code Coverage Actions
 hint.text.failed.to.load.covered.tests:
     text: Failed to load covered tests
 hits.message:

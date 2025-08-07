@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.document.FileDocumentManager;
-import consulo.language.editor.impl.action.BaseAnalysisAction;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
@@ -24,12 +24,14 @@ import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileMana
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 import consulo.ide.localize.IdeLocalize;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.impl.action.BaseAnalysisAction;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ComboBox;
 import consulo.ui.Hyperlink;
@@ -39,21 +41,33 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.MutableListModel;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@ActionImpl(id = "InspectCode")
 public class CodeInspectionAction extends BaseAnalysisAction {
     private GlobalInspectionContextImpl myGlobalInspectionContext = null;
     protected InspectionProfile myExternalProfile = null;
 
+    @Inject
     public CodeInspectionAction() {
-        super(InspectionsBundle.message("inspection.action.title"), InspectionsBundle.message("inspection.action.noun"));
+        this(
+            ActionLocalize.actionInspectcodeText(),
+            ActionLocalize.actionInspectcodeDescription(),
+            InspectionLocalize.inspectionActionTitle(),
+            InspectionLocalize.inspectionActionNoun()
+        );
     }
 
-    public CodeInspectionAction(String title, String analysisNoon) {
-        super(title, analysisNoon);
+    public CodeInspectionAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue analysisNoon
+    ) {
+        super(text, description, title, analysisNoon);
     }
 
     @Override
@@ -70,7 +84,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     protected void runInspections(Project project, AnalysisScope scope) {
         scope.setSearchInLibraries(false);
         FileDocumentManager.getInstance().saveAllDocuments();
-        final GlobalInspectionContextImpl inspectionContext = getGlobalInspectionContext(project);
+        GlobalInspectionContextImpl inspectionContext = getGlobalInspectionContext(project);
         inspectionContext.setExternalProfile(myExternalProfile);
         inspectionContext.setCurrentScope(scope);
         inspectionContext.doInspections(scope);
@@ -85,7 +99,6 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     }
 
     @Override
-    @NonNls
     protected String getHelpTopic() {
         return "reference.dialogs.inspection.scope";
     }
@@ -115,38 +128,41 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         dockLayout.center(profiles);
         layout.add(dockLayout);
 
-        final InspectionManagerImpl manager = (InspectionManagerImpl) InspectionManager.getInstance(project);
-        final InspectionProfileManager profileManager = InspectionProfileManager.getInstance();
-        final InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);
+        InspectionManagerImpl manager = (InspectionManagerImpl) InspectionManager.getInstance(project);
+        InspectionProfileManager profileManager = InspectionProfileManager.getInstance();
+        InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);
         reloadProfiles(profiles, model, profileManager, projectProfileManager, manager);
 
-        Hyperlink hyperlink = Hyperlink.create(IdeLocalize.buttonConfigureE().get(), event -> {
-            final IDEInspectionToolsConfigurable errorConfigurable = createConfigurable(projectProfileManager, profileManager);
-            final MySingleConfigurableEditor editor = new MySingleConfigurableEditor(project, errorConfigurable, manager);
-            errorConfigurable.selectProfile(profiles.getValue());
-            if (editor.showAndGet()) {
-                reloadProfiles(profiles, model, profileManager, projectProfileManager, manager);
+        Hyperlink hyperlink = Hyperlink.create(
+            IdeLocalize.buttonConfigureE().get(),
+            event -> {
+                IDEInspectionToolsConfigurable errorConfigurable = createConfigurable(projectProfileManager, profileManager);
+                MySingleConfigurableEditor editor = new MySingleConfigurableEditor(project, errorConfigurable, manager);
+                errorConfigurable.selectProfile(profiles.getValue());
+                if (editor.showAndGet()) {
+                    reloadProfiles(profiles, model, profileManager, projectProfileManager, manager);
+                }
+                else {
+                    //if profile was disabled and cancel after apply was pressed
+                    InspectionProfile profile = profiles.getValue();
+                    boolean canExecute = profile != null && profile.isExecutable(project);
+                    dialog.setOKActionEnabled(canExecute);
+                }
             }
-            else {
-                //if profile was disabled and cancel after apply was pressed
-                final InspectionProfile profile = (InspectionProfile) profiles.getValue();
-                final boolean canExecute = profile != null && profile.isExecutable(project);
-                dialog.setOKActionEnabled(canExecute);
-            }
-        });
+        );
 
         dockLayout.right(hyperlink);
 
         profiles.addValueListener(event -> {
             myExternalProfile = profiles.getValue();
-            final boolean canExecute = myExternalProfile != null && myExternalProfile.isExecutable(project);
+            boolean canExecute = myExternalProfile != null && myExternalProfile.isExecutable(project);
             dialog.setOKActionEnabled(canExecute);
             if (canExecute) {
                 manager.setProfile(myExternalProfile.getName());
             }
         });
 
-        final InspectionProfile profile = profiles.getValue();
+        InspectionProfile profile = profiles.getValue();
         dialog.setOKActionEnabled(profile != null && profile.isExecutable(project));
     }
 
@@ -165,7 +181,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         InspectionProjectProfileManager inspectionProjectProfileManager,
         InspectionManagerImpl inspectionManager
     ) {
-        final InspectionProfile selectedProfile = getGlobalInspectionContext(inspectionManager.getProject()).getCurrentProfile();
+        InspectionProfile selectedProfile = getGlobalInspectionContext(inspectionManager.getProject()).getCurrentProfile();
 
         List<InspectionProfile> resultItems = new ArrayList<>();
         fillModel(inspectionProfileManager, resultItems);
@@ -174,7 +190,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         profiles.setValue(selectedProfile);
     }
 
-    private static void fillModel(final ProfileManager inspectionProfileManager, List<InspectionProfile> model) {
+    private static void fillModel(ProfileManager inspectionProfileManager, List<InspectionProfile> model) {
         for (Profile profile : inspectionProfileManager.getProfiles()) {
             model.add((InspectionProfile) profile);
         }
@@ -183,19 +199,18 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     private static class MySingleConfigurableEditor extends SingleConfigurableEditor {
         private final InspectionManagerImpl myManager;
 
-        public MySingleConfigurableEditor(final Project project, final ErrorsConfigurable configurable, InspectionManagerImpl manager) {
+        public MySingleConfigurableEditor( Project project, ErrorsConfigurable configurable, InspectionManagerImpl manager) {
             super(project, configurable, createDimensionKey(configurable));
             myManager = manager;
             setTitle(configurable.getDisplayName());
         }
 
-
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         protected void doOKAction() {
-            final Object o = ((ErrorsConfigurable) getConfigurable()).getSelectedObject();
-            if (o instanceof InspectionProfile) {
-                myManager.setProfile(((InspectionProfile) o).getName());
+            Object o = ((ErrorsConfigurable) getConfigurable()).getSelectedObject();
+            if (o instanceof InspectionProfile inspectionProfile) {
+                myManager.setProfile(inspectionProfile.getName());
             }
             super.doOKAction();
         }

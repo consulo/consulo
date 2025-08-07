@@ -15,36 +15,43 @@
  */
 package consulo.ide.impl.idea.codeInsight.folding.impl.actions;
 
-import consulo.language.editor.folding.CodeFoldingManager;
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.action.EditorAction;
-import consulo.project.Project;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
 
+@ActionImpl(id = "CollapseAllRegions")
 public class CollapseAllRegionsAction extends EditorAction {
     public CollapseAllRegionsAction() {
-        super(new BaseFoldingHandler() {
-            @Override
-            public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-                Project project = editor.getProject();
-                assert project != null;
-                PsiDocumentManager.getInstance(project).commitAllDocuments();
-                CodeFoldingManager.getInstance(project).updateFoldRegions(editor);
+        super(
+            ActionLocalize.actionCollapseallregionsText(),
+            ActionLocalize.actionCollapseallregionsDescription(),
+            new BaseFoldingHandler() {
+                @Override
+                public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+                    Project project = editor.getProject();
+                    assert project != null;
+                    PsiDocumentManager.getInstance(project).commitAllDocuments();
+                    CodeFoldingManager.getInstance(project).updateFoldRegions(editor);
 
-                List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
-                editor.getFoldingModel().runBatchFoldingOperation(() -> {
-                    for (FoldRegion region : regions) {
-                        region.setExpanded(false);
-                    }
-                });
+                    List<FoldRegion> regions = getFoldRegionsForSelection(editor, caret);
+                    editor.getFoldingModel().runBatchFoldingOperation(() -> {
+                        for (FoldRegion region : regions) {
+                            region.setExpanded(false);
+                        }
+                    });
+                }
             }
-        });
+        );
     }
 }

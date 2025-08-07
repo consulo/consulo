@@ -429,26 +429,29 @@
         <action id="PinToolwindowTab" class="consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction"/>
         <action id="CloseEditor" class="consulo.ide.impl.idea.ide.actions.CloseEditorAction"/>
 
-        <group id="MainMenu">
-            <reference ref="FileMenu"/>
+        <reference ref="MainMenu">
+            <!--<reference ref="FileMenu"/>-->
 
             <!-- Edit -->
-            <reference ref="EditMenu"/>
+            <!--<reference ref="EditMenu"/>-->
 
             <!-- View -->
-            <reference ref="ViewMenu"/>
+            <!--<reference ref="ViewMenu"/>-->
 
             <!-- Go to -->
-            <reference ref="GoToMenu"/>
+            <!--<reference ref="GoToMenu"/>-->
+
+            <!-- Go to -->
+            <!--<reference ref="CodeMenu"/>-->
 
             <!-- Tools -->
-            <reference ref="ToolsMenu"/>
+            <!--<reference ref="ToolsMenu"/>-->
 
-            <reference ref="WindowMenu"/>
+            <!--<reference ref="WindowMenu"/>-->
 
             <!-- Help -->
-            <reference ref="HelpMenu"/>
-        </group>
+            <!--<reference ref="HelpMenu"/>-->
+        </reference>
 
         <group id="MainToolBar">
             <reference ref="OpenFile"/>
@@ -980,96 +983,6 @@
         </action>
 
         <action id="ProjectViewChangeView" class="consulo.ide.impl.idea.ide.projectView.actions.ChangeProjectViewAction"/>
-
-        <group id="AnalyzeActions">
-        </group>
-
-        <group id="AnalyzeMenu" popup="true">
-            <separator/>
-            <action id="RunInspection" class="consulo.ide.impl.idea.codeInspection.actions.RunInspectionAction"/>
-            <action id="PopupHector" class="consulo.ide.impl.idea.codeInsight.daemon.impl.PopupHectorAction"/>
-            <action id="ViewOfflineInspection" class="consulo.ide.impl.idea.codeInspection.actions.ViewOfflineResultsAction"/>
-            <separator/>
-            <reference ref="AnalyzeActions"/>
-        </group>
-
-        <group id="CodeCompletionGroup" class="consulo.ide.impl.idea.codeInsight.completion.actions.CodeCompletionGroup" popup="true">
-            <action id="CodeCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.CodeCompletionAction"/>
-            <action id="SmartTypeCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.SmartCodeCompletionAction"/>
-            <separator/>
-            <action id="HippieCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.HippieCompletionAction"/>
-            <action id="HippieBackwardCompletion"
-                    class="consulo.ide.impl.idea.codeInsight.completion.actions.HippieBackwardCompletionAction"/>
-        </group>
-
-        <!-- Code -->
-        <group id="CodeMenu" popup="true">
-            <reference ref="OverrideMethods"/>
-            <reference ref="ImplementMethods"/>
-            <reference ref="Generate"/>
-            <separator/>
-            <action id="SurroundWith" class="consulo.ide.impl.idea.codeInsight.generation.actions.SurroundWithAction"/>
-            <action id="Unwrap" class="consulo.ide.impl.idea.codeInsight.unwrap.UnwrapAction"/>
-            <separator/>
-
-            <reference ref="CodeCompletionGroup"/>
-
-            <separator/>
-
-            <action id="InspectCode" class="consulo.ide.impl.idea.codeInspection.actions.CodeInspectionAction"/>
-
-            <reference ref="AnalyzeMenu"/>
-
-            <separator/>
-
-            <group id="FoldingGroup" popup="true">
-                <action id="ExpandRegion" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.ExpandRegionAction"/>
-                <action id="CollapseRegion" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.CollapseRegionAction"/>
-                <separator/>
-                <action id="ExpandAllRegions" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.ExpandAllRegionsAction"/>
-                <action id="CollapseAllRegions" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.CollapseAllRegionsAction"/>
-                <separator/>
-                <group id="LanguageSpecificFoldingGroup">
-                    <action id="ExpandDocComments" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.ExpandDocCommentsAction"/>
-                    <action id="CollapseDocComments"
-                            class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.CollapseDocCommentsAction"/>
-                </group>
-                <separator/>
-                <action id="CollapseSelection" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.CollapseSelectionAction"/>
-                <action id="CollapseBlock" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.CollapseBlockAction"/>
-            </group>
-
-            <separator/>
-
-            <action id="InsertLiveTemplate" class="consulo.ide.impl.idea.codeInsight.template.impl.actions.ListTemplatesAction"/>
-            <action id="SurroundWithLiveTemplate"
-                    class="consulo.ide.impl.idea.codeInsight.template.impl.actions.SurroundWithTemplateAction"/>
-            <separator/>
-
-            <group id="CommentGroup">
-                <action id="CommentByLineComment" class="consulo.ide.impl.idea.codeInsight.generation.actions.CommentByLineCommentAction"/>
-                <action id="CommentByBlockComment"
-                        class="consulo.ide.impl.idea.codeInsight.generation.actions.CommentByBlockCommentAction"/>
-            </group>
-
-            <group id="CodeFormatGroup">
-                <action id="ReformatCode" class="consulo.ide.impl.idea.codeInsight.actions.ReformatCodeAction"/>
-                <action id="AutoIndentLines" class="consulo.ide.impl.idea.codeInsight.generation.actions.AutoIndentLinesAction"/>
-                <action id="OptimizeImports" class="consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsAction"/>
-                <action id="RearrangeCode"
-                        class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.RearrangeCodeAction"/>
-            </group>
-
-            <separator/>
-            <action id="MoveStatementDown" class="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveStatementDownAction"/>
-            <action id="MoveStatementUp" class="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveStatementUpAction"/>
-            <action id="MoveElementLeft" class="consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight.MoveElementLeftAction"/>
-            <action id="MoveElementRight" class="consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight.MoveElementRightAction"/>
-            <action id="MoveLineDown" class="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveLineDownAction"/>
-            <action id="MoveLineUp" class="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveLineUpAction"/>
-            <separator/>
-            <add-to-group group-id="MainMenu" anchor="after" relative-to-action="GoToMenu"/>
-        </group>
 
         <!-- Refactor -->
         <group id="RefactoringMenu" popup="true">
@@ -1713,11 +1626,6 @@
             <add-to-group group-id="ExportImportGroup" anchor="first"/>
         </group>
 
-        <!-- View -->
-        <reference ref="DelegateMethods">
-            <add-to-group group-id="CodeMenu" anchor="after" relative-to-action="ImplementMethods"/>
-        </reference>
-
         <group id="CompilerErrorViewPopupMenu">
         </group>
 
@@ -1934,21 +1842,6 @@
             <add-to-group group-id="ToolsBasicGroup" anchor="after" relative-to-action="SaveFileAsTemplate"/>
         </group>
 
-        <action id="ShowPackageDeps" class="consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesAction">
-            <add-to-group group-id="ShowPackageDepsGroup" anchor="first"/>
-            <add-to-group group-id="AnalyzeActions" anchor="first"/>
-        </action>
-        <action id="ShowBackwardPackageDeps" class="consulo.ide.impl.idea.packageDependencies.actions.BackwardDependenciesAction">
-            <add-to-group group-id="AnalyzeActions" relative-to-action="ShowPackageDeps" anchor="after"/>
-        </action>
-        <action id="ShowDependenciesOnTarget"
-                class="consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetAction">
-            <add-to-group group-id="AnalyzeActions" relative-to-action="ShowBackwardPackageDeps" anchor="after"/>
-        </action>
-        <action id="ShowModulesDependencies" class="consulo.ide.impl.idea.moduleDependencies.ShowModuleDependenciesAction">
-            <add-to-group group-id="AnalyzeActions" anchor="last"/>
-        </action>
-
         <reference id="ShowProjectStructureSettings">
             <add-to-group group-id="MainToolBarSettings" anchor="after" relative-to-action="ShowSettings"/>
         </reference>
@@ -2081,18 +1974,6 @@
                class="consulo.webBrowser.action.OpenInBrowserBaseGroupAction$OpenInBrowserEditorContextBarGroupAction"
                description="Open In...">
             <add-to-group group-id="EditorContextBarMenu" anchor="last"/>
-        </group>
-
-        <group id="CoverageMenu">
-            <reference id="SwitchCoverage"/>
-            <reference id="GenerateCoverageReport"/>
-            <reference id="HideCoverage"/>
-            <separator/>
-        </group>
-
-        <group id="AnalyzeCoverageMenu" popup="false">
-            <reference ref="CoverageMenu"/>
-            <add-to-group group-id="AnalyzeMenu" anchor="before" relative-to-action="AnalyzeActions"/>
         </group>
 
         <action id="Vcs.CherryPick" class="consulo.ide.impl.idea.dvcs.cherrypick.VcsCherryPickAction"

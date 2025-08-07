@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
@@ -22,11 +23,11 @@ import consulo.ide.impl.idea.codeInsight.actions.RearrangeCodeProcessor;
 import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -35,42 +36,47 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 2012-08-30
  */
+@ActionImpl(id = "RearrangeCode")
 public class RearrangeCodeAction extends AnAction {
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    PsiFile file = e.getData(PsiFile.KEY);
-    boolean enabled = file != null && Rearranger.forLanguage(file.getLanguage()) != null;
-    e.getPresentation().setEnabled(enabled);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public RearrangeCodeAction() {
+        super(ActionLocalize.actionRearrangecodeText(), ActionLocalize.actionRearrangecodeDescription());
     }
 
-    final Editor editor = e.getData(Editor.KEY);
-    if (editor == null) {
-      return;
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        PsiFile file = e.getData(PsiFile.KEY);
+        boolean enabled = file != null && Rearranger.forLanguage(file.getLanguage()) != null;
+        e.getPresentation().setEnabled(enabled);
     }
 
-    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-    Document document = editor.getDocument();
-    documentManager.commitDocument(document);
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-    final PsiFile file = documentManager.getPsiFile(document);
-    if (file == null) {
-      return;
-    }
+        Editor editor = e.getData(Editor.KEY);
+        if (editor == null) {
+            return;
+        }
 
-    SelectionModel model = editor.getSelectionModel();
-    if (model.hasSelection()) {
-      new RearrangeCodeProcessor(file, model).run();
+        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+        Document document = editor.getDocument();
+        documentManager.commitDocument(document);
+
+        PsiFile file = documentManager.getPsiFile(document);
+        if (file == null) {
+            return;
+        }
+
+        SelectionModel model = editor.getSelectionModel();
+        if (model.hasSelection()) {
+            new RearrangeCodeProcessor(file, model).run();
+        }
+        else {
+            new RearrangeCodeProcessor(file).run();
+        }
     }
-    else {
-      new RearrangeCodeProcessor(file).run();
-    }
-  }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packageDependencies.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposer;
 import consulo.find.ui.ScopeChooserCombo;
@@ -23,6 +24,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -35,20 +37,23 @@ import jakarta.annotation.Nonnull;
  * @author anna
  * @since 2005-01-16
  */
+@ActionImpl(id = "ShowBackwardPackageDeps")
 public class BackwardDependenciesAction extends BaseAnalysisAction {
     private ScopeChooserCombo myScopeChooserCombo;
 
     public BackwardDependenciesAction() {
         super(
-            AnalysisScopeLocalize.actionBackwardDependencyAnalysis().get(),
-            AnalysisScopeLocalize.actionAnalysisNoun().get()
+            ActionLocalize.actionShowbackwardpackagedepsText(),
+            ActionLocalize.actionShowbackwardpackagedepsDescription(),
+            AnalysisScopeLocalize.actionBackwardDependencyAnalysis(),
+            AnalysisScopeLocalize.actionAnalysisNoun()
         );
     }
 
     @Override
-    protected void analyze(@Nonnull final Project project, final AnalysisScope scope) {
+    protected void analyze(@Nonnull Project project, AnalysisScope scope) {
         scope.setSearchInLibraries(true); //find library usages in project
-        final SearchScope selectedScope = myScopeChooserCombo.getSelectedScope();
+        SearchScope selectedScope = myScopeChooserCombo.getSelectedScope();
         new BackwardDependenciesHandler(
             project,
             scope,

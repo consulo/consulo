@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.actions;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.codeStyle.FormattingModelBuilder;
@@ -33,13 +32,14 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.image.Image;
 import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -51,11 +51,16 @@ import java.util.ArrayList;
 import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
 
+@ActionImpl(id = IdeActions.ACTION_EDITOR_REFORMAT)
 public class ReformatCodeAction extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(ReformatCodeAction.class);
 
     private static final String HELP_ID = "editing.codeReformatting";
     protected static ReformatFilesOptions myTestOptions;
+
+    public ReformatCodeAction() {
+        super(ActionLocalize.actionReformatcodeText(), ActionLocalize.actionReformatcodeDescription(), PlatformIconGroup.actionsReformatcode());
+    }
 
     @Override
     @RequiredUIAccess
@@ -163,12 +168,6 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
         currentRunOptions.setProcessingScope(processingScope);
         new FileInEditorProcessor(file, editor, currentRunOptions).processCode();
-    }
-
-    @Nullable
-    @Override
-    protected Image getTemplateIcon() {
-        return PlatformIconGroup.actionsReformatcode();
     }
 
     @Nullable

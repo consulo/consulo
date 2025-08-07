@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
-import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
  */
+@ActionImpl(id = "SurroundWithLiveTemplate")
 public class SurroundWithTemplateAction extends BaseCodeInsightAction {
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new SurroundWithTemplateHandler();
-  }
+    public SurroundWithTemplateAction() {
+        super(ActionLocalize.actionSurroundwithlivetemplateText(), ActionLocalize.actionSurroundwithlivetemplateDescription());
+    }
+
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new SurroundWithTemplateHandler();
+    }
 }

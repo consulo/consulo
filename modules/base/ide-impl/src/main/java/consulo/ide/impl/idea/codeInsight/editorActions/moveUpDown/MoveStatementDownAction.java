@@ -15,14 +15,21 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
+import consulo.platform.base.localize.ActionLocalize;
 
 /**
  * @author max
  * @since 2002-05-13
  */
+@ActionImpl(id = "MoveStatementDown")
 public class MoveStatementDownAction extends EditorAction {
     public MoveStatementDownAction() {
-        super(new MoveStatementHandler(true));
+        super(
+            ActionLocalize.actionMovestatementdownText(),
+            ActionLocalize.actionMovestatementdownDescription(),
+            new MoveStatementHandler(true)
+        );
     }
 }

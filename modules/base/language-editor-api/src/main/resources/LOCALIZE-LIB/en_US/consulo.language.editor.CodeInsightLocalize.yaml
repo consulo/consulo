@@ -4,6 +4,10 @@ action.ToggleInlineHintsAction.description:
     text: Toggle parameter name hints
 action.ToggleInlineHintsAction.text:
     text: Toggle Parameter Name Hints
+action.show.dependencies.on.target.on.scope.text:
+    text: Analyze Dependencies of Module ''{0}'' on {1}
+action.show.dependencies.on.target.text:
+    text: Analyze Dependencies on Specified Target
 action.text.move:
     text: Move
 block.comment.intersects.existing.comment:

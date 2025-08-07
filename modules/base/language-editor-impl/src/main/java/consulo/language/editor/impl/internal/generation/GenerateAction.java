@@ -20,6 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.generation.GenerateActionPopupTemplateInjector;
 import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,6 +34,10 @@ import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "Generate")
 public class GenerateAction extends DumbAwareAction {
+    public GenerateAction() {
+        super(ActionLocalize.actionGenerateText(), ActionLocalize.actionGenerateDescription());
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {

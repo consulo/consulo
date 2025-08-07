@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight;
+package consulo.ide.impl.idea.codeInsight.generation.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.codeEditor.action.EditorAction;
+import consulo.annotation.component.ActionRef;
+import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.DefaultActionGroup;
 
-@ActionImpl(id = "MoveElementLeft")
-public class MoveElementLeftAction extends EditorAction {
-    public MoveElementLeftAction() {
-        super(
-            ActionLocalize.actionMoveelementleftText(),
-            ActionLocalize.actionMoveelementleftDescription(),
-            new MoveElementLeftRightActionHandler(true)
-        );
-        setInjectedContext(true);
+/**
+ * @author UNV
+ * @since 2025-08-06
+ */
+@ActionImpl(
+    id = "CommentGroup",
+    children = {
+        @ActionRef(type = CommentByLineCommentAction.class),
+        @ActionRef(type = CommentByBlockCommentAction.class)
+    }
+)
+public class CommentGroup extends DefaultActionGroup implements DumbAware {
+    public CommentGroup() {
+        super(ActionLocalize.groupCommentgroupText(), false);
     }
 }

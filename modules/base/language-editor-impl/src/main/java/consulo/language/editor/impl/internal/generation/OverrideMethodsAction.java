@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.generation;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.language.editor.generation.OverrideMethodHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "OverrideMethods")
 public class OverrideMethodsAction extends MethodsBasedAction<OverrideMethodHandler> {
-  @Inject
-  public OverrideMethodsAction(Application application) {
-    super(application, OverrideMethodHandler.class, OverrideMethodHandler.KEY);
-  }
+    @Inject
+    public OverrideMethodsAction(Application application) {
+        super(application, OverrideMethodHandler.class, OverrideMethodHandler.KEY);
+        getTemplatePresentation().setTextValue(ActionLocalize.actionOverridemethodsText());
+        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionOverridemethodsDescription());
+    }
 }

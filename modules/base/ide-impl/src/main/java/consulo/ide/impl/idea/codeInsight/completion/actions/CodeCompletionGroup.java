@@ -15,18 +15,36 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(
+    id = "CodeCompletionGroup",
+    children = {
+        @ActionRef(type = CodeCompletionAction.class),
+        @ActionRef(type = SmartCodeCompletionAction.class),
+        @ActionRef(type = AnSeparator.class),
+        @ActionRef(type = HippieCompletionAction.class),
+        @ActionRef(type = HippieBackwardCompletionAction.class)
+    }
+)
 public class CodeCompletionGroup extends DefaultActionGroup implements DumbAware {
+    public CodeCompletionGroup() {
+        super(ActionLocalize.groupCodecompletiongroupText(), true);
+    }
+
     @Override
     public void update(@Nonnull AnActionEvent event) {
         Presentation presentation = event.getPresentation();

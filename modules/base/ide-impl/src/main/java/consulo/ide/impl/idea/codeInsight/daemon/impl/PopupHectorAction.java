@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ActionImpl;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -27,16 +28,21 @@ import jakarta.annotation.Nonnull;
  * @author anna
  * @since 2008-11-07
  */
+@ActionImpl(id = "PopupHector")
 public class PopupHectorAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    PsiFile file = e.getRequiredData(PsiFile.KEY);
-    new HectorComponent(file).showComponent(JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext()));
-  }
+    public PopupHectorAction() {
+        super(ActionLocalize.actionPopuphectorText(), ActionLocalize.actionPopuphectorDescription());
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.hasData(PsiFile.KEY));
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        PsiFile file = e.getRequiredData(PsiFile.KEY);
+        new HectorComponent(file).showComponent(JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext()));
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(e.hasData(PsiFile.KEY));
+    }
 }

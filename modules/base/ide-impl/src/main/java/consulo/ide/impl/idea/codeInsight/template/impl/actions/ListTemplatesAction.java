@@ -14,23 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.impl.internal.template.ListTemplatesHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
-public class ListTemplatesAction extends BaseCodeInsightAction{
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new ListTemplatesHandler();
-  }
+@ActionImpl(id = "InsertLiveTemplate")
+public class ListTemplatesAction extends BaseCodeInsightAction {
+    public ListTemplatesAction() {
+        super(ActionLocalize.actionInsertlivetemplateText(), ActionLocalize.actionInsertlivetemplateDescription());
+    }
 
-  @Override
-  protected boolean isValidForLookup() {
-    return true;
-  }
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new ListTemplatesHandler();
+    }
+
+    @Override
+    protected boolean isValidForLookup() {
+        return true;
+    }
 }

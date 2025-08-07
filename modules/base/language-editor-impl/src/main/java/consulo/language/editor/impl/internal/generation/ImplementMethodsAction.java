@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.impl.internal.generation;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.language.editor.generation.ImplementMethodHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "ImplementMethods")
 public class ImplementMethodsAction extends MethodsBasedAction<ImplementMethodHandler> {
-  @Inject
-  public ImplementMethodsAction(Application application) {
-    super(application, ImplementMethodHandler.class, ImplementMethodHandler.KEY);
-  }
+    @Inject
+    public ImplementMethodsAction(Application application) {
+        super(application, ImplementMethodHandler.class, ImplementMethodHandler.KEY);
+        getTemplatePresentation().setTextValue(ActionLocalize.actionImplementmethodsText());
+        getTemplatePresentation().setDescriptionValue(ActionLocalize.actionImplementmethodsDescription());
+    }
 }

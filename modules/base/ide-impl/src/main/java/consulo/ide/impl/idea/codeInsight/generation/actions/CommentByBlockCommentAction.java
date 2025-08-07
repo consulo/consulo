@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -24,13 +25,16 @@ import consulo.ide.impl.idea.codeInsight.generation.CommentByBlockCommentHandler
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.language.Commenter;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "CommentByBlockComment")
 public class CommentByBlockCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
     public CommentByBlockCommentAction() {
+        super(ActionLocalize.actionCommentbyblockcommentText(), ActionLocalize.actionCommentbyblockcommentDescription());
         setEnabledInModalContext(true);
     }
 
@@ -41,19 +45,16 @@ public class CommentByBlockCommentAction extends MultiCaretCodeInsightAction imp
     }
 
     @Override
-    protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull final PsiFile file) {
-        final FileType fileType = file.getFileType();
-        if (fileType instanceof AbstractFileType) {
-            return ((AbstractFileType) fileType).getCommenter() != null;
+    protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
+        FileType fileType = file.getFileType();
+        if (fileType instanceof AbstractFileType abstractFileType) {
+            return abstractFileType.getCommenter() != null;
         }
 
         Commenter commenter = Commenter.forLanguage(file.getLanguage());
         if (commenter == null) {
             commenter = Commenter.forLanguage(file.getViewProvider().getBaseLanguage());
         }
-        if (commenter == null) {
-            return false;
-        }
-        return commenter.getBlockCommentPrefix() != null && commenter.getBlockCommentSuffix() != null;
+        return commenter != null && commenter.getBlockCommentPrefix() != null && commenter.getBlockCommentSuffix() != null;
     }
 }

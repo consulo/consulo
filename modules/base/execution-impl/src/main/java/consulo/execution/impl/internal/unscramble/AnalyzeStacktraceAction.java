@@ -37,7 +37,7 @@ import jakarta.annotation.Nonnull;
     id = "AnalyzeStacktrace",
     parents = @ActionParentRef(
         value = @ActionRef(id = IdeActions.ACTION_CODE_MENU),
-        relatedToAction = @ActionRef(id = "AnalyzeMenu"),
+        relatedToAction = @ActionRef(id = IdeActions.GROUP_ANALYZE),
         anchor = ActionRefAnchor.AFTER
     )
 )

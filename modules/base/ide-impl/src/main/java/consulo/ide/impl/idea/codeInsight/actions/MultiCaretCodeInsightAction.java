@@ -23,11 +23,11 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
@@ -43,6 +43,10 @@ import jakarta.annotation.Nonnull;
  * @see MultiCaretCodeInsightActionHandler
  */
 public abstract class MultiCaretCodeInsightAction extends AnAction {
+    protected MultiCaretCodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -52,7 +56,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     }
 
     @RequiredUIAccess
-    public void actionPerformedImpl(final Project project, final Editor hostEditor) {
+    public void actionPerformedImpl(Project project, Editor hostEditor) {
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .name(getTemplatePresentation().getTextValue())
@@ -97,12 +101,12 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     }
 
     private static void iterateOverCarets(
-        @Nonnull final Project project,
-        @Nonnull final Editor hostEditor,
-        @Nonnull final MultiCaretCodeInsightActionHandler handler
+        @Nonnull Project project,
+        @Nonnull Editor hostEditor,
+        @Nonnull MultiCaretCodeInsightActionHandler handler
     ) {
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-        final PsiFile psiFile = documentManager.getCachedPsiFile(hostEditor.getDocument());
+        PsiFile psiFile = documentManager.getCachedPsiFile(hostEditor.getDocument());
         documentManager.commitAllDocuments();
 
         hostEditor.getCaretModel().runForEachCaret(caret -> {
@@ -114,7 +118,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
                     editor = caret.getEditor();
                 }
             }
-            final PsiFile file = PsiUtilBase.getPsiFileInEditor(caret, project);
+            PsiFile file = PsiUtilBase.getPsiFileInEditor(caret, project);
             if (file != null) {
                 handler.invoke(project, editor, caret, file);
             }

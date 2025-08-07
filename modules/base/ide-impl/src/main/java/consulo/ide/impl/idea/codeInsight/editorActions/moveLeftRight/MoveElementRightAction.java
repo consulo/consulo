@@ -15,11 +15,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.action.EditorAction;
+import consulo.platform.base.localize.ActionLocalize;
 
+@ActionImpl(id = "MoveElementRight")
 public class MoveElementRightAction extends EditorAction {
     public MoveElementRightAction() {
-        super(new MoveElementLeftRightActionHandler(false));
+        super(
+            ActionLocalize.actionMoveelementrightText(),
+            ActionLocalize.actionMoveelementrightDescription(),
+            new MoveElementLeftRightActionHandler(false)
+        );
         setInjectedContext(true);
     }
 }
