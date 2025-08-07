@@ -31,6 +31,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ComboBox;
 import consulo.ui.Hyperlink;
@@ -53,8 +54,8 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     @Inject
     public CodeInspectionAction() {
         this(
-            InspectionLocalize.inspectionActionTitle(),
-            InspectionLocalize.inspectionActionTitle(),
+            ActionLocalize.actionInspectcodeText(),
+            ActionLocalize.actionInspectcodeDescription(),
             InspectionLocalize.inspectionActionTitle(),
             InspectionLocalize.inspectionActionNoun()
         );
