@@ -1648,6 +1648,10 @@ action.RecentLocations.description:
     text: Show list of recently viewed/changed locations
 action.RecentLocations.text:
     text: Recent Locations
+action.Refactorings.QuickListPopupAction.description:
+    text: Context-aware popup with a list of refactoring actions
+action.Refactorings.QuickListPopupAction.text:
+    text: Refactor This…
 action.ReformatCode.description:
     text: Reformat code
 action.ReformatCode.text:

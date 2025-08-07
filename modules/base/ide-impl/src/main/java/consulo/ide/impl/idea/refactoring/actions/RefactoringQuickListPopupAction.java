@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
-import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -33,8 +33,8 @@ import jakarta.annotation.Nullable;
 public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
     public RefactoringQuickListPopupAction() {
         super(
-            LocalizeValue.localizeTODO("Refactor This..."),
-            LocalizeValue.localizeTODO("Context aware popup with list of refactoring actions")
+            ActionLocalize.actionRefactoringsQuicklistpopupactionText(),
+            ActionLocalize.actionRefactoringsQuicklistpopupactionDescription()
         );
     }
 
@@ -85,7 +85,6 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
             }
         }
     }
-
 
     @Override
     protected void showPopup(AnActionEvent e, ListPopup popup) {

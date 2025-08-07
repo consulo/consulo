@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.language.editor.refactoring.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.refactoring.actions.RefactoringQuickListPopupAction;
 import consulo.language.editor.refactoring.rename.RenameElementAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnSeparator;
@@ -31,21 +32,26 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(
     id = "RefactoringMenu",
     children = {
-        @ActionRef(type = RefactoringQuickListPopupAction.class),
+        @ActionRef(id = "Refactorings.QuickListPopupAction"),
         @ActionRef(type = RenameElementAction.class),
-        @ActionRef(id = "ChangeSignature"),
+        @ActionRef(type = ChangeSignatureAction.class),
         @ActionRef(type = AnSeparator.class),
-        @ActionRef(id = "Move"),
-        @ActionRef(type = CopyElementAction.class),
-        @ActionRef(type = CloneElementAction.class),
-        @ActionRef(id = "SafeDelete"),
+        @ActionRef(type = MoveAction.class),
+        @ActionRef(id = "CopyElement"),
+        @ActionRef(id = "CloneElement"),
+        @ActionRef(type = SafeDeleteAction.class),
         @ActionRef(type = AnSeparator.class),
-        @ActionRef(id = "IntroduceActionsGroup"),
-        @ActionRef(id = "Inline"),
+        @ActionRef(type = IntroduceActionsGroup.class),
+        @ActionRef(type = InlineAction.class),
         @ActionRef(type = AnSeparator.class),
-        @ActionRef(id = "MembersPullUp"),
-        @ActionRef(id = "MemberPushDown")
-    }
+        @ActionRef(type = PullUpAction.class),
+        @ActionRef(type = PushDownAction.class)
+    },
+    parents = @ActionParentRef(
+        value = @ActionRef(id = "MainMenu"),
+        anchor = ActionRefAnchor.AFTER,
+        relatedToAction = @ActionRef(id = "CodeMenu")
+    )
 )
 public class RefactoringMenuGroup extends DefaultActionGroup implements DumbAware {
     public RefactoringMenuGroup() {

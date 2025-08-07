@@ -35,7 +35,6 @@ import consulo.ui.ex.action.IdeActions;
         @ActionRef(type = ViewMenuGroup.class),
         @ActionRef(type = GoToMenuGroup.class),
         @ActionRef(type = CodeMenuGroup.class),
-        @ActionRef(type = RefactoringMenuGroup.class),
         @ActionRef(type = ToolsMenuGroup.class),
         @ActionRef(type = WindowMenuGroup.class),
         @ActionRef(type = HelpMenuGroup.class)
