@@ -6,7 +6,7 @@ import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.internal.ExecutionCoverageInternal;
-import consulo.localize.LocalizeValue;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -23,7 +23,11 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "GenerateCoverageReport")
 public class GenerateCoverageReportAction extends AnAction implements DumbAware {
     public GenerateCoverageReportAction() {
-        super(LocalizeValue.localizeTODO("_Generate Coverage Report"), LocalizeValue.empty(), PlatformIconGroup.actionsExport());
+        super(
+            ExecutionCoverageLocalize.actionGenerateCoverageReportText(),
+            ExecutionCoverageLocalize.actionGenerateCoverageReportDescription(),
+            PlatformIconGroup.actionsExport()
+        );
     }
 
     @Override

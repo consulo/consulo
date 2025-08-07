@@ -24,6 +24,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -42,8 +43,10 @@ public class BackwardDependenciesAction extends BaseAnalysisAction {
 
     public BackwardDependenciesAction() {
         super(
-            AnalysisScopeLocalize.actionBackwardDependencyAnalysis().get(),
-            AnalysisScopeLocalize.actionAnalysisNoun().get()
+            ActionLocalize.actionShowbackwardpackagedepsText(),
+            ActionLocalize.actionShowbackwardpackagedepsDescription(),
+            AnalysisScopeLocalize.actionBackwardDependencyAnalysis(),
+            AnalysisScopeLocalize.actionAnalysisNoun()
         );
     }
 

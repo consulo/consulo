@@ -20,8 +20,8 @@ import jakarta.annotation.Nonnull;
 public class HideCoverageInfoAction extends AnAction {
     public HideCoverageInfoAction() {
         super(
-            ExecutionCoverageLocalize.actionHidecoverageText(),
-            ExecutionCoverageLocalize.actionHidecoverageDescription(),
+            ExecutionCoverageLocalize.actionHideCoverageText(),
+            ExecutionCoverageLocalize.actionHideCoverageDescription(),
             PlatformIconGroup.actionsCancel()
         );
     }

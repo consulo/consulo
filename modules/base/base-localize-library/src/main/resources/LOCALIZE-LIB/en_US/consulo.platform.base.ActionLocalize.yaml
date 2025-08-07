@@ -1026,8 +1026,6 @@ action.GenerateAntBuild.description:
     text: Generate Ant Build File from the Project
 action.GenerateAntBuild.text:
     text: _Generate Ant Build…
-action.GenerateCoverageReport.text:
-    text: _Generate Coverage Report
 action.GenerateDTD.text:
     text: Generate DTD from _XML File
 action.GenerateSuperMethodCall.text:
@@ -1168,8 +1166,6 @@ action.HideAllWindows.description:
     text: Hide all tool windows
 action.HideAllWindows.text:
     text: Hide All _Tool Windows
-action.HideCoverageInfo.text:
-    text: Hide Co&verage Info
 action.HideSideWindows.description:
     text: Hide all windows on this side
 action.HideSideWindows.text:
@@ -1910,8 +1906,6 @@ action.ShowContent.text:
     text: Show List of Tabs
 action.ShowContent.views.text:
     text: Show List of Views
-action.ShowCoverageInfo.text:
-    text: Show Co&verage Info
 action.ShowDiagram.text:
     text: Show Diagram
 action.ShowErrorDescription.description:
@@ -2026,8 +2020,6 @@ action.SurroundWithLiveTemplate.description:
     text: Surrounds the selection with one of the template
 action.SurroundWithLiveTemplate.text:
     text: Surround with Live Tem_plate…
-action.SwitchCoverage.text:
-    text: Show Code Co_verage Data
 action.Synchronize.description:
     text: Detect all externally changed files and reload them from disk
 action.Synchronize.text:
@@ -2478,8 +2470,6 @@ group.Copy.Paste.Special.text:
     text: Copy / Paste Special
 group.CopyReferencePopupGroup.text:
     text: Copy Path/Reference…
-group.CoverageMenu.text:
-    text: Code Coverage Actions
 group.CutCopyPasteGroup.text:
     text: Cut/Copy/Paste Actions
 group.DebugMainMenu.text:

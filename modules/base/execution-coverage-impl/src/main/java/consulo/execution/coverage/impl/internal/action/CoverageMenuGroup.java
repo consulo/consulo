@@ -16,10 +16,12 @@
 package consulo.execution.coverage.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.coverage.action.HideCoverageInfoAction;
-import consulo.platform.base.localize.ActionLocalize;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 
@@ -34,10 +36,15 @@ import consulo.ui.ex.action.DefaultActionGroup;
         @ActionRef(type = GenerateCoverageReportAction.class),
         @ActionRef(type = HideCoverageInfoAction.class),
         @ActionRef(type = AnSeparator.class)
-    }
+    },
+    parents = @ActionParentRef(
+        value = @ActionRef(id = "AnalyzeMenu"),
+        anchor = ActionRefAnchor.BEFORE,
+        relatedToAction = @ActionRef(id = "AnalyzeActions")
+    )
 )
 public class CoverageMenuGroup extends DefaultActionGroup implements DumbAware {
     public CoverageMenuGroup() {
-        super(ActionLocalize.groupCoveragemenuText(), false);
+        super(ExecutionCoverageLocalize.groupCoverageMenuText(), false);
     }
 }

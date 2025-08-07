@@ -24,16 +24,18 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
 
 @ActionImpl(
-    id = "ShowPackageDeps",
+    id = IdeActions.ACTION_ANALYZE_DEPENDENCIES,
     parents = @ActionParentRef(value = @ActionRef(id = "ShowPackageDepsGroup"), anchor = ActionRefAnchor.FIRST)
 )
 public class AnalyzeDependenciesAction extends BaseAnalysisAction {
@@ -41,7 +43,12 @@ public class AnalyzeDependenciesAction extends BaseAnalysisAction {
     private IntBox myDeepField;
 
     public AnalyzeDependenciesAction() {
-        super(AnalysisScopeLocalize.actionForwardDependencyAnalysis().get(), AnalysisScopeLocalize.actionAnalysisNoun().get());
+        super(
+            ActionLocalize.actionShowpackagedepsText(),
+            ActionLocalize.actionShowpackagedepsDescription(),
+            AnalysisScopeLocalize.actionForwardDependencyAnalysis(),
+            AnalysisScopeLocalize.actionAnalysisNoun()
+        );
     }
 
     @Override
@@ -55,15 +62,15 @@ public class AnalyzeDependenciesAction extends BaseAnalysisAction {
         clear();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
         DockLayout dockLayout = DockLayout.create();
         layout.add(dockLayout);
 
-        dockLayout.left(
-            myTransitiveCB = CheckBox.create(LocalizeValue.localizeTODO("Show transitive dependencies. Do not travel deeper than")));
+        myTransitiveCB = CheckBox.create(LocalizeValue.localizeTODO("Show transitive dependencies. Do not travel deeper than"));
 
+        dockLayout.left(myTransitiveCB);
         dockLayout.right(myDeepField = IntBox.create(5));
 
         myDeepField.setEnabled(false);

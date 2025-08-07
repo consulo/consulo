@@ -30,6 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
@@ -53,11 +54,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class BaseAnalysisAction extends AnAction {
-    private final String myTitle;
-    private final String myAnalysisNoon;
+    @Nonnull
+    private final LocalizeValue myTitle;
+    @Nonnull
+    private final LocalizeValue myAnalysisNoon;
     private static final Logger LOG = Logger.getInstance(BaseAnalysisAction.class);
 
-    protected BaseAnalysisAction(String title, String analysisNoon) {
+    protected BaseAnalysisAction(
+        @Nonnull LocalizeValue text,
+        @Nonnull LocalizeValue description,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue analysisNoon
+    ) {
+        super(text, description);
         myTitle = title;
         myAnalysisNoon = analysisNoon;
     }

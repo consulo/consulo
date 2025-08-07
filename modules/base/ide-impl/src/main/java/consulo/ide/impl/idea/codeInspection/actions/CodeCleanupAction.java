@@ -20,6 +20,7 @@ import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
@@ -29,7 +30,12 @@ public class CodeCleanupAction extends CodeInspectionAction {
     public static final String CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME = "Code Cleanup Inspections";
 
     public CodeCleanupAction() {
-        super("Code Cleanup", "Code Cleanup");
+        super(
+            LocalizeValue.localizeTODO("Code Cleanup"),
+            LocalizeValue.localizeTODO("Code Cleanup"),
+            LocalizeValue.localizeTODO("Code Cleanup"),
+            LocalizeValue.localizeTODO("Code Cleanup")
+        );
     }
 
     @Override

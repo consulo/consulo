@@ -1,0 +1,172 @@
+action.DumbAware.CopyrightProfilesPanel.description.copy:
+    text: Copy
+action.DumbAware.CopyrightProfilesPanel.description.import:
+    text: Import
+action.DumbAware.CopyrightProfilesPanel.text.copy:
+    text: Copy
+action.DumbAware.CopyrightProfilesPanel.text.import:
+    text: Import
+action.GenerateCopyright.description:
+    text: Generate/Update the copyright notice.
+action.GenerateCopyright.text:
+    text: Copyright
+action.add.profile.text:
+    text: Add Profile
+action.local.text:
+    text: Local
+action.shared.text:
+    text: Shared
+action.stored.in.ide.description:
+    text: Stored in IDE
+action.stored.in.project.description:
+    text: Stored in Project
+action.update.copyright.description:
+    text: Generate/Update the copyright notice.
+action.update.copyright.text:
+    text: Update Copyright…
+before.checkin.update.copyright:
+    text: Update copyright
+button.validate:
+    text: Validate
+checkbox.text.update.existing.copyrights:
+    text: Update existing copyrights
+checkbox.update.copyright.notice:
+    text: Update copyright notice
+command.name.update.copyright:
+    text: Update copyright
+configurable.CopyrightFormattingConfigurable.display.name:
+    text: Formatting
+configurable.CopyrightProfilesPanel.display.name:
+    text: Copyright Profiles
+configurable.CopyrightProjectConfigurable.display.name:
+    text: Copyright
+copy.copyright.profile:
+    text: Copy Copyright Profile
+copyright.copyright.column:
+    text: Copyright
+copyright.default.project.copyright:
+    text: 'Default &project copyright:'
+copyright.file.chooser.label:
+    text: XML|IML files
+copyright.file.chooser.title:
+    text: Choose File Containing Copyright Notice
+copyright.local.description:
+    text: Local
+copyright.no.text:
+    text: No copyright
+copyright.profiles.add.profile:
+    text: Add profile
+copyright.profiles.empty:
+    text: No copyright profiles added.
+copyright.profiles.select.profile:
+    text: Select a profile to view or edit its details here
+copyright.scope.column:
+    text: Scope
+copyright.select.scopes.label:
+    text: Select Scopes to add new scopes or modify existing ones
+copyright.shared.description:
+    text: Shared
+create.copyright.profile:
+    text: Create Copyright Profile
+detect.copyright.regexp.is.incorrect.configuration.error:
+    text: 'Detect copyright regexp is incorrect:'
+dialog.message.duplicate.copyright.profile.name:
+    text: 'Duplicate copyright profile name: ''''{0}'''''
+dialog.message.new.copyright.profile.name:
+    text: 'New copyright profile name:'
+dialog.message.no.copyright.configured:
+    text: No copyright configured for current file. Would you like to edit copyright settings?
+dialog.message.the.copyright.settings.imported:
+    text: The copyright settings have been successfully imported.
+dialog.message.the.selected.file.copyright.settings:
+    text: The selected file does not contain any copyright settings.
+dialog.message.velocity.template.contains.error.0:
+    text: |-
+        Velocity template contains error:
+        {0}
+dialog.message.velocity.template.is.valid:
+    text: Velocity template is valid.
+dialog.title.import.complete:
+    text: Import Complete
+dialog.title.import.failure:
+    text: Import Failure
+dialog.title.no.copyright.available:
+    text: No Copyright Available
+dialog.title.validation:
+    text: Validation
+import.copyright.profile:
+    text: Import Copyright Profile
+label.allow.replacing.copyright.if.old.copyright.matches:
+    text: 'Allow replacing copyright if old copyright matches:'
+label.copyright.text.may.contain.velocity.templates:
+    text: 'Copyright text (may contain Velocity templates):'
+label.no.copyright.configured:
+    text: No copyright is configured
+label.regexp.to.detect.copyright.in.comments:
+    text: 'Regexp to detect copyright in comments:'
+label.updates.existing.copyrights.e.g.changes.year.or.updated.notice:
+    text: Updates copyright text, year, and other properties
+link.label.configure.copyright.settings:
+    text: Configure…
+popup.title.choose.profile.to.import:
+    text: Choose Profile to Import
+radio.location.in.file.before.class:
+    text: Before class
+radio.location.in.file.before.doctype:
+    text: Before doctype
+radio.location.in.file.before.imports:
+    text: Before imports
+radio.location.in.file.before.package:
+    text: Before package
+radio.location.in.file.before.root.tag:
+    text: Before root tag
+replace.copyright.regexp.is.incorrect.configuration.error:
+    text: 'Replace copyright regexp is incorrect:'
+settings.copyright.formatting.add.blank.line.after:
+    text: A&dd blank line after
+settings.copyright.formatting.add.blank.line.before:
+    text: Add blank line &before
+settings.copyright.formatting.after.other.comments:
+    text: Afte&r other comments
+settings.copyright.formatting.before.other.comments:
+    text: Bef&ore other comments
+settings.copyright.formatting.borders:
+    text: Borders
+settings.copyright.formatting.box:
+    text: Box
+settings.copyright.formatting.comment.type:
+    text: Comment Type
+settings.copyright.formatting.length:
+    text: 'Length:'
+settings.copyright.formatting.location.in.file:
+    text: Location in File
+settings.copyright.formatting.no.copyright:
+    text: No copyright
+settings.copyright.formatting.prefix.each.line:
+    text: Prefix each line
+settings.copyright.formatting.relative.location:
+    text: Relative Location
+settings.copyright.formatting.separator:
+    text: 'Separator:'
+settings.copyright.formatting.separator.after:
+    text: Separator after
+settings.copyright.formatting.separator.before:
+    text: Separator before
+settings.copyright.formatting.use.block.comment:
+    text: Use block comment
+settings.copyright.formatting.use.custom.formatting.options:
+    text: Use custom formatting options
+settings.copyright.formatting.use.default.settings:
+    text: Use default settings
+settings.copyright.formatting.use.line.comment:
+    text: Use line comment
+share.profile.checkbox.title:
+    text: Share through VCS
+share.profile.context.help:
+    text: <html>Shared profiles are stored in <code>.idea</code> directory<br>and are available to other team members through VCS.<br><br>When not shared, profiles are stored<br> on the IDE level and are applied to all projects.</html>
+task.title.prepare.copyright:
+    text: Prepare copyright…
+update.copyright.progress.title:
+    text: Update Copyright
+updating.copyrights.progress.message:
+    text: Updating copyrights…

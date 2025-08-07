@@ -1,7 +1,7 @@
 package consulo.execution.coverage.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.localize.LocalizeValue;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -14,7 +14,7 @@ import jakarta.annotation.Nonnull;
 @ActionImpl(id = "SwitchCoverage")
 public class SwitchCoverageSuiteAction extends AnAction {
     public SwitchCoverageSuiteAction() {
-        super(LocalizeValue.localizeTODO("Show Co_verage Data..."));
+        super(ExecutionCoverageLocalize.actionSwitchCoverageText(), ExecutionCoverageLocalize.actionSwitchCoverageDescription());
     }
 
     @Override
