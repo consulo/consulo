@@ -12,10 +12,9 @@ package consulo.ui.ex.action;
  * <li>actions with complex update logic will not freeze the UI thread while keeping the possibility to switch to it</li>
  * </ol>
  *
- * TODO not supported for now
+ * Partial supported by action toolbars
  *
  * @see AnAction#getActionUpdateThread()
- * @see UpdateSession
  */
 public enum ActionUpdateThread {
     /**
@@ -24,8 +23,6 @@ public enum ActionUpdateThread {
      * An action method must not access Swing component hierarchy directly.
      * All accessed models must be thread-safe (several update sessions can be run at the same time).
      * When on background thread, application-wide read access is guaranteed, so no synchronization for PSI, VFS and project model is necessary.
-     * <p>
-     * When the UI thread is absolutely necessary, use {@link UpdateSession#compute}.
      */
     BGT,
     /**
