@@ -42,4 +42,6 @@ module consulo.code.editor.api {
         consulo.desktop.swt.ide.impl,
         consulo.language.editor.impl,
         consulo.execution.debug.impl;
+
+    opens consulo.codeEditor.internal to consulo.proxy;
 }
