@@ -21,6 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 

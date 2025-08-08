@@ -26,6 +26,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import jakarta.annotation.Nonnull;
 
 /**

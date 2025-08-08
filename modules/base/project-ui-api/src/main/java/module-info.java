@@ -12,6 +12,7 @@ module consulo.project.ui.api {
     requires transitive kava.beans;
 
     exports consulo.project.ui;
+    exports consulo.project.ui.action;
     exports consulo.project.ui.localize;
     exports consulo.project.ui.notification;
     exports consulo.project.ui.notification.event;

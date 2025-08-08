@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.Pair;

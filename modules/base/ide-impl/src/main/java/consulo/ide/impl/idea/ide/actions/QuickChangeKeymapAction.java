@@ -20,6 +20,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;

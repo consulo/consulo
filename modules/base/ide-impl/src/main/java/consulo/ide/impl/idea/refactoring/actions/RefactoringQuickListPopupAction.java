@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.refactoring.actions;
 
-import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;

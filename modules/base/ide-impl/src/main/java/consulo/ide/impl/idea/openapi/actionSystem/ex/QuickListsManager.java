@@ -26,7 +26,7 @@ import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.io.PathUtil;

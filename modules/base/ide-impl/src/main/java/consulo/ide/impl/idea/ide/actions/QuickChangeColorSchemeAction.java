@@ -23,6 +23,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

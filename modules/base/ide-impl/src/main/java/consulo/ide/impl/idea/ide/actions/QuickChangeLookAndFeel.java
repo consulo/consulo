@@ -22,6 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;

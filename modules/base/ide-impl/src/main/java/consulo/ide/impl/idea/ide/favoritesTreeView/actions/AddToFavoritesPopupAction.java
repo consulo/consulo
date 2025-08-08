@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
+import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.dataContext.DataContext;
