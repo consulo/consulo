@@ -13,20 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.copy.CopyHandler;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 
+@ActionImpl(id = "CloneElement")
 public class CloneElementAction extends CopyElementAction {
     private static final Logger LOG = Logger.getInstance(CloneElementAction.class);
+
+    public CloneElementAction() {
+        super(ActionLocalize.actionCloneelementText(), ActionLocalize.actionCloneelementDescription());
+    }
 
     @Override
     protected void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory) {

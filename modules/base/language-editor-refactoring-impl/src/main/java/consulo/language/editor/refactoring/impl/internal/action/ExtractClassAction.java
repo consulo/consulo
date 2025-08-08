@@ -15,13 +15,20 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ExtractClass")
 public class ExtractClassAction extends BasePlatformRefactoringAction {
+    public ExtractClassAction() {
+        super(ActionLocalize.actionExtractclassText(), ActionLocalize.actionExtractclassDescription());
+    }
+
     @Override
     protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
         return provider.getExtractClassHandler();

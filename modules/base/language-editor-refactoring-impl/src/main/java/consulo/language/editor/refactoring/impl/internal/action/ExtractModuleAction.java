@@ -15,14 +15,21 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
  */
+@ActionImpl(id = "ExtractModule")
 public class ExtractModuleAction extends ExtractSuperActionBase {
+    public ExtractModuleAction() {
+        super(ActionLocalize.actionExtractmoduleText(), ActionLocalize.actionExtractmoduleDescription());
+    }
+
     @Override
     protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider supportProvider) {
         return supportProvider.getExtractModuleHandler();

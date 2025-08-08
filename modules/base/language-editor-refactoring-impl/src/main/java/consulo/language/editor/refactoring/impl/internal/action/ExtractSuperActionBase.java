@@ -16,8 +16,14 @@
 package consulo.language.editor.refactoring.impl.internal.action;
 
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 public abstract class ExtractSuperActionBase extends BasePlatformRefactoringAction {
+    protected ExtractSuperActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
+
     @Override
     public boolean isAvailableInEditorOnly() {
         return false;

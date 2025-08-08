@@ -15,14 +15,19 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
-import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.psi.PsiElement;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ExtractMethod")
 public class ExtractMethodAction extends BasePlatformRefactoringAction {
     public ExtractMethodAction() {
+        super(ActionLocalize.actionExtractmethodText(), ActionLocalize.actionExtractmethodDescription());
         setInjectedContext(true);
     }
 
@@ -32,6 +37,7 @@ public class ExtractMethodAction extends BasePlatformRefactoringAction {
     }
 
     @Override
+    @RequiredReadAction
     public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
         return false;
     }

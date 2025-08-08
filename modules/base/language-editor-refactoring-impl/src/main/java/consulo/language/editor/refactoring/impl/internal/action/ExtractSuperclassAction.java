@@ -15,12 +15,16 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.platform.base.localize.ActionLocalize;
 import jakarta.annotation.Nonnull;
 
+@ActionImpl(id = "ExtractSuperclass")
 public class ExtractSuperclassAction extends ExtractSuperActionBase {
     public ExtractSuperclassAction() {
+        super(ActionLocalize.actionExtractsuperclassText(), ActionLocalize.actionExtractsuperclassDescription());
         setInjectedContext(true);
     }
 
