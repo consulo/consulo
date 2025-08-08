@@ -15,10 +15,13 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
 /**
  * @author Konstantin Bulenkov
  */
 @FunctionalInterface
 public interface AnActionButtonRunnable {
-  void run(AnActionButton button);
+    @RequiredUIAccess
+    void run(AnActionButton button);
 }
