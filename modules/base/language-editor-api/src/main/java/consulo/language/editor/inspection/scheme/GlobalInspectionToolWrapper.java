@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.internal.inspection;
+package consulo.language.editor.inspection.scheme;
 
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.reference.RefGraphAnnotator;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.editor.internal.RefManagerInternal;
 import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;

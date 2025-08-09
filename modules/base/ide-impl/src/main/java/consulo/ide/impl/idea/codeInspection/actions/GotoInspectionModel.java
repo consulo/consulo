@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.gotoByName.SimpleChooseByNameModel;
-import consulo.language.editor.internal.inspection.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;

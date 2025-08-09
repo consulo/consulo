@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.internal.inspection.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;

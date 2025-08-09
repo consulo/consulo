@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.internal.inspection;
+package consulo.language.editor.inspection.scheme;
 
 import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -69,12 +65,12 @@ public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspe
   }
 
   public static InspectionToolWrapper findTool2RunInBatch(@Nonnull Project project, @Nullable PsiElement element, @Nonnull String name) {
-    final InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-    final InspectionToolWrapper toolWrapper = element == null ? inspectionProfile.getInspectionTool(name, project) : inspectionProfile.getInspectionTool(name, element);
+    InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
+    InspectionToolWrapper toolWrapper = element == null ? inspectionProfile.getInspectionTool(name, project) : inspectionProfile.getInspectionTool(name, element);
     if (toolWrapper instanceof LocalInspectionToolWrapper && ((LocalInspectionToolWrapper)toolWrapper).isUnfair()) {
-      final LocalInspectionTool inspectionTool = ((LocalInspectionToolWrapper)toolWrapper).getTool();
+      LocalInspectionTool inspectionTool = ((LocalInspectionToolWrapper)toolWrapper).getTool();
       if (inspectionTool instanceof PairedUnfairLocalInspectionTool) {
-        final String oppositeShortName = ((PairedUnfairLocalInspectionTool)inspectionTool).getInspectionForBatchShortName();
+        String oppositeShortName = ((PairedUnfairLocalInspectionTool)inspectionTool).getInspectionForBatchShortName();
         return element == null ? inspectionProfile.getInspectionTool(oppositeShortName, project) : inspectionProfile.getInspectionTool(oppositeShortName, element);
       }
       return null;

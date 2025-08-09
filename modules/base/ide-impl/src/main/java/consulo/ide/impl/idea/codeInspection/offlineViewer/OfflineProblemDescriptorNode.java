@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.codeInspection.ui.ProblemDescriptionNode;
 import consulo.language.Language;
 import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.language.editor.internal.inspection.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.ProblemsHolderImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
