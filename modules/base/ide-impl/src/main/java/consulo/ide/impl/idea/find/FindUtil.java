@@ -620,7 +620,7 @@ public class FindUtil {
             }
 
             if (toPrompt) {
-                int promptResult = findManager.showPromptDialog(model, FindLocalize.findReplaceDialogTitle().get());
+                int promptResult = findManager.showPromptDialog(model, FindLocalize.findReplaceDialogTitle());
                 if (promptResult == FindManager.PromptResult.SKIP) {
                     offset = model.isForward() ? result.getEndOffset() : startResultOffset;
                     continue;

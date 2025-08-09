@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.todo.configurable;
 
 import consulo.application.HelpManager;
-import consulo.ide.impl.idea.ide.todo.TodoFilter;
+import consulo.language.editor.todo.TodoFilter;
 import consulo.ide.impl.idea.util.ui.Table;
 import consulo.language.psi.search.TodoPattern;
 import consulo.platform.base.localize.CommonLocalize;

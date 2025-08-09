@@ -35,7 +35,7 @@ import jakarta.annotation.Nullable;
 public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigurable implements ProjectConfigurable {
   @Inject
   public ProjectInspectionToolsConfigurable(InspectionProfileManager profileManager, InspectionProjectProfileManager projectProfileManager) {
-    super((consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager)projectProfileManager, profileManager);
+    super((consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager)projectProfileManager, profileManager);
   }
 
   @Nonnull

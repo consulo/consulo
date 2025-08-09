@@ -21,10 +21,9 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 
 /**
  * @author VISTALL
@@ -32,27 +31,29 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface InjectedEditorManager {
-  static InjectedEditorManager getInstance(@Nonnull Project project) {
-    return project.getInstance(InjectedEditorManager.class);
-  }
+    static InjectedEditorManager getInstance(@Nonnull Project project) {
+        return project.getInstance(InjectedEditorManager.class);
+    }
 
-  @Nullable
-  Editor openEditorFor(@Nonnull PsiFile file);
+    @Nullable
+    Editor openEditorFor(@Nonnull PsiFile file);
 
-  /**
-   * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
-   */
-  @Contract("null,_,_->null;!null,_,_->!null")
-  Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, final int offset);
+    /**
+     * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
+     */
+    @Contract("null,_,_->null;!null,_,_->!null")
+    Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, final int offset);
 
-  /**
-   * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
-   */
-  Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable Caret caret, @Nullable PsiFile file);
+    /**
+     * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
+     */
+    Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable Caret caret, @Nullable PsiFile file);
 
-  /**
-   * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
-   */
-  @Contract("null,_->null;!null,_->!null")
-  Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file);
+    /**
+     * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
+     */
+    @Contract("null,_->null;!null,_->!null")
+    Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file);
+
+    Editor getInjectedEditorForInjectedFile(@Nonnull Editor hostEditor, @Nullable PsiFile injectedFile);
 }

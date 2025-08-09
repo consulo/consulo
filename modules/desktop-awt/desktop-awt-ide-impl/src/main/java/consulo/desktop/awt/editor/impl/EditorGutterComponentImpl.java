@@ -31,7 +31,7 @@ import consulo.document.MarkupIterator;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.Segment;
 import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
-import consulo.ide.impl.idea.codeInsight.daemon.NonHideableIconGutterMark;
+import consulo.codeEditor.markup.NonHideableIconGutterMark;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;

@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
 import consulo.ide.impl.idea.codeInspection.offlineViewer.OfflineInspectionRVContentProvider;
 import consulo.ide.impl.idea.codeInspection.offlineViewer.OfflineViewParseUtil;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;

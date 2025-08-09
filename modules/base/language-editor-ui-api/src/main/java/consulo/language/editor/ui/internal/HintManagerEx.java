@@ -106,4 +106,6 @@ public interface HintManagerEx extends HintManager {
     );
 
     void updateLocation(LightweightHint hint, Editor editor, Point p);
+
+    boolean performCurrentQuestionAction();
 }

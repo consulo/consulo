@@ -156,10 +156,10 @@ public class InjectedLanguageUtil {
   public static boolean enumerate(@Nonnull PsiElement host, @Nonnull PsiFile containingFile, boolean probeUp, @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
     //do not inject into nonphysical files except during completion
     if (!containingFile.isPhysical() && containingFile.getOriginalFile() == containingFile) {
-      final PsiElement context = InjectedLanguageManager.getInstance(containingFile.getProject()).getInjectionHost(containingFile);
+      PsiElement context = InjectedLanguageManager.getInstance(containingFile.getProject()).getInjectionHost(containingFile);
       if (context == null) return false;
 
-      final PsiFile file = context.getContainingFile();
+      PsiFile file = context.getContainingFile();
       if (file == null || !file.isPhysical() && file.getOriginalFile() == file) return false;
     }
 
@@ -243,13 +243,13 @@ public class InjectedLanguageUtil {
    */
   @Nullable
   @SuppressWarnings("unchecked") // We check types dynamically (using isAssignableFrom)
-  public static <T extends PsiFileBase> T findInjectedFile(@Nonnull final PsiElement expression, @Nonnull final Class<T> classToFind) {
-    final List<Pair<PsiElement, TextRange>> files = InjectedLanguageManager.getInstance(expression.getProject()).getInjectedPsiFiles(expression);
+  public static <T extends PsiFileBase> T findInjectedFile(@Nonnull PsiElement expression, @Nonnull Class<T> classToFind) {
+    List<Pair<PsiElement, TextRange>> files = InjectedLanguageManager.getInstance(expression.getProject()).getInjectedPsiFiles(expression);
     if (files == null) {
       return null;
     }
-    for (final Pair<PsiElement, TextRange> fileInfo : files) {
-      final PsiElement injectedFile = fileInfo.first;
+    for (Pair<PsiElement, TextRange> fileInfo : files) {
+      PsiElement injectedFile = fileInfo.first;
       if (classToFind.isAssignableFrom(injectedFile.getClass())) {
         return (T)injectedFile;
       }
@@ -261,19 +261,19 @@ public class InjectedLanguageUtil {
    * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
    */
   @Contract("null,_,_->null;!null,_,_->!null")
-  public static Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, final int offset) {
+  public static Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset) {
     if (editor == null || file == null || editor instanceof EditorWindow) return editor;
     PsiFile injectedFile = findInjectedPsiNoCommit(file, offset);
     return getInjectedEditorForInjectedFile(editor, injectedFile);
   }
 
   @Nonnull
-  public static Editor getInjectedEditorForInjectedFile(@Nonnull Editor hostEditor, @Nullable final PsiFile injectedFile) {
+  public static Editor getInjectedEditorForInjectedFile(@Nonnull Editor hostEditor, @Nullable PsiFile injectedFile) {
     return getInjectedEditorForInjectedFile(hostEditor, hostEditor.getCaretModel().getCurrentCaret(), injectedFile);
   }
 
   @Nonnull
-  public static Editor getInjectedEditorForInjectedFile(@Nonnull Editor hostEditor, @Nonnull Caret hostCaret, @Nullable final PsiFile injectedFile) {
+  public static Editor getInjectedEditorForInjectedFile(@Nonnull Editor hostEditor, @Nonnull Caret hostCaret, @Nullable PsiFile injectedFile) {
     if (injectedFile == null || hostEditor instanceof EditorWindow || hostEditor.isDisposed()) return hostEditor;
     Project project = hostEditor.getProject();
     if (project == null) project = injectedFile.getProject();
@@ -436,11 +436,11 @@ public class InjectedLanguageUtil {
   /**
    * Invocation of this method on uncommitted {@code hostFile} can lead to unexpected results, including throwing an exception!
    */
-  static PsiElement findInjectedElementNoCommit(@Nonnull PsiFile hostFile, final int offset) {
+  static PsiElement findInjectedElementNoCommit(@Nonnull PsiFile hostFile, int offset) {
     if (hostFile instanceof PsiCompiledElement) return null;
     Project project = hostFile.getProject();
     if (InjectedLanguageManager.getInstance(project).isInjectedFragment(hostFile)) return null;
-    final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
     Trinity<PsiElement, PsiElement, Language> result = tryOffset(hostFile, offset, documentManager);
     return result.first;
   }
@@ -448,7 +448,7 @@ public class InjectedLanguageUtil {
   // returns (injected psi, leaf element at the offset, language of the leaf element)
   // since findElementAt() is expensive, we trying to reuse its result
   @Nonnull
-  private static Trinity<PsiElement, PsiElement, Language> tryOffset(@Nonnull PsiFile hostFile, final int offset, @Nonnull PsiDocumentManager documentManager) {
+  private static Trinity<PsiElement, PsiElement, Language> tryOffset(@Nonnull PsiFile hostFile, int offset, @Nonnull PsiDocumentManager documentManager) {
     FileViewProvider provider = hostFile.getViewProvider();
     Language leafLanguage = null;
     PsiElement leafElement = null;
@@ -475,8 +475,8 @@ public class InjectedLanguageUtil {
     return Trinity.create(null, leafElement, leafLanguage);
   }
 
-  private static PsiElement findInside(@Nonnull PsiElement element, @Nonnull PsiFile hostFile, final int hostOffset, @Nonnull final PsiDocumentManager documentManager) {
-    final Ref<PsiElement> out = new Ref<>();
+  private static PsiElement findInside(@Nonnull PsiElement element, @Nonnull PsiFile hostFile, int hostOffset, @Nonnull PsiDocumentManager documentManager) {
+    Ref<PsiElement> out = new Ref<>();
     enumerate(element, hostFile, true, (injectedPsi, places) -> {
       for (PsiLanguageInjectionHost.Shred place : places) {
         TextRange hostRange = place.getHost().getTextRange();
@@ -586,7 +586,7 @@ public class InjectedLanguageUtil {
   }
 
   @Deprecated
-  public static boolean isInInjectedLanguagePrefixSuffix(@Nonnull final PsiElement element) {
+  public static boolean isInInjectedLanguagePrefixSuffix(@Nonnull PsiElement element) {
     return InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element);
   }
 
@@ -635,13 +635,13 @@ public class InjectedLanguageUtil {
   @Deprecated
   public static boolean hasInjections(@Nonnull PsiLanguageInjectionHost host) {
     if (!host.isPhysical()) return false;
-    final Ref<Boolean> result = Ref.create(false);
+    Ref<Boolean> result = Ref.create(false);
     enumerate(host, (injectedPsi, places) -> result.set(true));
     return result.get().booleanValue();
   }
 
   public static String getUnescapedText(@Nonnull PsiFile file, @Nullable final PsiElement startElement, @Nullable final PsiElement endElement) {
-    final InjectedLanguageManager manager = InjectedLanguageManager.getInstance(file.getProject());
+    InjectedLanguageManager manager = InjectedLanguageManager.getInstance(file.getProject());
     if (manager.getInjectionHost(file) == null) {
       return file.getText().substring(startElement == null ? 0 : startElement.getTextRange().getStartOffset(), endElement == null ? file.getTextLength() : endElement.getTextRange().getStartOffset());
     }
@@ -698,8 +698,8 @@ public class InjectedLanguageUtil {
   }
 
   @Nullable
-  public static PsiElement findElementInInjected(@Nonnull PsiLanguageInjectionHost injectionHost, final int offset) {
-    final Ref<PsiElement> ref = Ref.create();
+  public static PsiElement findElementInInjected(@Nonnull PsiLanguageInjectionHost injectionHost, int offset) {
+    Ref<PsiElement> ref = Ref.create();
     enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
     return ref.get();
   }

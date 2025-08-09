@@ -10,8 +10,8 @@ import consulo.language.editor.impl.internal.inlay.setting.DeclarativeInlayHints
 import consulo.language.editor.internal.InlayHintsSettings;
 import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
@@ -67,7 +67,7 @@ public class DeclarativeInlayHintsPassFactory
 
     public static void scheduleRecompute(Editor editor, Project project) {
         resetModificationStamp(editor);
-        DaemonCodeAnalyzerEx.getInstanceEx(project)
+        DaemonCodeAnalyzerInternal.getInstanceEx(project)
             .restart("DeclarativeInlayHintsPassFactory.scheduleRecompute");
     }
 

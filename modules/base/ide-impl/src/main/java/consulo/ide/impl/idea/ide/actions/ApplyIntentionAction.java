@@ -19,8 +19,9 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
 import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
+import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -37,7 +38,7 @@ public class ApplyIntentionAction extends AnAction {
     private final Editor myEditor;
     private final PsiFile myFile;
 
-    public ApplyIntentionAction(HighlightInfoImpl.IntentionActionDescriptor descriptor, String text, Editor editor, PsiFile file) {
+    public ApplyIntentionAction(IntentionActionDescriptor descriptor, String text, Editor editor, PsiFile file) {
         this(descriptor.getAction(), text, editor, file);
     }
 
@@ -60,20 +61,20 @@ public class ApplyIntentionAction extends AnAction {
 
     @Nullable
     public static ApplyIntentionAction[] getAvailableIntentions(Editor editor, PsiFile file) {
-        ShowIntentionsPass.IntentionsInfo info = new ShowIntentionsPass.IntentionsInfo();
+        IntentionsInfo info = new IntentionsInfo();
         Application.get().runReadAction(() -> ShowIntentionsPass.getActionsToShow(editor, file, info, -1));
         if (info.isEmpty()) {
             return null;
         }
 
-        List<HighlightInfoImpl.IntentionActionDescriptor> actions = new ArrayList<>();
+        List<IntentionActionDescriptor> actions = new ArrayList<>();
         actions.addAll(info.errorFixesToShow);
         actions.addAll(info.inspectionFixesToShow);
         actions.addAll(info.intentionsToShow);
 
         ApplyIntentionAction[] result = new ApplyIntentionAction[actions.size()];
         for (int i = 0; i < result.length; i++) {
-            HighlightInfoImpl.IntentionActionDescriptor descriptor = actions.get(i);
+            IntentionActionDescriptor descriptor = actions.get(i);
             String actionText = Application.get().runReadAction((Supplier<String>)() -> descriptor.getAction().getText());
             result[i] = new ApplyIntentionAction(descriptor, actionText, editor, file);
         }

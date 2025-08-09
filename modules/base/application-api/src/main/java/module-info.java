@@ -56,6 +56,7 @@ module consulo.application.api {
         consulo.test.impl,
         consulo.ui.ex.api,
         consulo.project.impl,
+        consulo.language.editor.api,
         consulo.language.editor.refactoring.api,
         consulo.language.editor.impl,
         consulo.language.code.style.impl,

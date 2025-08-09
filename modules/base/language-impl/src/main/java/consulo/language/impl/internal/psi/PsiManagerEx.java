@@ -15,53 +15,60 @@
  */
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import consulo.language.impl.internal.file.FileManager;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.TestOnly;
 
 /**
  * @author peter
  */
 public abstract class PsiManagerEx extends PsiManager {
-  public static PsiManagerEx getInstanceEx(Project project) {
-    return (PsiManagerEx)getInstance(project);
-  }
-  public abstract boolean isBatchFilesProcessingMode();
+    public static PsiManagerEx getInstanceEx(Project project) {
+        return (PsiManagerEx) getInstance(project);
+    }
 
-  @TestOnly
-  public abstract void setAssertOnFileLoadingFilter(@Nonnull VirtualFileFilter filter, @Nonnull Disposable parentDisposable);
+    public abstract boolean isBatchFilesProcessingMode();
 
-  @TestOnly
-  public abstract boolean isAssertOnFileLoading(@Nonnull VirtualFile file);
+    @TestOnly
+    public abstract void setAssertOnFileLoadingFilter(@Nonnull VirtualFileFilter filter, @Nonnull Disposable parentDisposable);
 
-  /**
-   * @param runnable to be run before <b>physical</b> PSI change
-   */
-  public abstract void registerRunnableToRunOnChange(@Nonnull Runnable runnable);
+    @TestOnly
+    public abstract boolean isAssertOnFileLoading(@Nonnull VirtualFile file);
 
-  /**
-   * @param runnable to be run before <b>physical</b> or <b>non-physical</b> PSI change
-   */
-  public abstract void registerRunnableToRunOnAnyChange(@Nonnull Runnable runnable);
+    /**
+     * @param runnable to be run before <b>physical</b> PSI change
+     */
+    public abstract void registerRunnableToRunOnChange(@Nonnull Runnable runnable);
 
-  public abstract void registerRunnableToRunAfterAnyChange(@Nonnull Runnable runnable);
+    /**
+     * @param runnable to be run before <b>physical</b> or <b>non-physical</b> PSI change
+     */
+    public abstract void registerRunnableToRunOnAnyChange(@Nonnull Runnable runnable);
 
-  @Nonnull
-  public abstract FileManager getFileManager();
+    public abstract void registerRunnableToRunAfterAnyChange(@Nonnull Runnable runnable);
 
-  public abstract void beforeChildAddition(@Nonnull PsiTreeChangeEventImpl event);
+    @Nonnull
+    public abstract FileManager getFileManager();
 
-  public abstract void beforeChildRemoval(@Nonnull PsiTreeChangeEventImpl event);
+    public abstract void beforeChildAddition(@Nonnull PsiTreeChangeEventImpl event);
 
-  public abstract void beforeChildReplacement(@Nonnull PsiTreeChangeEventImpl event);
+    public abstract void beforeChildRemoval(@Nonnull PsiTreeChangeEventImpl event);
 
-  public abstract void beforeChange(boolean isPhysical);
+    public abstract void beforeChildReplacement(@Nonnull PsiTreeChangeEventImpl event);
 
-  public abstract void afterChange(boolean isPhysical);
+    public abstract void beforeChange(boolean isPhysical);
+
+    public abstract void afterChange(boolean isPhysical);
+
+    @RequiredReadAction
+    public PsiFile getCachedPsiFile(@Nonnull VirtualFile vFile) {
+        return getFileManager().getCachedPsiFile(vFile);
+    }
 }

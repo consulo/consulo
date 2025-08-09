@@ -193,7 +193,7 @@
         <schemeOwner serviceInterface="consulo.language.editor.inspection.scheme.InspectionProfileManager"/>
 
 
-        <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.changeSignature.inplace.EscapeHandler" id="changeSignatureEscape"-->
+        <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.language.editor.refactoring.impl.internal.changeSignature.EscapeHandler" id="changeSignatureEscape"-->
         <!--order="before hide-search"/>-->
 
 

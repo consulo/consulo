@@ -13,12 +13,14 @@ import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.language.editor.Pass;
 import consulo.language.editor.ReferenceImporter;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
@@ -111,7 +113,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
         Document document = myEditor.getDocument();
         List<HighlightInfoImpl> infos = new ArrayList<>();
-        DaemonCodeAnalyzerEx.processHighlights(
+        DaemonCodeAnalyzerInternal.processHighlights(
             document,
             myProject,
             null,
@@ -155,7 +157,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     ) {
         List<HighlightInfoImpl> highlights = new ArrayList<>();
         int offset = editor.getCaretModel().getOffset();
-        DaemonCodeAnalyzerEx.processHighlights(
+        DaemonCodeAnalyzerInternal.processHighlights(
             editor.getDocument(),
             project,
             null,
@@ -199,13 +201,13 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
     @Nonnull
     private static List<HintAction> extractHints(@Nonnull HighlightInfoImpl info) {
-        List<Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange>> list = info.quickFixActionRanges;
+        List<Pair<IntentionActionDescriptor, TextRange>> list = info.quickFixActionRanges;
         if (list == null) {
             return Collections.emptyList();
         }
 
         List<HintAction> hintActions = new SmartList<>();
-        for (Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> pair : list) {
+        for (Pair<IntentionActionDescriptor, TextRange> pair : list) {
             IntentionAction action = pair.getFirst().getAction();
             if (action instanceof HintAction hintAction) {
                 hintActions.add(hintAction);

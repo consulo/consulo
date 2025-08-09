@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.history.PlaceInfo;
 import consulo.fileEditor.history.RecentPlacesListener;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.application.ui.UISettings;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.colorScheme.EditorColorsManager;
@@ -208,7 +208,7 @@ public class RecentLocationsDataModel {
     ) {
         int startOffset = rangeMarker.getStartOffset();
         int endOffset = rangeMarker.getEndOffset();
-        DaemonCodeAnalyzerEx.processHighlights(document, project, null, startOffset, endOffset, i -> {
+        DaemonCodeAnalyzerInternal.processHighlights(document, project, null, startOffset, endOffset, i -> {
             HighlightInfoImpl info = (HighlightInfoImpl)i;
 
             if (info.getStartOffset() >= startOffset && info.getEndOffset() <= endOffset) {

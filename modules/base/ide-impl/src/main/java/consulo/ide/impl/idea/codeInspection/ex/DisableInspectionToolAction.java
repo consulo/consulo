@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;

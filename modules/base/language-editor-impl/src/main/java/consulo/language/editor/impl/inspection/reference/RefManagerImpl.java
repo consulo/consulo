@@ -16,6 +16,7 @@ import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.InspectionExtensionsFactory;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.reference.*;
+import consulo.language.editor.internal.RefManagerInternal;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.psi.PsiAnchor;
@@ -51,7 +52,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class RefManagerImpl extends RefManager {
+public class RefManagerImpl implements RefManagerInternal {
     private static final Logger LOG = Logger.getInstance(RefManagerImpl.class);
 
     private long myLastUsedMask = 0x0800_0000; // guarded by this

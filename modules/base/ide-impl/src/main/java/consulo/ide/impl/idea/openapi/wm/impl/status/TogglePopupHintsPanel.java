@@ -9,7 +9,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.HectorComponent;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.highlight.FileHighlightingSettingListener;
 import consulo.language.editor.highlight.HighlightingLevelManager;

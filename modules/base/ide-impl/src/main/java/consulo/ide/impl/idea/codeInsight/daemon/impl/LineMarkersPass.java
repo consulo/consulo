@@ -18,7 +18,7 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.gutter.*;
 import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.highlight.Divider;
 import consulo.language.editor.util.CollectHighlightsUtil;
 import consulo.language.file.FileViewProvider;

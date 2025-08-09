@@ -18,6 +18,8 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.todo.TodoConfiguration;
+import consulo.language.editor.todo.TodoConfigurationListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;

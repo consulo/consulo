@@ -37,6 +37,7 @@ import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.Divider;
 import consulo.language.editor.impl.internal.highlight.GeneralHighlightingPass;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -320,11 +321,11 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
       patched.setHint(info.hasHint());
 
       if (info.quickFixActionRanges != null) {
-        for (consulo.util.lang.Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> pair : info.quickFixActionRanges) {
+        for (consulo.util.lang.Pair<IntentionActionDescriptor, TextRange> pair : info.quickFixActionRanges) {
           TextRange quickfixTextRange = pair.getSecond();
           List<TextRange> editableQF = injectedLanguageManager.intersectWithAllEditableFragments(injectedPsi, quickfixTextRange);
           for (TextRange editableRange : editableQF) {
-            HighlightInfoImpl.IntentionActionDescriptor descriptor = pair.getFirst();
+            IntentionActionDescriptor descriptor = pair.getFirst();
             if (patched.quickFixActionRanges == null) patched.quickFixActionRanges = new ArrayList<>();
             TextRange hostEditableRange = documentWindow.injectedToHost(editableRange);
             patched.quickFixActionRanges.add(Pair.create(descriptor, hostEditableRange));

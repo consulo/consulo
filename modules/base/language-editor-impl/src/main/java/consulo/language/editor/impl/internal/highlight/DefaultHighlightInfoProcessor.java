@@ -14,9 +14,9 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.HighlightingSession;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.impl.internal.daemon.ShowAutoImportPassFactory;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripeUpdateManager;
@@ -159,7 +159,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         if (document == null) {
             return;
         }
-        DaemonCodeAnalyzerEx.processHighlights(
+        DaemonCodeAnalyzerInternal.processHighlights(
             document,
             project,
             null,

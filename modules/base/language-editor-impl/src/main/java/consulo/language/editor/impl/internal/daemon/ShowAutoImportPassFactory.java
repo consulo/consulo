@@ -17,8 +17,8 @@ package consulo.language.editor.impl.internal.daemon;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.editor.AutoImportHelper;
 import consulo.language.editor.Pass;
 import consulo.language.psi.PsiFile;

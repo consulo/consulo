@@ -200,11 +200,9 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeEditor.printing;
   exports consulo.ide.impl.idea.codeInsight;
   exports consulo.ide.impl.idea.codeInsight.actions;
-  exports consulo.ide.impl.idea.codeInsight.codeFragment;
   exports consulo.ide.impl.idea.codeInsight.completion;
   exports consulo.ide.impl.idea.codeInsight.completion.actions;
   exports consulo.ide.impl.idea.codeInsight.completion.impl;
-  exports consulo.ide.impl.idea.codeInsight.daemon;
   exports consulo.ide.impl.idea.codeInsight.daemon.impl;
   exports consulo.ide.impl.idea.codeInsight.daemon.impl.actions;
   exports consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
@@ -528,16 +526,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.profile.codeInspection.ui.header;
   exports consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
   exports consulo.ide.impl.idea.profile.codeInspection.ui.table;
-  exports consulo.ide.impl.idea.refactoring.actions;
-  exports consulo.ide.impl.idea.refactoring.changeSignature;
-  exports consulo.ide.impl.idea.refactoring.changeSignature.inplace;
-  exports consulo.ide.impl.idea.refactoring.extractMethod;
-  exports consulo.ide.impl.idea.refactoring.extractSuperclass;
-  exports consulo.ide.impl.idea.refactoring.inline;
-  exports consulo.ide.impl.idea.refactoring.introduce.inplace;
-  exports consulo.ide.impl.idea.refactoring.lang;
-  exports consulo.ide.impl.idea.refactoring.ui;
-  exports consulo.ide.impl.idea.refactoring.util;
   exports consulo.ide.impl.idea.reference;
 
   exports consulo.ide.impl.idea.reporting;
@@ -609,7 +597,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.ui;
   exports consulo.ide.impl.idea.util.ui.accessibility;
   exports consulo.ide.impl.idea.util.ui.classpath;
-  exports consulo.ide.impl.idea.util.ui.table;
   exports consulo.ide.impl.idea.util.ui.tree;
   exports consulo.ide.impl.idea.util.ui.update;
   exports consulo.ide.impl.idea.vcs;

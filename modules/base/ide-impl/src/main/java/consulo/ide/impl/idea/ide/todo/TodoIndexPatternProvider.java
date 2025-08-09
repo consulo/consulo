@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.todo.TodoConfiguration;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternProvider;
 import jakarta.inject.Inject;

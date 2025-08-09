@@ -21,6 +21,8 @@ import consulo.ide.impl.idea.ide.todo.nodes.TodoTreeHelper;
 import consulo.ide.impl.idea.openapi.wm.impl.VisibilityWatcher;
 import consulo.ide.impl.idea.usages.impl.UsagePreviewPanel;
 import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.todo.TodoConfiguration;
+import consulo.language.editor.todo.TodoFilter;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

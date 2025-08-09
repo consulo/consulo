@@ -16,8 +16,8 @@
 package consulo.web.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
-import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
+import consulo.language.editor.internal.intention.IntentionsUI;
+import consulo.language.editor.internal.intention.CachedIntentions;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

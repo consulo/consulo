@@ -41,7 +41,7 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleViewUtil;
-import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
+import consulo.language.editor.todo.TodoConfiguration;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;

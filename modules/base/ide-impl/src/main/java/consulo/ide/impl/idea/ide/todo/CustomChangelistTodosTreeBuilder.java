@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.language.editor.todo.TodoFilter;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.versionControlSystem.change.Change;

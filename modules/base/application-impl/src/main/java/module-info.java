@@ -34,7 +34,9 @@ module consulo.application.impl {
         consulo.module.impl,
         consulo.project.impl,
         consulo.sand.language.plugin,
-        consulo.language.impl;
+        consulo.language.impl,
+        consulo.language.editor.api,
+        consulo.language.editor.impl;
 
     exports consulo.application.impl.internal.macro to consulo.ide.impl, consulo.module.impl, consulo.project.impl;
 

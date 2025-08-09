@@ -7,6 +7,7 @@ import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.QuickFix;
+import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
@@ -22,7 +23,7 @@ public interface IntentionMenuContributor {
     void collectActions(
         @Nonnull Editor hostEditor,
         @Nonnull PsiFile hostFile,
-        @Nonnull ShowIntentionsPass.IntentionsInfo intentions,
+        @Nonnull IntentionsInfo intentions,
         int passIdToShowIntentionsFor,
         int offset
     );

@@ -22,10 +22,12 @@ module consulo.language.editor.refactoring.api {
     exports consulo.language.editor.refactoring;
     exports consulo.language.editor.refactoring.action;
     exports consulo.language.editor.refactoring.changeSignature;
+    exports consulo.language.editor.refactoring.changeSignature.inplace;
     exports consulo.language.editor.refactoring.classMember;
     exports consulo.language.editor.refactoring.copy;
     exports consulo.language.editor.refactoring.event;
     exports consulo.language.editor.refactoring.inline;
+    exports consulo.language.editor.refactoring.inline.awt;
     exports consulo.language.editor.refactoring.introduce;
     exports consulo.language.editor.refactoring.introduce.inplace;
     exports consulo.language.editor.refactoring.localize;
@@ -34,6 +36,9 @@ module consulo.language.editor.refactoring.api {
     exports consulo.language.editor.refactoring.postfixTemplate;
     exports consulo.language.editor.refactoring.memberPullUp;
     exports consulo.language.editor.refactoring.rename;
+    exports consulo.language.editor.refactoring.extractInclude;
+    exports consulo.language.editor.refactoring.extractSuperclass;
+    exports consulo.language.editor.refactoring.extractMethod;
     exports consulo.language.editor.refactoring.rename.inplace;
     exports consulo.language.editor.refactoring.safeDelete;
     exports consulo.language.editor.refactoring.safeDelete.usageInfo;

@@ -16,12 +16,12 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.annotation.ExternalLanguageAnnotators;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.language.editor.impl.highlight.UpdateHighlightersUtil;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.highlight.UpdateHighlightersUtil;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.impl.internal.highlight.AnnotationHolderImpl;
 import consulo.ui.ex.awt.util.Update;
 import consulo.annotation.access.RequiredReadAction;
@@ -95,7 +95,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
       final List<ExternalAnnotator> externalAnnotators = ExternalLanguageAnnotators.allForFile(language, psiRoot);
 
       if (!externalAnnotators.isEmpty()) {
-        DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
+        DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
         boolean errorFound = daemonCodeAnalyzer.getFileStatusMap().wasErrorFound(myDocument);
 
         for (ExternalAnnotator externalAnnotator : externalAnnotators) {
@@ -110,7 +110,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
 
   @Override
   public void doApplyInformationToEditor() {
-    DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
+    DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
     daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
 
     myDocumentListener = new DocumentListener() {

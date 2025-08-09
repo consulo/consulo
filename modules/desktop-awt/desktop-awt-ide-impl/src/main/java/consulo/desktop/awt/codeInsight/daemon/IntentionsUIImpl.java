@@ -2,9 +2,9 @@
 package consulo.desktop.awt.codeInsight.daemon;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
+import consulo.language.editor.internal.intention.IntentionsUI;
 import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
+import consulo.language.editor.internal.intention.CachedIntentions;
 import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;

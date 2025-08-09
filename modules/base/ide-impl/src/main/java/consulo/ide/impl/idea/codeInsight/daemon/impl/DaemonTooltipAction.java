@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -63,9 +63,9 @@ public class DaemonTooltipAction implements TooltipAction {
       return;
     }
 
-    List<HighlightInfoImpl.IntentionActionDescriptor> intentions = ShowIntentionsPass.getAvailableFixes(editor, psiFile, -1, myActualOffset);
+    List<IntentionActionDescriptor> intentions = ShowIntentionsPass.getAvailableFixes(editor, psiFile, -1, myActualOffset);
 
-    for (HighlightInfoImpl.IntentionActionDescriptor descriptor : intentions) {
+    for (IntentionActionDescriptor descriptor : intentions) {
       IntentionAction action = descriptor.getAction();
 
       if (myFixText.equals(action.getText())) {

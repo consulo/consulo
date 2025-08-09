@@ -19,18 +19,23 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
-import consulo.util.collection.ArrayUtil;
+import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.Pass;
-import consulo.language.editor.impl.highlight.*;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
+import consulo.language.editor.impl.highlight.DirtyScopeTrackingHighlightingPassFactory;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.MainHighlightingPassFactory;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
 import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntHashSet;
@@ -180,8 +185,8 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
             return true;
         });
 
-        DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
-        FileStatusMapImpl statusMap = daemonCodeAnalyzer.getFileStatusMap();
+        DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
+        FileStatusMap statusMap = daemonCodeAnalyzer.getFileStatusMap();
         passesRefusedToCreate.forEach(passId -> statusMap.markFileUpToDate(document, passId));
 
         return (List)Arrays.asList(id2Pass.getValues());

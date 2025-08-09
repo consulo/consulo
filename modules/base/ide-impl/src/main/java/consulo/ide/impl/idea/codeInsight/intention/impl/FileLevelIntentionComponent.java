@@ -5,13 +5,15 @@ package consulo.ide.impl.idea.codeInsight.intention.impl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.internal.intention.CachedIntentions;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
+import consulo.language.editor.internal.intention.IntentionActionWithTextCaching;
+import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -39,7 +41,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
     public FileLevelIntentionComponent(final String description,
                                        @Nonnull HighlightSeverity severity,
                                        @Nullable GutterMark gutterMark,
-                                       @Nullable final List<Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange>> intentions,
+                                       @Nullable final List<Pair<IntentionActionDescriptor, TextRange>> intentions,
                                        @Nonnull final Project project,
                                        @Nonnull final PsiFile psiFile,
                                        @Nonnull final Editor editor,
@@ -47,11 +49,11 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
         super(getColor(project, severity));
         myProject = project;
 
-        final ShowIntentionsPass.IntentionsInfo info = new ShowIntentionsPass.IntentionsInfo();
+        final IntentionsInfo info = new IntentionsInfo();
 
         if (intentions != null) {
-            for (Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> intention : intentions) {
-                final HighlightInfoImpl.IntentionActionDescriptor descriptor = intention.getFirst();
+            for (Pair<IntentionActionDescriptor, TextRange> intention : intentions) {
+                final IntentionActionDescriptor descriptor = intention.getFirst();
                 info.intentionsToShow.add(descriptor);
                 final IntentionAction action = descriptor.getAction();
                 if (action instanceof EmptyIntentionAction) {
@@ -77,7 +79,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
             myGearButton.addClickListener(event -> {
                 CachedIntentions cachedIntentions = new CachedIntentions(project, psiFile, editor);
                 IntentionListStep step = new IntentionListStep(null, editor, psiFile, project, cachedIntentions);
-                HighlightInfoImpl.IntentionActionDescriptor descriptor = intentions.get(0).getFirst();
+                IntentionActionDescriptor descriptor = intentions.get(0).getFirst();
                 IntentionActionWithTextCaching actionWithTextCaching = cachedIntentions.wrapAction(descriptor, psiFile, psiFile, editor);
                 if (step.hasSubstep(actionWithTextCaching)) {
                     step = step.getSubStep(actionWithTextCaching, null);

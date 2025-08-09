@@ -21,6 +21,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.util.TextRange;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
@@ -66,7 +67,7 @@ class SequentialCleanupTask implements SequentialTask {
     final List<HighlightInfo> infos = myResults.get(file);
     Collections.reverse(infos); //sort bottom - top
     for (HighlightInfo info : infos) {
-      for (final Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> actionRange : ((HighlightInfoImpl)info).quickFixActionRanges) {
+      for (final Pair<IntentionActionDescriptor, TextRange> actionRange : ((HighlightInfoImpl)info).quickFixActionRanges) {
         try {
           actionRange.getFirst().getAction().invoke(myProject, null, file);
         }

@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInspection.ex;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ProjectInspectionToolsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;

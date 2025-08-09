@@ -11,9 +11,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
 import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -22,13 +20,17 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
-import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.PsiElementBaseIntentionAction;
+import consulo.language.editor.internal.intention.CachedIntentions;
+import consulo.language.editor.internal.intention.IntentionsInfo;
+import consulo.language.editor.internal.intention.IntentionsUI;
+import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.template.TemplateState;
+import consulo.language.editor.ui.internal.HintManagerEx;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
@@ -40,9 +42,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
-import consulo.util.lang.function.PairProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.BiPredicate;
 
 /**
  * @author mike
@@ -50,37 +53,37 @@ import jakarta.annotation.Nullable;
 public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         invoke(project, editor, file, false);
     }
 
     @RequiredUIAccess
-    public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file, boolean showFeedbackOnEmptyMenu) {
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, boolean showFeedbackOnEmptyMenu) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
         if (editor instanceof EditorWindow editorWindow) {
             editor = editorWindow.getDelegate();
             file = InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file);
         }
 
-        final LookupEx lookup = LookupManager.getActiveLookup(editor);
+        LookupEx lookup = LookupManager.getActiveLookup(editor);
         if (lookup != null) {
             lookup.showElementActions(null);
             return;
         }
 
-        final DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
+        DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
         letAutoImportComplete(editor, file, codeAnalyzer);
 
-        ShowIntentionsPass.IntentionsInfo intentions = ShowIntentionsPass.getActionsToShow(editor, file, true);
+        IntentionsInfo intentions = ShowIntentionsPass.getActionsToShow(editor, file, true);
         IntentionsUI.getInstance(project).hide();
 
-        if (HintManagerImpl.getInstanceImpl().performCurrentQuestionAction()) {
+        if (((HintManagerEx) HintManager.getInstance()).performCurrentQuestionAction()) {
             return;
         }
 
         //intentions check isWritable before modification: if (!file.isWritable()) return;
 
-        TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(editor);
+        TemplateState state = TemplateManager.getInstance(project).getTemplateState(editor);
         if (state != null && !state.isFinished()) {
             return;
         }
@@ -96,7 +99,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         @Nonnull Project project,
         @Nonnull Editor editor,
         @Nonnull PsiFile file,
-        @Nonnull ShowIntentionsPass.IntentionsInfo intentions,
+        @Nonnull IntentionsInfo intentions,
         boolean showFeedbackOnEmptyMenu
     ) {
         if (!intentions.isEmpty()) {
@@ -130,7 +133,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
             Project project = psiFile.getProject();
             action = IntentionActionDelegate.unwrap(action);
             if (action instanceof SuppressIntentionActionFromFix suppressIntentionActionFromFix) {
-                final ThreeState shouldBeAppliedToInjectionHost = suppressIntentionActionFromFix.isShouldBeAppliedToInjectionHost();
+                ThreeState shouldBeAppliedToInjectionHost = suppressIntentionActionFromFix.isShouldBeAppliedToInjectionHost();
                 if (editor instanceof EditorWindow && shouldBeAppliedToInjectionHost == ThreeState.YES) {
                     return false;
                 }
@@ -163,7 +166,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         @Nonnull PsiFile hostFile,
         @Nonnull Editor hostEditor,
         @Nullable PsiFile injectedFile,
-        @Nonnull PairProcessor<? super PsiFile, ? super Editor> predicate
+        @Nonnull BiPredicate<? super PsiFile, ? super Editor> predicate
     ) {
         Editor editorToApply = null;
         PsiFile fileToApply = null;
@@ -171,13 +174,13 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         Editor injectedEditor = null;
         if (injectedFile != null) {
             injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(hostEditor, injectedFile);
-            if (predicate.process(injectedFile, injectedEditor)) {
+            if (predicate.test(injectedFile, injectedEditor)) {
                 editorToApply = injectedEditor;
                 fileToApply = injectedFile;
             }
         }
 
-        if (editorToApply == null && hostEditor != injectedEditor && predicate.process(hostFile, hostEditor)) {
+        if (editorToApply == null && hostEditor != injectedEditor && predicate.test(hostFile, hostEditor)) {
             editorToApply = hostEditor;
             fileToApply = hostFile;
         }
@@ -190,21 +193,21 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
     @RequiredUIAccess
     public static boolean chooseActionAndInvoke(
         @Nonnull PsiFile hostFile,
-        @Nonnull final Editor hostEditor,
-        @Nonnull final IntentionAction action,
+        @Nonnull Editor hostEditor,
+        @Nonnull IntentionAction action,
         @Nonnull String text
     ) {
-        final Project project = hostFile.getProject();
+        Project project = hostFile.getProject();
         return chooseActionAndInvoke(hostFile, hostEditor, action, text, project);
     }
 
     @RequiredUIAccess
     static boolean chooseActionAndInvoke(
         @Nonnull PsiFile hostFile,
-        @Nullable final Editor hostEditor,
-        @Nonnull final IntentionAction action,
+        @Nullable Editor hostEditor,
+        @Nonnull IntentionAction action,
         @Nonnull String text,
-        @Nonnull final Project project
+        @Nonnull Project project
     ) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickFix");
         

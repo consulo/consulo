@@ -2,7 +2,6 @@
 package consulo.language.editor.impl.internal.rawHighlight;
 
 import consulo.codeEditor.CodeInsightColors;
-import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -18,17 +17,10 @@ import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.annotation.ProblemGroup;
-import consulo.language.editor.annotation.SuppressableProblemGroup;
-import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.language.editor.impl.internal.inspection.AnnotatorBasedInspection;
 import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.rawHighlight.*;
 import consulo.language.editor.util.HighlightTypeUtil;
 import consulo.language.psi.PsiElement;
@@ -38,8 +30,6 @@ import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.image.Image;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
@@ -202,6 +192,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         myFlags = BitUtil.set(myFlags, mask, value);
     }
 
+    @Override
     public boolean isFileLevelAnnotation() {
         return isFlagSet(FILE_LEVEL_ANNOTATION_MASK);
     }
@@ -535,192 +526,6 @@ public class HighlightInfoImpl implements HighlightInfo {
     public int getActualEndOffset() {
         RangeHighlighter h = highlighter;
         return h == null || !h.isValid() ? endOffset : h.getEndOffset();
-    }
-
-    public static class IntentionActionDescriptor {
-        private final IntentionAction myAction;
-        private volatile List<IntentionAction> myOptions;
-        private volatile HighlightDisplayKey myKey;
-        private final ProblemGroup myProblemGroup;
-        private final HighlightSeverity mySeverity;
-        private final String myDisplayName;
-        private final Image myIcon;
-        private Boolean myCanCleanup;
-
-        public IntentionActionDescriptor(@Nonnull IntentionAction action, List<IntentionAction> options, String displayName) {
-            this(action, options, displayName, null);
-        }
-
-        public IntentionActionDescriptor(@Nonnull IntentionAction action, Image icon) {
-            this(action, null, null, icon);
-        }
-
-        public IntentionActionDescriptor(
-            @Nonnull IntentionAction action,
-            @Nullable List<IntentionAction> options,
-            @Nullable String displayName,
-            @Nullable Image icon
-        ) {
-            this(action, options, displayName, icon, null, null, null);
-        }
-
-        public IntentionActionDescriptor(
-            @Nonnull IntentionAction action,
-            @Nullable List<IntentionAction> options,
-            @Nullable String displayName,
-            @Nullable Image icon,
-            @Nullable HighlightDisplayKey key,
-            @Nullable ProblemGroup problemGroup,
-            @Nullable HighlightSeverity severity
-        ) {
-            myAction = action;
-            myOptions = options;
-            myDisplayName = displayName;
-            myIcon = icon;
-            myKey = key;
-            myProblemGroup = problemGroup;
-            mySeverity = severity;
-        }
-
-        @Nonnull
-        public IntentionAction getAction() {
-            return myAction;
-        }
-
-        public boolean isError() {
-            return mySeverity == null || mySeverity.compareTo(HighlightSeverity.ERROR) >= 0;
-        }
-
-        public boolean isInformation() {
-            return HighlightSeverity.INFORMATION.equals(mySeverity);
-        }
-
-        public boolean canCleanup(@Nonnull PsiElement element) {
-            if (myCanCleanup == null) {
-                InspectionProfile profile = InspectionProjectProfileManager.getInstance(element.getProject()).getCurrentProfile();
-                HighlightDisplayKey key = myKey;
-                if (key == null) {
-                    myCanCleanup = false;
-                }
-                else {
-                    InspectionToolWrapper toolWrapper = profile.getInspectionTool(key.toString(), element);
-                    myCanCleanup = toolWrapper != null && toolWrapper.isCleanupTool();
-                }
-            }
-            return myCanCleanup;
-        }
-
-        @Nullable
-        public List<IntentionAction> getOptions(@Nonnull PsiElement element, @Nullable Editor editor) {
-            if (editor != null && Boolean.FALSE.equals(editor.getUserData(IntentionManager.SHOW_INTENTION_OPTIONS_KEY))) {
-                return null;
-            }
-            List<IntentionAction> options = myOptions;
-            HighlightDisplayKey key = myKey;
-            if (myProblemGroup != null) {
-                String problemName = myProblemGroup.getProblemName();
-                HighlightDisplayKey problemGroupKey = problemName != null ? HighlightDisplayKey.findById(problemName) : null;
-                if (problemGroupKey != null) {
-                    key = problemGroupKey;
-                }
-            }
-            if (options != null || key == null) {
-                return options;
-            }
-            IntentionManager intentionManager = IntentionManager.getInstance();
-            List<IntentionAction> newOptions = intentionManager.getStandardIntentionOptions(key, element);
-            InspectionProfile profile = InspectionProjectProfileManager.getInstance(element.getProject()).getCurrentProfile();
-            InspectionToolWrapper toolWrapper = profile.getInspectionTool(key.toString(), element);
-            if (!(toolWrapper instanceof LocalInspectionToolWrapper)) {
-                HighlightDisplayKey idKey = HighlightDisplayKey.findById(key.toString());
-                if (idKey != null) {
-                    toolWrapper = profile.getInspectionTool(idKey.toString(), element);
-                }
-            }
-
-            if (toolWrapper != null) {
-                myCanCleanup = toolWrapper.isCleanupTool();
-
-                IntentionAction fixAllIntention = intentionManager.createFixAllIntention(toolWrapper, myAction);
-                InspectionTool wrappedTool = toolWrapper instanceof LocalInspectionToolWrapper localInspectionToolWrapper
-                    ? localInspectionToolWrapper.getTool()
-                    : ((GlobalInspectionToolWrapper)toolWrapper).getTool();
-                if (wrappedTool instanceof AnnotatorBasedInspection) {
-                    List<IntentionAction> actions = Collections.emptyList();
-                    if (myProblemGroup instanceof SuppressableProblemGroup suppressableProblemGroup) {
-                        actions = Arrays.asList(suppressableProblemGroup.getSuppressActions(element));
-                    }
-                    if (fixAllIntention != null) {
-                        if (actions.isEmpty()) {
-                            return Collections.singletonList(fixAllIntention);
-                        }
-                        else {
-                            actions = new ArrayList<>(actions);
-                            actions.add(fixAllIntention);
-                        }
-                    }
-                    return actions;
-                }
-                ContainerUtil.addIfNotNull(newOptions, fixAllIntention);
-                if (wrappedTool instanceof CustomSuppressableInspectionTool customSuppressableInspectionTool) {
-                    IntentionAction[] suppressActions = customSuppressableInspectionTool.getSuppressActions(element);
-                    if (suppressActions != null) {
-                        ContainerUtil.addAll(newOptions, suppressActions);
-                    }
-                }
-                else {
-                    SuppressQuickFix[] suppressFixes = wrappedTool.getBatchSuppressActions(element);
-                    if (suppressFixes.length > 0) {
-                        newOptions.addAll(ContainerUtil.map(
-                            suppressFixes,
-                            SuppressIntentionActionFromFix::convertBatchToSuppressIntentionAction
-                        ));
-                    }
-                }
-
-            }
-            if (myProblemGroup instanceof SuppressableProblemGroup suppressableProblemGroup) {
-                IntentionAction[] suppressActions = suppressableProblemGroup.getSuppressActions(element);
-                ContainerUtil.addAll(newOptions, suppressActions);
-            }
-
-            //noinspection SynchronizeOnThis
-            synchronized (this) {
-                options = myOptions;
-                if (options == null) {
-                    myOptions = options = newOptions;
-                }
-                myKey = null;
-            }
-
-            return options;
-        }
-
-        @Nullable
-        public String getDisplayName() {
-            return myDisplayName;
-        }
-
-        @Override
-        public String toString() {
-            String text = getAction().getText();
-            return "descriptor: " + (text.isEmpty() ? getAction().getClass() : text);
-        }
-
-        @Nullable
-        public Image getIcon() {
-            return myIcon;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof IntentionActionDescriptor descriptor && myAction.equals(descriptor.myAction);
-        }
-
-        @Override
-        public int hashCode() {
-            return myAction.hashCode();
-        }
     }
 
     @Override

@@ -4,7 +4,8 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionManager;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
+import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
@@ -13,18 +14,18 @@ import java.util.List;
 @ExtensionImpl(id = "cleanup", order = "after gutter")
 public class CleanupIntentionMenuContributor implements IntentionMenuContributor {
   @Override
-  public void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull ShowIntentionsPass.IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
+  public void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
     boolean cleanup = appendCleanupCode(intentions.inspectionFixesToShow, hostFile);
     if (!cleanup) {
       appendCleanupCode(intentions.errorFixesToShow, hostFile);
     }
   }
 
-  private static boolean appendCleanupCode(@Nonnull List<HighlightInfoImpl.IntentionActionDescriptor> actionDescriptors, @Nonnull PsiFile file) {
-    for (HighlightInfoImpl.IntentionActionDescriptor descriptor : actionDescriptors) {
+  private static boolean appendCleanupCode(@Nonnull List<IntentionActionDescriptor> actionDescriptors, @Nonnull PsiFile file) {
+    for (IntentionActionDescriptor descriptor : actionDescriptors) {
       if (descriptor.canCleanup(file)) {
         IntentionManager manager = IntentionManager.getInstance();
-        actionDescriptors.add(new HighlightInfoImpl.IntentionActionDescriptor(manager.createCleanupAllIntention(), manager.getCleanupIntentionOptions(), "Code Cleanup Options"));
+        actionDescriptors.add(new IntentionActionDescriptor(manager.createCleanupAllIntention(), manager.getCleanupIntentionOptions(), "Code Cleanup Options"));
         return true;
       }
     }

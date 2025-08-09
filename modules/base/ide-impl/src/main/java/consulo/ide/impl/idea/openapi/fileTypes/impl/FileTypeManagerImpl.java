@@ -1663,6 +1663,13 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         return FileTypeChooser.getKnownFileTypeOrAssociate(file, project);
     }
 
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public FileType getKnownFileTypeOrAssociate(@Nonnull String fileName) {
+        return FileTypeChooser.getKnownFileTypeOrAssociate(fileName);
+    }
+
     private void registerReDetectedMappings(@Nonnull StandardFileType pair) {
         FileType fileType = pair.fileType;
         if (fileType == PlainTextFileType.INSTANCE) {

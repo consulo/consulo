@@ -21,6 +21,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.disposer.Disposable;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
@@ -46,7 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/inspectionProfiles/", stateSplitter = InspectionProjectProfileManagerImpl.ProfileStateSplitter.class)})
 @Singleton
 @ServiceImpl
-public class InspectionProjectProfileManagerImpl extends InspectionProjectProfileManager implements Disposable {
+public class InspectionProjectProfileManagerImpl extends consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager implements Disposable {
   private final Map<String, InspectionProfileWrapper> myName2Profile = new ConcurrentHashMap<>();
   private final SeverityRegistrarImpl mySeverityRegistrar;
   private final NamedScopeManager myLocalScopesHolder;

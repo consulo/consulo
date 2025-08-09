@@ -231,6 +231,8 @@ public interface HighlightInfo extends Segment {
         @Nullable HighlightDisplayKey key
     );
 
+    boolean isFileLevelAnnotation();
+
     void unregisterQuickFix(@Nonnull Predicate<? super IntentionAction> condition);
 
     void forEachQuickFix(@Nonnull BiConsumer<IntentionAction, TextRange> consumer);

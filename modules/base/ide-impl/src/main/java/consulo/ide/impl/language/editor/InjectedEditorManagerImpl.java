@@ -22,11 +22,10 @@ import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -35,31 +34,36 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceImpl
 public class InjectedEditorManagerImpl implements InjectedEditorManager {
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public InjectedEditorManagerImpl(Project project) {
-    myProject = project;
-  }
+    @Inject
+    public InjectedEditorManagerImpl(Project project) {
+        myProject = project;
+    }
 
-  @Nullable
-  @Override
-  public Editor openEditorFor(@Nonnull PsiFile file) {
-    return InjectedLanguageUtil.openEditorFor(file, myProject);
-  }
+    @Nullable
+    @Override
+    public Editor openEditorFor(@Nonnull PsiFile file) {
+        return InjectedLanguageUtil.openEditorFor(file, myProject);
+    }
 
-  @Override
-  public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset) {
-    return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file, offset);
-  }
+    @Override
+    public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset) {
+        return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file, offset);
+    }
 
-  @Override
-  public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable Caret caret, @Nullable PsiFile file) {
-    return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, caret, file);
-  }
+    @Override
+    public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable Caret caret, @Nullable PsiFile file) {
+        return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, caret, file);
+    }
 
-  @Override
-  public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file) {
-    return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file);
-  }
+    @Override
+    public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file) {
+        return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file);
+    }
+
+    @Override
+    public Editor getInjectedEditorForInjectedFile(@Nonnull Editor hostEditor, @Nullable PsiFile injectedFile) {
+        return InjectedLanguageUtil.getInjectedEditorForInjectedFile(hostEditor, injectedFile);
+    }
 }

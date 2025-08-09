@@ -19,12 +19,15 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.Annotator;
 import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -33,11 +36,12 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import javax.swing.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
@@ -47,50 +51,61 @@ import java.util.function.Function;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface LanguageEditorInternalHelper {
-  @Nonnull
-  static LanguageEditorInternalHelper getInstance() {
-    return Application.get().getInstance(LanguageEditorInternalHelper.class);
-  }
+    @Nonnull
+    static LanguageEditorInternalHelper getInstance() {
+        return Application.get().getInstance(LanguageEditorInternalHelper.class);
+    }
 
-  void doWrapLongLinesIfNecessary(@Nonnull final Editor editor,
-                                  @Nonnull final Project project,
-                                  @Nonnull Language language,
-                                  @Nonnull Document document,
-                                  int startOffset,
-                                  int endOffset,
-                                  List<? extends TextRange> enabledRanges);
+    void doWrapLongLinesIfNecessary(@Nonnull Editor editor,
+                                    @Nonnull Project project,
+                                    @Nonnull Language language,
+                                    @Nonnull Document document,
+                                    int startOffset,
+                                    int endOffset,
+                                    List<? extends TextRange> enabledRanges);
 
-  @Contract("null,_,_->null;!null,_,_->!null")
-  default Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, final int offset) {
-    return editor;
-  }
+    @Contract("null,_,_->null;!null,_,_->!null")
+    default Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset) {
+        return editor;
+    }
 
-  default void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
-                                             @Nonnull String text,
-                                             @Nonnull SimpleTextAttributes attributes,
-                                             boolean selected,
-                                             @Nonnull ColoredTextContainer simpleColoredComponent) {
-    // [VISTALL] hack due we don't have hard dependency to AWT impl
-  }
+    default void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
+                                               @Nonnull String text,
+                                               @Nonnull SimpleTextAttributes attributes,
+                                               boolean selected,
+                                               @Nonnull ColoredTextContainer simpleColoredComponent) {
+        // [VISTALL] hack due we don't have hard dependency to AWT impl
+    }
 
-  default ListCellRenderer<LineMarkerInfo> createMergeableLineMarkerRender(Function<LineMarkerInfo, Pair<String, Image>> function) {
-    throw new UnsupportedOperationException();
-  }
+    default ListCellRenderer<LineMarkerInfo> createMergeableLineMarkerRender(Function<LineMarkerInfo, Pair<String, Image>> function) {
+        throw new UnsupportedOperationException();
+    }
 
-  @RequiredUIAccess
-  default void showInspectionsSettings(@Nonnull Project project) {
-  }
+    @RequiredUIAccess
+    default void showInspectionsSettings(@Nonnull Project project) {
+    }
 
-  @Nonnull
-  default List<Annotation> runAnnotator(Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
-    return List.of();
-  }
+    @Nonnull
+    default List<Annotation> runAnnotator(Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
+        return List.of();
+    }
 
-  default int adjustLineIndentNoCommit(Language language, @Nonnull Document document, @Nonnull Editor editor, int offset) {
-    return -1;
-  }
+    default int adjustLineIndentNoCommit(Language language, @Nonnull Document document, @Nonnull Editor editor, int offset) {
+        return -1;
+    }
 
-  default boolean isInlineRefactoringActive(@Nonnull Editor editor) {
-    return false;
-  }
+    default boolean isInlineRefactoringActive(@Nonnull Editor editor) {
+        return false;
+    }
+
+    @RequiredUIAccess
+    default void setHighlightersToEditor(@Nonnull Project project,
+                                         @Nonnull Document document,
+                                         int startOffset,
+                                         int endOffset,
+                                         @Nonnull Collection<HighlightInfo> highlights,
+                                         // if null global scheme will be used
+                                         @Nullable EditorColorsScheme colorsScheme,
+                                         int group) {
+    }
 }

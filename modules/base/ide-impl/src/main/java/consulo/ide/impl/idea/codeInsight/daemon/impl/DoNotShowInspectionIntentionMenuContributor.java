@@ -9,20 +9,21 @@ import consulo.application.util.concurrent.JobLauncher;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInspection.InspectionEngine;
-import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.intention.QuickFixWrapper;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
+import consulo.language.editor.internal.inspection.GlobalInspectionToolWrapper;
+import consulo.language.editor.internal.inspection.LocalInspectionToolWrapper;
+import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.impl.internal.inspection.ProblemsHolderImpl;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
+import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiDirectory;
@@ -52,7 +53,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
     public void collectActions(
         @Nonnull Editor hostEditor,
         @Nonnull PsiFile hostFile,
-        @Nonnull ShowIntentionsPass.IntentionsInfo intentions,
+        @Nonnull IntentionsInfo intentions,
         int passIdToShowIntentionsFor,
         int offset
     ) {
@@ -83,7 +84,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
         @Nonnull final PsiFile hostFile,
         @Nonnull PsiElement psiElement,
         final int offset,
-        @Nonnull final ShowIntentionsPass.IntentionsInfo intentions
+        @Nonnull final IntentionsInfo intentions
     ) {
         if (!psiElement.isPhysical()) {
             VirtualFile virtualFile = hostFile.getVirtualFile();
@@ -153,7 +154,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
                     if (fixes != null) {
                         for (int k = 0; k < fixes.length; k++) {
                             IntentionAction intentionAction = QuickFixWrapper.wrap(problemDescriptor, k);
-                            HighlightInfoImpl.IntentionActionDescriptor actionDescriptor = new HighlightInfoImpl.IntentionActionDescriptor(
+                            IntentionActionDescriptor actionDescriptor = new IntentionActionDescriptor(
                                 intentionAction,
                                 null,
                                 displayName,
@@ -162,7 +163,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
                                 null,
                                 HighlightSeverity.INFORMATION
                             );
-                            List<HighlightInfoImpl.IntentionActionDescriptor> intentionActionDescriptors =
+                            List<IntentionActionDescriptor> intentionActionDescriptors =
                                 problemDescriptor.getHighlightType() == ProblemHighlightType.ERROR
                                     ? intentions.errorFixesToShow
                                     : intentions.intentionsToShow;

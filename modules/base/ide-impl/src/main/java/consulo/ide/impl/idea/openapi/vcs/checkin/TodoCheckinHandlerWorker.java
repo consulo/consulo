@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
-import consulo.ide.impl.idea.ide.todo.TodoFilter;
+import consulo.language.editor.todo.TodoFilter;
 import consulo.ide.impl.idea.ide.todo.TodoIndexPatternProvider;
 import consulo.application.ApplicationManager;
 import consulo.diff.old.DiffFragmentOld;

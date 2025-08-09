@@ -7,7 +7,7 @@ import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.ide.impl.idea.ide.todo.SmartTodoItemPointer;
 import consulo.ide.impl.idea.ide.todo.SmartTodoItemPointerComparator;
-import consulo.ide.impl.idea.ide.todo.TodoFilter;
+import consulo.language.editor.todo.TodoFilter;
 import consulo.ide.impl.idea.ide.todo.TodoTreeBuilder;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.document.DocumentWindow;

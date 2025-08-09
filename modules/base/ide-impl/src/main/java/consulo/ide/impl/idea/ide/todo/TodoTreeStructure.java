@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.language.editor.todo.TodoFilter;
 import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.AbstractTreeStructureBase;

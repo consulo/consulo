@@ -16,6 +16,7 @@
 package consulo.language.editor.impl.highlight;
 
 import consulo.codeEditor.Editor;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.psi.PsiFile;
 
 import jakarta.annotation.Nonnull;

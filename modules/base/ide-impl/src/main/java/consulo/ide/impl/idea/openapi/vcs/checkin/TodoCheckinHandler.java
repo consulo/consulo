@@ -25,6 +25,8 @@ import consulo.application.ui.util.TodoPanelSettings;
 import consulo.application.util.DateFormatUtil;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.todo.*;
+import consulo.language.editor.todo.TodoConfiguration;
+import consulo.language.editor.todo.TodoFilter;
 import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;

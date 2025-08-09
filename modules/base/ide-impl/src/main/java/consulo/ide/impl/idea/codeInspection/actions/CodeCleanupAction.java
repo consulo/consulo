@@ -23,7 +23,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 
 public class CodeCleanupAction extends CodeInspectionAction {

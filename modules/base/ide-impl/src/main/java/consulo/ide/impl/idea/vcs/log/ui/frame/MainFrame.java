@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.table.ComponentsListFocusTraversalPolicy;
+import consulo.ui.ex.awt.table.ComponentsListFocusTraversalPolicy;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeListForRevision;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;

@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.impl.highlight.MainHighlightingPassFactory;
 import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;

@@ -37,7 +37,7 @@ import consulo.ide.impl.idea.codeInspection.ui.actions.ExportHTMLAction;
 import consulo.ide.impl.idea.codeInspection.ui.actions.InspectionsOptionsToolbarAction;
 import consulo.ide.impl.idea.codeInspection.ui.actions.InvokeQuickFixAction;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.CommonProblemDescriptor;

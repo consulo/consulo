@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
 import consulo.language.editor.inspection.InspectionsBundle;

@@ -20,6 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 

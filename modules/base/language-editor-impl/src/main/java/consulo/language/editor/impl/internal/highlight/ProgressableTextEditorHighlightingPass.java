@@ -19,20 +19,20 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.language.editor.FileStatusMap;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.HighlightingSession;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
-import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -103,7 +103,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   public final void doApplyInformationToEditor() {
     myFinished = true;
     applyInformationWithProgress();
-    DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
+    DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
     daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
   }
 
@@ -179,7 +179,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
 
     @Override
     public void doApplyInformationToEditor() {
-      FileStatusMapImpl statusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();
+      FileStatusMap statusMap = DaemonCodeAnalyzerInternal.getInstanceEx(myProject).getFileStatusMap();
       statusMap.markFileUpToDate(getDocument(), getId());
     }
   }

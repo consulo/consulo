@@ -6,9 +6,10 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionActionWithOptions;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.internal.intention.IntentionActionProvider;
+import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
@@ -17,7 +18,7 @@ import javax.swing.*;
 import java.util.List;
 
 class EditorNotificationActions {
-  public static void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull ShowIntentionsPass.IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
+  public static void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
     Project project = hostEditor.getProject();
     if (project == null) return;
     FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
@@ -28,7 +29,7 @@ class EditorNotificationActions {
       if (component instanceof IntentionActionProvider) {
         IntentionActionWithOptions action = ((IntentionActionProvider)component).getIntentionAction();
         if (action != null) {
-          intentions.notificationActionsToShow.add(new HighlightInfoImpl.IntentionActionDescriptor(action, action.getOptions(), null));
+          intentions.notificationActionsToShow.add(new IntentionActionDescriptor(action, action.getOptions(), null));
         }
       }
     }

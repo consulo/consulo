@@ -11,20 +11,21 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
-import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
+import consulo.language.editor.internal.intention.CachedIntentions;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EditIntentionSettingsAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EnableDisableIntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.IntentionActionFilter;
 import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
+import consulo.language.editor.internal.intention.IntentionsInfo;
+import consulo.language.editor.internal.intention.IntentionsUI;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
@@ -38,10 +39,8 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ShowIntentionsPass extends TextEditorHighlightingPass {
@@ -74,7 +73,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     }
 
     @Nonnull
-    public static List<HighlightInfoImpl.IntentionActionDescriptor> getAvailableFixes(
+    public static List<IntentionActionDescriptor> getAvailableFixes(
         @Nonnull Editor editor,
         @Nonnull PsiFile file,
         int passId,
@@ -91,7 +90,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
             true,
             new CommonProcessors.CollectProcessor<>(infos)
         );
-        List<HighlightInfoImpl.IntentionActionDescriptor> result = new ArrayList<>();
+        List<IntentionActionDescriptor> result = new ArrayList<>();
         infos.forEach(info -> addAvailableFixesForGroups(info, editor, file, result, passId, offset));
         return result;
     }
@@ -110,10 +109,10 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         );
         boolean removed = false;
         for (HighlightInfo info : infos) {
-            List<Pair<HighlightInfoImpl.IntentionActionDescriptor, RangeMarker>> list = ((HighlightInfoImpl)info).quickFixActionMarkers;
+            List<Pair<IntentionActionDescriptor, RangeMarker>> list = ((HighlightInfoImpl)info).quickFixActionMarkers;
             if (list != null) {
-                for (Pair<HighlightInfoImpl.IntentionActionDescriptor, RangeMarker> pair : list) {
-                    HighlightInfoImpl.IntentionActionDescriptor actionInGroup = pair.first;
+                for (Pair<IntentionActionDescriptor, RangeMarker> pair : list) {
+                    IntentionActionDescriptor actionInGroup = pair.first;
                     if (actionInGroup.getAction() == action) {
                         // no CME because the list is concurrent
                         removed |= list.remove(pair);
@@ -128,7 +127,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         @Nonnull HighlightInfo i,
         @Nonnull Editor editor,
         @Nonnull PsiFile file,
-        @Nonnull List<? super HighlightInfoImpl.IntentionActionDescriptor> outList,
+        @Nonnull List<? super IntentionActionDescriptor> outList,
         int group,
         int offset
     ) {
@@ -142,8 +141,8 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         boolean fixRangeIsNotEmpty = !info.getFixTextRange().isEmpty();
         Editor injectedEditor = null;
         PsiFile injectedFile = null;
-        for (Pair<HighlightInfoImpl.IntentionActionDescriptor, RangeMarker> pair : info.quickFixActionMarkers) {
-            HighlightInfoImpl.IntentionActionDescriptor actionInGroup = pair.first;
+        for (Pair<IntentionActionDescriptor, RangeMarker> pair : info.quickFixActionMarkers) {
+            IntentionActionDescriptor actionInGroup = pair.first;
             RangeMarker range = pair.second;
             if (!range.isValid() || fixRangeIsNotEmpty && isEmpty(range)) {
                 continue;
@@ -181,63 +180,6 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
 
     private static boolean isEmpty(@Nonnull Segment segment) {
         return segment.getEndOffset() <= segment.getStartOffset();
-    }
-
-    public static class IntentionsInfo {
-        public final List<HighlightInfoImpl.IntentionActionDescriptor> intentionsToShow = ContainerUtil.createLockFreeCopyOnWriteList();
-        public final List<HighlightInfoImpl.IntentionActionDescriptor> errorFixesToShow = ContainerUtil.createLockFreeCopyOnWriteList();
-        public final List<HighlightInfoImpl.IntentionActionDescriptor> inspectionFixesToShow =
-            ContainerUtil.createLockFreeCopyOnWriteList();
-        public final List<HighlightInfoImpl.IntentionActionDescriptor> guttersToShow = ContainerUtil.createLockFreeCopyOnWriteList();
-        public final List<HighlightInfoImpl.IntentionActionDescriptor> notificationActionsToShow =
-            ContainerUtil.createLockFreeCopyOnWriteList();
-        private int myOffset;
-
-        public void filterActions(@Nullable PsiFile psiFile) {
-            List<IntentionActionFilter> filters = IntentionActionFilter.EXTENSION_POINT_NAME.getExtensionList();
-            filter(intentionsToShow, psiFile, filters);
-            filter(errorFixesToShow, psiFile, filters);
-            filter(inspectionFixesToShow, psiFile, filters);
-            filter(guttersToShow, psiFile, filters);
-            filter(notificationActionsToShow, psiFile, filters);
-        }
-
-        public void setOffset(int offset) {
-            myOffset = offset;
-        }
-
-        public int getOffset() {
-            return myOffset;
-        }
-
-        private static void filter(
-            @Nonnull List<HighlightInfoImpl.IntentionActionDescriptor> descriptors,
-            @Nullable PsiFile psiFile,
-            @Nonnull List<IntentionActionFilter> filters
-        ) {
-            for (Iterator<HighlightInfoImpl.IntentionActionDescriptor> it = descriptors.iterator(); it.hasNext(); ) {
-                HighlightInfoImpl.IntentionActionDescriptor actionDescriptor = it.next();
-                for (IntentionActionFilter filter : filters) {
-                    if (!filter.accept(actionDescriptor.getAction(), psiFile)) {
-                        it.remove();
-                        break;
-                    }
-                }
-            }
-        }
-
-        public boolean isEmpty() {
-            return intentionsToShow.isEmpty() && errorFixesToShow.isEmpty() && inspectionFixesToShow.isEmpty() && guttersToShow.isEmpty() && notificationActionsToShow.isEmpty();
-        }
-
-        @Override
-        public String toString() {
-            return "Errors: " + errorFixesToShow + "; " +
-                "Inspection fixes: " + inspectionFixesToShow + "; " +
-                "Intentions: " + intentionsToShow + "; " +
-                "Gutters: " + guttersToShow + "; " +
-                "Notifications: " + notificationActionsToShow;
-        }
     }
 
     @Override
@@ -340,7 +282,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         intentions.setOffset(offset);
         Project project = hostFile.getProject();
 
-        List<HighlightInfoImpl.IntentionActionDescriptor> fixes =
+        List<IntentionActionDescriptor> fixes =
             getAvailableFixes(hostEditor, hostFile, passIdToShowIntentionsFor, offset);
         DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
         Document hostDocument = hostEditor.getDocument();
@@ -367,8 +309,8 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
                     List<IntentionAction> enableDisableIntentionAction = new ArrayList<>();
                     enableDisableIntentionAction.add(new EnableDisableIntentionAction(action));
                     enableDisableIntentionAction.add(new EditIntentionSettingsAction(action));
-                    HighlightInfoImpl.IntentionActionDescriptor descriptor =
-                        new HighlightInfoImpl.IntentionActionDescriptor(action, enableDisableIntentionAction, null);
+                    IntentionActionDescriptor descriptor =
+                        new IntentionActionDescriptor(action, enableDisableIntentionAction, null);
                     if (!fixes.contains(descriptor)) {
                         intentions.intentionsToShow.add(descriptor);
                     }
@@ -386,10 +328,10 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     public static void fillIntentionsInfoForHighlightInfo(
         @Nonnull HighlightInfoImpl infoAtCursor,
         @Nonnull IntentionsInfo intentions,
-        @Nonnull List<? extends HighlightInfoImpl.IntentionActionDescriptor> fixes
+        @Nonnull List<? extends IntentionActionDescriptor> fixes
     ) {
         boolean isError = infoAtCursor.getSeverity() == HighlightSeverity.ERROR;
-        for (HighlightInfoImpl.IntentionActionDescriptor fix : fixes) {
+        for (IntentionActionDescriptor fix : fixes) {
             if (fix.isError() && isError) {
                 intentions.errorFixesToShow.add(fix);
             }

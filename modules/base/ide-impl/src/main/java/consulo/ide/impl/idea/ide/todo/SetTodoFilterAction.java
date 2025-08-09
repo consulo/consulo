@@ -19,6 +19,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.util.TodoPanelSettings;
 import consulo.ide.impl.idea.ide.todo.configurable.TodoConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.todo.TodoConfiguration;
+import consulo.language.editor.todo.TodoFilter;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ide.localize.IdeLocalize;

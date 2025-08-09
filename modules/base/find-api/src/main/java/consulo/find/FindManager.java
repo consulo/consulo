@@ -22,6 +22,7 @@ import consulo.content.scope.SearchScope;
 import consulo.fileEditor.FileEditor;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -75,7 +76,7 @@ public abstract class FindManager {
    * interface.
    */
   @PromptResultValue
-  public abstract int showPromptDialog(@Nonnull FindModel model, String title);
+  public abstract int showPromptDialog(@Nonnull FindModel model, @Nonnull LocalizeValue title);
 
   /**
    * Returns the settings of the last performed Find in File operation, or the
@@ -134,15 +135,15 @@ public abstract class FindManager {
    * interface. May be only {@link PromptResult#CANCEL} or {@link PromptResult#SKIP} for bad replace operation
    */
   @PromptResultValue
-  public abstract int showMalformedReplacementPrompt(@Nonnull FindModel model, String title, MalformedReplacementStringException exception);
+  public abstract int showMalformedReplacementPrompt(@Nonnull FindModel model, LocalizeValue title, MalformedReplacementStringException exception);
 
   public static class MalformedReplacementStringException extends Exception {
     public MalformedReplacementStringException(String s) {
-      super(s);    //To change body of overridden methods use File | Settings | File Templates.
+      super(s);
     }
 
     public MalformedReplacementStringException(String s, Throwable throwable) {
-      super(s, throwable);    //To change body of overridden methods use File | Settings | File Templates.
+      super(s, throwable);
     }
   }
 
@@ -281,9 +282,11 @@ public abstract class FindManager {
   public @interface PromptResultValue {}
 
   /**
-   * Possible return values for the {@link FindManager#showPromptDialog(FindModel, String)} method.
+   * Possible return values for the {@link FindManager#showPromptDialog(FindModel, LocalizeValue)} method.
    *
-   * @since 5.0.2
+   * TODO [VISTALL] find better way without duplication
+   * 
+   * @see consulo.ui.ex.awt.ReplacePromptDialog
    */
   public interface PromptResult {
     int OK = 0;

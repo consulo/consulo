@@ -15,7 +15,8 @@ import consulo.document.Document;
 import consulo.ide.impl.idea.execution.lineMarker.LineMarkerActionWrapper;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.internal.intention.IntentionActionDescriptor;
+import consulo.language.editor.internal.intention.IntentionsInfo;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -33,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ExtensionImpl(id = "gutter", order = "after dontShow")
 public class GutterIntentionMenuContributor implements IntentionMenuContributor {
   @Override
-  public void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull ShowIntentionsPass.IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
+  public void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
     final Project project = hostFile.getProject();
     final Document hostDocument = hostEditor.getDocument();
     final int line = hostDocument.getLineNumber(offset);
@@ -49,13 +50,13 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
 
   private static void addActions(@Nonnull Project project,
                                  @Nonnull RangeHighlighterEx info,
-                                 @Nonnull List<? super HighlightInfoImpl.IntentionActionDescriptor> descriptors,
+                                 @Nonnull List<? super IntentionActionDescriptor> descriptors,
                                  @Nonnull DataContext dataContext) {
     final GutterIconRenderer r = info.getGutterIconRenderer();
     if (r == null || DumbService.isDumb(project) && !DumbService.isDumbAware(r)) {
       return;
     }
-    List<HighlightInfoImpl.IntentionActionDescriptor> list = new ArrayList<>();
+    List<IntentionActionDescriptor> list = new ArrayList<>();
     AtomicInteger order = new AtomicInteger();
     AnAction[] actions = new AnAction[]{r.getClickAction(), r.getMiddleButtonClickAction(), r.getRightButtonClickAction()};
     if (r.getPopupMenuActions() != null) {
@@ -70,7 +71,7 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
   }
 
   private static void addActions(@Nonnull AnAction action,
-                                 @Nonnull List<? super HighlightInfoImpl.IntentionActionDescriptor> descriptors,
+                                 @Nonnull List<? super IntentionActionDescriptor> descriptors,
                                  @Nonnull GutterIconRenderer renderer,
                                  AtomicInteger order,
                                  @Nonnull DataContext dataContext) {
@@ -98,7 +99,7 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
     if (icon == null) icon = Image.empty(Image.DEFAULT_ICON_SIZE);
     final GutterIntentionAction gutterAction = new GutterIntentionAction(action, order.getAndIncrement(), icon);
     if (!gutterAction.isAvailable(dataContext)) return;
-    descriptors.add(new HighlightInfoImpl.IntentionActionDescriptor(gutterAction, Collections.emptyList(), null, icon) {
+    descriptors.add(new IntentionActionDescriptor(gutterAction, Collections.emptyList(), null, icon) {
       @Nonnull
       @Override
       public String getDisplayName() {

@@ -32,7 +32,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(
     id = "RefactoringMenu",
     children = {
-        @ActionRef(id = "Refactorings.QuickListPopupAction"),
+        @ActionRef(type = RefactoringQuickListPopupAction.class),
         @ActionRef(type = RenameElementAction.class),
         @ActionRef(type = ChangeSignatureAction.class),
         @ActionRef(type = AnSeparator.class),

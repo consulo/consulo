@@ -16,17 +16,18 @@ import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.HighlightRangeExtension;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.wolfAnalyzer.ProblemImpl;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.editor.rawHighlight.*;
+import consulo.language.editor.todo.TodoAttributesUtil;
 import consulo.language.editor.wolfAnalyzer.Problem;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.*;
@@ -97,8 +98,8 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         PsiUtilCore.ensureValid(file);
         boolean wholeFileHighlighting = isWholeFileHighlighting();
         myHasErrorElement = !wholeFileHighlighting && Boolean.TRUE.equals(getFile().getUserData(HAS_ERROR_ELEMENT));
-        DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
-        FileStatusMapImpl fileStatusMap = daemonCodeAnalyzer.getFileStatusMap();
+        DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
+        FileStatusMap fileStatusMap = daemonCodeAnalyzer.getFileStatusMap();
         myErrorFound = !wholeFileHighlighting && fileStatusMap.wasErrorFound(getDocument());
 
         // initial guess to show correct progress in the traffic light icon
@@ -176,7 +177,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         List<HighlightInfo> outsideResult = new ArrayList<>(100);
         List<HighlightInfo> insideResult = new ArrayList<>(100);
 
-        DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
+        DaemonCodeAnalyzerInternal daemonCodeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(myProject);
         List<HighlightVisitor> filteredVisitors = getHighlightVisitors(getFile());
         try {
             List<Divider.DividedElements> dividedElements = new ArrayList<>();
@@ -686,7 +687,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
         List<Problem> problems = convertToProblems(getInfos(), file, myHasErrorElement);
         WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance(project);
 
-        boolean hasErrors = DaemonCodeAnalyzerEx.hasErrors(project, getDocument());
+        boolean hasErrors = DaemonCodeAnalyzerInternal.hasErrors(project, getDocument());
         if (!hasErrors || isWholeFileHighlighting()) {
             wolf.reportProblems(file, problems);
         }

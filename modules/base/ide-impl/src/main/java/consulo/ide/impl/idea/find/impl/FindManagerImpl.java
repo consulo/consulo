@@ -40,7 +40,7 @@ import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.ide.impl.idea.ui.ReplacePromptDialog;
+import consulo.ui.ex.awt.ReplacePromptDialog;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -149,7 +149,7 @@ public class FindManagerImpl extends FindManager {
 
     @Override
     @RequiredUIAccess
-    public int showPromptDialog(@Nonnull final FindModel model, String title) {
+    public int showPromptDialog(@Nonnull FindModel model, LocalizeValue title) {
         return showPromptDialogImpl(model, title, null);
     }
 
@@ -157,7 +157,7 @@ public class FindManagerImpl extends FindManager {
     @RequiredUIAccess
     public int showPromptDialogImpl(
         @Nonnull final FindModel model,
-        String title,
+        @Nonnull LocalizeValue title,
         @Nullable final MalformedReplacementStringException exception
     ) {
         ReplacePromptDialog replacePromptDialog = new ReplacePromptDialog(model.isMultipleFiles(), title, myProject, exception) {
@@ -262,7 +262,7 @@ public class FindManagerImpl extends FindManager {
     }
 
     @Override
-    public FindModel getFindNextModel(@Nonnull final Editor editor) {
+    public FindModel getFindNextModel(@Nonnull Editor editor) {
         if (myFindNextModel == null) {
             return null;
         }
@@ -312,7 +312,7 @@ public class FindManagerImpl extends FindManager {
         VirtualFile file,
         @Nullable Predicate<FindResult> filter
     ) {
-        final char[] textArray = CharArrayUtil.fromSequenceWithoutCopying(text);
+        char[] textArray = CharArrayUtil.fromSequenceWithoutCopying(text);
         while (true) {
             FindResult result = doFindString(text, textArray, offset, model, file);
             if (filter == null || filter.test(result)) {
@@ -432,7 +432,7 @@ public class FindManagerImpl extends FindManager {
 
     @Override
     @RequiredUIAccess
-    public int showMalformedReplacementPrompt(@Nonnull FindModel model, String title, MalformedReplacementStringException exception) {
+    public int showMalformedReplacementPrompt(@Nonnull FindModel model, LocalizeValue title, MalformedReplacementStringException exception) {
         return showPromptDialogImpl(model, title, exception);
     }
 
@@ -482,9 +482,9 @@ public class FindManagerImpl extends FindManager {
     @Nonnull
     private static FindModel normalizeIfMultilined(@Nonnull FindModel findmodel) {
         if (findmodel.isMultiline()) {
-            final FindModel model = new FindModel();
+            FindModel model = new FindModel();
             model.copyFrom(findmodel);
-            final String s = model.getStringToFind();
+            String s = model.getStringToFind();
             String newStringToFind;
 
             if (findmodel.isRegularExpressions()) {
@@ -523,11 +523,11 @@ public class FindManagerImpl extends FindManager {
             return findStringByRegularExpression(text, offset, model);
         }
 
-        final StringSearcher searcher = createStringSearcher(model);
+        StringSearcher searcher = createStringSearcher(model);
 
         int index;
         if (model.isForward()) {
-            final int res = searcher.scan(text, textArray, offset, text.length());
+            int res = searcher.scan(text, textArray, offset, text.length());
             index = res < 0 ? -1 : res;
         }
         else {
@@ -589,7 +589,7 @@ public class FindManagerImpl extends FindManager {
         char[] textArray,
         int offset,
         @Nonnull FindModel model,
-        @Nonnull final VirtualFile file
+        @Nonnull VirtualFile file
     ) {
         synchronized (model) {
             FileType ftype = file.getFileType();
@@ -611,7 +611,7 @@ public class FindManagerImpl extends FindManager {
                 TokenSet tokensOfInterest = TokenSet.EMPTY;
                 Set<Language> relevantLanguages;
                 if (lang != null) {
-                    final Language finalLang = lang;
+                    Language finalLang = lang;
                     relevantLanguages = Application.get().runReadAction((Computable<Set<Language>>)() -> {
                         Set<Language> result = new HashSet<>();
 
@@ -632,8 +632,8 @@ public class FindManagerImpl extends FindManager {
 
                     if (searchContext.isInStringLiterals()) {
                         // TODO: xml does not have string literals defined so we add XmlAttributeValue element type as convenience
-                        final Lexer xmlLexer = getHighlighter(null, Language.findLanguageByID("XML")).getHighlightingLexer();
-                        final String marker = "xxx";
+                        Lexer xmlLexer = getHighlighter(null, Language.findLanguageByID("XML")).getHighlightingLexer();
+                        String marker = "xxx";
                         xmlLexer.start("<a href=\"" + marker + "\" />");
 
                         while (!marker.equals(xmlLexer.getTokenText())) {
@@ -685,7 +685,7 @@ public class FindManagerImpl extends FindManager {
 
             int initialStartOffset = model.isForward() && data.startOffset < offset ? data.startOffset : 0;
             data.highlighter.resetPosition(initialStartOffset);
-            final Lexer lexer = data.highlighter.getHighlightingLexer();
+            Lexer lexer = data.highlighter.getHighlightingLexer();
 
             IElementType tokenType;
             TokenSet tokens = data.tokensOfInterest;
@@ -699,7 +699,7 @@ public class FindManagerImpl extends FindManager {
                     lastGoodOffset = lexer.getTokenStart();
                 }
 
-                final TextAttributesKey[] keys = data.highlighter.getTokenHighlights(tokenType);
+                TextAttributesKey[] keys = data.highlighter.getTokenHighlights(tokenType);
 
                 if (tokens.contains(tokenType)
                     || (searchContext.isInStringLiterals() && ChunkExtractor.isHighlightedAsString(keys))
@@ -725,7 +725,7 @@ public class FindManagerImpl extends FindManager {
                             int matchStart = data.searcher.scan(text, textArray, start, end);
 
                             if (matchStart != -1 && matchStart >= start) {
-                                final int matchEnd = matchStart + model.getStringToFind().length();
+                                int matchEnd = matchStart + model.getStringToFind().length();
                                 if (matchStart >= offset || !scanningForward) {
                                     findResult = new FindResultImpl(matchStart, matchEnd);
                                 }
@@ -738,7 +738,7 @@ public class FindManagerImpl extends FindManager {
                         else if (start <= end) {
                             data.matcher.reset(StringPattern.newBombedCharSequence(text.subSequence(start, end)));
                             if (data.matcher.find()) {
-                                final int matchEnd = start + data.matcher.end();
+                                int matchEnd = start + data.matcher.end();
                                 int matchStart = start + data.matcher.start();
                                 if (matchStart >= offset || !scanningForward) {
                                     findResult = new FindResultImpl(matchStart, matchEnd);
@@ -866,13 +866,13 @@ public class FindManagerImpl extends FindManager {
         return toReplace;
     }
 
-    private static String getStringToReplaceByRegexp(@Nonnull final FindModel model, @Nonnull CharSequence text, int startOffset)
+    private static String getStringToReplaceByRegexp(@Nonnull FindModel model, @Nonnull CharSequence text, int startOffset)
         throws MalformedReplacementStringException {
         Matcher matcher = compileRegexAndFindFirst(model, text, startOffset);
         return getStringToReplaceByRegexp(model, matcher);
     }
 
-    private static String getStringToReplaceByRegexp(@Nonnull final FindModel model, Matcher matcher)
+    private static String getStringToReplaceByRegexp(@Nonnull FindModel model, Matcher matcher)
         throws MalformedReplacementStringException {
         if (matcher == null) {
             return null;
@@ -1076,7 +1076,7 @@ public class FindManagerImpl extends FindManager {
     @Nullable
     @Override
     public FindUsagesHandler getFindUsagesHandler(@Nonnull PsiElement element, boolean forHighlightUsages) {
-        final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(myProject)).getFindUsagesManager();
+        FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(myProject)).getFindUsagesManager();
         return findUsagesManager.getFindUsagesHandler(element, forHighlightUsages);
     }
 
@@ -1140,7 +1140,7 @@ public class FindManagerImpl extends FindManager {
                     : FindLocalize.findSearchAgainFromBottomHotkeyMessage(message, shortcutsText);
             }
             JComponent component = HintUtil.createInformationLabel(message.get());
-            final LightweightHintImpl hint = new LightweightHintImpl(component);
+            LightweightHintImpl hint = new LightweightHintImpl(component);
             HintManagerImpl.getInstanceImpl().showEditorHint(
                 hint,
                 editor,
@@ -1159,9 +1159,9 @@ public class FindManagerImpl extends FindManager {
         return false;
     }
 
-    private static void expandFoldRegionsIfNecessary(@Nonnull Editor editor, final int startOffset, int endOffset) {
-        final FoldingModel foldingModel = editor.getFoldingModel();
-        final FoldRegion[] regions = foldingModel instanceof FoldingModelEx
+    private static void expandFoldRegionsIfNecessary(@Nonnull Editor editor, int startOffset, int endOffset) {
+        FoldingModel foldingModel = editor.getFoldingModel();
+        FoldRegion[] regions = foldingModel instanceof FoldingModelEx
             ? foldingModel.fetchTopLevel()
             : foldingModel.getAllFoldRegions();
         if (regions == null) {
@@ -1189,9 +1189,9 @@ public class FindManagerImpl extends FindManager {
         if (i >= regions.length) {
             return;
         }
-        final List<FoldRegion> toExpand = new ArrayList<>();
+        List<FoldRegion> toExpand = new ArrayList<>();
         for (; i < regions.length; i++) {
-            final FoldRegion region = regions[i];
+            FoldRegion region = regions[i];
             if (region.getStartOffset() >= endOffset) {
                 break;
             }

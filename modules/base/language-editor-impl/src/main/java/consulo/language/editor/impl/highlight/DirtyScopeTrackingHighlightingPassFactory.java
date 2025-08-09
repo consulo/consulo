@@ -16,6 +16,8 @@
 
 package consulo.language.editor.impl.highlight;
 
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
+
 /**
  * @author yole
  */

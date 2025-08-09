@@ -30,7 +30,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerSettingsImpl;
 import consulo.ide.impl.idea.codeInsight.intention.impl.FileLevelIntentionComponent;
 import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
@@ -42,15 +42,17 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.impl.internal.highlight.GeneralHighlightingPass;
 import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.internal.EditorTracker;
+import consulo.language.editor.internal.intention.IntentionsUI;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -90,7 +92,7 @@ import java.util.stream.Collectors;
 @Singleton
 @State(name = "DaemonCodeAnalyzer", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
-public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements PersistentStateComponent<Element>, Disposable {
+public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implements PersistentStateComponent<Element>, Disposable {
     private static final Logger LOG = Logger.getInstance(DaemonCodeAnalyzerImpl.class);
 
     private static final Key<List<HighlightInfoImpl>> FILE_LEVEL_HIGHLIGHTS = Key.create("FILE_LEVEL_HIGHLIGHTS");
@@ -596,7 +598,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     }
 
     // return true if the progress was really canceled
-    boolean doRestart() {
+    @Override
+    public boolean doRestart() {
         myFileStatusMap.markAllFilesDirty("Global restart");
         return stopProcess(true, "Global restart");
     }
@@ -650,6 +653,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
         return myFileStatusMap;
     }
 
+    @Override
     public synchronized boolean isRunning() {
         return !myUpdateProgress.isCanceled();
     }
@@ -662,7 +666,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     }
 
     // return true if the progress really was canceled
-    synchronized boolean stopProcess(boolean toRestartAlarm, @Nonnull String reason) {
+    @Override
+    public synchronized boolean stopProcess(boolean toRestartAlarm, @Nonnull String reason) {
         boolean canceled = cancelUpdateProgress(toRestartAlarm, reason);
         // optimisation: this check is to avoid too many re-schedules in case of thousands of events spikes
         boolean restart = toRestartAlarm && !myDisposed && myInitialized;

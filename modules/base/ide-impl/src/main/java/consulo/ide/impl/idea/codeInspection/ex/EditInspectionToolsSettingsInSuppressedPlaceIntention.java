@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInspection.ex;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.impl.internal.inspection.InspectionProjectProfileManager;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.InspectionExtensionsFactory;
 import consulo.language.editor.inspection.localize.InspectionLocalize;

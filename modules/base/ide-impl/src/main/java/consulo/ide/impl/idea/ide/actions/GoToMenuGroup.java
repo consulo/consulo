@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.actions.GoToErrorGroup;
+import consulo.language.editor.impl.internal.action.GoToErrorGroup;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GoToMenuExGroup;
 import consulo.ide.impl.idea.openapi.vcs.actions.GoToChangeMarkerGroup;
 import consulo.platform.base.localize.ActionLocalize;
