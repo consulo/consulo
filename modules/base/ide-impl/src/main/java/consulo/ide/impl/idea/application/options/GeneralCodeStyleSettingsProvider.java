@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.application.options;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationBundle;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.configurable.Configurable;
 import consulo.language.codeStyle.CodeStyleSettings;
@@ -35,9 +34,9 @@ public class GeneralCodeStyleSettingsProvider extends CodeStyleSettingsProvider 
   @Override
   @Nonnull
   public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
-    return new CodeStyleAbstractConfigurable(settings, originalSettings, ApplicationBundle.message("title.general")) {
+    return new CodeStyleAbstractConfigurable(settings, originalSettings, ApplicationLocalize.titleGeneral()) {
       @Override
-      protected CodeStyleAbstractPanel createPanel(final CodeStyleSettings settings) {
+      protected CodeStyleAbstractPanel createPanel(CodeStyleSettings settings) {
         return new GeneralCodeStylePanel(settings);
       }
     };

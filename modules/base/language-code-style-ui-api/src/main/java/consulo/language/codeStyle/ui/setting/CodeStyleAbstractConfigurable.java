@@ -21,6 +21,7 @@ import consulo.configurable.OptionsContainingConfigurable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
@@ -32,10 +33,11 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
   private CodeStyleAbstractPanel myPanel;
   private final CodeStyleSettings mySettings;
   private final CodeStyleSettings myCloneSettings;
-  private final String myDisplayName;
+  private final LocalizeValue myDisplayName;
 
-  public CodeStyleAbstractConfigurable(@Nonnull CodeStyleSettings settings, CodeStyleSettings cloneSettings,
-                                       final String displayName) {
+  public CodeStyleAbstractConfigurable(@Nonnull CodeStyleSettings settings,
+                                       CodeStyleSettings cloneSettings,
+                                       LocalizeValue displayName) {
     mySettings = settings;
     myCloneSettings = cloneSettings;
     myDisplayName = displayName;
@@ -43,7 +45,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
 
   @Override
   public String getDisplayName() {
-    return myDisplayName;
+    return myDisplayName.get();
   }
 
   @RequiredUIAccess
@@ -53,7 +55,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
     return myPanel.getPanel();
   }
 
-  protected abstract CodeStyleAbstractPanel createPanel(final CodeStyleSettings settings);
+  protected abstract CodeStyleAbstractPanel createPanel(CodeStyleSettings settings);
 
   @RequiredUIAccess
   @Override

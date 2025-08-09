@@ -15,19 +15,16 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.application.ApplicationBundle;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ConfigurationException;
 import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -90,33 +87,5 @@ public class OtherFileTypesCodeStyleOptionsForm extends CodeStyleAbstractPanel {
   @Override
   protected void resetImpl(CodeStyleSettings settings) {
     myIndentOptionsEditor.reset(settings, settings.OTHER_INDENT_OPTIONS);
-  }
-}
-
-class IndentOptionsEditorWithSmartTabs extends IndentOptionsEditor {
-  private JCheckBox myCbSmartTabs;
-
-  @Override
-  protected void addTabOptions() {
-    super.addTabOptions();
-    myCbSmartTabs = new JCheckBox(ApplicationBundle.message("checkbox.indent.smart.tabs"));
-    add(myCbSmartTabs, true);
-  }
-
-  @Override
-  public void reset(@Nonnull CodeStyleSettings settings, @Nonnull CommonCodeStyleSettings.IndentOptions options) {
-    super.reset(settings, options);
-    myCbSmartTabs.setSelected(options.SMART_TABS);
-  }
-
-  @Override
-  public boolean isModified(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
-    return super.isModified(settings, options) || isFieldModified(myCbSmartTabs, options.SMART_TABS);
-  }
-
-  @Override
-  public void apply(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
-    super.apply(settings, options);
-    options.SMART_TABS = myCbSmartTabs.isSelected();
   }
 }
